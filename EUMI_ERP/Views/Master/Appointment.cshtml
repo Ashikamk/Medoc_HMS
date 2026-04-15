@@ -1,0 +1,368 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking System</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/Scripts/Autocomplete/autocomplete.css" />
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .app-header {
+            background-color: #362a64;
+        }
+
+        .selected-day {
+            background-color: #00bcd4;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 188, 212, 0.3);
+        }
+
+        .selected-slot {
+            background-color: #362a64;
+            color: white;
+            border-color: #362a64;
+        }
+
+        .booked-slot {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .day-picker::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ui-autocomplete {
+            z-index: 20001 !important;
+        }
+        /* Fix for SweetAlert over Modals */
+        .swal2-container {
+            z-index: 30000 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="app-header text-white p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-4">
+            <i class="fas fa-stethoscope text-2xl"></i>
+            <h1 class="text-xl font-semibold">Appointment Scheduling</h1>
+        </div>
+        <div class="flex space-x-2">
+            <button onclick="ShowCalendarView()" class="bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-xs">Calendar</button>
+            <button onclick="GetRows(0)" class="bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-xs">List View</button>
+        </div>
+    </header>
+
+    <main class="flex-grow p-4 md:p-8">
+
+        <div id="calendar-view" class="bg-white p-6 rounded-xl shadow-lg mx-auto w-full max-w-6xl">
+            <section class="mb-8">
+                <h2 class="text-lg font-bold mb-4">Select Specialist</h2>
+                <div class="relative flex items-center">
+                    <button id="scrollLeftBtnDoctor" class="absolute left-0 z-10 bg-white shadow rounded-full p-2"><i class="fas fa-chevron-left"></i></button>
+                    <div id="doctorSelection" class="flex overflow-x-auto space-x-4 pb-4 px-8 scroll-smooth">
+                    </div>
+                    <button id="scrollRightBtnDoctor" class="absolute right-0 z-10 bg-white shadow rounded-full p-2"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <button id="prevMonthBtn" class="p-2"><i class="fas fa-chevron-left"></i></button>
+                    <h3 id="currentMonthDisplay" class="text-xl font-bold"></h3>
+                    <button id="nextMonthBtn" class="p-2"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div id="dayPicker" class="day-picker flex overflow-x-auto space-x-3 pb-4">
+                </div>
+            </section>
+
+            <section id="timeSlotsSection">
+                <h2 class="text-lg font-bold mb-4">Available Slots</h2>
+                <div id="timeSlotsContainer" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                    <p class="text-gray-400">Select a date to view slots.</p>
+                </div>
+            </section>
+        </div>
+
+        <div id="listing" class="hidden bg-white p-6 rounded-xl shadow-lg mx-auto w-full max-w-6xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Appointments List</h2>
+                <button onclick="openSearchModal()" class="bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm">
+                    <i class="fas fa-search mr-2"></i>Filter
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="tblAppointment" class="w-full text-left border-collapse">
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="patient-modal" class="fixed inset-0 z-[9999] hidden">
+        <div class="fixed inset-0 bg-black/50" onclick="closePatientModal()"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+                <div class="p-4 bg-indigo-900 text-white flex justify-between">
+                    <h2 id="modalTitle" class="font-bold">Book Appointment</h2>
+                    <button onclick="closePatientModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form id="patient-form" class="p-6 overflow-y-auto space-y-4 bg-gray-50">
+                    <input type="hidden" id="AppointmentId" value="0">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Patient Name *</label>
+                            <input type="text" id="AppFirst" required class="w-full p-2 border rounded-lg outline-none focus:ring-2 focus:ring-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Existing Reg No (Autocomplete)</label>
+                            <input type="text" id="AppLast" class="w-full p-2 border rounded-lg outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Mobile No *</label>
+                            <input type="tel" id="MobileNo" required class="w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Gender</label>
+                            <select id="PGender" class="w-full p-2 border rounded-lg">
+                                <option value="1">Male</option>
+                                <option value="2">Female</option>
+                                <option value="3">Others</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Date of Birth</label>
+                            <input type="text" id="PDOB" placeholder="dd/mm/yyyy" onchange="GetPatientAge()" class="w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Age</label>
+                            <input type="number" id="Age" class="w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Doctor</label>
+                            <select id="Doctor" class="w-full p-2 border rounded-lg bg-gray-100" readonly></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600">Appointment Time</label>
+                            <input type="text" id="PTime" readonly class="w-full p-2 border rounded-lg bg-gray-100">
+                            <input type="hidden" id="PDATE">
+                        </div>
+                    </div>
+                </form>
+                <div class="p-4 bg-gray-100 flex justify-end space-x-3">
+                    <button onclick="closePatientModal()" class="px-4 py-2 border rounded-lg">Cancel</button>
+                    <button id="saveBtn" onclick="submitPatientDetails(1)" class="px-6 py-2 bg-indigo-900 text-white rounded-lg font-bold">Save Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        let selectedDoctor = null;
+        let selectedDay = null;
+        let selectedTime = null;
+        let currentMonth = new Date();
+        const shortDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        $(document).ready(function () {
+            Doctorload();
+            setupAutocomplete();
+
+            $('#prevMonthBtn').click(() => { currentMonth.setMonth(currentMonth.getMonth() - 1); generateDays(); });
+            $('#nextMonthBtn').click(() => { currentMonth.setMonth(currentMonth.getMonth() + 1); generateDays(); });
+        });
+
+        // 1. DATA LOADING
+        function Doctorload() {
+            $.ajax({
+                type: "POST",
+                url: "/Master/DoctorGetandGets",
+                data: { DoctorsId: 0 },
+                success: function (res) {
+                    let html = '';
+                    res.oList.forEach(doc => {
+                        html += `
+                            <div class="doctor-card flex-shrink-0 w-32 p-3 bg-white border-2 rounded-xl text-center cursor-pointer hover:border-cyan-500 transition" onclick="selectDoctor(${doc.DoctorsId}, this)">
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full mx-auto mb-2 flex items-center justify-center text-indigo-700 font-bold">${doc.Name.charAt(0)}</div>
+                                <p class="text-xs font-bold truncate">${doc.Name}</p>
+                                <p class="text-[10px] text-gray-500">${doc.Department}</p>
+                            </div>`;
+                    });
+                    $('#doctorSelection').html(html);
+                }
+            });
+        }
+
+        function selectDoctor(id, el) {
+            $('.doctor-card').removeClass('border-cyan-500 bg-cyan-50');
+            $(el).addClass('border-cyan-500 bg-cyan-50');
+            selectedDoctor = id;
+            generateDays();
+        }
+
+        // 2. CALENDAR LOGIC
+        function generateDays() {
+            if (!selectedDoctor) return;
+            $('#currentMonthDisplay').text(currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' }));
+
+            let html = '';
+            let date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+            let end = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+            while (date <= end) {
+                let dateStr = date.toISOString().split('T')[0];
+                html += `
+                    <button class="day-slot flex-shrink-0 w-16 h-20 border rounded-xl flex flex-col items-center justify-center p-2 bg-white" onclick="selectDay('${dateStr}', this)">
+                        <span class="text-[10px] uppercase">${shortDays[date.getDay()]}</span>
+                        <span class="text-lg font-bold">${date.getDate()}</span>
+                    </button>`;
+                date.setDate(date.getDate() + 1);
+            }
+            $('#dayPicker').html(html);
+        }
+
+        function selectDay(date, el) {
+            $('.day-slot').removeClass('selected-day');
+            $(el).addClass('selected-day');
+            selectedDay = date;
+            $('#PDATE').val(date);
+            fetchSlots(date);
+        }
+
+        function fetchSlots(date) {
+            $.ajax({
+                type: "POST",
+                url: "../Master/GetBookedSession",
+                data: { DoctorId: selectedDoctor, Date: date },
+                success: function (res) {
+                    let booked = res.oList.map(x => x.AppointmentTime);
+                    renderTimeSlots(booked);
+                }
+            });
+        }
+
+        function renderTimeSlots(booked) {
+            const times = ["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "02:00 PM", "02:30 PM"];
+            let html = '';
+            times.forEach(t => {
+                let isBooked = booked.includes(t);
+                html += `<button ${isBooked ? 'disabled' : ''} class="${isBooked ? 'booked-slot' : 'bg-white border hover:bg-gray-50'} p-3 rounded-lg text-sm font-semibold transition" onclick="openBooking('${t}')">${t}</button>`;
+            });
+            $('#timeSlotsContainer').html(html);
+        }
+
+        // 3. BOOKING FLOW
+        function openBooking(time) {
+            selectedTime = time;
+            $('#AppointmentId').val(0);
+            $('#PTime').val(time);
+
+            // Set Doctor dropdown in modal
+            let docName = $('.doctor-card.border-cyan-500 p.truncate').text();
+            $('#Doctor').html(`<option value="${selectedDoctor}">${docName}</option>`);
+
+            $('#patient-modal').removeClass('hidden');
+        }
+
+        function submitPatientDetails(flag) {
+            let data = {
+                AppointmentId: $('#AppointmentId').val(),
+                FirstName: $('#AppFirst').val(),
+                LastName: $('#AppLast').val(),
+                Contact: $('#MobileNo').val(),
+                Gender: $('#PGender').val(),
+                AppointmentDate: $('#PDATE').val(),
+                AppointmentTime: $('#PTime').val(),
+                Doctor: $('#Doctor').val(),
+                Age: $('#Age').val(),
+                DelFlag: flag
+            };
+
+            if (!data.FirstName || !data.Contact) {
+                Swal.fire('Error', 'Please fill required fields', 'error');
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "../Master/AppointmentInsertandUpdate",
+                data: data,
+                success: function (res) {
+                    Swal.fire('Success', 'Appointment Saved!', 'success');
+                    closePatientModal();
+                    if (selectedDay) fetchSlots(selectedDay);
+                }
+            });
+        }
+
+        // 4. UTILS
+        function setupAutocomplete() {
+            $("#AppLast").autocomplete({
+                source: function (req, resp) {
+                    $.ajax({
+                        url: '../Revisit/HMS_PatientSearch',
+                        data: { PatientName: req.term, DeptId: 1 },
+                        success: (data) => resp($.map(data, item => ({ label: item.OPNumber + ' - ' + item.PatientName, value: item.OPNumber, item: item })))
+                    });
+                },
+                select: (e, ui) => {
+                    $('#AppFirst').val(ui.item.item.PatientName);
+                    $('#MobileNo').val(ui.item.item.Contact);
+                    $('#Age').val(ui.item.item.Age);
+                    $('#PGender').val(ui.item.item.Gender == 'Male' ? 1 : 2);
+                }
+            });
+        }
+
+        function GetRows(id) {
+            $.ajax({
+                type: "POST",
+                url: "../Master/AppointmentGetandGets",
+                data: { AppointmentId: id },
+                success: function (res) {
+                    if (id == 0) renderListView(res.oList);
+                    else fillModalForEdit(res.oList[0]);
+                }
+            });
+        }
+
+        function renderListView(list) {
+            $('#calendar-view').hide();
+            $('#listing').show();
+            let html = `<thead><tr class="bg-gray-100"><th class="p-3">ID</th><th class="p-3">Patient</th><th class="p-3">Doctor</th><th class="p-3">Date</th><th class="p-3">Action</th></tr></thead><tbody>`;
+            list.forEach(item => {
+                html += `<tr class="border-b">
+                        <td class="p-3">${item.AppointmentId}</td>
+                        <td class="p-3 font-bold">${item.FirstName}</td>
+                        <td class="p-3">${item.Doctor}</td>
+                        <td class="p-3">${item.AppointmentDate} ${item.AppointmentTime}</td>
+                        <td class="p-3"><button onclick="GetRows(${item.AppointmentId})" class="text-blue-600"><i class="fas fa-edit"></i></button></td>
+                    </tr>`;
+            });
+            $('#tblAppointment').html(html + '</tbody>');
+        }
+
+        function closePatientModal() { $('#patient-modal').addClass('hidden'); }
+        function ShowCalendarView() { $('#listing').hide(); $('#calendar-view').show(); }
+    </script>
+</body>
+</html>

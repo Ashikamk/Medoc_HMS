@@ -1,0 +1,110 @@
+﻿@model EUMI_ERP.Models.ABStockLocations
+@{
+    ViewBag.Title = "Stoct Report Detailed";
+}
+<style type="text/css">
+    .main-panel { height: auto; width: auto; max-height: none; min-height: 100%; margin:0; padding-top: 85px; float:none; }
+    .eumi-search-box { box-sizing: border-box; width: 100%; }
+    body.eumi-loader::before { content: ''; display:block; position: fixed; z-index:31000; height: 4px; background-color: rgba(0, 157, 160, 0.2); top:0; left:0; right:0; }
+    body.eumi-loader::after { content: ''; display:block; position: fixed; z-index:31001; height: 4px; background-color: rgba(0, 157, 160, 1); top:0; width:50px; animation:eumiloader 4s infinite linear;  }
+    .eumi-search-table, .eumi-shadow { border-spacing: 0 0px; box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999; }
+    /* .eumi-search-table tbody td { border:none; } */
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+</style>
+<div class="myData" data-x="M112" />
+<div class="card">
+    <br />
+    <div class="row m-1">
+        <div class="col-md-10">
+            <h2>Stock Report-Locationwise</h2>
+        </div>
+        <div class="col-md-2 eumi-button-area" id="divDownload" data-download-url="@Url.Action("StockReportDetailDownload", "ABDataTable")">
+            <div class="btn-group" role="group">
+                <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Columns
+                </button>
+                <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                </div>
+            </div>
+            <div class="btn-group excelexport" role="group">
+                <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Export
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                    <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                    <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" data-eumi-max="9" href="#">PDF</a>
+                    <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                    <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary" data-eumi-clear="1" type="button">Clear Search</button>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <hr style="margin-top:-.6%;" />
+    <table id="stockrpt" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%;margin: 0;">
+        <tfoot>
+            <tr class="eumi-search-row">
+                <th></th>
+                <th>Item Code</th>
+                <th>Description</th>
+                @foreach (var locOne in Model.locations)
+            {
+                    <th></th>
+                }
+                <th></th>
+                @*@foreach (var locOne in Model.locations)
+            {
+                    <th>@locOne.locName</th>
+                }
+                <th>Total</th>*@
+            </tr>
+        </tfoot>
+    </table>
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>
+    </div>
+    <script type="text/javascript">
+        window.StockReportDetailedLocs = @Html.Raw(EUMI_ERP.Models.ABStockLocations.GetJsonString(Model));
+        $(document).ready(function () {
+            //$("body").addClass("eumi-loader");
+            $('#stockrpt').EumiDataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "../ABDataTable/StockReportDetailedJson",
+                    "type": "POST",
+                    "data" : function (data) {
+                        data.addData = window.StockReportDetailedLocs;
+                    }
+                },
+                "columns": [
+                    { data: "slno", title: "Sl#", searchable: false, sortable: false },
+                    { data: "ItemCode", title: "Item Code", render: eumiWidth("100px")  },
+                    { data: "ItemDesc", title: "Description", render: eumiWidth("100px") },
+                    @foreach(var locOne in Model.locations)
+                    {
+                        <text>
+                    { data: "loc@(locOne.locationId)", title: "@(locOne.locName)" },
+                        </text>
+                    }
+                    { data: "locSum", title: "Total" }
+                ],
+            });
+        });
+        function eumiWidth(widthPx) {
+            return function(data) { return '<div style="min-width:' + widthPx + '">' + (data || "") + "</div>" }
+        }
+    </script>
+    @section bottomscripts {
+        <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+    }

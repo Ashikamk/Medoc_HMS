@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.Title = "MonthwiseReportDemo";
+}
+<style type="text/css">
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+    /* .eumi-search-table tbody td { border:none; } */
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+
+       .form-control {
+        font-weight: bold;
+    }
+</style>
+<div class="myData" data-x="M38" />
+<div class="card">
+    <div class="row m-1">
+        <div class="col-md-6">
+            <h2>Datewise Purchase Report</h2>
+        </div>
+        <div class="col-md-6 eumi-button-area" id="divReportOptions" data-download-url="@Url.Action("MonthwiseReportDemoDownload", "Report")">
+
+
+            <div class="btn-group" role="group">
+                <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Columns
+                </button>
+                <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                </div>
+            </div>
+
+            <button type="button" id="btnchgp" class="btn btn-primary" data-toggle="modal" data-target="#paramModal">Change Parameters</button>
+
+            <div class="btn-group excelexport" role="group">
+                <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Export
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                    <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                    <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                    <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                    <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary" data-eumi-clear="1" type="button">Clear Search</button>
+        </div>
+    </div>
+    <div id="popup" style="display:none;">
+        <div class="row m-1">
+            <div id="paramOfReport" class="row m-1"></div>
+        </div>
+        <table id="monthwisetbl" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+            @*<tfoot>
+                <tr class="eumi-search-row">
+                    <th></th>
+                    <th>Invoice#</th>
+                    <th>Supplier Invoice#</th>
+                    <th>Date</th>
+                    <th>Account#</th>
+                    <th>Supplier</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Currency</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Grand Total</th>
+                    <th id="eumiOtherCost" class="text-right">OtherCost</th>
+                    <th id="eumiTaxableAmount" class="text-right">TaxableAmount</th>
+                    <th id="eumiTaxAmount" class="text-right">TaxAmount</th>
+                    <th id="eumiAmount" class="text-right">Amount</th>
+                    <th></th>
+                    <th></th>
+                    <th id="eumiFCAmount" class="text-right">FCAmount</th>
+                </tr>
+            </tfoot>*@
+        </table>
+    </div>
+</div>
+<div style="height:100px;clear: both">
+    &nbsp;
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#UserId').val(ERPUserId);
+        $('#btnchgp').click();
+        var decimal = (window.Decimal || 1);
+        $('#monthwisetbl tr td').remove();
+        window.EumiLastSelectedInPurchaseRpt = null;
+        $('#monthwisetbl').append('<tfoot><tr class="eumi-search-row"><th></th><th>Inv.#</th><th>Sup.Inv.#</th><th>Date</th><th>Account#</th><th>Supplier</th><th>Purchase Type</th><th></th><th></th><th></th><th>Fx.</th><th></th><th></th></tr>' +
+                                     '<tr><th></th><th></th><th></th><th></th><th></th><th>Grand Total</th><th></th><th id="eumiTaxableAmount" class="text-right">TaxableAmount</th><th id="eumiTaxAmount" class="text-right">TaxAmount</th><th id="eumiAmount" class="text-right">Amount</th> <th></th><th></th><th id="eumiFCAmount" class="text-right">FCAmount</th></tr></tfoot>')
+
+
+                         var table = $('#monthwisetbl').EumiDataTable({
+                         "processing": true,
+                         "serverSide": true,
+                         "ajax": {
+                             "url": "../Report/MonthwiseReportDemoJson",
+                             "type": "POST",
+                             "data": function (data, settings) {
+                                 var addData = (window.EumiLastSelectedInPurchaseRpt || {});
+                                 addData.dateFrom = moment(addData.dateFrom || new Date()).format("YYYY-MM-DD");
+                                 addData.dateTo = moment(addData.dateTo || new Date()).format("YYYY-MM-DD");
+                                 addData.UserId = (addData.UserId || 0);
+
+                                 if (!addData.title) {
+                                     addData.title = "Parameters - " + "From: " + moment(new Date()).format("DD-MM-YYYY") + " To: " + moment(new Date()).format("DD-MM-YYYY")
+                                     $("#paramOfReport").text(addData.title);
+                                 }
+                                 data.addData = addData;
+                                 $("#eumiTaxableAmount").text(parseFloat(0).toFixed(decimal));
+                                 $("#eumiTaxAmount").text(parseFloat(0).toFixed(decimal));
+                                 $("#eumiAmount").text(parseFloat(0).toFixed(decimal));
+                                 $("#eumiFCAmount").text(parseFloat(0).toFixed(decimal));
+                             }
+
+                         },
+                         "columnDefs": [
+                             {
+                                 "targets": 3,
+                                 "className": "text-center",
+                             },
+                             {
+                                 "targets": 4,
+                                 "className": "text-center",
+                             },
+                             {
+                             "targets": 5,
+                             "className": "text-left",
+                             "width": "40%",
+                            
+                         },
+                         {
+                             "targets": 6,
+                             "className": "text-left",
+                             "width": "10%",
+                         },
+                         {
+                             "targets": 7,
+                             "className": "text-right",
+                             "width": "15%",
+                             "render": function (data) {
+                                 return (data || 0).toFixed(decimal);
+                             }
+                         },
+                         {
+                             "targets": 8,
+                             "className": "text-right",
+                             "width": "15%",
+                             "render": function (data) {
+                                 return (data || 0).toFixed(decimal);
+                             }
+                         },
+                         {
+                             "targets": 9,
+                             "className": "text-right",
+                             "width": "15%",
+                             "render": function (data) {
+                                 return (data || 0).toFixed(decimal);
+                             }
+                         },
+                         {
+                             "targets": 10,
+                             "className": "text-center",
+                             "width": "5%",
+
+                         },
+                          {
+                              "targets": 11,
+                              "className": "text-right",
+                              "width": "10%",
+                              "render": function (data) {
+                                  return (data || 0).toFixed(decimal);
+                              }
+                          },
+                          {
+                              "targets": 12,
+                              "className": "text-right",
+                              "width": "15%",
+                              "render": function (data) {
+                                  return (data || 0).toFixed(decimal);
+                              }
+                                  
+                          }, ],
+                         "columns": [
+                             { data: "DeptId", data: "slno", title: "Sl#", searchable: false, sortable: false },
+                             { data: "SerialNo", title: "Inv.#", sortable: false },
+                             { data: "InvoNo", title: "Sup.Inv.#", sortable: false },
+                             { data: "InvoDate", title: "Date", sortable: false },
+                             { data: "AccCode", title: "Account#", sortable: false },
+                             { data: "CustName", title: "Supplier", sortable: false },
+                             { data: "PurchaseType", title: "Purchase Type", sortable: false },
+                             { data: "TotalTaxable", title: "Taxable Amount", sortable: false },
+                             { data: "TotalTax", title: "Tax Amount", sortable: false },
+                             { data: "BaseTotal", title: "Amount", sortable: false },
+                             { data: "Currency", title: "Fx.", sortable: false },
+                             { data: "Rate", title: "Rate", sortable: false },
+                             { data: "FCTotal", title: "FC Amount", sortable: false },
+                         ],
+                         "createdRow": function (row, data, index) {
+                             if (index == 0) {
+                                 $("#eumiTaxableAmount").text(ReplaceNumberWithCommas(data._totaltaxable.toFixed(decimal)));
+                                 $("#eumiTaxAmount").text(ReplaceNumberWithCommas(data._totaltax.toFixed(decimal)));
+                                 $("#eumiAmount").text(ReplaceNumberWithCommas(data._basetotal.toFixed(decimal)));
+                                 $("#eumiFCAmount").text(ReplaceNumberWithCommas(data._fctotal.toFixed(decimal)));
+                                 console.log(index);
+                             }
+                         },
+                     });
+        
+
+
+        $('#monthwisetbl tbody').on('dblclick', 'tr', function () {
+            var table = $("#monthwisetbl").DataTable();
+            var data = table.row(this).data();
+            GetRows(data.SerialNo, data.DeptId);
+        });
+
+        function GetRows(SerialNo, DeptId) {
+            if ((usermenu1.indexOf("M31") != -1)) {
+                window.open('../inventory/PurchaseInvoice?slno=' + SerialNo + '&dept=' + DeptId);
+            }
+            else if ((usermenu1.indexOf("M233") != -1)) {
+                window.open('../Purchase/PurchaseInvoiceNew?slno=' + SerialNo + '&dept=' + DeptId);
+
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+        }
+
+        function warningshow(message, Id) {
+            $('#popupmessage').text(message);
+            $('#Warningpopup').show();
+            $('#' + Id).focus();
+            window.setTimeout(function () {
+                $('#Warningpopup').hide();
+            }, 3000);
+        }
+    });
+</script>
+
+@section popups {
+    <div class="modal" id="paramModal" style="margin-top:15%">
+        <div class="modal-dialog ">
+            <div class="modal-content" style="width:98%">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-primary white">
+                    <h4 class="modal-title">Datewise Report</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:10%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:-1%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <input type="text" class="form-control" id="UserId" style="display:none">
+                </div>
+
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <fieldset class="form-group floating-label-form-group" style="margin-right:35%">
+                        <div class="row">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="customCheck" id="fcamount">
+                                <label class="custom-control-label" for="fcamount" style="font-weight:bold">FC amount</label>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <button type="button" id="btnsubmit" class="btn btn-primary" data-dismiss="modal" onclick="redrawTable();">Apply</button>
+                    <button type="button" id="btnclose" class="btn btn-primary" data-dismiss="modal" >Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section bottomscripts {
+    <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+    <script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#dateFrom, #dateTo').daterangepicker({
+                minDate: minDate,
+                maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                singleDatePicker: true,
+                showDropdowns: true,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
+            });
+
+
+        });
+
+
+        function getTableRow(item, keyArray, widthArray, headersArray) {
+            var jqRow = $("<tr>")
+            for (var x = 0; x < keyArray.length; x++) {
+                $("<td>").css({ "border": "1px solid #d6d9db", "width": widthArray[x] })
+                    .html(item[keyArray[x]])
+                    .attr("data-em-header", (headersArray[x] || ""))
+                    .appendTo(jqRow)
+            }
+            return jqRow;
+        }
+
+
+
+        function redrawTable() {
+            $('#popup').show();
+            var data = {};
+            data.dateFrom = moment($('#dateFrom').val(), "DD-MM-YYYY").toDate();
+            data.dateTo = moment($('#dateTo').val(), "DD-MM-YYYY").toDate();
+            data.UserId = parseInt($('#UserId').val() || 0);
+
+            data.title = "Parameters - " + "From: " + $('#dateFrom').val()
+                + " To: " + $('#dateTo').val() ;
+            if ($.fn.DataTable.isDataTable('#monthwisetbl')) {
+                window.EumiLastSelectedInPurchaseRpt = data;
+                $("#monthwisetbl").DataTable().ajax.reload();
+                $("#paramOfReport").text(data.title);
+            }
+            var table = $('#monthwisetbl').DataTable();
+            if ($("#fcamount").prop("checked")) {
+                table.column(10).visible(true);
+                table.column(11).visible(true);
+                table.column(12).visible(true);
+            }
+
+            else {
+                table.column(10).visible(false);
+                table.column(11).visible(false);
+                table.column(12).visible(false);
+
+
+            }
+           
+        
+        }
+    </script>
+}
+

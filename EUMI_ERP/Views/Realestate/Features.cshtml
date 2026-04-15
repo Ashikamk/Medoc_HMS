@@ -1,0 +1,254 @@
+﻿
+@{
+    ViewBag.Title = "Features";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<div class="myData" data-x="M269" /> 
+
+<div id="Entry" style="width:50%;margin-left:25%;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header text-center" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">OP SERIES</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body" >
+
+
+                                       
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>SERIES<span class="danger">*</span></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" onkeyup="changetoupper(this.id),CodeName()" id="Code" class="form-control" name="Code">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>NO</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" id="Facilities" class="form-control" name="Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+
+                                            </div>
+                                        </div>
+
+                                      
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Details</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" id="Details" class="form-control" name="Description">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-actions">
+                                        <div class="text-center">
+                                            <button type="button" style="width:100px" id="btnsubmit"onclick="SaveAndUpdate(1)"class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                            
+                                            <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none;width:50%;margin-left:25%;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title"> Building Features</h4></td>
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div class="btn-group">
+                                            <button type="button" onclick="closetable(1)" class="btn btn-outline-primary"><i class="ft-edit"></i> Add New</button>
+                                            <button type="button" class="btn btn-outline-primary"><i class="ft-edit"></i> Export</button>
+                                            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">Excel</a>
+                                                <a class="dropdown-item" href="#">PDF</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Print</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-content collapse show" style="overflow:auto;">
+                        <div class="card-body card-dashboard">
+                            <table id="tblFeatures_Building" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none"><input type="text" value="0" id="FeaturesModelId" /></div>
+
+
+
+
+<script> 
+
+    
+
+    function SaveAndUpdate(Flag) { 
+        if ($.trim($('#Code').val()) == "") {
+            warningshow('Please Enter  Code', 'Code');
+        }
+        else if ($.trim($('#Facilities').val()) == "") {
+            warningshow('Please Enter Facilities', 'Facilities');
+        }
+        else
+        {
+            var data = {};   //array
+            data.FeaturesModelId = $('#FeaturesModelId').val();
+            data.Code = $('#Code').val();
+            data.Facilities = $('#Facilities').val();
+            data.Details = $('#Details').val();
+            data.DelFlag = Flag;
+            $.ajax({
+                type: "POST",
+                url: "../Realestate/FeaturesInsertandUpdate",
+                data: data,
+                success: function (result) {
+                    var status = result.oList[0].Status;
+                    Showalerts(status);
+                }
+            });
+        }
+    }
+
+    function formrefresh() {
+        $('#Code').val('');
+        $('#Facilities').val('');
+        $('#Details').val('');
+        $('#btndelete').hide();
+        $('#FeaturesModelId').val('0');
+        Defaultfocus();
+    }
+    function closetable(value) {
+        $('#Entry').show();
+        $('#listing').hide();
+        if (value == 1)
+            formrefresh();
+    }
+
+    function ShowBuildingFeatures(result) {        
+        disable_datatable('tblFeatures_Building');
+        $('#Entry').hide();
+        $('#listing').show();
+        var responseText = "<thead><tr><th width=15px>Slno</th><th>Series</th><th>No</th><th>Details</th><th width=15px>Edit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td>' + slno + '</td><td>' + result[i].Code + '</td><td>' + result[i].Facilities + '</td><td>' + result[i].Details + '</td><td align=center><a onclick="GetRows(' + result[i].FeaturesModelId + ')">' + Editbutton + '</a></td></tr>';
+        }
+        $('#tblFeatures_Building').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>Series</th><th>No</th><th>Details</th><th>Edit</th></tr></tfoot>');
+        datatableWithsearch('tblFeatures_Building');
+    }
+    function ShowFeaturesGet(result) {
+        for (var i = 0; i < result.length; i++) {
+            $('#Code').val(result[i].Code);
+            $('#Facilities').val(result[i].Facilities);
+            $('#Details').val(result[i].Details);
+            $('#Code').focus();
+        }
+        $('#Entry').show();
+        $('#listing').hide();
+        $('#btndelete').show();
+    }
+
+    function GetRows(FeaturesModelId) {
+        $('#FeaturesModelId').val(FeaturesModelId)
+        var data = {};
+        data.FeaturesModelId = FeaturesModelId;
+        $.ajax({
+            type: "POST",
+            url: "../Realestate/FeaturesGetandGets",
+            data: data,
+            success: function (result) {
+                if (FeaturesModelId == 0)
+                    ShowBuildingFeatures(result.oList);
+                else
+                    ShowFeaturesGet(result.oList);
+            }
+        });
+    }
+
+
+
+    function Defaultfocus() {
+        $('#Code').focus();
+    }
+
+    Defaultfocus();
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+

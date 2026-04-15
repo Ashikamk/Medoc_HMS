@@ -1,0 +1,1503 @@
+﻿
+@{
+    ViewBag.Title = "IPStatement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+<script type="text/javascript" src="~/ProjectScript/IPStatement.js"></script>
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1 !important;
+    }
+
+    img {
+        max-height: 200px;
+        max-width: 200px;
+    }
+
+    #customView,#customView_1 {
+        border: 1px solid #CCD6E6;
+    }
+
+    .GridBRow {
+        border: 1px solid #9faec3;
+    }
+
+    .TotalBill > .GridBRow {
+        background: #009da0;
+        color: white;
+        font-weight: bold;
+    }
+
+    .Total > .GridBRow {
+        background: #cfd8dc;
+        color: black;
+        font-weight: bold;
+    }
+
+    .Header > .GridBRow {
+        background: #80ced0;
+        color: black;
+        font-weight: bold;
+    }
+
+    .GridTextBox {
+        border: none;
+        height: 30px;
+        text-align: right;
+         background-color: white !important;
+    }
+
+    .GridTextBoxTotal {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: #cfd8dc !important;
+        color: black;
+        font-weight: bold;
+    }
+
+    .GridTextBoxTotalBill {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: #009da0 !important;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="myData" data-x="M355" />
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div style="display:none">
+    <table width="100%" class="dataTableVEM" id="tblprint"></table>
+</div>
+
+<section id="vertical-tabs">
+
+
+    <div class="row match-height">
+
+        <div class="col-xl-4 col-lg-12">
+            <div class="card" style="height: 252px;">
+                <div class="card-header pb-0" style="border-bottom:1px solid #e6e6e6;">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h4 class="card-title" style="font-weight:bold;">IP Statement</h4>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-primary" onclick="printselected()"><i class="fa fa-print"></i></button>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="pl-4 pr-2">
+                            <div class="row mb-1 mt-2">
+
+                                <label class="col-md-4 label-control pl-1">Reg#/IP#</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="RegNo" class="form-control denull" placeholder="Search Patient" />
+                                    <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="SIP_Number" class="form-control denull" disabled style="background-color:white;" />
+                                    <input type="hidden" id="IP_Number" class="form-control denull" />
+                                    <input type="hidden" id="IP_Year" class="form-control denull" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+
+                                <label class="col-md-4 label-control pl-1">Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="PName" class="form-control denull" disabled style="background-color:white;" />
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-1" style="display:none;">
+
+                                <label class="col-md-4 label-control pl-1">OPVisit#</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="OPVisitId" class="form-control denull" disabled style="background-color:white;" />
+
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+
+                                <label class="col-md-4 label-control pl-1">Admitted Date</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="AdmittedDate" class="form-control denull" disabled style="background-color:white;" />
+
+                                </div>
+                            </div>
+                           
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-12">
+            <div class="card" style="height: 252px;">
+
+                <div class="card-content">
+                    <div class="card-body pt-3">
+                        <div class="row">
+                            <div class="col-md-7" style="">
+
+                                <div class="px-3">
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">DOB/Age</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatDOB" class="label-control detextnull"></label>
+
+                                            <label id="PatAge" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Gender/Blood Group</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatGender" class="label-control detextnull"></label>
+
+                                            <label id="PatBloodGrp" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Contat</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatNumber" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Aadhar No</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatAadhar" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Address</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatAdd1" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label class="col-md-5 "></label>
+                                        <div class="col-md-7">
+                                            <label id="PatAdd2" class="label-control detextnull"></label>
+                                            <label id="PatAdd3" class="label-control detextnull m-0"></label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-5 p-0">
+                                <div class="row mb-2">
+                                    <div class="m-0 col-md-12">
+                                        <div class="text-center p-0" style="">
+                                            <img id="myImg" src="/app-assets/img/portrait/medium/avatar-m-100.jpg" alt="Gini" class="img-thumbnail  gray" onerror="this.onerror = null; this.src = '../app-assets/img/portrait/medium/avatar-m-100.jpg';">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script>
+
+
+
+
+
+    function printselected() {
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+        //myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% >');
+        myWindow.document.write('<tr ><td width=10% align=left >MR No#</td><td colspan=4 align = left width = 50 %> ' + $('#RegNo').val() + '</td > <td align=left width=5%> IP# </td > <td colspn=2 width = 15 % >: ' + $('#SIP_Number').val() + '</td ></tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient</td><td colspan=4 align=left width=50%>' + $('#PName').val() + '</td><td align=left width=5%>Age/Sex</td><td colspn=2 width=15% >:' + $('#PatAge').text() + '/' + $('#PatGender').text() + '</td></tr>');
+        myWindow.document.write('<tr><td align=left width=5%>Print Date </td><td colspn=2 width=15% >' + $('#LayouEOD').text() + '</td><td colspan=3></td></tr>');
+        myWindow.document.write('</table>');
+
+        var Rowcount = 7    
+
+        myWindow.document.write('<hr>');
+        if ($('#tbl_IPGriddetailsmedicine tr').length>1) {
+
+            var HeaderRow = '';
+            myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%><tr><td style="font-family:tahoma;">PHARMACY BILL</td></tr></table>');
+
+
+            myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>   <td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Bill No</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td>  <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td> <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+            var PTotal = 0;
+            for (var i = 1; i <= PRno; i++) {
+                var Id = i;
+                Rowcount += 1;
+
+                if ($('#Pmedicine' + Id).text() == 'BILL TOTAL') {
+                    myWindow.document.write('<tr><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;">' + $('#PBillDate_' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;">' + $('#PBillNo_' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;"  colspan=5></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=center>' + $('#PQty' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right>' + $('#PLrate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right>' + $('#PAmount' + Id).text() + '</td></tr>');
+
+                }
+                else {
+                    if ($('#PBillDate_' + Id).text() != '') {
+                        myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#PBillDate_' + Id).text() + '</td><td style=font-family:tahoma;font-size:11px>' + $('#PBillNo_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#Pmedicine' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#PQty' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PLrate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PAmount' + Id).text() + '</td></tr>');
+                        PTotal = PTotal + parseFloat($('#PAmount' + Id).text() || 0)
+                    }
+                }
+
+            }
+            myWindow.document.write('<table  width=100%><tr><td></td><td style="font-weight: bold;font-size: 12px;font-family:tahoma;" align=right>PHARMA TOTAL  :</td><td style="font-weight: bold;font-size: 14px;border-top:0px solid black;font-weight: bold;font-size: 12px;font-family:tahoma;" align=right >' + parseFloat(Pharmatotal).toFixed(Decimal) + '</td></tr></table>');
+        }
+
+        if ($('#customViewproc tr').length>1) {
+            myWindow.document.write('<hr><br><table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%><tr><td style="font-family:tahoma;">PROCEDURE/GENERAL BILL</td></tr></table>');
+
+            myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>   <td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Bill No</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+            var LabTotal = 0;
+            for (var i = 1; i <= $('#customViewproc tr').length; i++) {
+                var Id = i;
+
+               
+                if ($('#L1BillDate_' + Id).text() != '') {
+
+                    Rowcount += 1;
+                    myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#L1BillDate_' + Id).text() + '</td><td style=font-family:tahoma;font-size:11px>' + $('#L1BillNo_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#L1test' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#L1rate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#L1Amount' + Id).text() + '</td></tr>');
+                    LabTotal = LabTotal + parseFloat($('#L1Amount' + Id).text() || 0)
+                }
+                else {
+                    myWindow.document.write('<tr><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;">' + $('#L1BillDate_' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;"  colspan=5></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=center></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right>' + $('#L1Amount' + Id).text() + '</td></tr>');
+
+                }
+                
+
+            }
+            myWindow.document.write('</table><table  width=100%>');
+            myWindow.document.write('<tr><td></td><td style="font-weight: bold;font-family:tahoma;font-size: 12px;" align=right>PROCEDURE/GENERAL BILL TOTAL Total  :</td><td style="font-weight: bold;font-size: 14px;border-top:1px solid black" align=right >' + parseFloat(LabTotal).toFixed(Decimal) + '</td></tr></table>');
+        }
+
+
+        if ($('#tbl_IPGriddetailstest tr').length>1) {
+
+            myWindow.document.write('<hr><br><table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%><tr><td style="font-family:tahoma;">LAB BILL</td></tr></table>');
+
+            myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>   <td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Bill No</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+
+            var LabTotal = 0;
+            for (var i = 1; i <= Rno; i++) {
+                var Id = i;
+                if ($('#LBillDate_' + Id).text() != '') {
+
+                    Rowcount += 1;
+                    myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#LBillDate_' + Id).text() + '</td><td style=font-family:tahoma;font-size:11px>' + $('#LBillNo_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#Ltest' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#Lrate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#LAmount' + Id).text() + '</td></tr>');
+                    LabTotal = LabTotal + parseFloat($('#LAmount' + Id).text() || 0)
+                }
+
+            }
+
+            myWindow.document.write('<table width=100%><tr><td>.</td><td style="font-weight: bold;font-size: 12px;font-family:tahoma;" align=right>LAB BILL TOTAL  :</td><td style="font-weight: bold;font-size: 14px;border-top:1px solid black" align=right >' + parseFloat(LabTotal).toFixed(Decimal) + '</td></tr></table>');
+
+        }
+
+
+
+        if ($('#tbl_IPGriddetails tr').length>1) {
+
+            myWindow.document.write('<hr><br><table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%><tr><td style="font-family:tahoma;">OTHER  BILL</td></tr></table>');
+            myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+            
+            for (var i = 1; i <= $('#tbl_IPGriddetails tr').length; i++) {
+                 var Id = i;
+
+                 Rowcount += 1;
+                 myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#bd' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#pr' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#qt' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#rt' + Id).text() + '</td><td align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + $('#at' + Id).text() + '</td></tr>');
+
+
+             }
+           
+             myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
+             myWindow.document.write('<tr><td>This is a computer generated Bill.</td><td style="font-weight: bold;font-size: 12px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + parseFloat($('#at' + Rowlen).text()).toFixed(Decimal) + '</td></tr>');
+       
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        myWindow.print();
+        myWindow.close();
+
+    }
+
+    function printgeneraldetilsbill() {
+
+
+        Rowlen = R1no
+
+        var TotPQty = 0; var Rowcount = 7;
+        var MaxCnt = 20;
+
+
+        var AmountinWords = ''// WordwithDecimal($('#GrandTotal').text());
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        var Trnvalue = '';
+        var Trnvalue = '';
+
+
+
+        var SNo = '';
+
+        var Gen = ""
+        if ($('#Gender').val() == 1) {
+            Gen = 'M'
+        }
+        else {
+            Gen = 'F'
+        }
+        var Age = '';
+        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+
+
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+
+
+        //myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% >');
+        //myWindow.document.write('<tr><td width=10 % align=left >Bill#</td ><td colspan=4 align = left width = 60%> ' + SNo + '/' + $('#PayType option:selected').text() + '</td > <td width=10%> Date</td > <td colspn=2 width = 20 % >: ' + $('#BillDate').val() + '</td >   <td  rowspan=4>' + (powerdby.outerHTML) + '</td> </tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >MR No#</td><td colspan=4 align = left width = 50 %> ' + $('#RegNo').val() + '</td > <td align=left width=5%> IP# </td > <td colspn=2 width = 15 % >: ' + $('#SIP_Number').val() + '</td ></tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient</td><td colspan=4 align=left width=50%>' + $('#PName').val() + '</td><td align=left width=5%>Age/Sex</td><td colspn=2 width=15% >:' + $('#PatAge').text() + '/' + $('#PatGender').text() + '</td></tr>');
+        myWindow.document.write('<tr><td align=left width=5%>Print Date </td><td colspn=2 width=15% >' + $('#LayouEOD').text() + '</td><td colspan=3>TYPE:GENERAL/PROCEDURE BILL DETAILS</td></tr>');
+
+        myWindow.document.write('</table>');
+
+
+
+
+
+        var HeaderRow = '';
+
+        myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>   <td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Bill No</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td> <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+        console.log(Rowlen)
+        var LabTotal = 0;
+        for (var i = 1; i <= $('#customViewproc tr').length; i++) {
+            var Id = i;
+            if ($('#L1BillDate_' + Id).text() != '') {
+
+                Rowcount += 1;
+                myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#L1BillDate_' + Id).text() + '</td><td style=font-family:tahoma;font-size:11px>' + $('#L1BillNo_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#L1test' + Id).text() + '</td>  <td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#L1QTYY' + Id).text() + '</td>    <td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#L1rate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#L1Amount' + Id).text() + '</td></tr>');
+                LabTotal = LabTotal + parseFloat($('#L1Amount' + Id).text() || 0)
+            }
+            else {
+                myWindow.document.write('<tr><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;">' + $('#L1BillDate_' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;"  colspan=5></td>  <td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=center></td>   <td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=center></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right>' + $('#L1Amount' + Id).text() + '</td></tr>');
+
+            }
+
+        }
+
+
+
+
+        for (var a = 1; a <= (9 - Rowlen); a++) {
+            myWindow.document.write('<tr><td>&#160;</td></tr>');
+        }
+        myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
+
+
+        myWindow.document.write('<tr><td>This is a computer generated Bill.</td><td style="font-weight: bold;font-size: 12px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + parseFloat(LabTotal).toFixed(Decimal) + '</td></tr>');
+        //myWindow.document.write('<tr><td>.</td></tr></table>');
+
+        myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:10px;font-weight: bold;" width=100%><tr><td align=center>24x7 Emergency,Laboratory,X-RAY/ECG,ECHO,TMT,Ultrasound Scanning</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+        myWindow.document.write('<table><tr ><td style="font-size:12;font-family: tahoma;" colspan=15">Prepared By :' + $('#UserDetsss').text() + ' - ' + (new Date().toLocaleString()).substring(10, 20) + '<td></tr></table>');
+
+
+        myWindow.print();
+        myWindow.close();
+
+
+    }
+
+    
+
+    function printdetilsbillconsole()             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
+    {
+
+        Rowlen = RW
+
+        var TotPQty = 0; var Rowcount = 7;
+        var MaxCnt = 20;
+
+
+        var AmountinWords = ''// WordwithDecimal($('#GrandTotal').text());
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        var Trnvalue = '';
+        var Trnvalue = '';
+
+
+
+        var SNo = '';
+
+        var Gen = ""
+        if ($('#Gender').val() == 1) {
+            Gen = 'M'
+        }
+        else {
+            Gen = 'F'
+        }
+        var Age = '';
+        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+
+
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+
+        //  myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% >');
+        //myWindow.document.write('<tr><td width=10 % align=left >Bill#</td ><td colspan=4 align = left width = 60%> ' + SNo + '/' + $('#PayType option:selected').text() + '</td > <td width=10%> Date</td > <td colspn=2 width = 20 % >: ' + $('#BillDate').val() + '</td >   <td  rowspan=4>' + (powerdby.outerHTML) + '</td> </tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >MR No#</td><td colspan=4 align = left width = 50 %> ' + $('#RegNo').val() + '</td > <td align=left width=5%> IP# </td > <td colspn=2 width = 15 % >: ' + $('#SIP_Number').val() + '</td ></tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient</td><td colspan=4 align=left width=50%>' + $('#PName').val() + '</td><td align=left width=5%>Age/Sex</td><td colspn=2 width=15% >:' + $('#PatAge').text() + '/' + $('#PatGender').text() + '</td></tr>');
+        myWindow.document.write('<tr><td align=left width=5%>DOA </td><td colspn=2 width=15% >' + $('#AdmittedDate').val() + '</td><td colspan=3>TYPE:ESTIMATE</td></tr>');
+
+        myWindow.document.write('</table>');
+
+        var abcrwcount = $('#tbl_IPGrid tr').length;
+
+
+
+        var HeaderRow = '';
+
+        myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=40%>Bill No</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Inv No</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+        console.log(Rowlen)
+        for (var i = 1; i <= abcrwcount; i++) {
+            var Id = i;
+            //debugger;
+
+            if ($('#BillNo_' + Id).text() == 'LAB' || $('#BillNo_' + Id).text() == 'IPBILL' || $('#BillNo_' + Id).text() == 'PROCEDURE' || $('#BillNo_' + Id).text() == 'PHARMA BILL') {
+                myWindow.document.write('<tr ><td align=center style="padding-left:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1px solid black"  colspan=8>' + $('#BillNo_' + Id).text() + '</td> </tr>');
+            }
+            else if ($('#BillNo_' + Id).text() == 'TOTAL' || $('#BillNo_' + Id).text() == 'TOTAL BILL AMOUNT')
+            {
+                myWindow.document.write('<tr ><td style="padding-left:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1px solid black;border-top:1px solid black"></td><td style="padding-left:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1px solid black;border-top:1px solid black"  colspan=5></td><td align=right style="padding-left:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1px solid black;border-top:1px solid black">' + $('#BillNo_' + Id).text() + '</td><td align=right style="padding-left:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1px solid black;border-top:1px solid black">' + $('#Amount_' + Id).val() + '</td></tr>');
+            }
+            else
+            {
+             myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + Id + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#BillDate_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#BillNo_' + Id).text() + '</td><td align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + $('#Amount_' + Id).val() + '</td></tr>');
+            }
+
+        }
+
+
+
+
+        for (var a = 1; a <= (9 - Rowlen); a++) {
+           // myWindow.document.write('<tr><td>&#160;</td></tr>');
+        }
+        myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
+
+
+
+
+       // myWindow.document.write('<tr><td>This is a computer generated Bill.</td><td style="font-weight: bold;font-size: 12px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + parseFloat($('#at' + Rowlen).text()).toFixed(Decimal) + '</td></tr>');
+        //myWindow.document.write('<tr><td>.</td></tr></table>');
+
+
+
+        myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:10px;font-weight: bold;" width=100%><tr><td align=center>24x7 Emergency,Laboratory,X-RAY/ECG,ECHO,TMT,Ultrasound Scanning</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+        myWindow.document.write('<table><tr ><td style="font-size:12;font-family: tahoma;" colspan=15">Prepared By :' + $('#UserDetsss').text() + ' - ' + (new Date().toLocaleString()).substring(10, 20) + '<td></tr></table>');
+
+
+
+
+
+
+        myWindow.print();
+        myWindow.close();
+    }
+
+    
+
+
+
+    function printdetilsbill()             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
+    {
+
+        Rowlen = RW
+
+        var TotPQty = 0; var Rowcount = 7;
+        var MaxCnt=20;
+      
+
+        var AmountinWords =''// WordwithDecimal($('#GrandTotal').text());
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        var Trnvalue = '';
+        var Trnvalue = '';
+       
+
+      
+        var SNo = '';
+       
+        var Gen = ""
+        if ($('#Gender').val() == 1) {
+            Gen = 'M'
+        }
+        else {
+            Gen = 'F'
+        }
+        var Age = '';
+        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+
+        
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+       
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+       
+          //  myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+       
+         myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% >');
+       //myWindow.document.write('<tr><td width=10 % align=left >Bill#</td ><td colspan=4 align = left width = 60%> ' + SNo + '/' + $('#PayType option:selected').text() + '</td > <td width=10%> Date</td > <td colspn=2 width = 20 % >: ' + $('#BillDate').val() + '</td >   <td  rowspan=4>' + (powerdby.outerHTML) + '</td> </tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >MR No#</td><td colspan=4 align = left width = 50 %> ' + $('#RegNo').val() + '</td > <td align=left width=5%> IP# </td > <td colspn=2 width = 15 % >: ' + $('#SIP_Number').val() + '</td ></tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient</td><td colspan=4 align=left width=50%>' + $('#PName').val() + '</td><td align=left width=5%>Age/Sex</td><td colspn=2 width=15% >:' + $('#PatAge').text()+'/' + $('#PatGender').text() + '</td></tr>');
+        myWindow.document.write('<tr><td align=left width=5%>DOA </td><td colspn=2 width=15% >' + $('#AdmittedDate').val() + '</td><td colspan=3>TYPE:ESTIMATE</td></tr>');
+       
+            myWindow.document.write('</table>');
+
+       
+
+
+
+        var HeaderRow = '';
+        
+        myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+        console.log(Rowlen)
+        for (var i = 1; i <= Rowlen-1; i++) {
+            var Id = i;
+          
+            Rowcount += 1;
+            myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#bd' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#pr' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#qt' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#rt' + Id).text() + '</td><td align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + $('#at' + Id).text() + '</td></tr>');
+
+            
+        }
+
+
+
+
+        for (var a = 1; a <= (9 - Rowlen); a++) {
+            myWindow.document.write('<tr><td>&#160;</td></tr>');
+        }
+        myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
+
+       
+
+
+        myWindow.document.write('<tr><td>This is a computer generated Bill.</td><td style="font-weight: bold;font-size: 12px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + parseFloat($('#at' + Rowlen).text()).toFixed(Decimal) + '</td></tr>');
+        //myWindow.document.write('<tr><td>.</td></tr></table>');
+
+
+
+        myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:10px;font-weight: bold;" width=100%><tr><td align=center>24x7 Emergency,Laboratory,X-RAY/ECG,ECHO,TMT,Ultrasound Scanning</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+        myWindow.document.write('<table><tr ><td style="font-size:12;font-family: tahoma;" colspan=15">Prepared By :' + $('#UserDetsss').text() + ' - ' + (new Date().toLocaleString()).substring(10, 20) + '<td></tr></table>');
+
+
+
+
+
+
+        myWindow.print();
+        myWindow.close();
+    }
+    
+
+
+    function printdetilslabbill() {
+
+
+        Rowlen = RW
+
+        var TotPQty = 0; var Rowcount = 7;
+        var MaxCnt = 20;
+
+
+        var AmountinWords = ''// WordwithDecimal($('#GrandTotal').text());
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        var Trnvalue = '';
+        var Trnvalue = '';
+
+
+
+        var SNo = '';
+
+        var Gen = ""
+        if ($('#Gender').val() == 1) {
+            Gen = 'M'
+        }
+        else {
+            Gen = 'F'
+        }
+        var Age = '';
+        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+
+
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+
+       // myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% >');
+        //myWindow.document.write('<tr><td width=10 % align=left >Bill#</td ><td colspan=4 align = left width = 60%> ' + SNo + '/' + $('#PayType option:selected').text() + '</td > <td width=10%> Date</td > <td colspn=2 width = 20 % >: ' + $('#BillDate').val() + '</td >   <td  rowspan=4>' + (powerdby.outerHTML) + '</td> </tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >MR No#</td><td colspan=4 align = left width = 50 %> ' + $('#RegNo').val() + '</td > <td align=left width=5%> IP# </td > <td colspn=2 width = 15 % >: ' + $('#SIP_Number').val() + '</td ></tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient</td><td colspan=4 align=left width=50%>' + $('#PName').val() + '</td><td align=left width=5%>Age/Sex</td><td colspn=2 width=15% >:' + $('#PatAge').text() + '/' + $('#PatGender').text() + '</td></tr>');
+        myWindow.document.write('<tr><td align=left width=5%>Print Date </td><td colspn=2 width=15% >' + $('#LayouEOD').text() + '</td><td colspan=3>TYPE:LAB BILL DETAILS</td></tr>');
+
+        myWindow.document.write('</table>');
+
+
+
+
+
+        var HeaderRow = '';
+
+        myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>   <td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Bill No</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+        console.log(Rowlen)
+        var LabTotal = 0;
+        for (var i = 1; i <= Rno; i++) {
+            var Id = i;
+            if ($('#LBillDate_' + Id).text() != '') {             
+
+                Rowcount += 1;
+                myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#LBillDate_' + Id).text() + '</td><td style=font-family:tahoma;font-size:11px>' + $('#LBillNo_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#Ltest' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#Lrate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#LAmount' + Id).text() + '</td></tr>');
+                LabTotal = LabTotal + parseFloat($('#LAmount' + Id).text()||0)
+            }
+
+        }
+
+
+
+
+        for (var a = 1; a <= (9 - Rowlen); a++) {
+            myWindow.document.write('<tr><td>&#160;</td></tr>');
+        }
+        myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
+
+
+        myWindow.document.write('<tr><td>This is a computer generated Bill.</td><td style="font-weight: bold;font-size: 12px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + parseFloat(LabTotal).toFixed(Decimal) + '</td></tr>');
+        //myWindow.document.write('<tr><td>.</td></tr></table>');
+
+        myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:10px;font-weight: bold;" width=100%><tr><td align=center>24x7 Emergency,Laboratory,X-RAY/ECG,ECHO,TMT,Ultrasound Scanning</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+        myWindow.document.write('<table><tr ><td style="font-size:12;font-family: tahoma;" colspan=15">Prepared By :' + $('#UserDetsss').text() + ' - ' + (new Date().toLocaleString()).substring(10, 20) + '<td></tr></table>');
+
+
+        myWindow.print();
+        myWindow.close();
+
+
+    }
+
+
+    function PrintthisReportDOS() {
+        var titles = [];
+        var data = [];
+
+        $('.dataTableVEM th').each(function () {
+            titles.push($(this).text());
+        });
+        $('.dataTableVEM tr').each(function () {
+            data.push($(this).text());
+        });
+        var CSVString = prepCSVRow(titles, titles.length, '');
+        CSVString = prepCSVRow(data, titles.length, CSVString);
+        //console.log(CSVString)
+        var downloadLink = document.createElement("a");
+        var blob = new Blob(["\ufeff", CSVString]);
+        var url = URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = "printbill.txt";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+    }
+
+
+    function prepCSVRow(arr, columnCount, initial) {
+        var row = ''; // this will hold data
+        var delimeter = ''; // data slice separator, in excel it's `;`, in usual CSv it's `,`
+        var newLine = '\r\n'; // newline separator for CSV row
+        function splitArray(_arr, _count) {
+            var splitted = [];
+            var result = [];
+            _arr.forEach(function (item, idx) {
+                if ((idx + 1) % _count === 0) {
+                    splitted.push(item);
+                    result.push(splitted);
+                    splitted = [];
+                } else {
+                    splitted.push(item);
+                }
+            });
+            return result;
+        }
+        var plainArr = splitArray(arr, columnCount);
+        plainArr.forEach(function (arrItem) {
+            arrItem.forEach(function (item, idx) {
+                row += item + ((idx + 1) === arrItem.length ? '' : delimeter);
+            });
+            row += newLine;
+        });
+        return initial + row;
+    }
+
+
+
+    function printdetilsDOSbill() {
+        $('#tblprint').html('');
+        var printline = ""; var pref = '                                                   ';
+        var prodname;
+        var mrnum = $("#RegNo").val();
+        var ipnum = $("#SIP_Number").val();
+        var doa = $("#AdmittedDate").val();
+        var patient = $("#PName").val();
+        var gen = $("#PatGender").text();
+        var age = $("#PatAge").text();
+        var gensex = gen + age
+        var Line = "<tr><th></th></tr>";
+        Line += "<tr><td>                  " + $.trim(CompanySettingsArray.CompanyName) + "</td></tr>";
+        Line += "<tr><td>   " + $.trim(CompanySettingsArray.Address) + "</td></tr>";
+        Line += "<tr><td>                  " + $.trim(CompanySettingsArray.PhoneNo) + "</td></tr>";
+        Line += '<tr><td>-----------------------------------------------------------</td></tr>'   //bold on
+        Line += "<tr><td>MR No  :" + mrnum + "         ESTIMATE         IP#   :" + ipnum + "     </td></tr>";
+        Line += "<tr><td>Patient:" + patient + "                                                             </td></tr>";
+        Line += "<tr><td>DOA    :" + doa + "             Sex/Age:" + gensex + " </td></tr>";
+        Line += '<tr><td>-----------------------------------------------------------</td></tr>'   //bold on
+        Line += '<tr><td>SL#  DATE        DESCRIPTION          QTY   RATE   AMOUNT  </td></tr>'   //bold on
+        Line += '<tr><td>-----------------------------------------------------------</td></tr>'   //bold on
+        var Space1 = '                ';
+        var Space = '                          ';
+        var Leftalign = '  ';
+        var Rowlen = 1;
+
+        for (var i = 1; i <= Rowlen; i++) {
+            var Id = parseInt(i);
+            var Date = $.trim($('#bd' + Id).text());
+            var Desc = $.trim($('#pr' + Id).text());
+            var Qty = $.trim($('#qt' + Id).text());
+            var Rate = $.trim($('#rt' + Id).text());
+            var Amount = $.trim($('#at' + Id).text());
+
+            Line += '<tr><td>' + '' + i + '   ' + Date + '  ' + Desc.substring(0, 42) + "        " + Qty.substring(0, 42) + "   " + Rate.substring(0, 42) + "  " + Amount.substring(0, 42) + '</td></tr>';
+
+
+
+        }
+        Line += '<tr height=250px;><td></td><tr>'
+        Line += '<tr><td>-----------------------------------------------------------</td></tr>'   //bold on
+
+        Line += '<tr><td> Net Amount :' + Amount + '</td><tr>'
+        Line += '<tr><td>-----------------------------------------------------------</td></tr>'   //bold on
+
+        //Line += '<tr><td>24x7 Emergency,Laboratory,X-RAY/ECG,ECHO,TMT,Scanning </td><tr>'
+        //Line += '<tr><td>     FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td><tr>'
+        $('#tblprint').append(Line)
+        PrintthisReportDOS();
+    }
+
+
+
+    function printdetilsDOSpharmabill() {
+
+        alert('')
+
+    }
+
+
+
+
+    function printdetilspharmabill() {
+
+
+        Rowlen = RW
+
+        var TotPQty = 0; var Rowcount = 7;
+        var MaxCnt = 20;
+
+
+        var AmountinWords = ''// WordwithDecimal($('#GrandTotal').text());
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        var Trnvalue = '';
+        var Trnvalue = '';
+
+
+
+        var SNo = '';
+
+        var Gen = ""
+        if ($('#Gender').val() == 1) {
+            Gen = 'M'
+        }
+        else {
+            Gen = 'F'
+        }
+        var Age = '';
+        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+
+
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+
+        //myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% >');
+        //myWindow.document.write('<tr><td width=10 % align=left >Bill#</td ><td colspan=4 align = left width = 60%> ' + SNo + '/' + $('#PayType option:selected').text() + '</td > <td width=10%> Date</td > <td colspn=2 width = 20 % >: ' + $('#BillDate').val() + '</td >   <td  rowspan=4>' + (powerdby.outerHTML) + '</td> </tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >MR No#</td><td colspan=4 align = left width = 50 %> ' + $('#RegNo').val() + '</td > <td align=left width=5%> IP# </td > <td colspn=2 width = 15 % >: ' + $('#SIP_Number').val() + '</td ></tr > ');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient</td><td colspan=4 align=left width=50%>' + $('#PName').val() + '</td><td align=left width=5%>Age/Sex</td><td colspn=2 width=15% >:' + $('#PatAge').text() + '/' + $('#PatGender').text() + '</td></tr>');
+        myWindow.document.write('<tr><td align=left width=5%>Print Date </td><td colspn=2 width=15% >' + $('#LayouEOD').text() + '</td><td colspan=3>TYPE:MEDICINE BILL DETAILS</td></tr>');
+
+        myWindow.document.write('</table>');
+
+
+        var HeaderRow = '';
+        myWindow.document.write('<table style=margin-top:0px; border-collapse: collapse;font-family:tahoma;  width=100%>');
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>   <td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Bill No</td>   <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td>  <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td> <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+        console.log(Rowlen)
+        var LabTotal = 0;
+        for (var i = 1; i <= PRno; i++) {
+            var Id = i;
+            Rowcount += 1;
+
+            if ($('#Pmedicine' + Id).text() == 'BILL TOTAL') {
+                myWindow.document.write('<tr><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;">' + $('#PBillDate_' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;">' + $('#PBillNo_' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;"  colspan=5></td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=center>' + $('#PQty' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right>' + $('#PLrate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px;font-weight: bold;border-bottom:1pt solid black;border-top:1pt solid black;" align=right>' + $('#PAmount' + Id).text() + '</td></tr>');
+
+            }
+            else {
+            myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#PBillDate_' + Id).text() + '</td><td style=font-family:tahoma;font-size:11px>' + $('#PBillNo_' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#Pmedicine' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#PQty' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PLrate' + Id).text() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PAmount' + Id).text() + '</td></tr>');
+            LabTotal = LabTotal + parseFloat($('#LAmount' + Id).text() || 0)
+           }
+
+        }
+
+
+
+
+        for (var a = 1; a <= (9 - Rowlen); a++) {
+            myWindow.document.write('<tr><td>&#160;</td></tr>');
+        }
+        myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
+
+
+        myWindow.document.write('<tr><td>This is a computer generated Bill.</td><td style="font-weight: bold;font-size: 12px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + parseFloat(Pharmatotal).toFixed(Decimal) + '</td></tr>');
+        //myWindow.document.write('<tr><td>.</td></tr></table>');
+
+        myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:10px;font-weight: bold;" width=100%><tr><td align=center>24x7 Emergency,Laboratory,X-RAY/ECG,ECHO,TMT,Ultrasound Scanning</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+        myWindow.document.write('<table><tr ><td style="font-size:12;font-family: tahoma;" colspan=15">Prepared By :' + $('#UserDetsss').text() + ' - ' + (new Date().toLocaleString()).substring(10, 20) + '<td></tr></table>');
+
+
+        myWindow.print();
+        myWindow.close();
+
+
+    }
+
+
+    
+</script>
+
+<div id="listing">
+    <section>
+        <div class="card m-0">
+            <div class="card-header">
+                <table width="80%">
+                    <tbody>
+                        <tr><td>&nbsp;</td></tr>
+                        <tr>
+                            <td width="60%">
+                                <label class="label-control">
+                                    BILL'S DETAILS(Consolidated)&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <div class="custom-control custom-checkbox" style="float:right;margin-top:-7px">
+                                        <input type="checkbox" class="custom-control-input" id="d1" autocomplete="off">
+                                        <label class="custom-control-label" for="d1"></label>
+                                    </div>
+                                </label>
+
+                            </td>
+                            <td align="right">
+                                <button class="btn btn-primary" onclick="printdetilsbillconsole()" id="" autocomplete="off"><i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="printdetilsDOSbillconsole()" id="">DOS-<i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" id="btnexceldetailbill" onclick="exceldetailsbillconsole()"><i class="fa fa-file-excel-o"></i></button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    @*<label class="label-control">BILL'S DETAILS(Consolidated)</label>*@
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative;width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:50px;">PayType</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:90px;">Credit</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:90px;">Debit</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddiv" class="" style="position: relative;height: auto; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGrid" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <table width="80%">
+                        <tr><td>&#160;</td></tr>
+                        <tr>
+                            <td width=60%>
+                                <label class="label-control">
+                                    Bill Details(Date wise)Service Bill&#160;&#160;&#160;&#160;
+                                    <div class="custom-control custom-checkbox" style="float:right;margin-top:-7px">
+                                        <input type="checkbox" class="custom-control-input" id="d1" autocomplete="off">
+                                        <label class="custom-control-label" for="d1"></label>
+                                    </div>
+                                </label>
+
+                            </td>
+                            <td align="right">
+                                <button class="btn btn-primary" onclick="printdetilsbill()" id=""><i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="printdetilsDOSbill()" id="">DOS-<i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" id="btnexceldetailbill" onclick="exceldetailsbill()"><i class="fa fa-file-excel-o"></i></button>
+                            </td>
+
+                        </tr>
+                    </table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative; height: auto; width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:230px;">Description</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Qty</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddiv" class="" style="position: relative; width:98%;">
+                                    <table class="jsgrid-table" id="tbl_IPGriddetails" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <table width="80%">
+                        <tr><td>&#160;</td></tr>
+                        <tr>
+                            <td width=60%>
+                                <label class="label-control">
+                                    GENERAL BILL/PROCEDURE BILL
+
+                                    &#160;&#160;&#160;&#160;
+                                    <div class="custom-control custom-checkbox" style="float:right;margin-top:-7px">
+                                        <input type="checkbox" class="custom-control-input" id="D2" onkeyup="CalcDiscountSplitTax()" autocomplete="off">
+                                        <label class="custom-control-label" for="D2"></label>
+                                    </div>
+                                </label>
+
+                                </label>
+                            </td>
+                            <td align="right">
+                                <button class="btn btn-primary" onclick="printgeneraldetilsbill()" id=""><i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="printDOSgeneraldetilsbill()" id="">DOS-<i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" id="btnexcelGenralbill"><i class="fa fa-file-excel-o"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customViewprocc" class="jsgrid" style="position: relative; height: auto; width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:45px;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:250px;"> Name</th>
+
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Qty</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddiv" class="" style="position: relative; width:99%;">
+                                    <table class="jsgrid-table" id="customViewproc" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <table width="80%">
+                        <tr><td>&#160;</td></tr>
+                        <tr>
+                            <td width=60%>
+                                <label class="label-control">
+                                    Lab Details(Test/Bill wise)
+                                    &#160;&#160;&#160;&#160;
+                                    <div class="custom-control custom-checkbox" style="float:right;margin-top:-7px">
+                                        <input type="checkbox" class="custom-control-input" id="D3" onkeyup="CalcDiscountSplitTax()" autocomplete="off">
+                                        <label class="custom-control-label" for="D3"></label>
+                                    </div>
+                                </label>
+
+                                </label>
+                            </td>
+                            <td align="right">
+                                <button class="btn btn-primary" onclick="printdetilslabbill()" id=""><i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="printdetilsDOSlabbill()" id="">DOS-<i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="excellabll()" id="btnexcellabbill"><i class="fa fa-file-excel-o"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative; width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:45px;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:250px;">Test Name</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddivtest" class="" style="position: relative; width:99%;">
+                                    <table class="jsgrid-table" id="tbl_IPGriddetailstest" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div class="row">
+
+                    <table width="80%">
+                        <tr><td>&#160;</td></tr>
+                        <tr>
+                            <td width=60%>
+                                <label class="label-control">
+                                    Pharmacy Details(Product/Bill wise)
+                                    &#160;&#160;&#160;&#160;
+                                    <div class="custom-control custom-checkbox" style="float:right;margin-top:-7px">
+                                        <input type="checkbox" class="custom-control-input" id="D5" onkeyup="CalcDiscountSplitTax()" autocomplete="off">
+                                        <label class="custom-control-label" for="D5"></label>
+                                    </div>
+                                </label>
+
+                                </label>
+                            </td>
+                            <td align="right">
+                                <button class="btn btn-primary" onclick="printdetilspharmabill()" id=""><i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="printdetilsDOSpharmabill()" id="">DOS-<i class="fa fa-print"></i></button>
+                                <button class="btn btn-primary" onclick="excelharmabill()" id="btnexcelpharmabill"><i class="fa fa-file-excel-o"></i></button>
+                            </td>
+
+                        </tr>
+                    </table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative;width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:45px;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:200px;">Medicine Name</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Batch</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Exp</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Qty</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddivtest" class="" style="position: relative; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGriddetailsmedicine" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <label class="label-control">Room Details</label>
+                            <div id="customView_1" class="jsgrid" style="position: relative; height: 210px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%;">Room</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px;">Rent</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:100px;">From Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:100px;">To Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px;">Days/Hrs</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px;">Total Rent</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="proddiv_1" class="" style="position: relative; overflow-x: hidden;overflow-y:scroll; height: 170px; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGrid_Room" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none">
+    <input id="GridLength" value="0" />
+    <input id="GridLengthRoom" value="0" />
+    
+</div>
+<script>
+    $("#RegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            formrefresh(0); 
+            var data = {};
+            data.PatientName = $("#RegNo").val();
+            data.Flag = 10;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../Revisit/HMS_IPPatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'GR3',
+                            label: item.OPSerName + ' - ' + item.OPNumber,
+                            label1: item.PatientName,
+                            label2: item.AadharNo,            //IP NUMBER
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            IpNo: item.AadharNo,
+                            IPYear: item.Status,
+                            AdmitDate: item.FromDate,
+                            AdmitTime: item.ToDate,
+                            headers: ["RegNo", "Patient", "IP No"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            $("#PatientId").val(ui.item.PatientId);
+            $("#IP_Year").val(ui.item.IPYear);
+            $("#IP_Number").val(ui.item.IpNo);
+            $("#PName").val(ui.item.PatientName);
+            $("#AdmittedDate").val(ui.item.AdmitDate + ' - ' + ui.item.AdmitTime);
+            $("#SIP_Number").val(ui.item.IPYear + '/' + ui.item.IpNo);
+            $("#OPVisitId").val(ui.item.OPNumber);
+
+            GetPatient(ui.item.PatientId);
+            GetIPDetails(ui.item.IpNo, ui.item.IPYear, ui.item.PatientName);
+            GetIPDetailsRoom(ui.item.IpNo, ui.item.IPYear, ui.item.PatientName);
+        },
+    });
+
+
+    if ("@Request.QueryString["from"]" == "SOPWorkSheet") {
+
+
+        var PatientId=sessionStorage.getItem("SOP_PI");
+        var IPNumber=sessionStorage.getItem("SOP_IP");
+        var IPYear=sessionStorage.getItem("SOP_IPY");
+        var PatientName=sessionStorage.getItem("SOP_PN");
+        var AdmittedDate=sessionStorage.getItem("SOP_AD");
+        var AdmittedTime=sessionStorage.getItem("SOP_AT");
+        var OPVisitId=sessionStorage.getItem("SOP_OV");
+        var OPSerName=sessionStorage.getItem("SOP_RS");
+        var OPNumber=sessionStorage.getItem("SOP_RN");
+
+
+        sessionStorage.removeItem("SOP_PI");
+        sessionStorage.removeItem("SOP_IP");
+        sessionStorage.removeItem("SOP_IPY");
+        sessionStorage.removeItem("SOP_PN");
+
+        sessionStorage.removeItem("SOP_AD");
+        sessionStorage.removeItem("SOP_AT");
+        sessionStorage.removeItem("SOP_OV");
+        sessionStorage.removeItem("SOP_RS");
+        sessionStorage.removeItem("SOP_RN");
+
+        if (PatientId != null) {
+
+            $("#RegNo").val(OPSerName + ' - ' + OPNumber);
+            $("#PatientId").val(PatientId);
+            $("#IP_Year").val(IPYear);
+            $("#IP_Number").val(IPNumber);
+            $("#PName").val(PatientName);
+            $("#AdmittedDate").val(AdmittedDate + ' - ' + AdmittedTime);
+            $("#SIP_Number").val(IPYear + '/' + IPNumber);
+            $("#OPVisitId").val(OPVisitId);
+
+            GetPatient(PatientId);
+            GetIPDetails(IPNumber, IPYear, PatientName);
+            GetIPDetailsRoom(IPNumber, IPYear, PatientName);
+        }
+
+    }
+
+
+
+</script>
+<script src="~/Scripts/ExcelExport/tableToExcel.js" type="text/javascript"></script>
+<script>
+
+
+    $(function () {
+
+        let Buttonproc = document.querySelector("#btnexcelGenralbill");
+        let Buttonlab = document.querySelector("#btnexcelpharmabill");
+        let buttonpharma = document.querySelector("#btnexcelpharmabill");
+        let ButtonFee = document.querySelector("#btnprint");
+
+        let AllBills = document.querySelector("#btnprint");
+
+
+        Buttonproc.addEventListener("click", e => {
+            //exportbilltotable()
+            filename = 'GeneralBill' + $('#RegNo').val() +'.xlsx'
+            let table = document.querySelector("#customViewproc");
+            TableToExcel.convert(table);
+        });
+
+
+        document.getElementById("btnexcelpharmabill").addEventListener("click", () => {
+            let table2excel = new Table2Excel();
+            table2excel.export(document.querySelector("#tbl_IPGriddetailsmedicine"));
+        });
+
+        //buttonpharma.addEventListener("click", e => {
+        //    //exportbilltotable()
+
+        //    debugger;
+        //    filename = 'PharmaBill' + $('#RegNo').val() + '.xlsx'
+        //    let table = document.querySelector("#tbl_IPGriddetailsmedicine");
+        //    TableToExcel.convert(table);
+        //});
+
+        AllBills.addEventListener("click", e => {
+            //exportbilltotable()
+            filename = 'IPBills' + $('#RegNo').val() + '.xlsx'
+            let table = document.querySelector("#tbl_IPGrid");
+            TableToExcel.convert(table);
+        });
+
+
+    });
+
+
+
+</script>

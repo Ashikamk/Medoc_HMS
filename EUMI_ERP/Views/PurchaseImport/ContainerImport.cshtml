@@ -1,0 +1,724 @@
+﻿
+@{
+    ViewBag.Title = "ContainerImport";
+}
+
+
+<script type="text/javascript" src="~/Scripts/Excelmport/xlsx.full.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Excelmport/excelimport.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    #fixed {
+        width: 100%;
+        position: fixed;
+        top: 0px;
+    }
+
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+
+    #OtherCostView {
+        border: 1px solid #CCD6E6;
+    }
+
+    #Cell1 {
+        width: 80%;
+    }
+
+    #Cell2 {
+        width: 20%;
+        text-align: right;
+    }
+
+    #panel1 {
+        display: none;
+    }
+
+    .modal-xl {
+        max-width: 90%;
+        margin-left: 7%;
+        margin-right: 3%;
+    }
+
+    .modal-llg {
+        max-width: 80%;
+        margin-left: 13%;
+        margin-right: 7%;
+    }
+
+    #costdisplay {
+        height: 100%;
+        margin-left: 0%;
+        color: white;
+        background-color: rgb(0, 157, 160);
+        margin-top: -3px;
+        width: 100%;
+    }
+</style>
+
+
+<script type="text/javascript">
+    var i; var a = "0.00"; var total = 0; var CopyFlag = 0; var InvoDate = ""; var JobId = 0; var x = 0;
+    function Upload() {
+        //Reference the FileUpload element.
+        var fileUpload = document.getElementById("fileUpload");
+
+        //Validate whether File is valid Excel file.
+        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
+        if (regex.test(fileUpload.value.toLowerCase())) {
+            if (typeof (FileReader) != "undefined") {
+                var reader = new FileReader();
+
+                //For Browsers other than IE.
+                if (reader.readAsBinaryString) {
+                    reader.onload = function (e) {
+                        ProcessExcel(e.target.result);
+                    };
+                    reader.readAsBinaryString(fileUpload.files[0]);
+                } else {
+                    //For IE Browser.
+                    reader.onload = function (e) {
+                        var data = "";
+                        var bytes = new Uint8Array(e.target.result);
+                        for (var i = 0; i < bytes.byteLength; i++) {
+                            data += String.fromCharCode(bytes[i]);
+                        }
+                        ProcessExcel(data);
+                    };
+                    reader.readAsArrayBuffer(fileUpload.files[0]);
+                }
+            } else {
+                alert("This browser does not support HTML5.");
+            }
+        } else {
+            alert("Please upload a valid Excel file.");
+        }
+    };
+    function ProcessExcel(data) {
+
+
+        
+
+        
+
+        //Read the Excel File data.
+        var workbook = XLSX.read(data, {
+            type: 'binary'
+        });
+
+        //Fetch the name of First Sheet.
+        var firstSheet = workbook.SheetNames[0];
+
+        //Read all rows from First Sheet into an JSON array.
+        var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+
+
+
+
+        $('#popupdiv').show();
+        $("#tblpurchaseinvoice tr").remove();
+        //Add the data rows from Excel file.
+        for (var i = 0; i < excelRows.length; i++) {
+
+            if (excelRows[i]["Date ofloading"] == undefined || excelRows[i]["Date ofloading"] == '')
+                var DOLformatted = '';
+                else
+                var DOLformatted = GetFormattedDate(excelRows[i]["Date ofloading"])
+
+            if (excelRows[i]["expectedarival date"] == undefined || excelRows[i]["expectedarival date"] == '')
+                var EADformatted = '';
+            else
+                var EADformatted = GetFormattedDate(excelRows[i]["expectedarival date"])
+
+            if (excelRows[i]["Date of release"] == undefined || excelRows[i]["Date of release"] == '')
+                var DORformatted = '';
+            else
+                var DORformatted = GetFormattedDate(excelRows[i]["Date of release"])
+
+            if (excelRows[i]["Containerarrivaldate"] == undefined || excelRows[i]["Containerarrivaldate"] == '')
+                var CADformatted = '';
+            else
+                var CADformatted = GetFormattedDate(excelRows[i]["Containerarrivaldate"])
+
+            //alert('final   ::: ' + DOLformatted)
+
+
+            if (excelRows[i]["Container Nr."] == undefined) { var ContainerNo = '' } else { var ContainerNo = excelRows[i]["Container Nr."] }
+            if (excelRows[i]["Booking number"] == undefined) { var BookingNo = '' } else { var BookingNo = excelRows[i]["Booking number"] }
+            if (excelRows[i]["Lines"] == undefined) { var Lines = '' } else { var Lines = excelRows[i]["Lines"] }
+            if (excelRows[i]["Size"] == undefined) { var Size = '' } else { var Size = excelRows[i]["Size"] }
+            if (excelRows[i]["Point of loading"] == undefined) { var POL = '' } else { var POL = excelRows[i]["Point of loading"] }
+            if (excelRows[i]["Port"] == undefined) { var Port = '' } else { var Port = excelRows[i]["Port"] }
+            //if (excelRows[i]["Date ofloading"] == undefined) { var DateOfLoading = '' } else { var DateOfLoading = excelRows[i]["Date ofloading"] }
+            //if (excelRows[i]["expectedarival date"] == undefined) { var ExArrivalDate = '' } else { var ExArrivalDate = excelRows[i]["expectedarival date"] }
+            //if (excelRows[i]["Date of release"] == undefined) { var DateofRelease = '' } else { var DateofRelease = excelRows[i]["Date of release"] }
+            //if (excelRows[i]["Containerarrivaldate"] == undefined) { var ConArrivalDate = '' } else { var ConArrivalDate = excelRows[i]["Containerarrivaldate"] }
+
+
+            if (excelRows[i]["Invoice"] == undefined) { var Invoice = '' } else { var Invoice = excelRows[i]["Invoice"] }
+            if (excelRows[i]["Invoice amount"] == undefined) { var InvoiceAmt = '' } else { var InvoiceAmt = excelRows[i]["Invoice amount"] }
+            if (excelRows[i]["Paid amount"] == undefined) { var PaidAmount = '' } else { var PaidAmount = excelRows[i]["Paid amount"] }
+            var slno = parseInt(i + 1)
+
+            //Add the data row.id=' + "locID" + i + '
+
+            var row = '<tr class="jsgrid-row" id="row_' + slno + '">' +
+                    '<td align=center        style= "width:50px;text-align:center">' + slno + '</td>' +
+                    '<td class= jsgrid-cell  style= "width:200px;text-align:left" id=" + "td' + slno + ' "><input type="text" id=' + "Containerno" + slno + ' class="form-control" disabled style="height:30px;background-color:white;;text-align:left" value="' + ContainerNo + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:200px;text-align:left"><input type="text" id=' + "BookingNo" + slno + ' class="form-control" disabled style="height:30px;background-color:white;;text-align:left" value="' + BookingNo + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:left"><input type="text" id=' + "Lines" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:left" value="' + Lines + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "Size" + slno + ' class="form-control" disabled style="height:30px;background-color:white;;text-align:center" value="' + Size + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:left"><input type="text" id=' + "POL" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:left" value="' + POL + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:160px;text-align:left"><input type="text" id=' + "Port" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:left" value="' + Port + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "DateOfLoading" + slno + ' class="form-control" disabled style="height:30px;background-color:white;;text-align:center" value="' + DOLformatted + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "ExArrivalDate" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:center" value="' + EADformatted + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "DateofRelease" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:center" value="' + DORformatted + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "ConArrivalDate" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:center" value="' + CADformatted + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "Invoice" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:center" value="' + Invoice + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "InvoiceAmt" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:center" value="' + InvoiceAmt + '"></td>' +
+                    '<td class= jsgrid-cell  style= "width:100px;text-align:center"><input type="text" id=' + "PaidAmount" + slno + ' class="form-control" disabled style="height:30px;background-color:white;text-align:center" value="' + PaidAmount + '"></td>' +
+
+            '</tr>'
+            $("#tblpurchaseinvoice").append(row);
+        }
+        $('#popupdiv').hide();
+        $('#RowLength').val(i);
+        //Othercosttotal();
+    };
+
+    function GetFormattedDate(datetoformat) {
+        var todayTime = new Date(datetoformat);
+        var month = todayTime.getMonth() + 1;
+        var day = todayTime.getDate();
+        var year = todayTime.getFullYear();
+
+        if (day < 10)
+            day = '0' + day
+        if (month < 10)
+            month = '0' + month
+
+        return day + "/" + month + "/" + year;
+    }
+
+
+</script>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div style="position:fixed;top:30%;left:35%">
+        <img src="~/app-assets/img/Loading-V3.gif" />
+    </div>
+
+</div>
+
+<div class="myData" data-x="M165" />
+
+<div id="Entry" style="margin-top:-20px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0" style="float:left">Container Import</h4>
+
+                    <h2 class="text-right" id="gndtotal" style="float:right;opacity:0">0.00</h2>
+                    <h2 class="col-md-2" id="fc" style="float:right;opacity:0">fc </h2>
+
+                </div>
+                <div class="card-body" style="margin-top:-20px">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr style="margin-top:0px" />
+                                    <div class="row" style="background-color:#E0F3F4;margin-left:3px;width:100%;margin-top:-20px;height:200px">
+
+                                        <div class="col-md-12">
+                                            <br />
+                                            <div class="form-group">
+
+                                                <div class="row" style="margin-top:-8px">
+                                                    <label class="col-lg-1">Serial No<span class="danger">*</span></label>
+                                                    <div class="col-lg-11">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <input type="text" class="form-control" id="containerslno" disabled>
+                                                                <input type="hidden" class="form-control" id="hiddencontainerslno" disabled>
+                                                            </div>
+                                                            @*=====div for page load======*@
+                                                            <div class="col-md-2" id="purchaseinv">
+                                                                <input type="text" class="form-control" id="containerslno1">
+                                                            </div>
+                                                            @*============================*@
+
+                                                            @*===div for copy===*@
+                                                            <div class="col-md-2 input-group" id="copypurchase" style="display:none;position:inherit;">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-btn" title="Previous">
+                                                                        <button type="button" disabled="" id="btnprvs" onclick="GetBillPrevousornext(-1)" class="btn btn-outline-primary"><i class="ft-chevron-left"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                                <input type="text" class="form-control" style="height:38px;" id="copypurchaseinvo" onkeyup="$('#tour1').fadeOut();">
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-btn" title="Next">
+                                                                        <button type="button" id="btnnxt" disabled="" onclick="GetBillPrevousornext(1)" class="btn btn-outline-primary"> <i class="ft-chevron-right"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            @*=================*@
+                                                            <label class="col-lg-1 text-lg-right">Date<span class="danger">*</span></label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="containerdate" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-top:20px">
+                                                    <label class="col-lg-1">Reference<span class="danger">*</span></label>
+                                                    <div class="col-md-6">
+                                                        <textarea id="txtreference" style="height:100px;resize:none" class="form-control col-md-11" name="notes"></textarea>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top:0px" />
+
+                                </div>
+                                <div class="px-2">
+                                    <div id="customView" class="jsgrid" style="position: relative; height: 303px; width: 100%; margin-top:0px;overflow-x: auto;overflow-y: hidden; ">
+                                        <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:3000px;">
+                                            <table class="jsgrid-table">
+                                                <tr class="jsgrid-header-row">
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:50px" align="center">SL No</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:200px">Container Number</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:200px">Booking Number</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Lines</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Size</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Point Of Loading</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:160px">Port</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Date Of Loading</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Expected Arrival</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Date of Release</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Arrival Date</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Invoice</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Invoice Amount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:100px">Paid Amount</th>
+
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height: 240px; width: 3000px;">
+                                            <table class="jsgrid-table" id="tblpurchaseinvoice"></table>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td id="Cell1">
+                                                <div class="row text-md-center" style="margin-top:-10px;">
+                                                    <div class="form-group row col-md-12 text-md-center">
+                                                        <div class="col-md-3">
+                                                            <input type="file" id="fileUpload" onchange="Upload()" class="btn btn-lg gradient-back-to-earth font-small-2 white p-2 mr-2" />
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <input type="button" id="upload" value="Upload" onclick="Upload()" class="btn btn-lg gradient-back-to-earth font-small-2 white p-2 mr-2" />
+                                                            <input type="hidden" id="otrcost" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                            <td valign="top" id="Cell2"></td>
+                                        </tr>
+                                    </table>
+                                    <input type="hidden" id="RowLength" />
+                                    <div class="form-actions" style="margin-top:-10px;">
+                                        <div class="text-right">
+                                            <button type="button" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" id="btnlist" onclick="GetRows()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                            <button style="display:none" type="button" id="btnprint" onclick="" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                            <button type="button" id="btnnew" onclick="formrefreshconfirm()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none" type="button" id="btnupdate" onclick="" class="btn btn-primary btn-min-width mr-1 mb-1">Update <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none" type="button" id="btnedit" onclick="Editdata()" class="btn btn-primary btn-min-width mr-1 mb-1">Edit <i class="ft-refresh-cw position-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="dvExcel" style="overflow:auto">
+    <table id="exceltable"></table>
+</div>
+
+
+
+<script>
+   
+
+
+    function Defaultfocus() {
+        $('#containerslno1').focus();
+    }
+
+    function SaveAndUpdate(flag) {
+
+        if ($("#tblpurchaseinvoice tr").length > 0) {
+            $('#btnsubmit').prop('disabled', true);
+            var oArray = new Array();
+            for (var k = 1; k <= $('#RowLength').val() ; k++) {                
+                var BookingNumber = $('#BookingNo' + k).val();
+                var ContainerNumber = $.trim($('#Containerno' + k).val());
+                var Lines = $('#Lines' + k).val();
+                var Size = $('#Size' + k).val();
+                var PointOfLoading = $('#POL' + k).val();
+                var Port = $('#Port' + k).val();
+                var LoadDate = $('#DateOfLoading' + k).val();
+                var ExpectArrivalDate = $('#ExArrivalDate' + k).val();
+                var ReleaseDate = $('#DateofRelease' + k).val();
+                var ContArrivalDate = $('#ConArrivalDate' + k).val();
+                var Invoice = $('#Invoice' + k).val();
+                var InvoiceAmount = $('#InvoiceAmt' + k).val();
+                var PaidAmount = $('#PaidAmount' + k).val();
+                var DelFlag = flag;
+                var ContainerSlno = $('#containerslno').val();
+                var ContainerBillNo = $('#containerslno1').val();
+                var ContainerDate = $('#containerdate').val();
+                var DeptId = ERPDeptId;
+                var Reference = $('#txtreference').val();
+                var UId = ERPUserId;
+                if (ContainerNumber != undefined) {
+                    oArray.push({
+                        'ContainerNumber': ContainerNumber,
+                        'BookingNumber': BookingNumber,
+                        'Lines': Lines,
+                        'Size': Size,
+                        'PointOfLoading': PointOfLoading,
+                        'Port': Port,
+                        'LoadDate': LoadDate,
+                        'ExpectArrivalDate': ExpectArrivalDate,
+                        'ReleaseDate': ReleaseDate,
+                        'ContArrivalDate': ContArrivalDate,
+                        'Invoice': Invoice,
+                        'InvoiceAmount': InvoiceAmount,
+                        'PaidAmount': PaidAmount,
+                        'DelFlag': DelFlag,
+                        'ContainerSlno': ContainerSlno,
+                        'ContainerBillNo': ContainerBillNo,
+                        'ContainerDate': ContainerDate,
+                        'DeptId': DeptId,
+                        'Reference': Reference,
+                        'UId': UId,
+
+                    })
+                }
+            }
+            if (oArray != "") {
+                $('#LoadingSmall').show();
+                var data = { 'ContainerManagement': oArray };
+                $.ajax(
+            {
+                type: "POST",
+                url: "../LocationTransfer/ContainerImportInsertandUpdate",
+                data: data,
+                success: function (result) {
+                    //for (var i = 0; i < result.oList.length; i++) {
+                    if (result.oList.length > 0) {
+                        var status = result.oList[0].Status;
+                        var billno = result.oList[0].ContainerSlno;
+                        $('#LoadingSmall').hide();
+                        Showalerts(status, billno);
+                        $('#btnsubmit').prop('disabled', false);
+
+                        var datax = {};
+                        datax.DeptId = ERPDeptId;
+                        $.ajax({
+                                   type: "POST",
+                                   url: "../LocationTransfer/AutoLocTransferUtilityForUC",
+                                   data: datax,
+                                   success: function (result) { }
+                               });
+
+                    }
+                   // }
+                }
+            });
+            }
+        }
+        else
+            warningshow('Please Select Excel File');
+    }
+
+
+    var total = 0; var x = 1;
+    function Showalerts(Status, Invonum) {
+        if (Status == 1) {
+            formrefresh();
+            swal('Data Saved Successfully', " ", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        if (Status == 2) {
+            swal('Invo No:' + Invonum, " Updated Successfully", "success");
+            $('.swal-button swal-button--confirm').focus();
+            formrefresh(0);
+        }
+    }
+    function formrefresh() {
+        $('#containerslno1').val('');
+        $('#txtreference').val('');
+        $('#tblpurchaseinvoice tr').remove();
+        $('#containerdate').val(CurDate);
+        Serialnoload();
+        $('#purchaseinv').show();
+        $('#copypurchase').hide();
+        $('#fileUpload').prop("disabled", false);
+        $('#upload').prop("disabled", false);
+        $('#txtreference').prop("disabled", false);
+        $('#containerdate').prop("disabled", false);
+        $('#containerdate').val(CurDate);
+        $('#containerslno1').prop("disabled", false);
+        $('#containerslno1').focus();
+        $('#btnsubmit,#btnlist').show();
+        $('.form-control').prop('disabled', false);
+        $('#containerslno').prop("disabled", false);
+    }
+
+    function formrefreshconfirm() {
+        if ($("#tblpurchaseinvoice tr").length > 1 && CopyFlag == 0) {
+            $('#confirm').show();
+            $('#confirmOk').focus();
+            $('#Confirmflag').val('refresh'); $('#ConfirmRowId').val(0);
+            $('#confirmmessage').text('Data will be lost.Do you want to Continue?');
+        }
+        else {
+            formrefresh();
+        }
+    }
+
+    function ConfirmboxResult(Result, status, rowid) {
+        if (Result == 'true' && status == 'refresh') {
+            formrefresh(0);
+        }
+
+        else if (Result == 'true' && status == 'copy') {
+            formrefresh(0);
+            GetRows();
+        }
+        $('#confirm').fadeOut();
+    }
+
+    $(document).ready(function () {
+        $("#btnsubmit").click(function (e) {
+            SaveAndUpdate(1);
+        });
+        Defaultfocus();
+        Serialnoload();
+        $('#containerdate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#containerslno1').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $('#containerdate').focus();
+            }
+        });
+        $('#containerdate').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $('#txtreference').focus();
+            }
+        });
+
+    });
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').fadeOut();
+        }, 3000);
+    }
+
+
+    function Serialnoload() {
+        var srlno = {};
+        srlno.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Common/SlNoGetandGets",
+            data: srlno,
+            success: function (result) {
+                getslno(result.oList);
+
+            }
+        });
+    }
+    function getslno(result) {
+        $('#containerslno').val(result[0].ContainerImportNO);
+        $('#hiddencontainerslno').val(result[0].ContainerImportNO);
+    }
+
+
+    $("#copypurchaseinvo").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.ContainerSlno = $("#copypurchaseinvo").val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../LocationTransfer/ContainerNumberSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '3',
+                            label1: item.ContainerBillNo,
+                            label: item.ContainerSlno,
+                            label2: item.ContainerDate,
+                            ContainerSlno: item.ContainerSlno,
+                            ContainerBillNo: item.ContainerBillNo,
+                            ContainerDate: item.ContainerDate,
+                            headers: ["Sl No", "", "Date"]
+                        })
+                    }));
+                }
+            })
+        },
+
+        autoFocus: true,
+        select: function (event, ui) {
+            var data = {};
+            data.ContainerSlno = ui.item.ContainerSlno;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../../LocationTransfer/ContainerSearch",
+                data: data,
+                success: function (result) {
+                    ShowContainerlist(result.oList);
+                }
+            });
+            $('#containerslno').prop('disabled', true);
+            $('#copypurchaseinvo').prop('disabled', false);
+            $('#containerdate').prop('disabled', true);       
+        },
+    });
+
+    function GetRows() {
+        CopyFlag = 1;
+        var rowCount = document.getElementById('tblpurchaseinvoice').rows.length;
+        if (rowCount == 0) {
+            NextInvoiceNo = parseInt($('#hiddencontainerslno').val() || 0);
+            $('#purchaseinv,#productpdiv,#Othercostpopup').hide();
+            $('#copypurchase').show();
+            $('#btnprvs').prop("disabled", false);
+            $('#btnnxt').prop("disabled", false);
+            $('.form-control').prop('disabled', true);
+            $('#copypurchaseinvo').prop("disabled", false);
+            $('.jsgrid-button').prop('disabled', true);
+            $('#btnadd').prop("disabled", true);
+            $('#btncrncysave,#btncrncyclear').prop("disabled", true);
+            $('#copypurchaseinvo').focus();
+            $('#copypurchaseinvo').select();
+            $('.butndis').prop("disabled", true);
+            $('#fileUpload').prop("disabled", true);
+            $('#upload').prop("disabled", true);
+            $('#btnsubmit,#btnlist').hide();
+        }
+        else {
+            $('#Confirmflag').val('copy'), $('#ConfirmRowId').val(1);
+            $('#confirmmessage').text('Data Will be Lost. Do you want to Continue?')
+            $('#confirm').show();
+            $('#confirmOk').focus();
+        }
+    }
+
+
+    function GetBillPrevousornext(Value) {
+        $('#Warningpopup').fadeOut();
+        var SlNo = parseInt($('#containerslno').val() || 0);
+        SlNo = SlNo + Value;
+        if ((SlNo <= 0) || (SlNo >= NextInvoiceNo)) {
+            warningshow('SL Number Not Valid', 'copypurchaseinvo');
+            return false;
+        }
+        else {
+            $('#containerslno').val(SlNo);
+            var data = {};
+            data.ContainerSlno = $('#containerslno').val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../LocationTransfer/ContainerSearch",
+                data: data,
+                success: function (result) {
+                    ShowContainerlist(result.oList);
+                    $('#btnnew').focus();
+                    $('.form-control').prop('disabled', true);
+                    $('#copypurchaseinvo').prop("disabled", false);
+                    $('.jsgrid-button').prop('disabled', true);
+                    $('#btnsubmit').hide();
+                    $('#btnlist').hide();
+                    //$('#btnedit').show();
+                    $('#btnadd').prop("disabled", true);
+                    $('#btncrncysave').prop("disabled", true);
+                    $('#btnaddcost').prop("disabled", true);
+                    $('#fileUpload').prop("disabled", true);
+                }
+            });
+        }
+    }
+    function ShowContainerlist(result) {
+        var responseText = "";
+        $("#tblpurchaseinvoice tr").remove();
+        $('#containerslno').val(result[0].ContainerSlno);
+        $('#containerslno1').val(result[0].ContainerBillNo);
+        $('#copypurchaseinvo').val(result[0].ContainerBillNo);
+        $('#containerdate').val(result[0].ContainerDate);
+        $('#txtreference').val(result[0].Reference);        
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);           
+            responseText += '<tr class="jsgrid-row"><td class=jsgrid-cell style="width:50px" align=center>' + slno + '</td><td class= jsgrid-cell style="width:200px" >' + result[i].ContainerNumber + '</td><td class= jsgrid-cell style="width:200px" >' + result[i].BookingNumber + '</td><td class= jsgrid-cell style="width:100px" align=center>' + result[i].Lines + '</td><td class= jsgrid-cell style="width:100px" align=center>' + result[i].Size + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].PointOfLoading + '</td><td align=center class= jsgrid-cell style="width:160px" >' + result[i].Port + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].LoadDate + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].ExpectArrivalDate + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].ReleaseDate + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].ContArrivalDate + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].Invoice + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].InvoiceAmount + '</td><td align=center class= jsgrid-cell style="width:100px" >' + result[i].PaidAmount + '</td></tr>';
+        }
+        $('#tblpurchaseinvoice').append(responseText);
+    }
+
+
+
+    function Editdata()
+    {
+        $('#fileUpload').prop("disabled", false);
+        $('#upload').prop("disabled", false);
+        $('#txtreference').prop("disabled", false);
+        $('#containerdate').prop("disabled", false);
+        $('#containerdate').val(CurDate);
+    }
+</script>
+
+
+

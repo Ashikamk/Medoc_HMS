@@ -1,0 +1,1450 @@
+﻿
+@{
+    ViewBag.Title = "DischargeSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+<script type="text/javascript" src="~/ProjectScript/DischargeSummary.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+
+<style>
+    .modal-xl {
+    max-width: 1200px;
+}
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1 !important;
+    }
+
+    img {
+        max-height: 200px;
+        max-width: 200px;
+    }
+
+    #customView, #customView_1 {
+        border: 1px solid #CCD6E6;
+    }
+
+    .GridBRow {
+        border: 1px solid #9faec3;
+    }
+
+    .TotalBill > .GridBRow {
+        background: #009da0;
+        color: white;
+        font-weight: bold;
+    }
+
+    .Total > .GridBRow {
+        background: #cfd8dc;
+        color: black;
+        font-weight: bold;
+    }
+
+    .Header > .GridBRow {
+        background: #80ced0;
+        color: black;
+        font-weight: bold;
+    }
+
+    .GridTextBox {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: white !important;
+    }
+
+    .GridTextBoxTotal {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: #cfd8dc !important;
+        color: black;
+        font-weight: bold;
+    }
+
+    .GridTextBoxTotalBill {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: #009da0 !important;
+        color: white;
+        font-weight: bold;
+    }
+    #myImg{
+        max-height:265px;
+        min-height:265px;
+        max-width:364px;
+        width:auto;
+    }
+    .chnwd{
+        max-width: 10%!important;
+    }
+    .patdeys input{
+        height:35px;
+    }
+    .patdeys:not(input){
+        resize:none;height:70px;
+        font-weight:500!important;
+    }
+   .mbb-1 {
+    margin-bottom: 0 !important;
+    border:1px solid lightgrey;
+    border-bottom:none;
+    padding-top: .14rem;
+    padding-bottom: .14rem;
+}
+   .wd20{
+       padding-left:5px;
+       width:30%;
+       background-color:#8EDEEC;
+       border-bottom:1px solid white;
+       color:black!important;
+   }
+     .pathdr{
+        height:30px;
+    background-color:#8EDEEC;
+    color:black!important;
+    }
+    .wd80{
+       width:70%;
+       padding-left: 5px;
+   }
+
+       .patdeys:not(input)
+    {
+        border-top-left-radius:0px;
+        border-top-right-radius:0px;
+    }
+    .patlbl{
+        /*padding-top:8px;*/
+    }
+  
+    .jsgrid-header-row>.jsgrid-header-cell{
+        background:#8EDEEC;
+        color:black;
+    }
+    .jsgrid input{
+    height: 30px;
+}
+    .HRow{
+        height:31px;
+    }
+    tr.jsgrid-header-row.RRow {
+    height: 36px;
+}
+</style>
+
+<div class="myData" data-x="M357" />
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div id="Entry">
+    <section id="vertical-tabs">
+        <div class="row match-height">
+
+            <div class="col-xl-4 col-lg-12">
+                <div class="card" style="min-height: 300px !important;">
+                    <div class="card-header pb-0" style="border-bottom:1px solid #e6e6e6;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4 class="card-title" style="font-weight:bold;">Discharge Summary</h4>
+                            </div>
+                            <div class="col-md-2">
+                               <input type="text" class="form-control" value="0" id="rownoo" />
+                            </div>
+                            
+                            <div class="col-md-1">
+                                <button class="btn btn-primary" id="btnprint"><i class="fa fa-print"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="pl-4 pr-2">
+                                <div class="row mb-1 mt-2">
+                                    <label class="col-md-4 label-control pl-1">Reg#/IP#</label>
+                                    <div class="col-md-4">
+                                        <input type="text" id="RegNo" class="form-control denull" placeholder="Search Patient" />
+                                        <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                        <input type="hidden" id="RegNoSave" class="form-control dezro" value="0" />
+                                        <input type="hidden" id="RegSeries" class="form-control dezro" value="0" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" id="SIP_Number" class="form-control denull" disabled style="background-color:white;" />
+                                        <input type="hidden" id="IP_Number" class="form-control denull" />
+                                        <input type="hidden" id="IP_Year" class="form-control denull" />
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+
+                                    <label class="col-md-4 label-control pl-1">Name</label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="PName" class="form-control denull" disabled style="background-color:white;" />
+                                    </div>
+                                </div>
+                                <div class="row mb-1" style="display:none;">
+                                    <label class="col-md-4 label-control pl-1">OPVisit#</label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="OPVisitId" class="form-control denull" disabled style="background-color:white;" />
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <label class="col-md-4 label-control pl-1">Admitted Date</label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="AdmittedDate" class="form-control denull"  style="background-color:white;" />
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <label class="col-md-4 label-control pl-1">Discharge Date</label>
+                                    <div class="col-md-8">
+                                        <table><tr><td><input type="text" id="DischargeDate" class="form-control" style="" /></td>
+                                            <td><input type="text" id="Dischargetime" class="form-control" style="" /></td>
+                                            
+                                            </tr></table>
+                                     
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8 col-lg-12">
+                <div class="card" style="min-height: 300px!important;">
+
+                    <div class="card-content">
+                        <div class="card-body pt-3">
+                            <div class="row" style="margin-top: -1%;">
+                                <div class="col-md-8" style="">
+                                    <div class="px-1 mb-1">
+                                        <table width="100%" class="p-1" style="border:1px solid lightgrey;table-layout:fixed">
+                                            <tr style="border:1px solid lightgrey">
+                                                <td class="mbb-1 wd20">
+                                                    <label class="label-control">DOB/Age</label>
+                                                </td>
+                                                <td class="mbb-1 wd80">
+                                                    <label id="PatDOB" class="label-control detextnull"></label>
+
+                                                    <label id="PatAge" class="label-control detextnull"></label>
+                                                </td>
+                                            </tr>
+                                            <tr class="mbb-1">
+                                                <td class="mbb-1 wd20">
+                                                    <label class="label-control">Gender/Blood Group</label>
+                                                </td>
+                                                <td class="mbb-1 wd80">
+                                                    <label id="PatGender" class="label-control detextnull"></label>
+
+                                                    <label id="PatBloodGrp" class="label-control detextnull"></label>
+                                                </td>
+                                            </tr>
+                                            <tr class="mbb-1">
+                                                <td class="mbb-1 wd20">
+                                                    <label class="label-control">Contat</label>
+                                                </td>
+                                                <td class="mbb-1 wd80">
+                                                    <label id="PatNumber" class="label-control detextnull"></label>
+                                                </td>
+                                            </tr>
+                                            <tr class="mbb-1">
+                                                <td class="mbb-1 wd20">
+                                                    <label class="label-control">Aadhar No</label>
+                                                </td>
+                                                <td class="mbb-1 wd80">
+                                                    <label id="PatAadhar" class="label-control detextnull"></label>
+                                                </td>
+                                            </tr>
+                                            <tr class="mbb-1">
+                                                <td class="mbb-1 wd20">
+                                                    <label class="label-control">Address</label>
+                                                </td>
+                                                <td class="wd80">
+                                                    <div style="min-height:100px!important;max-height:100px!important;overflow-y:auto">
+                                                        <div class="row col-md-12">
+                                                            <label id="PatAdd1" class="label-control detextnull">&nbsp;</label>
+                                                        </div>
+                                                        <div class="row  col-md-12">  <label id="PatAdd2" class="label-control detextnull">&nbsp;</label></div>
+                                                        <div class="row  col-md-12">  <label id="PatAdd3" class="label-control detextnull m-0">&nbsp;</label></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr class="mbb-1">
+                                                <td class="mbb-1 wd20 " style="border-bottom:1px solid lightgrey;">
+                                                    <label class="label-control">Reason</label>
+                                                </td>
+                                                <td class="mbb-1 wd80">
+                                                    <div class="col-md-7">
+                                                        <select id="Reasons" class="form-control m-0" style="height:30px;border:none;font-weight: bold;
+                                                                                        width:auto;margin-left: -5%!important; padding-left: 0;width:185%">
+                                                            <option value="0">
+                                                                Discharge With Advice
+                                                            </option>
+                                                            <option value="1">
+                                                                Discharge On Request
+                                                            </option>
+                                                            <option value="2">
+                                                                Discharge Against Medical Advice
+                                                            </option>
+                                                            <option value="3">
+                                                                Discharge and Refer
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4 p-0">
+                                    <div class="row mb-2">
+                                        <div class="m-0 col-md-12">
+                                            <div class="text-center p-0" style="">
+                                                <img id="myImg" src="/app-assets/img/portrait/medium/avatar-m-100.jpg" alt="Gini" class="img-thumbnail  gray" onerror="this.onerror = null; this.src = '../app-assets/img/portrait/medium/avatar-m-100.jpg';">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div style="margin-top: -.5%;">
+        <section>
+            <div class="card m-0">
+                <div class="card-header">
+                    <div class="row mb-1">
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center" onclick="CloseAdvice(9)"><label class="label-control patlbl">Presenting Complaints   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="PresentComplaints" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Diagnosis   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="Diagnosis" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Past History   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="PastHistory" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Family History   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="FamilyHistory" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Development History   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="DevelopHistory" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Immunization  </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="Immunization" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">On Examination   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="Examination" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Investigation </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="GenExamination" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Course In the Hospital   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="Course" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Treatment Given   </label></div>
+                            </div>
+                            <div class="row">
+                                <textarea class="form-control patdeys" id="Treatment" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center">
+                                    <label style="opacity:0;-webkit-user-select: none;">AdviDischarge </label>
+                                    <label class="label-control patlbl" style="cursor:pointer" onclick="CloseAdvice(0)">Advice on Discharge </label>
+                                    <button type="button" style="float:right;margin-top:-.1%;padding: 3px;" onclick="$('#DischargeAdvice').text(''); $('#showmore').focus()" class="btn btn-warning mr-1 mb-1 btn-sm white">
+                                        <i class="ft-refresh-cw position-right" style="cursor:pointer;font-weight:700;">Clear</i>
+                                    </button>
+                                    <button type="button" style="float:right;margin-top:-.1%;padding: 3px;" onclick="ShowMoreDetails(0)" id="showmore" class="btn btn-warning mr-1 mb-1 btn-sm white">
+                                        <i class="ft-plus-circle" style="cursor:pointer;font-weight:700;">MoreDetails</i>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="row" style="height: 90px;border: 1px solid #BABFC7; border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;overflow-y:auto">
+                                <div class="text-bold-600" id="DischargeAdvice" style="padding-left:5px;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-1" style="display:none" id="MoreDets">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="row mb-1">
+                                <div class="col-md-1">  <label class="label-control">RS   </label></div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control patdeys" id="RS" value="NAD" autocomplete="off" />
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="label-control">GIT</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control patdeys" value="NAD" id="GIT" autocomplete="off" />
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="label-control">CNS</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control patdeys" value="NAD" id="CNS" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-md-1">  <label class="label-control">Height   </label></div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control patdeys" id="Height" autocomplete="off" />
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="label-control">Weight</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control patdeys" id="Weight" autocomplete="off" />
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="label-control">CVS</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control patdeys" value="NAD" id="CVS" autocomplete="off" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-1">
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="row mbb-1 pathdr" style="background-color:white;height: 40px;">
+                                <div class="col-md-12 text-center">
+                                    <label class="label-control patlbl">Select Investigations</label>
+                                    <button type="button" class="btn btn-outline-warning mr-1 mb-1 btn-sm" onclick="ngOnDestroy(0)" style="margin-bottom:0px;"><i class="ft-align-justify"></i></button>
+                                    <button type="button" class="btn btn-outline-warning mr-1 mb-1 btn-sm" onclick="$('.RRow').remove()" style="margin-bottom:0px;"><i class="ft-refresh-cw position-right"></i></button>                                
+                                  </div>
+                               
+                            </div>
+                            <div class="row mb-2">
+                                <div class="jsgrid" style="position: relative; height: 300px; width: 100%; border:solid 1px;border-color:#e9e9e9;overflow-x: auto;overflow-y: hidden;">
+                                    <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:100%;">
+                                        <table class="jsgrid-table table-bordered">
+                                            <tbody>
+                                                <tr class="jsgrid-header-row">
+                                                    @*<th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;"><i class="icon-trash"></i></th>*@
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 4%;"><input type="checkbox" id="allinvestigation" autocomplete="off"> </th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 5%;">Sl No</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 10%;">Bill No</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 7%;">Date</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 30%;">Test Name</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 20%;">SubTest Name</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 8%;">Result</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 8%;">Normal</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right" style="width: 8%;">Std Unit</th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:255px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                        <table class="jsgrid-table table-bordered" id="TblMedicine">
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="row mb-1" style="padding:2px;border-top:1px solid lightgrey">
+                        <div class="col-xl-5 col-lg-12" style="border:1px solid lightgrey">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Review On</label></div>
+                            </div>
+                            <div class="row mb-0" style="padding:2px;">
+                                <div class="col-md-3">
+                                    <div class="col-md-12 text-left"><label class="label-control patlbl">After Days</label></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control patdeys" id="AfterDays" onkeypress="isNumber(event,this)" onkeyup="GetNextReviewDate(0)" autocomplete="off" style="width: 115%;margin-left: -6%;" />
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="col-md-12 text-left"><label class="label-control patlbl">After Date</label></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control patdeys" id="AfterDate" autocomplete="off" style="width: 115%;margin-left: -6%;" onchange="GetNextReviewDate(1)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-12" style="border:1px solid lightgrey">
+                            <div class="row mbb-1 pathdr">
+                                <div class="col-md-12 text-center"><label class="label-control patlbl">Surgery Date</label></div>
+                            </div>
+                            <div class="row mb-0" style="padding:2px;">
+                               
+                                <div class="col-md-12">
+                                    <input class="form-control patdeys" id="SurgeryDate" autocomplete="off" style="width: 115%;margin-left: -6%;" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-lg-12 text-right" style="margin-top:1.5%">
+                            <button type="button" style="width:120px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1" autocomplete="off"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                            <button type="button" style="width:120px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                            <button type="button" style="width:120px" id="btnnew" onclick="formrefresh(0)" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                            <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                            <button style="display:none" type="button" id="btnRevisit" onclick="RevisitPatient()" class="btn btn-primary btn-min-width mr-1 mb-1">Re-Visit <i class="fa fa-book fa-fw"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div style="display:none;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Discharge List</h4></td>
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <button type="button" onclick="closelist(1)" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table id="tblDischarge" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+
+
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="Divcomanddiagnosis" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">Complaints and Diagnosis</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="CloseAdvice(-1)">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-top:-15px;margin-left:3px">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div style="border:1px solid black;height:200px" class="col-md-6">
+                                    <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:180px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                        
+                                    <table class="table table-striped table-bordered base-style dataTable" id="tblcomplaints"></table>
+
+                                    </div></div>
+                                <div style="border:1px solid black;height:200px" class="col-md-6">
+                                    <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:180px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+
+                                        <table class="table table-striped table-bordered base-style dataTable" id="tbldignosis"></table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            <div class="row">
+                                <div style="border:1px solid black;height:200px" class="col-md-6">
+                                    <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:180px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+
+                                        <table class="table table-striped table-bordered base-style dataTable" id="tblexmedicines"></table>
+                                    </div>
+                                </div>
+                                <div style="border:1px solid black;height:200px" class="col-md-6">
+                                    <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:180px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+
+                                        <table class="table table-striped table-bordered base-style dataTable" id="tblexinvestigations"></table>
+                                    </div>
+                                    
+
+                                </div>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnadvice" class="btn btn-outline-primary" onclick="Addadviceanddetails()">+ADD</button>
+                    <button type="button" id="btnadvice" class="btn btn-outline-primary" onclick="CloseAdvice(-1)">Clear</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="DivAdvice" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">ADVICE ON DISCHARGE</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="CloseAdvice(1)">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-top:-15px;margin-left:3px">
+                        <div class="col-md-12">
+                            <div class="row" >
+                                <div class="col-md-3">
+
+                                    <label class="label-control">Medicine<span class="danger">*</span></label>
+
+                                </div>
+                                <div class="col-md-2">
+
+                                    <label class="label-control">Daily<span class="danger">*</span></label>
+
+                                </div>
+                                <div class="col-md-2">
+
+                                    <label class="label-control">Dosage<span class="danger">*</span></label>
+
+                                </div>
+                                <div class="col-md-2">
+
+                                    <label class="label-control">Days<span class="danger">*</span></label>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" id="Medicine0" class="form-control advc" autocomplete="off">
+                                    <input type="text" class="form-control advc" id="MedicineId0" style="display:none">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" id="Daily0" class="form-control advc" autocomplete="off">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" id="Dosage0" style="" class="form-control advc"  autocomplete="off">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" id="Days0" style="" class="form-control advc"  autocomplete="off">
+
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" style="font-weight:bold;width:37%" id="btnaddadv" onclick="AddAdvice()" class="btn btn-outline-primary">+Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="height:310px;overflow-y:auto">
+                        <div class="jsgrid" style="position: relative; height: 255px; width: 100%; border:solid 1px;border-color:#e9e9e9;overflow-x: auto;overflow-y: hidden;">
+                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:100%;">
+                                <table class="jsgrid-table table-bordered">
+                                    <tbody>
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;"><i class="icon-trash"></i></th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 8%;">Sl No</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 47%;">Medicine</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 10%;">Daily</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 10%;">Dosage</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 10%;">Days</th>
+                                        </tr>                                      
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:210px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                <table class="jsgrid-table table-bordered" id="tblAdvice">
+                                   
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnadvice" class="btn btn-outline-primary" onclick="AddAdvicetoTable()">+ADD</button>
+                    <button type="button" id="btnadvice" class="btn btn-outline-primary" onclick="CloseAdvice(3)">Clear</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content" id="MainInvest">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">LABORATORY BILLS</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(1)">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="height:500px;overflow-y:auto">
+                        <table id="tblViewList" width="100%" class="table table-striped table-bordered base-style dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnview" class="btn btn-outline-primary" onclick="ViewBillDetails()"><i class='ft-eye'></i><b>VIEW</b></button>
+                </div>
+            </div>
+            <div class="modal-content" id="SubInvest" style="display:none">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">LABORATORY TESTS</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(1)">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="height:500px;overflow-y:auto">
+                        <table id="tblSubTest" width="100%" class="table table-striped table-bordered base-style dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"  class="btn btn-outline-primary" onclick="ngOnDestroy(0)"><b>BACK</b></button>
+                    <button type="button"  class="btn btn-outline-primary" onclick="AddBillDetails()"><b>+ADD</b></button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModalnew" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+         
+            <div class="modal-content" id="SubInvest" >
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">LABORATORY TESTS</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(1)">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="height:500px;overflow-y:auto">
+                        <table id="tblSubTest" width="100%" class="table table-striped table-bordered base-style dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"  class="btn btn-outline-primary" onclick="ngOnDestroy(0)"><b>BACK</b></button>
+                    <button type="button"  class="btn btn-outline-primary" onclick="AddBillDetails()"><b>+ADD</b></button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div style="display:none">
+    <input type="text" class="form-control" id="DischargeId" autocomplete="off" />
+    <input type="text" class="form-control" id="DischargeNo" autocomplete="off" /> 
+    <input type="text" class="form-control" id="SummaryDate" autocomplete="off" /> 
+    <input type="text" class="form-control" id="DoctorName" autocomplete="off" /> 
+</div>
+
+
+<script>
+    function GetPatientData(result) {       
+        $('#Weight').val(result[0].Weight);
+    }
+
+    function GetLastRevisitDetails(PatientId) {
+        var data = {};                                       //dropdownbind
+        data.PatientId = PatientId;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_LAstRevisitGets",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    GetPatientData(result.oList, 0);
+                   
+                }
+            }
+        });
+    }
+
+  
+    $("#RegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            formrefresh(1);
+
+            var data = {};
+            data.PatientName = $("#RegNo").val();
+            data.Flag = 0;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../Revisit/HMS_IPPatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'GR3',
+                            label: item.OPSerName + ' - ' + item.OPNumber,
+                            label1: item.PatientName,
+                            label2: item.AadharNo,            //IP NUMBER
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            OPSerId: item.OPSerId,
+                            PatientName: item.PatientName,
+                            IpNo: item.AadharNo,
+                            IPYear: item.Status,
+                            AdmitDate: item.FromDate,
+                            AdmitTime: item.ToDate,
+                            DoctorName:item.DoctorName,
+                            headers: ["RegNo", "Patient", "IP No"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#RegNoSave").val(ui.item.OPNumber);
+            $("#RegSeries").val(ui.item.OPSerId);
+            $("#PatientId").val(ui.item.PatientId);
+            $("#IP_Year").val(ui.item.IPYear);
+            $("#IP_Number").val(ui.item.IpNo);
+            $("#PName").val(ui.item.PatientName);
+            $("#AdmittedDate").val(ui.item.AdmitDate + ' - ' + ui.item.AdmitTime);
+            $("#SIP_Number").val(ui.item.IPYear + '/' + ui.item.IpNo);
+            $("#OPVisitId").val(ui.item.OPNumber);
+            
+            GetPatient(ui.item.PatientId);
+            GetLabDetails(ui.item.OPNumber, ui.item.OPSerId);
+            DocGet(ui.item.IpNo, ui.item.IPYear);
+            GetLastRevisitDetails(ui.item.PatientId);
+           // casesheetdetailsget(ui.item.IpNo, ui.item.IPYear, ui.item.OPNumber)
+        },
+    }).on('keydown', function (e) {
+        if ((e.which == 13) && (($('#RegNo').val() == '') || (($('#PatientId').val() || 0) != 0))) {
+            $('#PresentComplaints').focus().select();
+        }
+
+    });
+   
+    $("#Medicine0").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#Medicine0").val();
+            data.SlNumber = 0;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+            $.ajax({
+                url: '../Pharmacy/HMS_PurchaseProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4',
+                            label: item.Description,
+                            label1: item.ItemCode,
+                            label2: item.Group,
+                            label3: item.Category,
+
+                            ItemId: item.ItemId,
+                            headers: ["Name", "Code", "Company", "Type"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $("#MedicineId0").val(ui.item.ItemId);
+            $('#Daily0').focus().select();
+        },
+    }).on('keydown', function (e) {
+        if ((e.which == 13)) {
+            $('#Daily0').focus().select();
+        }
+       
+    });
+
+    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+    function PrintthisDischargeSummary(Flag) {
+
+
+        var TotPQty = 0; var Rowcount = 7;  
+        var MaxCnt = 32;
+
+        var myWindow = window.open("", "", "width=1500,height=1500");
+
+        $(ComapnydivToPrintLab).css('width', '100%'); $(ComapnydivToPrintLab).css('height', 'auto'); $(ComapnydivToPrintLab).css('max-height', '120px');
+
+        var Patient = $.trim($('#PName').val()).substring(0, 31);
+        var Age = $('#PatAge').text().split(', ');
+        var AdmitDate = $('#AdmittedDate').val(); //.split(' -')[0];
+        var DiscDate = $('#DischargeDate').val() + ' - ' + $('#Dischargetime').val();
+        var Address = $('#PatAdd1').text() + ' ' + $('#PatAdd2').text() + ' ' + $('#PatAdd3').text();
+        Address = Address.replace(/  +/g, ' ').substring(0, 60);
+
+        myWindow.document.write('<style type="text/css">.invstbl{border:1px solid black} .invstblrght{border-right:1px solid black}  .txtbld{font-weight:700;} .headrtd{ font-weight:700;width:15%} .brdbtm{width=35%}  .totbord{border:1px solid grey;height:40px;padding-left:3px }  .brdrgh{border-right:1px solid grey;} .brdbtmclr{border-bottom:1px solid black!important} .blckbrdr{padding:2px;height:45px} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+
+        myWindow.document.write('<table width=100% ><tr ><td colspan=8 width=100% style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('<tr ><td colspan=8 width=100% align=center style="font-weight:bold;"><div class=brdbtmclr style="height:20px!important">DISCHARGE SUMMARY</div></td></tr>');
+        myWindow.document.write('</table>');
+
+        myWindow.document.write('<table width=100% style="layout:fixed"><tr ><td width=10% align=left >Patient &#160;&#160;:</td><td colspan=3 align=left width=40%>' + Patient + '</td><td align=right width=10%>RegNo&#160;&#160;&#160;&#160;: </td><td width=15% >' + $('#RegNoSave').val() + '</td><td align=right width=10%>Date &#160;&#160;&#160;&#160;&#160;&#160;: </td><td width=15% >' + $('#SummaryDate').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Age/Sex :</td><td colspan=3 align=left width=40%>' + Age[1] + ' / ' + $('#PatGender').text().split(', ') + '</td><td align=right width=10%>OP NO&#160;&#160;&#160;: </td><td width=15% >' + $('#OPVisitId').val() + '</td><td align=right width=10%>IP NO&#160;&#160;&#160;&#160;: </td><td width=15% >' + $('#IP_Number').val() + '</td></tr>');
+        myWindow.document.write('<tr class=brdbtmclr><td width=10% align=left >Address :</td><td colspan=3 align=left width=40%  valign=top>' + Address + '</td><td align=right width=10%>DOA &#160;&#160;&#160;&#160;&#160;:</td><td width=50% colspan=3>' + AdmitDate + '</td></tr>');
+        myWindow.document.write('<tr class=brdbtmclr><td width=10% align=left >Doctor  :</td><td colspan=3 align=left width=40%  valign=top>' + $("#DoctorName").val() + '</td><td align=right width=10%>DOD &#160;&#160;&#160;&#160;&#160;: </td><td width=50% colspan=3>' + DiscDate + '</td></tr>');
+        myWindow.document.write('<tr><td  colspan=8>&#160;<div class=brdbtmclr ></div></td></tr>');
+        myWindow.document.write('</table>');
+
+        myWindow.document.write('<table width=100% >');
+        if ($('#PresentComplaints').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class=txtbld><U>PRESENTING COMPLAINTS</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#PresentComplaints').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Diagnosis').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class=txtbld><U>DIAGNOSIS</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Diagnosis').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        myWindow.document.write('</table>');
+
+
+        myWindow.document.write('<table width=100% >');
+        if ($('#PastHistory').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>PAST HISTORY</U>  </td></tr><tr ><td  colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#PastHistory').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#FamilyHistory').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>FAMILY HISTORY</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#FamilyHistory').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#DevelopHistory').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>DEVELOPMENT HISTORY</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#DevelopHistory').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Immunization').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>INVESTIGATION</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Immunization').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Examination').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>ON EXAMINATION</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Examination').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#GenExamination').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>GENERAL EXAMINATION</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#GenExamination').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Course').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>COURSE IN THE HOSPITAL</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Course').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Treatment').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>TREATMENT GIVEN</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Treatment').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#RS').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>RS</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#RS').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#GIT').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>GIT</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#GIT').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#CNS').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>CNS</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#CNS').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Height').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>HEIGHT</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Height').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#Weight').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>WEIGHT</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#Weight').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        if ($('#CVS').val() != '')
+        { myWindow.document.write('<tr ><td height=5px colspan=8 class="txtbld"><U>CVS</U>  </td></tr><tr ><td colspan=8 rowspan=2 class="blckbrdr"> ' + ($('#CVS').val()).substring(0, 130) + '</td></tr><tr ></tr>'); Rowcount = Rowcount + 3; }
+        myWindow.document.write('</table>');
+      
+        var Scount = 130;
+        //myWindow.document.write('<table width=100% bordercolor="1 px solid black" frame="box"  style="font-size:75%;margin-top:10px;border-spacing:0;border-collapse:collapse;">');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >Past History  </td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + ($('#PastHistory').val()).substring(0, Scount) +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>Family History </td><td   colspan=2 class="brdbtm totbord" > ' + ($('#FamilyHistory').val()).substring(0, Scount) + '</td></tr>');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >Develop. History  </td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + ($('#DevelopHistory').val()).substring(0, Scount) +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>Immunization </td><td   colspan=2 class="brdbtm totbord" > ' + ($('#Immunization').val()).substring(0, Scount) + '</td></tr>');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >On Examination  </td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + ($('#Examination').val()).substring(0, Scount) +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>Gen. Examination </td><td   colspan=2 class="brdbtm totbord" > ' + ($('#GenExamination').val()).substring(0, Scount) + '</td></tr>');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >Course</td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + ($('#Course').val()).substring(0, Scount) +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>Treatment </td><td   colspan=2 class="brdbtm totbord" > ' + ($('#Treatment').val()).substring(0, Scount) + '</td></tr>');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >RS</td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + $('#RS').val() +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>GIT </td><td   colspan=2 class="brdbtm totbord" > ' + $('#GIT').val() + '</td></tr>');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >CNS</td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + $('#CNS').val() +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>Height </td><td   colspan=2 class="brdbtm totbord" > ' + $('#Height').val() + '</td></tr>');
+        //myWindow.document.write('<tr><td   class="totbord headrtd" colspan=2 valign=center >Weight</td><td  colspan=2 valign=center  class="brdbtm totbord"> ' + $('#Weight').val() +
+        //    ' </td><td class="totbord headrtd"  colspan=2  valign=center>CVS </td><td   colspan=2 class="brdbtm totbord" > ' + $('#CVS').val() + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+        var AdviceArray =''; if($('#DischargeAdvice').text()!=''){($('#DischargeAdvice').text()).split(' ,')};
+        var Totlen = AdviceArray.length;
+        
+       // var Rowcount = $('.Prnttbl tr').length //25;
+        if (AdviceArray!=[])
+        {
+            myWindow.document.write('<table width=100%><tr><td  colspan=8>&#160;</td></tr>');
+            myWindow.document.write('<tr ><td height=5px colspan=8 class=txtbld><U>ADVICE ON DISCHARGE</U>  </td></tr>');
+
+            var chkvar = 1;
+            for (var j = 0; j < Totlen; j++) {
+                var Adv = ($.trim(AdviceArray[j])).substring(0, 130);
+                if (Adv !== '') {
+                    myWindow.document.write('<tr ><td colspan=8 >' + (parseInt(j) + 1) + ') ' + Adv + '</td></tr><tr ></tr>');
+                    Rowcount++; chkvar = parseInt(chkvar) + 1;
+                    if ((Rowcount % 33 == 0)) {
+                        myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=185px colspan=8></td></tr>');
+                        if ((Rowcount % 33 == 0)) { Rowcount = 0; }
+                    }
+                }
+            }
+            if (chkvar <= 8) {
+                for (var j = Rowcount; j <= 33; j++) {
+                    myWindow.document.write('<tr ><td colspan=8 >&#160;</td></tr>');
+                    Rowcount++;
+                    if ((Rowcount % 33 == 0)) {
+                        myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=185px colspan=8></td></tr>');
+                        if ((Rowcount % 33 == 0)) { Rowcount = 0; }
+                    }
+                }
+            }
+            myWindow.document.write('</table>');
+        }
+      
+
+        //myWindow.document.write('<table width=100%>');
+        //myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr><tr ><td height=5px colspan=8 class=txtbld><U>INVESTIGATIONS</U>  </td></tr>');
+        //myWindow.document.write('</table>');
+
+        //myWindow.document.write('<table class=invstblnew width=100% bordercolor="1 px solid black" frame="box"  style="font-size:75%;border-spacing:0;border-collapse:collapse;">');     
+        //myWindow.document.write('<tr style="border:1px solid black"><td class="invstbl txtbld" width=10%> Bill No</td><td class="invstbl txtbld" width=8%> Date</td><td class="invstbl txtbld" colspan=2 width=20%> TestName</td><td class="invstbl txtbld" width=30%> SubTest Name</td><td class="invstbl txtbld" width=10%>Result</td><td class="invstbl txtbld" width=10%> Normal</td><td class="invstbl txtbld" width=12%> Std. Unit</td></tr>');
+     
+        //Rowcount = Rowcount + 3;
+        //var Rowcn = Rowcount;
+        //for (var j = 1; j <= $('.RRow').length ; j++) {
+        //    if ($('#tstSubTest' + j).text() != '')
+        //    {
+        //        myWindow.document.write('<tr ><td class=invstbl>' + $('#tstbill' + j).text() + '</td><td  class=invstbl> ' + $('#tstdate' + j).text() + '</td><td  class=invstbl  colspan=2> ' + $('#tstTest' + j).text() + '</td><td  class=invstbl> ' + $('#tstSubTest' + j).text() + '</td><td  class=invstbl> ' + $('#tstResult' + j).text() + '</td><td  class=invstbl>  ' + $('#tstNormal' + j).text() + '</td><td  class=invstbl>' + $('#tstUnit' + j).text() + '</td></tr>');
+        //        Rowcount++;
+        //    }
+        //    else
+        //    {
+        //        myWindow.document.write('<tr ><td  class=invstbl></td><td  class=invstbl></td><td  colspan=2  class=invstbl> ' + $('#tstTest' + j).text() + '</td><td  class=invstbl> </td><td  class=invstbl> </td><td  class=invstbl>  </td><td  class=invstbl></td></tr>');
+        //        Rowcount++;
+        //    }          
+        //    if ((Rowcount % 41) == 0) {
+        //        myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white!important;border-right:1px solid white!important;"><td height=240px colspan=8></td></tr>');               
+        //        Rowcount = 0;                            
+        //    }
+        //}
+        //for (var a = Rowcount; a <= 37 ; a++) {            
+        //    myWindow.document.write('<tr ><td class="invstblrght" width=10%> </td><td class="invstblrght" width=8%>&#160; </td><td class="invstblrght" colspan=2 width=20%> </td><td class="invstblrght" width=30%> </td><td class="invstblrght" width=10%></td><td class="invstblrght" width=10%></td><td class="invstblrght" width=12%></td></tr>');
+        //}
+        //myWindow.document.write('</table>');
+
+        var NextDate = '';
+        if (($('#AfterDays').val() || 0) > 0)
+        { NextDate = 'Next Review On ' + $('#AfterDate').val(); }
+        
+        if (Rowcount > 37)
+        {
+            myWindow.document.write('<table width=100%>');
+            myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=185px colspan=8></td></tr>');
+            myWindow.document.write('</table>');
+            Rowcount = 0;
+        }
+        myWindow.document.write('<table width=100%>');
+        for (var a = Rowcount; a <= 30 ; a++) {
+            myWindow.document.write('<tr ><td width=10%> </td><td width=8%>&#160; </td><td colspan=2 width=20%> </td><td width=30%> </td><td  width=10%></td><td width=10%></td><td  width=12%></td></tr>');
+        }
+        myWindow.document.write('</table>');
+        myWindow.document.write('<table width=100%><tr style="height:10px"><td colspan=8></td></tr> <tr align=center><td colspan=8> ' + NextDate + '</td></tr><tr ><td colspan=8>&#160;</td></tr>');
+        myWindow.document.write('<tr align=left><td colspan=8>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr align=left><td colspan=8>' + window.CompanySettingsArray.Address + '</td></tr><tr align=left><td colspan=8>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr align=left><td colspan=8>' + window.CompanySettingsArray.Email + '</td></tr><tr align=left><td colspan=8>' + window.CompanySettingsArray.PhoneNo + '</td></tr>');
+        myWindow.document.write('</table>');
+
+        myWindow.print();
+
+    }
+
+    function PrintthisDischargeSummaryNew(Flag)
+    {
+       // alert('')
+       
+        // var colo = window.CompanySettingsArray.ColourPrint;
+        var colo ='#cccccc';
+        var TotPQty = 0; var Rowcount = 7;
+        var MaxCnt = 32;
+
+        var myWindow = window.open("", "", "width=1500,height=1500");
+
+        $(ComapnydivToPrintLab).css('width', '100%'); $(ComapnydivToPrintLab).css('height', 'auto'); $(ComapnydivToPrintLab).css('max-height', '120px');
+
+        var Patient = $.trim($('#PName').val()).substring(0, 31);
+        var Age = $('#PatAge').text().split(', ');
+        console.log(Age)
+        var AdmitDate = $('#AdmittedDate').val(); //.split(' -')[0];
+        var DiscDate = $('#DischargeDate').val() + ' - ' + $('#Dischargetime').val();
+        var Address = $('#PatAdd1').text() + ' ' + $('#PatAdd2').text() + ' ' + $('#PatAdd3').text();
+        Address = Address.replace(/  +/g, ' ').substring(0, 60);
+
+        myWindow.document.write('<style type="text/css">#dd{ width: 100%;  border-collapse: collapse;};#dd td {border:1px solid black};.invstbl{border:1px solid black} .invstblrght{border-right:1px solid black}  .txtbld{font-weight:700;} .headrtd{ font-weight:700;width:15%} .brdbtm{width=35%}  .totbord{border:1px solid grey;height:40px;padding-left:3px }  .brdrgh{border-right:1px solid grey;} .brdbtmclr{border-bottom:1px solid black!important} .blckbrdr{padding:2px;height:45px} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+        myWindow.document.write(PrintBG3);
+        var Headdet = $("#Reasons option:selected").text(); 
+
+
+        myWindow.document.write('<table width=100% ><tr ><td colspan=8 height=100px width=100% ></td></tr>');
+
+        //myWindow.document.write('<table width=100% ><tr ><td colspan=8 width=100% style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('<tr ><td colspan=8 width=100% align=center style="font-weight:bold;color:white"><div class=brdbtmclr style="height:20px!important">DISCHARGE SUMMARY '+Headdet+'</div></td></tr>');
+        myWindow.document.write('</table>');
+
+
+
+        myWindow.document.write('<table  width=100% style="layout:fixed;font-family:tahoma;font-size: 11px;"><tr >' +
+            '<td style="font-family:tahoma;font-size: 11px;" width=15% align=left >Patient No<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" colspan=3 align=left width=30%>' + $('#RegNoSave').val() + "      IPNo- " + $('#SIP_Number').val() + '</td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" align=left width=20%>Gender/Age<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" width=20% >' + $('#PatGender').text().split(', ') + ' / ' + Age[1] + '</td></tr>');
+
+        myWindow.document.write('<tr >' +
+            '<td style="font-family:tahoma;font-size: 11px;" width=15% align=left >Name<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" colspan=3 align=left width=30%>' + Patient + '</td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" align=left width=20%>Admitting Doctor<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" width=20% >' + $("#DoctorName").val() + '</td></tr>');
+
+        myWindow.document.write('<tr style="vertical-align: top;">' +
+            '<td style="font-family:tahoma;font-size: 11px;"  width=15% align=left rowspan=2>Address<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" colspan=3 align=left width=30% rowspan=2>' + Address + '</td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" align=left width=20%>Date of Admission<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" width=20% >' + AdmitDate + '</td></tr>');
+
+        myWindow.document.write('<tr >' +
+            '<td style="font-family:tahoma;font-size: 11px;" align=left width=15%>Date of Discharge<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+            '<td style="font-family:tahoma;font-size: 11px;" width=20% >' + DiscDate + '</td></tr>');
+
+        //myWindow.document.write('<tr >' +
+        //    '<td width=15% align=left >Mobile No.<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+        //    '<td colspan=3 align=left width=30%>' + $("#PatNumber").text() + '</td>' +
+        //    '<td align=left width=20%>Customer<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+        //    '<td width=20% ></td></tr>');
+
+        //myWindow.document.write('<tr >' +
+        //    '<td width=15% align=left >Phone No.<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+        //    '<td colspan=3 align=left width=30%></td>' +
+        //    '<td align=left width=20%>Qualification<span style="float:right">&#160;&#160;:&#160;&#160;</span></td>' +
+        //    '<td width=20% ></td></tr>');
+
+        myWindow.document.write('<tr><td  colspan=8>&#160;<div class=brdbtmclr ></div></td></tr>');
+
+        myWindow.document.write('<tr ><td colspan=8 width=100% align=center style="font-weight:bold;">' +
+            '<div class=brdbtmclr style="font-family:tahoma;font-size: 11px;height:20px!important">DEPARTMENT OF PEDIATRICS</div></td></tr>');
+
+        myWindow.document.write('<tr >' +
+            '<td colspan=8 width=100% height=5px;></td></tr>' +
+            '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+            'FINAL DIAGNOSIS</td>' +
+            '</tr>');
+        myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#Diagnosis").val() + '</td></tr>');
+
+        myWindow.document.write('<tr >' +
+            '<td colspan=8 width=100% height=5px;></td></tr>' +
+           '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+           'PRESENT ILLNESS</td>' +
+            '</tr>');
+
+        myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#PresentComplaints").val() + '</td></tr>');
+
+        myWindow.document.write('<tr><td colspan=8 width=100%><table  style="font-family:tahoma;font-size: 11px;"  id=dd><tr><td><u>RS</u></td><td><u>GIT</u></td><td><u>CNS</u></td><td><u>Weight</u></td><td><u>CVS</u></td></tr><tr> <td>' + $('#RS').val() + '</td><td>' + $('#GIT').val() + '</td><td>' + $('#CNS').val() + '</td><td>' + $('#Weight').val() + '</td><td>' + $('#CVS').val() + '</td></tr></table></td></tr>');
+
+
+
+
+         myWindow.document.write('<tr >' +
+            '<td colspan=8 width=100% height=5px;></td></tr>' +
+            '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+            'PAST HISTORY</td>' +
+            '</tr>');
+         myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#PastHistory").val() + '</td></tr>');
+
+         myWindow.document.write('<tr >' +
+             '<td colspan=8 width=100% height=5px;></td></tr>' +
+             '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+             'FAMILY HISTORY</td>' +
+             '</tr>');
+         myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#FamilyHistory").val() + '</td></tr>');
+
+         myWindow.document.write('<tr >' +
+             '<td colspan=8 width=100% height=5px;></td></tr>' +
+             '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+             'DEVELOPMENT HISTORY</td>' +
+             '</tr>');
+         myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#DevelopHistory").val() + '</td></tr>');
+
+         
+
+
+
+
+
+        myWindow.document.write('<tr >' +
+           '<td colspan=8 width=100% height=5px;></td></tr>' +
+          '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+          'CLINICAL EXAMINATION</td>' +
+           '</tr>');
+
+        myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#Examination").val() + '</td></tr>');
+
+        for (var aa = 1; aa <= parseInt($('#rownoo').val() || 0) ; aa++) {
+            if (aa == parseInt($('#rownoo').val() || 0)) {
+                myWindow.document.write('<tr ><td align=right colspan=8 width=100%>PTO</td></tr>');
+                myWindow.document.write('<tr ><td height=100px colspan=8 width=100%>&#160;</td></tr>');
+
+
+            }
+            else {
+                myWindow.document.write('<tr ><td colspan=8 width=100%>&#160;</td></tr>');
+
+            }
+
+        }
+
+        if ($("#GenExamination").val() != '') {
+            myWindow.document.write('<tr >' +
+             '<td colspan=8 width=100% height=5px;></td></tr>' +
+             '<tr ><td colspan=8 width=100% style="font-weight:bold;font-family:tahoma;font-size: 11px;background-color:' + colo + ';color:black">' +
+             'INVESTIGATION</td>' +
+             '</tr>');
+            myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#GenExamination").val() + '</td></tr>');
+        }
+
+        myWindow.document.write('<tr ><td colspan=8 width=100% align=center style="font-weight:bold;font-family:tahoma;font-size: 11px;background-color:' + colo + ';color:white">' +
+          '<divOTHER INVESTIGATION RESULTS</td></tr>');
+
+       // myWindow.document.write('<tr ><td colspan=8 width=100%>' + $("#Immunization").val() + '</td></tr>');
+
+      
+
+
+
+        var tblen = $("#TblMedicine tr").length;
+
+       // alert(tblen)
+
+        //console.log(tblen)
+        var AAA = ""; var BBBNo = 0; var data = "";
+
+        for (var i = 1; i <= tblen; i++) {
+
+            
+            if ($("#tstdate" + i).text() != '') {
+
+                if ($.trim($("#tstdate" + i).text()) + '- ' + $.trim($("#tstTest" + i).text()) != BBBNo)
+                {
+                    AAA = $.trim($("#tstdate" + i).text()) + '- ' + $.trim($("#tstTest" + i).text());
+                    data += '<b><u>' + AAA + ':&#160;</b></u>'
+                }
+
+              
+                data += $.trim($("#tstSubTest" + i).text()) + ' - ' + $.trim($("#tstResult" + i).text()) + '&#160;,&#160;'
+                BBBNo = AAA
+            }
+        }
+
+        myWindow.document.write('<tr><td colspan=8 >' + data + '</td></tr>');
+
+        myWindow.document.write('<tr><td colspan=8 width=100% ></td><tr >' +
+          '<td colspan=8 width=100% height=5px;></td></tr>' +
+         '<tr ><td colspan=8 width=100% style="font-weight:bold;font-family:tahoma;font-size: 11px;background-color:' + colo + ';color:black">' +
+         'COURSE IN THE HOSPITAL</td>' +
+          '</tr>');
+        myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#Course").val() + '</td></tr>');
+
+        
+
+
+        
+
+        myWindow.document.write('<tr >' +
+            '<td colspan=8 width=100% height=5px;></td></tr>' +
+            '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+            'TREATMENT GIVEN</td>' +
+            '</tr>');
+        myWindow.document.write('<tr ><td style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + $("#Treatment").val() + '</td></tr>');
+
+
+
+
+
+      
+
+        myWindow.document.write('<tr >' +
+          '<td colspan=8 width=100% height=5px;></td></tr>' +
+         '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+         'ADVISE ON DISCHARGE</td>' +
+          '</tr>');
+
+         var myStr = $("#DischargeAdvice").html();
+         var newStr = myStr.replace(/,/g, '');
+        //alert(newStr)
+         myWindow.document.write('<tr ><td  style="font-family:tahoma;font-size: 11px;" colspan=8 width=100%>' + newStr + '</td></tr>');
+
+         if ($('#AfterDays').val() != '') {
+
+            myWindow.document.write('<tr >' +
+              '<td colspan=8 width=100% height=5px;></td></tr>' +
+             '<tr ><td colspan=8 width=100% style="font-family:tahoma;font-size: 11px;font-weight:bold;background-color:' + colo + ';color:black">' +
+             'REVIEW</td>' +
+              '</tr>');
+
+            myWindow.document.write('<tr ><td colspan=8 width=100%>On ' + $("#AfterDate").val() + ' (After ' + $("#AfterDays").val() + ' days)</td></tr>');
+        }
+
+       
+        myWindow.document.write('</table>');
+        myWindow.document.write('<table width=90%><tr><td height=50px></td><td align=right>Signature of Doctor</td></tr></table>');
+
+
+       myWindow.print();
+    }
+
+</script>

@@ -1,0 +1,3358 @@
+﻿
+@{
+    ViewBag.Title = "PurchaseAnalysis";
+}
+
+<style>
+    #radiodiv {
+        margin-left: -5%;
+    }
+</style>
+
+
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script src="~/Scripts/Chart/export-data.js"></script>
+<script src="~/Scripts/Chart/exporting.js"></script>
+<script src="~/app-assets/data/table2excel.js" type="text/javascript"></script>
+
+@*<script type="text/javascript" src="../Projectscript/Common.js"></script>*@
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .checkmark {
+        background-color: #eee;
+    }
+
+    input[name="Checkimeino"]:not(:checked),
+    input[name="Checkimeino"]:checked {
+        position: absolute;
+        left: -9999px;
+    }
+
+        input[name="Checkimeino"]:not(:checked) + label,
+        input[name="Checkimeino"]:checked + label {
+            position: relative;
+            padding-left: 25px;
+            padding-top: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            input[name="Checkimeino"]:not(:checked) + label:before,
+            input[name="Checkimeino"]:checked + label:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: -5px;
+                width: 30px;
+                height: 30px;
+                background: white;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, .1);
+                background-color: white;
+                outline: none;
+            }
+
+            input[name="Checkimeino"]:not(:checked) + label:after,
+            input[name="Checkimeino"]:checked + label:after {
+                content: '✔';
+                position: absolute;
+                top: 3px;
+                left: 6px;
+                font-size: 24px;
+                line-height: 0.8;
+                color: #0097a7;
+                transition: all .2s;
+            }
+
+            input[name="Checkimeino"]:not(:checked) + label:after {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            input[name="Checkimeino"]:checked + label:after {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+         
+        
+         input[name="gridheadchk"]:not(:checked),
+    input[name="gridheadchk"]:checked {
+        position: absolute;
+        left: -9999px;
+    }
+
+      input[name="gridheadchk"]:not(:checked) + label,
+        input[name="gridheadchk"]:checked + label {
+            position: relative;
+            padding-left: 25px;
+            padding-top: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            input[name="gridheadchk"]:not(:checked) + label:before,
+            input[name="gridheadchk"]:checked + label:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: -5px;
+                width: 30px;
+                height: 30px;
+                background: white;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, .1);
+                background-color: white;
+                outline: none;
+            }
+
+            input[name="gridheadchk"]:not(:checked) + label:after,
+            input[name="gridheadchk"]:checked + label:after {
+                content: '✔';
+                position: absolute;
+                top: 3px;
+                left: 6px;
+                font-size: 24px;
+                line-height: 0.8;
+                color: black;
+                transition: all .2s;
+            }
+
+            input[name="gridheadchk"]:not(:checked) + label:after {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            input[name="gridheadchk"]:checked + label:after {
+                opacity: 1;
+                transform: scale(1);
+            }
+   
+         .modal-xl {
+        max-width: 100%;
+        margin-left: 10%;
+        margin-right: 3%;
+    }          
+</style>
+<div class="myData" data-x="M201" />
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td class="HideWhenLoad" style="display:none"><h4 id="header"></h4></td>
+                                <td class="HideWhenLoad" style="display:none">
+                                <label>Filter</label>
+                                </td>
+                                <td class="HideWhenLoad" style="display:none">
+                                    <select id="types" class="form-control">
+                                    <option value="0">Equal to</option>
+                                    <option value="1">Greater than</option>
+                                    <option value="2">Less than</option>
+                                    <option value="3">Color</option>
+                                    <option value="4">Check</option>
+                                    <option value="5">Uncheck</option>
+                                   
+                                    </select>
+                                </td>
+                                <td class="HideWhenLoad" style="display:none">
+                                    <input type="text" id="SelectAll" class="form-control">
+                                </td>
+                                <td class="HideWhenLoad" style="display:none">
+                                    <button type="button" style="width:100px;margin-left:10%" id="Apply" onclick="Apply()" class="btn btn-success btn-min-width mr-1 mb-1">Apply</button>
+                                </td>
+                                <td class="HideWhenLoad" style="display:none">
+                                    <button type="button" style="width:100px;margin-left:5%" id="Remove" onclick="Remove()" class="btn btn-danger btn-min-width mr-1 mb-1">Remove</button>
+                                </td>
+                                <td width="5%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#area').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+                                <td align="right">
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-raised btn-outline-primary btn-min-width dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export</button>
+                                        <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                            <a class="dropdown-item" href="#" onclick="ExcelExportFn(0)"><i class="fa fa-th-list"></i> Excel</a>
+                                            <a class="dropdown-item" href="#"  onclick="ExcelExportFn(1)"><i class="fa fa-print"></i> Print</a>
+                                        </div>
+                                    </div>
+                                    
+
+
+                                    <div class="btn-group" id="buttonPlace" style="display:none1">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div>
+
+                            <div class="heading-elements">
+                               
+                                <div style="margin-left:0.5%">
+                                    <h6><span  id="SuppName"></span></h6>
+                                </div>
+                               <hr />
+                               
+                                <div id="divreport" style="overflow:auto;display:none;height:620px">
+                                   
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable" style="width:200%"></table><br />
+
+                                </div>
+                                <input type="hidden" id="RowGet" />
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                    <table id="TblreportExcel"></table>
+                                </div>
+                                
+
+                                <br /><br />
+                                <div class="form-actions">
+                                    <div class="text-right">
+                                        <button type="button" style="width:100px" id="btnsave" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                        <button type="button" style="width:100px" id="btncopy" onclick="enablenobox()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                        <button style="display:none" type="button" id="" onclick="PrintthisBill()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                        <button type="button" style="width:100px" id="btnnew"  class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                        <button style="display:none" type="button" id="" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+@*<div style="display:none">
+        <input type="text" id="ResultLength" />
+    </div>
+
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>*@
+
+
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Purchase Analysis</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Purchase Type</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select type="text" class="form-control" id="Type">
+                                <option value="0">-All-</option>
+                                <option value="Local">Local Purchase</option>
+                                <option value="Import">Import Purchase</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Movement</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select type="text" class="form-control" id="movement" onchange="getcalcmonth()">
+                                <option value="1">1 Month</option>
+                                <option value="3">3 Month</option>
+                                <option value="6">6 Month</option>
+                                <option value="9">9 Month</option>
+                                <option value="12">12 Month</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Movement From Date </label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="DateFrom" class="form-control">
+                        </div>
+
+
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Movement To Date </label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="DateTo" class="form-control" onchange="getcalcmonth()">
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Group </label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="Group" class="form-control" name="priority" onchange="SubGroupGets()">
+                                <option value='0'>-All-</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Sub Group </label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="Subgroup" class="form-control" name="priority">
+                                <option value='0'>-All-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Category </label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="Category" class="form-control" name="priority" onchange="SubCategoryGets()">
+                                <option value='0'>-All-</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                        <label style="margin-top:5px;">Sub Category</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="Subcategory" class="form-control" name="priority">
+                                <option value='0'>-All-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3">
+                        <label for="Values" style="margin-top:5px;">Supplier</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="suppliername" class="form-control" onkeyup="Checksupempty(event)">
+                            <input type="hidden" id="supplierId" class="form-control" />
+                        </div>
+
+                        <div class="col-md-3"> 
+                        <label style="margin-top:5px;">Order For</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="orderfor" class="form-control">
+                                <option value="1">1 Month</option>
+                                <option value="3">3 Month</option>
+                                <option value="6">6 Month</option>
+                                <option value="9">9 Month</option>
+                                <option value="12">12 Month</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-outline-primary">Go</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left show" id="iconForm" tabindex="-1" role="dialog" aria-labelledby="headiddetialls" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);height:1800px;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:180%; margin-left:-270px;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="headiddetialls"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#iconForm').hide();" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="View">
+                <div class="modal-body">
+
+                    <div id="div1" style="height:500px;overflow:auto;">
+                        <table id="Stocklist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="RowGet" />
+                    <input type="button" id="btn1" class="btn btn-outline-secondary btn-lg" style="height:45px;width:75px" onclick="$('#iconForm').hide();" value="close">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade text-left show" id="OrderPopup" tabindex="-1" role="dialog" aria-labelledby="headdetialls" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);height:1800px;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:180%; margin-left:-270px;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="headdetialls"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#OrderPopup').hide(),$('#Chkflg').val('');" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="View">
+                <div class="modal-body">
+
+                    <div id="div1" style="height:500px;overflow:auto;">
+                        <table id="OrderList" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="RowGet" />
+                    <input type="button" id="btn1" class="btn btn-outline-secondary btn-lg" style="height:45px;width:75px" onclick="$('#OrderPopup').hide(),$('#Chkflg').val('');" value="close">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div id="PendingPurchaseTransactionPopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="PurchaseTransactionheader" style="padding-right: 17px;background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:250px">
+        <div class="modal-content" style="width:180%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="PendingPurchaseTransactionheader"></h4>
+
+                <div id="allpendingcheckboxdiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                    <input type="checkbox" class="custom-control-input" id="select_statuspending" onchange="PendingPurchasespopup($('#Chkflg').val())">
+                    <label class="custom-control-label" for="select_statuspending">All</label>
+                </div>
+
+                <button type="button" class="close" onclick="ClosePendingPurTransPopup()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <section id="pendingpurchasetrans" style="display:none">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3">
+                                    <label style="font-weight:bold">Total Pending :</label>
+                                    <label style="font-weight:bold" id="totalpending"></label>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <label style="font-weight:bold">Total In transit Qty. :</label>
+                                    <label style="font-weight:bold" id="totalintransit"></label>
+                                </div>
+                                <div class="col-md-1"></div>
+
+
+                            </div>
+                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                <div id="" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                    <input type="hidden" id="pendingtransid" />
+                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblpendingpurchasetrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+<div style="display:none">
+    <input type="text" id="Chkflg" />
+    <input type="text" id="ModelsValue1" />
+    <input type="text" id="ModelsValue2" />
+    <input type="text" id="ModelsValue3" />
+    <input type="text" id="ModelsValue4" />
+    <input type="text" id="ModelsValue5" />
+    <input type="text" id="ModelsValue6" />
+    <input type="text" id="ModelsValue7" />
+    <input type="text" id="ModelsValue8" />
+    <input type="text" id="selectedrowindex" />
+</div>
+
+<div id="salestranspopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;top:-1%">
+    <div class="modal-dialog modal-xl" role="document" style="margin-top:100px">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="salesheader"></h4>
+
+                <div style="float:right" id="alltranscheckboxdivsales" class="custom-control custom-checkbox col-md-1">
+                    <input type="checkbox" class="custom-control-input" checked="" id="status_type" onchange="GetTrans()">
+                    <label class="custom-control-label" for="status_type" id="idforlabeltype">All</label> 
+                </div>
+                <button type="button" class="close" onclick="salestranspopuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="salestransdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                                    <div id="" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                                        <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblsalestrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form id="purchasetransdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card-body">
+                                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                                <div id="" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                                    <input type="hidden" id="transid" />
+                                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblurchasetrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form id="alltranstransdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                                    <div id="" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px;font-size:small">
+
+                                                        <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblalltrans" style="width:100%;overflow-x:scroll;overflow-y:scroll"></table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+<div id="MonthwisePurchase" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px;background:rgba(0,0,0,0.5); display: block; display:none;">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:250px">
+        <div class="modal-content" style="width:180%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="MonthwisePurchaseheader"></h4>
+
+
+                <button type="button" class="close" onclick="$('#MonthwisePurchase').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section id="MonthwisePurchasediv" style="display:none;">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div id="PurchaseDetails">
+                                                <h5 style="margin-left:20px">Purchase Details</h5>
+                                                <div class="card-block">
+                                                    <table class="table table-responsive-md-md text-center table-bordered table-striped" id="tblMonthwisePurchase" style="font-size:small">
+                                                        <tr>
+                                                            <th>Year</th>
+                                                            <th>January</th>
+                                                            <th>February</th>
+                                                            <th>March</th>
+                                                            <th>April</th>
+                                                            <th>May</th>
+                                                            <th>June</th>
+                                                            <th>July</th>
+                                                            <th>August</th>
+                                                            <th>September</th>
+                                                            <th>October</th>
+                                                            <th>November</th>
+                                                            <th>December</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div id="SalesDetails">
+                                                <h5 style="margin-left:20px">Sales Details</h5>
+                                                <div class="card-block">
+                                                    <table class="table table-responsive-md-md text-center table-bordered table-striped" id="tblMonthwiseSales" style="font-size:small">
+                                                        <tr>
+                                                            <th>Year</th>
+                                                            <th>January</th>
+                                                            <th>February</th>
+                                                            <th>March</th>
+                                                            <th>April</th>
+                                                            <th>May</th>
+                                                            <th>June</th>
+                                                            <th>July</th>
+                                                            <th>August</th>
+                                                            <th>September</th>
+                                                            <th>October</th>
+                                                            <th>November</th>
+                                                            <th>December</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    function PendingPurchasespopup(ItemId) {
+        var pending = 0;
+        var Intransit = 0;
+        if ($('#select_statuspending').prop("checked"))
+            var s = 1;
+        else
+            var s = 0;
+
+        $('#totalpending').text('');
+        $('#pendingtransid').val(0);
+        if ($('#productId_0').val() != 0) {
+
+            disable_datatable('tblpendingpurchasetrans');
+
+
+            var data = {};   //array
+            data.ItemId = ItemId;
+            data.Department = ERPDeptId;
+            data.UserId = ERPUserId;
+            data.Type = s;
+
+            $.ajax({
+                type: "POST",
+                url: "../StockReport/PendingPurchaseOrderSQ",
+                data: data,
+                success: function (result) {
+
+                    var ProdRow = "<thead><tr><th>Order#</th><th class='text-center'>Date</th><th>Supplier</th><th>Performa#</th><th>Order Qty.</th><th>In transit Qty.</th><th>Received Qty.</th><th class='text-center'>Arrival Date</th><th style='text-align:right'>FC Cost</th><th>Currency</th><th style='display:none'></th></tr>" +
+                                         "<tr><th>Order#</th><th class='text-center'>Date</th><th>Supplier</th><th>Performa#</th><th>Order Qty.</th><th>In transit Qty.</th><th>Received Qty.</th><th class='text-center'>Arrival Date</th><th style='text-align:right'>FC Cost</th><th>Currency</th><th style='display:none'></th></tr></thead><tbody>";
+
+                    if (result.length != 0) {
+
+                        for (var p = 0; p < result.length; p++) {
+                            if (SuppDetailsRight == 'Yes') {
+                                ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                "<td class='text-center'>" + result[p].OrderNo + "</td>" +
+                                "<td class='text-center'>" + result[p].OrderDate + "</td>" +
+                                "<td class='text-left'>" + result[p].Supplier + "</td>" +
+                                 "<td class='text-left'>" + result[p].Column1 + "</td>" +
+                                "<td style='text-align:center' class='QtyColour'>" + result[p].OrderQty + "</td>" +
+                               "<td style='text-align:center' class='QtyColour'>" + result[p].PerformaQty + "</td>" +
+                               "<td style='text-align:center' class='QtyColour'>" + result[p].RecQty + "</td>" +
+                                "<td style='text-align:center'>" + result[p].PerformaDate + "</td>" +
+                                "<td style='text-align:right'>" + parseFloat(result[p].FCCost).toFixed(Decimal) + "</td>" +
+                                "<td class='text-left'>" + result[p].Currency + "</td>" +
+                                "<td class='text-right' style='display:none'>" + parseFloat(result[p].PendingQty).toFixed(Decimal) + "</td></tr>";
+                            }
+                            else {
+                                ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                "<td class='text-center'>" + result[p].OrderNo + "</td>" +
+                                "<td class='text-center'>" + result[p].OrderDate + "</td>" +
+                                "<td></td>" +
+                                 "<td class='text-left'>" + result[p].Column1 + "</td>" +
+                                "<td style='text-align:center' class='QtyColour'>" + result[p].OrderQty + "</td>" +
+                                "<td style='text-align:center' class='QtyColour'>" + result[p].PerformaQty + "</td>" +
+                                "<td style='text-align:center' class='QtyColour'>" + result[p].RecQty + "</td>" +
+                                "<td style='text-align:center'>" + result[p].PerformaDate + "</td>" +
+                                "<td></td>" +
+                                "<td class='text-left'>" + result[p].Currency + "</td>" +
+                                "<td class='text-right' style='display:none'>" + parseFloat(result[p].PendingQty).toFixed(Decimal) + "</td></tr>";
+                            }
+                            pending += parseFloat(result[p].PendingQty);
+                            Intransit += parseFloat(result[p].PerformaQty);
+                        }
+
+                        $('#tblpendingpurchasetrans').html(ProdRow + '</tbody>');
+                        datatableWithsearch('tblpendingpurchasetrans', 'MultiplePurchaseOrderT');
+                        $('#tblpendingpurchasetrans').scrollTop(0);
+                        $('#totalpending').text(pending);
+                        $('#totalintransit').text(Intransit);
+
+                    }
+                    else {
+                        $('#totalpending').text(0);
+                        $('#totalintransit').text(0);
+                        $('#tblpendingpurchasetrans').html(ProdRow + '</tbody>');
+                        datatableWithsearch('tblpendingpurchasetrans', 'MultiplePurchaseOrderT');
+                    }
+
+
+                    $('#allpendingcheckboxdiv').show();
+                    $('#productpdiv').hide();
+                    $('#productdiv').hide();
+                    $('#salestransdiv').hide();
+                    $('#PurchaseTransactionPopup').hide();
+                    $("#PendingPurchaseTransactionPopup").css("margin-top", '0px');
+                    $('#PendingPurchaseTransactionPopup').show();
+                    var Id = $('.rowactive').attr('id').match(/\d+/)[0];
+                    var ProductDesc = $('#desc' + Id).text();
+                    var product = $('#itemcode' + Id).text();
+                    $('#PendingPurchaseTransactionheader').text(ProductDesc + '(' + product + ')' + ' :  Pending Details');
+                    $('#pendingpurchasetrans').show();
+
+                }
+            });
+        }
+
+    }
+
+    function ClosePendingPurTransPopup() {
+        var Z = $('#tblpendingpurchasetrans tr').length;
+        $('#PendingPurchaseTransactionPopup').hide();
+        $('#pendingpurchasetrans').hide();
+        for (var j = 1; j <= Z; j++) {
+            $('#pid_' + j).remove();
+        }
+    }
+
+
+
+
+    function Checksupempty(e)
+    {
+        var charCode = (e.which) ? e.which : e.keyCode
+        if (e.which != 13) {
+            $('#supplierId').val(''); 
+        }
+    }
+
+   
+    function salestranspopuprefresh() {
+        $('#tblsalestrans tr td').remove();
+        $('#tblurchasetrans tr td').remove();
+        $('#tblalltrans tr td').remove();
+        $('#salestranspopupdiv').hide();
+        $('#salestransdiv').hide();
+        $('#purchasetransdiv').hide();
+        $('#alltranstransdiv').hide();
+        $('#salesheader').text('Transaction Details');
+        $('#status_type').prop("checked",true);
+    }
+
+    function TransactionGet(ProductId, type)
+    {
+
+        var Id = $('.rowactive').attr('id').match(/\d+/)[0];
+        var ProductDesc = $('#desc' + Id).text();
+        var product = $('#itemcode' + Id).text();
+
+        if (ProductId > 0)
+        {
+            if ($('#status_type').prop("checked"))
+                var flag = 1;
+            else
+                var flag = 0;
+
+            if (type == 1)                     //Sales
+            {
+                $('#idforlabeltype').text('All');
+                var data = {};
+                data.ProductId = ProductId;
+                data.DeptId = ERPDeptId;
+                data.type = flag;
+                data.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: '../SalesInvoice/SalesTransGetandGets',
+                    data: data,
+                    success: function (result) {
+
+                        disable_datatable('tblsalestrans');
+                        $('#MonthwisePurchase').hide()
+                        $('#salestranspopupdiv').show();
+                        $('#purchasetransdiv').hide();
+                        $('#alltranstransdiv').hide();
+                        $('#salesheader').text(ProductDesc + '(' + product + ')' +  ' - Last Sales Transaction Details');
+                        $('#salestransdiv').show();
+                        $('#tblsalestrans tr').remove();
+
+                        var ProdRow = "<thead><tr><th>SalesInvoice</th><th>Date</th><th style='width:12%'>AccountName</th><th style='width:15%'>Address</th><th style='width:6%'>Qty.</th><th>Price</th><th>Location</th><th>SalesMan</th><th style='width:7%'>LPO</th><th>Dept</th></tr>" +
+                                           "<tr><th>SalesInvoice</th><th>Date</th><th style='width:12%'>AccountName</th><th style='width:15%'>Address</th><th style='width:6%'>Qty.</th><th>Price</th><th>Location</th><th>SalesMan</th><th style='width:7%'>LPO</th><th>Dept</th></tr></thead><tbody>";
+
+                        if (result.length != 0) {
+
+                            for (var n = 0; n < result.length; n++) {
+
+                                ProdRow += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                   "<td class='text-left'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+                                   "<td class='text-left'>" + result[n].InvDate + "                                   </td>" +
+                                   "<td class='text-left'>" + result[n].CustName + "                                   </td>" +
+                                   "<td class='text-left'>" + result[n].CustAddress + "                                   </td>" +
+                                   "<td class='text-right'>" + result[n].ProdQty + "                                   </td>" +
+                                   "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                                   "<td class='text-left'>" + result[n].Location + " </td>" +
+                                   "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                                   "<td class='text-left'>" + result[n].LPONumber + "                                   </td>" +
+                                   "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                                    "</tr>";
+                            }
+                            $('#tblsalestrans').html(ProdRow + '</tbody>');
+                            datatableWithsearch('tblsalestrans', 'MultipleSalesT');
+                            $('#tblsalestrans').scrollTop(0);
+                        }
+                        else {
+                            $('#tblsalestrans').html(ProdRow + '</tbody>');
+                            datatableWithsearch('tblsalestrans', 'MultipleSalesT');
+                        }
+                    }
+                });
+            }
+            else if (type == 2) {           //Purchase
+                $('#idforlabeltype').text('All');
+                var data = {};
+                data.ItemId = ProductId;
+                data.DepartmentId = ERPDeptId;
+                data.UserId = ERPUserId;
+                data.Type = flag;
+                $.ajax({
+                    type: "POST",
+                    url: '../Purchase/PurchaseTransactionSearch',
+                    data: data,
+                    success: function (result) {
+
+                        disable_datatable('tblurchasetrans');
+                        $('#MonthwisePurchase').hide()
+                        $('#salestranspopupdiv').show();
+                        $('#salestransdiv').hide();
+                        $('#alltranstransdiv').hide();
+                        $('#purchasetransdiv').show();                      
+                        $('#tblurchasetrans tr td').remove();
+                        $('#salesheader').text(ProductDesc + '(' + product + ')' + ' - Last Purchase Transaction Details   [ Average Cost : ' + parseFloat(result[0].Cost).toFixed(Decimal) + ']');
+
+                        var ProdRow = "<thead><tr><th>Invoice No</th><th>Date</th><th>Supplier</th><th>Supp_No</th><th>Qty.</th><th>FC Cost</th><th>Cost</th><th>Location</th><th>Currency</th><th>Dept</th><th>PO_Ref</th><th>OtherCost</th></tr>" +
+                                             "<tr><th>Invoice No</th><th>Date </th><th>Supplier</th><th>Supp_No</th><th>Qty.</th><th>FC Cost</th><th>Cost</th><th>Location</th><th>Currency </th><th>Dept</th><th>PO_Ref</th><th>OtherCost</th></tr></thead><tbody>";
+
+                        if (result.length != 0) {
+
+                            var LeastCost = 0;
+                            var LeastCostRows = [];
+                            for (var p = 0; p < result.length; p++) {
+
+                                var a = (result[p].Rate).toFixed(Decimal);
+
+                                if (p == 0 || parseFloat(a) <= parseFloat(LeastCost)) {         //For HighLight Least Cost
+                                    if (parseFloat(a) == parseFloat(LeastCost))
+                                    {
+                                        LeastCostRows.push(p + 1);
+                                    }
+                                    else {
+                                        
+                                        LeastCostRows.length = 0;
+                                        LeastCostRows.push(p + 1);
+                                    }
+                                    LeastCost = a;
+
+                                    
+                                }
+
+                                var lpotr = '';
+                                if (result[p].LPO != '0')
+                                    lpotr = result[p].LPO;
+
+                                if (result[p].PurchaseType == 'Local' || SuppDetailsRight == 'Yes') {
+                                    ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                        "<td style='width:12%' class='text-left'>Sl No: (" + result[p].SlNo + ") - Inv No: (" + result[p].InvoNo + ")</td>" +
+                                        "<td class='text-left'>" + result[p].InvoDate + "</td>" +
+                                        "<td style='width:20%' class='text-left'>" + result[p].SupplierName + "</td>" +
+                                        "<td class='text-left'><input type='hidden' id=" + 'AccSupp_' + (p + 1) + " value='" + result[p].AccName + "' />" + result[p].AccName + "</td>" +
+                                        "<td style='text-align:right'>" + result[p].Quantity + "</td>" +
+                                        "<td style='text-align:right'>" + parseFloat(result[p].FCGrandTotal).toFixed(Decimal) + "</td>" +
+                                        "<td style='text-align:right' id=" + 'CCost_' + (p + 1) + ">" + a + "</td>" +
+                                        //"<td style='text-align:right'>" + parseFloat(result[p].Cost).toFixed(Decimal) + "</td>" +
+                                        "<td class='text-left'>" + result[p].Locnname + "</td>" +
+                                        "<td class='text-left'>" + result[p].CurrencyName + "</td>" +
+                                        "<td class='text-left'>" + result[p].DeptName + "</td>" +
+                                        "<td class='text-left'>" + lpotr + "</td>" +
+                                         "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                                        "</tr>";
+                                }
+                                else {
+                                    ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                        "<td style='width:12%' class='text-left'>Sl No: (" + result[p].SlNo + ") - Inv No: (" + result[p].InvoNo + ")</td>" +
+                                        "<td class='text-left'>" + result[p].InvoDate + "</td>" +
+                                        "<td></td>" +
+                                        "<td><input type='hidden' id=" + 'AccSupp_' + (p + 1) + " value='" + result[p].AccName + "' /></td>" +
+                                        "<td style='text-align:right'>" + result[p].Quantity + "</td>" +
+                                        "<td style='text-align:right'>" + parseFloat(result[p].FCGrandTotal).toFixed(Decimal) + "</td>" +
+                                        "<td style='text-align:right' id=" + 'CCost_' + (p + 1) + ">" + a + "</td>" +
+                                        //"<td style='text-align:right'>" + parseFloat(result[p].Cost).toFixed(Decimal) + "</td>" +
+                                        "<td class='text-left'>" + result[p].Locnname + "</td>" +
+                                        "<td class='text-left'>" + result[p].CurrencyName + "</td>" +
+                                        "<td class='text-left'>" + result[p].DeptName + "</td>" +
+                                        "<td class='text-left'>" + lpotr + "</td>" +
+                                         "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                                        "</tr>";
+                                }
+                            }
+
+                            $('#tblurchasetrans').html(ProdRow + '</tbody>');
+
+
+                            var LeastCostRowsSupp = [];
+
+                            LeastCostRows.forEach(function (item) {
+                                if (!LeastCostRowsSupp.includes($("#AccSupp_" + item).val())) {
+                                    document.getElementById('pdctrow' + item).style.background = '#40bf80'
+                                    document.getElementById('pdctrow' + item).style.color = 'white'
+                                    LeastCostRowsSupp.push($("#AccSupp_" + item).val());
+                            }
+                            });
+
+                            //document.getElementById('pdctrow' + LeastCostRow).style.background = '#40bf80'
+
+                            //$("#pdctrow" + LeastCostRow).css("background-color", "#40bf80");
+
+                            datatableWithsearch('tblurchasetrans', 'MultiplePurchaseTn');
+                            $('#tblurchasetrans').scrollTop(0);
+
+                        }
+                        else {
+                            $('#tblurchasetrans').html(ProdRow + '</tbody>');
+                            datatableWithsearch('tblurchasetrans', 'MultiplePurchaseTn');
+                        }
+
+                    }
+                });
+            }
+            else if (type == 3) {           //All
+
+                $('#idforlabeltype').text('Previous');
+                var data = {};
+                data.ItemId = ProductId;
+                data.DepartmentId = ERPDeptId;
+                data.UserId = ERPUserId;
+                data.Type = flag;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchase/TransactionSearch",
+                    data: data,
+                    success: function (result) {
+                        disable_datatable('tblalltrans');
+                        $('#MonthwisePurchase').hide()
+                        $('#salestranspopupdiv').show();
+                        $('#salestransdiv').hide();
+                        $('#alltranstransdiv').show();
+                        $('#purchasetransdiv').hide();
+                        $("#txtquantity0,#txtproduct0").blur();
+                        $('#tblalltrans tr').remove();
+                        $('#salesheader').text(ProductDesc + '(' + product + ')' + ' - All Transaction Details');
+
+                        var ProdRow = "<thead><tr><th>Bill Number</th><th>Invoice Date</th><th>TransType</th><th>Salesman</th><th>Status</th><th>Account Name</th><th>Remarks</th><th>Qty.</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Dept</th><th>Job Code</th></tr>" +
+                                        "<tr><th>Bill Number</th><th>Date</th><th>TransType</th><th>Salesman</th><th>Status</th><th>Account Name</th><th>Remarks</th><th>Qty.</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Dept</th><th>Job Code</th></tr></thead><tbody>";
+
+
+                        if (result.length != 0) {
+                          
+                            var BalQty = parseInt(result[0].OpeningQty);
+
+                            for (var n = 0; n < result.length; n++) {
+                                if (result[n].Status == 'IN') {
+                                    BalQty += parseInt(result[n].Quantity)
+                                }
+                                else {
+                                    BalQty = BalQty - parseInt(result[n].Quantity)
+                                }
+
+                                ProdRow += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                           "<td class='text-left text-sizebold'  style='width:1%'> " + result[n].BillNo + "</td>" +
+                                             "<td class='text-left text-sizebold' style='width:1%'>" + result[n].InvoDate + " </td>" +
+                                           "<td class='text-left text-sizebold' style='width:1%'>" + result[n].TransType + "  </td>" +
+                                          "<td class='text-left text-sizebold' style='width:3%'>" + result[n].Salesman + " </td>" +
+                                            "<td class='text-left text-sizebold' style='width:1%'>" + result[n].Status + "  </td>" +
+                                          "<td class='text-left text-sizebold' style='width:6%'>" + result[n].AccountName + " </td>" +
+                                            "<td class='text-left text-sizebold' style='width:6%'>" + result[n].Remarks + " </td>" +
+                                          "<td class='text-left text-sizebold' style='width:1%'>" + result[n].Quantity + " </td>" +
+                                          "<td class='text-left text-sizebold' style='width:1%'>" + BalQty + "  </td>" +
+                                          "<td class='text-right text-sizebold' style='width:3%'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                                          "<td class='text-right text-sizebold' style='width:3%'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                                           "<td class='text-left text-sizebold' style='width:5%'>" + result[n].Locnname + " </td>" +
+                                            "<td class='text-left text-sizebold' style='width:1%'>" + result[n].DeptName + "  </td>" +
+                                            "<td class='text-left text-sizebold' style='width:6%'>" + result[n].JobCode + "  </td>" + "</tr>";
+                            }
+                            $('#tblalltrans').html(ProdRow + '</tbody>');
+                            datatableWithsearch('tblalltrans', 'MultipleAllTransaction');
+                            $('#alltranstransdiv').scrollTop(0);
+
+                        }
+                        else {
+                            $('#tblalltrans').html(ProdRow + '</tbody>');
+                            datatableWithsearch('tblalltrans', 'MultipleAllTransaction');
+                        }
+                    }
+                });
+            }
+            else if (type == 4) {           //monthly
+                $('#salestranspopupdiv').hide();
+                MonthwisePurchasePopup(ProductId, product, ProductDesc)
+            }
+        }
+       
+    }
+
+    function MonthwisePurchasePopup(ItemId, Code, Desc) {
+       
+        $('#MonthwisePurchasediv').show();
+        $('#MonthwisePurchase').show();
+
+
+        var data = {};
+        data.ItemId = ItemId;
+        data.Department = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: '../Purchaseandsalesreports/MonthwisePurchaseStockQuery',
+            data: data,
+            success: function (result) {
+                var ProductDesc = Desc;
+                var product = Code;
+                $('#MonthwisePurchaseheader').text(ProductDesc + '(' + product + ')' + ' - Monthwise Details');
+                MonthwisePurchaseLoad(result);
+
+                var data = {};
+                data.ItemId = ItemId;
+                data.Department = ERPDeptId;
+                $.ajax({
+                    type: "POST",
+                    url: '../Purchaseandsalesreports/MonthwiseSalesStockQuery',
+                    data: data,
+                    success: function (result) {
+                        MonthwiseSalesLoad(result);
+                    }
+                });
+            }
+        });
+    }
+
+
+    function MonthwisePurchaseLoad(result) {
+
+
+        $('#tblMonthwisePurchase td').remove();
+        for (var n = 0; n < result.length; n++) {
+
+            var ProdRow = "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+             "<td >" + result[n].Year + "                          </td>" +
+            "<td >" + parseInt(result[n].Column1 || 0) + "       </td>" +
+             "<td >" + parseInt(result[n].Column2 || 0) + "        </td>" +
+            "<td >" + parseInt(result[n].Column3 || 0) + "      </td>" +
+            "<td >" + parseInt(result[n].Column4 || 0) + "       </td>" +
+             "<td >" + parseInt(result[n].Column5 || 0) + "       </td>" +
+            "<td >" + parseInt(result[n].Column6 || 0) + "         </td>" +
+            "<td >" + parseInt(result[n].Column7 || 0) + "         </td>" +
+             "<td >" + parseInt(result[n].Column8 || 0) + "        </td>" +
+            "<td >" + parseInt(result[n].Column9 || 0) + "         </td>" +
+            "<td >" + parseInt(result[n].Column10 || 0) + "        </td>" +
+             "<td >" + parseInt(result[n].Column11 || 0) + "       </td>" +
+            "<td >" + parseInt(result[n].Column12 || 0) + "        </td>" +
+              "<td >" + parseInt(result[n].Column13 || 0) + "       </td>" +
+            "</tr>";
+
+            $('#tblMonthwisePurchase').append(ProdRow);
+
+        }
+    }
+
+    function MonthwiseSalesLoad(result) {
+
+
+        $('#tblMonthwiseSales td').remove();
+        for (var n = 0; n < result.length; n++) {
+
+            var ProdRow = "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+            "<td >" + result[n].Year + "                          </td>" +
+            "<td >" + parseInt(result[n].Column1 || 0) + "       </td>" +
+             "<td >" + parseInt(result[n].Column2 || 0) + "        </td>" +
+            "<td >" + parseInt(result[n].Column3 || 0) + "      </td>" +
+            "<td >" + parseInt(result[n].Column4 || 0) + "       </td>" +
+             "<td >" + parseInt(result[n].Column5 || 0) + "       </td>" +
+            "<td >" + parseInt(result[n].Column6 || 0) + "         </td>" +
+            "<td >" + parseInt(result[n].Column7 || 0) + "         </td>" +
+             "<td >" + parseInt(result[n].Column8 || 0) + "        </td>" +
+            "<td >" + parseInt(result[n].Column9 || 0) + "         </td>" +
+            "<td >" + parseInt(result[n].Column10 || 0) + "        </td>" +
+             "<td >" + parseInt(result[n].Column11 || 0) + "       </td>" +
+            "<td >" + parseInt(result[n].Column12 || 0) + "        </td>" +
+              "<td >" + parseInt(result[n].Column13 || 0) + "       </td>" +
+            "</tr>";
+
+            $('#tblMonthwiseSales').append(ProdRow);
+
+        }
+    }
+
+    function GetTrans()
+    {
+        var type;
+        if ($('#salestransdiv').is(':visible'))                
+            type = 1;      
+        else if ($('#purchasetransdiv').is(':visible'))                  
+            type = 2;       
+        else if ($('#alltranstransdiv').is(':visible'))        
+            type = 3;                            
+
+        TransactionGet($('#Chkflg').val(), type);
+    }
+
+
+    $(document).keydown(function (e) {
+
+        var rowCount = document.getElementById('Tblreport').rows.length;
+        var x = event.keyCode;
+
+       
+        if ((x > 111 && x < 124) && !($('#modal_dialog').is(':visible'))) {
+            if (x == 115) {                     // F4
+                GetOrder($('#Chkflg').val());
+                $('#iconForm').hide();
+                $('#PendingPurchaseTransactionPopup').hide();
+                $('#salestranspopupdiv').hide();
+                $('#OrderPopup').show();
+            }
+            else if ((x == 118)) {     // F7 - Pop Up to Show Sales Transaction Details of Selected Product      
+                $('#OrderPopup').hide();
+                $('#iconForm').hide();
+                $('#PendingPurchaseTransactionPopup').hide();
+                TransactionGet($('#Chkflg').val(), 1);
+                e.preventDefault();
+            }
+            else if ((x == 119)) {                         // F8 - Pop Up to Show Purchase Transaction Details of Selected Product 
+                $('#OrderPopup').hide();
+                $('#iconForm').hide();
+                $('#PendingPurchaseTransactionPopup').hide();
+                TransactionGet($('#Chkflg').val(), 2);
+            }
+            else if ((x == 120)) {  // F9 :   All Transaction details Popup      
+                $('#OrderPopup').hide();
+                $('#iconForm').hide();
+                $('#PendingPurchaseTransactionPopup').hide();
+                TransactionGet($('#Chkflg').val(), 3);
+                e.preventDefault();
+            }
+            else if ((x == 121)) {  // F10 :   monthly Popup      
+                e.preventDefault();
+                $('#PendingPurchaseTransactionPopup').hide();
+                TransactionGet($('#Chkflg').val(), 4);
+
+            }
+            else if (x == 123) {                                                // F12 :   Pending details Popup      
+                $('#OrderPopup').hide();
+                $('#iconForm').hide();
+                $('#salestranspopupdiv').hide();
+                $('#MonthwisePurchase').hide();
+                PendingPurchasespopup($('#Chkflg').val());
+                $('#PendingPurchaseTransactionPopup').show();
+            }
+
+            event.cancelBubble = true;
+            event.returnValue = false;
+            event.keyCode = false;
+            return false;
+        }
+        else if (e.keyCode == 27) { //ESC       :   Popup Close
+            $('#OrderPopup').hide();
+            $('#iconForm').hide();
+            $('#Chkflg').val('');
+            salestranspopuprefresh();
+            $('#MonthwisePurchase').hide();
+            $('#PendingPurchaseTransactionPopup').hide();
+        }
+
+    });
+
+
+    $(function () {
+      
+
+        GroupPageLoad(0);
+        CategoryPageLoad(0);
+
+        $("#SelectAll").keypress(function (e) {
+
+            if (e.which != 8 && e.which != 0 && e.which != 40 && e.which != 41 && e.which != 45 && e.which != 32 && e.which != 43 && e.which != 44 && (e.which < 48 || e.which > 57)) {
+                warningshow('Digits Only', 'SelectAll')
+                return false;
+            }
+
+        });
+
+        $('#DateFrom,#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        var Decimal = 2;
+        getcalcmonth();
+        
+        $("#btnsubmit").click(function (e) {
+
+            if (($('#supplierId').val() == 0 || $('#supplierId').val() == '')&&($('#suppliername').val()!=''))
+            {
+                warningshow('Please select a valid Supplier', 'suppliername');
+                $('#suppliername').select();
+            }
+            else
+            {
+                var Condition = ''; var Condition1 = '';                           //Condition1 for prevInvtrans table
+            var FromDate = $('#DateFrom').val();
+            var ToDate = $('#DateTo').val();
+            var grp = '', subgrp = '', cat = '', subcat = '', SuplierId = '', Qty = ''
+
+            var GrpId = parseInt($('#Group').val() || 0);
+            var SubGrpId = parseInt($('#Subgroup').val() || 0);
+            var CatId = parseInt($('#Category').val() || 0);
+            var SubCatID = parseInt($('#Subcategory').val() || 0);
+           
+            var Type = $('#Type').val();
+            var Qty = 0;
+
+            if ($('#suppliername').val() == '') {
+                $('#supplierId').val(0);
+            }
+
+            var SuplierId = parseInt($('#supplierId').val() || 0);
+            if ($('#DateFrom').val() == '') {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+            else {
+                $('#Loading').show();
+                var SUPPLIER='';
+                if (SuplierId != 0) { SUPPLIER =  SuplierId; } 
+                if (GrpId != 0) { Condition1 += '  and MI.GroupId=' + GrpId; }
+                if (SubGrpId != 0) { Condition1 += ' and MI.SubGroupId=' + SubGrpId;  }
+                if (CatId != 0) { Condition1 += ' and MI.CategoryId=' + CatId;  }
+                if (SubCatID != 0) { Condition1 += ' and MI.SubCategoryId=' + SubCatID; }
+
+                //if (Type != 0) { Condition1 += ' and PurchaseType=' + "'" + Type + "'"; } 
+
+                Condition += ' and CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103) '             
+               
+               
+
+                var data = {};
+              
+                data.Condition = Condition;
+                data.DeptId = ERPDeptId; 
+                data.Status = Condition1;
+                data.CustName = SUPPLIER;
+                data.acctype = $('#Type').val();
+                data.HSNCode = '';
+                data.TrnNumber = '';
+                
+                $.ajax({
+                    type: "POST",
+                    url: "../MonthlyPurchaseAnalysis/PurchaseAnalysisGet",
+                    data: data,
+                    success: function (result) {
+                        $('.HideWhenLoad').show();
+
+                        if ($('#suppliername').val() =='')
+                        {
+                            Showreport(result);
+                        }
+                        else
+                        {
+                            ShowreportSupplier(result);
+                        }
+                        
+                        $('#Loading').hide();
+                        $('#Entry').show();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                    }
+                });
+           } 
+            }
+          
+        });
+
+
+
+
+        $('#btnsave').click(function (e) {
+            var oTable = $("#Tblreport").dataTable();
+            var oArray1 = new Array();
+            $(".checkbox1:checked", oTable.fnGetNodes()).each(function () {
+
+                var id = "";
+                var k = 0; var CurrentCheked = 0; var CurrentId = 0;
+                CurrentCheked = $(this).attr('id')
+                CurrentId = CurrentCheked.split('_')
+                k = CurrentId[1];
+                if ($("#RowTr_" + k).is(":visible")) {
+                    if ($('#CheckModel_1_' + k).prop("checked") == true) {
+                        $('#ModelsValue1').text($('#CheckModel_1_' + k).val())
+                    }
+                    else if ($('#CheckModel_2_' + k).prop("checked") == true) {
+                        $('#ModelsValue2').text($('#CheckModel_2_' + k).val())
+                    }
+                    else if ($('#CheckModel_3_' + k).prop("checked") == true) {
+                        $('#ModelsValue3').text($('#CheckModel_3_' + k).val())
+                    }
+                    else if ($('#CheckModel_4_' + k).prop("checked") == true) {
+                        $('#ModelsValue4').text($('#CheckModel_4_' + k).val())
+                    }
+                    else if ($('#CheckModel_5_' + k).prop("checked") == true) {
+                        $('#ModelsValue5').text($('#CheckModel_5_' + k).val())
+                    }
+                    else if ($('#CheckModel_6_' + k).prop("checked") == true) {
+                        $('#ModelsValue6').text($('#CheckModel_6_' + k).val())
+                    }
+                    else if ($('#CheckModel_7_' + k).prop("checked") == true) {
+                        $('#ModelsValue7').text($('#CheckModel_7_' + k).val())
+                    }
+                    else if ($('#CheckModel_8_' + k).prop("checked") == true) {
+                        $('#ModelsValue8').text($('#CheckModel_8_' + k).val())
+                    }
+                 
+
+                    var SupplierId = $('#custId' + k).text();
+                    var Supplier = $('#custname' + k).text();
+                    var ItemId = $('#itemId' + k).val();
+                    var ItemCode = $('#itemcode' + k).text();
+                    var Description = $('#desc' + k).text();
+                    var SaledQty = $('#qty' + k).text();
+                    var POQty = $('#poqty' + k).text();
+                    var PPQty = $('#ppqty' + k).text();
+                    var PurchaseCost = $('#purchasecost' + k).text();
+                    var FCCost = $('#FC' + k).text();
+                    var CurrenctStock = $('#curstock' + k).text();
+                    if ($('#ModelsValue1').text() != '') {
+                        var Model1 = $('#ModelsValue1').text();
+                    }
+                    else if ($('#ModelsValue2').text() != '') {
+                        var Model1 = $('#ModelsValue2').text();
+                    }
+                    else if ($('#ModelsValue3').text() != '') {
+                        var Model1 = $('#ModelsValue3').text();
+                    }
+                    else if ($('#ModelsValue4').text() != '') {
+                        var Model1 = $('#ModelsValue4').text();
+                    }
+                    else if ($('#ModelsValue5').text() != '') {
+                        var Model1 = $('#ModelsValue5').text();
+                    }
+                    else if ($('#ModelsValue6').text() != '') {
+                        var Model1 = $('#ModelsValue6').text();
+                    }
+                    else if ($('#ModelsValue7').text() != '') {
+                        var Model1 = $('#ModelsValue7').text();
+                    }
+                    else if ($('#ModelsValue8').text() != '') {
+                        var Model1 = $('#ModelsValue8').text();
+                    }
+                    var Model2 = '';
+                    var Model3 = '';
+                    var OrderQty = $('#adjstock_' + k).val();
+                    var UId = ERPUserId;
+                    var DeptId = ERPDeptId;
+                    var Location = UserLocationId;
+                  
+                        if (typeof (ItemCode != undefined)) {
+                            oArray1.push({
+                                'SupplierId': SupplierId,
+                                'Supplier': Supplier,
+                                'ItemId': ItemId,
+                                'ItemCode': ItemCode,
+                                'Description': Description,
+                                'SaledQty': SaledQty,
+                                'POQty': POQty,
+                                'POQty': POQty,
+                                'PurchaseCost': PurchaseCost,
+                                'FCCost': FCCost,
+                                'CurrenctStock': CurrenctStock,
+                                'Model1': Model1,
+                                'Model2': Model2,
+                                'Model3': Model3,
+                                'OrderQty': OrderQty,
+                                'UId': UId,
+                                'DeptId': DeptId,
+                                'Location': Location,
+                            })
+                        }
+
+                    
+                }
+                });
+            
+                if (oArray1 != "") {
+                var data = { 'PurchaseAnalysisModel': oArray1 };
+                $.ajax({
+                    type: "POST",
+                    url: "../../MonthlyPurchaseAnalysis/PurchaseAnalysisInsert",
+                    data: data,
+                    success: function (result) {
+                        //  for (var a = 0; a < result.oList.length; a++) {
+                        var status = result.oList[0].Status;
+
+                        $('#btnsave').prop("disabled", false);
+                        Showalerts(status);
+                        //   }
+                    }
+                });
+            }
+        });
+
+
+
+
+    //    $('#btnnew').click(function () {
+    //        //    var oTable = $("#Tblreport").dataTable();
+    //        //    $("input:checkbox", oTable.fnGetNodes()).each(function () {
+    //        //        var table = $('#example').DataTable();
+
+    //        //        $('#Tblreport tbody').on('click', 'tr', function () {
+    //        //        });
+    //        //        var tuisre = $(this).is(":checked");
+    //        //        if (tuisre) {
+    //        //            var no = $(this).parent().prev().prev().text();
+    //        //            alert("no:" + no + " is checked");
+    //        //        }
+    //        //    })
+    //        //})
+    //        var oTable = $("#Tblreport").dataTable();
+    //        $(".checkbox1:checked", oTable.fnGetNodes()).each(function () {
+
+    //            var id = "";
+    //            var k = 0;
+    //                //id1 = $(this).val();
+    //            k = $(this).attr('id')
+               
+              
+    //                var oArray1 = new Array();
+    //                var SupplierId = $('#custId' + k).text();
+    //                var Supplier = $('#custname' + k).text();
+    //                var ItemId = $('#itemId' + k).text();
+    //                var ItemCode = $('#itemcode' + k).text();
+    //                var Description = $('#desc' + k).text();
+    //                var SaledQty = $('#qty' + k).text();
+    //                var PurchaseCost = $('#purchasecost' + k).text();
+    //                var FCCost = $('#FC' + k).text();
+    //                var CurrenctStock = $('#curstock' + k).text();
+    //                var Model1 = $('#model1' + k).text();
+    //                var Model2 = $('#model2' + k).text();
+    //                var Model3 = $('#model3' + k).text();
+    //                var OrderQty = $('#adjstock' + k).val();
+    //                var UId = ERPUserId;
+    //                var DeptId = ERPDeptId;
+    //                var Location = UserLocationId;
+    //                if (typeof (ItemCode != undefined)) {
+    //                    oArray1.push({
+    //                        'SupplierId': SupplierId,
+    //                        'Supplier': Supplier,
+    //                        'ItemId': ItemId,
+    //                        'ItemCode': ItemCode,
+    //                        'Description': Description,
+    //                        'SaledQty': SaledQty,
+    //                        'PurchaseCost': PurchaseCost,
+    //                        'FCCost': FCCost,
+    //                        'CurrenctStock': CurrenctStock,
+    //                        'Model1': Model1,
+    //                        'Model2': Model2,
+    //                        'Model3': Model3,
+    //                        'OrderQty': OrderQty,
+    //                        'UId': UId,
+    //                        'DeptId': DeptId,
+    //                        'Location': Location,
+    //                    })
+    //                }
+
+            
+            
+    //        if (oArray1 != "") {
+    //            var data = { 'PurchaseAnalysisModel': oArray1 };
+    //            $.ajax({
+    //                type: "POST",
+    //                url: "../../MonthlyPurchaseAnalysis/PurchaseAnalysisInsert",
+    //                data: data,
+    //                success: function (result) {
+    //                    //  for (var a = 0; a < result.oList.length; a++) {
+    //                    var status = result.oList[0].Status;
+
+    //                    $('#btnsave').prop("disabled", false);
+    //                    Showalerts(status);
+    //                    //   }
+    //                }
+    //            });
+    //        }
+
+    //        });
+    //    });
+    //        //    var oTable = $("#Tblreport").dataTable();
+    //        //    var rowcollection = oTable.$(".checkbox1:checked", { "page": "all" });
+    //        //    rowcollection.each(function (index, elem) {
+    //        //        var checkbox_value = elem.name;
+    //        //        console.log(oTable.rows('.selected').data())
+
+    //        //    });
+
+    //        //});
+
+
+       
+    });
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    function Apply() //Apply
+    {
+       
+        if ($('#types').val() == 0) {
+            $('.SELECTALL').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if (parseFloat($(this).val()) == $('#SelectAll').val()) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+            });
+
+            $('.NSelectTr').hide();
+            $('.SelectTr').show();
+        }
+
+        else if($('#types').val() == 1)
+        {
+            $('.SELECTALL').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if (parseFloat($(this).val()) > ($('#SelectAll').val())) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+            });
+            $('.NSelectTr').hide();
+            $('.SelectTr').show();
+        }
+
+        else if ($('#types').val() == 2) {
+            $('.SELECTALL').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if (parseFloat($(this).val()) < ($('#SelectAll').val())) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+            });
+            $('.NSelectTr').hide();
+            $('.SelectTr').show();
+        }
+        else if ($('#types').val() == 3) {
+
+            $('.rowclass').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if ($(this).css('background-color') == "rgb(0, 153, 51)")
+                {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else
+                {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+            });
+            $('.NSelectTr').hide();
+            $('.SelectTr').show();
+        }
+        else if ($('#types').val() == 4) {
+            $('.rowclass').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+
+                if ($('#CheckBoxId_' + RId[1]).prop("checked") == true) {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+            });
+            $('.NSelectTr').hide();
+            $('.SelectTr').show();
+        }
+
+        else if ($('#types').val() == 5) {
+            $('.rowclass').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                
+                if ($('#CheckBoxId_' + RId[1]).prop("checked") == false) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+            });
+            $('.NSelectTr').hide();
+            $('.SelectTr').show();
+        }
+    }
+    function ConfirmboxResult(Result, status, rowid) {
+        if (Result == 'true' && status == 'delete') {
+            removerow();
+        }
+        else {
+            $('#confirm').fadeOut();
+          
+        }
+
+    }
+
+    function removerow() {
+
+        var table = $('#Tblreport').DataTable();
+        var cindexvalue = $("#selectedrowindex").val();
+
+        $('#RowTr_' + cindexvalue).remove();
+        table.row('#RowTr_' + cindexvalue).remove().draw();
+        $('#confirm').fadeOut();
+        Showalerts(3);
+        $("#selectedrowindex").val('');
+
+    }
+
+    function Remove() {
+        var table = $('#Tblreport').DataTable();
+        var indexvalue = $("#selectedrowindex").val();
+
+        var checkedremove = $("#Tblreport input[name=Checkimeino]:checked").length;
+        
+        if ((checkedremove <=0) && (indexvalue!=0)) {
+            $('#Confirmflag').val('delete'), $('#ConfirmRowId').val(0)
+            $('#confirmmessage').text('Do you want to Delete this Row?')
+            $('#confirm').show();
+            $('#confirmOk').focus();
+        }
+
+        if ($('#types').val() == 0) {
+            $('.SELECTALL').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if (parseFloat($(this).val()) == $('#SelectAll').val()) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+                
+            });
+            var rows = table.rows('.SelectTr').remove().draw();
+            $('.NSelectTr').show();
+        }
+
+        else if ($('#types').val() == 1) {
+            $('.SELECTALL').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if (parseFloat($(this).val()) > ($('#SelectAll').val())) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+                
+            });
+            var rows = table.rows('.SelectTr').remove().draw();
+            $('.NSelectTr').show();
+        }
+
+        else if ($('#types').val() == 2) {
+            $('.SELECTALL').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if (parseFloat($(this).val()) < ($('#SelectAll').val())) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+              
+            });
+            var rows = table.rows('.SelectTr').remove().draw();
+            $('.NSelectTr').show();
+        }
+        else if ($('#types').val() == 3) {
+            $('.rowclass').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+                if ($(this).css('background-color') == "rgb(0, 153, 51)") {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+                
+            });
+            var rows = table.rows('.SelectTr').remove().draw();
+            $('.NSelectTr').show();
+            
+        }
+        else if ($('#types').val() == 4) {
+       
+            $('.rowclass').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+
+                if ($('#CheckBoxId_' + RId[1]).prop("checked") == false) {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+            });
+            var rows = table.rows('.SelectTr').remove().draw();
+            $('.NSelectTr').show();
+
+        }
+        else if ($('#types').val() == 5) {
+            $('.rowclass').each(function () {
+                var CuSO = $(this).attr("id");
+                var RId = CuSO.split("_");
+
+                if ($('#CheckBoxId_' + RId[1]).prop("checked") == false) {
+                    $('#RowTr_' + RId[1]).removeClass('NSelectTr')
+                    $('#RowTr_' + RId[1]).addClass('SelectTr')
+                }
+                else {
+                    $('#RowTr_' + RId[1]).removeClass('SelectTr')
+                    $('#RowTr_' + RId[1]).addClass('NSelectTr')
+                }
+            });
+            var rows = table.rows('.SelectTr').remove().draw();
+            $('.NSelectTr').show();
+
+        }
+
+    }
+
+
+    function Showalerts(Status) {
+        if (Status == 1) {
+            swal('Data Saved Successfully', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        else if (Status == 3) {
+            swal('Row Deleted', "", "error");
+            $('.swal-button swal-button--confirm').focus();
+           
+        }
+    }
+    function GroupPageLoad(id) {
+        var data1 = {};
+        data1.GrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/GroupGetandGets",
+            data: data1,
+            success: function (result) {
+                GroupLoad(result.oList, id);
+            }
+        });
+    }
+    function Defaultfocus()
+    {
+
+    }
+    function formrefresh()
+    {
+        $(":checkbox").prop("checked", false);
+    }
+    function GroupLoad(result) {
+        $("#Group").empty();
+        $("#Group").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#Group").append("<option value='" + result[i].GrpId + "'>" + result[i].GrpName + "</option>");
+        }
+        SubGroupGets();
+    }
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+    function SubGroupGets() {
+        var data = {};
+        data.GroupId = $("#Group").val();
+
+
+        if (data.GroupId == 0) {
+            data.SbgrpId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubGroupGetandGets",
+                data: data,
+                success: function (result) {
+                    SubGroupLoad(result.oList);
+                }
+            });
+        }
+        else {
+            data.SbgrpId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubGroupGetForGroup",
+                data: data,
+                success: function (result) {
+                    SubGroupLoad(result.oList);
+                }
+            });
+        }
+    }
+
+    function SubGroupLoad(result) {
+        $("#Subgroup").empty();
+        $("#Subgroup").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Subgroup").append("<option value='" + result[i].SbgrpId + "'>" + result[i].SbgrpName + "</option>");
+        }
+    }
+
+    function CategoryPageLoad(id) {
+        var data2 = {};
+        data2.CategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CategoryGetandGets",
+            data: data2,
+            success: function (result) {
+                CategoryLoad(result.oList, id);
+            }
+        });
+    }
+
+
+    function CategoryLoad(result) {
+        $("#Category").empty();
+        $("#Category").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Category").append("<option value='" + result[i].CategoryId + "'>" + result[i].CategoryName + "</option>");
+        }
+        SubCategoryGets();
+    }
+
+    function SubCategoryGets() {
+
+        var data = {};
+        data.CategoryId = $("#Category").val();
+
+        if (data.CategoryId == 0) {
+            data.SubCategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubCategoryGetandGets",
+                data: data,
+                success: function (result) {
+                    SubCategoryLoad(result.oList);
+
+                }
+            });
+        }
+
+        else {
+            data.SubCategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubCategoryGetforCategory",
+                data: data,
+                success: function (result) {
+                    SubCategoryLoad(result.oList);
+                }
+            });
+        }
+    }
+
+    function SubCategoryLoad(result) {
+        $("#Subcategory").empty();
+        $("#Subcategory").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Subcategory").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+        }
+    }
+
+
+    function Showreport(result) {
+       
+        $('#divreport').show();
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr>" +
+            "<th align=center> </th>" +
+            "<th align=center> </th>" +
+            "<th style='display:none;'>supId</th>" +            
+            "<th>Supplier</th>" +
+            "<th style='display:none;'>ItemId</th>" +
+            "<th>Item Code</th>" +
+            "<th>Description</th>" +
+            "<th>Current Stock</th>" +
+            "<th>Movement Qty.</th>" +
+            "<th>Back Order Qty.</th>" +
+            "<th>In transit Qty.</th>" +
+            "<th> </th>" +
+            "<th>Purchase Cost</th>" +
+            "<th>FC Cost</th>" +
+            "<th>Model 1</th>" +
+            "<th>Model 2</th>" +
+            "<th>Model 3</th>" +
+            "<th>Model 4</th>" +
+            "<th>Model 5</th>" +
+            "<th>Model 6</th>" +
+            "<th>Model 7</th>" +
+            "<th>Model 8</th>" +
+            "<th style='display:none;'>SuppCode</th>" +
+            "</tr>"+
+
+           "<tr>" +
+            "<th align=center>Sl#</th>" +
+            "<th align=center><input type='checkbox' style='zoom:1' align=center id='checkall'  onchange='checkmeall()' name='gridheadchk'>" +
+            "<label for='checkall' align=center></label></th>" +
+            "<th style=display:none;>Supplier</th>" +            
+            "<th>Supplier</th>" +
+            "<th style=display:none;>ItemId</th>" +
+            "<th>Item Code</th>" +
+            "<th>Description</th>" +
+            "<th style='text-align:center'>Current Stock</th>" +
+            "<th style='text-align:center'>Movement Qty.</th>" +
+            "<th style='text-align:center'>BackOrder Qty.</th>" +
+            "<th style='text-align:center'>In transit Qty.</th>" +
+            "<th style='text-align:center'>Order Qty.</th>" +
+            "<th style=text-align:right;>Purchase Cost</th>" +
+            "<th style=text-align:right;>Purchase(FC)</th>" +
+             "<th><input type='checkbox' class='modhead1' style='zoom:1' align=center id='Model1Ckeck' onchange="+'checkmeallModel("1")'+"    >" +
+            "<label for='Model1Ckeck' align=center></label>  Model 1</th>" +
+            "<th><input type='checkbox' class='modhead2' style='zoom:1' align=center id='Model2Ckeck' onchange=" + 'checkmeallModel("2")' + ">" +
+            "<label for='Model2Ckeck' align=center></label>  Model 2</th>" +
+            "<th><input type='checkbox' class='modhead3' style='zoom:1' align=center id='Model3Ckeck' onchange=" + 'checkmeallModel("3")' + ">" +
+            "<label for='Model3Ckeck' align=center></label>  Model 3</th>" +
+           "<th><input type='checkbox' class='modhead4' style='zoom:1' align=center id='Model4Ckeck' onchange=" + 'checkmeallModel("4")' + ">" +
+            "<label for='Model4Ckeck' align=center></label>  Model 4</th>" +
+            "<th><input type='checkbox' class='modhead5' style='zoom:1' align=center id='Model5Ckeck' onchange=" + 'checkmeallModel("5")' + ">" +
+            "<label for='Model5Ckeck' align=center></label>  Model 5</th>" +
+            "<th><input type='checkbox' class='modhead6' style='zoom:1' align=center id='Model6Ckeck' onchange=" + 'checkmeallModel("6")' + ">" +
+            "<label for='Model6Ckeck' align=center></label>  Model 6</th>" +
+            "<th><input type='checkbox' class='modhead7' style='zoom:1' align=center id='Model7Ckeck' onchange=" + 'checkmeallModel("7")' + ">" +
+            "<label for='Model7Ckeck' align=center></label>  Model 7</th>" +
+            "<th><input type='checkbox' class='modhead8' style='zoom:1' align=center id='Model8Ckeck' onchange=" + 'checkmeallModel("8")' + ">" +
+            "<label for='Model8Ckeck' align=center></label>  Model 8</th>" +
+            "<th style='display:none;'>SuppCode</th>" +
+            "</tr></thead><tbody>"
+
+        var a = $('#movement').val(); 
+        var b = $('#orderfor').val();
+        for (var i = 0; i < result.length; i++) {
+            var s = parseFloat(result[i].ProdQty).toFixed(Decimal);  //sales qty
+            var tempstock = parseFloat(s / a).toFixed(Decimal);
+           
+            var avgstock = 0; var Tempx = 0; var Tempy = 0;
+            Tempx = parseFloat(tempstock * b).toFixed(Decimal);
+          
+            Tempy = parseFloat(parseFloat(result[i].stocktotloseqty) + parseFloat(result[i].POQty) + parseFloat(result[i].PPQty)).toFixed(Decimal);
+            avgstock = Tempx - Tempy;
+
+            var Models = (result[i].Model1).split('%');
+         
+
+            var Model1 = Models[0]; var Model2 = Models[1]; var Model3 = Models[2]; var Model4 = Models[3]; var Model5 = Models[4];
+            var Model6 = Models[5]; var Model7 = Models[6]; var Model8 = Models[7];
+            
+
+            var slno = parseInt(i + 1);
+
+
+            if (result[i].DelFlag == 1) {
+                responseText += '<tr id="RowTr_' + slno + '" style=background-color:#009933;color:white;font-weight:normal onclick=$("#Chkflg").val(' + result[i].ProductId + '),$("#selectedrowindex").val(' + slno + ') ondblclick="GetItem(' + result[i].ProductId + ') "  class="rowclass">' +
+                    '<td align=center id= "' + 'visibletdno' + slno + '">' + slno + '</td>' +
+                    '<td  align=center><input type="checkbox"  style="zoom:1"  id= "CheckBoxId_' + slno + '"    name="Checkimeino" class="checkbox1 AllCheckBox"><label class="" for="CheckBoxId_' + slno + '"></label></td>' +
+                    '<td style="display:none;" id= "' + 'custId' + slno + '">' + result[i].CustId + '</td>' +                   
+                    '<td id= "' + 'custname' + slno + '" >' + result[i].CustName + '</td>' +
+                    '<td style="display:none;"><input style="display:none;"  id= "' + 'itemId' + slno + '"  value="' + result[i].ProductId + '" />' + result[i].ProductId + '</td>' +
+                    '<td id= "' + 'itemcode' + slno + '"  class="SelectColor">' + result[i].ProductCode + '</td>' +
+                    '<td id= "' + 'desc' + slno + '" >' + result[i].ProductDescr + '</td>' +
+
+                   '<td id= "' + 'curstock' + slno + '"   style="text-align:center">' + result[i].stocktotloseqty + '</td>' +
+                    '<td  id= "' + 'qty' + slno + '"  style="text-align:center">' + result[i].ProdQty + '</td>' +
+                    '<td  id= "' + 'poqty' + slno + '"  style="text-align:center">' + result[i].POQty + '</td>' +
+                    '<td  id= "' + 'ppqty' + slno + '"  style="text-align:center">' + result[i].PPQty + '</td>' +
+                    '<td  id= "' + 'orderqty' + slno + '" > <input type=text onkeyup="Focusnext(event,' + slno + ')" id= "' + 'adjstock_' + slno + '"  style="text-align:center;height:33px;"   onkeypress="return isNumber(event)"   onkeyup="Focusnext(event,' + slno + ')"  class="form-control SELECTALL"  value="' + Math.round(avgstock) + '"><input type=hidden id= "' + 'hiddenstock' + slno + '" style="width:180px;text-align:center;height:33px;">  </td>' +
+
+                   '<td id= "' + 'purchasecost' + slno + '"  style="text-align:right;">' + (parseFloat(result[i].AvgCost).toFixed(Decimal)) + '</td>' +
+                   '<td id= "' + 'FC' + slno + '" style="text-align:right;">' + (parseFloat(result[i].FCAmount).toFixed(Decimal)) + '</td>' +
+                   '<td  id= "' + 'model1' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio1 mod1" id="CheckModel_1_' + slno + '" value="' + Model1 + '"><label class="custom-control-label" for="CheckModel_1_' + slno + '"></label></div>' + Model1 + '</td>' +
+                   '<td  id= "' + 'model2' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio2 mod2" id="CheckModel_2_' + slno + '" value="' + Model2 + '"><label class="custom-control-label" for="CheckModel_2_' + slno + '"></label></div>' + Model2 + '</td>' +
+                   '<td  id= "' + 'model3' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio3 mod3" id="CheckModel_3_' + slno + '" value="' + Model3 + '"><label class="custom-control-label" for="CheckModel_3_' + slno + '"></label></div>' + Model3 + '</td>' +
+                   '<td  id= "' + 'model4' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio4 mod4" id="CheckModel_4_' + slno + '" value="' + Model4 + '"><label class="custom-control-label" for="CheckModel_4_' + slno + '"></label></div>' + Model4 + '</td>' +
+                   '<td  id= "' + 'model5' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio5 mod5" id="CheckModel_5_' + slno + '" value="' + Model5 + '"><label class="custom-control-label" for="CheckModel_5_' + slno + '"></label></div>' + Model5 + '</td>' +
+                   '<td  id= "' + 'model6' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio6 mod6" id="CheckModel_6_' + slno + '" value="' + Model6 + '"><label class="custom-control-label" for="CheckModel_6_' + slno + '"></label></div>' + Model6 + '</td>' +
+                   '<td  id= "' + 'model7' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio7 mod7" id="CheckModel_7_' + slno + '" value="' + Model7 + '"><label class="custom-control-label" for="CheckModel_7_' + slno + '"></label></div>' + Model7 + '</td>' +
+                   '<td  id= "' + 'model8' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio8 mod8" id="CheckModel_8_' + slno + '" value="' + Model8 + '"><label class="custom-control-label" for="CheckModel_8_' + slno + '"></label></div>' + Model8 + '</td>' +
+                   '<td style="display:none;" id= "' + 'CustAcc' + slno + '">' + result[i].CustAddress + '</td>' +
+                   '</tr>';
+            }
+            else
+            {
+                responseText += '<tr id="RowTr_' + slno + '" style=font-weight:normal onclick=$("#Chkflg").val(' + result[i].ProductId + '),$("#selectedrowindex").val(' + slno + ') ondblclick="GetItem(' + result[i].ProductId + ') " class="rowclass">' +
+                    '<td align=center id= "' + 'visibletdno' + slno + '">' + slno + '</td>' +
+                    '<td  align=center><input type="checkbox"  style="zoom:1"  id= "CheckBoxId_' + slno + '"    name="Checkimeino" class="checkbox1 AllCheckBox" >  <label class="" for="CheckBoxId_' + slno + '"></label></td>' +
+                    '<td style="display:none;" id= "' + 'custId' + slno + '">' + result[i].CustId + '</td>' +
+                    '<td id= "' + 'custname' + slno + '" >' + result[i].CustName + '</td>' +
+                    '<td style="display:none;"><input style="display:none;"  id= "' + 'itemId' + slno + '"  value="' + result[i].ProductId + '" />' + result[i].ProductId + '</td>' +
+                    '<td id= "' + 'itemcode' + slno + '"  class="SelectColor">' + result[i].ProductCode + '</td>' +
+                    '<td id= "' + 'desc' + slno + '" >' + result[i].ProductDescr + '</td>' +
+
+                   '<td id= "' + 'curstock' + slno + '"   style="text-align:center">' + result[i].stocktotloseqty + '</td>' +
+                    '<td  id= "' + 'qty' + slno + '"  style="text-align:center">' + result[i].ProdQty + '</td>' +
+                    '<td  id= "' + 'poqty' + slno + '"  style="text-align:center">' + result[i].POQty + '</td>' +
+                    '<td  id= "' + 'ppqty' + slno + '"  style="text-align:center">' + result[i].PPQty + '</td>' +
+                    '<td  id= "' + 'orderqty' + slno + '" > <input type=text onkeyup="Focusnext(event,' + slno + ')" id= "' + 'adjstock_' + slno + '"  style="text-align:center;height:33px;"   onkeypress="return isNumber(event)"   onkeyup="Focusnext(event,' + slno + ')"  class="form-control SELECTALL"  value="' + Math.round(avgstock) + '"><input type=hidden id= "' + 'hiddenstock' + slno + '" style="width:180px;text-align:center;height:33px;">  </td>' +
+
+                   '<td id= "' + 'purchasecost' + slno + '"  style="text-align:right;">' + (parseFloat(result[i].AvgCost).toFixed(Decimal)) + '</td>' +
+                   '<td id= "' + 'FC' + slno + '" style="text-align:right;">' + (parseFloat(result[i].FCAmount).toFixed(Decimal)) + '</td>' +
+                   '<td  id= "' + 'model1' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio1 mod1" id="CheckModel_1_' + slno + '" value="' + Model1 + '"><label class="custom-control-label" for="CheckModel_1_' + slno + '"></label></div>' + Model1 + '</td>' +
+                   '<td  id= "' + 'model2' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio2 mod2" id="CheckModel_2_' + slno + '" value="' + Model2 + '"><label class="custom-control-label" for="CheckModel_2_' + slno + '"></label></div>' + Model2 + '</td>' +
+                   '<td  id= "' + 'model3' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio3 mod3" id="CheckModel_3_' + slno + '" value="' + Model3 + '"><label class="custom-control-label" for="CheckModel_3_' + slno + '"></label></div>' + Model3 + '</td>' +
+                   '<td  id= "' + 'model4' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio4 mod4" id="CheckModel_4_' + slno + '" value="' + Model4 + '"><label class="custom-control-label" for="CheckModel_4_' + slno + '"></label></div>' + Model4 + '</td>' +
+                   '<td  id= "' + 'model5' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio5 mod5" id="CheckModel_5_' + slno + '" value="' + Model5 + '"><label class="custom-control-label" for="CheckModel_5_' + slno + '"></label></div>' + Model5 + '</td>' +
+                   '<td  id= "' + 'model6' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio6 mod6" id="CheckModel_6_' + slno + '" value="' + Model6 + '"><label class="custom-control-label" for="CheckModel_6_' + slno + '"></label></div>' + Model6 + '</td>' +
+                   '<td  id= "' + 'model7' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio7 mod7" id="CheckModel_7_' + slno + '" value="' + Model7 + '"><label class="custom-control-label" for="CheckModel_7_' + slno + '"></label></div>' + Model7 + '</td>' +
+                   '<td  id= "' + 'model8' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio8 mod8" id="CheckModel_8_' + slno + '" value="' + Model8 + '"><label class="custom-control-label" for="CheckModel_8_' + slno + '"></label></div>' + Model8 + '</td>' +
+                   '<td style="display:none;" id= "' + 'CustAcc' + slno + '">' + result[i].CustAddress + '</td>' +
+                   '</tr>';
+            }
+          
+        }
+        $('#Tblreport').html(responseText + '</tbody>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Purchase Analysis - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearchs('Tblreport', true, title, 'buttonPlace');    
+        $('#RowGet').val(result.length);
+        $('#header').text(title);
+        $('#checkall').prop("checked", false);
+        //$('#Model1Ckeck').prop("checked", true);
+        
+        checkmeall();
+        //checkmeallModel(1);
+    }
+
+   
+    function ShowreportSupplier(result) {
+
+        $('#divreport').show();
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr>" +
+            "<th align=center> </th>" +
+            "<th align=center> </th>" +
+            "<th style='display:none;'>supId</th>" +           
+            "<th style='display:none;'>Supplier</th>" +
+            "<th style='display:none;'>ItemId</th>" +
+            "<th>Item Code</th>" +
+            "<th>Description</th>" +
+            "<th>Current Stock</th>" +
+            "<th>Movement Qty.</th>" +
+            "<th>Back Order Qty.</th>" +
+            "<th>In transit Qty.</th>" +
+            "<th> </th>" +
+            "<th>Purchase Cost</th>" +
+            "<th>FC Cost</th>" +
+            "<th>Model 1</th>" +
+            "<th>Model 2</th>" +
+            "<th>Model 3</th>" +
+            "<th>Model 4</th>" +
+            "<th>Model 5</th>" +
+            "<th>Model 6</th>" +
+            "<th>Model 7</th>" +
+            "<th>Model 8</th>" +
+             "<th style='display:none;'>SupplierCode</th>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<th align=center>Sl#</th>" +
+            "<th align=center><input type='checkbox' style='zoom:1' align=center id='checkall' onchange='checkmeall()' name='gridheadchk'>" +
+            "<label for='checkall' align=center></label></th>" +
+            "<th style=display:none;>Supplier</th>" +
+            "<th style='display:none;'>Supplier</th>" +
+            "<th style=display:none;>ItemId</th>" +
+            "<th>Item Code</th>" +
+            "<th>Description</th>" +
+            "<th style='text-align:center'>Current Stock</th>" +
+            "<th style='text-align:center'>Movement Qty.</th>" +
+            "<th style='text-align:center'>BackOrder Qty.</th>" +
+            "<th style='text-align:center'>In transit Qty.</th>" +
+            "<th style='text-align:center'>Order Qty.</th>" +
+            "<th style=text-align:right;>Purchase Cost</th>" +
+            "<th style=text-align:right;>Purchase(FC)</th>" +
+             "<th><input type='checkbox' class='modhead1' style='zoom:1' align=center id='Model1Ckeck' onchange=" + 'checkmeallModel("1")' + "    >" +
+            "<label for='Model1Ckeck' align=center></label>  Model 1</th>" +
+            "<th><input type='checkbox' class='modhead2' style='zoom:1' align=center id='Model2Ckeck' onchange=" + 'checkmeallModel("2")' + ">" +
+            "<label for='Model2Ckeck' align=center></label>  Model 2</th>" +
+            "<th><input type='checkbox' class='modhead3' style='zoom:1' align=center id='Model3Ckeck' onchange=" + 'checkmeallModel("3")' + ">" +
+            "<label for='Model3Ckeck' align=center></label>  Model 3</th>" +
+           "<th><input type='checkbox' class='modhead4' style='zoom:1' align=center id='Model4Ckeck' onchange=" + 'checkmeallModel("4")' + ">" +
+            "<label for='Model4Ckeck' align=center></label>  Model 4</th>" +
+            "<th><input type='checkbox' class='modhead5' style='zoom:1' align=center id='Model5Ckeck' onchange=" + 'checkmeallModel("5")' + ">" +
+            "<label for='Model5Ckeck' align=center></label>  Model 5</th>" +
+            "<th><input type='checkbox' class='modhead6' style='zoom:1' align=center id='Model6Ckeck' onchange=" + 'checkmeallModel("6")' + ">" +
+            "<label for='Model6Ckeck' align=center></label>  Model 6</th>" +
+            "<th><input type='checkbox' class='modhead7' style='zoom:1' align=center id='Model7Ckeck' onchange=" + 'checkmeallModel("7")' + ">" +
+            "<label for='Model7Ckeck' align=center></label>  Model 7</th>" +
+            "<th><input type='checkbox' class='modhead8' style='zoom:1' align=center id='Model8Ckeck' onchange=" + 'checkmeallModel("8")' + ">" +
+            "<label for='Model8Ckeck' align=center></label>  Model 8</th>" +
+            "<th style='display:none;'>SupplierCode</th>" +
+            "</tr></thead><tbody>"
+
+        var a = $('#movement').val();
+        var b = $('#orderfor').val();
+        $('#SuppName').html('');
+        if ($('#suppliername').val() != '' && result.length>0) { 
+            $('#SuppName').append('Supplier Name: <b>' + result[0].CustName + '</b>');
+        }
+        for (var i = 0; i < result.length; i++) {
+        
+           
+            var s = parseFloat(result[i].ProdQty).toFixed(Decimal);  //sales qty
+            var tempstock = parseFloat(s / a).toFixed(Decimal);
+
+            var avgstock = 0; var Tempx = 0; var Tempy = 0;
+            Tempx = parseFloat(tempstock * b).toFixed(Decimal);
+
+            Tempy = parseFloat(parseFloat(result[i].stocktotloseqty) + parseFloat(result[i].POQty) + parseFloat(result[i].PPQty)).toFixed(Decimal);
+            avgstock = Tempx - Tempy;
+
+            var Models = (result[i].Model1).split('%');
+
+
+            var Model1 = Models[0]; var Model2 = Models[1]; var Model3 = Models[2]; var Model4 = Models[3]; var Model5 = Models[4];
+            var Model6 = Models[5]; var Model7 = Models[6]; var Model8 = Models[7];
+
+
+            var slno = parseInt(i + 1);
+
+
+            if (result[i].DelFlag == 1) {
+                responseText += '<tr id="RowTr_' + slno + '" style=background-color:#009933;color:white;font-weight:normal onclick=$("#Chkflg").val(' + result[i].ProductId + '),$("#selectedrowindex").val(' + slno + ') ondblclick="GetItem(' + result[i].ProductId + ') "  class="rowclass">' +
+                    '<td align=center id= "' + 'visibletdno' + slno + '">' + slno + '</td>' +
+                    '<td  align=center><input type="checkbox"  style="zoom:1"  id= "CheckBoxId_' + slno + '"    name="Checkimeino" class="checkbox1"><label for="CheckBoxId_' + slno + '"></label></td>' +
+                    '<td style="display:none;" id= "' + 'custId' + slno + '">' + result[i].CustId + '</td>' +
+                    '<td  style="display:none;" id= "' + 'custname' + slno + '" >' + result[i].CustName + '</td>' +
+                    '<td style="display:none;"><input style="display:none;"  id= "' + 'itemId' + slno + '"  value="' + result[i].ProductId + '" />' + result[i].ProductId + '</td>' +
+                    '<td id= "' + 'itemcode' + slno + '"  class="SelectColor">' + result[i].ProductCode + '</td>' +
+                    '<td id= "' + 'desc' + slno + '" >' + result[i].ProductDescr + '</td>' +
+
+                   '<td id= "' + 'curstock' + slno + '"   style="text-align:center">' + result[i].stocktotloseqty + '</td>' +
+                    '<td  id= "' + 'qty' + slno + '"  style="text-align:center">' + result[i].ProdQty + '</td>' +
+                    '<td  id= "' + 'poqty' + slno + '"  style="text-align:center">' + result[i].POQty + '</td>' +
+                    '<td  id= "' + 'ppqty' + slno + '"  style="text-align:center">' + result[i].PPQty + '</td>' +
+                    '<td  id= "' + 'orderqty' + slno + '" > <input type=text onkeyup="Focusnext(event,' + slno + ')" id= "' + 'adjstock_' + slno + '"  style="text-align:center;height:33px;"   onkeypress="return isNumber(event)"   onkeyup="Focusnext(event,' + slno + ')"  class="form-control SELECTALL"  value="' + Math.round(avgstock) + '"><input type=hidden id= "' + 'hiddenstock' + slno + '" style="width:180px;text-align:center;height:33px;">  </td>' +
+
+                   '<td id= "' + 'purchasecost' + slno + '"  style="text-align:right;">' + (parseFloat(result[i].AvgCost).toFixed(Decimal)) + '</td>' +
+                   '<td id= "' + 'FC' + slno + '" style="text-align:right;">' + (parseFloat(result[i].FCAmount).toFixed(Decimal)) + '</td>' +
+                   '<td  id= "' + 'model1' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio1 mod1" id="CheckModel_1_' + slno + '" value="' + Model1 + '"><label class="custom-control-label" for="CheckModel_1_' + slno + '"></label>' + Model1 + '</div></td>' +
+                   '<td  id= "' + 'model2' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio2 mod2" id="CheckModel_2_' + slno + '" value="' + Model2 + '"><label class="custom-control-label" for="CheckModel_2_' + slno + '"></label>' + Model2 + '</div></td>' +
+                   '<td  id= "' + 'model3' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio3 mod3" id="CheckModel_3_' + slno + '" value="' + Model3 + '"><label class="custom-control-label" for="CheckModel_3_' + slno + '"></label>' + Model3 + '</div></td>' +
+                   '<td  id= "' + 'model4' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio4 mod4" id="CheckModel_4_' + slno + '" value="' + Model4 + '"><label class="custom-control-label" for="CheckModel_4_' + slno + '"></label>' + Model4 + '</div></td>' +
+                   '<td  id= "' + 'model5' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio5 mod5" id="CheckModel_5_' + slno + '" value="' + Model5 + '"><label class="custom-control-label" for="CheckModel_5_' + slno + '"></label>' + Model5 + '</div></td>' +
+                   '<td  id= "' + 'model6' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio6 mod6" id="CheckModel_6_' + slno + '" value="' + Model6 + '"><label class="custom-control-label" for="CheckModel_6_' + slno + '"></label>' + Model6 + '</div></td>' +
+                   '<td  id= "' + 'model7' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio7 mod7" id="CheckModel_7_' + slno + '" value="' + Model7 + '"><label class="custom-control-label" for="CheckModel_7_' + slno + '"></label>' + Model7 + '</div></td>' +
+                   '<td  id= "' + 'model8' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio8 mod8" id="CheckModel_8_' + slno + '" value="' + Model8 + '"><label class="custom-control-label" for="CheckModel_8_' + slno + '"></label>' + Model8 + '</div></td>' +
+                   '<td style="display:none;" id= "' + 'CustAcc' + slno + '">' + result[i].CustAddress + '</td>' +
+                   '</tr>';
+            }
+            else {
+                responseText += '<tr id="RowTr_' + slno + '" style=font-weight:normal onclick=$("#Chkflg").val(' + result[i].ProductId + '),$("#selectedrowindex").val(' + slno + ') ondblclick="GetItem(' + result[i].ProductId + ') " class="rowclass">' +
+                    '<td align=center id= "' + 'visibletdno' + slno + '">' + slno + '</td>' +
+                    '<td  align=center><input type="checkbox"  style="zoom:1"  id= "CheckBoxId_' + slno + '"    name="Checkimeino" class="checkbox1" >  <label for="CheckBoxId_' + slno + '"></label></td>' +
+                    '<td style="display:none;" id= "' + 'custId' + slno + '">' + result[i].CustId + '</td>' +
+                    '<td   style="display:none;" id= "' + 'custname' + slno + '" >' + result[i].CustName + '</td>' +
+                    '<td style="display:none;"><input style="display:none;"  id= "' + 'itemId' + slno + '"  value="' + result[i].ProductId + '" />' + result[i].ProductId + '</td>' +
+                    '<td id= "' + 'itemcode' + slno + '"  class="SelectColor">' + result[i].ProductCode + '</td>' +
+                    '<td id= "' + 'desc' + slno + '" >' + result[i].ProductDescr + '</td>' +
+
+                   '<td id= "' + 'curstock' + slno + '"   style="text-align:center">' + result[i].stocktotloseqty + '</td>' +
+                    '<td  id= "' + 'qty' + slno + '"  style="text-align:center">' + result[i].ProdQty + '</td>' +
+                    '<td  id= "' + 'poqty' + slno + '"  style="text-align:center">' + result[i].POQty + '</td>' +
+                    '<td  id= "' + 'ppqty' + slno + '"  style="text-align:center">' + result[i].PPQty + '</td>' +
+                    '<td  id= "' + 'orderqty' + slno + '" > <input type=text onkeyup="Focusnext(event,' + slno + ')" id= "' + 'adjstock_' + slno + '"  style="text-align:center;height:33px;"   onkeypress="return isNumber(event)"   onkeyup="Focusnext(event,' + slno + ')"  class="form-control SELECTALL"  value="' + Math.round(avgstock) + '"><input type=hidden id= "' + 'hiddenstock' + slno + '" style="width:180px;text-align:center;height:33px;">  </td>' +
+
+                   '<td id= "' + 'purchasecost' + slno + '"  style="text-align:right;">' + (parseFloat(result[i].AvgCost).toFixed(Decimal)) + '</td>' +
+                   '<td id= "' + 'FC' + slno + '" style="text-align:right;">' + (parseFloat(result[i].FCAmount).toFixed(Decimal)) + '</td>' +
+                   '<td  id= "' + 'model1' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio1 mod1" id="CheckModel_1_' + slno + '" value="' + Model1 + '"><label class="custom-control-label" for="CheckModel_1_' + slno + '"></label>' + Model1 + '</div></td>' +
+                   '<td  id= "' + 'model2' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio2 mod2" id="CheckModel_2_' + slno + '" value="' + Model2 + '"><label class="custom-control-label" for="CheckModel_2_' + slno + '"></label>' + Model2 + '</div></td>' +
+                   '<td  id= "' + 'model3' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio3 mod3" id="CheckModel_3_' + slno + '" value="' + Model3 + '"><label class="custom-control-label" for="CheckModel_3_' + slno + '"></label>' + Model3 + '</div></td>' +
+                   '<td  id= "' + 'model4' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio4 mod4" id="CheckModel_4_' + slno + '" value="' + Model4 + '"><label class="custom-control-label" for="CheckModel_4_' + slno + '"></label>' + Model4 + '</div></td>' +
+                   '<td  id= "' + 'model5' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio5 mod5" id="CheckModel_5_' + slno + '" value="' + Model5 + '"><label class="custom-control-label" for="CheckModel_5_' + slno + '"></label>' + Model5 + '</div></td>' +
+                   '<td  id= "' + 'model6' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio6 mod6" id="CheckModel_6_' + slno + '" value="' + Model6 + '"><label class="custom-control-label" for="CheckModel_6_' + slno + '"></label>' + Model6 + '</div></td>' +
+                   '<td  id= "' + 'model7' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio7 mod7" id="CheckModel_7_' + slno + '" value="' + Model7 + '"><label class="custom-control-label" for="CheckModel_7_' + slno + '"></label>' + Model7 + '</div></td>' +
+                   '<td  id= "' + 'model8' + slno + '"  ><div class="custom-control custom-radio mr-1"><input type="radio" name="ModelBodyCheck' + slno + '" class="custom-control-input radio8 mod8" id="CheckModel_8_' + slno + '" value="' + Model8 + '"><label class="custom-control-label" for="CheckModel_8_' + slno + '"></label>' + Model8 + '</div></td>' +
+                   '<td style="display:none;" id= "' + 'CustAcc' + slno + '">' + result[i].CustAddress + '</td>' +
+                   '</tr>';
+            }
+
+        }
+        $('#Tblreport').html(responseText + '</tbody>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Purchase Analysis - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearchsupplier('Tblreport', true, title, 'buttonPlace');
+        $('#RowGet').val(result.length);
+        $('#header').text(title);
+        $('#checkall').prop("checked", false);
+        //$('#Model1Ckeck').prop("checked", true);
+
+        //checkmeall();
+        checkmeallModel(1);
+    }
+
+
+
+
+    function GetItem(ItemId)
+    {
+        var data={};
+
+        data.ItemId = ItemId;
+        data.locId = 0;
+        $.ajax({
+            type:"POST",
+            url: "../MonthlyPurchaseAnalysis/PurchaseanalysisPurchaseGet",
+            data:data,
+            success: function (result) {
+                $('#iconForm').show();
+                ItemLoad(result.oList);
+                
+            }
+
+        })
+
+    }
+
+  
+
+
+    function ItemLoad(result) {
+
+        var Id = $('.rowactive').attr('id').match(/\d+/)[0];
+        var ProductDesc = $('#desc' + Id).text();
+        var product = $('#itemcode' + Id).text();
+
+        $('#headiddetialls').text(product + '-' + ProductDesc + ' : Purchase Details')
+        disable_datatable('Stocklist');
+     
+        var responseText = "<thead><tr><th>Sl#</th><th>Inv.#</th>" +
+              "<th>Inv.Date</th>" +
+              "<th>Supplier Name</th>" +
+              "<th>Pur.Qty.</th>" +
+               "<th>Pur. Cost</th>" +
+               "<th>FC Cost</th>" +
+               "<th>Currency</th>" +
+               "<th>Currency Rate</th>" +
+               "<th>Purchase Type</th></tr>" +
+
+              "<tr><th> </th><th>Inv.#</th>" +
+              "<th>Inv.Date</th><th>Supplier</th>" +
+              "<th>Pur.Qty.</th><th> </th><th> </th><th>Currency</th>" +
+              "<th> </th><th>Purchase Type</th></tr></thead><tbody>";
+        if (result.length != 0) {
+          
+            for (var l = 0; l < result.length; l++) {
+               
+
+                var slno = parseInt(l + 1);
+                responseText += '<tr><td align=center>' + slno + '</td>' +
+                                '<td>' + result[l].InvoNo + '</td>' +
+                                '<td>' + result[l].Date + '</td>' +
+                                '<td>' + result[l].CustName + '</td>' +
+                                 '<td align=center>' + result[l].PurchaseQty + '</td>' +
+                                '<td align=right>' + parseFloat(result[l].MinCost || 0).toFixed(Decimal) + '</td>' +
+                                 '<td align=right>' + parseFloat(result[l].FCCost || 0).toFixed(Decimal) + '</td>' +
+                                '<td>' + result[l].Currency + '</td>' +
+                                '<td align=right>' + parseFloat(result[l].CurrencyRate || 0).toFixed(Decimal) + '</td>'+
+                                '<td>' + result[l].Currency + '</td>' +
+                                '</tr>';
+            }
+            
+        }
+      
+        $('#Stocklist').html(responseText + '</tbody>');       
+        datatableWithsearch('Stocklist', 'Multiple');
+    }
+
+    function GetOrder(ItemId) {
+        var data = {};
+
+        data.ItemId = ItemId;
+        $.ajax({
+            type: "POST",
+            url: "../MonthlyPurchaseAnalysis/PurchaseanalysisPurchaseOrderGet",
+            data: data,
+            success: function (result) {
+                $('#OrderPopup').show();
+                OrderLoad(result.oList);
+
+            }
+
+        })
+
+    }
+
+    function OrderLoad(result) {
+        var Id = $('.rowactive').attr('id').match(/\d+/)[0];
+        var ProductDesc = $('#desc' + Id).text();
+        var product = $('#itemcode' + Id).text();
+        $('#headdetialls').text(product + '-' + ProductDesc + ' : Purchase Order Details')
+        disable_datatable('OrderList');
+        var responseText = "";
+        if (result.length != 0) {
+            var responseText = "<thead><tr><th>Sl#</th><th>Inv.#</th>" +
+                "<th>Inv.Date</th>" +
+                "<th>Supplier Name</th>" +
+                "<th>Order Qty.</th>" +
+                 "<th>Order Cost</th>" +
+                 "<th>FC Cost</th>" +
+                 "<th>Currency</th>" +
+                 "<th>Currency Rate</th>" +
+                 "</tr>" +
+
+                "<tr><th> </th><th>Inv.#</th>"+
+                "<th>Inv.Date</th><th>Supplier</th>" +
+                "<th>Pur.Qty.</th><th> </th><th> </th><th>Currency</th>" +
+                "<th> </th></tr></thead><tbody>";
+            for (var l = 0; l < result.length; l++) {
+               
+
+                var slno = parseInt(l + 1);
+                responseText += '<tr><td align=center>' + slno + '</td>' +
+                                '<td>' + result[l].InvoNo + '</td>' +
+                                '<td>' + result[l].Date + '</td>' +
+                                '<td>' + result[l].CustName + '</td>' +
+                                 '<td align=center>' + result[l].PurchaseQty + '</td>' +
+                                '<td align=right>' + parseFloat(result[l].MinCost ||0).toFixed(Decimal) + '</td>' +
+                                 '<td align=right>' + parseFloat(result[l].FCCost || 0).toFixed(Decimal) + '</td>' +
+                                '<td>' + result[l].Currency + '</td>' +
+                                '<td align=right>' + parseFloat(result[l].CurrencyRate || 0).toFixed(Decimal) + '</td>' +
+                                '</tr>';
+            }
+           
+        }
+        else {
+            var responseText = '<tr><td style="width:1000px;text-align:center"><b>No Datas Found</b><td><tr>';
+        }
+        $('#OrderList').html(responseText + '</tbody>');
+        datatableWithsearchOrder('OrderList', 'Multiple');
+    }
+    function checkmeall() {
+        var checked = $("#checkall").is(":checked")
+        if (checked) {
+           $('input[name=Checkimeino]').prop('checked', true);
+          
+
+        } else {
+
+            $('input[name=Checkimeino]').prop('checked', false);
+
+        }
+
+
+       
+            //var table = $('#Tblreport').DataTable();
+            //var checked = $("#checkall").is(":checked")
+            //table.column(0).nodes().to$().each(function (index) {
+              
+            //    if (checked) {
+            //        $('input', table.cells().nodes()).prop('checked', true);
+                   
+            //    } else {
+                    
+            //        $('input', table.cells().nodes()).prop('checked', false);
+                    
+            //    }
+            //});
+            //table.draw();    
+    }
+
+    function checkmeallModel(Id) {
+
+        if (Id == 1) {  //Model1
+                for (i = 0; i < $('#RowGet').val() ; i++) {
+                    var slno = parseInt(i + 1);
+
+                    if ($("#Model1Ckeck").prop("checked") == true)
+                    {
+                        $("#CheckModel_2_" + slno).prop("checked", false);
+                        $("#CheckModel_3_" + slno).prop("checked", false);
+                        $("#CheckModel_4_" + slno).prop("checked", false);
+                        $("#CheckModel_5_" + slno).prop("checked", false);
+                        $("#CheckModel_6_" + slno).prop("checked", false);
+                        $("#CheckModel_7_" + slno).prop("checked", false);
+                        $("#CheckModel_8_" + slno).prop("checked", false);
+                        $("#CheckModel_1_" + slno).prop("checked", true);
+                        $("#Model2Ckeck").prop("checked", false);
+                        $("#Model3Ckeck").prop("checked", false);
+                        $("#Model4Ckeck").prop("checked", false);
+                        $("#Model5Ckeck").prop("checked", false);
+                        $("#Model6Ckeck").prop("checked", false);
+                        $("#Model7Ckeck").prop("checked", false);
+                        $("#Model8Ckeck").prop("checked", false);
+                    } else {
+                        $("#CheckModel_1_" + slno).prop("checked", false);
+                    }
+
+            }
+        }
+        else if (Id == 2) {  //Model2
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model2Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model3Ckeck").prop("checked", false);
+                    $("#Model4Ckeck").prop("checked", false);
+                    $("#Model5Ckeck").prop("checked", false);
+                    $("#Model6Ckeck").prop("checked", false);
+                    $("#Model7Ckeck").prop("checked", false);
+                    $("#Model8Ckeck").prop("checked", false);
+                } else {
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+        else if (Id == 3) {  //Model3
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model3Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model2Ckeck").prop("checked", false);
+                    $("#Model4Ckeck").prop("checked", false);
+                    $("#Model5Ckeck").prop("checked", false);
+                    $("#Model6Ckeck").prop("checked", false);
+                    $("#Model7Ckeck").prop("checked", false);
+                    $("#Model8Ckeck").prop("checked", false);
+                   
+                } else {
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+        else if (Id == 4) {  //Model4
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model4Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model2Ckeck").prop("checked", false);
+                    $("#Model3Ckeck").prop("checked", false);
+                    $("#Model5Ckeck").prop("checked", false);
+                    $("#Model6Ckeck").prop("checked", false);
+                    $("#Model7Ckeck").prop("checked", false);
+                    $("#Model8Ckeck").prop("checked", false);
+                  
+                } else {
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+        else if (Id == 5) {  //Model5
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model5Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model2Ckeck").prop("checked", false);
+                    $("#Model3Ckeck").prop("checked", false);
+                    $("#Model4Ckeck").prop("checked", false);
+                    $("#Model6Ckeck").prop("checked", false);
+                    $("#Model7Ckeck").prop("checked", false);
+                    $("#Model8Ckeck").prop("checked", false);
+                }
+                else {
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+        else if (Id == 6) {  //Model6
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model6Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model2Ckeck").prop("checked", false);
+                    $("#Model3Ckeck").prop("checked", false);
+                    $("#Model4Ckeck").prop("checked", false);
+                    $("#Model5Ckeck").prop("checked", false);
+                    $("#Model7Ckeck").prop("checked", false);
+                    $("#Model8Ckeck").prop("checked", false);
+                }
+                else {
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+        else if (Id == 7) {  //Model7
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model7Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model2Ckeck").prop("checked", false);
+                    $("#Model3Ckeck").prop("checked", false);
+                    $("#Model4Ckeck").prop("checked", false);
+                    $("#Model5Ckeck").prop("checked", false);
+                    $("#Model6Ckeck").prop("checked", false);
+                    $("#Model8Ckeck").prop("checked", false);
+                }
+                else {
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+        else if (Id == 8) {  //Model8
+            for (i = 0; i < $('#RowGet').val() ; i++) {
+                var slno = parseInt(i + 1);
+
+                if ($("#Model8Ckeck").prop("checked") == true) {
+                    $("#CheckModel_1_" + slno).prop("checked", false);
+                    $("#CheckModel_2_" + slno).prop("checked", false);
+                    $("#CheckModel_3_" + slno).prop("checked", false);
+                    $("#CheckModel_4_" + slno).prop("checked", false);
+                    $("#CheckModel_5_" + slno).prop("checked", false);
+                    $("#CheckModel_6_" + slno).prop("checked", false);
+                    $("#CheckModel_7_" + slno).prop("checked", false);
+                    $("#CheckModel_8_" + slno).prop("checked", true);
+                    $("#Model1Ckeck").prop("checked", false);
+                    $("#Model2Ckeck").prop("checked", false);
+                    $("#Model3Ckeck").prop("checked", false);
+                    $("#Model4Ckeck").prop("checked", false);
+                    $("#Model5Ckeck").prop("checked", false);
+                    $("#Model6Ckeck").prop("checked", false);
+                    $("#Model7Ckeck").prop("checked", false);
+                   
+                }
+                else {
+                    $("#CheckModel_8_" + slno).prop("checked", false);
+                }
+
+            }
+        }
+    }
+   
+
+    function Focusnext(e,slno)
+    {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if(key==13)
+        {
+            var nextId = slno + 1;
+            $('#adjstock_' + nextId).focus();
+        }
+    }
+    function isNumber(e) {
+        var charCode = (e.which) ? e.which : e.keyCode
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    }
+    $("#suppliername").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.CustName = $("#suppliername").val();
+            data.CustType = 'S';
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.CustAccount,
+                            label1: item.CustName,
+                            CustId: item.CustId,
+                            headers: ["Supplier Code", "Supplier Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#supplierId').val(ui.item.CustId)
+
+        },
+
+    });
+    function getcalcmonth() {
+
+        if ($('#movement').val() != 0) {
+            var Dt = $('#DateTo').val();            
+            var x = $('#movement').val(); //or whatever offset
+            var CurrentDate = new Date(Dt.slice(6, 10) + '-' + Dt.slice(3, 5) + '-' + Dt.slice(0, 2));;
+            //For the very rare cases like the end of a month
+            //eg. May 30th - 3 months will give you March instead of February            
+            var date = CurrentDate.getDate();
+            CurrentDate.setDate(1);
+            CurrentDate.setMonth(CurrentDate.getMonth() - x);
+            CurrentDate.setDate(date);
+            date = new Date(CurrentDate)
+            var dd = date.getDate();
+            var mm = date.getMonth() + 1;
+            var yyyy = date.getFullYear();
+            if (dd < 10) { dd = '0' + dd }
+            if (mm < 10) { mm = '0' + mm };
+            var d = dd + '/' + mm + '/' + yyyy;
+            $('#DateFrom').val(d);
+        }
+    }
+
+    //function calcavgstock()
+    //{
+    //    var a = $('#movement').val();
+    //    var b = $('#orderfor').val();
+    //    for( var i=1;i<=$('#RowGet').val();i++)
+    //    {
+    //        var s = $('#qty' + i).text();
+    //        var tempstock = parseFloat(s / a).toFixed(Decimal)
+    //       $('#hiddenstock' + i).val(tempstock);
+    //       var avgstock = $('#hiddenstock' + i).val() * b;
+    //       $('#adjstock' + i).val(Math.round(avgstock))
+    //    }
+    //}
+
+   
+
+    function datatableWithsearch(tablename, Type) {
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+          
+                if (title != ' ')
+                    $(this).html('<input type="text"  style="width:100%" class="form-control"  placeholder="' + title + '"/>')
+
+        });
+
+        var table = null;
+
+        if (Type == 'Single') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                orderCellsTop: true,
+                //"order": false,
+            });
+
+        }
+        else if (Type == 'Multiple') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                "pageLength": -1,
+                "columnDefs": [
+                   { "width": "1%", "targets": 0 },
+                   { "width": "3%", "targets": 1 },
+                   { "width": "2%", "targets": 2 },
+                   { "width": "15%", "targets": 3 },
+                   { "width": "1%", "targets": 4 },
+                   { "width": "6%", "targets": 5},
+                   { "width": "5%", "targets": 6 },
+                   { "width": "2%", "targets": 7 },
+                   { "width": "2%", "targets": 8 },
+                   { "width": "2%", "targets": 9 },
+                
+                ],
+            });
+
+
+        }
+        else if (Type == 'MultiplePurchaseT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+               
+                orderCellsTop: true,
+                "order": [],
+                //  "pageLength": -1,
+                autoWidth: false
+            });
+
+        }
+   
+        else if (Type == 'MultiplePurchaseTn') {
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'tipr',
+                "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "15%", "targets": 2 },
+                ],
+                //orderCellsTop: true,
+                //"order": [],
+                ////  "pageLength": -1,
+                //autoWidth: false
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                "pageLength": -1,
+            });
+
+        }
+        else if (Type == 'MultipleSalesT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                "pageLength": -1,
+                "columnDefs": [
+                    { "width": "9%", "targets": 0 },
+                     { "width": "8%", "targets": 1 },
+                      { "width": "8%", "targets": 3 },
+                       { "width": "7%", "targets": 4 },
+                        { "width": "10%", "targets": 5 },
+                         { "width": "20%", "targets": 6 },
+                          { "width": "12%", "targets": 7 },
+                ],
+               
+            });
+
+
+        }
+        else if (Type == 'MultiplePurchaseOrderT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "8%", "targets": 0 },
+                    { "width": "12%", "targets": 1 },
+                    { "width": "25%", "targets": 2 },
+                    { "width": "8%", "targets": 3 },
+                    { "width": "8%", "targets": 4 },
+                    { "width": "10%", "targets": 5 },
+                    { "width": "8%", "targets": 6 },
+                    { "width": "12%", "targets": 7 },
+                    { "width": "10%", "targets": 8 },
+                    { "width": "12%", "targets": 9 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                //  "pageLength": -1,
+                autoWidth: false
+            });
+
+        }
+        else if (Type == 'MultipleAllTransaction') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                "pageLength": -1,
+                "columnDefs": [
+                    { "width": "10%", "targets": 2 },
+
+                ],
+                
+            });
+
+        }
+      
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+    }
+
+
+    function datatableWithsearchOrder(tablename, Type) {
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+
+            if (title != ' ')
+                $(this).html('<input type="text"  style="width:100%" class="form-control"  placeholder="' + title + '"/>')
+
+        });
+
+        var table = null;
+
+        if (Type == 'Single') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                orderCellsTop: true,
+                //"order": false,
+            });
+
+        }
+        else if (Type == 'Multiple') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                "pageLength": -1,
+                "columnDefs": [
+                   { "width": "1%", "targets": 0 },
+                   { "width": "3%", "targets": 1 },
+                   { "width": "2%", "targets": 2 },
+                   { "width": "15%", "targets": 3 },
+                   { "width": "1%", "targets": 4 },
+                   { "width": "6%", "targets": 5 },
+                   { "width": "5%", "targets": 6 },
+                   { "width": "2%", "targets": 7 },
+                   { "width": "2%", "targets": 8 },
+
+                ],
+            });
+
+
+        }
+        else if (Type == 'MultiplePurchaseT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+
+                orderCellsTop: true,
+                "order": [],
+                //  "pageLength": -1,
+                autoWidth: false
+            });
+
+        }
+
+
+
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+    }
+
+    function datatableWithsearchs(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tr:eq(0) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+               
+                    $(this).html('<input type="text"  style="width:100%"  placeholder="' + title + '"/>')
+                
+               
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+            table = $('#' + tablename).DataTable({
+
+                dom: "<'row'<'col-sm-12'f>>" +
+                  "<'row'<'col-sm-12'tr>>" +
+                  "<'row'<'col-sm-1'i>>",
+                'bSortable': false,
+                "ordering": false,
+                'aTargets': [0],
+                "columnDefs": [
+                    { "width": "1%", "targets": 0 },
+                    { "width": "1%", "targets": 1 },
+                    { "width": "8%", "targets": 3 },
+                    { "width": "5%", "targets": 5 },
+                    { "width": "8%", "targets": 6 },
+                    { "width": "3%", "targets": 7 },
+                    { "width": "3%", "targets": 8 },
+                    { "width": "3%", "targets": 9 },
+                    { "width": "3%", "targets": 10 },
+                    { "width": "3%", "targets": 11 },
+                    { "width": "4%", "targets": 12 },
+                    { "width": "4%", "targets": 13 },
+                    { "width": "6%", "targets": 14 },
+                    { "width": "6%", "targets": 15 },
+                    { "width": "6%", "targets": 16 },
+                    { "width": "6%", "targets": 17 },
+                    { "width": "6%", "targets": 18 },
+                    { "width": "6%", "targets": 19 },
+                    { "width": "6%", "targets": 20 },
+                    { "width": "6%", "targets": 21 },
+
+                   
+                ],
+                "order": [],
+                "pageLength": -1,
+                buttons: []
+                
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                    extend: 'colvis',
+                    columns: ':visible',
+                }
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(0) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+   
+
+
+    function datatableWithsearchsupplier(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tr:eq(0) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+
+                $(this).html('<input type="text"  style="width:100%"  placeholder="' + title + '"/>')
+
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+            table = $('#' + tablename).DataTable({
+
+                dom: "<'row'<'col-sm-12'f>>" +
+                  "<'row'<'col-sm-12'tr>>" +
+                  "<'row'<'col-sm-1'i>>",
+                'bSortable': false,
+                "ordering": false,
+                'aTargets': [0],
+                "columnDefs": [
+                    { "width": "1%", "targets": 0 },
+                    { "width": "1%", "targets": 1 },
+                    { "width": "3%", "targets": 4 },
+                    { "width": "20%", "targets": 6 },
+                    { "width": "3%", "targets": 7 },
+                    { "width": "3%", "targets": 8 },
+                    { "width": "3%", "targets": 9 },
+                    { "width": "3%", "targets": 10 },
+                    { "width": "3%", "targets": 11 },
+                    { "width": "4%", "targets": 12 },
+                    { "width": "4%", "targets": 13 },
+                    { "width": "6%", "targets": 14 },
+                    { "width": "6%", "targets": 15 },
+                    { "width": "6%", "targets": 16 },
+                    { "width": "6%", "targets": 17 },
+                    { "width": "6%", "targets": 18 },
+                    { "width": "6%", "targets": 19 },
+                    { "width": "6%", "targets": 20 },
+                    { "width": "6%", "targets": 21 },
+                   
+
+                ],
+                "order": [],
+                "pageLength": -1,
+                buttons: []
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        columns: ':visible',
+                    }
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(0) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+    function ExcelExportFn(Flag) {
+
+        $('#TblreportExcel thead tr').remove();
+        $('#TblreportExcel tbody tr').remove();
+
+        var responseTextExcel = "<thead><tr><th  colspan=12 style='text-align:center'><b><center>" + $("#header").text() + "</center></b></th></tr>"
+
+        responseTextExcel += "<tr>" +
+            "<th align=center><b>Sl#</b></th>" +
+            "<th><b>Supplier</b></th>" +
+            "<th><b>Item Code</b></th>" +
+            "<th><b>Description</b></th>" +
+            "<th style='text-align:center'><b>Current Stock</b></th>" +
+            "<th style='text-align:center'><b>Movement Qty.</b></th>" +
+            "<th style='text-align:center'><b>Back Order Qty.</b></th>" +
+            "<th style='text-align:center'><b>In transit Qty.</b></th>" +
+            "<th style='text-align:center'><b>Order Qty.</b></th>" +
+            "<th style=text-align:right;><b>Purchase Cost</b></th>" +
+            "<th style=text-align:right;><b>Purchase(FC)</b></th>" +
+            "<th><b>Model 1</b></th>" +
+            "<th><b>Model 2</b></th>" +
+            "<th><b>Model 3</b></th>" +
+            "<th><b>Model 4</b></th>" +
+            "<th><b>Model 5</b></th>" +
+            "<th><b>Model 6</b></th>" +
+            "<th><b>Model 7</b></th>" +
+            "<th><b>Model 8</b></th>" +
+            "</tr></thead><tbody>"
+
+        var newslno = 1;
+
+        for (var i = 0; i < $('#RowGet').val(); i++) {
+
+
+            var slno = parseInt(i + 1);
+
+
+            if ($("#RowTr_" + slno).is(":visible")) { //&& $("#CheckBoxId_" + slno).prop("checked")
+                
+
+                if ($('#CheckModel_1_' + slno).prop("checked") == false) {
+                    $('#ModelsValue1').text($('#CheckModel_1_' + slno).val())
+                }
+                 if ($('#CheckModel_2_' + slno).prop("checked") == false) {
+                    $('#ModelsValue2').text($('#CheckModel_2_' + slno).val())
+                }
+                if ($('#CheckModel_3_' + slno).prop("checked") == false) {
+                    $('#ModelsValue3').text($('#CheckModel_3_' + slno).val())
+                }
+                if ($('#CheckModel_4_' + slno).prop("checked") == false) {
+                    $('#ModelsValue4').text($('#CheckModel_4_' + slno).val())
+                }
+                 if ($('#CheckModel_5_' + slno).prop("checked") == false) {
+                    $('#ModelsValue5').text($('#CheckModel_5_' + slno).val())
+                }
+                if ($('#CheckModel_6_' + slno).prop("checked") == false) {
+                    $('#ModelsValue6').text($('#CheckModel_6_' + slno).val())
+                }
+               if ($('#CheckModel_7_' + slno).prop("checked") == false) {
+                    $('#ModelsValue7').text($('#CheckModel_7_' + slno).val())
+                }
+                if ($('#CheckModel_8_' + slno).prop("checked") == false) {
+                    $('#ModelsValue8').text($('#CheckModel_8_' + slno).val())
+                }
+
+                //var reporttablelen = document.getElementById('Tblreport').rows.length;
+                //var oArray5 = new Array();
+                //for (var d = 1; d <= reporttablelen; d++) {
+                //    oArray5.push($('#visibletdno'+d))
+                //}
+                
+
+
+
+                responseTextExcel += '<tr id="RowTrExcel_' + slno + '">' +
+                        '<td align=center>' + newslno + '</td>' +
+                        '<td id= "' + 'custnameExcel' + slno + '" >' +
+                        $("#CustAcc" + slno).text() + '</td>' +
+                        '<td id= "' + 'itemcodeExcel' + slno + '" >' +
+                        $("#itemcode" + slno).text() + '</td>' +
+                        '<td id= "' + 'descExcel' + slno + '" >' +
+                       $("#desc" + slno).text() + '</td>' +
+                        '<td id= "' + 'curstockExcel' + slno + '"   style="text-align:center">' +
+                       $("#curstock" + slno).text() + '</td>' +
+                        '<td  id= "' + 'qtyExcel' + slno + '"  style="text-align:center">' +
+                        $("#qty" + slno).text() + '</td>' +
+                        '<td  id= "' + 'poqtyExcel' + slno + '"  style="text-align:center">' +
+                        $("#poqty" + slno).text() + '</td>' +
+                        '<td  id= "' + 'ppqtyExcel' + slno + '"  style="text-align:center">' +
+                        $("#ppqty" + slno).text() + '</td>' +
+                        '<td  id= "' + 'adjstockExcel_' + slno + '" >' +
+                        $("#adjstock_" + slno).val() + '</td>' +
+                        '<td id= "' + 'purchasecostExcel' + slno + '"  style="text-align:right;">' +
+                        $("#purchasecost" + slno).text() + '</td>' +
+                        '<td id= "' + 'FCExcel' + slno + '" style="text-align:right;">' +
+                        $("#FC" + slno).text() + '</td>' +
+                        '<td  id= "' + 'model1Excel' + slno + '"  >' +
+                        $("#ModelsValue1").text() + '</td>' +
+                         '<td  id= "' + 'model2Excel' + slno + '"  >' +
+                        $("#ModelsValue2").text() + '</td>' +
+                         '<td  id= "' + 'model3Excel' + slno + '"  >' +
+                        $("#ModelsValue3").text() + '</td>' +
+                         '<td  id= "' + 'model4Excel' + slno + '"  >' +
+                        $("#ModelsValue4").text() + '</td>' +
+                         '<td  id= "' + 'model5Excel' + slno + '"  >' +
+                        $("#ModelsValue5").text() + '</td>' +
+                         '<td  id= "' + 'model6Excel' + slno + '"  >' +
+                        $("#ModelsValue6").text() + '</td>' +
+                         '<td  id= "' + 'model7Excel' + slno + '"  >' +
+                        $("#ModelsValue7").text() + '</td>' +
+                         '<td  id= "' + 'model8Excel' + slno + '"  >' +
+                        $("#ModelsValue8").text() + '</td>' +
+                        '</tr>';
+                newslno++;
+            }
+        }
+        $('#TblreportExcel').html(responseTextExcel + '</tbody>');
+        
+
+        if (Flag == 0) {            //Excel
+
+            $("#TblreportExcel").table2excel({
+                filename: $("#header").text()+".xls"
+            });
+        }
+        else if (Flag == 1) {       //Print
+
+            var myWindow = window.open("", "", "width=1500,height=1500");
+            myWindow.document.write('<table width=100%>' + responseTextExcel + '</table>');
+            myWindow.print();
+
+        }
+    }
+    function Focusnext(e, Id) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+
+        if (key == 40 && Id != 0)          // Down Arrow
+        {
+            e.preventDefault();
+            var Rid;
+
+            try {
+
+                Rid = ($('#RowTr_' + Id).closest('tr').next('tr').attr('id')).match(/\d+/)[0];
+                $('#adjstock_' + Rid).focus();
+                $('#adjstock_' + Rid).select();
+                $('#RowTr_' + Rid).click();
+            }
+            catch (err) {
+                Rid = Id;
+            }
+
+        }
+        else if (key == 38 && Id != 0) {           // Up Arrow
+            e.preventDefault();
+            var Rid;
+
+            try {
+
+                Rid = ($('#RowTr_' + Id).closest('tr').prev('tr').attr('id')).match(/\d+/)[0];
+                $('#adjstock_' + Rid).focus();
+                $('#adjstock_' + Rid).select();
+                $('#RowTr_' + Rid).click();
+            }
+            catch (err) {
+                Rid = Id;
+            }
+
+        }
+    }
+   
+</script>

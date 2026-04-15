@@ -1,0 +1,2284 @@
+﻿
+@{
+    ViewBag.Title = "StockReport";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        #draggable {
+            width: 150px;
+            height: 150px;
+            padding: 0.5em;
+        }
+        .QtyColour {
+            color:#0033cc;
+            font-weight:bold;
+        }
+    </style>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script>
+
+  $( function() {
+      $("#TransactionPopup").draggable({
+          handle: ".modal-header"
+      });
+      $("#productpopupdiv").draggable({
+          handle: ".modal-header"
+      });
+      $("#salestranspopupdiv").draggable({
+          handle: ".modal-header"
+      });
+      $("#PurchaseTransactionPopup").draggable({
+          handle: ".modal-header"
+      });
+      $("#MonthwiseSales").draggable({
+          handle: ".modal-header"
+      });
+      $("#MonthwisePurchase").draggable({
+          handle: ".modal-header"
+      });
+      $("#PendingPurchaseTransactionPopup").draggable({
+          handle: ".modal-header"
+      });
+  });
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+
+<style>
+   
+       /*#productlist tr:hover {
+            background-color: cyan;
+            cursor:pointer;
+        }*/
+
+    .message {
+        /*background: #181818;
+        color: #FFF;*/
+        position: fixed;
+        top: -200px;
+        left: 0;
+        width: 100%;
+        height: 250px;
+        padding: 20px;
+        transition: top 1000ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+        .message h1 {
+            /*color: #FFF;*/
+        }
+
+    #toggle:checked ~ .message {
+        top: 10px;
+        z-index: 1001;
+    }
+
+    #toggle {
+        position: absolute;
+        appearance: none;
+        cursor: pointer;
+        left: -100%;
+        top: -100%;
+    }
+
+        #toggle + label {
+            position: absolute;
+            cursor: pointer;
+            padding: 10px;
+            background: #26ae90;
+            width: 100px;
+            border-radius: 3px;
+            padding: 8px 10px;
+            color: #FFF;
+            line-height: 20px;
+            font-size: 12px;
+            text-align: center;
+            -webkit-font-smoothing: antialiased;
+            cursor: pointer;
+            margin: 20px 50px;
+            transition: all 3000ms ease;
+        }
+
+            #toggle + label:after {
+                content: "Open";
+            }
+
+    .container {
+        transition: margin 1000ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+        padding: 5em 3em;
+    }
+
+
+
+    #toggle:checked ~ .container {
+        margin-top: 250px;
+    }
+
+    #toggle:checked + label {
+        background: #dd6149;
+    }
+
+        #toggle:checked + label:after {
+            content: "Close";
+        }
+</style>
+
+
+<div class="myData" data-x="M232" />
+
+
+
+<div class="container" style="display:none">
+
+
+    <h1>Pure CSS3 Slide Down Toggle Demo</h1>
+    <h2> Click the Open button to see hidden mesage.</h2>
+
+</div>
+
+<input type="checkbox" name="toggle" id="toggle" style="display:none" />
+
+<label for="toggle" style="display:none"></label>
+
+@*<div class="message" style="width:98%;margin-left:2%;height:185px;background-color:#009da0;z-index:100">
+    <div class="row col-md-12" style="height:30px">
+        <div class="modal-title col-md-2" id="prodheader" style="font-weight:600;color:white;font-size:larger;"></div>
+
+        <div class="col-md-1" id="PopUpDetail1" style="font-weight:400;text-align:center;color:white;"></div>
+        <div class="col-md-2" id="PopUpDetail2" style="font-weight:400;text-align:center;color:white;"></div>
+        <div class="col-md-2" id="PopUpDetail3" style="font-weight:400;text-align:center;color:white;"></div>
+        <div class="col-md-1" id="PopUpDetail4" style="font-weight:400;text-align:center;color:white;"></div>
+        <div class="col-md-2" id="PopUpDetail5" style="font-weight:400;text-align:center;color:white;font-weight:600;color:white;font-size:larger"></div>
+        <div class="col-md-2" id="PopUpDetail6" style="font-weight:400;text-align:right;color:white; ">
+
+        </div>
+        <div class="col-md-1" style="display:none">
+            <button type="button" class="close" onclick="hidepopup(1)">
+                <span>×</span>
+            </button>
+        </div>
+    </div>
+
+    <section id="productdiv" style="display:none;height:130px;overflow-y:hidden;overflow-x:hidden">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="" style="height:135px;">
+                    <div class="" style="overflow:scroll;height:300px;width:100%;overflow:auto;background-color:white;color:black">
+                        <table class="table table-responsive-md-md text-center" id="tblproductdetails" style="top:-10px;"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="" style="height:135px;background-color:#009da0">
+                </div>
+            </div>
+        </div>
+
+
+
+    </section>
+
+</div>*@
+@*<div id="productpdiv" style="display:none;border-radius: 25px;">
+    <div id="toast-containerinfo" class="toast-container toast-top-half-width" style="position:absolute; top:0; right:0%;opacity:100">
+
+        <div class="toast-primary" style="height:180px;margin-top:-25px;font-weight:500;text-align:center;opacity:100;width:100%" id="infomessage">
+            <h5 class="modal-title" id="prodheader"></h5>
+            <button type="button" class="close" onclick="productpopuprefresh()" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <section id="productdiv" style="display:none;height:25%;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <input type="hidden" id="LPCost" value="0" />
+                            <input type="hidden" id="AvgCost" value="0" />
+                            <input type="hidden" id="Sumtotqty" value="0" />
+                            <input type="hidden" id="LastSellingPrice" value="0" />
+                            <div class="card-block" style="height:115px;width:100%;">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </div>
+
+    </div>
+</div>*@
+
+<div id="TransactionPopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px;  display:none;">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:90px;margin-left:90px">
+        <div class="modal-content" style="width:223%;">
+            <div class="modal-header bg-primary white">
+                <h5 class="modal-title" id="transactionheader"></h5>
+
+                <div style="float:right;margin-left:500px" id="alltranscheckboxdivsales" class="custom-control custom-checkbox col-md-1">
+                    <input type="checkbox" class="custom-control-input" id="status_type" onchange="CheckTransType()">
+                    <label class="custom-control-label" for="status_type" id="idforlabeltype">All</label>
+                </div>
+                <button type="button" class="close" onclick="transpopuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="transdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                                    <div id="proddiv" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:560px;font-size:medium">
+                                                        <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tbltransaction" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div id="salestranspopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px;  display:none;">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:200px">
+        <div class="modal-content" style="width:200%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="salesheader"></h4>
+
+
+                <div id="alltranscheckboxdivsales" class="custom-control custom-checkbox col-md-1">
+                    <input type="checkbox" class="custom-control-input" id="select_status_sales" onchange="Salespopup($('#ProductId').val())">
+                    <label class="custom-control-label" for="select_status_sales">All</label>
+                </div>
+
+                <button type="button" class="close" onclick="salestranspopuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <section id="salestransdiv" style="display:none">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-3">
+                                            <label style="font-weight:bold">No. of  Transactions :</label>
+                                            <label style="font-weight:bold" id="totalnosales"></label>
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-3">
+                                            <label style="font-weight:bold">Total Sales Qty :</label>
+                                            <label style="font-weight:bold" id="totalnosalesqty"></label>
+                                        </div>
+                                        <div class="col-md-1"></div>
+
+
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                            <div id="salestransdiv" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                                <input type="hidden" id="salestransid" />
+                                                <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblsalestrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="PurchaseTransactionPopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="PurchaseTransactionheader" style="padding-right: 17px; display: block; display:none">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:200px">
+        <div class="modal-content" style="width:200%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="PurchaseTransactionheader"></h4>
+
+                <div id="alltranscheckboxdiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                    <input type="checkbox" class="custom-control-input" id="select_status" onchange="Purchasespopup($('#ProductId').val())">
+                    <label class="custom-control-label" for="select_status">All</label>
+                </div>
+
+                <button type="button" class="close" onclick="ClosePurTransPopup()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <section id="purchasetrans" style="display:none">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3">
+                                    <label style="font-weight:bold">No. of  Transactions :</label>
+                                    <label style="font-weight:bold" id="totalnopurchase"></label>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <label style="font-weight:bold">Total Purchase Qty :</label>
+                                    <label style="font-weight:bold" id="totalnopurchaseqty"></label>
+                                </div>
+                                <div class="col-md-1"></div>
+
+
+                            </div>
+
+                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                <div id="" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                    <input type="hidden" id="transid" />
+                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblpurchasetrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="PendingPurchaseTransactionPopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="PurchaseTransactionheader" style="padding-right: 17px; display: block; display:none">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:300px">
+        <div class="modal-content" style="width:170%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="PendingPurchaseTransactionheader"></h4>
+
+                <div id="allpendingcheckboxdiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                    <input type="checkbox" class="custom-control-input" id="select_statuspending" onchange="PendingPurchasespopup($('#ProductId').val())">
+                    <label class="custom-control-label" for="select_statuspending">All</label>
+                </div>
+
+                <button type="button" class="close" onclick="ClosePendingPurTransPopup()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <section id="pendingpurchasetrans" style="display:none">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-3">
+                                    <label style="font-weight:bold">Total Pending :</label>
+                                    <label style="font-weight:bold" id="totalpending"></label>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <label style="font-weight:bold">Total In transit Qty. :</label>
+                                    <label style="font-weight:bold" id="totalintransit"></label>
+                                </div>
+                                <div class="col-md-1"></div>
+
+
+                            </div>
+                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                <div id="" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                    <input type="hidden" id="pendingtransid" />
+                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblpendingpurchasetrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div id="DOpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px;  display:none;">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:200px">
+        <div class="modal-content" style="width:200%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="DOheader"></h4>
+
+
+                <div id="alltranscheckboxdivDO" class="custom-control custom-checkbox col-md-1">
+                    <input type="checkbox" class="custom-control-input" id="select_status_DO" onchange="DeliveryOrderpopup($('#ProductId').val())">
+                    <label class="custom-control-label" for="select_status_DO">All</label>
+                </div>
+
+                <button type="button" class="close" onclick="DOpopuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <section id="DOdiv" style="display:none">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    @*<div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-3">
+                                            <label style="font-weight:bold">Total Sales :</label>
+                                            <label style="font-weight:bold" id="totalnoDO"></label>
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-3">
+                                            <label style="font-weight:bold">Total Sales Qty :</label>
+                                            <label style="font-weight:bold" id="totalnoDOqty"></label>
+                                        </div>
+                                        <div class="col-md-1"></div>
+
+
+                                    </div>*@
+
+                                    <div class="card-body">
+                                        <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                            <div id="DOdiv" class="jsgrid" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                                <input type="hidden" id="DOid" />
+                                                <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblDO" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="MonthwisePurchase" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px;  display:none;">
+    <div class="modal-dialog modal-lg" role="document" style="margin-top:100px;margin-left:250px">
+        <div class="modal-content" style="width:180%;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="MonthwisePurchaseheader"></h4>
+
+
+                <button type="button" class="close" onclick="MonthwisePurchasepopuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section id="MonthwisePurchasediv" style="display:none;">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div id="PurchaseDetails">
+                                                <h5 style="margin-left:20px">Purchase Details</h5>
+                                                <div class="card-block">
+                                                    <table class="table table-responsive-md-md text-center  table-bordered table-striped" id="tblMonthwisePurchase" style="font-size:small">
+                                                        <tr>
+                                                            <th>Year</th>
+                                                            <th>January</th>
+                                                            <th>February</th>
+                                                            <th>March</th>
+                                                            <th>April</th>
+                                                            <th>May</th>
+                                                            <th>June</th>
+                                                            <th>July</th>
+                                                            <th>August</th>
+                                                            <th>September</th>
+                                                            <th>October</th>
+                                                            <th>November</th>
+                                                            <th>December</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div id="SalesDetails">
+                                                <h5 style="margin-left:20px">Sales Details</h5>
+                                                <div class="card-block">
+                                                    <table class="table table-responsive-md-md text-center  table-bordered table-striped" id="tblMonthwiseSales" style="font-size:small">
+                                                        <tr>
+                                                            <th>Year</th>
+                                                            <th>January</th>
+                                                            <th>February</th>
+                                                            <th>March</th>
+                                                            <th>April</th>
+                                                            <th>May</th>
+                                                            <th>June</th>
+                                                            <th>July</th>
+                                                            <th>August</th>
+                                                            <th>September</th>
+                                                            <th>October</th>
+                                                            <th>November</th>
+                                                            <th>December</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td style="height:100px">
+                                   
+                                    <div style="width:80%;height:45px;margin-left:15%">
+                                      
+                                        <div class="modal-title" id="pdthead" style="width:100%;">
+                                            <div style="width:100%;">
+                                                <table style="width:100%" id="TblStockItemDt">
+                                                    <tr style="width:100%">
+                                                       
+                                                        <td id="pcol2" style="font-weight:500;width:100%;"></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <table id="ItemDetails" style="display:none;margin-left:18%;margin-top:2%">
+                                        <tr>
+                                            <td id="pcol1" style="font-weight:400;color:green"></td>
+                                            <td>
+                                                <input type="hidden" id="LPCost" value="0" />
+                                                <input type="hidden" id="AvgCost" value="0" />
+                                                <input type="hidden" id="Sumtotqty" value="0" />
+                                                <input type="hidden" id="LastSellingPrice" value="0" />
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                               
+                                <td align="right">
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-outline-primary" style="width:120px" id="btnGo" onclick="window.open('../Master/ItemMaster')" type="button">Add Product</button>
+                                    </div>
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div align="right">
+                            <div class="heading-elements">
+                            <hr />
+                              
+                                    <table style="margin-right:9.5%">
+                                        <tr>
+                                            <td>Search: </td>
+                                            <td>
+                                                <div style="width:170%;"><input type="text" id="txtbox" style="font-weight:bold;background-color:#e6ffff" onkeyup="load(event)" class="form-control" /></div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <div id="divreport" style="display:none;position: relative; overflow-x: auto;overflow-y: auto; height:650px;">
+
+                                        <table id="productlist" class="table table-striped table-bordered dataTable"></table><br />
+
+                                    </div>
+                                    <div style="display:none">
+                                        <table id="Tblreportprint"></table>
+                                    </div>
+                              
+                                <br /><br />
+                                <div><input type="hidden" id="ProductId" class="form-control" /></div>
+                                <div><input type="hidden" id="ItemCode" class="form-control" /></div>
+                                <div><input type="hidden" id="ItemDescription" class="form-control" /></div>
+                                <div><input type="hidden" id="OpenQty" class="form-control" /></div>
+                                <div><input type="hidden" id="AvgCost" class="form-control" /></div>
+                                <div><input type="hidden" id="OpenCost" class="form-control" /></div>
+                                <div><input type="hidden" id="Stock" class="form-control" /></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="margin-bottom:3%" class="row col-md-12">
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500">Close Popups : Esc</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;">Last Sales Transactions : F7</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;margin-left:2%">Last Purchase Transactions : F8</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;margin-left:2%">All Transactions : F9</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;margin-left:-2%">Monthwise Details : F10</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;margin-left:-2%">Delivery Order Details : F11</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500">Pending Details : F12</h6>
+    <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500">Previous Transactions : ALT+Y</h6>   
+</div>
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;height:200%">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Stock Query</h3>
+              
+               
+
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="location">Location</label>
+                        <select id="location" name="priority" class="form-control"></select>
+                    </fieldset>
+                    <br>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-outline-primary">Go</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function Getproddetails(id) {
+        $('#ProductId').val(id);
+        $('#ItemCode').val($('#Icode' + id).text());
+        $('#ItemDescription').val($('#IDesc' + id).text());
+        $('#OpenQty').val($('#OpenQty' + id).text());
+        $('#AvgCost').val($('#Cost' + id).text());
+        $('#OpenCost').val($('#OpeningCost' + id).text());
+        $('#Stock').val($('#StockGrid' + id).text());
+        
+
+        $('#pcol1').text("");
+        $('#pcol2').text("");
+        $('#Itemname').text('');
+        if (id != 0) {
+            var data = {};
+            data.ProductId = id;
+            data.CustId =0;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: '../SalesInvoice/CustomerProductDetailsSearch',
+                data: data,
+                success: function (result) {
+                    LoadProddetails(result.oList, 1);
+                }
+            });
+        }
+
+    }
+
+    function LoadProddetails(result, flg) {
+            if (flg == 1)                                 //For F2 Popup 
+            {
+                $('#pcol1').text("");
+                $('#pcol2').text("");
+
+                if (result[0].ProductCode != undefined) {
+                    $('#Itemname').text(result[0].ProductCode);
+                }
+                for (var n = 0; n < result.length; n++) {
+                    var custstat;
+                    if (result[n].LastSellingPrice == 0) {
+                        custstat = "Last Selling Price";
+                    }
+                    else {
+                        custstat = result[n].custstats;
+                    }
+                    var strr = result[n].Locationstock;
+                    var strr1 = strr.replace(/&/gi, "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;");
+                    var strr2 = strr1.replace(/#/gi, "&emsp;");
+                    var strr3 = strr2.replace(/,/gi, "&nbsp;");
+                    if (result[n].custstats == 'Last Selling Price' && $('#txtCustId').val() == 0) {
+                        var ProdRow =
+                         "Average Cost : <b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</b> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; LP Cost : " + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + " &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; " + custstat + " :" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "";
+                        var ProdRow2 = strr3;
+                        $('#pcol1').append(ProdRow);
+                        $('#pcol2').append(ProdRow2);
+                        $('#ItemDetails').show();
+                        $('#pcol1').show();
+                        $('#tbllocqty').attr('border', '1');
+                        $('#tbllocqty').attr('bordercolor', 'black');
+                        
+                        $('#tbllocqty td').attr('border', '1px solid black');
+                    }
+                    else {
+                        var ProdRow = "Average Cost : <b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</b> &emsp;&emsp; LPCost : <b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</b> &emsp;&emsp; CLS Price : <b>" + (parseFloat(result[n].CustLastSellingPrice || 0).toFixed(Decimal)) + "</b> &emsp;&emsp; Last Selling Price : <b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</b>";
+                        var ProdRow2 = strr3;
+                        $('#pcol1').append(ProdRow);
+                        $('#pcol2').append(ProdRow2);
+                        $('#ItemDetails').show();
+                        $('#pcol1').show();
+                        $('#tbllocqty').attr('border', '1');
+                        
+                        $('#tbllocqty').attr('bordercolor', 'black');
+                       
+                        $('#tbllocqty td').attr('border', '1px solid black');
+                    }
+
+                }
+                var table = document.getElementById('TblStockItemDt');
+                var tbody = table.getElementsByTagName('tbody')[0];
+                var cells = tbody.getElementsByTagName('td');
+
+                for (var i = 0, len = cells.length; i < len; i++) {
+                    if (parseInt(cells[i].innerHTML, 10) > 0) {
+                        cells[i].style.color = '#0033cc';
+                        cells[i].style.fontWeight = "500";
+                    }
+                    else if (parseInt(cells[i].innerHTML, 10) <= 0) {
+                        cells[i].style.color = 'red';
+                    }
+                }
+            }
+           
+    }
+     
+
+        function load(e)
+        {
+           
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+
+            var flg = 1;
+            if ($('#txtbox').val() == '')
+                flg = 0;
+            if ((flg ==1 && key == 32)||(flg==0)) { 
+                var data = {};
+                data.Type = flg;
+                data.Condition = $('#txtbox').val();
+                $.ajax({
+                    type: "POST",
+                    url: "../StockReport/StockReportGet",
+                    data: data,
+                    success: function (result) {
+                        Showreport(result);
+                       
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                    }
+                });
+            }
+        }
+   
+    function Showreport(result) {
+        disable_datatable('productlist');
+        var responseText = "<thead><tr><th style=text-align:center>Sl#</th><th>Item Code</th><th>Item Description</th><th>Group</th><th>Stock</th><th style=text-align:right>Price</th><th style=text-align:right>Cost</th><th style=text-align:right>LP_Cost</th><th>Sub Group</th><th>Category</th><th>Sub Category</th><th>Model 1</th><th>Model 2</th><th>Model 3</th><th>Model 4</th><th>Model 5</th><th>Status</th><th>View</th><th style='display:none'></th><th style='display:none'></th></tr>" +
+            "<tr><th> </th><th>Item Code</th><th>Item Description</th><th>Group</th><th> </th><th> </th><th> </th><th> </th><th>Sub Group</th><th>Category</th><th>Sub Category</th><th>Model 1</th><th>Model 2</th><th>Model 3</th><th>Model 4</th><th>Model 5</th><th>Status</th><th> </th><th style='display:none'></th><th style='display:none'></th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            if (result[i].StockQty > 0) {
+                responseText += '<tr id="MainRow_' + slno + '" onclick=Getproddetails(' + result[i].ItemId + ') ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Group + '</td><td align=center style="color:#0033cc" id=' + "StockGrid" + result[i].ItemId + '><b>' + parseFloat(result[i].StockQty).toFixed(Decimal) + '</b></td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td  style=text-align:right>' + parseFloat(result[i].LPCost).toFixed(Decimal) + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].Model4 + '</td><td>' + result[i].Model5 + '</td><td>' + result[i].Status + '</td><td align=center><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+            }
+            else
+            {
+                responseText += '<tr id="MainRow_' + slno + '" onclick=Getproddetails(' + result[i].ItemId + ') ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Group + '</td><td align=center style="color:red" id=' + "StockGrid" + result[i].ItemId + '><b>' + parseFloat(result[i].StockQty).toFixed(Decimal) + '</b></td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td  style=text-align:right>' + parseFloat(result[i].LPCost).toFixed(Decimal) + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].Model4 + '</td><td>' + result[i].Model5 + '</td><td>' + result[i].Status + '</td><td align=center><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+            }
+        }
+        $('#productlist').html(responseText + '</tbody>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Stock Query";
+        datatableWithsearchForMainTable('productlist', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+
+
+    function GetItem(ItemId, GroupId, CategoryId) {
+        window.open('../Master/ItemMaster?itemid=' + ItemId + '&grpid=' + GroupId + '&cati=' + CategoryId);
+    }
+
+    function getproduct(ItemId) {
+        itempopup(ItemId);
+        $('#ProductId').val(ItemId);
+        $('#ItemCode').val($('#Icode'+ItemId).text());
+        $('#ItemDescription').val($('#IDesc' + ItemId).text());
+        $('#OpenQty').val($('#OpenQty' + ItemId).text());
+        $('#AvgCost').val($('#Cost' + ItemId).text());
+        $('#OpenCost').val($('#OpeningCost' + ItemId).text());
+        $('#Stock').val($('#StockGrid' + ItemId).text());
+    }
+
+
+    $(function () {
+
+            $('#Loading').show();
+          
+            var data = {};
+            data.Type = 0;
+            data.Condition = $('#txtbox').val();
+            $.ajax({
+                type: "POST",
+                url: "../StockReport/StockReportGet",
+                data: data,
+                success: function (result) {
+                    Showreport(result);
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                }
+            });
+
+            $('#txtbox').focus();
+                $(document).keydown(function (e) {
+
+
+                    var x = event.keyCode;
+                    if ((x > 111 && x < 124)) {
+                        //Purchase Popup
+                        if (x == 119) {                     // F8 - Pop Up to Show Purchase Transaction Details of Selected Product 
+                            if ((usermenu1.indexOf("M31") != -1) || (usermenu1.indexOf("M35") != -1) || (usermenu1.indexOf("M159") != -1) || (usermenu1.indexOf("M233") != -1)) {
+
+                                Purchasespopup($('#ProductId').val());
+                                hidepopup(1);
+                                $('#productpdiv').hide();
+                                $('#salestranspopupdiv').hide();
+                                $('#TransactionPopup').hide();
+                                $('#MonthwisePurchase').hide();
+                                $('#PendingPurchaseTransactionPopup').hide();
+                                $('#DOpopupdiv').hide();
+                                $('#PurchaseTransactionPopup').show();
+                            }
+                            else {
+                                $('#PurchaseTransactionPopup').hide();
+                                $('#purchasetrans').hide();
+
+                                warningshow('Invalid User Rights')
+                            }
+                        }
+
+
+                            //Sales Popup
+                        else if (x == 118) {           // F7 - Pop Up to Show Sales Transaction Details of Selected Product 
+                            if ((usermenu1.indexOf("M54") != -1) || (usermenu1.indexOf("M162") != -1) || (usermenu1.indexOf("M173") != -1) || (usermenu1.indexOf("M192") != -1) || (usermenu1.indexOf("M227") != -1)) {
+
+                                Salespopup($('#ProductId').val());
+                                //$('#totalnosalesqty').text('');
+                                //$('#totalnosales').text('');
+                                hidepopup(1);
+                                $('#productpdiv').hide();
+                                $('#TransactionPopup').hide();
+                                $('#PurchaseTransactionPopup').hide();
+                                $('#MonthwisePurchase').hide();
+                                $('#PendingPurchaseTransactionPopup').hide();
+                                $('#DOpopupdiv').hide();
+                                $('#salestranspopupdiv').show();
+                            }
+                            else {
+                                $('#salestranspopupdiv').hide();
+                                $('#salestransdiv').hide();
+                                warningshow('Invalid User Rights')
+                            }
+
+                        }
+                            //All Transaction Popup
+                        else if (x == 120) {                                 // F9 :   All Transaction details Popup  
+                            TransactionPopup($('#ProductId').val());
+                            hidepopup(1);
+                            $('#productpdiv').hide();
+                            $('#PurchaseTransactionPopup').hide();
+                            $('#salestranspopupdiv').hide();
+                            $('#MonthwisePurchase').hide();
+                            $('#PendingPurchaseTransactionPopup').hide();
+                            $('#DOpopupdiv').hide();
+                            $('#TransactionPopup').show();
+
+                            $('#alltranscheckboxdivsales').show();
+                            $('#idforlabeltype').text('Previous');
+                            $('#status_type').prop("checked", false);
+                        }
+                        else if (x == 123) {                                 // F12 :   Pending PO Details Popup  
+                            PendingPurchasespopup($('#ProductId').val());
+                            hidepopup(1);
+                            $('#productpdiv').hide();
+                            $('#PurchaseTransactionPopup').hide();
+                            $('#salestranspopupdiv').hide();
+                            $('#MonthwisePurchase').hide();
+                            $('#TransactionPopup').hide();
+                            $('#DOpopupdiv').hide();
+                            $('#PendingPurchaseTransactionPopup').show();
+                            
+                            $('#alltranscheckboxdivsales').show();
+                            $('#idforlabeltype').text('Previous');
+                            $('#status_type').prop("checked", false);
+                        }
+                        else if (x == 122) {                                 // F11 :   DO Details Popup  
+                            DeliveryOrderpopup($('#ProductId').val());
+                            hidepopup(1);
+                            $('#productpdiv').hide();
+                            $('#TransactionPopup').hide();
+                            $('#PurchaseTransactionPopup').hide();
+                            $('#salestranspopupdiv').hide();
+                            $('#MonthwisePurchase').hide();
+                            $('#PendingPurchaseTransactionPopup').hide();
+                            $('#DOpopupdiv').show();
+                        }
+                        
+                            //Monthwise Details Popup
+                        else if (x == 121) {                // F10 :   Monthwise details Popup                                                           
+                            if (((usermenu1.indexOf("M31") != -1) || (usermenu1.indexOf("M233") != -1) || (usermenu1.indexOf("M35") != -1) || (usermenu1.indexOf("M159") != -1))
+                                &&
+                                    ((usermenu1.indexOf("M54") != -1) || (usermenu1.indexOf("M227") != -1) || (usermenu1.indexOf("M162") != -1) || (usermenu1.indexOf("M173") != -1) || (usermenu1.indexOf("M192") != -1))) {
+                                $('#PurchaseDetails').show();
+                                $('#SalesDetails').show();
+
+                                MonthwisePurchasePopup($('#ProductId').val());
+                                hidepopup(1);
+                                $('#productpdiv').hide();
+                                $('#PurchaseTransactionPopup').hide();
+                                $('#salestranspopupdiv').hide();
+                                $('#TransactionPopup').hide();
+                                $('#PendingPurchaseTransactionPopup').hide();
+                                $('#DOpopupdiv').hide();
+                                $('#MonthwisePurchase').show();
+                            }
+
+                            else if (((usermenu1.indexOf("M31") != -1) || (usermenu1.indexOf("M233") != -1) || (usermenu1.indexOf("M35") != -1) || (usermenu1.indexOf("M159") != -1))
+                                &&
+                                ((usermenu1.indexOf("M54") == -1) || (usermenu1.indexOf("M227") == -1) || (usermenu1.indexOf("M162") == -1) || (usermenu1.indexOf("M173") == -1) || (usermenu1.indexOf("M192") == -1))) {
+
+                                $('#SalesDetails').hide();
+                                $('#PurchaseDetails').show();
+
+                                MonthwisePurchasePopup($('#ProductId').val());
+                                hidepopup(1);
+                                $('#productpdiv').hide();
+                                $('#PurchaseTransactionPopup').hide();
+                                $('#salestranspopupdiv').hide();
+                                $('#TransactionPopup').hide();
+                                $('#PendingPurchaseTransactionPopup').hide();
+                                $('#MonthwisePurchase').show();
+                            }
+                            else if (((usermenu1.indexOf("M31") == -1) || (usermenu1.indexOf("M233") == -1) || (usermenu1.indexOf("M35") == -1) || (usermenu1.indexOf("M159") == -1))
+                                &&
+                                    ((usermenu1.indexOf("M54") != -1) || (usermenu1.indexOf("M227") != -1) || (usermenu1.indexOf("M162") != -1) || (usermenu1.indexOf("M173") != -1) || (usermenu1.indexOf("M192") != -1))) {
+                                $('#PurchaseDetails').hide();
+                                $('#SalesDetails').show();
+
+                                MonthwisePurchasePopup($('#ProductId').val());
+                                hidepopup(1);
+                                $('#productpdiv').hide();
+                                $('#PurchaseTransactionPopup').hide();
+                                $('#salestranspopupdiv').hide();
+                                $('#TransactionPopup').hide();
+                                $('#PendingPurchaseTransactionPopup').hide();
+                                $('#MonthwisePurchase').show();
+                            }
+
+                            else {
+                                $('#MonthwisePurchase').hide();
+                                $('#MonthwisePurchasediv').hide();
+                                warningshow('Invalid User Rights')
+                            }
+                        }
+                        event.cancelBubble = true;
+                        event.returnValue = false;
+                        event.keyCode = false;
+                        return false;
+
+                    }
+                    else if (e.altKey && e.keyCode == 83) {                   //Alt+S     :   Save
+                        $("#txtbox").focus();
+                        $("#txtbox").select();
+                        hidepopup(1);
+                        productpopuprefresh();
+                        transpopuprefresh();
+                        salestranspopuprefresh();
+                        ClosePurTransPopup();
+                        ClosePendingPurTransPopup();
+                        MonthwisePurchasepopuprefresh();
+                        DOpopuprefresh();
+                    }
+                    else if (e.keyCode == 27) { //ESC       :   Popup Close
+                        $('#txtbox').focus();
+                        $("#txtbox").select();
+                        hidepopup(1);
+                        productpopuprefresh();
+                        transpopuprefresh();
+                        salestranspopuprefresh();
+                        ClosePurTransPopup();
+                        ClosePendingPurTransPopup();
+                        MonthwisePurchasepopuprefresh();
+                        DOpopuprefresh();
+                    }
+                    else if ((e.altKey && e.keyCode == 89) && (($("#salestranspopupdiv").is(":visible")) || ($("#PurchaseTransactionPopup").is(":visible")) || ($("#TransactionPopup").is(":visible")))) {   //ALT+Y : PREVIOUS TRANSACTIONS
+                        if ($("#salestranspopupdiv").is(":visible")) {
+                            if ($('#select_status_sales').prop("checked")) {
+                                $('#select_status_sales').prop("checked", false);
+                            }
+                            else {
+                                $('#select_status_sales').prop("checked", true);
+                            }
+                            Salespopup($('#ProductId').val());
+                        }
+                        else if ($("#PurchaseTransactionPopup").is(":visible")) {
+                            if ($('#select_status').prop("checked")) {
+                                $('#select_status').prop("checked", false);
+                            }
+                            else {
+                                $('#select_status').prop("checked", true);
+                            }
+                            Purchasespopup($('#ProductId').val());
+                        }
+                        else if ($("#TransactionPopup").is(":visible")) {
+                            if ($('#status_type').prop("checked")) {
+                                $('#status_type').prop("checked", false);
+                            }
+                            else {
+                                $('#status_type').prop("checked", true);
+                            }
+                            CheckTransType();
+                        }
+                    }
+                });
+    });
+
+ 
+            function Purchasespopup(ItemId) {
+                var qtys = 0;
+                if ($('#select_status').prop("checked")) {var s = 1;}
+                else { var s = 0; }
+
+                $('#totalnopurchase').text('');
+
+                $('#transid').val(0);
+                if ($('#ProductId').val() != 0) {
+
+                    disable_datatable('tblpurchasetrans');
+
+
+                    var data = {};   //array
+                    data.ItemId = ItemId;
+                    data.DepartmentId = ERPDeptId;
+                    data.UserId = ERPUserId;
+                    data.Type = s;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../Purchase/PurchaseTransactionSearch",
+                        data: data,
+                        success: function (result) {
+
+                            var ProdRow = "<thead><tr><th>Invoice No</th><th class='text-center'>Date</th><th>Supplier</th><th>Supp_No</th><th>Qty.</th><th style='text-align:right'>FC Cost</th><th style='text-align:right'>Cost</th><th>Location</th><th>Currency</th><th>Department</th><th>PO_Ref</th><th style='text-align:right'>OtherCost</th></tr>" +
+                             "<tr><th>Invoice No</th><th class='text-center'>Date </th><th>Supplier</th><th>Supp_No</th><th>Qty.</th><th style='text-align:right'>FC Cost</th><th style='text-align:right'>Cost</th><th>Location</th><th>Currency </th><th>Department</th><th>PO_Ref</th><th style='text-align:right'>OtherCost</th></tr></thead><tbody>";
+                            $('#totalnopurchase').text(result.length);
+                            if (result.length != 0) {
+
+                                for (var p = 0; p < result.length; p++) {
+
+
+                                    var a = (result[p].Rate + result[p].OtherCost).toFixed(Decimal);
+                                    var lpotr = '';
+                                    if (result[p].LPO != '0')
+                                        lpotr = result[p].LPO;
+
+                                    if (result[p].PurchaseType == 'Local' || SuppDetailsRight == 'Yes') {
+                                        ProdRow = ProdRow + "<tr  id=" + 'pdctrow' + (p + 1) + ">" +
+                                            "<td style='width:10%' class='text-left'>" + result[p].InvoNo + "</td>" +
+                                            "<td class='text-center'>" + result[p].InvoDate + "</td>" +
+                                            "<td style='width:20%' class='text-left'>" + result[p].SupplierName + "</td>" +
+                                            "<td class='text-left'>" + result[p].AccName + "</td>" +
+                                            "<td style='text-align:center' class='QtyColour'>" + result[p].Quantity + "</td>" +
+                                            "<td style='text-align:right'>" + parseFloat(result[p].FCGrandTotal).toFixed(Decimal) + "</td>" +
+                                             "<td style='text-align:right'>" + a + "</td>" +
+                                            "<td class='text-left'>" + result[p].Locnname + "</td>" +
+                                            "<td class='text-left'>" + result[p].CurrencyName + "</td>" +
+                                            "<td class='text-left'>" + result[p].DeptName + "</td>" +
+                                            "<td class='text-left'>" + lpotr + "</td>" +
+                                             "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                                            "</tr>";
+                                        qtys += result[p].Quantity;
+                                    }
+                                    else {
+                                        ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                           "<td style='width:10%' class='text-left'>" + result[p].InvoNo + "</td>" +
+                                            "<td class='text-center'>" + result[p].InvoDate + "</td>" +
+                                            "<td></td>" +
+                                            "<td></td>" +
+                                            "<td style='text-align:center' class='QtyColour'>" + result[p].Quantity + "</td>" +
+                                            "<td style='text-align:right'>" + parseFloat(result[p].FCGrandTotal).toFixed(Decimal) + "</td>" +
+                                             "<td style='text-align:right'>" + a + "</td>" +
+                                            "<td class='text-left'>" + result[p].Locnname + "</td>" +
+                                            "<td class='text-left'>" + result[p].CurrencyName + "</td>" +
+                                            "<td class='text-left'>" + result[p].DeptName + "</td>" +
+                                            "<td class='text-left'>" + lpotr + "</td>" +
+                                             "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                                            "</tr>";
+                                        qtys += result[p].Quantity;
+                                    }
+
+                                    
+                                    
+                                }
+                                $('#tblpurchasetrans').html(ProdRow + '</tbody>');
+                                datatableWithsearch('tblpurchasetrans', 'MultiplePurchaseT');
+                                $('#tblpurchasetrans').scrollTop(0);
+                                $('#totalnopurchaseqty').text((qtys).toFixed(Decimal));
+                                
+                            }
+                            else {
+                                $('#totalnopurchaseqty').text(0);
+                                $('#tblpurchasetrans').html(ProdRow + '</tbody>');
+                                datatableWithsearch('tblpurchasetrans', 'MultiplePurchaseT');
+                            }
+
+
+                            $('#alltranscheckboxdiv').show();
+                            $('#productpdiv').hide();
+                            $('#productdiv').hide();
+                            $('#salestransdiv').hide();
+                            $("#PurchaseTransactionPopup").css("margin-top", '0px');
+                            $('#PurchaseTransactionPopup').show();
+                            var ProductDesc = $('#ItemCode').val();
+                            var product = $('#ItemDescription').val();
+                            $('#PurchaseTransactionheader').text(ProductDesc + '(' + product + ')' + ' :  Last Purchase Transaction   [ Average Cost : ' + $('#AvgCost').val() + ']');
+                            $('#purchasetrans').show();
+                            ProductPopuprefresh1();
+
+                           
+                        }
+                    });
+                }
+
+            }
+
+
+            function PendingPurchasespopup(ItemId) {
+                var pending = 0;
+                var Intransit = 0;
+                if ($('#select_statuspending').prop("checked"))
+                    var s = 1;
+                else
+                    var s = 0;
+
+                $('#totalpending').text('');
+                $('#pendingtransid').val(0);
+                if ($('#ProductId').val() != 0) {
+
+                    disable_datatable('tblpendingpurchasetrans');
+
+
+                    var data = {};   //array
+                    data.ItemId = ItemId;
+                    data.Department = ERPDeptId;
+                    data.UserId = ERPUserId;
+                    data.Type = s;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../StockReport/PendingPurchaseOrderSQ",
+                        data: data,
+                        success: function (result) {
+
+                            var ProdRow = "<thead><tr><th>Order#</th><th class='text-center'>Date</th><th>Supplier</th><th>Performa#</th><th>Order Qty.</th><th>In transit Qty.</th><th>Received Qty.</th><th class='text-center'>Arrival Date</th><th style='text-align:right'>FC Cost</th><th>Currency</th><th style='display:none'></th></tr>" +
+                                                 "<tr><th>Order#</th><th class='text-center'>Date</th><th>Supplier</th><th>Performa#</th><th>Order Qty.</th><th>In transit Qty.</th><th>Received Qty.</th><th class='text-center'>Arrival Date</th><th style='text-align:right'>FC Cost</th><th>Currency</th><th style='display:none'></th></tr></thead><tbody>";
+
+                            if (result.length != 0) {
+
+                                for (var p = 0; p < result.length; p++) {
+                                    if (SuppDetailsRight == 'Yes') {
+                                        ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                        "<td class='text-center'>" + result[p].OrderNo + "</td>" +
+                                        "<td class='text-center'>" + result[p].OrderDate + "</td>" +
+                                        "<td class='text-left'>" + result[p].Supplier + "</td>" +
+                                         "<td class='text-left'>" + result[p].Column1 + "</td>" +
+                                        "<td style='text-align:center' class='QtyColour'>" + result[p].OrderQty + "</td>" +
+                                       "<td style='text-align:center' class='QtyColour'>" + result[p].PerformaQty + "</td>" +
+                                       "<td style='text-align:center' class='QtyColour'>" + result[p].RecQty + "</td>" +
+                                        "<td style='text-align:center'>" + result[p].PerformaDate + "</td>" +
+                                        "<td style='text-align:right'>" + parseFloat(result[p].FCCost).toFixed(Decimal) + "</td>" +
+                                        "<td class='text-left'>" + result[p].Currency + "</td>" +
+                                        "<td class='text-right' style='display:none'>" + parseFloat(result[p].PendingQty).toFixed(Decimal) + "</td></tr>";
+                                    }
+                                    else
+                                    {
+                                        ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                                        "<td class='text-center'>" + result[p].OrderNo + "</td>" +
+                                        "<td class='text-center'>" + result[p].OrderDate + "</td>" +
+                                        "<td></td>" +
+                                         "<td class='text-left'>" + result[p].Column1 + "</td>" +
+                                        "<td style='text-align:center' class='QtyColour'>" + result[p].OrderQty + "</td>" +
+                                        "<td style='text-align:center' class='QtyColour'>" + result[p].PerformaQty + "</td>" +
+                                        "<td style='text-align:center' class='QtyColour'>" + result[p].RecQty + "</td>" +
+                                        "<td style='text-align:center'>" + result[p].PerformaDate + "</td>" +
+                                        "<td></td>" +
+                                        "<td class='text-left'>" + result[p].Currency + "</td>" +
+                                        "<td class='text-right' style='display:none'>" + parseFloat(result[p].PendingQty).toFixed(Decimal) + "</td></tr>";
+                                    }
+                                        pending += parseFloat(result[p].PendingQty);
+                                        Intransit += parseFloat(result[p].PerformaQty);
+                                }
+                              
+                                $('#tblpendingpurchasetrans').html(ProdRow + '</tbody>');
+                                datatableWithsearch('tblpendingpurchasetrans', 'MultiplePurchaseOrderT');
+                                $('#tblpendingpurchasetrans').scrollTop(0);
+                                $('#totalpending').text(pending);
+                                $('#totalintransit').text(Intransit);
+                               
+                            }
+                            else {
+                                $('#totalpending').text(0);
+                                $('#totalintransit').text(0);
+                                $('#tblpendingpurchasetrans').html(ProdRow + '</tbody>');
+                                datatableWithsearch('tblpendingpurchasetrans', 'MultiplePurchaseOrderT');
+                            }
+
+
+                            $('#allpendingcheckboxdiv').show();
+                            $('#productpdiv').hide();
+                            $('#productdiv').hide();
+                            $('#salestransdiv').hide();
+                            $('#PurchaseTransactionPopup').hide();
+                            $("#PendingPurchaseTransactionPopup").css("margin-top", '0px');
+                            $('#PendingPurchaseTransactionPopup').show();
+                            var ProductDesc = $('#ItemCode').val();
+                            var product = $('#ItemDescription').val();
+                            $('#PendingPurchaseTransactionheader').text(ProductDesc + '(' + product + ')' + ' :  Pending Details   [Stock : '+ $('#Stock').val()+']');
+                            $('#pendingpurchasetrans').show();
+
+                        }
+                    });
+                }
+
+            }
+
+            //For Close Purchase Transaction Popup
+
+            function ClosePurTransPopup() {
+                var Z = $('#tblpurchasetrans tr').length;
+                $('#PurchaseTransactionPopup').hide();
+                $('#purchasetrans').hide();
+                for (var j = 1; j <= Z; j++) {
+                    $('#pid_' + j).remove();
+                }
+            }
+            function ClosePendingPurTransPopup() {
+                var Z = $('#tblpendingpurchasetrans tr').length;
+                $('#PendingPurchaseTransactionPopup').hide();
+                $('#pendingpurchasetrans').hide();
+                for (var j = 1; j <= Z; j++) {
+                    $('#pid_' + j).remove();
+                }
+            }
+            function ProductPopuprefresh1() {
+                $('#productpdiv').hide();
+                $('#prodheader').text('');
+                $('#productdiv').hide();
+                $("#tblproductdetails tr").remove();
+            }
+
+
+            function MonthwisePurchasepopuprefresh() {
+                var pdtrowcnt = $('#pdtrowcnt').val();
+                for (var n = 0; n <= pdtrowcnt; n++) {
+                    $('#pdctrow' + n).remove();
+                }
+                $('#MonthwisePurchase').hide();
+                $('#MonthwisePurchasediv').hide();
+                $('#MonthwisePurchaseheader').text('Transaction Details')
+            }
+            //Close Transaction Popup
+            function salestranspopuprefresh() {
+                var pdtrowcnt = $('#pdtrowcnt').val();
+                for (var n = 0; n <= pdtrowcnt; n++) {
+                    $('#pdctrow' + n).remove();
+                }
+                $('#salestranspopupdiv').hide();
+                $('#salestransdiv').hide();
+                $('#salesheader').text('Transaction Details')
+            }
+            function DOpopuprefresh() {
+                var pdtrowcnt = $('#pdtrowcnt').val();
+                for (var n = 0; n <= pdtrowcnt; n++) {
+                    $('#pdctrow' + n).remove();
+                }
+                $('#DOpopupdiv').hide();
+                $('#DOdiv').hide();
+                $('#DOheader').text('Transaction Details')
+            }
+            function transpopuprefresh() {
+                var pdtrowcnt = $('#pdtrowcnt').val();
+                for (var n = 0; n <= pdtrowcnt; n++) {
+                    $('#pdctrow' + n).remove();
+                }
+                $('#TransactionPopup').hide();
+                $('#transdiv').hide();
+                $('#transactionheader').text('Transaction Details')
+            }
+
+
+            function TransactionPopup(ItemId, flag) {
+
+                var data = {};
+                data.ItemId = ItemId;
+                data.DepartmentId = ERPDeptId;
+                data.UserId = ERPUserId;
+                data.Type = flag;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchase/TransactionSearch",
+                    data: data,
+                    success: function (result) {
+                        $('#tbltransaction td').remove();
+                        disable_datatable('tbltransaction');
+
+                        // $('#TransactionPopup').show();
+
+
+
+                        var ProductDesc = $('#ItemCode').val();
+                        var product = $('#ItemDescription').val();
+                        var OpenQty = $('#OpenQty').val();
+                        var AvgCost = $('#AvgCost').val();
+                        var OpenCost = $('#OpenCost').val();
+                        $('#transactionheader').text(ProductDesc + '(' + product + ')' + ' - All Transaction' + ' [Opening Quantity- ' + parseInt(OpenQty) + ' , Average Cost- ' + parseFloat(AvgCost).toFixed(Decimal) + ', Opening Cost- ' + parseFloat(OpenCost).toFixed(Decimal) + ']');
+
+
+                        $('#transdiv').show();
+                        if (result.length > 0) {
+                            var BalQty = (result[0].OpeningQty);
+                        }
+
+                        var responseText = "<thead><tr><th>Bill#</th><th class='text-center'>Date</th><th class='text-center'>Type</th><th>Salesman</th><th class='text-center'>Status</th><th>Account Name</th><th>Remarks</th><th>Qty.</th><th style='text-align:right'>Balance</th><th style='text-align:right'>Cost</th><th style='text-align:right'>Price</th><th style='text-align:center'>Location</th><th>Department</th><th>JobCode</th></tr>" +
+                              "<tr><th>Bill#</th><th>Date</th><th class='text-center'>Type</th><th>Salesman</th><th class='text-center'>Status</th><th>Account Name</th><th>Remarks</th><th> </th><th style='text-align:right'> </th><th style='text-align:right'> </th><th style='text-align:right'> </th><th>Location</th><th>Department</th><th>JobCode</th></tr></thead><tbody>";
+
+
+                        for (var n = 0; n < result.length; n++) {
+
+                            if (result[n].Status == 'IN') {
+                                BalQty += (result[n].Quantity)
+                            }
+                            else {
+                                BalQty = BalQty - (result[n].Quantity)
+                            }
+
+                            if ((usermenu1.indexOf("M31") == -1) && (usermenu1.indexOf("M35") == -1) && (usermenu1.indexOf("M159") == -1) && (usermenu1.indexOf("M233") == -1) && result[n].TransType == 'PI') {
+
+                                responseText += "<tr style='display:none' class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                                            "<td class='text-left'> " + result[n].BillNo + "</td>" +
+                                                              "<td class='text-center'>" + result[n].InvoDate + " </td>" +
+                                                            "<td class='text-center'>" + result[n].TransType + "  </td>" +
+                                                           "<td class='text-left'>" + result[n].Salesman + " </td>" +
+                                                             "<td class='text-center' >" + result[n].Status + "  </td>" +
+                                                           "<td class='text-left'>" + result[n].AccountName + " </td>" +
+                                                             "<td class='text-left'>" + result[n].Remarks + " </td>" +
+                                                           "<td class='text-center QtyColour'>" + result[n].Quantity + " </td>" +
+                                                           "<td class='text-center'>" + (BalQty).toFixed(Decimal) + "  </td>" +
+                                                           "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                                                           "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                                                            "<td style='text-align:center'>" + result[n].Locnname + " </td>" +
+                                                             "<td class='text-left'>" + result[n].DeptName + "  </td>" +
+                                                             "<td class='text-left'>" + result[n].JobCode + "  </td>" + "</tr>";
+                            }
+                            else if ((usermenu1.indexOf("M54") == -1) && (usermenu1.indexOf("M162") == -1) && (usermenu1.indexOf("M173") == -1) && (usermenu1.indexOf("M192") == -1) && (usermenu1.indexOf("M227") == -1) && result[n].TransType == 'SI') {
+                                responseText += "<tr style='display:none' class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                 "<td class='text-left'> " + result[n].BillNo + "</td>" +
+                                      "<td class='text-center'>" + result[n].InvoDate + " </td>" +
+                                    "<td class='text-center'>" + result[n].TransType + "  </td>" +
+                                   "<td class='text-left'>" + result[n].Salesman + " </td>" +
+                                     "<td class='text-center'>" + result[n].Status + "  </td>" +
+                                   "<td class='text-left'>" + result[n].AccountName + " </td>" +
+                                     "<td class='text-left'>" + result[n].Remarks + " </td>" +
+                                   "<td class='text-center QtyColour'>" + result[n].Quantity + " </td>" +
+                                   "<td class='text-center'>" + (BalQty).toFixed(Decimal) + "  </td>" +
+                                   "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                                   "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                                    "<td style='text-align:center'>" + result[n].Locnname + " </td>" +
+                                     "<td class='text-left'>" + result[n].DeptName + "  </td>" +
+                                     "<td class='text-left'>" + result[n].JobCode + "  </td>" + "</tr>";
+                            }
+
+                            else {
+                                responseText += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                                            "<td class='text-left'> " + result[n].BillNo + "</td>" +
+                                                              "<td class='text-center'>" + result[n].InvoDate + " </td>" +
+                                                            "<td class='text-center'>" + result[n].TransType + "  </td>" +
+                                                           "<td class='text-left'>" + result[n].Salesman + " </td>" +
+                                                             "<td class='text-center'>" + result[n].Status + "  </td>" +
+                                                           "<td class='text-left'>" + result[n].AccountName + " </td>" +
+                                                             "<td class='text-left'>" + result[n].Remarks + " </td>" +
+                                                           "<td class='text-center QtyColour'>" + result[n].Quantity + " </td>" +
+                                                           "<td class='text-center'>" + (BalQty).toFixed(Decimal) + "  </td>" +
+                                                           "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                                                           "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                                                            "<td style='text-align:center'>" + result[n].Locnname + " </td>" +
+                                                             "<td class='text-left'>" + result[n].DeptName + "  </td>" +
+                                                             "<td class='text-left'>" + result[n].JobCode + "  </td>" + "</tr>";
+                            }
+                        }
+
+                        $('#tbltransaction').html(responseText + '</tbody>');
+                        datatableWithsearch('tbltransaction', 'MultipleAllTransaction');
+
+                    }
+
+                });
+            }
+
+            function AllTransactionsTransType() {
+                if ($('#status_type').prop("checked"))
+                    var flag = 1;
+                else
+                    var flag = 0;
+
+
+                TransactionPopup($('#ProductId').val(), flag);
+
+            }
+
+            function CheckTransType() {
+                if ($("#transdiv").is(":visible"))
+                    AllTransactionsTransType();
+            }
+
+            function Salespopup(ItemId) {
+
+                $('#alltranscheckboxdiv').hide();
+                $('#alltranscheckboxdivsales').show();
+                qty = 0;
+                $('#totalnosales').text('');
+
+                X = $('#salestransid').val();
+                //for (var j = 1; j <= X; j++) {
+                //    $('#sid_' + j).remove();
+                //}
+
+                if ($('#select_status_sales').prop("checked")) {var s = 1;  }
+                else {var s = 0;}
+
+                $('#salestransid').val(0);
+                if ($('#ProductId').val() != 0) {
+                    var data = {};   //array
+                    data.ProductId = ItemId;
+                    data.DeptId = ERPDeptId;
+                    data.type = s;
+                    data.UserId = ERPUserId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../SalesInvoice/SalesTransGetandGets",
+                        data: data,
+                        success: function (result) {
+
+                            $('#salestranspopupdiv').show();
+                            $("#salestranspopupdiv").css("margin-top", '0px');
+                            var ProductDesc = $('#ItemCode').val();
+                            var product = $('#ItemDescription').val();
+                            $('#salesheader').text(ProductDesc + '(' + product + ')' + ' :  Last Sales Transaction');
+                            $('#salestransdiv').show();
+                            SalesTransLoad(result);
+                        }
+                    });
+                }
+
+            }
+
+            //Pop Up for Sales Transactions
+            function SalesTransLoad(result) {
+                var qty = 0;
+                disable_datatable('tblsalestrans');
+                $('#tblsalestrans tr').remove();
+                var ProdRow = "<thead><tr>"+
+                    "<th>SalesInvoice</th>" +
+                    "<th class='text-center'>Date</th>" +
+                    "<th>AccountName</th>"+
+                    "<th>Delivery Details</th>"+
+                    "<th>Qty.</th>"+
+                    "<th style='text-align:right'>Price</th>" +
+                    "<th>Location</th>"+
+                    "<th>Salesman</th>"+
+                    "<th>Department</th></tr>" +
+
+                    "<tr>" +
+                    "<th>SalesInvoice</th>" +
+                    "<th class='text-center'>Date</th>" +
+                    "<th>AccountName</th>"+
+                    "<th>Delivery Details</th>"+
+                    "<th>Qty.</th>"+
+                    "<th style='text-align:right'>Price</th>" +
+                    "<th>Location</th>"+
+                    "<th>Salesman</th>"+
+                    "<th>Department</th>"+
+                    "</tr></thead><tbody>";
+
+                $('#totalnosales').text(result.length);
+                if (result.length != 0) {
+
+                    for (var n = 0; n < result.length; n++) {
+                        if (result[n].ProdQty > 0) {
+                            ProdRow += "<tr  ondblclick=gotoSales(" + result[n].BillSlNo + "," + result[n].BillSeriesId + "," + result[n].DeptId + ") class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                               "<td class='text-center'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+                               "<td class='text-center'>" + result[n].InvDate + "    </td>" +
+                               "<td class='text-left'>" + result[n].CustName + "    </td>" +
+                                "<td class='text-left'>" + result[n].GarageName + "       </td>" +
+                               "<td class='text-center' style='color:#0033cc;font-weight:bold'>" + result[n].ProdQty + "                                   </td>" +
+                               "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                               "<td class='text-left'>" + result[n].Location + " </td>" +
+                               "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                               "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                                "</tr>";
+                        }
+                        else
+                        {
+                            ProdRow += "<tr ondblclick=gotoSales(" + result[n].BillSlNo + "," + result[n].BillSeriesId + "," + result[n].DeptId + ") class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                                          "<td class='text-center'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+                                                          "<td class='text-center'>" + result[n].InvDate + "                                   </td>" +
+                                                          "<td class='text-left'>" + result[n].CustName + "                                   </td>" +
+                                                           "<td class='text-left'>" + result[n].GarageName + "       </td>" +
+                                                          "<td class='text-center' style='color:red;font-weight:bold'>" + result[n].ProdQty + "                                  </td>" +
+                                                          "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                                                          "<td class='text-left'>" + result[n].Location + " </td>" +
+                                                          "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                                                          "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                                                           "</tr>";
+                        }
+                            qty += (result[n].ProdQty);
+                        
+                    }
+                    $('#totalnosalesqty').text((qty).toFixed(Decimal));
+                    $('#tblsalestrans').html(ProdRow + '</tbody>');
+                    datatableWithsearch('tblsalestrans', 'MultipleSalesT');
+                    $('#tblsalestrans').scrollTop(0);
+                    qty = 0;
+                }
+                else {
+                    $('#totalnosalesqty').text(0);
+                    $('#tblsalestrans').html(ProdRow + '</tbody>');
+                    datatableWithsearch('tblsalestrans', 'MultipleSalesT');
+                }
+
+
+            }
+
+
+            function DeliveryOrderpopup(ItemId) {
+
+                $('#alltranscheckboxdiv').hide();
+                $('#alltranscheckboxdivDO').show();
+                qty = 0;
+               // $('#totalnoDO').text('');
+
+                X = $('#DOid').val();
+                
+
+                if ($('#select_status_DO').prop("checked")) { var s = 1; }
+                else { var s = 0; }
+
+                $('#DOid').val(0);
+                if ($('#ProductId').val() != 0) {
+                    var data = {};   //array
+                    data.ProductId = ItemId;
+                    data.DeptId = ERPDeptId;
+                    data.type = s;
+                    data.UserId = ERPUserId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../SalesInvoice/DeliveryOrderTransGetandGets",
+                        data: data,
+                        success: function (result) {
+
+                            $('#DOpopupdiv').show();
+                            $("#DOpopupdiv").css("margin-top", '0px');
+                            var ProductDesc = $('#ItemCode').val();
+                            var product = $('#ItemDescription').val();
+                            $('#DOheader').text(ProductDesc + '(' + product + ')' + ' :  Delivery Order Transaction');
+                            $('#DOdiv').show();
+                            DOTransLoad(result);
+                        }
+                    });
+                }
+
+            }
+
+            //Pop Up for Sales Transactions
+            function DOTransLoad(result) {
+                var qty = 0;
+                disable_datatable('tblDO');
+                $('#tblDO tr').remove();
+                var ProdRow = "<thead><tr>" +
+                    "<th>DO#</th>" +
+                    "<th class='text-center'>Date</th>" +
+                    "<th>AccountName</th>" +
+                    "<th>Delivery Details</th>" +
+                    "<th>Qty.</th>" +
+                    "<th class='text-right'>Price</th>" +
+                    "<th>Location</th>" +
+                    "<th>User</th>" +
+                    "<th>Department</th></tr>" +
+
+                    "<tr>" +
+                    "<th>DO#</th>" +
+                    "<th class='text-center'>Date</th>" +
+                    "<th>AccountName</th>" +
+                    "<th>Delivery Details</th>" +
+                    "<th>Qty.</th>" +
+                    "<th class='text-right'>Price</th>" +
+                    "<th>Location</th>" +
+                    "<th>User</th>" +
+                    "<th>Department</th>" +
+                    "</tr></thead><tbody>";
+
+               // $('#totalnoDO').text(result.length);
+                if (result.length != 0) {
+
+                    for (var n = 0; n < result.length; n++) {
+                        if (result[n].ProdQty > 0) {
+                            ProdRow += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                               "<td class='text-center'> " +  result[n].BillSlNo + "</td>" +
+                               "<td class='text-center'>" + result[n].InvDate + "    </td>" +
+                               "<td class='text-left'>" + result[n].CustName + "    </td>" +
+                                "<td class='text-left'>" + result[n].GarageName + "       </td>" +
+                               "<td class='text-center' style='color:#0033cc;font-weight:bold'>" + result[n].ProdQty + "                                   </td>" +
+                               "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                               "<td class='text-left'>" + result[n].Location + " </td>" +
+                               "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                               "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                                "</tr>";
+                        }
+                        else {
+                            ProdRow += "<tr ondblclick=gotoSales(" + result[n].BillSlNo + "," + result[n].BillSeriesId + "," + result[n].DeptId + ") class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                                          "<td class='text-center'> "  + result[n].BillSlNo + "</td>" +
+                                                          "<td class='text-center'>" + result[n].InvDate + "                                   </td>" +
+                                                          "<td class='text-left'>" + result[n].CustName + "                                   </td>" +
+                                                           "<td class='text-left'>" + result[n].GarageName + "       </td>" +
+                                                          "<td class='text-center' style='color:red;font-weight:bold'>" + result[n].ProdQty + "                                  </td>" +
+                                                          "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                                                          "<td class='text-left'>" + result[n].Location + " </td>" +
+                                                          "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                                                          "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                                                           "</tr>";
+                        }
+                        qty += (result[n].ProdQty);
+
+                    }
+                    //$('#totalnoDOqty').text(qty);
+                    $('#tblDO').html(ProdRow + '</tbody>');
+                    datatableWithsearch('tblDO', 'MultipleSalesT');
+                    $('#tblDO').scrollTop(0);
+                    qty = 0;
+                }
+                else {
+                    //$('#totalnoDOqty').text(0);
+                    $('#tblDO').html(ProdRow + '</tbody>');
+                    datatableWithsearch('tblDO', 'MultipleSalesT');
+                }
+
+
+            }
+
+
+            function MonthwisePurchasePopup(ItemId) {
+                var data = {};
+                data.ItemId = ItemId;
+                data.Department = ERPDeptId;
+                $.ajax({
+                    type: "POST",
+                    url: '../Purchaseandsalesreports/MonthwisePurchaseStockQuery',
+                    data: data,
+                    success: function (result) {
+                        $('#MonthwisePurchase').show();
+                        var ProductDesc = $('#ItemCode').val();
+                        var product = $('#ItemDescription').val();
+                        $('#MonthwisePurchaseheader').text(ProductDesc + '(' + product + ')' + ' - Monthwise Details');
+                        $('#MonthwisePurchasediv').show();
+                        MonthwisePurchaseLoad(result);
+
+                        var data = {};
+                        data.ItemId = ItemId;
+                        data.Department = ERPDeptId;
+                        $.ajax({
+                            type: "POST",
+                            url: '../Purchaseandsalesreports/MonthwiseSalesStockQuery',
+                            data: data,
+                            success: function (result) {
+                                MonthwiseSalesLoad(result);
+                            }
+                        });
+                    }
+                });
+            }
+
+
+            function MonthwisePurchaseLoad(result) {
+
+                $('#pdtrowcnt').val(result.length);
+                for (var n = 0; n <= result.length; n++) {
+                    $('#pdctrow' + n).remove();
+                }
+                $('#tblMonthwisePurchase td').remove();
+                for (var n = 0; n < result.length; n++) {
+
+                    var ProdRow = "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                     "<td >" + result[n].Year + "                          </td>" +
+                    "<td >" + parseInt(result[n].Column1 || 0) + "       </td>" +
+                     "<td >" + parseInt(result[n].Column2 || 0) + "        </td>" +
+                    "<td >" + parseInt(result[n].Column3 || 0) + "      </td>" +
+                    "<td >" + parseInt(result[n].Column4 || 0) + "       </td>" +
+                     "<td >" + parseInt(result[n].Column5 || 0) + "       </td>" +
+                    "<td >" + parseInt(result[n].Column6 || 0) + "         </td>" +
+                    "<td >" + parseInt(result[n].Column7 || 0) + "         </td>" +
+                     "<td >" + parseInt(result[n].Column8 || 0) + "        </td>" +
+                    "<td >" + parseInt(result[n].Column9 || 0) + "         </td>" +
+                    "<td >" + parseInt(result[n].Column10 || 0) + "        </td>" +
+                     "<td >" + parseInt(result[n].Column11 || 0) + "       </td>" +
+                    "<td >" + parseInt(result[n].Column12 || 0) + "        </td>" +
+                      "<td >" + parseInt(result[n].Column13 || 0) + "       </td>" +
+                    "</tr>";
+
+                    $('#tblMonthwisePurchase').append(ProdRow);
+
+                }
+            }
+
+            function MonthwiseSalesLoad(result) {
+
+                $('#pdtrowcnt').val(result.length);
+                for (var n = 0; n <= result.length; n++) {
+                    // $('#pdctrow' + n).remove();
+                }
+                $('#tblMonthwiseSales td').remove();
+                for (var n = 0; n < result.length; n++) {
+
+                    var ProdRow = "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                    "<td >" + result[n].Year + "                          </td>" +
+                    "<td >" + parseInt(result[n].Column1 || 0) + "       </td>" +
+                     "<td >" + parseInt(result[n].Column2 || 0) + "        </td>" +
+                    "<td >" + parseInt(result[n].Column3 || 0) + "      </td>" +
+                    "<td >" + parseInt(result[n].Column4 || 0) + "       </td>" +
+                     "<td >" + parseInt(result[n].Column5 || 0) + "       </td>" +
+                    "<td >" + parseInt(result[n].Column6 || 0) + "         </td>" +
+                    "<td >" + parseInt(result[n].Column7 || 0) + "         </td>" +
+                     "<td >" + parseInt(result[n].Column8 || 0) + "        </td>" +
+                    "<td >" + parseInt(result[n].Column9 || 0) + "         </td>" +
+                    "<td >" + parseInt(result[n].Column10 || 0) + "        </td>" +
+                     "<td >" + parseInt(result[n].Column11 || 0) + "       </td>" +
+                    "<td >" + parseInt(result[n].Column12 || 0) + "        </td>" +
+                      "<td >" + parseInt(result[n].Column13 || 0) + "       </td>" +
+                    "</tr>";
+
+                    $('#tblMonthwiseSales').append(ProdRow);
+
+                }
+            }
+
+            function itempopup(ItemId) {
+                $('#productpopupdiv').hide();
+                var data = {};
+                data.ProductId = ItemId;
+                data.CustId = 0;
+                data.DeptId = ERPDeptId;
+                $.ajax({
+                    type: "POST",
+                    url: '../SalesInvoice/CustomerProductDetailsSearch',
+                    data: data,
+                    success: function (result) {
+                        CustPrdctLoad(result.oList);
+                    }
+                })
+            }
+
+            var custstats = "Last Selling Price";
+
+            //Product Details Popup
+            function CustPrdctLoad(result) {
+                $('#tblproductdetails td').remove();
+                //$('#PopUpDetail6').text('BINS : ');
+                $('#PopUpDetailbin').text('');
+                for (var n = 0; n < result.length; n++) {
+
+                    var bins = '';
+                    if (result[n].Bin_A != '') { bins = result[n].Bin_A } if (result[n].Bin_B != '') { bins = bins + ' , ' + result[n].Bin_B } if (result[n].Bin_C != '') { bins = bins + ' , ' + result[n].Bin_C }
+                    if (result[n].Bin_D != '') { bins = bins + ' , ' + result[n].Bin_D } if (result[n].Bin_E != '') { bins = bins + ' , ' + result[n].Bin_E } if (result[n].Bin_F != '') { bins = bins + ' , ' + result[n].Bin_F }
+                    if (result[n].Bin_G != '') { bins = bins + ' , ' + result[n].Bin_G } if (result[n].Bin_H != '') { bins = bins + ' , ' + result[n].Bin_H }
+                    var custstat;
+                    if (result[n].LastSellingPrice == 0) {
+                        custstat = "Last Selling Price";
+                    }
+                    else {
+                        custstat = result[n].custstats;
+                    }
+
+
+                    $('#productpdiv,#Infospopup').slideDown();
+                    $('#prodheader').text('Location Stock Details');
+                    $('#productdiv').show();
+
+                    var strr = result[n].Locationstock;
+                    var strr1 = strr.replace(/&/gi, "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;");
+                    var strr2 = strr1.replace(/#/gi, "&emsp;");
+
+                  
+                    if (result[n].custstats == 'Last Selling Price' && $('#txtCustId').val() == 0) {
+                  
+                        var ProdRow = "<tr class='jsgrid-row' id='pdctrow'>" +
+                 "<td style='border:none;font-weight:500;font-size:150%' class='text-left'><b>" + result[0].ProductCode + "</b></td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><table width='100%'><tr><td style='border:none;font-weight:500' class='text-left'><b>C : </b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><b>LP : </b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><b>LSP : </b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><b>Stock : </b>" + (result[n].Sumtotqty || 0) + "</td>" + "</tr></table></td></tr>" +
+                 "<tr class='jsgrid-row' id='pdctrow1'><td colspan=4 class='text-left' style='border:none'> " + strr2 + "</td ></tr>";
+                    }
+                    else {
+                       
+
+                        var ProdRow = "<tr class='jsgrid-row' id='pdctrow'>" +
+                 "<td style='border:none;font-weight:500;font-size:150%' class='text-left'><b>" + result[0].ProductCode + "</b></td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><table width='100%'><tr><td style='border:none;font-weight:500' class='text-left'><b>C : </b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><b>LP : </b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</td>" +
+                  "<td style='border:none;font-weight:500' class='text-left'><b>CLSP : </b>" + (parseFloat(result[n].CustLastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><b>CLSP' : </b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
+                 "<td style='border:none;font-weight:500' class='text-left'><b>Stock : </b>" + (result[n].Sumtotqty || 0) + "</td>" + "</tr></table></td></tr>" +
+                 "<tr class='jsgrid-row' id='pdctrow1'><td colspan=5 class='text-left' style='border:none'> " + strr2 + "</td ></tr>";
+
+                    }
+                    if (bins != "") {
+                        //$('#PopUpDetail6').text('BINS :' + bins)
+                        $('#PopUpDetailbin').text(bins);
+                    }
+
+
+                    $('#tblproductdetails').append(ProdRow);
+
+
+                    //var ProdRow1 =
+                    //   "<tr class='jsgrid-row' id='pdctrow1'><td colspan=5 class='text-left' style='border:none'> " + strr3 + "</td ></tr><tr class='jsgrid-row' style='margin-top:-5px'><td colspan=5 class='text-left' style='border:none'></td ></tr>";
+                    //$('#tblproductdetails').append(ProdRow1);
+
+                    $('#AvgCost0').val(parseFloat(result[n].AvgCost || 0).toFixed(Decimal));
+                    $('#tbllocqty').attr('border', '1');
+                    $('#tbllocqty').attr('bordercolor', 'white');
+                }
+                // hidepopup(0);
+            }
+
+            function hidepopup(flg) {
+
+                if (flg == 0)                 //Show Popup
+                {
+                    if ($('#toggle').prop("checked") == false)
+                        $('#toggle').click();
+                }
+                else if (flg == 1)           //Hide Popup 
+                {
+                    if ($('#toggle').prop("checked") == true)
+                        $('#toggle').click();
+                }
+            }
+            //Product Popup Refresh
+            function productpopuprefresh() {
+                //$('#productpopupdiv').hide();
+                //$('#pdctrow').remove();
+                //$('#pdctrow1').remove();
+
+                $('#productpdiv').hide();
+                $('#prodheader').text('');
+                $('#productdiv').hide();
+                $("#tblproductdetails tr").remove();
+              
+            }
+
+
+            function gotoSales(BillSlNo, BillSeriesId, DeptId) {
+                    if ((usermenu1.indexOf("M54") != -1)) {
+                        window.open('../inventory/SalesInvoice?slno=' + BillSlNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+                    }
+                    else if ((usermenu1.indexOf("M227") != -1)) {
+                        window.open('../inventory/SalesInvoiceNew?slno=' + BillSlNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+                    }
+                    else {
+                        warningshow('Invalid User Rights');
+                        return false;
+                    }
+              
+            }
+            function gotoPurchase(SlNo, DeptId) {
+                if ((usermenu1.indexOf("M31") != -1)) {
+                    window.open('../inventory/PurchaseInvoice?slno=' + SlNo + '&dept=' + DeptId);
+                }
+                else if ((usermenu1.indexOf("M233") != -1)) {
+                    window.open('../Purchase/PurchaseInvoiceNew?slno=' + SlNo + '&dept=' + DeptId);
+
+                }
+                else {
+                    warningshow('Invalid User Rights');
+                    return false;
+                }
+
+            }
+            function gotoTransaction(BillNo, TransType, BillSeriesId, DeptId) {
+
+                if (TransType == 'SI') {
+                    if ((usermenu1.indexOf("M54") != -1)) {
+                        window.open('../inventory/SalesInvoice?slno=' + BillNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+                    }
+                    else if ((usermenu1.indexOf("M227") != -1)) {
+                        window.open('../inventory/SalesInvoiceNew?slno=' + BillNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+                    }
+                    else {
+                        warningshow('Invalid User Rights');
+                        return false;
+                    }
+                }
+
+
+                else if (TransType == 'PI') {
+                    if ((usermenu1.indexOf("M31") != -1)) {
+                        window.open('../inventory/PurchaseInvoice?slno=' + BillNo + '&dept=' + DeptId);
+                    }
+                    else if ((usermenu1.indexOf("M233") != -1)) {
+                        window.open('../Purchase/PurchaseInvoiceNew?slno=' + BillNo + '&dept=' + DeptId);
+
+                    }
+                    else {
+                        warningshow('Invalid User Rights');
+                        return false;
+                    }
+                }
+
+
+                else if (TransType == 'SR') {
+                    if ((usermenu1.indexOf("M56") != -1)) {
+                        window.open('../SalesInvoice/SalesReturn?billseries=' + BillSeriesId + '&slno=' + BillNo + '&dept=' + DeptId);
+
+                    }
+                    else if ((usermenu1.indexOf("M241") != -1)) {
+                        window.open('../SalesInvoice/SalesReturnNew?billseries=' + BillSeriesId + '&slno=' + BillNo + '&dept=' + DeptId);
+                    }
+                    else {
+                        warningshow('Invalid User Rights');
+                        return false;
+                    }
+                }
+
+
+                else if (TransType == 'PR') {
+
+                    if ((usermenu1.indexOf("M32") != -1)) {
+                        window.open('../Purchase/PurchaseReturn?slno=' + BillNo + '&dept=' + DeptId);
+                    }
+                    else if ((usermenu1.indexOf("M239") != -1)) {
+                        window.open('../Purchase/PurchaseReturnNew?slno=' + BillNo + '&dept=' + DeptId);
+
+                    }
+                    else {
+                        warningshow('Invalid User Rights');
+                        return false;
+                    }
+                }
+                
+
+            }
+
+    function datatableWithsearchForMainTable(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                if (title == 'Date' || title == 'Currency' || title == 'OrderNo' || title == 'Sl#' || title == 'InvoiceNo') {
+                    $(this).html('<input type="text"  style="width:120px"  placeholder="' + title + '"/>')
+                }
+                else  if(title == 'Status')
+                    $(this).html('<input type="text" style="width:100%"   placeholder="' + title + '"/>')
+                else {
+                    $(this).html('<input type="text"   placeholder="' + title + '"/>')
+                }
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                orderCellsTop: true,
+                buttons: [],
+              
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+           
+        }
+        if (tablename == 'productlist') {
+            $("#MainRow_1").click();
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+   
+    function datatableWithsearch(tablename, Type) {
+
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                if (title == 'Currency' || title == 'OrderNo' || title == 'SerialNo' || title == 'InvoiceNo') {
+                    $(this).html('<input type="text" class="form-control"  style="width:120px"  placeholder="' + title + '"/>')
+                }
+                else {
+                    $(this).html('<input type="text" class="form-control"   placeholder="' + title + '"/>')
+                }
+        });
+
+        var table = null;
+
+        if (Type == 'Single') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                orderCellsTop: true,
+                //"order": false,
+            });
+
+        }
+        else if (Type == 'Multiple') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                "pageLength": -1
+            });
+
+
+        }
+        else if (Type == 'MultiplePurchaseT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "15%", "targets": 2 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                //  "pageLength": -1,
+                autoWidth: false
+            });
+            
+        }
+        else if (Type == 'MultiplePurchaseOrderT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "5%", "targets": 1 },
+                    { "width": "30%", "targets": 2 },
+                    { "width": "10%", "targets": 3 },
+                    { "width": "10%", "targets": 4 },
+                    { "width": "15%", "targets": 5 },
+                    { "width": "15%", "targets": 6 },
+                    { "width": "15%", "targets": 7 },
+                    { "width": "15%", "targets": 8 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                //  "pageLength": -1,
+                autoWidth: false
+            });
+
+        }
+        else if (Type == 'MultipleSalesT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "3%", "targets": 1 },
+                    { "width": "30%", "targets": 2 },
+                    { "width": "40%", "targets": 3 },
+                    { "width": "5%", "targets": 4 },
+                    { "width": "10%", "targets": 5 },
+                    { "width": "5%", "targets": 6 },
+                    { "width": "5%", "targets": 7 },
+                    { "width": "5%", "targets": 8 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                // "pageLength": -1
+            });
+
+
+        }
+
+        else if (Type == 'MultipleAllTransaction') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "1%", "targets": 1 },
+                    { "width": "15%", "targets": 3 },
+                    { "width": "12%", "targets": 5 },
+                    { "width": "30%", "targets": 6 },
+                    { "width": "10%", "targets": 11 },
+                     { "width": "10%", "targets": 13 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                //"pageLength": -1,
+                autoWidth: false
+            });
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+    }
+
+
+    function disable_datatable(tablename) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            return;
+        }
+    }
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+</script>
+
+
+

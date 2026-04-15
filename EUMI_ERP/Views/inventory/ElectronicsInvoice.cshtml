@@ -1,0 +1,793 @@
+﻿
+@{
+    ViewBag.Title = "ElectronicsInvoice";
+}
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+
+<style>
+    .btn:hover {
+        opacity: 1;
+    }
+
+    #panel1 {
+        display: none;
+    }
+
+    .modal-xl {
+        max-width: 100%;
+        margin-left: 10%;
+        margin-right: 3%;
+    }
+
+    #productpopupdiv {
+        max-width: 100%;
+        max-height: 35%;
+        margin-left: 10%;
+        margin-right: 3%;
+        margin-top: 0px;
+    }
+
+    #td1 {
+        width: 75%;
+    }
+
+    #td2 {
+        width: 25%;
+    }
+
+    .footertable tr {
+        border: 1px solid #BABFC7;
+        height: 50px;
+    }
+
+    .headertable tr {
+        border: 1px solid #BABFC7;
+        height: 40px;
+    }
+</style>
+<div id="Entry" style="margin-top:-20px;">
+    <section class="grid-row-label">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                        <h3 class="card-title mb-0" style="float:left"> Electronics Sales Invoice</h3>
+
+                        <h3 class="col-md-3 text-right" id="gndtotal" style="float:right">0.00 </h3>
+
+                        <h3 class="text-md-right" id="fc" style="float:right;opacity:0">fc </h3>
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body" style="margin-top:-60px">
+
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr style="margin-top:30px" />
+
+                                    <div class="row" style="background-color:#E0F3F4 ;margin-left:3px;width:100%;height:228px;margin-top:-20px;">
+
+                                        <div class="col-md-12" style="margin-top:-5px;">
+                                            <br />
+                                            <div class="form-group">
+
+                                                <div class="row" id="slnorow">
+
+                                                    <label class="col-lg-1" style="margin-top:5px">Invoice No</label>
+                                                    <div class="col-lg-11">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+
+                                                                <select id="txtBillseriesId" name="priority" class="form-control"></select>
+                                                            </div>
+                                                            @*<div class="hopscotch-bubble animated tour-demo-tour" id="tour1" style="position: absolute; top: 65px; left:187px;display:none">
+
+                                                                    <div class="hopscotch-bubble-container" style="width: 280px; padding: 10px;">
+                                                                        <div class="hopscotch-bubble-content">
+                                                                            <h3 class="hopscotch-title">Search Invoice Number Here.</h3>
+                                                                            <div class="hopscotch-content"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="hopscotch-bubble-arrow-container hopscotch-arrow up">
+                                                                        <div class="hopscotch-bubble-arrow-border"></div>
+                                                                        <div class="hopscotch-bubble-arrow"></div>
+                                                                    </div>
+                                                                </div>*@
+
+                                                            @*===div for copy===*@
+                                                            <div class="col-md-2 input-group" id="copybill" style="display:none">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-btn" title="Previous">
+                                                                        <button type="button" disabled="" id="btnprvs" onclick="GetBillPrevousornext(-1)" class="btn btn-outline-primary" style="height:85%"><i class="ft-chevron-left"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                                <input type="text" class="form-control" id="txtBillSlNocopy" style="height:85%;background-color:white" onkeypress="isNumberInt(event,this)">
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-btn" title="Next">
+                                                                        <button type="button" id="btnnxt" disabled="" onclick="GetBillPrevousornext(1)" class="btn btn-outline-primary" style="height:85%"> <i class="ft-chevron-right"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            @*===========*@
+
+                                                            @*=====div for page load======*@
+                                                            <div class="col-md-2" id="bill">
+                                                                <input type="text" class="form-control" disabled="" id="txtBillSlNo" style="background-color:white" onkeypress="isNumberInt(event,this)">
+                                                            </div>
+
+                                                            <input type="text" class="form-control" id="txtBlSlNo" style="display:none">
+                                                            @*===========*@
+
+                                                            <label class="col-lg-1 text-lg-right" style="margin-top:10px">Pay Type<span class="danger">*</span></label>
+                                                            <div class="col-md-2">
+                                                                <select id="select_payterms" name="priority" class="form-control">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option value="1">Cash</option>
+                                                                    <option value="2">Credit</option>
+                                                                    <option value="3">Card</option>
+                                                                </select>
+                                                            </div>
+
+
+                                                            @*<label class="col-lg-1 text-lg-right" style="margin-top:10px;">Transfer</label>
+
+                                                                <div  class="col-md-2 input-group">
+                                                                    <select id="select_transfer" class="form-control">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option value="1">Quotation</option>
+                                                                        <option value="2">Sales Order</option>
+                                                                        <option value="3">Enquiry</option>
+                                                                        <option value="4">Recall Old</option>
+                                                                        <option value="5">Delivery Order</option>
+                                                                    </select>
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-outline-primary" onclick="Transfer()" id="btntrnsfr" type="button">⇆</button>
+                                                                    </div>
+                                                                </div>*@
+
+                                                            @*<label class="col-lg-1 text-lg-right" style="margin-top:10px">Bar Code</label>
+                                                                <div class="col-md-2">
+                                                                    <input type="hidden" id="hiddenitemId" />
+                                                                    <input type="text" id="barcode" class="form-control" style="width:99.6%" placeholder="Bar Code">
+                                                                </div>*@
+                                                            @*<label class="col-lg-1 text-lg-right" style="margin-top:10px">LPO Number</label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" id="txtlpono" class="form-control">
+                                                                </div>*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+
+                                                </div>
+                                                @*///////////////////////////*@
+                                                <div class="row" style="margin-top:5px">
+                                                    <label class="col-lg-1" style="margin-top:8px">Customer<span class="danger">*</span></label>
+                                                    <div class="col-lg-11">
+                                                        <div class="row">
+                                                            <div class="col-md-3 input-group">
+                                                                <input type="text" id="txtcustomer" class="form-control" style="height:90%" onkeyup="changetoupper(this.id),checkcustomerempty()">
+                                                                <input type="text" id="txtCustId" style="display:none" value="0" />
+                                                                <div class="input-group-append" id="addVisa">
+                                                                    <button class="btn btn-outline-primary" onclick="window.open('../master/CustomerMaster')" id="btncst" type="button" style="height:90%">+</button>
+                                                                </div>
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right" style="margin-top:10px">Date</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="txtivdate" class="form-control" name="IVDate" onchange="getdate()">
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right" style="margin-top:10px">Terms</label>
+
+                                                            <div class="col-md-2 input-group">
+                                                                <select id="select_terms" class="form-control"></select>
+
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary" onclick="Addpopupwindow(5)" id="btnterms" type="button" style="height:90%">+</button>
+                                                                </div>
+                                                            </div>
+
+
+
+                                                            <label class="col-lg-1 text-lg-right" style="margin-top:10px">Due Date</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" disabled="" id="txtduedate" class="form-control" name="duedate" style="background-color:white;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+
+
+                                                        <div class="row" style="margin-top:-10px">
+                                                            <label class="col-lg-1" style="margin-top:30px">Address</label>
+
+                                                            <div class="col-lg-11">
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+                                                                        <textarea id="txtaddress" class="form-control" style="position:absolute;width:92%; height:178%" name="Address"></textarea>
+                                                                    </div>
+
+                                                                    <label class="col-lg-1 text-lg-right" style="margin-top:10px">Location<span class="danger">*</span></label>
+                                                                    <div class="col-md-2 input-group">
+                                                                        <select id="select_locn" name="priority" class="form-control"></select>
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-outline-primary" onclick="Addpopupwindow(3)" id="btnlocn" type="button">+</button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <label class="col-lg-1 text-lg-right" style="margin-top:10px">SalesMan<span class="danger">*</span></label>
+
+
+                                                                    <div class="col-md-2 input-group">
+                                                                        <select id="select_salesman" name="priority" class="form-control"></select>
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-outline-primary" onclick="Addpopupwindow(4)" id="btnsales" type="button">+</button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <label class="col-lg-1 text-lg-right" style="margin-top:10px">Supply To<span class="danger">*</span></label>
+                                                                    <div class="col-md-2 input-group">
+                                                                        <select id="select_place" class="form-control"></select>
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-outline-primary" onclick="Addpopupwindow(2)" id="btnsply" type="button">+</button>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="row" style="margin-top:-10px">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <label class="col-lg-1"></label>
+
+                                                            <div class="col-lg-11">
+                                                                <div class="row">
+                                                                    <div class="col-md-3">
+
+                                                                    </div>
+
+                                                                    <label class="col-lg-1 text-lg-right" style="margin-top:10px">Currency<span class="danger">*</span></label>
+
+                                                                    <div class="col-md-2 input-group">
+                                                                        <select id="select_crncy" class="form-control"></select>
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-outline-primary" onclick="Addpopupwindow(1)" id="btncrncy" type="button">+</button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <label class="col-lg-1 text-lg-right" style="margin-top:10px">Rate</label>
+                                                                    <div class="col-md-2">
+
+                                                                        <input type="text" id="txtcrncyrate" class="form-control" onkeypress="isNumber(event,this)">
+
+                                                                    </div>
+                                                                    @*<label class="col-lg-1 text-lg-right" style="margin-top:10px">Job No</label>
+                                                                        <div class="col-md-2">
+
+                                                                            <input type="text" id="select_jobno" onkeyup="checkjobempty()" class="form-control">
+                                                                            <input type="text" id="ProjectJobId" value="0" style="display:none">
+                                                                        </div>*@
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr style="margin-top:3px" />
+                                    <div class="px-0">
+                                        <div class="row" style="margin-top:-15px;margin-left:3px">
+
+                                            <div class="col-md-12">
+                                                <div class="row" style="height:26px;">
+
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label>Bar Code<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label>Product<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Unit</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Quantity<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Rate<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Discount</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Tax Group</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Tax %</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Amount</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <input type="hidden" id="hiddenitemId" />
+                                                        <input type="text" id="barcode" class="form-control" style="width:99.6%" placeholder="Bar Code">
+                                                    </div>
+
+                                                    <div class="col-md-2 input-group" id="dd">
+                                                        <input type="text" id="txtproduct0" class="form-control" onkeyup="checkpdcttextempty(event)" aria-describedby="btnpdct">
+                                                        <input type="text" id="ProductDesc0" style="display:none" />
+                                                        <input type="text" id="PrdtId0" value="0" style="display:none" />
+                                                        <input type="text" id="TransPrdtId0" value="0" style="display:none" />
+                                                        <input type="text" id="LPCost" value="0" style="display:none" />
+                                                        <input type="text" id="AvgCost0" value="0" style="display:none" />
+                                                        <input type="text" id="Sumtotqty" value="0" style="display:none" />
+                                                        <input type="text" id="Custlastsellingprice" value="0" style="display:none" />
+                                                        <input type="text" id="LineAvgCost0" value="0" style="display:none">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-primary" onclick="window.open('../master/ItemMaster')" id="btnpdct" type="button" style="height:63%">+</button>
+                                                        </div>
+                                                    </div>
+
+                                                    @*<div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <select id="select_location0" class="form-control" disabled=""></select>
+                                                                <input type="text" id="txtlcn" style="display:none">
+                                                            </div>
+                                                        </div>*@
+
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <select id="select_unit0" class="form-control" name="Units"></select>
+                                                            <input type="text" id="txtunit" style="display:none" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="txtquantity0" name="prdaddqty" class="form-control" onkeypress="isNumberInt(event, this)" maxlength="8" onkeyup="checkqty(0),checkpricegroup(0),amountcalculation(0)">
+                                                            <input type="text" id="txtstocktotloseqty0" value="0" style="display:none">
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="txtrate0" class="form-control" name="Rates" onkeypress="isNumber(event, this)" onkeyup="amountcalculation(0)">
+                                                            <input type="text" id="txtfcrate0" style="display:none">
+                                                            <input type="text" id="LastSellingPrice" style="display:none">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="txtdiscount0" class="form-control" onkeypress="isNumber(event,this)" onkeyup="amountcalculation(0)">
+                                                            <input type="text" id="txtfcdiscount0" style="display:none">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <select id="select_tax0" class="form-control" name="Tax" onchange="ChangeTax(0,this)"></select>
+                                                            <input type="text" id="txttaxableamnt0" class="form-control" style="display:none">
+                                                            <input type="text" id="txtfctaxableamnt0" style="display:none">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <input type="text" id="txttaxpercent0" class="form-control" name="Taxpercent" disabled="" style="background-color:white">
+                                                            <input type="text" id="txttaxamnt0" class="form-control" style="display:none">
+                                                            <input type="text" id="txtfctaxamnt0" style="display:none">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="txtamnt0" class="form-control" disabled="" style="background-color:white">
+                                                            <input type="text" id="txtfcamnt0" style="display:none">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <button type="button" id="btnadd" onclick="productadd()" class="btn btn-outline-primary" style="height:40px;width:100px">+Add</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <div id="customView" class="jsgrid" style="position: relative; height: auto; width: 100%; border:solid 1px;border-color:#e9e9e9;margin-top:-28px;overflow-x: auto;overflow-y: hidden;margin-bottom:-10px;">
+                                        <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width: 2050px;">
+                                            <table class="jsgrid-table" id="tblsalesinvoiceheader">
+                                                <tr class="jsgrid-header-row">
+                                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 15px;"></th>
+                                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editcancelheader" style="width: 15px;display:none;margin-top:5px"></th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 15px;">Sl No</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 75px;">Product/Service</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 75px;">Description</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Unit</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Quantity</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Rate</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Avg Cost</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Discount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 40px;">Taxable Amount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Tax</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Tax%</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Tax Amount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width: 30px;">Amount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 40px;">Location</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y: auto; height:280px; width: 2050px;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                            <table class="jsgrid-table" id="tblsalesinvoice"></table>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <br />
+                                <div class="px-3" style="border-top:1px solid #BABFC7;border-bottom:1px solid #BABFC7;height:173px;background-color:#E0F3F4;">
+                                    <table>
+                                        <tr>
+                                            <td width="25%">
+                                                <div id="TaxSplit">
+                                                    <div id="transsplitdiv" class="jsgrid" style="overflow:auto;height:170px;width:100%;top:-15px;margin-left:-15px">
+                                                        <table class="headertable" id="tbltaxsplit" style="border:1px solid #BABFC7;background-color:white;">
+                                                            <tr>
+                                                                <th class="text-center" style="font-weight:500;width:30%;border:1px solid #BABFC7;height:50px"><b>Tax Group</b></th>
+                                                                <th class="text-center" style="font-weight:500;width:40%;border:1px solid #BABFC7;height:50px"><b>Taxable Amount</b></th>
+                                                                <th class="text-center" style="font-weight:500;width:40%;border:1px solid #BABFC7;height:50px"><b>Tax Amount</b></th>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td width="50%">
+                                                <div id="" class="jsgrid text-lg-right" style="left:5px;height:200px; overflow: auto;width:100%;overflow:hidden">
+                                                    <table class="footertable" id="" style="overflow:hidden;border:1px solid #BABFC7;background-color:white;">
+                                                        <tr>
+                                                            <td class="" style="width: auto;text-align:center;font-weight:500"><b>Round Off</b></td>
+                                                            <td class="" style="width: auto;text-align:center;font-weight:500"><b>Discount</b></td>
+                                                            <td class="" style="width: auto;text-align:center;font-weight:500"><b>Discount%</b></td>
+                                                            <td class="" style="width: auto;text-align:center;font-weight:500"><b>Tot. Discount</b></td>
+                                                            <td class="" style="width: auto;text-align:center;font-weight:500"><b>Total Taxable</b></td>
+                                                            <td class="" style="width: auto;text-align:center;font-weight:500"><b>Total Tax</b></td>
+
+                                                        </tr>
+                                                        <tr style="background-color:#E0F3F4 ;">
+                                                            <td>
+                                                                <input type="text" id="TotRoundOff" style="font-weight:bold;text-align:center;" value="0.00" class="form-control">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" id="disc" class="form-control" style="font-weight:bold;text-align:center;" value="0.00" onkeypress="isNumber(event, this)" onkeyup="CalcGrandTotal(i)">
+                                                                <input type="text" id="fcdisc" class="form-control" style="display:none">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" id="Discountpercent" style="font-weight:bold;text-align:center;" class="form-control">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" id="TotalDiscount" class="form-control" style="background-color:white;border:none;font-weight:bold;text-align:center;" disabled value="0.00">
+                                                                <input type="text" id="FcTotalDiscount" style="display:none">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" id="TotalTaxable" class="form-control" style="background-color:white;border:none;font-weight:bold;text-align:center;" disabled value="0.00">
+                                                                <input type="text" id="FcTotalTaxable" style="display:none">
+                                                            </td>
+
+                                                            <td>
+                                                                <input type="text" id="TotalTax" class="form-control" style="background-color:white;border:none;font-weight:bold;text-align:center;" disabled value="0.00">
+                                                                <input type="text" id="FcTotalTax" style="display:none">
+
+                                                                <input type="text" id="GrandTotal" style="display:none">
+                                                                <input type="text" id="FcGrandTotal" style="display:none">
+                                                                <input type="text" id="TotalAvgCost" style="display:none">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="6">
+                                                                <div class="form-group">
+                                                                    <textarea id="txtmsg" rows="4" class="form-control" name="notes" style="width:100%;resize:none;border:none;overflow:hidden" placeholder="Remarks"></textarea>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                            <td width="25%">
+                                                <div class="text-right" style="height:200px;top:-5px">
+                                                    <br />
+                                                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                    <button type="button" style="width:100px" id="btnlist" onclick="GetRows()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                                    <button style="display:none" type="button" id="btnprint" onclick="PrintthisBill()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                                    <button type="button" style="width:100px;display:none" id="btnclr" onclick="Tbldelete(),copyrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="icon-close"></i></button>
+                                                    <button type="button" style="width:100px" id="btnnew" onclick="formrefreshconfirm()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                                    <button style="display:none" type="button" id="btnsaveedit" onclick="UpdateSales()" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                                    <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Bill Cancel<i class="fa fa-times"></i></button>
+                                                    <button style="display:none" type="button" id="btnedit" onclick="EditInvoice()" class="btn btn-secondary btn-min-width mr-1 mb-1">Edit<i class="fa ft-edit"></i></button>
+                                                    <button style="display:none" type="button" id="btnwrk" onclick="billdetails($('#txtBillSlNocopy').val(), $('#txtBillseriesId').val(), ERPDeptId)" class="btn btn-secondary btn-min-width mr-1 mb-1">Work<i class="fa ft-wind"></i></button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader"></h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="currencydiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="txt_code">Code<span class="danger">*</span></label>
+                        <input type="text" id="txt_code" onkeyup="changetoupper(this.id),$('#txt_cname').val($('#txt_code').val())" class="form-control">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitdesc">Name</label>
+                        <input type="text" id="txt_cname" maxlength="100" class="form-control">
+                    </fieldset>
+                    <br />
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitname">Rate<span class="danger">*</span></label>
+                        <input type="text" id="txt_rate" maxlength="8" onkeypress="return isNumber(event, this)" class="form-control">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitname">Remarks</label>
+                        <textarea id="txt_remark" rows="5" class="form-control" name="comment"></textarea>
+                    </fieldset>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btncrncysave" onclick="SaveCurrency(1)">
+                </div>
+            </form>
+            <form id="areadiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupcode">Area Code<span class="danger">*</span></label>
+                        <input type="text" onkeyup="changetoupper(this.id),$('#txtname').val($('#txtcode').val())" id="txtcode" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupname">Area Name<span class="danger">*</span></label>
+                        <input type="text" id="txtname" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Group</label>
+                        <div class="input-group">
+
+                            <select id="select_areagroup" class="form-control"></select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="button" onclick="areagroupadd(1)">+</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+
+
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Description</label>
+                        <input type="text" id="txtdescription" class="form-control" autocomplete="off">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnareasave" onclick="SavePlace(1)">
+                </div>
+            </form>
+
+
+            <form id="locationdiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="grp">Code<span class="danger">*</span></label>
+                        <input type="text" onkeyup="changetoupper(this.id),$('#LocationName').val($('#LocationCode').val())" id="LocationCode" class="form-control" name="Code">
+
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbgroupname">Name<span class="danger">*</span></label>
+                        <input type="text" id="LocationName" class="form-control" name="Name">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbgroupdesc">Description</label>
+                        <input type="text" id="LocationDescription" class="form-control" name="Description">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnlocnsave" onclick="SaveLocation(1)">
+                </div>
+            </form>
+
+
+            <form id="salesmandiv" style="display:none;">
+                <div class="modal-body" style="overflow:auto;height:290px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catcode">Code<span class="danger">*</span></label>
+                        <input type="text" id="code" maxlength="25" onkeyup="changetoupper(this.id),$('#txt_fname').val($('#txt_code').val())" class="form-control" name="txt_code">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catname">Name<span class="danger">*</span></label>
+                        <input type="text" id="txt_fname" maxlength="100" class="form-control" name="txt_fname">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Target Amount</label>
+                        <input type="text" id="txt_amount" maxlength="12" class="form-control" name="txt_amount" onkeypress="return isNumber(event, this)">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Address 1</label>
+                        <input type="text" id="txt_address1" maxlength="100" class="form-control" name="txt_address1">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Address 2</label>
+                        <input type="text" id="txt_address2" maxlength="100" class="form-control" name="txt_address2">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Address 3</label>
+                        <input type="text" id="txt_address3" maxlength="100" class="form-control" name="txt_address3">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Contact Number</label>
+                        <input type="text" id="txt_contactnumber" maxlength="13" class="form-control" name="txt_contactnumber">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnsalesmansave" onclick="SaveSalesman(1)">
+                </div>
+            </form>
+            <form id="termsdiv" style="display:none">
+                <div class="modal-body">
+
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbcatname">Description<span class="danger">*</span></label>
+                        <input type="text" id="txtdesc" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbcatdesc">Terms</label>
+                        <input type="text" id="txtterms" class="form-control" autocomplete="off">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btntermssave" onclick="SaveTerms(1)">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div id="areapopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="armyheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="armyheader"></h3>
+                <button type="button" class="close" onclick="areagroupadd(2)" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="areagroupdiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupcode">Area Code<span class="danger">*</span></label>
+                        <input type="text" onkeyup="changetoupper(this.id),$('#artxtname').val($('#artxtcode').val())" id="artxtcode" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupname">Area Name<span class="danger">*</span></label>
+                        <input type="text" id="artxtname" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Description</label>
+                        <input type="text" id="artxtdescription" class="form-control" autocomplete="off">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="areagroupadd(2)" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnareasave" onclick="SaveAreagrp(1)">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+@*///////////jobpopupdiv*@
+<div id="productpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="prodheader" style="display:none;margin-left:-1%;margin-top:30px;height:300px;">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header" style="background-color:#F0F6F6;height:70px">
+                <h5 class="modal-title" id="prodheader" style="height:1px;"></h5>
+                <button type="button" class="close" onclick="productpopuprefresh()" style="height:2px">
+                    <span>×</span>
+                </button>
+            </div>
+            <section id="productdiv" style="display:none;height:50px;margin-top:-5px">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card card-body" style="margin-top:-10px;height:180px">
+                            <div class="card-block" style="overflow:scroll;height:110px;width:100%;overflow:auto;top:-10px">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails" style="top:-10px"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

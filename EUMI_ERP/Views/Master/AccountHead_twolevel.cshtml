@@ -1,0 +1,564 @@
+﻿
+@{
+    ViewBag.Title = "AccountHead_twolevel";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<style>
+    #tree {
+        float: left;
+    }
+
+        #tree li {
+            white-space: nowrap;
+            user-select: none;
+        }
+
+            #tree li::before {
+                content: '\f105';
+                font-family: FontAwesome;
+                display: inline-block;
+                padding-right: 5px;
+            }
+
+            #tree li span {
+                cursor: pointer;
+            }
+
+        #tree ul, #tree ul li {
+            list-style: none;
+            margin: 2px 5px 2px 20px;
+            padding: 2px;
+            display: block;
+        }
+
+        #tree ul {
+            display: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #tree > ul, #tree .eumi-open-list > ul {
+            display: block;
+        }
+
+        #tree .eumi-open-list::before {
+            content: '\f107';
+            font-family: FontAwesome;
+            display: inline-block;
+            padding-right: 5px;
+        }
+
+        #tree li.eumi-leaf::before {
+            content: '\f192';
+            font-family: FontAwesome;
+            display: inline-block;
+            padding-right: 5px;
+        }
+</style>
+
+<script>
+
+    function Addschedule(Id)
+    {
+        var SheduleName = $('#SchName' + Id).val();
+        var ScheduleCode = $('#ACCODE' + Id).val();
+        $('#scheduleId').val(Id);
+        $('#schhead').text(SheduleName);
+        $('#popup1').show();
+        $('#divschedule').show();
+        $('#divachead').hide();
+        $('#txtschedulename').focus();
+    }
+
+
+    function AddAccounthead(Id)
+    {
+        var SheduleName = $('#SchName' + Id).val();
+        var ScheduleCode = $('#ACCODE' + Id).val();
+        var AccSlno = $('#ACCSlno' + Id).val();
+        var Prefix = ["0", "0", "00", "000"];
+        var i = 4 - AccSlno.length
+        if (i < 4) { Pre = Prefix[i] } else { Pre = ''; }
+        $('#scheduleId').val(Id);
+        $('#txtacccode').val(ScheduleCode + '-' + Pre + AccSlno);
+        $('#myModalLabel1').text(SheduleName);
+        $('#popup1').show();
+        $('#divschedule').hide();
+        $('#divachead').show();
+        $('#txtaccname').focus();
+
+    }
+
+
+
+
+
+
+    function Showtree(result) {
+        $("#tree").empty();
+        for (var i = 0; i < result.length; i++) {
+            var data = {
+                SchName: result[i].description,
+                ACCODE: result[i].accountCode,
+                ACCSlno: result[i].slno
+            }
+            for (var key in data)
+            {
+                $("#tree").append($('<input type="hidden" />').attr("id", key + result[i].accountId).val(data[key]));
+            }
+        }
+        var list = GetScheduleUL(0, result);
+        if (list != null && list.length > 0) {
+            $('#tree').append(list);
+            AddTreeEvents();
+        }
+    }
+
+    function GetScheduleUL(parentId, result) {
+        var arrMainSch = result.filter(function (ele) { return ele.parentId === parentId });
+        // if (parentId == 0) {
+        //     console.log(arrMainSch);
+        // }
+        var jqList = null;
+        if (arrMainSch.length > 0) {
+            jqList = $("<ul>");
+        }
+        for (var j = 0; j < arrMainSch.length; j++) {
+            var jqItem = $("<li>").append($("<span>").addClass("eumi-node-span").text(arrMainSch[j].description))
+                .append(' ')
+                .append($("<span>").addClass("eumi-add ft-plus-circle text-primary").attr("data-eumi-id", arrMainSch[j].accountId));
+            jqList.append(jqItem);
+            var jqChildList = GetScheduleUL(arrMainSch[j].accountId, result);
+            if (jqChildList != null && jqChildList.length > 0) {
+                jqItem.append(jqChildList)
+            } else {
+                jqItem.addClass("eumi-leaf");
+            }
+
+        }
+        return jqList;
+    }
+
+    function AddTreeEvents()
+    {
+        $("#tree").off(".eumiTreeEvents").on("click.eumiTreeEvents", ".eumi-add", function () {
+            if ($(this).parentsUntil("#tree", "ul").length >= 2) {
+                AddAccounthead($(this).attr("data-eumi-id"));
+            } else {
+                Addschedule($(this).attr("data-eumi-id"));
+                $("#tree").find(".eumi-current-node").removeClass("eumi-current-node");
+                $("#tree").find(".eumi-open-list").removeClass("eumi-open-list");
+                $(this).closest("li").addClass("eumi-current-node");
+                $(this).parentsUntil("#tree", "li").addClass("eumi-open-list");
+
+            }
+        }).on("click.eumiTreeEvents", ".eumi-node-span", function () {
+
+            if (!$(this).closest("li").is(".eumi-current-node")) {
+                if (!$.fn.DataTable.isDataTable('#example')) {
+                    var table = $("#tblacchead").DataTable();
+                    table.column(4).search($(this).text()).draw();
+                }
+            }
+            var currentNodeOpen = false;
+            if ($(this).closest("li").is(".eumi-open-list")) {
+                currentNodeOpen = true;
+            }
+            $("#tree").find(".eumi-current-node").removeClass("eumi-current-node");
+            $("#tree").find(".eumi-open-list").removeClass("eumi-open-list");
+            $(this).closest("li").addClass("eumi-current-node");
+            $(this).parentsUntil("#tree", "li").addClass("eumi-open-list");
+            if (currentNodeOpen) {
+                $(this).closest("li").removeClass("eumi-open-list");
+            }
+        });
+    }
+
+    function formrefresh() {
+        $('#txtacccode').val('');
+        $('#txtaccname').val('');
+        $('#txtaccnamrration').val('');
+        $('#txtob').val('');
+        $('#popup1').hide();
+        $('#txtschedulename').val('');
+        $('#txtschedulcode').val('');
+        $('.swal-button swal-button--confirm').focus();
+
+    }
+
+
+    function ShowAccheadList(result)
+    {
+        disable_datatable('tblacchead');
+        var responseText = "<thead><tr><th width=15px>Slno</th><th>Code</th><th>Name</th><th>Opening</th><th>Schedule</th><th width=15px>Edit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            responseText += '<tr><td>' + slno + '</td><td>' + result[i].AcntCode + '</td><td>' + result[i].AcntDescription + '</td><td>' + result[i].Opening + '</td><td>' + result[i].schedul + '</td><td align=center><a onclick="GetRows(' + result[i].AcntId + ')">' + Editbutton + '</a></td></tr>';
+        }
+        $('#tblacchead').html(responseText + '</tbody><tfoot><tr><th width=15px>Slno</th><th>Code</th><th>Name</th><th>Opening</th><th>Schedule</th><th width=15px>Edit</th></tr></tfoot>');
+        datatableWithsearch('tblacchead');
+
+
+    }
+
+
+    function GetRows(Ac_Id) {
+        console.log(Ac_Id)
+        $('#AccID').val(Ac_Id);
+        var data = {};
+        data.AcntId = Ac_Id;
+        data.ScheduleId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/AccountHeadGetandGets",
+            data: data,
+            success: function (result) {
+                ShowAccheadheadGets(result);
+            }
+        });
+    }
+
+
+    function ShowAccheadheadGets(result)
+    {
+        console.log(result)
+        $('#popup1,#divachead,#btnDelete').show();
+        $('#txtacccode').val(result[0].AcntCode);
+        $('#txtaccname').val(result[0].AcntDescription);
+        $('#txtaccnamrration').val(result[0].Narration);
+        $('#txtob').val(result[0].Opening);
+        $('#scheduleId').val();
+
+    }
+
+
+
+    function Gettreeview() {
+        var data = {};
+        data.AreaGrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/TreeViewGets",
+            data: data,
+            success: function (result) {
+                Showtree(result.oList);
+            }
+        });
+    }
+
+
+    function GetAllaccHead()
+    {
+        var data = {};
+        data.AcntId = 0;
+        data.ScheduleId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/AccountHeadGetandGets",
+            data: data,
+            success: function (result) {
+                ShowAccheadList(result);
+            }
+        });
+
+    }
+
+    $(document).ready(function () {
+
+        Gettreeview();
+        GetAllaccHead();
+
+
+        $("#txtob,#txtschedulcode").on("keypress keyup blur", function (event) {
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
+
+
+
+
+
+
+
+        $("#btnsubmitschedule").click(function (e) {
+            var data = {};
+            if ($('#txtschedulename').val() == '') {
+                $('#txtschedulename').focus();
+            }
+            else if ($('#txtschedulcode').val() == '') {
+                $('#txtschedulcode').focus();
+            }
+            else {
+                data.schedul = $('#txtschedulename').val();
+                data.AcntCode = $('#txtschedulcode').val();
+                data.ScheduleId = $('#scheduleId').val();
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/AccountScheduleInsertandUpdate",
+                    data: data,
+                    success: function (result) {
+                        for (var i = 0; i <= result.oList.length; i++) {
+                            var status = result.oList[i].Flag;
+                            Showalerts(status);
+                            Gettreeview();
+
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+
+
+        $("#btnsubmit").click(function (e) {
+            Accoundheadsave(1)
+        });
+
+        $("#btnDelete").click(function (e) {
+            var Result = confirm("Do You Want Delete this record?")
+            if (Result==true)
+            Accoundheadsave(0)
+        });
+
+        function Accoundheadsave(DelFlag) {
+                if ($('#txtaccname').val() == '') {
+                    $('#txtaccname').focus();
+                }
+                else {
+                    var data = {};
+                    data.AcntDescription = $('#txtaccname').val();
+                    data.Narration = $('#txtaccnamrration').val();
+                    data.AcntCode = $('#txtacccode').val();
+                    data.Opening = parseFloat($('#txtob').val() || 0);
+                    data.ScheduleId = parseFloat($('#scheduleId').val() || 0);
+                    data.AcntId = $('#AccID').val();
+                    data.DelFlag = DelFlag;
+                    data.UserId = ERPUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/AccountHeadInsertandUpdate",
+                        data: data,
+                        success: function (result) {
+                            for (var i = 0; i <= result.oList.length; i++) {
+                                var status = result.oList[i].Flag;
+                                var Accode = result.oList[i].AcntCode;
+                                $('#ACCSlno' + $('#scheduleId').val()).val(Accode + 1)
+                                Showalerts(status);
+                                GetAllaccHead();
+                                $('#AccID').val(0)
+                            }
+                        }
+                    });
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+
+
+    function hidepopup()
+    {
+        $('#popup1').hide()
+        $('#AccID').val(0)
+    }
+
+
+
+</script>
+
+
+
+
+
+
+<div class="row">
+    <!--Basic List Group Starts-->
+    <div class="col-sm-12 col-md-5 col-lg-3">
+        <div class="card">
+            <div class="card-header">
+                <a href="@Url.Action("AccountSchedule", "Print")" target="_blank" class="pull-right"><i class="ft-printer"></i></a>
+
+               
+                <h4 class="card-title">Account Schedule &nbsp;
+                
+                    <a data-toggle="popover" & data-placement="bottom" data-content="ASSETS-1000-1999 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;      ,LIABILITY-2000-2999     ,EQUITY-1000,INCOME-2000" data-trigger="hover" data-original-title="Schedule Range">
+                        <i class="fa fa-question-circle"></i>
+                    </a>
+               
+                
+                
+                </h4><hr />
+            </div>
+            <div class="card-body">
+                <div class="card-block">
+                    <div style="height: 750px;overflow:auto;">
+                        <div id="tree">
+
+                        </div>
+                        <div style="clear:both"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Basic List Group Ends-->
+    <!--List Group with badges Starts-->
+    <div class="col-sm-12 col-md-7 col-lg-9">
+        <div class="card" style="height: 900px;">
+            <div class="card-header">
+                <a onclick="GetAllaccHead()"> <h4 class="card-title">Account Head</h4></a>
+                <hr />
+            </div>
+            <div class="card-body">
+                <div class="card-block">
+                    <table id="tblacchead" class="table table-striped table-bordered base-style dataTable"></table>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="AccID" value="0" />
+
+</div>
+
+
+<div class="modal fade text-left show" id="popup1" style="display: none;background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog" id="divachead" role="document" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel1">Account Head</h4>
+                <button type="button" class="close" onclick="hidepopup()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp">Account Code<span class="danger">*</span></label>
+                    <input type="text" id="txtacccode" class="form-control" disabled>
+
+                </fieldset>
+
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp">Account Name<span class="danger">*</span></label>
+                    <input type="text" id="txtaccname" class="form-control" name="Code">
+
+                </fieldset>
+                <br>
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="sbgroupname">Narration</label>
+                    <input type="text" id="txtaccnamrration" class="form-control" name="Name">
+                </fieldset>
+                <br>
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="sbgroupdesc">opening Balance</label>
+                    <input type="text" id="txtob" class="form-control">
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn grey btn-outline-secondary" onclick="hidepopup()">Close</button>
+                <button type="button" id="btnsubmit" class="btn btn-outline-primary">Save </button>
+                <button type="button" id="btnDelete" class="btn btn-outline-primary" style="display:none">Delete </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-dialog" id="divschedule" style="display:none;top:20%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="schhead">Schedule</h4>
+                <button type="button" class="close" onclick="($('#popup1').hide())">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp">Group Name<span class="danger">*</span></label>
+                    <input type="text" id="txtschedulename" class="form-control">
+                </fieldset>
+
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp">Code<span class="danger">*</span></label>
+                    <input type="text" id="txtschedulcode" class="form-control">
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn grey btn-outline-secondary" onclick="($('#popup1').hide())">Close</button>
+                <button type="button" id="btnsubmitschedule" class="btn btn-outline-primary">Save </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+    
+
+
+
+
+
+
+<div style="display:none">
+    <input type="text" id="scheduleId" />
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1468 @@
+﻿
+@{
+    ViewBag.Title = "SalesmanwiseSales";
+}
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script src="~/Scripts/Chart/export-data.js"></script>
+<script src="~/Scripts/Chart/exporting.js"></script>
+
+<style type="text/css">
+  
+    .form-control {
+        font-weight: bold;
+    }
+    body{
+        overflow-x:hidden;
+    }
+</style>
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<script>
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var hhh = new Date();
+    var mmmonth = hhh.getMonth() + 1;
+    var ddday = hhh.getDate();
+    var MonthFirst = '01/' + (mmmonth < 10 ? '0' : '') + mmmonth + '/' + hhh.getFullYear();
+    var monthtext = '';
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+    function ShowReport(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+
+
+        var ResponseEntity = "<thead><tr><th>Sl#</th><th>Salesman</th><th>Sales</th><th style='width:5px'>Discount</th><th>Gross Sales</th><th>S.Return</th><th>Net Sales</th><th>Net Cost</th><th>Profit</th><th style='width:15px'>Profit%</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            if (result[i].SalesManName == 'Grand Total') {
+                ResponseEntity += '<tr style=background-color:#cfd8dc><td style="width:5px">' + slno + '</td><td><b>' + result[i].SalesManName + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].Sales || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].Disc || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].GrossSales || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].SReturn || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].NetSales || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].NetCost || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].Profit || 0).toFixed(Decimal) + '</b></td><td style=text-align:right></td></tr>';
+            }
+            else {
+                ResponseEntity += '<tr><td  style="width:5px">' + slno + '</td><td>' + result[i].SalesManName + '</td><td style=text-align:right>' + parseFloat(result[i].Sales || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].Disc || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].GrossSales || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].SReturn || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].NetSales || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].NetCost || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].Profit || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].ProfitPer || 0).toFixed(Decimal) + '</td></tr>';
+            }
+        }
+
+        $('#Tblreport').html(ResponseEntity + '</tbody><tfoot><tr><th>Sl#</th><th>Salesman</th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th></tr> </tfoot>');
+
+
+        var title = "Salesmanwise Performance Report - from " + $("#dpDateFrom").val() + " to " + $("#dpDateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'O Balance' && title != ' ') {
+                $(this).html('<input type="text" placeholder=" ' + title + '" style="width=100%" />');
+            }
+            if (title == 'Date') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+        
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'Blfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function gotoInvoNo(InvoNo, BillSeriesId, DeptId) {
+        window.open('../inventory/SalesInvoice?slno=' + InvoNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+    }
+
+    function ShowReportShort(result, GrType) {
+        $('#salesrept').html('');
+        var Amount = [];
+        var SalesMan = [];
+        var GrData = [];
+        $("#salesrept").append('<thead><th>&ensp;Salesman</th><th>&ensp;Sales</th><th>&ensp;SReturn</th><th>&ensp;Total</th></thead>');
+        for (var i = 0; i < result.length; i++) {
+            Amount.push(parseFloat(result[i].Amount || 0));
+            SalesMan.push('Salesman:' + result[i].SalesMan);
+            GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+            $("#salesrept").append('<tr><td>&ensp;' + result[i].SalesMan + '</td><td align="right"> ' + parseFloat(result[i].Amount || 0).toFixed(Decimal) + '&ensp;</td><td align="right"> ' + parseFloat(result[i].SReturn || 0).toFixed(Decimal) + '&ensp;</td><td align="right"> ' + parseFloat(result[i].Total || 0).toFixed(Decimal) + '&ensp;</td></tr>');
+        }
+
+
+
+
+        //For PI Chart
+        Highcharts.chart('container', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Salesmanwise Sales-PI Chart'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            colors: [
+                   '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Sales',
+                colorByPoint: true,
+                data: GrData
+            }]
+        });
+
+        Highcharts.chart('container2', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                type: 'pie',
+            },
+            title: {
+                text: 'Salesmanwise Sales-Half PI Chart'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            colors: [
+                  '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%']
+                }
+            },
+            series: [{
+                name: 'Sales',
+                innerSize: '50%',
+                colorByPoint: true,
+                data: GrData
+
+            }]
+        });
+
+
+
+    }
+
+    GetDepartment(0);
+
+    function GetSalesMan(id) {
+        var data = {};
+        data.Id = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/SalesmanGetandGets",
+            data: data,
+            success: function (result) {
+                SalesManLoad(result.oList, id);
+            }
+        });
+    }
+
+    function SalesManLoad(result, a) {
+        $("#cmbSalesMan").empty();
+        $("#cmbSalesMan").append("<option value='0'>-All-</option>")
+        for (var i = 0; i < result.length; i++) {
+            $("#cmbSalesMan").append("<option value='" + result[i].Id + "'>" + result[i].FirstName + "</option>");
+        }
+        if (a == 0) {
+            $('#cmbSalesMan').val(0);
+        }
+        else {
+            $('#cmbSalesMan').val(a);
+        }
+    }
+    function GetDepartment(id) {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UserDepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result, a) {
+        $("#dept").empty();
+        $("#dept").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#dept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+    }
+
+    //SalesmanwiseGraphReport('column');
+
+    function ChangeType() {
+        SalesmanwiseGraphReport('column');
+        $("#customRadioInline1").prop("checked", true);
+    }
+
+    $(function () {
+
+        $("#cmbSalesMan").focus();
+        GetDepartment(0);
+        GetSalesMan(0);
+
+        $("#Summary").click(function (e) {
+            $('#Datetype').val('0');
+            $("#customRadioInline1").prop("checked", true);
+            $('#Loading').hide();
+            Summary();
+            $('#pi').hide();
+            $('#halfpi').hide();
+            $("#Summary").prop("checked", true);
+            $("#Graphical").prop("checked", false);
+        });
+        $("#Graphical").click(function (e) {
+            $('#Datetype').val('0');
+            $("#customRadioInline1").prop("checked", true);
+            $('#Loading').hide();
+            graphreport();
+            $("#Graphical").prop("checked", true);
+            $("#Summary").prop("checked", false);
+        });
+
+        $("#Both").click(function (e) {
+            $('#Loading').hide();
+            $("#Both").prop("checked", true);
+            $("#SalesValue").prop("checked", false);
+            $("#SalesReturn").prop("checked", false);
+        });
+
+        $("#SalesValue").click(function (e) {
+            $('#Loading').hide();
+            $("#SalesValue").prop("checked", true);
+            $("#customRadioInline1").prop("checked", true);
+            $("#Both").prop("checked", false);
+            $("#SalesReturn").prop("checked", false);
+        });
+        $("#SalesReturn").click(function (e) {
+            $('#Loading').hide();
+            $("#SalesReturn").prop("checked", true);
+            $("#customRadioInline1").prop("checked", true);
+            $("#Both").prop("checked", false);
+            $("#SalesValue").prop("checked", false);
+        });
+        $("#customRadioInline1").click(function (e) {
+            $('#pi').hide();
+            $('#halfpi').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+        $("#customRadioInline2").click(function (e) {
+            $('#pi').hide();
+            $('#halfpi').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+        $("#customRadioInline3").click(function (e) {
+            $('#pi').show();
+            $('#halfpi').hide();
+            $('#Sales').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+        $("#customRadioInline4").click(function (e) {
+            $('#halfpi').show();
+            $('#pi').hide();
+            $('#Sales').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+
+
+        $('#dpDateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#dpDateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+
+        $('#cmbSalesMan').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#cmbPayType').focus();
+                e.preventDefault();
+            }
+        });
+
+        $('#cmbPayType').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#dept').focus();
+                e.preventDefault();
+            }
+        });
+        $('#dept').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnGo').focus();
+                e.preventDefault();
+            }
+        });
+
+
+    });
+    function Summary()
+    {
+        var Condition = '', PayType = '', Salesman = '', Department = '';
+        var data = {};
+        var FromDate = $('#dpDateFrom').val();
+        var ToDate = $('#dpDateTo').val();
+        var PayType = $('#cmbPayType').val();
+        var Salesman = parseInt($('#cmbSalesMan').val() || 0);
+        var Department = parseInt($('#dept').val() || 0);
+
+
+        Condition = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+
+
+        if (PayType != 0) { Condition += ' and PayType=' + PayType; }
+        if (Salesman != 0) { Condition += ' and SalesManId=' + Salesman; }
+        if (Department != 0) { Condition += ' and DeptId=' + Department; }
+
+
+
+        var data = {};
+        data.Condition = Condition
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Purchaseandsalesreports/SalesmanwiseSalesGet",
+            data: data,
+            success: function (result) {
+                $('#Loading').hide();
+                $('#divreport').show();
+                $('#popupdiv').hide();
+                $('#Main').show();
+                $("#Summary").prop("checked", true);
+                $("#Graphical").prop("checked", false);
+                $('#graph').hide();
+                ShowReport(result);
+
+            }
+        });
+
+    }
+
+
+
+    function Graphical()
+    {
+        var data = {};
+        data.Fromdate = $('#dpDateFrom').val();
+        data.Todate = $('#dpDateTo').val();
+        data.Paytype = $('#cmbPayType').val();
+        data.SalesmanId = $('#cmbSalesMan').val();
+        data.DeptId = $('#dept').val();
+        data.Userid = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Purchaseandsalesreports/SalesmanwiseGraphReport",
+            data: data,
+            success: function (result) {
+                ShowReportShort(result, Grtype);
+                $('#Loading').hide();
+                $('#divreport').hide();
+                $('#popupdiv').hide();
+               // $('#Main').hide();
+                $('#graph').show();
+
+            }
+        });
+
+     if ($('#Datetype').val() == 0) {
+
+            var datamnt = {};
+            datamnt.Fromdate = $('#dpDateFrom').val();
+            datamnt.Todate = $('#dpDateTo').val();
+            datamnt.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanwisePeriodReport",
+                data: datamnt,
+                success: function (result) {
+                        SalesmanwiseSalesGraphPeriod(result, Grtype);
+                }
+            });
+        }
+
+      else  if ($('#Datetype').val() == 1) {
+            var datamnt = {};
+            datamnt.Fromdate = CurDate;
+            datamnt.Todate = CurDate;
+            datamnt.DeptId = 0;
+            datamnt.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanDashboard",
+                data: datamnt,
+                success: function (result) {
+                    SalesmanwiseSalesGraph(result, Grtype);
+                }
+            });
+        }
+        else if ($('#Datetype').val() == 2) {
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanWeeklyDashboard",
+                data: data,
+                success: function (result) {
+                    SalesmanwiseSalesGraphWeek(result, Grtype);
+                }
+            });
+        }
+        else if ($('#Datetype').val() == 3) {
+
+            var datamnt = {};
+            datamnt.Fromdate = $('#dpDateFrom').val();
+            datamnt.Todate = $('#dpDateTo').val();
+            datamnt.DeptId = 0;
+            datamnt.UserId = ERPUserId;
+
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanMonthlyDashboard",
+                data: datamnt,
+                success: function (result) {
+                    SalesmanwiseSalesGraphMonth(result, Grtype);
+                }
+            });
+        }
+        else if ($('#Datetype').val() == 4) {
+
+            var datamnt = {};
+            datamnt.Fromdate = $('#dpDateFrom').val();
+            datamnt.Todate = $('#dpDateTo').val();
+            datamnt.DeptId = 0;
+            datamnt.UserId = ERPUserId;
+
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanYearlyDashboard",
+                data: datamnt,
+                success: function (result) {
+                    SalesmanwiseSalesGraphYear(result, Grtype);
+                }
+            });
+        }
+      
+    }
+
+
+    function graphreport()
+    {
+        $("#graphreport").prop("checked", true);
+        SalesmanwiseGraphReport('column');
+    }
+    function GetFormattedDate(datetoformat) {
+        var todayTime = new Date(datetoformat);
+        var month = todayTime.getMonth() + 1;
+        var day = todayTime.getDate();
+        var year = todayTime.getFullYear();
+
+        if (day < 10)
+            day = '0' + day
+        if (month < 10)
+            month = '0' + month
+
+        return day + "/" + month + "/" + year;
+    }
+
+    function SalesmanwiseGraphReport(Grtype) {
+        $('#Loading').show();
+        var Condition = '', PayType = '', Salesman = '', Department = '';
+        var data = {};
+        var FromDate = $('#dpDateFrom').val();
+        var ToDate = $('#dpDateTo').val();
+        var PayType = $('#cmbPayType').val();
+        var Salesman = parseInt($('#cmbSalesMan').val() || 0);
+        var Department = parseInt($('#dept').val() || 0);
+
+
+
+
+
+
+        if ($("#graphreport").prop("checked")) {
+            var data = {};
+            data.Fromdate = $('#dpDateFrom').val();
+            data.Todate = $('#dpDateTo').val();
+            data.Paytype = $('#cmbPayType').val();
+            data.SalesmanId = $('#cmbSalesMan').val();
+            data.DeptId = $('#dept').val();
+            data.Userid = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanwiseGraphReport",
+                data: data,
+                success: function (result) {
+                    ShowReportShort(result, Grtype);
+                    $('#Loading').hide();
+                    $('#divreport').hide();
+                    $('#popupdiv').hide();
+                   // $('#Main').hide();
+                    $('#graph').show();
+                    $("#Graphical").prop("checked", true);
+                    $("#Summary").prop("checked", false);
+                }
+            });
+
+
+           if ($('#Datetype').val() == 0) {
+
+                var datamnt = {};
+                datamnt.Fromdate = $('#dpDateFrom').val();
+                datamnt.Todate = $('#dpDateTo').val();
+                datamnt.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/SalesmanwisePeriodReport",
+                    data: datamnt,
+                    success: function (result) {
+                            SalesmanwiseSalesGraphPeriod(result, Grtype);
+                    }
+                });
+            }
+           else if ($('#Datetype').val() == 1) {
+                var datamnt = {};
+                datamnt.Fromdate = CurDate;
+                datamnt.Todate = CurDate;
+                datamnt.DeptId = 0;
+                datamnt.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/SalesmanDashboard",
+                    data: datamnt,
+                    success: function (result) {
+                        SalesmanwiseSalesGraph(result, Grtype);
+                    }
+                });
+            }
+           else if ($('#Datetype').val() == 2) {
+
+               var XFromDate = CurDate.split('/');
+               var XXFromDate = XFromDate[2] + '-' + XFromDate[1] + '-' + XFromDate[0];
+
+
+               var prevSat = new Date(XXFromDate);
+               prevSat.setDate(prevSat.getDate() - (prevSat.getDay() + 8) % 7);
+               var FormatedDate = GetFormattedDate(prevSat);
+
+
+               var datamnt = {};
+               datamnt.Fromdate = FormatedDate;                                    //'01/' + mmmonth + '/' + hhh.getFullYear();
+               datamnt.Todate = CurDate;                               //'31/12/' + hhh.getFullYear();
+               datamnt.DeptId = 0;
+               datamnt.UserId = ERPUserId;
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/SalesmanWeeklyDashboard",
+                    data: datamnt,
+                    success: function (result) {
+                       
+                        SalesmanwiseSalesGraphWeek(result, Grtype);
+                    }
+                });
+            }
+            else if ($('#Datetype').val() == 3) {
+                var XFromDate = CurDate.split('/');
+
+                var datamnt = {};
+                datamnt.Fromdate = '01/' + XFromDate[1] + '/' + +XFromDate[2];              //$('#dpDateFrom').val();
+                datamnt.Todate = CurDate                                                    //$('#dpDateTo').val();
+                datamnt.DeptId = 0;
+                datamnt.UserId = ERPUserId;
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/SalesmanMonthlyDashboard",
+                    data: datamnt,
+                    success: function (result) {
+                        
+                        SalesmanwiseSalesGraphMonth(result, Grtype);
+                    }
+                });
+            }
+            else if ($('#Datetype').val() == 4) {
+
+                var datamnt = {};
+                datamnt.Fromdate = '01/01/' + hhh.getFullYear();
+                datamnt.Todate = CurDate;                                                         //$('#dpDateTo').val();
+                datamnt.DeptId = 0;
+                datamnt.UserId = ERPUserId;
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/SalesmanYearlyDashboard",
+                    data: datamnt,
+                    success: function (result) {
+                        SalesmanwiseSalesGraphYear(result, Grtype);
+                    }
+                });
+            }
+           
+
+        }
+
+        else {
+
+            Condition = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+           
+
+            if (PayType != 0) { Condition += ' and PayType=' + PayType; }
+
+            if (Salesman != 0) { Condition += ' and SalesManId=' + Salesman; }
+
+            if (Department != 0) { Condition += ' and DeptId=' + Department; }
+
+
+
+            var data = {};
+            data.Condition = Condition;
+            data.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/SalesmanwiseSalesGet",
+                data: data,
+                success: function (result) {
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                    $('#popupdiv').hide();
+                    $('#Main').show();
+                    $("#Summary").prop("checked", true);
+                    $("#Graphical").prop("checked", false);
+                    $('#graph').hide();
+                    ShowReport(result);
+
+                }
+            });
+            //var data = {};
+            //data.InvDate = $('#dpDateFrom').val();
+            //data.DueDate = $('#dpDateTo').val();
+            //data.SalesManId = $('#cmbSalesMan').val();
+            //data.PayType = $('#cmbPayType').val();
+            //data.Dept = $('#dept').val();
+            //data.Userid = ERPUserId;
+            //$.ajax({
+            //    type: "POST",
+            //    url: "../Purchaseandsalesreports/SalesmanwiseSalesGet",
+            //    data: data,
+            //    success: function (result) {
+            //        ShowReport(result);
+            //        $('#Loading').hide();
+            //        $('#divreport').show();
+            //        $('#popupdiv').hide();
+            //        $('#Main').show();
+            //        $('#graph').hide();
+            //    }
+           // });
+        }
+
+    }
+
+    function SalesmanwiseSalesGraph(result, Grtype) {
+
+        var Amount = [];
+        var SReturn = [];
+        var Total = [];
+        var SalesMan = [];
+        var GrData = [];
+        var Date = [];
+
+
+        if ($("#SalesReturn").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                var shodatesplit = result[i].Fromdate.split("/");
+                var ShowDate = shodatesplit[0] + '/' + shodatesplit[1];
+                SReturn.push(parseFloat(result[i].SReturn || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(ShowDate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].SReturn || 0) })
+            }
+        }
+        else if ($("#SalesValue").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                var shodatesplit = result[i].Fromdate.split("/");
+                var ShowDate = shodatesplit[0] + '/' + shodatesplit[1];
+                Amount.push(parseFloat(result[i].Amount || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(ShowDate)
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+            }
+        }
+        else if ($("#Both").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                var shodatesplit = result[i].Fromdate.split("/");
+                var ShowDate = shodatesplit[0] + '/' + shodatesplit[1];
+                Total.push(parseFloat(result[i].Total || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(ShowDate)
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Total || 0) })
+            }
+        }
+
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Salesman Daily Sales'
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Sales()'
+                }
+            },
+            colors: [
+                        '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Sales',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function SalesmanwiseSalesGraphWeek(result, Grtype) {
+
+        var Amount = [];
+        var SReturn = [];
+        var Total = [];
+        var SalesMan = [];
+        var GrData = [];
+        var Date = [];
+
+        if ($("#SalesReturn").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                SReturn.push(parseFloat(result[i].SReturn || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(result[i].Fromdate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].SReturn || 0) })
+            }
+
+        }
+        else if ($("#SalesValue").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Amount.push(parseFloat(result[i].Amount || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(result[i].Fromdate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+            }
+        }
+        else if ($("#Both").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Total.push(parseFloat(result[i].Total || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(result[i].Fromdate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Total || 0) })
+            }
+        }
+
+
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Salesman Weekly Sales '
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Sales()'
+                }
+            },
+            colors: [
+                    '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Sales',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function SalesmanwiseSalesGraphMonth(result, Grtype) {
+
+        var Amount = [];
+        var SReturn = [];
+        var Total = [];
+        var SalesMan = [];
+        var GrData = [];
+        var Date = [];
+
+        if ($("#SalesReturn").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                SReturn.push(parseFloat(result[i].SReturn || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(monthNames[result[i].Fromdate]);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].SReturn || 0) })
+            }
+
+        }
+        else if ($("#SalesValue").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Amount.push(parseFloat(result[i].Amount || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(monthNames[result[i].Fromdate]);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+            }
+        }
+        else if ($("#Both").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Total.push(parseFloat(result[i].Total || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(monthNames[result[i].Fromdate]);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Total || 0) })
+            }
+        }
+
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Salesman Month Wise Sales'
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Sales()'
+                }
+            },
+            colors: [
+                   '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Sales',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function SalesmanwiseSalesGraphYear(result, Grtype) {
+
+        var Amount = [];
+        var SReturn = [];
+        var Total = [];
+        var SalesMan = [];
+        var GrData = [];
+        var Date = [];
+        if ($("#SalesReturn").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                SReturn.push(parseFloat(result[i].SReturn || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(result[i].Fromdate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].SReturn || 0) })
+            }
+        }
+        else if ($("#SalesValue").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Amount.push(parseFloat(result[i].Amount || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(result[i].Fromdate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+            }
+        }
+        else if ($("#Both").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Total.push(parseFloat(result[i].Total || 0));
+                SalesMan.push(result[i].SalesMan);
+                Date.push(result[i].Fromdate);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Total || 0) })
+            }
+        }
+
+        
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Salesman Year Wise Sales'
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Sales()'
+                }
+            },
+            colors: [
+                    '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Sales',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function SalesmanwiseSalesGraphPeriod(result, Grtype) {
+
+        var Total = [];
+        var SReturn = [];
+        var Amount = [];
+        var SalesMan = [];
+        var GrData = [];
+        if ($("#SalesReturn").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                SReturn.push(parseFloat(result[i].SReturn || 0));
+                SalesMan.push(result[i].SalesMan);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].SReturn || 0) })
+            }
+        }
+        else if ($("#SalesValue").prop("checked") == true)
+        {
+            for (var i = 0; i < result.length; i++) {
+                Amount.push(parseFloat(result[i].Amount || 0));
+                SalesMan.push(result[i].SalesMan);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+            }
+        }
+
+        else if ($("#Both").prop("checked") == true) {
+            for (var i = 0; i < result.length; i++) {
+                Total.push(parseFloat(result[i].Total || 0));
+                SalesMan.push(result[i].SalesMan);
+                GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Total || 0) })
+            }
+        }
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Sales'
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: SalesMan
+            },
+            yAxis: {
+                title: {
+                    text: 'Sales()'
+                }
+            },
+            colors: [
+                   '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Sales',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+
+</script>
+<div class="myData" data-x="M64" />
+<div id="Main">
+ 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h5 id="header"></h5></td>
+                                <td width="20%"></td>
+                                <td >
+                                    <div class="row">
+                                       
+                                            <div class="col-md-5">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="Summary" checked="" onclick="Summary()" class="custom-control-input">
+                                                    <label class="custom-control-label" for="Summary">Summary</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="Graphical" class="custom-control-input" onclick="graphreport()">
+                                                    <label class="custom-control-label" for="Graphical">Graphical</label>
+                                                </div>
+                                            </div>
+                                       
+                                    </div>
+                                </td>
+
+                                <td align="right"><button type="button" style="width:100px;margin-left:20px" onclick="$('#popupdiv').show(),$('#cmbSalesMan').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+                                <hr style="margin-top:-1px;" />
+                                <div id="divreport" style="display:none;overflow:auto">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                              
+                                <div id="graph" style="display:none;margin-top:-25px;">
+                                    <div class="card-body">
+                                        <div class="card-block">
+                                            <div class="" style="float:left;margin-left:30px">
+                                                <select id="Datetype" class="" style="border:none" onchange="ChangeType()">
+                                                    <option value="0">Period</option>
+                                                    <option value="1">Daily</option>
+                                                    <option value="2">Weekly</option>
+                                                    <option value="3">Monthly</option>
+                                                    <option value="4">Yearly</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group" style="margin-left:75%">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="Both" checked="" name="Both" class="custom-control-input" onclick="SalesmanwiseGraphReport('column')">
+                                                    <label class="custom-control-label" for="Both">Both</label>
+                                                </div>
+                                                <div class="custom-control custom-radio custom-control-inline" style="margin-left:1%">
+                                                    <input type="radio" id="SalesValue" name="SalesValue" class="custom-control-input" onclick="SalesmanwiseGraphReport('column')">
+                                                    <label class="custom-control-label" for="SalesValue">Sales</label>
+                                                </div>
+                                                <div class="custom-control custom-radio custom-control-inline" style="margin-left:20px">
+                                                    <input type="radio" id="SalesReturn"  name="SalesReturn" class="custom-control-input" onclick="SalesmanwiseGraphReport('column')">
+                                                    <label class="custom-control-label" for="SalesReturn">Sales Return</label>
+                                                </div>
+                                               
+                                            </div>
+
+                                            <div id="line-area" class="height-350 lineArea">
+                                                <div id="Sales" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+
+                                                <div class="input-group" style="margin-top:-10px;">
+                                                 
+
+                                                    <div class="custom-control custom-radio custom-control-inline" style="margin-left:20px">
+                                                        <input type="radio" id="customRadioInline1" checked="" name="customRadioInline1" class="custom-control-input"  onclick="SalesmanwiseGraphReport('column')">
+                                                        <label class="custom-control-label" for="customRadioInline1">Column chart</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" onclick="SalesmanwiseGraphReport('line')">
+                                                        <label class="custom-control-label" for="customRadioInline2">Line chart</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input" onclick="('container')">
+                                                        <label class="custom-control-label" for="customRadioInline3">Pi chart</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input" onclick="('container2')">
+                                                        <label class="custom-control-label" for="customRadioInline4">Half-Pi chart</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                           <table id="salesrept" style="float:left;table-layout:fixed;width:700px;overflow:auto" border="1"></table>
+                                            <div class="card-body" id="pi" style="display:none;margin-left:20px;min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px">
+                                                <div id="container" style="min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px; margin: 0 auto;"></div>
+                                            </div>
+
+                                            <div class="card-body" id="halfpi" style="display:none;margin-left:20px;min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px;">
+                                                <div id="container2" style="min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px; margin: 0 auto"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                    @*<div id="Sales" style="min-width: 310px; height: 350px; margin: 0 auto">fgfgf</div>*@
+
+                                </div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog " role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Salesmanwise Performance Report</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+      
+
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:9.5%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dpDateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:10.5%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dpDateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:4%;"></div>
+                    <div class="row" style="margin-top:2%">
+                        <label style="margin-top:2%;font-weight:bold;margin-left:2%">Salesman</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="cmbSalesMan" class="form-control" name="priority"></select>
+                        </div>
+
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:1%">PayType</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="cmbPayType" class="form-control" name="priority">
+                                <option value="0">-All-</option>
+                                <option value="1">Cash</option>
+                                <option value="2">Credit</option>
+                                <option value="3">Card</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%">
+                        <label style="margin-top:2%;font-weight:bold;margin-left:9%">Dept.</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="dept" class="form-control" name="priority"></select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <fieldset class="form-group floating-label-form-group" style="margin-right:37%">
+                        <div class="row">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="customCheck" id="graphreport">
+                                <label class="custom-control-label" for="graphreport" style="font-weight:bold">Graphical Report</label>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                    <button type="button" style="width:100px;" id="btnGo" onclick="SalesmanwiseGraphReport('column')"  class="btn btn-primary">Go</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

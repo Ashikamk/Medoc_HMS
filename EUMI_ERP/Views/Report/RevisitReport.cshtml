@@ -1,0 +1,567 @@
+﻿
+@{
+    ViewBag.Title = "RevisitReport";
+}
+
+
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+    #btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnback:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnprint:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="myData" data-x="M368" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+
+
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td>
+                                    <div class="custom-control custom-radio display-inline-block black" style="float:right;font-weight:normal;font-size:x-large;margin-left: 10px;">
+                                        <input type="radio" id="Summary" name="customRadioInline3" class="custom-control-input" onchange=" Detailed(1)">
+                                        <label class="custom-control-label custsize" for="Summary">Summary</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="custom-control custom-radio display-inline-block black" style="float:right;font-weight:normal;font-size:x-large;margin-left: 5px">
+                                        <input type="radio" id="Detailed" name="customRadioInline3" class="custom-control-input" checked="" onchange="Detailed(0)">
+                                        <label class="custom-control-label custsize" for="Detailed">Detailed</label>
+                                    </div>
+                                </td>
+                                <td width="10%"></td>
+
+                                <td align="right" ;width="20%"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#User').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintthisReportWindows('RevisitREPORT', $('#LabBillsLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+                                <td align="right">
+
+
+
+
+
+
+                                    <div align="right">
+                                        <div class="heading-elements">
+                                            <div class="btn-group" id="buttonPlace">
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                            </tr>
+
+                            <tr><td><h6 id="headersub"></h6></td></tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+
+
+
+
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:.1%;width:130%" />
+
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="width:130%;margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Revisit Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:11%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:4%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:3%;"></div>
+                    <div class="row" style="margin-top:2%">
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:8%">Doctor</label>
+                        <div class="col-md-9" style="margin-top:2%">
+                            <input type="text" id="select_doc" maxlength="100" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;display:none">
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:7.5%">Patient</label>
+                        <div class="col-md-9" style="margin-top:2%">
+                            <input type="text" maxlength="100" id="Searchcode" onfocus="LoadRegNumber()" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+
+                    
+
+                    <div class="row" style="margin-top:2%">
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:8%">Dept&#160;&#160;&#160;&#160;&#160;</label>
+                        <div class="col-md-9" style="margin-top:2%">
+                            <select type="text" id="dept" maxlength="100" class="form-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:2%">
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:8%">User&#160;&#160;&#160;&#160;&#160;</label>
+                        <div class="col-md-9" style="margin-top:2%">
+                            <select type="text" id="UserId" maxlength="100" class="form-control"></select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:6%" id="btnsubmit" class="btn btn-primary">Go</button>
+                    <input type="hidden" id="LabBillsLength" class="form-control" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    $("#select_doc").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val('');
+            var data = {};
+            data.Name = $("#select_doc").val();
+            data.DoctorsId = $("#DocId").val();
+            data.Department = $("#Department").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Master/HMS_DoctorsSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.Name,
+                            label1: item.Department,
+                            Department: item.Department,
+                            DoctorsId: item.DoctorsId,
+                            Name: item.Name,
+
+
+                            headers: ["Name", "Department"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#DoctorId').val(ui.item.DoctorsId);
+
+        },
+
+
+
+
+    });
+
+    GetDepartment(0)
+    function GetDepartment(id) {
+        var data = {};
+        data.DeptId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result) {
+        $("#dept").empty();
+        $("#dept").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#dept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+
+    }
+
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+    UserList()
+    function UserList() {
+
+        var data = {};
+        data.UserId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UsersGetandGets",
+            data: data,
+            success: function (result) {
+                ShowUserslist(result.oList);
+            }
+        });
+
+    }
+
+
+    function ShowUserslist(result) {
+        $("#UserId").append("<option value='0'>All</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#UserId").append("<option value='" + result[i].UserId + "'>" + result[i].UserName + "</option>");
+
+        }
+
+    }
+
+
+
+
+
+    function LoadRegNumber() {
+        $("#Searchcode").autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+
+                $('#SearchcodeiD').val('');
+
+                var data = {};
+                data.PatientName = $("#Searchcode").val();
+                data.DeptId = ERPDeptId;
+                $.ajax({
+                    url: '../Revisit/HMS_PatientSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '2',
+                                label1: item.OPSerName + ' - ' + item.OPNumber,
+                                label: item.PatientName,
+                                PatientId: item.PatientId,
+                                DOB: item.DOB,
+                                Contact: item.Contact,
+                                OPNumber: item.OPNumber,
+                                PatientName: item.PatientName,
+                                headers: ["Patient", "RegNo"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#SearchcodeiD').val(ui.item.PatientId);
+
+            },
+
+
+        });
+    }
+
+    $(function () {
+
+        $('#User').focus();
+        $('#Dept').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth() , new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('#DateFrom,#DateTo').val(CurDate);
+
+        $("#btnsubmit").click(function (e) {
+
+
+            if ($('#DateFrom').val() == '') {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+
+            else {
+                $('#Loading').show();
+
+                var data = {};
+                data.FromDate = $('#DateFrom').val() + '##' + parseInt($('#UserId').val() || 0) + '$$' + parseInt($('#dept').val() || 0);
+                data.ToDate = $('#DateTo').val();
+                data.Doctor = parseInt($('#DoctorId').val() || 0);
+                data.Revisit_Id = parseInt($('#SearchcodeiD').val() || 0);
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/RevisitReport",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showreport(result);
+
+
+                    }
+                });
+            }
+        });
+
+    });
+
+
+    function Showreport(result) {
+        var Amount = 0;
+        var Paid = 0; var Nonpaid = 0;
+
+        $('#LabBillsLength').val(result.length);
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th align= center>Sl#</th><th>Revisit No</th><th> Date</th><th> Time</th><th>Patient</th><th>Doctor</th><th>Age</th><th class='Hidden'>Gender</th><th class='Hidden'>Address</th><th class='Hidden'>PhoneNo</th><th style='text-align:right;'> Revisit Fee</th><th style='text-align:right;'> Consut Fee</th><th style='text-align:right;'>Other Fee</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var XX = (result[i].RegDate).split("##")
+          
+           
+            var slno = parseInt(i + 1);
+            if (result[i].PName == 'Total') {
+                responseText += '<tr style="background:#d3d3d3"><td align= center id= Col1_' + slno + '>' + slno + '</td><td id= Col2_' + slno + '>' + " " + "" + " " + '</td><td id= Col3_' + slno + '>' + " " + '</td><td id= Col4_' + slno + '><b>' + result[i].PName + '</b></td><td id= Col5_' + slno + '>' + " " + '</td><td id= Col6_' + slno + '>' + " " + '</td><td id= Col6_' + slno + '>' + " " + '</td><td class="Hidden">' + " " + '</td><td class="Hidden">' + " " + '</td><td class="Hidden">' + " " + '</td><td align=right id= Col7_' + slno + '><b>' + parseFloat(result[i].RegFee).toFixed(Decimal) + '</b></td><td align= right id= Col8_' + slno + '><b>' + parseFloat(result[i].ConsultFee).toFixed(Decimal) + '</b></td><td align = right id= Col9_' + slno + '><b>' + parseFloat(result[i].OtherFee).toFixed(Decimal) + '</b></td></tr>';
+            }
+            else {
+                responseText += '<tr><td align= center id= Col1_' + slno + '>' + slno + '</td><td id= Col2_' + slno + '>' + result[i].Bloodgroup + '-' + result[i].RegNo + '</td><td id= Col3_' + slno + '>' + XX[0] + '</td>  <td id= Col3_' + slno + '>' + XX[1] + '</td>     <td id= Col4_' + slno + '>' + result[i].PName + '</td><td id= Col5_' + slno + '>' + result[i].Fathersname + '</td><td id= Col6_' + slno + '>' + result[i].Age + '</td><td class="Hidden">' + result[i].Mothersname + '</td><td class="Hidden">' + result[i].Address1 + '</td><td class="Hidden">' + result[i].PhoneNo + '</td><td align=right id= Col7_' + slno + '>' + parseFloat(result[i].RegFee).toFixed(Decimal) + '</td><td align= right id= Col8_' + slno + '>' + parseFloat(result[i].ConsultFee).toFixed(Decimal) + '</td><td align = right id= Col9_' + slno + '>' + parseFloat(result[i].OtherFee).toFixed(Decimal) + '</td></tr>';
+                Amount = parseFloat(parseFloat(result[i].RegFee) + parseFloat(result[i].ConsultFee) + parseFloat(result[i].OtherFee) || 0)
+                if (Amount == 0) { Nonpaid += 1; } else { Paid += 1; }
+            }
+        }
+        $('#Tblreport').html(responseText + '</tbody>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Revisit Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+
+        $('#header').text(title);
+
+        $('#headersub').text('PAID VISIT- ' + Paid + ' NON PAID VISIT-' + Nonpaid);
+
+        
+
+        if ($('#Summary').prop('checked')==true) {
+            Detailed(1);
+        }
+        else if ($('#Detailed').prop('checked')== true) {
+            Detailed(0);
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+    function Detailed(flag) {
+        if (flag == 0)
+        { $('.Hidden').show(); }
+        else
+        { $('.Hidden').hide(); }
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+
+        });
+        var table = null;
+        if (download) {
+
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+        // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+        table = $('#' + tablename).DataTable({
+            dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+            buttons: [],
+            "columnDefs": [
+                 { "width": "7%", "targets": 1 },
+                { "width": "7%", "targets": 2 },
+                { "width": "7%", "targets": 3 },
+              
+
+            ],
+
+        });
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11] }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] }
+                    },
+                    {
+                        extend: 'print',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11] }
+                    }
+                ]
+            },
+            'colvis'
+            ],
+
+        });
+
+        table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+        $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+    }
+
+</script>
+
+
+<div style="display:none">
+    <input type="text" id="DoctorId" />
+</div>
+<div style="display:none">
+    <input type="text" id="SearchcodeiD" />
+</div>
+
+
+
+
+
+
+

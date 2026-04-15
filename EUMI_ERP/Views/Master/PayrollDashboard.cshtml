@@ -1,0 +1,439 @@
+﻿
+@{
+    ViewBag.Title = "PayrollDashboard";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<style>
+    #Tblreport tr:hover {
+        background-color: cyan;
+    }
+
+    .abc {
+        background-color: orange;
+    }
+</style>
+
+<div class="myData" data-x="M188" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="25%"></td>
+                                @*<td>
+                                    <div class="btn-group" style="margin-left:50%">
+                                        <button class="btn btn-warning" style="width:150px" id="btnInv" onclick="getInvoice( $('#accountid').val(),$('#acccode').val(),$('#accdesc').val(),$('#custtype').val(),$('#custid').val())" type="button">Gratuity Report</button>
+                                    </div>
+                                </td>*@
+                                <td>
+                                    <div class="btn-group" style="margin-left:40%">
+                                        <button class="btn btn-primary"  onclick="getgratuity($('#EmpId').val(),$('#EmpName').val())" type="button">Gratuity Report</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" style="margin-left:30%">
+                                        <button class="btn btn-primary" onclick="getattendance($('#EmpId').val(), $('#EmpName').val())" type="button">Attendance Report</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" style="margin-left:30%">
+                                        <button class="btn btn-primary" onclick="getsalary($('#EmpId').val(), $('#EmpName').val())" type="button">Salary Report</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" style="margin-left:30%">
+                                        <button class="btn btn-primary" onclick="getdocument($('#EmpId').val(), $('#EmpName').val())" type="button">Documents</button>
+                                    </div>
+                                </td>
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+                            <div class="heading-elements">
+                                <hr style="margin-top:.1%" />
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                                <input type="text" id="EmpId" style="display:none" />
+                                <input type="text" id="EmpName" style="display:none" />
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function getid(EmpId,EmpName)
+    {
+       
+        $('#EmpId').val(EmpId);
+        $('#EmpName').val(EmpName);
+    }
+
+    function Showreport(result) {
+        console.log(result)
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th>Sl#</th><th>Account Code</th><th>Account Description</th><th>Balance</th><th>Credit Limit</th><th>Opening Balance</th><th>Address</th><th>Phone#</th><th>Email</th><th>Salesman</th><th>Contact Name</th><th>DueDays</th><th>Fx.</th><th>Area</th><th>Status</th><th>Created Date</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr  id="mltplerow_' + slno + '"  onclick=rowbgcolor(' + slno + ')>' +
+                '<td align=center>' +
+
+                '<input type="text" style="display:none;" id="aqaccid_' + slno + '" value="' + result[i].AccId + '" />' +
+                '<input type="text" style="display:none;" id="aqcustid_' + slno + '" value="' + result[i].CustId + '" />' +
+                '<input type="text" style="display:none;" id="aqacccode_' + slno + '" value="' + result[i].AccountCode + '" />' +
+                '<input type="text" style="display:none;" id="aqcusttype_' + slno + '" value="' + result[i].CustType + '" />'
+
+                + slno + '</td>' +
+
+
+                '<td>' + result[i].AccountCode + '</td><td id=' + "Desc" + result[i].AccId + '>' + result[i].AccDesc + '</td><td align=right>' + parseFloat(result[i].Balance).toFixed(Decimal) + '</td><td align=right>' + parseFloat(result[i].CreditLimit).toFixed(Decimal) + '</td><td align=right>' + parseFloat(result[i].OpenBal).toFixed(Decimal) + '</td><td>' + result[i].Address + '</td><td>' + result[i].PhoneNum + '</td><td>' + result[i].Email + '</td><td>' + result[i].SalesMan + '</td><td>' + result[i].ContactName + '</td><td>' + result[i].DueDays + '</td><td>' + result[i].Currency + '</td><td>' + result[i].Area + '</td><td>' + result[i].Status + '</td><td>' + result[i].CreatedDate + '</td></tr>';
+
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Account Code</th><th>Account Description</th><th> </th><th> </th><th> </th><th>Address</th><th>Phone#</th><th>Email</th><th>Salesman</th><th>Contact Name</th><th>DueDays</th><th>Fx.</th><th>Area</th><th>Status</th><th>Created Date</th></tr> </tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Payroll Dashboard";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+    function rowbgcolor(Id) {
+        var a;
+        try {
+            a = $('#Tblreport > tbody > tr:last-child()').attr('id').match(/\d+/)[0];
+        }
+        catch (err) {
+            a = 1;
+        }
+        for (var c = 1; c <= a; c++) {
+            $('#mltplerow_' + c).css('background-color', '');
+            $('#mltplerow_' + c).css('font-weight', '');
+        }
+        if (Id != 0) {
+            $('#mltplerow_' + Id).css('background-color', '#9fdfbf');
+            $('#mltplerow_' + Id).css('font-weight', 'bold');
+        }
+    }
+
+    function getgratuity(EmpId,EmpName)
+    {
+        if (EmpId != '') {
+            window.open('../PayRoll_LeaveApply/GratuityReport?EmpId=' + EmpId + '&EmpName=' + EmpName);
+        }
+    }
+
+    function getattendance(EmpId, EmpName)
+    {
+        if (EmpId != '') {
+            window.open('../SalaryManagement/AttendanceReport?EmpId=' + EmpId + '&EmpName=' + EmpName);
+        }
+    }
+
+    function getsalary(EmpId, EmpName)
+    {
+        if (EmpId != '') {
+            window.open('../SalaryManagement/SalaryReport?EmpId=' + EmpId + '&EmpName=' + EmpName);
+        }
+    }
+
+    function getdocument(EmpId, EmpName) {
+        if (EmpId != '') {
+            window.open('../master/employee?EmpId=' + EmpId + '&EmpName=' + EmpName);
+        }
+    }
+    
+    function getInvoice(AccId, AccountCode,AccDesc, CustType, CustId) {
+        if (CustType == 'C')
+        {
+
+            if ((usermenu1.indexOf("M54") != -1)) {
+                window.open('../Inventory/SalesInvoice?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+
+            }
+            else if ((usermenu1.indexOf("M227") != -1)) {
+                window.open('../Inventory/SalesInvoiceNew?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+
+        }
+        else if(CustType == 'S')
+        {
+            if ((usermenu1.indexOf("M31") != -1)) {
+                window.open('../inventory/PurchaseInvoice?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+
+            }
+            else if ((usermenu1.indexOf("M233") != -1)) {
+                window.open('../Purchase/PurchaseInvoiceNew?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+
+        }
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    $(function () {
+               // $('#Loading').show();
+
+                var data = {};
+                data.EmpId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/EmployeeGetandGets",
+                    data: data,
+                    success: function (result) {
+                        $('#divreport').show();
+                        ShowEmployeelist(result.oList);
+                       // $('#Loading').hide();
+                    }
+                });
+
+    });
+    function ShowEmployeelist(result) {
+        
+       disable_datatable('Tblreport');
+
+       var responseText = "<thead><tr><th width=1%;align=center;>Sl#</th><th>Emp.ID</th><th>Emp.Code</th><th>Name</th><th>Designation</th><th>Gender</th><th>Blood Group</th>"+
+           "<th>Date Of Join</th><th>Date Of Birth</th><th>Nationality</th><th>Email</th><th>User</th><th>Department</th>"+
+           "<th>Mobile#</th><th>Work Email</th><th>Manager</th><th>Payroll Type</th>" +
+           "<th>Passport#</th><th>Visa#</th><th>National ID#</th><th>Driving License#</th><th>Labour#</th><th>Insurance Company</th><th>Contract Type</th><th>File#</th>" +
+           "<th>Local Address</th><th>Telephone#</th><th>Country</th><th>International Address</th><th>Telephone#</th><th>Country</th>"+
+           "<th>Salary A/C</th><th>Advance A/C</th><th>Bank A/C#</th><th>Bank A/C Name</th><th align=right>Salary Amount</th>" +
+           "<th align=right>Visa Expense</th><th align=right>Salary Advance</th><th align=right>OT Rate</th><th align=right>OTS Rate</th><th align=center>Working Hours</th>" +
+           "<th align=right>Increments</th><th align=right>Net Salary</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slnos = parseInt(i + 1);
+            responseText += '<tr onclick=getid(' + result[i].EmpId + ',"' + result[i].Name + '")>' +
+                '<td align=center>' + slnos + '</td>'+
+                '<td>' + result[i].EmpId + '</td>'+
+                '<td>' + result[i].EmpCode + '</td>' +
+                '<td>' + result[i].Name + '</td>' +
+                '<td>' + result[i].DesignationDescription + '</td>' +
+                '<td>' + result[i].Gender + '</td>' +
+                '<td>' + result[i].BloodGroup + '</td>' +
+
+                '<td>' + result[i].DateofJoin + '</td>' +
+                '<td>' + result[i].DOB + '</td>' +
+                '<td>' + result[i].CountryName + '</td>' +
+                '<td>' + result[i].LCEmail + '</td>' +
+                '<td>' + result[i].EmployeeUserName + '</td>' +
+                '<td>' + result[i].DepartmentName + '</td>' +
+                
+
+                '<td>' + result[i].Mobile + '</td>' +
+                '<td>' + result[i].Email + '</td>' +
+                '<td>' + result[i].MangerName + '</td>' +
+                '<td>' + result[i].PayRollType + '</td>' +
+
+                '<td>' + result[i].PassportId + '</td>' +
+                '<td>' + result[i].VISANo + '</td>' +
+                '<td>' + result[i].NationalId + '</td>' +
+                '<td>' + result[i].DLNo + '</td>' +
+                '<td>' + result[i].LabourNo + '</td>' +
+                '<td>' + result[i].InsuranceCompanyName + '</td>' +
+                '<td>' + result[i].ContractType + '</td>' +
+                '<td>' + result[i].FileNo + '</td>' +
+
+
+                '<td>' + result[i].LCAddress1 + '</td>' +
+                '<td>' + result[i].LCMobile + '</td>' +
+                '<td>' + result[i].CLCountryName + '</td>' +
+                '<td>' + result[i].PCAddress1 + '</td>' +
+                '<td>' + result[i].PCMobile + '</td>' +
+                '<td>' + result[i].CPCountryName + '</td>' +
+
+
+                '<td>' + result[i].SalaryAccountCode + '</td>' +
+                '<td>' + result[i].AdvanceAccountCode + '</td>' +
+                '<td>' + result[i].BankAccount + '</td>' +
+                '<td>' + result[i].BankAccountName + '</td>' +
+                '<td align=right>' + parseFloat(result[i].BasicSalary).toFixed(Decimal) + '</td>' +
+                '<td align=right>' + parseFloat(result[i].VisaExpense).toFixed(Decimal) + '</td>' +
+                '<td align=right>' + parseFloat(result[i].SalaryAdvance).toFixed(Decimal) + '</td>' +
+                '<td align=right>' + parseFloat(result[i].OTRate).toFixed(Decimal) + '</td>' +
+                '<td align=right>' + parseFloat(result[i].OTSRate).toFixed(Decimal) + '</td>' +
+                '<td align=center>' + result[i].WorkingHours + '</td>' +
+                '<td align=right>' + parseFloat(result[i].IncrementAmount).toFixed(Decimal) + '</td>' +
+                '<td align=right>' + parseFloat(result[i].TotalNetSalary).toFixed(Decimal) + '</td>' +
+               
+                '</tr>';
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><th>Sl#</th><th>Emp.ID</th><th>Emp.Code</th><th>Name</th><th>Designation</th><th>Gender</th><th>Blood Group</th><th>Date Of Join</th><th>Date Of Birth</th><th>Nationality</th><th>Email</th><th>User</th><th>Department</th>' +
+           "<th>Mobile#</th><th>Work Email</th><th>Manager</th><th>Payroll Type</th>" +
+           "<th>Passport#</th><th>Visa#</th><th>National ID#</th><th>Driving Licence#</th><th>Labour#</th><th>Insurance Company</th><th>Contract Type</th><th>File#</th>" +
+           "<th>Local Address</th><th>Telephone#</th><th>Country</th><th>International Address</th><th>Telephone#</th><th>Country</th>"+
+           "<th>Salary A/C</th><th>Advance A/C</th><th>Bank A/C#</th><th>Bank A/C Name</th><th> </th>"+
+           "<th> </th><th> </th><th> </th><th> </th><th> </th>"+
+           '<th> </th><th> </th></tr><tfoot>');
+        var title = "Payroll Dashboard";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width=100%" />');
+
+            if (title == 'Emp.ID' || title == 'Emp.Code')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Name')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:250px" />');
+            if (title == 'User')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:250px" />');
+            if (title == 'Blood Group')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Date Of Join')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Date Of Birth')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Nationality')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Email' || title == 'Work Email' || title == 'File#' || title == 'Gender' || title == 'Mobile#')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Salary A/C' || title == 'Advance A/C')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Department' || title == 'Bank A/C Name')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Manager' || title == 'Country' || title == 'Telephone#' || title == 'Bank A/C#')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Payroll Type')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Passport#' || title == 'Visa#' || title == 'National ID#' || title == 'Driving License#' || title == 'Labour#' || title == 'Contract Type')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+            $('input[type="search"]').on('keyup change', function () {
+
+                    table.rows('.selected').deselect();
+                    table.row(':eq(0)', { page: 'current' }).select();
+
+                    var CurrentRow = document.getElementsByClassName('selected')[0].id
+                    var FindCurrentId = CurrentRow.split('_')
+                    console.log(FindCurrentId[1])
+                    console.log($('#aqaccid_' + FindCurrentId[1]).val());
+                   // getid($("#aqaccid_" + FindCurrentId[1]).val(), $("#aqcustid_" + FindCurrentId[1]).val(), $("#aqacccode_" + FindCurrentId[1]).val(), $("#aqcusttype_" + FindCurrentId[1]).val())
+
+                    //$('#accountid').val();
+                    //$('#acccode').val();
+                    ////$('#accdesc').val($("#aqaccid_"+FindCurrentId).val());
+                    //$('#custtype').val();
+                    //$('#custid').val();
+
+            });
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+</script>
+
+
+

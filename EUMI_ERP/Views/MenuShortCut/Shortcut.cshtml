@@ -1,0 +1,376 @@
+﻿
+@{
+    ViewBag.Title = "Shortcut";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M213" />
+<div class="form-actions">
+
+    <div class="form-body">
+        <form action="#">
+            <div class="card-body">
+                <div class="px-3">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-1" style="display:none" >
+                                    <label>User</label>
+                                </div>
+                                <div class="col-md-3" style="" >
+                                    <div class="form-group">
+                                        <input type="text" id="User" disabled style="height:40px;background-color:white" class="form-control" autocomplete="off">
+                                        <input type="hidden" id="UserId" />
+                                        <input type="hidden" id="UserName" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1" >
+                                    <button type="button" id="btnsubmit" style="" class="btn btn-primary">Submit <i class="fa fa-check-square-o"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv1">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um0" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv2">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um1" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv3">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um2" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um3" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="div1">
+    <div class="row" id="menutbl">
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+$('#User').val(window.LoggedInUserArray[3]);
+$('#UserId').val(ERPUserId);
+var MenuLength = 0;
+
+$(document).ready(function () {
+        $('#Loading').fadeIn();
+        getallmenus();
+        Defaultfocus();
+
+
+    //Save ShortCut
+        $("#btnsubmit").click(function () {
+          
+             
+            getid();
+
+            var data = {};
+            data.uid = ERPUserId;
+
+            data.username = window.LoggedInUserArray[3];
+            data.userright = rights;
+            data.delflag = 1;
+                $.ajax({
+                type: "POST",
+                url: "../MenuShortCut/ShortcutMenusInsertandUpdate",
+                data: data,
+                success: function (result) {
+                           
+                for (var i = 0; i < result.oList.length; i++) {
+                    var status = result.oList[i].status;
+                    Showalerts(status);
+                }
+
+                }
+                });
+            });
+ });
+
+
+    //LIST ALL USER RIGHT
+    function getallmenus() {        
+        if (ERPUserId != 0 && ERPUserId != '') {
+            var data = {};
+            data.uid = ERPUserId;
+
+
+            $.ajax({
+                type: "POST",
+                url: "../MenuShortCut/ShotcutMenuGetandGets",
+                data:data,
+                success: function (result) {
+                    showMenulist(result.oList);
+                    // CHECK ALREADY SAVED SHORTCUT
+                    var checkboxes = document.getElementsByName('customcheck');
+                    var data = {};
+                    data.uid = ERPUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../MenuShortCut/MenuGetandGets",
+                        data: data,
+                        success: function (result) {
+                          
+                            for (var j = 0; j < result.oList.length; j++) {
+
+                                for (var i = 1; i <= checkboxes.length; i++) {
+                                    console.log(($('#Menucodeid' + i).val() == result.oList[j].MenuCode));
+                                    if (($('#Menucodeid' + i).val() == result.oList[j].MenuCode)) {
+
+                                        $('#checklabel' + i).prop('checked', true);
+                                    }
+
+                                }
+                            }
+
+                        }
+                    });
+                }
+            });
+        }
+
+    }
+
+
+ function showMenulist(result) {
+        MenuLength = result.length;
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            var row = '';
+
+            if (result[i].HFlag=='MM')
+                row = '<li id="row' + slno + '" class="list-group-item"><div style="float:left"><a class="menu-item" target="_blank"><i class="fa fa-paper-plane-o mr-1"></i>  ' + result[i].MenuName + '</a></div> <div style="float:right"<fieldset><div class="custom-control custom-checkbox"><input style=display:none name="customcheck" type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+
+            else
+                row = '<li id="row' + slno + '" class="list-group-item"><div style="float:left"><a class="menu-item" target="_blank"><i class="fa fa-paper-plane-o mr-1"></i>  ' + result[i].MenuName + '</a></div> <div style="float:right"<fieldset><div class="custom-control custom-checkbox"><input type="checkbox" name="customcheck" class="custom-control-input chebox" onchange=check(' + slno + ') id="checklabel' + slno + '"><label class="custom-control-label" for="checklabel' + slno + '" ></label><input style=display:none type=text value="SS" id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+
+
+            //if (result[i].MasterId == 4 || result[i].MasterId == 6 || result[i].MasterId == 8 ) {
+            //    $('#um0').append(row);
+            //    $('#UMDiv1').show();
+            //}
+            //else if ( result[i].MasterId == 7 || result[i].MasterId == 9) {
+            //    $('#um1').append(row);
+            //    $('#UMDiv2').show();
+            //}
+            //else if (result[i].MasterId == 10 || result[i].MasterId == 11 || result[i].MasterId == 13 || result[i].MasterId == 20 || result[i].MasterId == 18 ) {
+            //    $('#um2').append(row);
+            //    $('#UMDiv3').show();
+            //}
+            //else if (result[i].MasterId == 5 || result[i].MasterId == 22 || result[i].MasterId == 12) {
+            //    $('#um3').append(row);
+            //    $('#UMDiv4').show();
+            //}
+            
+            //if ($('#head' + slno).val() == 'MM') {
+            //    $('#row' + slno).css('background-color', '#009DA0')
+            //    $("#row" + slno).css("color", "white");
+            //}
+
+            if (result[i].MasterId == 1 || result[i].MasterId == 2 || result[i].MasterId == 3 || result[i].MasterId == 16 || result[i].MasterId == 17 || result[i].MasterId == 21 || result[i].MasterId == 24) {
+                $('#um0').append(row);
+                $('#UMDiv1').show();
+            }
+            else if (result[i].MasterId == 4 || result[i].MasterId == 5 || result[i].MasterId == 12 || result[i].MasterId == 19 || result[i].MasterId == 15 || result[i].MasterId == 25) {
+                $('#um1').append(row);
+                $('#UMDiv2').show();
+            }
+            else if (result[i].MasterId == 6 || result[i].MasterId == 7 || result[i].MasterId == 14 || result[i].MasterId == 22 || result[i].MasterId == 20 || result[i].MasterId == 26) {
+                $('#um2').append(row);
+                $('#UMDiv3').show();
+            }
+            else if (result[i].MasterId == 8 || result[i].MasterId == 9 || result[i].MasterId == 10 || result[i].MasterId == 11 || result[i].MasterId == 13 || result[i].MasterId == 18 || result[i].MasterId == 27) {
+                $('#um3').append(row);
+                $('#UMDiv4').show();
+            }
+            if ($('#head' + slno).val() == 'MM') {
+                $('#row' + slno).css('background-color', '#009DA0')
+                $("#row" + slno).css("color", "white");
+            }
+
+        }
+        $('#Loading').fadeOut();
+ }
+
+    //User Autocomplete
+
+ $("#User").autocomplete({
+     delay: 0,
+     minLength: 0,
+     source: function (request, response) {
+         var data1 = {};
+         data1.UserName = $("#User").val();
+
+         $.ajax({
+             url: '../Master/UserSearchInUserMenuSettings',
+             type: "POST",
+             data: data1,
+             dataType: "json",
+             success: function (data) {
+
+                 response($.map(data, function (item) {
+
+                     return ({
+                         ColCount: '1',
+                         label: item.UserName,
+                         UserId: item.UserId,
+                         UserName: item.UserName,
+                         UserRole: item.UserRole,
+                         MenuCode: item.MenuCode,
+                         headers: ["User"]
+                     })
+                 }));
+             }
+
+         })
+
+     },
+     autoFocus: true,
+     select: function (event, ui) {
+         $('.chebox').prop('checked', false);
+         $('#UserId').val(ui.item.UserId);
+         if (ui.item.UserRole == 0 || ui.item.UserRole == '') {
+             $('#UserRole').val(0);
+         } else {
+             $('#UserRole').val(ui.item.UserRole);
+         }
+       
+        // GetCurrentMenu(ui.item.MenuCode) 
+         var checkboxes = document.getElementsByName('customcheck');
+             var data = {};
+             data.uid = ERPUserId;
+
+             $.ajax({
+                 type: "POST",
+                 url: "../MenuShortCut/MenuGetandGets",
+                 data: data,
+                 success: function (result) {
+                     // showMenu(result.oList)
+                    
+
+                     for (var j = 0; j < result.oList.length; j++)
+                     {
+                        
+                         for (var i = 1; i <= checkboxes.length; i++) {
+                             console.log(($('#Menucodeid' + i).val()==result.oList[j].MenuCode)); 
+                             if (($('#Menucodeid' + i).val()==result.oList[j].MenuCode)) {
+
+                                 $('#checklabel' + i).prop('checked', true);
+                             }
+                             
+                         }
+                     }
+                   
+                 }
+             });
+       },
+ });
+
+
+ function check(id) {
+    
+
+     var flg = 0;
+     var checkboxes = document.getElementsByName('customcheck');
+
+     for (var k = 1; k <= checkboxes.length; k++) { 
+        
+         if (( $('#checklabel' + k).prop("checked")) && ($('#head' + k).val() != 'MM')) {  
+             flg++;           
+         }
+     }
+    
+     if (flg > 20 )
+     {
+         warningshow('Limit Exceeded'); 
+        
+         $('#checklabel' + id).prop("checked", false); 
+         
+     }
+    
+ }
+ function Defaultfocus() {
+     $('#User').focus();
+ }
+
+ var rights = '';
+ function getid()
+ {
+     rights = '';
+     var checkboxes = 500;// document.getElementsByName('customcheck');
+     
+  
+    
+     for (var k = 0; k <=500; k++) {
+        
+         if (($('#checklabel' + k).prop("checked")) && ($('#head' + k).val() != 'MM')) {            
+             rights += $('#Menucodeid' + k).val() + ',';
+             console.log(rights)
+         }
+     }
+
+ }
+
+ function formrefresh() {
+
+     $('#User').val(window.LoggedInUserArray[3]);
+     $('#UserId').val(ERPUserId);
+   
+     $('#UserRole').val(0);
+     //$('.chebox').prop('checked', false);
+
+ }
+
+ function GetCurrentMenu(MenuCode) {
+     var array = MenuCode.split(',');
+     console.log('array ' + array)
+     for (var i = 1; i <= checkboxes.length; i++) {
+         console.log(array.indexOf($('#Menucodeid' + i).val()));
+         if (array.indexOf($('#Menucodeid' + i).val()) != -1) {
+
+             $('#checklabel' + i).prop('checked', true);
+         }
+     }
+   
+ }
+
+</script>

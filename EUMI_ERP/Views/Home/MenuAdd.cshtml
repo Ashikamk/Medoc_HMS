@@ -1,0 +1,467 @@
+﻿
+@{
+    ViewBag.Title = "MenuAdd";
+}
+
+<script>
+
+    if (ERPUserId != 1) {
+        window.location = '../Home/Logout';
+        localStorage.clear();
+        alert('InValid User Rights')
+    }
+</script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">Add New Menu</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body">
+
+                                        <div class="row">
+
+                                            <div class="col-md-3">
+                                                <label for="menumaster">Menu Master<span class="danger">*</span></label>
+                                                <div class="input-group">
+                                                    <select id="menumaster" class="form-control" aria-describedby="addmenumaster">
+                                                        <option value=0>---Select MenuMaster---</option>
+                                                    </select>
+                                                    <div class="input-group-append" id="addmenumaster">
+                                                        <button class="btn btn-outline-primary" onclick="AddMainMenu()" type="button" id="addnewmennumst">+</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Menu Code<span class="danger">*</span></label>
+                                                    <input type="text" id="menucode" autocomplete="off" class="form-control" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Menu Name<span class="danger">*</span></label>
+                                                    <input type="text" id="menuname" autocomplete="off" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Url<span class="danger">*</span></label>
+                                                <input type="text" id="url" autocomplete="off" class="form-control">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <fieldset>
+                                                <div class="custom-control custom-checkbox" >
+                                                    <input type="checkbox" class="custom-control-input" id="masterflag">
+                                                    <label class="custom-control-label" for="masterflag">Master Flag</label>
+                                                </div>
+                                            </fieldset>
+                                            </div>
+                                        </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <fieldset>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="invflag">
+                                                    <label class="custom-control-label" for="invflag">Inventory Flag</label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <fieldset>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="reportflag">
+                                                    <label class="custom-control-label" for="reportflag">Report Flag</label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                            <div class="form-actions right">
+                                                <button type="button" style="width:100px" id="btnsubmit" onclick="SaveMenuSub()" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                <button type="button" style="display:none;width:100px" id="btnupdate" onclick="UpdateMenuSub()" class="btn btn-primary btn-min-width mr-1 mb-1"><u>U</u>pdate <i class="fa fa-check-square-o"></i></button>
+                                                <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                                <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                @*<button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>*@
+                                            </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title">Menu List</h4></td>
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div class="btn-group">
+                                            <button type="button" onclick="closetable()" class="btn btn-outline-primary"><i class="ft-edit"></i> Add New</button>
+                                            <button type="button" class="btn btn-outline-primary"><i class="ft-edit"></i> Export</button>
+                                            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">Excel</a>
+                                                <a class="dropdown-item" href="#">PDF</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Print</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard">
+                            <table id="tblmenulist" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h5 class="modal-title" id="myheader">NEW MAIN MENU</h5>
+                <button type="button" class="close" onclick="popuprefresh();" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="ccc" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:150px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="mainmaster">Main Menu<span class="danger">*</span></label>
+                        <input type="text" id="mainmaster" onkeyup="" class="form-control">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh();" data-dismiss="modal" value="Close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnmainmastersave" onclick="SaveMainMater()">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    GetMenuMaster();
+    GetLatetstMenuCode();
+    Defaultfocus();
+
+    function GetMenuMaster() {
+        var data = {};
+        $.ajax({
+            type: "POST",
+            url: "../Home/GetMenuMaster",
+            data: data,
+            success: function (result) {
+                GetMenuM(result.oList);
+
+            }
+        });
+    }
+
+    function GetMenuM(result) {
+        $("#menumaster").empty();
+        $("#menumaster").append("<option value='0'>---Select MenuMaster---</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#menumaster").append("<option value='" + result[i].MasterId + "'>" + result[i].MenuName + "</option>");
+        }
+    }
+
+    function GetLatetstMenuCode() {
+        var data = {};
+        $.ajax({
+            type: "POST",
+            url: "../Home/GetLatetstMenuCode",
+            data: data,
+            success: function (result) {
+
+                var MenuCodeCurrent = parseInt(result.oList[0].MenuCode);
+                $('#menucode').val('M' + MenuCodeCurrent);
+
+            }
+        });
+    }
+
+    function SaveMenuSub() {
+        if ($("#menumaster").val() == 0) {
+            warningshow('Please Select Menu Master', 'menumaster');
+        }
+        else if ($('#menucode').val() == '') {
+            warningshow('InValid Menu Code', 'menucode');
+        }
+        else if ($('#menuname').val() == '') {
+            warningshow('InValid Menu Name', 'menuname');
+        }
+        else if ($.trim($('#url').val()) == '') {
+            warningshow('InValid URL', 'url');
+        }
+        else {
+            var data = {};
+            data.MasterId = $("#menumaster").val();
+            data.MenuCode = $("#menucode").val();
+            data.MenuName = $('#menuname').val();
+            data.URL = $('#url').val();
+
+            if ($('#masterflag').prop("checked"))
+                data.MasterFlag = 1;
+            else
+                data.MasterFlag = 0;
+
+            if ($('#invflag').prop("checked"))
+                data.InvFlag = 1;
+            else
+                data.InvFlag = 0;
+
+            if ($('#reportflag').prop("checked"))
+                data.ReportFlag = 1;
+            else
+                data.ReportFlag = 0;
+
+            
+
+            $.ajax({
+                type: "POST",
+                url: "../Home/SaveMenuSub",
+                data: data,
+                success: function (result) {
+                    var status = result.oList[0].Status;
+                    $('#btnsubmit').prop('disabled', false);
+                    Showalerts(status);
+                }
+            });
+        }
+    }
+
+    function formrefresh() {
+       $("#menumaster").val(0);
+       GetLatetstMenuCode();
+       $('#menuname').val('');
+       $('#url').val('');
+       $('#masterflag').prop("checked", false);
+       $('#invflag').prop("checked", false);
+       $('#reportflag').prop("checked", false);
+       Defaultfocus();
+       $('#btnupdate').hide();
+       $('#btnsubmit').show();
+    }
+    function Defaultfocus() {
+        $("#menumaster").focus();
+    }
+
+    function GetRows() {
+        var data = {};
+        $.ajax({
+            type: "POST",
+            url: "../Home/GetMenuList",
+            data: data,
+            success: function (result) {
+                ShowMenuList(result.oList);
+            }
+        });
+
+    }
+
+    function ShowMenuList(result) {
+        disable_datatable('tblmenulist');
+        $('#Entry').hide();
+        $('#listing').show();
+        $('#btnnew').show();
+        var responseText = "<thead><tr><th width=15px>Slno</th><th>Main Menu</th><th>Sub Menu</th><th>Menu Code</th><th>URL</th><th width=15px>Edit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td>' + slno + '</td><td>' + result[i].MainMenu + '</td><td>' + result[i].MenuName + '</td><td>' + result[i].MenuCode + '</td><td>' + result[i].URL + '</td><td><a onclick="GetSubMenu('+"'"+result[i].MenuCode+"'"+')">' + Editbutton + '</a></td></tr>';
+        }
+        $('#tblmenulist').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>Main Menu</th><th>Sub Menu</th><th>Menu Code</th><th>URL</th><th>Edit</th></tr></tfoot>');
+        datatableWithsearch('tblmenulist');
+    }
+
+
+    function GetSubMenu(MenuCode) {
+        var data = {};
+        data.MenuCode = MenuCode
+        $.ajax({
+            type: "POST",
+            url: "../Home/GetSubMenu",
+            data: data,
+            success: function (result) {
+                ShowEditSubMenu(result.oList);
+            }
+        });
+    }
+
+    function ShowEditSubMenu(result) {
+        $('#btnupdate').show();
+        $('#btnsubmit').hide();
+
+        $("#menumaster").val(result[0].MasterId);
+        $("#menucode").val(result[0].MenuCode);
+        $('#menuname').val(result[0].MenuName);
+        $('#url').val(result[0].URL);
+
+        if (result[0].MasterFlag ==1 )
+            $('#masterflag').prop("checked",true);
+        else
+            $('#masterflag').prop("checked", false);
+
+        if (result[0].InvFlag == 1)
+            $('#invflag').prop("checked", true);
+        else
+            $('#invflag').prop("checked", false);
+
+        if (result[0].ReportFlag == 1)
+            $('#reportflag').prop("checked", true);
+        else
+            $('#reportflag').prop("checked", false);
+
+        $('#listing').hide();
+        $('#Entry').show();
+        
+    }
+
+
+    function UpdateMenuSub() {
+        if ($("#menumaster").val() == 0) {
+            warningshow('Please Select Menu Master', 'menumaster');
+        }
+        else if ($('#menucode').val() == '') {
+            warningshow('InValid Menu Code', 'menucode');
+        }
+        else if ($('#menuname').val() == '') {
+            warningshow('InValid Menu Name', 'menuname');
+        }
+        else if ($.trim($('#url').val()) == '') {
+            warningshow('InValid URL', 'url');
+        }
+        else {
+            var data = {};
+            data.MasterId = $("#menumaster").val();
+            data.MenuCode = $("#menucode").val();
+            data.MenuName = $('#menuname').val();
+            data.URL = $('#url').val();
+
+            if ($('#masterflag').prop("checked"))
+                data.MasterFlag = 1;
+            else
+                data.MasterFlag = 0;
+
+            if ($('#invflag').prop("checked"))
+                data.InvFlag = 1;
+            else
+                data.InvFlag = 0;
+
+            if ($('#reportflag').prop("checked"))
+                data.ReportFlag = 1;
+            else
+                data.ReportFlag = 0;
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "../Home/UpdateMenuSub",
+                data: data,
+                success: function (result) {
+                    var status = result.oList[0].Status;
+                    $('#btnsubmit').prop('disabled', false);
+                    Showalerts(status);
+                }
+            });
+        }
+
+    }
+    function closetable() {
+        formrefresh();
+        $('#listing').hide();
+        $('#Entry').show();
+        Defaultfocus();
+    }
+
+    function AddMainMenu() {
+        $('#mainmaster').val('');
+        $('#popupdiv').show();
+        $('#ccc').show();
+        $('#mainmaster').focus();
+    }
+    function popuprefresh() {
+        $('#mainmaster').val('');
+        $('#popupdiv').hide();
+        $('#ccc').hide();
+    }
+
+
+    function SaveMainMater() {
+        if ($.trim($('#mainmaster').val()) == '') {
+            warningshow('InValid Menu Name', 'mainmaster');
+        }
+        else {
+                var data = {};
+                data.MenuNmae = $("#mainmaster").val();
+               
+                $.ajax({
+                    type: "POST",
+                    url: "../Home/SaveMainMenu",
+                    data: data,
+                    success: function (result) {
+                        var status = result.oList[0].Status;
+                        $('#btnsubmit').prop('disabled', false);
+                        popuprefresh();
+                        Showalerts(status);
+                        if (status == 1) {
+                            GetMenuMaster();
+                        }
+                    }
+                });
+
+        }
+
+    }
+</script>
+

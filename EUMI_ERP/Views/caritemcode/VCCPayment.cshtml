@@ -1,0 +1,868 @@
+﻿
+@{
+    ViewBag.Title = "VCCPayment";
+}
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<script type="text/javascript" src="~/ProjectScript/DosPrint.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+
+
+<style>
+    #fixed {
+        width: 100%;
+        position: fixed;
+        top: 0px;
+    }
+
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+    .tblwidth{
+        width:100%
+
+    }
+
+</style>
+<div class="myData" data-x="M200" />
+
+<div id="Entry" style="margin-top:-20px;">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0" style="float:left;color:orange;font-weight:600;font-size:x-large" id="vccid">Deposit Paid</h4>
+                    <h3 class="col-md-3 text-md-right" id="gndtotal" style="float:right;color:red;font-weight:500">0.00</h3>
+
+
+                </div>
+                <div class="card-body" style="margin-top:-00px">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr style="margin-top:0px" />
+                                    <div class="row" style="background-color:#E0F3F4;margin-left:3px;width:100%;margin-top:-20px;height:225px">
+
+                                        <div class="col-md-12">
+                                            <br />
+                                            <div class="form-group">
+
+
+
+                                                <div class="hopscotch-bubble animated tour-demo-tour" id="tour1" style="position: absolute; top: 65px; left:18%;display:none">
+                                                    <div class="hopscotch-bubble-container" style="width: 280px; padding: 10px;">
+                                                        <div class="hopscotch-bubble-content">
+                                                            <h3 class="hopscotch-title">Search Invoice Number Here.</h3>
+                                                            <div class="hopscotch-content"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hopscotch-bubble-arrow-container hopscotch-arrow up">
+                                                        <div class="hopscotch-bubble-arrow-border"></div>
+                                                        <div class="hopscotch-bubble-arrow"></div>
+                                                    </div>
+                                                </div>
+
+
+
+
+
+
+
+                                                <div class="form-group">
+                                                    <div class="row col-md-12" style="">
+                                                        <label class="text-lg-left col-md-1">VCC No#</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control defualtdisabled" id="vccnoid" style="" disabled>
+                                                        </div>
+                                                        <label class="text-lg-right col-md-1">Account Type</label>
+                                                        <div class="col-md-2">
+                                                            <select id="Accounttypeid" style="" class="form-control">
+                                                                <option value="Cash">Cash</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Currency</label>
+                                                        <div class="col-md-2">
+                                                            <select id="select_crncy" class="form-control defualtdisabled" style="background-color:white" disabled onchange="CurrencyChange(this.id)"></select>
+                                                        </div>
+                                                        <label class="text-lg-right col-md-1">Account</label>
+                                                        <div class="col-md-2">
+
+                                                            <input type="text" id="Accountvcc" class="form-control" style="">
+                                                            <input type="text" id="AccountvccID" class="form-control" style="display:none" value="0">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row col-md-12" style="margin-top:5px">
+                                                        <label class="text-lg-left col-md-1">Customer</label>
+                                                        <div class="col-md-2">
+
+                                                            <input type="text" id="txtcustomer" class="form-control"  style="" onkeyup="changetoupper(this.id)">
+                                                            <input type="text" id="txtCustId" style="display:none" />
+
+                                                        </div>
+                                                        <label class="text-lg-right col-md-1">Date</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" style="" class="form-control" id="date" autocomplete="off">
+
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Rate</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" id="txtcrncyrate" disabled style="background-color:white" class="form-control defualtdisabled" onkeypress="return isNumbercheck(event, this)" onkeyup="calcbaseamount()" autocomplete="off">
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Exit Date</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" id="exitpaperdate" style="" class="form-control"  autocomplete="off">
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row col-md-12" style="margin-top:5px">
+                                                        <label class="text-lg-left col-md-1">Address</label>
+                                                        <div class="col-md-2">
+
+                                                            <input type="text" id="addressid" class="form-control" style="height:80px">
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Chassis No#</label>
+                                                        <div class="col-md-2">
+                                                            <input type="hidden" id="hiddenitemId" />
+                                                            <input type="text" class="form-control" id="chassisnoid" style="height:80px;font-weight:600;color:black;font-size:large" autocomplete="off" >
+
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Amount</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" disabled id="amountid" class="form-control defualtdisabled" style="height:80px;text-align:center;font-size:x-large;background-color:white;color:black;font-weight:600" onkeypress="return isNumbercheck(event, this)"  autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" id="txtmsg" disabled class="form-control defualtdisabled" style="border:none;background-color:#E0F3F4;position:absolute;height:80px;color:blue;font-weight:500;font-size:x-large" autocomplete="off">
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="px-2">
+                                        <div id="customView" class="jsgrid" style="position: relative; height: 290px; width:100%; margin-top:14px;overflow-x: auto;overflow-y: hidden; ">
+                                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:100%;">
+                                                <table class="jsgrid-table tblwidth">
+                                                    <tr class="jsgrid-header-row">
+
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:10px">No</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">VCC No</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">VCC Date</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px">Description</th>                                                       
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Amount</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Currency</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Base Amount</th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height:246px; width:100%;border:#6c757d">
+                                                <table class="jsgrid-table tblwidth" id="tblvcc"></table>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </div>
+
+                                    <div class="text-right px-3" style="height:100px;top:0px">
+
+                                        <br />
+                                        <button type="button" id="btnsubmit" onclick="SaveVCCP()" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                        <button type="button" style="width:100px" id="btnlist" onclick="copyvccp()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy<i class="ft-align-justify"></i></button>
+                                        <button type="button" id="btnnew" onclick="createnew()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                        <button type="button" id="PendingVCC" onclick="window.open('../caritemcode/VCCIssuedReport')" class="btn btn-primary btn-min-width mr-1 mb-1">Pending VCC Payment <i class="icon-layers"></i></button>
+                                         <button style="display:none" type="button" id="btnprint" onclick="PrintthisBill()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="alertpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:25%">
+        <div class="modal-content" style="width:600px">
+            <form id="alertdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="placeholder"></div>
+                        <div class="col-md-12" style="overflow:scroll;height:auto;width:100%;overflow:auto;">
+                            <div class="swal2-icon swal2-success animate" style="display: block;"><span class="line tip animate-success-tip"></span> <span class="line long animate-success-long"></span><div class="placeholder"></div> <div class="fix"></div></div>
+                            <br />
+                            <h2 id="savealert" class="text-center"></h2>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <input type="button" class="btn btn-primary" value="Print" id="btnok">
+                        <input type="button" class="btn btn-outline-primary" value="Cancel" id="btncnclalrt">
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div style="display:none">
+    <table id="DosPrintPV" class="dataTablePV"></table>
+    <input id="txtinvono1" />
+    <input id="prodesc1"/>
+</div>
+
+
+
+<input id="VoucherNoMain" style="display:none"/>
+
+
+<script>
+
+    var CopyFlag = 0;
+    $(document).ready(function () {
+
+        $('#chassisnoid').focus();
+        $('#amountid').val(parseFloat(0).toFixed(Decimal));
+        $('#gndtotal').text(parseFloat(0).toFixed(Decimal));
+
+        $('#date,#exitpaperdate ').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        serialnoload();
+        GetCurrency(0);
+
+        $('#chassisnoid').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 8) {
+                clearitemcode();
+            }
+
+        });
+        $('#vccnoid').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 8) {
+                $('#chassisnoid').val('');
+                clearitemcode();
+            }
+
+        });
+        $('#Accountvcc').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 8) {
+                $("#AccountvccID").val(0);
+            }
+
+        });
+
+    });
+
+    function PrintthisBill()
+    {
+        if (VoucherBillType == 'USEDCARS-LAZOR') {
+            if (CopyFlag == 1)
+                PrintthisBillWindows('VCCPaid', $('#tblvcc tr').length, 'LAZORCOPY')
+            else
+                PrintthisBillWindows('VCCPaid', $('#tblvcc tr').length, 'LAZORSAVE')
+        }
+        else {
+            for (var k = 1; k <= $('#tblvcc tr').length; k++) {
+                $('#txtinvono1').val($('#vccno' + k).val())
+            }
+            PrintVCCPaymentSave($('#tblvcc tr').length)
+        }
+    }
+
+    function warningpopupshow(message, Id) {
+        $('#type-error').text(message);
+        $('#alertpopupy').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#alertpopupy').hide();
+        }, 3000);
+    }
+
+
+
+
+
+    var BaseCurrency;
+
+    function CurncyLoad(result, a) {
+        $("#select_crncy").empty();
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].BaseCurrencyId != 0) {
+                BaseCurrency = result[i].BaseCurrencyId;
+            }
+        }
+        $("#select_crncy").append("<option value='0'>--Select--</option>");
+
+        for (var i = 0; i < result.length; i++) {
+            $("#select_crncy").append("<option value='" + result[i].Id + "' name='" + result[i].CurrencyRate + "'>" + result[i].CurrencyName + "</option>");
+        }
+        if (a == 0) {
+            $('#select_crncy').val(BaseCurrency);
+            $('#txtcrncyrate').val($('#select_crncy').find("option:selected").attr("name"));
+
+        }
+        else {
+            $('#select_crncy').val(a);
+            $('#txtcrncyrate').val($('#select_crncy').find("option:selected").attr("name"));
+        }
+    }
+
+    function CurrencyChange(Id) {
+        $('#txtcrncyrate').val($('#' + Id).find("option:selected").attr("name"));
+        calcbaseamount();
+    }
+
+
+    function GetCurrency(id) {
+
+        var data = {};
+        data.Id = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CurrencyGetandGets",
+            data: data,
+            success: function (result) {
+                CurncyLoad(result.oList, id);
+            }
+        });
+    }
+
+
+
+    $("#Accountvcc").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.AccountDescription = $("#Accountvcc").val();
+            $.ajax({
+                url: '../Inventory/AccountNumberSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DebitAccount,
+                            label1: item.AccountDescription,
+                            DebitAccount: item.DebitAccount,
+                            AccountDescription: item.AccountDescription,
+                            AccountId: item.AccountId,
+                            headers: ["Account Code", "Description"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#AccountvccID').val(ui.item.AccountId)
+            $('#Accountvcc').val(ui.item.DebitAccount);
+            //$('#accountdescription').val(ui.item.AccountDescription);
+
+        },
+    });
+
+
+
+
+
+    $("#txtcustomer").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.CustName = $("#txtcustomer").val();
+            data.CustType = 'C';
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2ph',
+                            label: item.CustName,
+                            label1: item.CustAccount,
+                            label2: item.PhoneNumber,
+                            CustName: item.CustName,
+                            Address: item.CustStreet1 + '\n' + item.CustCity1 + '\n' + item.CustState1,
+                            Street: item.CustStreet1,
+                            City: item.CustCity1,
+                            State: item.CustState1,
+                            TRNNumber: item.TRNNumber,
+                            CustId: item.CustId,
+                            SalesmanId: item.SalesmanId,
+                            CurncyId: item.CurrencyId,
+                            CustTermsId: item.CustTermsId,
+                            AreaId: item.AreaId,
+                            PriceGroupId: item.PriceGroupId,
+                            headers: ["Customer Name", "Account Code", "Phone No"]
+                        })
+                    }));
+                }
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#txtcustomer').val(ui.item.CustName);
+            $('#txtaddress').val(ui.item.Address);
+            $('#txtCustId').val(ui.item.CustId);
+        }
+    });
+
+    $("#chassisnoid").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#chassisnoid").val();
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            label2: item.UnitName,
+                            label3: item.SellingPrice.toFixed(Decimal),
+                            label4: '0',
+                            label5: '0',
+                            ItemId: item.ItemId,
+                            ItemCode: item.ItemCode,
+                            Description: item.Description,
+                            headers: ["Item Code", "Description", "Unit Name", "Average Cost"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#hiddenitemId').val(ui.item.ItemId);
+            $('#chassisnoid').val(ui.item.ItemCode);
+            $('#prodesc1').val(ui.item.Description);
+            var data = {};
+            data.ProductId = $('#hiddenitemId').val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../../caritemcode/VCCReceivedAmountGet",
+                data: data,
+                success: function (result) {
+                        GetVCCReceviedAmount(result.oList);
+                }
+            });
+        },
+    });
+
+    $("#vccnoid").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.PaymentVCCNo = $("#vccnoid").val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../caritemcode/VCCPaymentGetandGets',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data + 'data');
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TH3',
+                            label: item.PaymentVCCNo,
+                            label1: item.VCCDate,
+                            label2: item.ProductName,
+                            PaymentVCCNo: item.PaymentVCCNo,
+                            VCCDate: item.VCCDate,
+                            ProductName: item.ProductName,
+                            VCCNo: item.VCCNo,
+                            CustomerName: item.CustomerName,
+                            CustomerAddress: item.CustomerAddress,
+                            AccountType: item.AccountType,
+                            ProductName: item.ProductName,
+                            Product:item.Product,
+                            CurrencyId: item.CurrencyId,
+                            CurrencyRate: item.CurrencyRate,
+                            FCAmount: item.FCAmount,
+                            Amount: item.Amount,
+                            VCCRDate: item.VCCRDate,
+                            ProductCode: item.ProductCode,
+                            VCCPAmt: item.VCCPAmt,
+                            VCCBAmount: item.VCCBAmount,
+                            CurrencyName: item.CurrencyName,
+                            Account: item.Account,
+                            AccountId: item.AccountId,
+                            ExitDate: item.ExitDate,
+                            headers: ["VCC No", "VCC Date", "Chassis No"]
+                        })
+                    }));
+                }
+            })
+        },
+
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#tblvcc tr').remove();
+            $('#vccnoid').val(ui.item.PaymentVCCNo);
+            $('#date').val(ui.item.VCCDate);
+            $('#addressid').val(ui.item.CustomerAddress);
+            $('#txtcustomer').val(ui.item.CustomerName);
+            $('#select_crncy').val(ui.item.CurrencyId);
+            $('#txtcrncyrate').val(ui.item.CurrencyRate);
+            $('#amountid').val(parseFloat(ui.item.FCAmount).toFixed(Decimal));
+            $('#chassisnoid').val(ui.item.ProductName);
+            $('#gndtotal').text(parseFloat(ui.item.Amount).toFixed(Decimal));
+
+            $("#Accountvcc").val(ui.item.Account);
+            $("#AccountvccID").val(ui.item.AccountId);
+            $("#exitpaperdate").val(ui.item.ExitDate);
+            $('#prodesc1').val(ui.item.Product);
+
+            var slno = 1;
+            var VCCRowEdit = "<tr id=" + 'row' + slno + " class= jsgrid-row ><td  id=" + 'td' + slno + " class= jsgrid-cell  style= width:10px;text-align:center >"
+                     + slno + "</td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:30px;text-align:center' ><input type='text' class='form-control' disabled=disabled  style='background-color:white;height:30px;border:none;' id='vccno" + slno + "' value='"
+                     + ui.item.VCCNo + "'> </td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:30px;text-align:center'> <input type='text' class='form-control'  disabled  style='background-color:white;height:30px;border:none;' id='vccdate" + slno + "' value='"
+                     + ui.item.VCCRDate + "'> </td>  <td class= 'jsgrid-cell jsgrid-align-left' style='width:50px;'><input type='text' class='form-control text-left'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='desc" + slno + "' value='"
+                     + ui.item.ProductCode + "'><input type='text' class='form-control text-left'  disabled=disabled  style='background-color:white;height:30px;border:none;display:none'   id='productdesc" + slno + "' value='"
+                     + ui.item.Product + "'></td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input type='text' class='form-control text-right'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='famnt" + slno + "' value='"
+                     + parseFloat(ui.item.VCCPAmt).toFixed(Decimal) + "'></td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled style='background-color:white;height:30px;border:none;' id='curr" + slno + "' value="
+                     + ui.item.CurrencyName + "></td><td class= 'jsgrid-cell jsgrid-control-field jsgrid-align-left'  style='width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled  style='background-color:white;height:30px;background-color:white;border:none;' readonly onkeyup=''   id='bamnt" + slno + "' value="
+                     + parseFloat(ui.item.VCCBAmount).toFixed(Decimal) + "></td></tr>";
+            $('#tblvcc').append(VCCRowEdit);
+            $('#btnprint').show();
+        },
+    });
+
+
+    function GetVCCReceviedAmount(result) {
+        if (result[0].Status == 0) {
+            $('#tblvcc tr').remove();
+            $('#amountid').val(parseFloat(0).toFixed(Decimal))
+            $('#txtmsg').val('Deposit Not Received');
+            $('#btnsubmit').prop('disabled', true);
+            $('#btnsubmit').hide();
+        }
+        else {
+            $('#tblvcc tr').remove();
+            $('#txtmsg').val('');
+            if (result[0].Status == 2)
+            {
+                $('#txtmsg').val('Deposit Already Paid : '+(result[0].VCCPAmt).toFixed(Decimal));
+                $('#btnsubmit').prop('disabled', true);
+                $('#btnsubmit').hide();
+            }
+            else {
+                $('#btnsubmit').prop('disabled', false);
+                $('#btnsubmit').show();
+            }
+            
+            $('#txtCustId').val(result[0].CustId);
+            $('#txtcustomer').val(result[0].CustomerName);
+            $('#addressid').val(result[0].CustomerAddress);
+            $('#select_crncy').val(result[0].CurrencyId);
+            $('#txtcrncyrate').val(result[0].CurrencyRate);
+            $('#amountid').val(result[0].FCAmount);
+
+
+            $("#Accountvcc").val(result[0].Account);
+            $("#AccountvccID").val(result[0].AccountId);
+            if (result[0].ExitDate != '') {
+                $("#exitpaperdate").val(result[0].ExitDate);
+            }
+
+
+        for (i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1)
+            var VCCRowEdit = "<tr id=" + 'row' + slno + " class= jsgrid-row ><td  id=" + 'td' + slno + " class= jsgrid-cell  style= width:10px;text-align:center >"
+                      + slno + "</td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:30px;text-align:center' ><input type='text' class='form-control' disabled=disabled  style='background-color:white;height:30px;border:none;' id='vccno" + slno + "' value='"
+                      + result[i].VCCNo + "'> </td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:30px;text-align:center'> <input type='text' class='form-control'  disabled  style='background-color:white;height:30px;border:none;' id='vccdate" + slno + "' value='"
+                      + result[i].VCCDate + "'> </td>  <td class= 'jsgrid-cell jsgrid-align-left' style='width:50px;'><input type='text' class='form-control text-left'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='desc" + slno + "' value='"
+                      + result[i].ProductName + "'><input type='text' class='form-control text-left'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='productdesc" + slno + "' value='"
+                      + result[i].Product + "'></td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input type='text' class='form-control text-right'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='famnt" + slno + "' value='"
+                      + parseFloat(result[i].FCAmount).toFixed(Decimal) + "'></td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled style='background-color:white;height:30px;border:none;' id='curr" + slno + "' value="
+                      + result[i].CurrencyName + "></td><td class= 'jsgrid-cell jsgrid-control-field jsgrid-align-left'  style='width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled  style='background-color:white;height:30px;background-color:white;border:none;' readonly   id='bamnt" + slno + "' value="
+                      + parseFloat(result[i].Amount).toFixed(Decimal) + "></td></tr>";
+            $('#tblvcc').append(VCCRowEdit);
+        }
+        calcbaseamount();
+        }
+    }
+
+
+    function serialnoload() {
+        var srlno = {};
+        srlno.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../../AccountsErp/VoucherNoGetandGets",
+            data: srlno,
+            success: function (result){
+                //console.log(result)
+                getslno(result.oList);
+            }
+        });
+
+        var dataz = {};
+        dataz.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Common/CashAccountGets",
+            data: dataz,
+            success: function (result) {
+                //console.log(result)
+                GetCashAccount(result.oList);
+            }
+        });
+    }
+
+
+    //Seriel No Get
+    function getslno(result) {
+        for (var k = 0; k < result.length; k++) {
+            $('#vccnoid').val(result[k].PVNo);
+        }
+    }
+
+    function GetCashAccount(result) {
+        //console.log(result.oList)
+        for (var k = 0; k < result.length; k++) {
+
+            $('#Accountvcc').val(result[k].GICash);
+            $('#AccountvccID').val(result[k].AccId);
+        }
+    }
+
+    function formrefresh()
+    {
+        $('#VoucherNoMain').val('');
+        $('.form-control').prop("disabled", false);
+        $('.defualtdisabled').prop("disabled", true);
+        CopyFlag = 0;       
+        $('#btnsubmit').show();
+        $('#btnlist').show();        
+        $('#btnprint').hide();
+        $('#chassisnoid').val('');
+        serialnoload();      
+        clearitemcode();
+    }
+
+
+
+
+    function isNumbercheck(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+    }
+
+    function calcbaseamount() {
+        var baseamount = parseFloat($('#amountid').val() || 0).toFixed(Decimal);
+        var CurrencyRate = parseFloat($('#txtcrncyrate').val() || 0).toFixed(Decimal);
+        var FCAmount = baseamount * CurrencyRate
+        $('#gndtotal').text(parseFloat(FCAmount).toFixed(Decimal));
+        $('#amountid').val(parseFloat(baseamount).toFixed(Decimal));
+    }
+
+    function SaveVCCP() {
+        if ($('#hiddenitemId').val() == 0) {
+            warningshow('Please Enter Valid Chassis Number', "chassisnoid")
+        }
+        else if ($('#txtCustId').val() == 0) {
+            warningshow('Customer is Not Valid')
+        }
+        else if (parseInt($("#AccountvccID").val() || 0) == 0) {
+            warningshow('Please Select Valid Account', "Accountvcc");
+        }
+        else {
+            $('#btnsubmit').prop('disabled', true);
+            var len = $("#tblvcc tr").length;
+
+            var dataq = {};
+            for (var k = 1; k <= len ; k++) {
+                dataq.CustId = $('#txtCustId').val();
+                dataq.CustomerName = $('#txtcustomer').val();
+                dataq.CustomerAddress = $('#addressid').val();
+                dataq.VCCNo = $('#vccno' + k).val();
+                dataq.VCCDate = $('#date').val();
+                dataq.ProductId = $('#hiddenitemId').val();
+                dataq.ProductName = $('#chassisnoid').val();
+                dataq.CurrencyId = $('#select_crncy').val();
+                dataq.CurrencyRate = $('#txtcrncyrate').val();
+                dataq.FCAmount = $('#amountid').val();
+                dataq.Amount = $('#gndtotal').text();
+                dataq.AccountType = $('#Accounttypeid').val();
+                dataq.UserId = ERPUserId;
+                dataq.DeptId = ERPDeptId;
+                dataq.AccountId = $("#AccountvccID").val();
+                dataq.Account = $("#Accountvcc").val();
+                dataq.ExitDate = $("#exitpaperdate").val();
+            }
+            //console.log(dataq)
+            $.ajax({
+                type: "POST",
+                url: "../caritemcode/VCCPaymentInsertandUpdate",
+                data: dataq,
+                success: function (result) {
+                    for (var i = 0; i < result.oList.length; i++) {
+                        var status = result.oList[i].Status;
+                        var VCCPNo = result.oList[i].PaymentVCCNo;
+                        Showalerts(status, VCCPNo);
+                        $('#btnsubmit').prop('disabled', false);
+                    }
+                }
+            });
+        }
+    }
+
+
+
+    function clearitemcode() {
+        $('#txtmsg').val('');
+        $('#btnsubmit').prop('disabled', false);
+        $('#btnsubmit').show();
+        $('#hiddenitemId').val(0);
+        $('#tblvcc tr').remove();
+        $('#txtcustomer').val('');
+        $('#addressid').val('');
+        $('#amountid').val(parseFloat(0).toFixed(Decimal));
+        $('#gndtotal').text(parseFloat(0).toFixed(Decimal));
+        $('#txtCustId').val(0);
+        GetCurrency(0);
+        $('#date,#exitpaperdate').val(CurDate);
+        $('#txtinvono1').val('');
+        $('#chassisnoid').focus();
+    }
+
+    function getcopy() {
+        CopyFlag = 1;       
+        $('.form-control').prop("disabled", true);
+        $('#btnsubmit').prop('disabled', true);
+        $('#btnsubmit').hide();
+        $('#vccnoid,#chassisnoid').val('');
+        $('#vccnoid').prop('disabled', false);
+        $('#vccnoid').focus();
+        $('#btnprint').hide();
+        clearitemcode();
+    }
+
+    function Showalerts(Status, VCCPNo) {
+        if (Status == 1) {
+        $('#VoucherNoMain').val(VCCPNo);
+        $('#savealert').html('');
+        $('#alertpopup').show();
+        $('#alertdiv').show();
+        $('#savealert').append('Saved Successfully!<br>Do you want to print this bill?');
+        $('#btnok').focus();     
+        }
+        else {
+            $('#savealert').html('');
+            $('#alertpopup').hide();
+            $('#alertdiv').hide();
+            swal('Data Already Exists', "", "warning");
+            $('.swal-button swal-button--confirm').focus();
+        }
+    }
+
+
+    function createnew() {
+
+        var rowcount = document.getElementById('tblvcc').rows.length;
+        if (rowcount > 0 && CopyFlag == 0) {
+            $('#Confirmflag').val('createnew'), $('#ConfirmRowId').val(1)
+            $('#confirmmessage').text('Data Will be Lost.Do you want to Continue?')
+            $('#confirm').show();
+            $('#confirmOk').focus();
+        }
+        else {
+            formrefresh();
+        }
+    }
+    function ConfirmboxResult(Result, status, rowid) {
+        if (Result == 'true' && status == 'createnew') {
+            formrefresh();
+        }
+        else if (Result == 'true' && status == 'copy') {
+            CopyFlag = 1;
+            getcopy();
+        }
+        $('#confirm').fadeOut();
+    }
+    function copyvccp() {
+        var rowcount = $('#tblvcc tr').length;
+        if (rowcount > 0) {
+            $('#Confirmflag').val('copy'), $('#ConfirmRowId').val(1)
+            $('#confirmmessage').text('Data Will be Lost.Do you want to Continue?')
+            $('#confirm').show();
+            $('#confirmOk').focus();
+        }
+        else if (rowcount == 0) {
+            getcopy();
+        }
+    }
+
+    //Show Warnig Popup right top
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    $('#btnok').click(function () {
+        PrintthisBill();
+        formrefresh();
+        $('#alertpopup').hide();
+        $('#alertdiv').hide();
+    });
+    $('#btncnclalrt').click(function () {
+        formrefresh();
+        $('#alertpopup').hide();
+        $('#alertdiv').hide();
+    });
+</script>

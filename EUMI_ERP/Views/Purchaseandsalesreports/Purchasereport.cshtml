@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "Purchasereport";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<script>
+
+
+
+
+
+
+
+
+
+    function Showreport(result) {
+        disable_datatable('Tblreport');
+        var responseText = "<thead><tr><th>Slno</th><th>Invoice No</th><th>Invoice Date</th><th>Customer No</th><th>Customer</th><th>Taxable Amount</th><th>invoice Amount</th><th>Amount</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td>' + slno + '</td><td>' + result[i].InvoiceNo + '</td><td>' + result[i].invoiceDate + '</td><td>' + result[i].CustomerNo + '</td><td>' + result[i].Customername + '</td><td>' + result[i].TaxableAmount + '</td><td>' + result[i].Vat_Amount + '</td><td>' + result[i].Invoice_total + '</td></tr>';
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>Invoice No</th><th>Invoice Date</th><th>Customer No</th><th>Customer</th><th>Taxable Amount</th><th>invoice Amount</th><th>Amount</th></tr> </tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+
+        datatableWithsearch('Tblreport');
+       
+
+    }
+
+
+  
+
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+          , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+          , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+          , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
+
+
+
+
+
+
+
+
+    $(function () {
+
+
+
+
+        $('#txtfromdate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+
+        $('#txttodate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+
+
+
+        $("#btnsubmit").click(function (e) {
+
+            if ($('#txtfromdate').val() == '')
+            {
+                alert('Please Select From Date');
+                $('#txtfromdate').focus();
+
+            }
+            else if ($('#txttodate').val() == '') {
+                alert('Please Select To Date');
+                $('#txttodate').focus();
+
+            }
+            else {
+                $('#Loading').show();
+                var Query = $('#selectQuery').val();
+
+                var data = {};
+                data.FromDate = $('#txtfromdate').val();
+                data.ToDate = $('#txttodate').val();
+                data.Query = Query;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/DemoReportGet",
+                    data: data,
+                    success: function (result) {
+                        Showreport(result);
+                        $('#Loading').hide();
+                        $('#tblsiv').show();
+                    }
+                });
+            }
+
+        });
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+    
+
+
+   
+
+  
+
+</script>
+
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">Report</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+
+                                <table width="60%"><tr>
+
+                                                       <td align="center">Type</td>
+                                                       <td><select id="selectQuery"  class="form-control" >
+                                                           <option value="VATREPORTS">Sales</option>
+                                                           <option value="VATREPORTS">Sales Return</option>
+                                                           <option value="VATREPORTS">Purchase</option>
+                                                           <option value="VATREPORTS">Purchase Return</option>
+                                                           </select></td>
+                                    <td align="center">From Date </td><td><input type="text" id="txtfromdate" class="form-control" autocomplete="off"></td>
+                                           <td align="center">To Date </td>
+                                           <td><input type="text" id="txttodate" class="form-control" autocomplete="off"></td><td align="center">
+                                       <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1">Go</button>
+                                    </td>
+                                    
+                                    
+                                    </tr></table><br />
+                                <div id="tblsiv" style="display:none;"><hr />
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                    <input type="button" onclick="tableToExcel('Tblreportprint', 'W3C Example Table')" value="Export to Excel" class="btn btn-primary btn-min-width mr-1 mb-1" />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

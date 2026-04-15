@@ -1,0 +1,2615 @@
+﻿@{
+    ViewBag.Title = "EmployeeDashboard";
+}
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script src="~/Scripts/Chart/export-data.js"></script>
+<script src="~/Scripts/Chart/exporting.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script type="text/javascript" src="../Projectscript/WorkItemNew.js"></script>
+
+
+
+<style type="text/css">
+    .modal-slg {
+        max-width: 700px;
+    }
+
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+</style>
+@if (Model != null)
+{
+<script>
+        window.ListPageParams = @Html.Raw(EUMI_ERP.Common.ToJson(Model));
+</script>
+}
+else
+{
+<script>
+        window.ListPageParams = { };
+</script>
+}
+
+
+
+<div class="myData" data-x="M222" />
+
+<div class="content-wrapper">
+    <!--Statistics cards Starts-->
+
+    <div class="row">
+
+        <div class="col-xl-3 col-lg-6 col-md-6 col-12" style="cursor:pointer" onclick="GetSalesbills()">
+            <div class="card gradient-green-tea" style="height:90px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totsales" class="font-large-1 mb-0">0.00</h3>
+                                <span>Total Sales</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="icon-graph font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart2" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xl-3 col-lg-6 col-md-6 col-12" style="cursor:pointer" onclick="Getaccountstament()">
+            <div class="card gradient-blackberry" style="height:90px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totoutstand" class="font-large-1 mb-0">0.00</h3>
+                                <span>Customer Outstanding</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="icon-pie-chart font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-xl-3 col-lg-6 col-md-6 col-12" style="cursor:pointer">
+            <div class="card gradient-pomegranate" style="height:90px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totalexp" class="font-large-1 mb-0">0.00</h3>
+                                <span>Total Expenses</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="icon-wallet font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart3" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-6 col-12" style="cursor:pointer">
+            <div class="card gradient-ibiza-sunset" style="height:90px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totstock" class="font-large-1 mb-0"></h3>
+                                <span>Directory</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="icon-bulb font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart1" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Statistics cards Ends-->
+    <!--Line with Area Chart 1 Starts-->
+
+
+
+    <div class="row">
+        <div class="col-xl-9 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div class="" style="float:left;margin-left:30px">
+                            <select id="Datetype" class="" style="border:none" onchange="ChangeType()">
+                                <option value="0">Period</option>
+                                <option value="1">Daily</option>
+                                <option value="2">Weekly</option>
+                                <option value="3">Monthly</option>
+                                <option value="4">Yearly</option>
+                            </select>
+                        </div>
+
+                        <div class="" style="float:left;margin-left:30px">
+
+                        </div>
+                        <div class="" style="float:left;margin-left:30px">
+                            <input type="text" class="" style="width:105px;border-radius:10px;text-align:center" id="fromdate" onchange="loadgraph(),LoginDetailsGet(),GetList()" />
+                        </div>
+                        <div class="" style="float:left;margin-left:30px">
+                            -
+                        </div>
+                        <div class="" style="float:left;margin-left:30px">
+                            <input type="text" class="" style="width:105px;border-radius:10px;text-align:center" id="todate" onchange="loadgraph(),LoginDetailsGet(),GetList()" />
+                        </div>
+
+                        <div id="line-area" class="height-350 lineArea">
+                            <div id="Sales" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+                            <div id="pi" style="display:none;margin-left:300px;min-width: 310px; height: 350px; max-width: 600px;">
+                                <div id="container" style="min-width: 310px; height: 350px; max-width: 600px; margin-left:200px;"></div>
+                            </div>
+
+                            <div id="halfpi" style="display:none;margin-left:300px;min-width: 310px; height: 350px; max-width: 600px;">
+                                <div id="container2" style="min-width: 310px; height: 372px; max-width: 600px;  margin-left:100px;"></div>
+                            </div>
+
+                            <div class="input-group" style="margin-top:-10px;">
+
+
+                                <div class="custom-control custom-radio custom-control-inline" style="margin-left:20px">
+                                    <input type="radio" id="customRadioInline1" checked="" name="customRadioInline1" class="custom-control-input" onclick="SalesmanwiseGraphReport('column')">
+                                    <label class="custom-control-label" for="customRadioInline1">Column chart</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" onclick="SalesmanwiseGraphReport('line')">
+                                    <label class="custom-control-label" for="customRadioInline2">Line chart</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input" onclick="GraphReport('container')">
+                                    <label class="custom-control-label" for="customRadioInline3">Pi chart</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input" onclick="GraphReport('container2')">
+                                    <label class="custom-control-label" for="customRadioInline4">Half-Pi chart</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-3 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div id="container1" style="min-width: 310px; height: 430px; max-width: 600px; margin: 0 auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-12">
+            <div class="card" id="defaulttable" style="width:100%;">
+                <div class="row m-1">
+                    <div class="col-md-12" style="align-content:center;">
+                        <div class="card-header">
+                            <center><h4 class="card-title mb-0">Work Items</h4></center>
+                        </div>
+
+                        <div class="card-body" style="margin-top:3px; height:auto; overflow:auto;width:100%;">
+                            <table id="listitems" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:150%;margin-top:40px;"></table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="height:90%;clear: both">
+                    &nbsp;
+                    <div style="display:none;">
+                        <input id="Type" type="text" />
+                        <input id="BillSerId" type="text" value="0" />
+                        <input id="BillNo" type="text" value="0" />
+                        <input id="ReferenceNo" type="text" value="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h4 class="card-title">Employee Login Details</h4>
+                    </div>
+                    <div class="card-body" style="margin-top:-25px; height:350px; overflow:auto;">
+                        <table class="table table-responsive-sm text-center" id="tblEmpDetails"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row">
+        <div class="col-xl-12 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h4 class="card-title">Purchase Order Reminder</h4>
+                    </div>
+                    <div class="card-body" style="margin-top:-25px; height:350px; overflow:auto;">
+                        <table class="table table-responsive-sm text-center" id="topnsales"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+    <div class="row">
+        <div class="col-xl-6 col-lg-12 col-12">
+            <div class="card" style="height:95%;">
+                <div class="card-body">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="card-title">Fast Moving Items</h4>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label style="margin-left:200px">Quantity</label>
+                            </div>
+                            <div class="col-md-2" style="margin-top:-10px;margin-left:10px">
+                                <input type="text" id="fastQty" onkeyup="GetFast()" class="form-control" style="width:97%">
+                            </div>
+
+                            <div class="col-md-1" style="margin-top:-10px">
+                                <button type="button" id="btnfastmore" onclick="$('#fastQty').val(''),GetFastMovingItems(0)" class="btn btn-outline-primary">View More</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body" style="margin-top:-25px; height:350px; overflow:auto;">
+                        <br />
+                        <table class="table table-responsive-sm text-center" id="fastmovingsales"></table>
+                        <div id="LoadingFastmoving" class="overlay" style="display:none;background:none;">
+                            <div style="position:fixed;top:75%;left:28%">
+                                <img src="~/app-assets/img/Loading_1.gif" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-12 col-12">
+            <div class="card" style="height:95%;">
+                <div class="card-body">
+                    <div class="card-header">
+
+                        <div class="col-md-4">
+                            <h4 class="card-title">Non-Moving Items</h4>
+                        </div>
+                        <div class="row" style="margin-top:10px">
+                            <div class="col-md-4" style="margin-left:15px">
+                                <h8 class="card-title">Excluding Purchase Date</h8>
+                            </div>
+                            <div class="col-md-2" style="margin-top:-10px;margin-left:-40px">
+                                <input type="text" style="width:120px;border-radius:10px" id="DateFrom" class="form-control" autocomplete="off">
+                            </div>
+                            <div style="margin-left:-1px">
+                                -
+                            </div>
+                            <div class="col-md-3" style="margin-top:-10px;margin-left:-11px">
+                                <input type="text" style="width:120px;border-radius:10px" id="DateTo" class="form-control" autocomplete="off">
+                            </div>
+                            <div class="col-md-1" style="margin-left:-70px">
+                                <label>Quantity</label>
+                            </div>
+
+                            <div class="col-md-1" style="margin-top:-10px">
+                                <input type="text" id="nonQty" onkeyup="GetNon()" class="form-control" style="width:250%">
+                            </div>
+
+
+                            <div class="col-md-1" style="margin-top:-10px;margin-left:40px">
+                                <button type="button" id="btnnonmore" onclick="$('#nonQty').val(''),GetNonMovingItems(0)" class="btn btn-outline-primary">View More</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="card-body" style="margin-top:-25px; height:315px; overflow:auto;width:100%">
+                        <br />
+                        <table class="table table-responsive-sm text-center" id="nonmovingsales" style="width:100%"></table>
+                        <div id="LoadingNonmoving" class="overlay" style="display:none;background:none;">
+                            <div style="position:fixed;top:75%;left:72%">
+                                <img src="~/app-assets/img/Loading_1.gif" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*<div class="col-xl-3 col-lg-3 col-3">
+            <div class="card" style="width:100%;height:580px">
+                <div class="card-header">
+                    <h4 class="card-title mb-0"><input type="checkbox" id="checkallusers" onchange="Checkallusers()" />&#160;&#160;User List</h4>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="msguser" />
+                    <div id="userlist" style="height:300px; overflow:auto;" class="card-block">
+
+
+                    </div>
+                    <hr />
+
+
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-12">
+                                <textarea style="height:80px;width:100%"></textarea>
+                            </div>
+                            <div class="col text-center">
+                                <button type="button" id="sendmsg" class="btn btn-raised btn-primary" onclick="sendmessage()">
+                                    <i class="fa fa-paper-plane-o hidden-lg-up"></i> Send
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>*@
+
+        @*<div class="col-xl-9 col-lg-12 col-12">
+            <div class="card" id="defaulttable" style="width:100%;">
+                <div class="row m-1">
+                    <div class="col-md-12" style="align-content:center;">
+                        <div class="card-header">
+                            <center><h4 class="card-title mb-0">Work Items</h4></center>
+                        </div>
+
+                        <div class="card-body" style="margin-top:3px; height:468px; overflow:auto;width:100%;">
+                            <table id="listitems" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:125%;margin-top:40px;">
+                                <tfoot>
+                                    <tr class="eumi-search-row">
+                                        <th></th>
+                                        <th>Category </th>
+                                        <th>Date/Time </th>
+                                        <th>Assigned By </th>
+                                        <th>Assigned To </th>
+                                        <th>Location </th>
+                                        <th>Division </th>
+                                        <th>Status </th>
+                                        <th>Remarks </th>
+                                        <th>Edit </th>
+                                        <th style="display:none"></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="height:90%;clear: both">
+                    &nbsp;
+                </div>
+            </div>
+        </div>*@
+
+
+
+        <div class="col-xl-4 col-lg-12" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Statistics</h4>
+                </div>
+                <div class="card-body">
+
+                    <p class="font-medium-2 text-muted text-center">.</p>
+                    <div id="bar-chart" class="height-250 BarChartShadow BarChart">
+                    </div>
+
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col text-center">
+                                <span class="gradient-pomegranate d-block rounded-circle mx-auto mb-2" style="width:10px; height:10px;"></span>
+                                <span class="font-large-1 d-block mb-2">48</span>
+                                <span>Sport</span>
+                            </div>
+                            <div class="col text-center">
+                                <span class="gradient-green-tea d-block rounded-circle mx-auto mb-2" style="width:10px; height:10px;"></span>
+                                <span class="font-large-1 d-block mb-2">9</span>
+                                <span>Music</span>
+                            </div>
+                            <div class="col text-center">
+                                <span class="gradient-blackberry d-block rounded-circle mx-auto mb-2" style="width:10px; height:10px;"></span>
+                                <span class="font-large-1 d-block mb-2">26</span>
+                                <span>Travel</span>
+                            </div>
+                            <div class="col text-center">
+                                <span class="gradient-ibiza-sunset d-block rounded-circle mx-auto mb-2" style="width:10px; height:10px;"></span>
+                                <span class="font-large-1 d-block mb-2">17</span>
+                                <span>News</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12" style="display:none;">
+            <div class="card ">
+                <div class="card-header">
+                    <h4 class="card-title">Project Stats</h4>
+                </div>
+                <div class="card-body">
+
+                    <p class="font-medium-2 text-muted text-center">Project Tasks</p>
+                    <div id="donut-dashboard-chart" class="height-250 donut">
+                    </div>
+
+                    <div class="card-block">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <span class="mb-1 text-muted d-block">23% - Started</span>
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 23%;" aria-valuenow="23" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <span class="mb-1 text-muted d-block">14% - In Progress</span>
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar bg-amber" role="progressbar" style="width: 14%;" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <span class="mb-1 text-muted d-block">35% - Remaining</span>
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar bg-deep-purple bg-lighten-1" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <span class="mb-1 text-muted d-block">28% - Done</span>
+                                <div class="progress" style="height: 5px;">
+                                    <div class="progress-bar bg-blue" role="progressbar" style="width: 28%;" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div id="container1" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;height:2800px;display:none">
+    <div class="modal-dialog modal-slg" role="document" style="top:400px;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h5 class="modal-title" id="myheader">Create Work Item</h5>
+                <button type="button" class="close" onclick="CloseAssign()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <input type="hidden" id="WorkItemId" class="form-control" value="0">
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Department:</label>
+                        <div class="col-md-7">
+                            <select id="Department" class="form-control disa"></select>
+                        </div>
+
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-7">
+                            <select id="Division" class="form-control disa" onchange="WorkTaskTime()"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Assigned To:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="User" class="form-control disa" autocomplete="off" onkeyup="checkuser()">
+                        </div>
+                        <input type="hidden" id="UserId" value="0" class="form-control" autocomplete="off">
+                        <input type="hidden" id="UserLength" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="row followuphide followuphidedef" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Title:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Title" class="form-control disa" autocomplete="off">
+                        </div>
+
+                    </div>
+                    <div class="row followupshow" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left">Title:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Customer" class="form-control disa" autocomplete="off">
+                        </div>
+                        <input type="hidden" id="CustId" />
+                    </div>
+                    <div class="row" style="margin-top:2%;height:90px;">
+
+                        <label class="col-md-5" style="text-align:left">Description:</label>
+                        <div class="col-md-7">
+                            <textarea id="Description" class="form-control disa" style="resize: none;height:100%"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reference Type:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="RefType" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reference Id:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="RefId" class="form-control disa" autocomplete="off">
+                        </div>
+
+                    </div>
+                    <div class="row followuphide followuphidedef" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Turn around Time:</label>
+                        <div class="col-md-7">
+                            <select class="form-control disa" id="Time"></select>
+                        </div>
+                    </div>
+                    <div class="row followupshow" style="margin-top:2%;display:none;">
+
+                        <label class="col-md-5" style="text-align:left">Due Date:</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control disa" id="DueDate" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Status</label>
+                        <div class="col-md-7">
+                            <select class="form-control disa" id="Status" onchange="checkhold()">
+                                <option value="Created">Created</option>
+                                <option value="Started">Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="On Hold">On Hold</option>
+                                <option value="Ready To Deliver">Ready To Deliver</option>
+                                <option value="On The Way">On The Way</option>
+                                <option value="Delivered With Pending">Delivered With Pending</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Canceled" hidden>Cancel</option>
+                                <option value="Reassign" hidden>Reassigned</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row followuphide followuphidedef" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left">Store Keeper:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="StoreKeeper" class="form-control disa" />
+                            <input type="hidden" id="StoreKeeperId" value="0" />
+                        </div>
+                    </div>
+                    <div class="row" id="panel1" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left" id="reasondisplay"></label>
+                        <div class="col-md-7">
+                            <input type="text" id="Remarksdisplay" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row followuphide" id="panel2" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left" id="">Driver</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Driver" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="DriverId" class="form-control disa" value="0">
+                        </div>
+                    </div>
+                    <div class="row" id="panel3" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left" id="">User</label>
+                        <div class="col-md-7">
+                            <input type="text" id="IPUser" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="IPUserId" class="form-control disa" value="0">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;height:70px;">
+
+                        <label class="col-md-5" style="text-align:left">Remarks:</label>
+                        <div class="col-md-7">
+                            <textarea id="NewRemarks" class="form-control disa" style="resize: none;height:100%"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:150px;display:none" id="btncancel" class="btn btn-outline-danger">Cancel Work</button>
+                <button type="button" style="width:150px;display:none" id="btntransfer" class="btn btn-outline-warning">Transfer</button>
+                <button type="button" style="width:150px;display:none" id="btnassignme" onclick="AssignMe()" class="btn btn-outline-success">Assign Me</button>
+                <button type="button" style="width:100px" id="btnclose" onclick="CloseAssign()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btnassign" class="btn btn-info">Create</button>
+                <button type="button" style="width:100px;display:none" id="CNWR" onclick="ReAssignAsNew()" class="btn btn-info">Re Assign</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="Divsiondiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:77%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myheader">Add/Edit Division</h5>
+                <button type="button" class="close" onclick="$('#Divsiondiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-7">
+                            <select id="Division1" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">New Division Name:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="NewDivName" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="SaveandUpdateDivision(0)" class="btn btn-outline-secondary">Delete</button>
+                <button type="button" style="width:100px" id="btndivsave" onclick="SaveandUpdateDivision(1)" class="btn btn-outline-primary">Save</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="TimeDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:77%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myheader">Add Time Tags</h5>
+                <button type="button" class="close" onclick="$('#TimeDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-4" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-8">
+                            <select id="Division2" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-4" style="text-align:left">New Time Name:</label>
+                        <div class="col-md-8">
+                            <input type="text" id="NewTime" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+                        <label class="col-md-4" style="text-align:left">Time:</label>
+                        <div class="col-md-4">
+                            <input type="text" id="NewTimeHr" value="0" class="form-control" placeholder="Hr(s)" autocomplete="off" onkeypress="isNumberInt(event,this)">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="NewTimeMin">
+                                <option value="" hidden>Min(s)</option>
+                                <option value="0">0</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" style="width:100px;" id="btndivdelete" onclick="" class="btn btn-outline-secondary">Delete</button>*@
+                <button type="button" style="width:100px" id="btntimesave" onclick="SaveNewTime()" class="btn btn-outline-primary">Save</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="ReasonDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-15%">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="myheader">Add Time Tags</h5>*@
+                <button type="button" class="close" onclick="$('#ReasonDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason"></label>
+                        <div class="col-md-7">
+                            <input type="text" id="Remarks" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#ReasonDiv').hide()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CancelWork()" class="btn btn-outline-danger">Cancel</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="TransferDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-15%">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="myheader">Add Time Tags</h5>*@
+                <button type="button" class="close" onclick="$('#TransferDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reason For Transfer:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="rsntransfer" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Transfer To User:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="transuser" class="form-control disa" autocomplete="off" onkeyup="checktransuser()">
+                            <input type="hidden" id="transuserId" value="0" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="transuserLength" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btncncl" onclick="$('#TransferDiv').hide()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btntras" onclick="Reassign()" class="btn btn-outline-warning">Transfer</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="LoadingSmallRound" class="overlay" style="display:none;background:none">
+    <div style="position:fixed;top:10%;left:40%">
+        <img src="~/app-assets/img/Loading_1.gif" />
+    </div>
+</div>
+
+<div class="modal fade text-left show" id="iconForm" tabindex="-1" role="dialog" aria-labelledby="headiddetialls" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);height:1800px;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:180%; margin-left:-270px;margin-top:20%">
+            <div class="modal-header bg-primary white">
+                <div style="" id="saleshead">
+                    <h4 class="modal-title" id="headiddetialls"></h4>
+                </div>
+                <div style="width:5%">
+
+                </div>
+                <div style="" id="salesdetails">
+                    <table id="" style="">
+                        <tr>
+                            <td id="pcol0" style="font-weight:500;font-size:medium">  </td>
+                            <td id="pcol1" style="font-weight:500;font-size:medium">  </td>
+                            <td id="pcol2" style="font-weight:500;font-size:medium"></td>
+                            <td id="pcol3" style="font-weight:500;font-size:medium"></td>
+                        </tr>
+                    </table>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#iconForm').hide();" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="View">
+                <div class="modal-body">
+
+                    <div id="div1" style="height:500px;overflow:auto;width:100%">
+                        <table id="Stocklist" class="table table-striped table-bordered zero-configuration dataTable" style="width:100%"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="RowGet" />
+                    @*<input type="button" id="btn1" class="btn btn-outline-secondary btn-lg" style="height:45px;width:75px" onclick="$('#iconForm').hide();" value="close">*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+    @section bottomscripts {
+<script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+    }
+
+
+
+
+
+
+<script type="text/javascript">
+
+    var RemarkFlag=0;
+    $("#User").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data1 = {};
+            data1.UserName = $("#User").val();
+            data1.DepartmentId = $("#Department").val();
+            data1.DivisionId = $("#Division").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DeptUserGetandGets',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName:item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#UserId').val(ui.item.UserId);
+            $('#UserLength').val((ui.item.UserName).length);
+        },
+    });
+
+    $("#transuser").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data1 = {};
+            data1.UserName = $("#transuser").val();
+            data1.DepartmentId = $("#Department").val();
+            data1.DivisionId = $("#Division").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DeptUserGetandGets',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName:item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#transuserId').val(ui.item.UserId);
+            $('#transuserLength').val((ui.item.UserName).length);
+        },
+    });
+
+    $(document).ready(function () {
+
+        GetDepartment();
+        GetDivision();
+        GetList();
+
+        $("#btnassign").click(function (e) {
+            SaveAndUpdate()
+        });
+        $("#btncancel").click(function (e) {
+            $('#TransferDiv').hide();
+            $('#Remarks').prop("disabled",false)
+            $('#ReasonDiv').show();
+            $('#reason').text('Reason For Cancel:')
+            $('#Remarks').focus();
+        });
+        $("#btntransfer").click(function (e) {
+            $('#ReasonDiv').hide();
+            $('#rsntransfer').prop("disabled",false);
+            $('#transuser').prop("disabled",false);
+            $('#TransferDiv').show();
+            $('#rsntransfer').focus();
+
+        });
+        Defaultfocus();
+
+        if ("@Request.QueryString["from"]" == "SalesInvoice") {
+            var srlsrs = sessionStorage.getItem("sales_srs");
+            var srlno = sessionStorage.getItem("sales_slno");
+            var dep = sessionStorage.getItem("sales_deptid");
+            sessionStorage.removeItem("sales_srs");
+            sessionStorage.removeItem("sales_slno");
+            sessionStorage.removeItem("sales_deptid");
+            var numId = parseInt(srlsrs);
+            var num = parseInt(srlno);
+            var deprtid=parseInt(dep)
+            if (!isNaN(numId) && !isNaN(num) && !isNaN(deprtid)) {
+                GetSalesInvoceWorkItem(numId,num,deprtid);
+            }
+        }
+        else if("@Request.QueryString["from"]" == "Layout"){
+            var sorttype = sessionStorage.getItem("sort_type");
+            sessionStorage.removeItem("sort_type");
+            var worksorttype = parseInt(sorttype);
+            if (!isNaN(worksorttype)) {
+                $('#defaulttable').hide();
+                GetSortedWorkitem(worksorttype);
+
+            }
+        } 
+
+        $(document).keydown(function (e) {
+            if (e.keyCode == 27) { //ESC       :   Popup Close
+                $('#iconForm').hide();
+            }
+        });
+    });
+
+    function GetDepartment(){
+        var data = {};
+        data.DeptId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList);
+
+
+            }
+        });
+    }
+
+
+    function GetDivision(){
+
+        var data1 = {};
+        $.ajax({
+            type: "POST",
+            url: "../WorkItemUser/WorkDivisionGetandGets",
+            data: data1,
+            success: function (result) {
+                DivisionLoad(result.oList);
+
+
+            }
+        });
+    }
+
+    function GetList() {
+
+
+        if (usermenu1.indexOf("M225") != -1) {
+            var  Flag = 0;               //ALL WORK ITEM VIEW RIGHT
+        }
+        else {
+            var  Flag = 4;               //NOT ALL WORK ITEM VIEW RIGHT
+        }
+
+
+
+        var data = {};
+        data.Type = Flag;
+        data.UserId = ERPUserId;
+        data.DepartmentId = ERPDeptId;
+        data.FromDate = CurDate;
+        data.ToDate = CurDate;
+        data.Variable1 = 0;
+        data.Variable2 = '';
+
+        $.ajax({
+            type: "POST",
+            url: "../WorkItemUser/WorkItemGetList",
+            data: data,
+            success: function (result) {
+
+                ListWorkItemsD(result);
+            }
+        });
+
+    }
+
+    function ListWorkItemsD(result) {
+
+        disable_datatable('listitems', 'buttonPlace');
+        var responseText = "<thead><tr>" +
+            "<th>Edit</th>" +
+            "<th>Sl#</th>" +
+            "<th>Category</th>" +
+            "<th>Description</th>" +
+            "<th>Date/Time</th>" +
+            "<th>Assigned By</th>" +
+            "<th>Assigned To</th>" +
+            "<th>Driver</th>" +
+            "<th>Status</th>" +
+            "<th>StoreKeeper</th>" +
+            "<th>Location</th>" +
+            "<th>Division</th>" +
+            "<th>Reason</th>" +
+            "<th>Remarks</th>" +
+            "<th>UpdatedOn</th>" +
+            "</tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+
+            if (result[i].Status == 'Completed') var rowclass = 'badge-success';
+            else if (result[i].Status == 'In Progress') var rowclass = 'badge-info';
+            else if (result[i].Status == 'Canceled') var rowclass = 'badge-dark';
+            else if (result[i].Status == 'Created') var rowclass = 'badge-light';
+            else if (result[i].Status == 'Started') var rowclass = 'badge-secondary';
+            else if (result[i].Status == 'On Hold') var rowclass = 'badge-danger';
+            else if (result[i].Status == 'Reassign') var rowclass = 'badge-warning';
+            else if (result[i].Status == 'Ready To Deliver') var rowclass = 'badge-pink white';
+            else if (result[i].Status == 'On The Way') var rowclass = 'badge-primary';
+            else if (result[i].Status == 'Delivered With Pending') var rowclass = 'badge-light-blue white';
+
+            if (result[i].ExceededTime <= 0 && result[i].Status != 'Completed' && result[i].Status != 'Canceled' && result[i].Status != 'Reassign') {
+
+                responseText += '<tr ondblclick=GetSalesCopy(' + "'" + result[i].BillSlNo + "'" + ',' + "'" + result[i].BillNo + "'" + ',' + "'" + result[i].BillDeptId + "'" + ')  class="white" style="background-color:' + WorkItemColour + '">' +
+                    '<td><a  onclick="GetItem(' + result[i].WorkItemId + ');">' + Editbutton + '</a></td>' +
+                    '<td>' + slno + '</td>' +
+                    '<td>' + result[i].Title + '</td>' +
+                    '<td>' + result[i].Description + '</td>' +
+                    '<td>' + result[i].AssignedOnDate + '</td>' +
+                    '<td>' + result[i].AssignedByUser + '</td>' +
+                    '<td>' + result[i].AssignedToUser + '</td>' +
+                    '<td>' + result[i].DriverName + '</td>' +
+                    '<td><div class="text-center" style="width:100%"><span style="width:100%" class="badge ' + rowclass + '">' + result[i].Status + '</span></div></td>' +
+                    '<td>' + result[i].StoreKeeper + '</td>' +
+                    '<td>' + result[i].DepartmentName + '</td>' +
+                    '<td>' + result[i].DivisionName + '</td>' +
+                    '<td>' + result[i].Remarks + '</td>' +
+                    '<td>' + result[i].NewWorkRemarks + '</td>' +
+                    '<td>' + result[i].UpdatedOn + '</td>' +
+                    '</tr>';
+
+            }
+            else {
+                responseText += '<tr ondblclick=GetSalesCopy(' + "'" + result[i].BillSlNo + "'" + ',' + "'" + result[i].BillNo + "'" + ',' + "'" + result[i].BillDeptId + "'" + ')>' +
+                    '<td><a  onclick="GetItem(' + result[i].WorkItemId + ');">' + Editbutton + '</a></td>' +
+                    '<td>' + slno + '</td>' +
+                    '<td>' + result[i].Title + '</td>' +
+                    '<td>' + result[i].Description + '</td>' +
+                    '<td>' + result[i].AssignedOnDate + '</td>' +
+                    '<td>' + result[i].AssignedByUser + '</td>' +
+                    '<td>' + result[i].AssignedToUser + '</td>' +
+                    '<td>' + result[i].DriverName + '</td>' +
+                    '<td><div class="text-center" style="width:100%"><span style="width:100%" class="badge ' + rowclass + '">' + result[i].Status + '</span></div></td>' +
+                    '<td>' + result[i].StoreKeeper + '</td>' +
+                    '<td>' + result[i].DepartmentName + '</td>' +
+                    '<td>' + result[i].DivisionName + '</td>' +
+                    '<td>' + result[i].Remarks + '</td>' +
+                    '<td>' + result[i].NewWorkRemarks + '</td>' +
+                    '<td>' + result[i].UpdatedOn + '</td>' +
+                    '</tr>';
+            }
+        }
+        $('#listitems').html(responseText + '</tbody><tfoot><tr>' +
+            '<th> </th>' +
+            '<th> </th>' +
+            '<th>Category</th>' +
+            '<th>Description</th>' +
+            '<th>Date/Time</th>' +
+            '<th>Assigned By</th>' +
+            '<th>Assigned To</th>' +
+            "<th>Driver</th>" +
+            '<th>Status</th>' +
+            '<th>StoreKeeper</th>' +
+            '<th>Location</th>' +
+            '<th>Division</th>' +
+            '<th>Reason</th>' +
+            '<th>Remarks</th>' +
+            '<th>UpdatedOn</th>' +
+            '</tr></tfoot>');
+
+
+        datatableWithsearchWIINDEX('listitems', true, '', 'buttonPlace');
+        $('#Loading').hide();
+        WorkItemNotifyVar = 0;
+    }
+
+
+    function datatableWithsearchWIINDEX(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                "pageLength": 25,
+                "columnDefs": [
+                    { "width": "2%", "targets": 0 },
+                    { "width": "2%", "targets": 1 },
+                    { "width": "9%", "targets": 2 },
+                    { "width": "14%", "targets": 3 },
+                    { "width": "8%", "targets": 4 },
+                    { "width": "6%", "targets": 5 },
+                    { "width": "6%", "targets": 6 },
+                    { "width": "6%", "targets": 7 },
+                    { "width": "6%", "targets": 8 },
+                    { "width": "6%", "targets": 9 },
+                    { "width": "6%", "targets": 10 },
+                    { "width": "4%", "targets": 11 },
+                    { "width": "8%", "targets": 12 },
+                    { "width": "9%", "targets": 13 },
+                    { "width": "8%", "targets": 14 },
+
+                ],
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+
+
+            function Checkallusers() {
+                //alert('')
+            }
+
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var hhh = new Date();
+            var mmmonth = hhh.getMonth() + 1;
+            var ddday = hhh.getDate();
+            var MonthFirst = '01/' + (mmmonth < 10 ? '0' : '') + mmmonth + '/' + hhh.getFullYear();
+            var monthtext = '';
+
+            GetUsers();
+            function GetUsers() {
+                var data = {};
+                data.UserId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/UsersGetandGets",
+                    data: data,
+                    success: function (result) {
+                        ShowUserslist(result.oList);
+                    }
+                });
+            }
+
+
+
+            var d = new Date();
+            var month = d.getMonth() + 1;
+            var day = d.getDate();
+           
+            $('#fromdate').val(CurDate);
+            $('#todate').val(CurDate);
+
+            SalesmanwiseGraphReport('column')
+
+
+            function ChangeType() {
+                if ($('#Datetype').val() == 0 || $('#Datetype').val() ==1 )
+                {
+                    $('#fromdate').val(CurDate);
+                    $('#todate').val(CurDate);
+                }
+                loadgraph();
+                //SalesmanwiseGraphReport('column');
+                //$("#customRadioInline1").prop("checked", true);
+            }
+
+
+            GetPurchaseorderItems()
+            GetFastMovingItems(10)
+            GetNonMovingItems(1)
+            LoginDetailsGet();
+
+
+            function GetFast() {
+                if ($('#fastQty').val() == '') {
+                    GetFastMovingItems(10)
+
+                }
+                else {
+                    GetFastMovingItems(0)
+                }
+
+            }
+
+            function GetNon() {
+                if ($('#nonQty').val() == '') {
+
+                    GetNonMovingItems(1)
+
+                }
+                else {
+                    GetNonMovingItems(0)
+                }
+
+            }
+
+            function GetPurchaseorderItems() {
+
+                var Condition = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + CurDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + CurDate + "'" + ',103) group by ProductCode,ProductDescr,GrpCode,SbgrpName,CategoryCode,SubCategoryName,Inv_SalesSub.DeptId,avgcost order by Quantity desc'
+                var data = {};
+                data.Number = 5;
+                data.Condition = Condition;
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/PurchaseOrderReminder",
+                    data: data,
+                    success: function (result) {
+                        ShowTopSalesreport(result);
+                    }
+                });
+            }
+
+            function LoginDetailsGet()
+            {
+
+                var data = {};
+                data.UserId = 0;
+                data.FromDate = $('#fromdate').val();
+                data.ToDate =  $('#todate').val();
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/UserLoginDetailsGet",
+                    data: data,
+                    success: function (result) {
+                        ShowEmployeLogin(result.oList);
+                    }
+                });
+            }
+
+            function GetFastMovingItems(Num) {
+                $('#LoadingFastmoving').show();
+                var data = {};
+                data.Number = Num;
+                data.Qty = parseInt($('#fastQty').val() || 0);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/FastMovingItemsDashboard",
+                    data: data,
+                    success: function (result) {
+                        ShowFastMovingreport(result);
+                    }
+                });
+            }
+
+            function ShowFastMovingreport(result) {
+                var responseText = "<thead><tr><th class='text-center'>Sl#</th><th style=text-align:left>Item Code</th><th style=text-align:left>Item Name</th><th style=text-align:right>Qty.Sold</th><th style=text-align:right>Stock</th><th style=text-align:right>Cost</th></tr></thead>  <tbody>";
+                for (var i = 0; i < result.length; i++) {
+
+                    if (result[i].ItemDesc != 'Grand Total')
+                        responseText += '<tr><td class="text-center">' + (i + 1) + '</td><td style=text-align:left>' + result[i].ItemCode + ' </td><td style=text-align:left> ' + result[i].ItemDesc + '</td><td style=text-align:right>' + result[i].Qty + '</td><td style=text-align:right>' + result[i].Stock + '</td><td style=text-align:right>' + ReplaceNumberWithCommas(parseFloat(result[i].AvgCost || 0).toFixed(Decimal)) + '</td></tr>';
+                }
+                $('#fastmovingsales').html(responseText + '</tbody>');
+                $('#LoadingFastmoving').hide();
+            }
+
+
+            function GetNonMovingItems(Num) {
+                $('#LoadingNonmoving').show();
+                var data1 = {};
+                data1.Qty = parseInt($('#nonQty').val() || 0);
+                data1.DateFrom = $('#DateFrom').val();
+                data1.DateTo = $('#DateTo').val();
+                data1.Number = Num;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/NonMovingItemsDashboard",
+                    data: data1,
+                    success: function (result) {
+                        ShowNonMovingreport(result);
+                    }
+                });
+            }
+
+
+            function ShowNonMovingreport(result) {
+                var responseText = "<thead><tr><th class='text-center'>Sl#</th><th class='text-left' style=''>Item Code</th><th class='text-left'>Item Name</th><th class='text-right'>Qty.Sold</th><th class='text-right'>Stock</th><th class='text-right'>Cost</th></tr></thead>  <tbody>";
+                for (var i = 0; i < result.length; i++) {
+
+                    if (result[i].ItemDesc != 'Grand Total')
+                        responseText += '<tr><td class="text-center">' + (i + 1) + '</td><td class="text-left">' + result[i].ItemCode + ' </td><td class="text-left"> ' + result[i].ItemDesc + '</td><td class="text-right">' + result[i].Qty + '</td><td class="text-right">' + result[i].Stock + '</td><td class="text-right">' + ReplaceNumberWithCommas(parseFloat(result[i].AvgCost || 0).toFixed(Decimal)) + '</td></tr>';
+                }
+                $('#nonmovingsales').html(responseText + '</tbody>');
+                $('#LoadingNonmoving').hide();
+            }
+
+
+            $('#Datetype').val('0');
+          //  DepartmentWiseSalesDashboard('column')
+
+
+
+            function Getaccountstament() {
+                $('#LoadingSmallRound').show();
+                $('#salesdetails').hide();
+                $('#pcol0').text(''); $('#pcol1').text(''); $('#pcol2').text(''); $('#pcol3').text('');
+
+
+                var data = {};
+                data.DateFrom = '01/01/2019';
+                data.DateTo = CurDate;
+                data.AccountCode = 0;
+                data.AccountGroup = 10;
+                data.Opening = 1;
+                data.DeptId = 0;
+                data.UserId = ERPUserId;
+                data.Condition = 1;
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "../AccountsReport/OutstandingStatement",
+                    data: data,
+                    success: function (result) {
+                        showaccountstament(result);
+                    }
+                });
+            }
+
+
+            function showaccountstament(result) {
+
+
+                disable_datatable('Stocklist');
+                $('#Stocklist tr').remove();
+
+                var responseText = "";
+                if (result.length != 0) {
+
+
+                    var responseText = "<thead><tr><th style='text-align:center;'>Sl#</th><th style='width:150px'>Account Code</th><th style='width:300px'>Account Name</th><th class=text-right style='width:100px'>Debit</th><th style='width:100px' class=text-right>Credit</th><th style='display:none'></th></tr>" +
+                        "<tr><th>SlNo</th><th>Account Code</th><th>Account Name</th><th class=text-right>Debit</th><th class=text-right>Credit</th><th style='display:none'></th></tr>" +
+                        "</thead><tbody>";
+
+                    for (var i = 4; i < result.length; i++) {
+
+
+                        var slno;
+                        slno = parseInt(i - 3);
+
+                        var DebitAmt = parseFloat(result[i].Amount || 0).toFixed(Decimal);
+                        var CreditAmt = parseFloat(result[i].RecAmount || 0).toFixed(Decimal);
+                        if (DebitAmt == 0)
+                            DebitAmt = '';
+
+                        if (CreditAmt == 0)
+                            CreditAmt = '';
+
+                        if (result[i].BillSeriesId == 1 && result[i].AccDesc != 'Balance') {
+
+                            responseText += '<tr style="background-color:#cfd8dc"><td style="width:70px;text-align:center;"><b>' + slno + '</b></td><td style="width:150px"  id="Col1_' + slno + '" ><b>' + result[i].AccountCode + '</b></td><td style="width:500px"   id="Col2_' + slno + '" ><b>' + result[i].AccDesc + '</b></td><td   id="Col3_' + slno + '" style="text-align:right;width:120px"><b>' + ReplaceNumberWithCommas(DebitAmt) + '</b></td><td id="Col4_' + slno + '" style="text-align:right;width:120px" ><b>' + ReplaceNumberWithCommas(CreditAmt) + '</b></td><td id="Col5_' + slno + '" style="text-align:right;display:none"><b>1</b></td></tr>';
+                        }
+                        else if (result[i].AccDesc == 'Balance') {
+                            responseText += '<tr style="background-color:#cfd8dc"><td style="width:70px;text-align:center;"><b>' + slno + '</b></td><td style="width:150px"   id="Col1_' + slno + '" ><b>' + result[i].AccountCode + '</b></td><td style="width:500px"   id="Col2_' + slno + '" ><b>' + result[i].AccDesc + '</b></td><td  id="Col3_' + slno + '" style="text-align:right;width:120px"><b>' + ReplaceNumberWithCommas(parseFloat(result[i].Amount || 0).toFixed(Decimal)) + '</b></td><td id="Col4_' + slno + '" style="text-align:right;width:120px"><b>' + ReplaceNumberWithCommas(CreditAmt) + '</b></td><td id="Col5_' + slno + '" style="text-align:right;display:none"><b>1</b></td></tr>';
+                        }
+                        else {
+                            responseText += '<tr><td style="text-align:center;">' + slno + '</td><td style="width:70px;"   id="Col1_' + slno + '"  style="width:150px" >' + result[i].AccountCode + '</td><td   id="Col2_' + slno + '" style="width:500px" >' + result[i].AccDesc + '</td><td   id="Col3_' + slno + '" style="text-align:right;width:120px">' + ReplaceNumberWithCommas(DebitAmt) + '</td><td id="Col4_' + slno + '" style="text-align:right;width:120px">' + ReplaceNumberWithCommas(CreditAmt) + '</td><td id="Col5_' + slno + '" style="text-align:right;display:none"><b>0</b></td></tr>';
+                        }
+                    }
+                }
+
+
+                $('#Stocklist').html(responseText + '</tbody>');
+                datatablesearch('Stocklist', 'Multiple');
+                $('#headiddetialls').text('Customer Outstanding Statement');
+                $('#div1').animate({ scrollTop: 0 });
+                $('#iconForm').show();
+                $('#LoadingSmallRound').hide();
+
+
+            }
+
+
+            function datatablesearch(tablename, Type) {
+
+                console.log(tablename)
+                var a = '#' + tablename + ' tr:eq(1) th'
+
+                $(a).each(function () {
+                    var title = $(this).text();
+                    if (title != ' ')
+                        if (title == 'Sl#') {
+                            $(this).html('<input type="text" style="width:50px" class="form-control" placeholder="' + title + '"/>')
+                        }
+                        else if (title == 'Dept.Code')
+                        {
+                            $(this).html('<input type="text" class="form-control" style="width:90px"   placeholder="' + title + '"/>')
+                        }
+                        else if(title=='Account#')
+                        {
+                            $(this).html('<input type="text" class="form-control" style="width:100px"   placeholder="' + title + '"/>')
+                        }
+                        else {
+                            $(this).html('<input type="text" class="form-control" style="font-weight:100;"   placeholder="' + title + '"/>')
+                        }
+                });
+                var table = null;
+
+                if (Type == 'Single') {
+
+                    table = $('#' + tablename).DataTable({
+                        dom: 'tipr',
+                        orderCellsTop: true,
+                        //"order": false,
+                    });
+                }
+                else if (Type == 'Multiple') {
+
+                    table = $('#' + tablename).DataTable({
+                        dom: 'tir',
+                        orderCellsTop: true,
+                        //"order": false,
+                        "pageLength": -1
+                    });
+                }
+                table.columns().every(function (index) {
+                    $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                        table.column($(this).parent().index() + ':visible')
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+            }
+
+
+
+            function GetSalesbills()
+            {
+
+                $('#LoadingSmallRound').show();
+                status = 0;
+                var FromDate = $('#fromdate').val();  //CurDate;
+                var ToDate = $('#todate').val();  //CurDate;
+
+                Condition = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                Condition1 = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+                var data = {};
+                data.Condition = Condition;
+                data.Condition1 = Condition1;
+                data.SType = 1;
+                data.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../SalesReport/salesreportGetandGets",
+                    data: data,
+                    success: function (result) {
+                        disable_datatable('Stocklist');
+                        $('#Stocklist tr').remove();
+                        $('#LoadingSmallRound').hide();
+                        $('#iconForm').show();
+                        $('#headiddetialls').text('Total Sales');
+                        ShowSalesreport(result);
+                    }
+                });
+
+            }
+
+
+            function disable_datatable(tablename) {
+                $('#Warningpopup').fadeOut();
+                if ($.fn.DataTable.isDataTable('#' + tablename)) {
+                    var table = $('#' + tablename).DataTable();
+                    table.destroy();
+                    return;
+                }
+            }
+
+
+
+            function ShowSalesreport(result) {
+
+                var responseText = "";
+
+                var responseText = "<thead><tr><th style='width:5px;text-align:center;'>Sl#</th><th style='width:10px'>Dept.Code</th><th>Type</th><th style='width:50px'>Bill#</th>" +
+                 "<th style='width:50px'>Date</th><th style='width:30px'>Account#</th><th style='width:400px'>Customer</th><th style='width:40px'>Pay.</th><th style='width:100px' class='text-right' >SalesValue</th></tr>" +
+                 "<tr><th >Sl#</th><th>Dept.Code</th><th>Type</th><th>Bill</th><th >Date</th><th style='width:50px'>Account#</th>" +
+                 "<th >Customer</th><th>Pay.</th><th >SalesValue</th></tr></thead><tbody>";
+
+                if (result.length != 0) {
+                    var crsale = 0; var drsale = 0; var retval = 0; 
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i].SType == 'SR') {
+                            retval = (parseFloat(retval) + parseFloat(result[i].SalesAmount || 0)).toFixed(Decimal);
+                        }
+                        if (result[i].PayTerms == 'Credit')
+                        {
+                            drsale = (parseFloat(drsale) + parseFloat(result[i].SalesAmount || 0)).toFixed(Decimal);
+                        }
+                        else  if (result[i].PayTerms == 'Cash') {
+                            crsale = (parseFloat(crsale) + parseFloat(result[i].SalesAmount || 0)).toFixed(Decimal);
+                        }
+                        var slno = parseInt(i+ 1);
+                        responseText += '<tr> <td style="width:5px;text-align:center;">' + slno + '</td>' +
+                            '<td style="width:10px">' + result[i].DepartmentName + '</td>' +
+                            '<td style="width:10px">' + result[i].SType + '</td>' +
+                            '<td style="width:50px">' + result[i].Billdescription + '-' + result[i].BillSlNo + '</td>' +
+                            '<td style="width:50px">' + result[i].InvDate + '</td>' +
+                            '<td style="width:30px">' + result[i].AccCode + '</td>' +
+                            '<td style="width:400px">' + result[i].CustoName + '</td>' +
+                            '<td style="width:40px">' + result[i].PayTerms + '</td>' +
+                            '<td align=right style="width:100px">' + ReplaceNumberWithCommas(parseFloat(result[i].SalesAmount || 0).toFixed(Decimal)) + '</td></tr>';
+                    }
+                    //$('#RowGet').val(result.length);
+                }
+                $('#pcol1').text('');
+                $('#pcol2').text('');
+                $('#pcol3').text('');
+                $('#pcol0').text('');
+                $('#salesdetails').show();
+
+                $('#pcol0').show(); $('#pcol1').show(); $('#pcol2').show(); $('#pcol3').show();
+                $('#pcol0').append('Total Sales : ' + $('#totsales').text() + '&emsp;&emsp;&emsp;');
+                $('#pcol1').append('Total Cash Sale : ' + ReplaceNumberWithCommas(parseFloat(crsale|| 0).toFixed(Decimal)) + '&emsp;&emsp;&emsp;');
+                $('#pcol2').append('Total Credit Sale : ' + ReplaceNumberWithCommas(parseFloat(drsale || 0).toFixed(Decimal)) + '&emsp;&emsp;&emsp;');
+                $('#pcol3').append('Total SalesReurn : ' + ReplaceNumberWithCommas(parseFloat(retval || 0).toFixed(Decimal)));
+                $('#Stocklist').html(responseText + '</tbody>');
+                datatablesearch('Stocklist', 'Multiple');
+                $('#div1').animate({ scrollTop: 0 });
+                $('#LoadingSmallRound').hide();
+
+            }
+
+
+
+            function DepartmentWiseSalesDashboard(GrType) {
+
+                var data = {};
+                data.Fromdate = $('#fromdate').val();   //CurDate;
+                data.Todate =   $('#todate').val(); // CurDate;
+                data.UserId = ERPUserId;
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/DepartmentWiseSalesDashboard1",
+                    data: data,
+                    success: function (result) {
+                        DepartmentwiseSalesGraph(result, GrType);
+                    }
+                });
+
+
+
+
+            //    //var datamnt = {};
+            //    //datamnt.Fromdate = $('#fromdate').val();  //CurDate;
+            //    //datamnt.Todate = $('#todate').val(); // CurDate;
+            //    //datamnt.UserId = ERPUserId;
+            //    //$.ajax({
+            //    //    type: "POST",
+            //    //    url: "../Purchaseandsalesreports/SalesmanwisePeriodReport",
+            //    //    data: datamnt,
+            //    //    success: function (result) {
+            //    //        SalesmanwiseSalesGraphPeriod(result, GrType);
+            //    //    }
+            //    //});
+
+
+                calcTotSales();
+
+
+
+
+            }
+
+
+            function calcTotSales()
+            {
+                var data1 = {};
+                data1.Fromdate = $('#fromdate').val(); //CurDate;
+                data1.Todate = $('#todate').val();   //CurDate;
+                data1.DeptId = ERPDeptId;
+                data1.UserId = ERPUserId;
+
+
+                // totoutstand, ,
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/DashboardGetandGetsElectronics",
+                    data: data1,
+                    success: function (result) {
+                        $('#totsales').text(ReplaceNumberWithCommas(parseFloat((result[0].TotalAmount)||0).toFixed(Decimal)));
+                        $('#totoutstand').text(ReplaceNumberWithCommas(parseFloat((result[0].totalTax) || 0).toFixed(Decimal)));
+                        $('#totstock').text(ReplaceNumberWithCommas(parseFloat((result[0].Cost) || 0).toFixed(0)));
+                        $('#totalexp').text(ReplaceNumberWithCommas(parseFloat((result[0].Earning || 0)).toFixed(Decimal)));
+                    }
+                });
+            }
+
+
+
+
+
+
+            function GraphReport(GrType)
+            {
+                var data1 = {};
+                data1.Fromdate = $('#fromdate').val(); // CurDate;
+                data1.Todate = $('#todate').val(); //CurDate;
+                data1.Paytype = 0;
+                data1.SalesmanId = 0;
+                data1.DeptId = 0;
+                data1.Userid = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/SalesmanwiseGraphReport",
+                    data: data1,
+                    success: function (result) {
+                        DepartmentWiseSalesDashboard('column');
+                        ShowReportShort(result, GrType);
+                    }
+                });
+            }
+
+            function loadgraph()
+            {
+                if ($('#customRadioInline1').prop('checked'))
+                {
+                    SalesmanwiseGraphReport('column');
+                }
+                else if ($('#customRadioInline2').prop('checked')) {
+                    SalesmanwiseGraphReport('line');
+                }
+                else if ($('#customRadioInline3').prop('checked')) {
+                    GraphReport('container');
+                }
+                else if ($('#customRadioInline4').prop('checked')) {
+                    GraphReport('container2');
+                }
+            }
+
+
+
+            function ShowReportShort(result, GrType) {
+                var Amount = [];
+                var SalesMan = [];
+                var GrData = [];
+                for (var i = 0; i < result.length; i++) {
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    SalesMan.push('Salesman:' + result[i].SalesMan);
+                    GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+                }
+                //For PI Chart
+                Highcharts.chart('container', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Salesmanwise Sales-PI Chart'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    colors: [
+                           '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: false
+                            },
+                            //showInLegend: true,
+
+                        }
+                    },
+
+                    series: [{
+                        name: 'Sales',
+                        colorByPoint: true,
+                        data: GrData
+                    }]
+                });
+
+                Highcharts.chart('container2', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: 0,
+                        plotShadow: false,
+                        type: 'pie',
+                    },
+                    title: {
+                        text: 'Salesmanwise Sales-Half PI Chart'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    colors: [
+                          '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        pie: {
+                            dataLabels: {
+                                enabled: true,
+                                distance: -50,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: 'white'
+                                }
+                            },
+                            startAngle: -90,
+                            endAngle: 90,
+                            center: ['50%', '75%'],
+                        }
+                    },
+                    series: [{
+                        name: 'Sales',
+                        innerSize: '50%',
+                        colorByPoint: true,
+                        data: GrData
+
+                    }]
+                });
+
+
+
+            }
+
+
+
+            //Date Picker
+            $(function () {
+                $('#fromdate,#todate').daterangepicker({
+                    minDate: minDate,
+                    maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+
+            });
+
+            function SalesmanwiseGraphReport(Grtype) {
+                if ($('#Datetype').val() == 0) {
+
+                    var datamnt = {};
+                    datamnt.Fromdate = $('#fromdate').val(); // CurDate;
+                    datamnt.Todate = $('#todate').val(); //CurDate;
+                    datamnt.UserId = ERPUserId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Purchaseandsalesreports/SalesmanwisePeriodReport",
+                        data: datamnt,
+                        success: function (result) {
+                            DepartmentWiseSalesDashboard('column');
+                            SalesmanwiseSalesGraphPeriod(result, Grtype);
+                        }
+                    });
+                }
+                else if ($('#Datetype').val() == 1) {
+                    var datamnt = {};
+                    datamnt.Fromdate = $('#fromdate').val();  //CurDate;
+                    datamnt.Todate = $('#todate').val();//CurDate;
+                    datamnt.DeptId = 0;
+                    datamnt.UserId = ERPUserId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Purchaseandsalesreports/SalesmanDashboard",
+                        data: datamnt,
+                        success: function (result) {
+                            DepartmentWiseSalesDashboard('column');
+                            SalesmanwiseSalesGraph(result, Grtype);
+                        }
+                    });
+                }
+                else if ($('#Datetype').val() == 2) {
+                    var datamnt = {};
+                    datamnt.Fromdate = '01/' + mmmonth + '/' + hhh.getFullYear();
+                    datamnt.Todate = '31/12/' + hhh.getFullYear();
+                    datamnt.DeptId = 0;
+                    datamnt.UserId = ERPUserId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Purchaseandsalesreports/SalesmanWeeklyDashboard",
+                        data: datamnt,
+                        success: function (result) {
+                            $('#fromdate').val(datamnt.Fromdate);
+                            $('#todate').val(datamnt.Todate);
+                            DepartmentWiseSalesDashboard('column');
+                            SalesmanwiseSalesGraphWeek(result, Grtype);
+                        }
+                    });
+                }
+                else if ($('#Datetype').val() == 3) {
+
+                    var datamnt = {};
+                    datamnt.Fromdate = '01/01/' + hhh.getFullYear();
+                    datamnt.Todate = '31/12/' + hhh.getFullYear();
+                    datamnt.DeptId = 0;
+                    datamnt.UserId = ERPUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../Purchaseandsalesreports/SalesmanMonthlyDashboard",
+                        data: datamnt,
+                        success: function (result) {
+                            $('#fromdate').val(datamnt.Fromdate);
+                            $('#todate').val(datamnt.Todate);
+                            DepartmentWiseSalesDashboard('column');
+                            SalesmanwiseSalesGraphMonth(result, Grtype);
+                        }
+                    });
+                }
+                else if ($('#Datetype').val() == 4) {
+
+                    var datamnt = {};
+                    datamnt.Fromdate = '01/01/' + hhh.getFullYear();
+                    datamnt.Todate = CurDate;
+                    datamnt.DeptId = 0;
+                    datamnt.UserId = ERPUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../Purchaseandsalesreports/SalesmanYearlyDashboard",
+                        data: datamnt,
+                        success: function (result) {
+                            $('#fromdate').val(datamnt.Fromdate);
+                            $('#todate').val(datamnt.Todate);
+                            DepartmentWiseSalesDashboard('column');
+                            SalesmanwiseSalesGraphYear(result, Grtype);
+                        }
+                    });
+                }
+            }
+
+
+
+
+            //for SalesmanwiseSales
+
+            function SalesmanwiseSalesGraph(result, Grtype) {
+
+                var Amount = [];
+                var SalesMan = [];
+                var GrData = [];
+                var Date = [];
+                for (var i = 0; i < result.length; i++) {
+                    var shodatesplit = result[i].Fromdate.split("/");
+                    var ShowDate = shodatesplit[0] + '/' + shodatesplit[1];
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    SalesMan.push(result[i].SalesMan);
+                    Date.push(ShowDate)
+                    GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+                }
+
+
+                Highcharts.chart('Sales', {
+                    chart: { type: Grtype },
+                    title: {
+                        text: 'Salesman Wise Daily - ' + monthNames[hhh.getMonth()] + ',' + hhh.getFullYear()
+                    },
+                    subtitle: {
+                        text: 'Source: eumierp.com'
+                    },
+                    xAxis: {
+                        categories: Date
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales()'
+                        }
+                    },
+                    colors: [
+                                '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        column: {
+                            colorByPoint: true,
+                        },
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            },
+                            enableMouseTracking: false
+                        }
+                    },
+                    series: [
+                    {
+                        name: 'Sales',
+                        data: GrData
+                    },
+                    ]
+                });
+
+
+            }
+
+            function SalesmanwiseSalesGraphWeek(result, Grtype) {
+
+                var Amount = [];
+                var SalesMan = [];
+                var GrData = [];
+                var Date = [];
+                for (var i = 0; i < result.length; i++) {
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    SalesMan.push(result[i].SalesMan);
+                    Date.push(result[i].Fromdate);
+                    GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+                }
+
+
+                Highcharts.chart('Sales', {
+                    chart: { type: Grtype },
+                    title: {
+                        text: 'Salesman Wise Weekly - ' + monthNames[hhh.getMonth()] + ',' + hhh.getFullYear()
+                    },
+                    subtitle: {
+                        text: 'Source: eumierp.com'
+                    },
+                    xAxis: {
+                        categories: Date
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales()'
+                        }
+                    },
+                    colors: [
+                            '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        column: {
+                            colorByPoint: true,
+                        },
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            },
+                            enableMouseTracking: false
+                        }
+                    },
+                    series: [
+                    {
+                        name: 'Sales',
+                        data: GrData
+                    },
+                    ]
+                });
+
+
+            }
+
+            function SalesmanwiseSalesGraphMonth(result, Grtype) {
+
+                var Amount = [];
+                var SalesMan = [];
+                var GrData = [];
+                var Date = [];
+                for (var i = 0; i < result.length; i++) {
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    SalesMan.push(result[i].SalesMan);
+                    Date.push(monthNames[result[i].Fromdate]);
+                    GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+                }
+
+
+                Highcharts.chart('Sales', {
+                    chart: { type: Grtype },
+                    title: {
+                        text: 'Salesman Wise Monthly - ' + hhh.getFullYear()
+                    },
+                    subtitle: {
+                        text: 'Source: eumierp.com'
+                    },
+                    xAxis: {
+                        categories: Date
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales()'
+                        }
+                    },
+                    colors: [
+                           '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        column: {
+                            colorByPoint: true,
+                        },
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            },
+                            enableMouseTracking: false
+                        }
+                    },
+                    series: [
+                    {
+                        name: 'Sales',
+                        data: GrData
+                    },
+                    ]
+                });
+
+
+            }
+
+            function SalesmanwiseSalesGraphYear(result, Grtype) {
+
+                var Amount = [];
+                var SalesMan = [];
+                var GrData = [];
+                var Date = [];
+                for (var i = 0; i < result.length; i++) {
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    SalesMan.push(result[i].SalesMan);
+                    Date.push(result[i].Fromdate);
+                    GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+                }
+
+
+                Highcharts.chart('Sales', {
+                    chart: { type: Grtype },
+                    title: {
+                        text: 'Salesman Wise Yearly - ' + hhh.getFullYear()
+                    },
+                    subtitle: {
+                        text: 'Source: eumierp.com'
+                    },
+                    xAxis: {
+                        categories: Date
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales()'
+                        }
+                    },
+                    colors: [
+                            '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        column: {
+                            colorByPoint: true,
+                        },
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            },
+                            enableMouseTracking: false
+                        }
+                    },
+                    series: [
+                    {
+                        name: 'Sales',
+                        data: GrData
+                    },
+                    ]
+                });
+
+
+            }
+            function SalesmanwiseSalesGraphPeriod(result, Grtype) {
+
+                var Amount = [];
+                var SalesMan = [];
+                var GrData = [];
+                for (var i = 0; i < result.length; i++) {
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    SalesMan.push(result[i].SalesMan);
+                    GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+                }
+
+
+                Highcharts.chart('Sales', {
+                    chart: { type: Grtype },
+                    title: {
+                        text: 'Salesman Wise Period - ' + hhh.getFullYear()
+                    },
+                    subtitle: {
+                        text: 'Source: eumierp.com'
+                    },
+                    xAxis: {
+                        categories: SalesMan
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Sales()'
+                        }
+                    },
+                    colors: [
+                           '#FF4758',
+                           '#08B46B',
+                           '#19B6D4',
+                            '#FF8558',
+                           '#ec407a',
+                           '#9c27b0',
+                            '#1a237e',
+                            '#3e2723',
+                            '#e91e63',
+                            '#9c27b0',
+                            '#03a9f4',
+                            '#4caf50',
+                            '#795548',
+                            '#9e9e9e',
+                    ],
+                    plotOptions: {
+                        column: {
+                            colorByPoint: true,
+                        },
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            },
+                            enableMouseTracking: false
+                        }
+                    },
+                    series: [
+                    {
+                        name: 'Sales',
+                        data: GrData
+                    },
+                    ]
+                });
+
+
+            }
+
+
+            //for DepartmentwiseSales
+            function DepartmentwiseSalesGraph(result, GrType) {
+                var Amount = [];
+                var GrData = [];
+                var Department = [];
+
+                for (var i = 0; i < result.length; i++) {
+                    Amount.push(parseFloat(result[i].Amount || 0));
+                    Department.push(result[i].Department);
+                    GrData.push({ name: result[i].Department, y: parseFloat(result[i].Amount || 0) })
+                }
+                //PI CHAT
+                Highcharts.chart('container1', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Department wise Sales'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>({point.y})  {point.percentage:.1f}% </b>'
+                    },
+                    colors: [
+                              '#0099e6',    //Blue
+                              '#FF8F00',     //Orange
+                              '#3e2723',
+                              '#9c27b0',
+                              '#1a237e',  //dark blue
+                              '#FF8558',   //light orange
+                              '#ec407a',   //Light Majanta
+                              '#FF4758',
+                              '#08B46B'     //Green
+                              //'#FF4758',
+                              //'#08B46B',
+                              //'#19B6D4',
+                              // '#FF8558',
+                              //'#ec407a',
+                              //'#9c27b0',
+                              // '#1a237e',
+                              // '#3e2723'
+                    ],
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: false
+                            },
+                            showInLegend: true
+                        }
+                    },
+                    series: [{
+                        name: 'Sales',
+                        colorByPoint: true,
+                        data: GrData
+                    }]
+                });
+            }
+
+
+
+            function ShowUserslist(result) {
+                for (var i = 0; i < result.length; i++) {
+                    var userid = result[i].UserId;
+                    var Data = '<div class="media mb-1"><a><img class="rounded-circle" height="45" width="45" src="../ProjectImages/User/Image/' + userid + '.png" alt=""  ></a><div class="media-body"><h4 class="font-medium-1 mt-1 mb-0">' + result[i].Name + '</h4><p class="text-muted font-small-3">User</p></div><div class="mt-1"><input type="checkbox" class="" checked id=""></div></div></div>'
+                    $('#userlist').append(Data)
+                }
+            }
+
+
+
+            function ShowTopSalesreport(result) {
+                var responseText = "<thead><tr><th>Image</th><th>Product</th><th>Quantity</th><th>Status</th><th>Amount</th><th></th></tr></thead>  <tbody>";
+                for (var i = 0; i < result.length; i++) {
+
+                    if (result[i].ItemDesc != 'Grand Total')
+                        responseText += '<tr><td><img class="media-object round-media height-50" src="../app-assets/img/elements/01.png" alt="" /></td><td>' + result[i].ItemCode + ' - ' + result[i].ItemDesc + '</td><td>' + result[i].Qty + '</td><td><a class="btn white btn-round btn-primary">Active</a></td><td>' + ReplaceNumberWithCommas(parseFloat(result[i].Amount||0).toFixed(Decimal) )+ '</td><td><a class="danger" data-original-title="" title=""></a></td></tr>';
+                }
+                $('#topnsales').html(responseText + '</tbody>');
+            }
+
+            function ShowEmployeLogin(result) {
+                var responseText = "<thead><tr><th>EmployeeName</th><th>EmployeeCode</th><th>Date</th><th>InTime</th><th>OutTime</th><th>TotalWorkingHours</th></tr></thead>  <tbody>";
+                for (var i = 0; i < result.length; i++) {
+                    responseText += '<tr><td>' + result[i].EmpName + '</td><td>' + result[i].EmpCode + '</td><td>' + result[i].AtendanceDate + '</td><td>' + result[i].InTime + '</td><td>' + result[i].OutTime + '</td><td>' + result[i].TotalWorkHrs + '</td></tr>';
+                }
+                console.log(responseText)
+                $('#tblEmpDetails').html(responseText + '</tbody>');
+            }
+
+
+
+            $(function () {
+                $("#customRadioInline1").click(function (e) {
+                    $('#pi').hide();
+                    $('#halfpi').hide();
+                    $('#Sales').show();
+                    $('#Loading').hide();
+                });
+                $("#customRadioInline2").click(function (e) {
+                    $('#pi').hide();
+                    $('#halfpi').hide();
+                    $('#Sales').show();
+                    $('#Loading').hide();
+                });
+                $("#customRadioInline3").click(function (e) {
+                    $('#pi').show();
+                    $('#halfpi').hide();
+                    $('#Sales').hide();
+                    $('#Loading').hide();
+                });
+                $("#customRadioInline4").click(function (e) {
+                    $('#halfpi').show();
+                    $('#pi').hide();
+                    $('#Sales').hide();
+                    $('#Loading').hide();
+                });
+                $('#DateFrom').daterangepicker({
+                    minDate: minDate,
+                    maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+
+                $('#DateTo').daterangepicker({
+                    minDate: minDate,
+                    maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+            });
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+

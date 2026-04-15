@@ -1,0 +1,1815 @@
+﻿
+@{
+    ViewBag.Title = "Employee";
+}
+
+
+<style>
+    #CELL1 {
+        border-right: 1px solid #cccccc;
+        border-left: 1px solid #ffffff;
+        width:47%;
+      
+    }
+
+    #CELL2 {
+        /*padding-left:50px;*/
+        /*border-right: 1px solid #cccccc;*/
+        width: 57%;
+    }
+
+    #CELL3 {
+        /*padding-left:50px;*/
+        border-right: 1px solid #ffffff; 
+        width:5%;      
+    }
+
+    #saltd2 {
+        border-left: 5px solid #ffffff;
+        border-bottom: red;
+    }
+    .label-control {
+        font-weight: bold;
+    }
+     #Uploadpopupdiv ::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#Uploadpopupdiv ::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#Uploadpopupdiv ::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
+}
+  .modal-xl {
+        max-width: 100%;
+        margin-left: 10%;
+        margin-right: 3%;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        if (getQueryString('EmpId') != null) {
+            var data = {};
+            data.EmpId = getQueryString('EmpId');
+            $.ajax({
+                type: "POST",
+                url: "../Master/EmployeeGetandGets",
+                data: data,
+                success: function (result) {
+                   
+                    $('.form-control').prop('disabled', true);
+                    $('.btnbottom').prop('disabled', true);
+
+                    $('#btnsubmit').prop("disabled", true);
+                    $('#btnlist').prop("disabled", true);
+                    $('#btnadd').prop("disabled", true);
+                    if (getQueryString('EmpName') == '') {
+                        ShowEmployeeGet(result.oList);
+                    }
+                    else {
+                        ShowEmployeeGet(result.oList);
+                        $('#btnuploaddoc').prop("disabled", false);
+                        $('#Uploadpopupdivshow').show();
+                    }
+                }
+            });
+        }
+   
+
+
+    if (window.File && window.FileList && window.FileReader) {
+        $("#files").on("change", function (e) {
+            var files = e.target.files,
+              filesLength = files.length;
+            for (var i = 0; i < filesLength; i++) {
+                var f = files[i]
+                var fileReader = new FileReader();
+                fileReader.onload = (function (e) {
+                    var file = e.target;
+                    //$('.container img').prop('src', target.result);
+                    $("<span class=\"pip\">" +
+                      "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                      "<br/><span class=\"remove\">Remove image</span>" +
+                      "</span>").insertAfter("#DDh");
+                    $(".remove").click(function () {
+                        $(this).parent(".pip").remove();
+                    });
+
+
+                });
+                fileReader.readAsDataURL(f);
+                //fileReader.readAsDataURL(this.files[0]);
+            }
+        });
+    } else {
+        alert("Your browser doesn't support to File API")
+    }
+    });
+</script>
+
+
+
+
+<script type="text/javascript" src="../Projectscript/Employee.js"></script>
+@*<script type="text/javascript" src="../Projectscript/Common.js"></script>*@
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+
+<div class="myData" data-x="M23" />
+
+<div id="Entry">
+
+    <div class="row" >
+        <div class="col-md-8" style="margin-left:16%;">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <table style="margin-top:-5px;margin-bottom:-11px;" width="100%">
+                        <tr>
+                            <td><h4 class="card-title mb-0" style="font-weight:bold;" >Employee</h4></td>
+                            <td align="right">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <fieldset>
+                                            <div class="custom-control custom-checkbox" style="float:right">
+                                                <input type="checkbox" class="custom-control-input" id="IsActive" checked="">
+                                                <label class="custom-control-label" style="font-weight:bold;"  for="IsActive">Active</label>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card" style="margin-top:-13px">
+                                            <table id="">
+                                                <tr>
+                                                    <td id="CELL1" valign="top">
+                                                        <table width="95%">
+                                                            <tr><td height="20px"></td></tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="card-content collapse show">
+                                                                        <div class="card-body">
+                                                                            <form class="form">
+                                                                                <div class="form-body">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput1"> Name<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="Name" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2">Code<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="EmpCode"  onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2"> Designation<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8 input-group">
+                                                                                                    <select id="DesignationId" class="form-control"></select>
+                                                                                                    <div class="input-group-append">
+                                                                                                        <button class="btn btn-outline-primary" onclick="Addpopupwindow(1)" id="btndesignation" type="button">+</button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2" style="margin-top:5px;">Gender<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <select id="Gender" name="interested" class="form-control">
+                                                                                                        <option value="0">--Select--</option>
+                                                                                                        <option value="Male">Male</option>
+                                                                                                        <option value="Female">Female</option>
+                                                                                                        <option value="Other">Other</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                                
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2" style="margin-top:5px;">Blood Group</label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <select id="Bloodgroup" name="interested" class="form-control">
+                                                                                                        <option value="0">--Select--</option>
+                                                                                                        <option value="A+">A+</option>
+                                                                                                        <option value="B+">B+</option>
+                                                                                                        <option value="O+">O+</option>
+                                                                                                        <option value="O-">O-</option>
+                                                                                                        <option value="A-">A-</option>
+                                                                                                        <option value="A-">B-</option>
+                                                                                                        <option value="AB-">AB-</option>
+                                                                                                        <option value="AB+">AB+</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2">DOJ<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="DateofJoin" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2">DOB<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="DOB" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput2">Salary<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="txtBasicSalary" class="form-control" autocomplete="off" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" style="text-align:right" />
+
+                                                                                                    <select style="display:none" id="Nationality" class="form-control"></select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput1">Date of Leave<span class="danger">*</span></label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="LCEmail" class="form-control" autocomplete="off" />
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            <div class="form-group row">
+                                                                                                <label class="col-md-4 label-control" for="userinput1">User</label>
+                                                                                                <div class="col-md-8">
+                                                                                                    <input type="text" id="EmployeeUser" class="form-control" autocomplete="off" />
+                                                                                                    <input type="hidden" id="EmployeeUserId" class="form-control" autocomplete="off" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                    <td id="CELL2" valign="top" style="height:500px;">
+                                                        <table width="95%">
+                                                            <tr>
+                                                                <td>
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="card-content collapse show">
+                                                                                <div class="card-body">
+                                                                                    <ul class="nav nav-tabs nav-topline">
+                                                                                        <li class="nav-item">
+                                                                                            <a class="nav-link active" id="tab1" data-toggle="tab" aria-controls="div1" href="#div1" aria-expanded="true">&nbsp;Work Info</a>
+                                                                                        </li>
+                                                                                        <li class="nav-item">
+                                                                                            <a class="nav-link" id="tab2" data-toggle="tab" aria-controls="div2" href="#div2" aria-expanded="false" onclick="FocusAdd()">Documents Info</a>
+                                                                                        </li>
+                                                                                        <li class="nav-item">
+                                                                                            <a class="nav-link" id="tab3" data-toggle="tab" aria-controls="div3" href="#div3" aria-expanded="false" onclick="FocusTab3()">Local Address</a>
+                                                                                        </li>
+                                                                                        <li class="nav-item">
+                                                                                            <a class="nav-link" id="tab4" data-toggle="tab" aria-controls="div4" href="#div4" aria-expanded="false" onclick="FocusTab4()">Salary Info</a>
+                                                                                        </li>
+                                                                                        @*<li class="nav-item">
+                                                                                            <a class="nav-link" id="tab5"><span style="width:70px">&#160;</span></a>
+                                                                                        </li>*@
+                                                                                    </ul>
+                                                                                    <div class="tab-content px-1 pt-1  border-lighten-2 border-0-top">
+                                                                                        <div role="tabpanel" class="tab-pane active" id="div1" aria-expanded="true" aria-labelledby="tab1">
+                                                                                            <div class="repeater-default">
+                                                                                                <div data-repeater-list="car">
+                                                                                                    <div data-repeater-item="">
+                                                                                                        <form class="form" style="margin-left:10px">
+
+                                                                                                            <div class="form-group row" style="margin-top:16px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2">Department<span class="danger">*</span></label>
+                                                                                                                <div class="col-md-8 input-group">
+                                                                                                                    <select id="DepartmentId" class="form-control"></select>
+                                                                                                                    <div class="input-group-append">
+                                                                                                                        <button class="btn btn-outline-primary" onclick="Addpopupwindow(2)" id="btndept" type="button">+</button>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row" style="margin-top:-15px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2">Work Location</label>
+                                                                                                                <div class="col-md-8 input-group">
+                                                                                                                    <select id="LocationId" class="form-control"></select>
+                                                                                                                    <div class="input-group-append">
+                                                                                                                        <button class="btn btn-outline-primary" onclick="Addpopupwindow(3)" id="btnloc" type="button">+</button>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row" style="margin-top:-13px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2">Division</label>
+                                                                                                                <div class="col-md-8 input-group">
+                                                                                                                    <select id="CompanyId" class="form-control"></select>
+                                                                                                                    <div class="input-group-append">
+                                                                                                                        <button class="btn btn-outline-primary" onclick="Addpopupwindow(5)" id="btndivision" type="button">+</button>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row" style="margin-top:-11px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput1">Mobile#</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <input type="text" id="Mobile" class="form-control" onkeypress="return isNumber(event)" autocomplete="off" />
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2">Work Email</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <input type="text" id="Email" class="form-control" autocomplete="off" />
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                            <div class="form-group row" style="margin-top:0px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2"> Manager</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <select id="Manager" class="form-control"></select>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row" style="margin-top:12px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2"> Payroll Type</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <div class="input-group">
+                                                                                                                        <div class="d-inline-block custom-control custom-radio mr-1">
+                                                                                                                            <input type="radio" name="customer1" class="custom-control-input" checked="" id="yes" value="normal">
+                                                                                                                            <label class="custom-control-label" for="yes">Normal </label>
+                                                                                                                        </div>
+                                                                                                                        <div class="d-inline-block custom-control custom-radio" style="margin-left:8%">
+                                                                                                                            <input type="radio" name="customer1" class="custom-control-input" id="no" value="jobtype">
+                                                                                                                            <label class="custom-control-label" for="no">Job Type</label>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                            @*<div class="form-group row" style="margin-top:-13px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput2">Doc Type<span class="danger">*</span></label>
+                                                                                                                <div class="col-md-6 input-group">
+                                                                                                                    <select id="type" class="form-control"></select>
+                                                                                                                    <input type="text" id="DocumentTypeid" class="form-control" style="display:none">
+                                                                                                                   
+                                                                                                                </div>
+                                                                                                            </div>*@
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="tab-pane" id="div2" aria-labelledby="tab2">
+                                                                                            <div class="repeater-default">
+                                                                                                <div data-repeater-list="car">
+                                                                                                    <div data-repeater-item="">
+                                                                                                        <form class="form" style="margin-left:10px">
+                                                                                                            <div class="form-body">
+                                                                                                                <div class="form-group row" style="margin-top:15px;">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Passport#</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="PassportId" class="form-control" disabled style="" autocomplete="off" />
+                                                                                                                            <div class="input-group-append" id="addpassport">
+                                                                                                                                <button id="add1" class="btn btn-outline-primary" onclick="DocumentEntryShow(1)" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row" style="margin-top:-20px">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Visa#</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="VISANo" class="form-control" disabled style="" autocomplete="off" />
+                                                                                                                            <div class="input-group-append" id="addVisa">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="DocumentEntryShow(2)" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row" style="margin-top:-20px">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">National ID</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="NationalId" class="form-control" disabled style="" autocomplete="off" />
+                                                                                                                            <div class="input-group-append" id="addNID">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="DocumentEntryShow(3)" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row" style="margin-top:-20px">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Driving Licence#</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="DLNo" class="form-control" disabled style="" autocomplete="off" />
+                                                                                                                            <div class="input-group-append" id="addLicence">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="DocumentEntryShow(4)" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row" style="margin-top:-20px">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Labour#</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="LabourNo" class="form-control" disabled style="" autocomplete="off" />
+                                                                                                                            <div class="input-group-append" id="addLID">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="DocumentEntryShow(5)" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput2">Insurance </label>
+                                                                                                                    <div class="col-md-8 input-group">
+                                                                                                                        <input type="text" id="InsuranceCompanyId" class="form-control" disabled style="" autocomplete="off" />
+                                                                                                                        <div class="input-group-append" id="addIC">
+                                                                                                                            <button class="btn btn-outline-primary" onclick="DocumentEntryShow(6)" type="button">+</button>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row" style="margin-top:-20px">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Contract Type<span class="danger">*</span></label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <select id="ContractTypeId" name="interested" class="form-control">
+                                                                                                                            <option value="1" selected="">------Select-------</option>
+                                                                                                                            <option value="2">Limited</option>
+                                                                                                                            <option value="3">UnLimited</option>
+                                                                                                                        </select>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">File#</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <input type="text" id="FileNo" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="tab-pane" id="div3" aria-labelledby="tab3">
+                                                                                            <div class="repeater-default">
+                                                                                                <div data-repeater-list="car">
+                                                                                                    <div data-repeater-item="">
+                                                                                                        <form class="form" style="margin-left:10px;">
+                                                                                                            <div class="form-group row" style="margin-top:4px;">&#160;&#160;&#160;<u>Local Address</u></div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-md-4 label-control" style="margin-top:-5px;" for="userinput1">Address </label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <textarea id="LCAddress1" class="form-control" style="position:absolute;width:92.5%; height:295%;resize:none;" name="Address"></textarea>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            @*<div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Address 2</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <input type="text" id="LCAddress2" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Address 3</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <input type="text" id="LCAddress3" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>*@
+                                                                                                            <div class="form-group row" style="margin-top:12%;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput1">Telephone#</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <input type="text" id="LCMobile" class="form-control" onkeypress="return isNumber(event)" autocomplete="off" />
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row" style="margin-top:-10px;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput1">Country</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <select id="LCCountry" class="form-control"></select>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </form>
+                                                                                                        <form class="form" style="margin-left:10px">
+                                                                                                            <div class="form-group row">
+                                                                                                                <div class="form-group row">&#160;&#160;&#160;&#160;&#160;&#160;&#160;<u>International Address</u></div>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                                                                                                &#160;&#160;&#160;&#160;&#160;&#160;<div class="custom-control custom-checkbox">
+                                                                                                                    <input type="checkbox" class="custom-control-input" id="sameas" onchange="CopyAdd(this);" />
+                                                                                                                    <label class="custom-control-label" for="sameas">Same as Local Address</label>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row">
+                                                                                                                <label class="col-md-4 label-control" for="userinput1" style="margin-top:-5px;">Address</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <textarea id="PCAddress1" class="form-control" style="position:absolute;width:92.5%; height:295%;resize:none;" name="Address"></textarea>
+
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            @*<div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Address 2</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <input type="text" id="PCAddress2" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Address 3</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <input type="text" id="PCAddress3" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>*@
+                                                                                                            @*<div class="form-group row">
+                                                                                                                    <label class="col-md-4 label-control" for="userinput1">Email</label>
+                                                                                                                    <div class="col-md-8">
+                                                                                                                        <input type="text" id="PCEmail" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>*@
+                                                                                                            <div class="form-group row" style="margin-top:12%;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput1">Telephone#</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <input type="text" id="PCMobile" class="form-control" onkeypress="return isNumber(event)" autocomplete="off" />
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="form-group row" style="margin-top:-2%;">
+                                                                                                                <label class="col-md-4 label-control" for="userinput1">Country</label>
+                                                                                                                <div class="col-md-8">
+                                                                                                                    <select id="PCCountry" class="form-control"></select>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="text-right">
+
+
+                                                                                                            </div>
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="tab-pane" id="div4" aria-labelledby="tab4">
+
+                                                                                            <div class="repeater-default">
+                                                                                                <div data-repeater-list="car">
+                                                                                                    <div data-repeater-item="">
+                                                                                                        <form class="form" style="margin-left:10px">
+
+
+                                                                                                            <div class="row" style="margin-top:2.5%">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="form-group">
+
+                                                                                                                        <label style="font-weight:bold;" for="group">Salary Account<span class="danger">*</span></label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="SalAccnt" class="form-control" onkeyup="checkSalarytAccounttextempty(event)" autocomplete="off" />
+                                                                                                                            <input type="hidden" id="hiddensalaccId" />
+                                                                                                                            <div class="input-group-append" id="addgroup">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="window.open('../master/AccountHead')" type="button" id="addgroup">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="form-group">
+
+                                                                                                                        <label  style="font-weight:bold;"  for="sbgroup">Advance Account<span class="danger">*</span></label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="AdvAccnt" class="form-control" onkeyup="checkAdvanceAccounttextempty(event)" autocomplete="off" />
+                                                                                                                            <input type="hidden" id="hiddenadvaccId" />
+                                                                                                                            <div class="input-group-append" id="addsbgrp">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="window.open('../master/AccountHead')" type="button" id="addsbgrp">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                            <div class="row" style="margin-top:-1%">
+                                                                                                                <div class="col-md-6">
+
+
+                                                                                                                    <label style="font-weight:bold;"  for="group">Bank A/c No#</label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="txtbankaccount" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <label style="font-weight:bold;"  for="group">Bank A/c Name</label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="txtbankname" class="form-control" autocomplete="off" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="row" style="margin-top:-1%">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="form-group">
+
+                                                                                                                        <label  style="font-weight:bold;" for="group">Salary Amount<span class="danger">*</span></label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="SalAmount" class="form-control" autocomplete="off" disabled />
+                                                                                                                            <div class="input-group-append" id="addgroup">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="Addsalarypopupwindow(1)" type="button" id="addgroup">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <label style="font-weight:bold;"  for="group">Visa Expense</label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="txtvisaexpense" class="form-control" autocomplete="off" onkeypress="return isNumbercheck(event, this)" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                            <div class="row" style="margin-top:-1%">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <label style="font-weight:bold;"  for="group">Salary Advance</label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="SalAdvance" class="form-control" autocomplete="off" onkeypress="return isNumbercheck(event, this)" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <label style="font-weight:bold;"  for="group">OT Rate<span class="danger">*</span></label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="txtotrate" class="form-control" autocomplete="off" onkeypress="return isNumbercheck(event, this)" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="row" style="margin-top:-1%">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <label style="font-weight:bold;"  for="group">OTS Rate</label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="txtOtsRate" class="form-control" autocomplete="off" onkeypress="return isNumbercheck(event, this)" />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="form-group">
+                                                                                                                        <label style="font-weight:bold;"  for="group">Working Hours<span class="danger">*</span></label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <select id="WorkingHoursId" class="form-control">   </select>
+                                                                                                                            <div class="input-group-append">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="Addpopupwindow(4)" id="btndept" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="row" style="margin-top:-1%">
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <div class="form-group">
+                                                                                                                        <label style="font-weight:bold;"  for="group">Increments</label>
+                                                                                                                        <div class="input-group">
+                                                                                                                            <input type="text" id="txtIncrement" class="form-control" autocomplete="off" disabled />
+                                                                                                                            <div class="input-group-append">
+                                                                                                                                <button class="btn btn-outline-primary" onclick="Addpopupwindow(6)" id="btndept" type="button">+</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <div class="col-md-6">
+                                                                                                                    <label for="group" style="font-weight:500;">Net Salary</label>
+                                                                                                                    <div class="input-group">
+                                                                                                                        <input type="text" id="NetSal" class="form-control" autocomplete="off" style="font-weight:500" disabled />
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </form>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="card-body" style="border-top:1px solid #e3e8e8">
+                                            
+                                                <br />
+                                                <div class="form-body">
+                                                    <div class="form-actions center" >
+                                                       
+                                                        <div class="text-right">
+                                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1 btnbottom">Save <i class="fa fa-check-square-o"></i></button>
+                                                            <button type="button" class="btn btn-primary btn-min-width mr-1 mb-1 btnbottom" id="MultipleUpload" onclick="$('#Uploadpopupdiv').show()" style="">Upload <i class="fa fa-upload"></i></button>
+                                                            <button type="button"  id="btnuploaddoc" style="display:none" onclick="$('#Uploadpopupdivshow').show()" class="btn btn-primary btn-min-width mr-1 mb-1 btnbottom">View Documents</button>
+                                                            <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1 btnbottom">List <i class="ft-align-justify"></i></button>
+                                                            <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1 btnbottom">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                            <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1 btnbottom">Delete <i class="fa fa-times"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="Uploadpopupdivshow" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-lg" role="document" style="top:10%;height:1000px;width:1000px">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white" style="height:50px">
+                <h4 class="modal-title" id="myheader" style="margin-top:-2%;text-align:center">Documents</h4>
+                <button type="button" class="close" onclick="$('#Uploadpopupdivshow').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="DD">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            @*<div class="card-header">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td><h4 class="card-title" style="font-weight:bold;text-align:center">My Files</h4></td>
+                                        </tr>
+                                    </table>
+                                </div>*@
+                            <div class="px-3 card-body card-dashboard overflow-auto" style="height:500px;">
+                                <table id="tbldocumentlist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                            </div>
+                            @*<div class="card-content collapse show" style="width:inherit;">
+                                    <div class="card-body card-dashboard" style="overflow:auto;">
+                                        <table id="tbldocumentlist" class="table table-striped table-bordered base-style dataTable"></table>
+
+                                    </div>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div>
+                    <a href="../app-assets/img/portrait/small/avatar-s-12.png" class="html5lightbox" data-group="mygroup" data-thumbnail="images/Toronto_96.jpg" title="Toronto">Image1</a>
+                </div>*@
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div id="Uploadpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl " role="document" style="width:55%;left:12%" >
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Document Upload</h4>
+                <button type="button" class="close" onclick="$('#Uploadpopupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="categorydiv">
+                <div class="modal-body" >
+                    <br />
+                    <div style="overflow-y:scroll;overflow-x:hidden;">
+                        <div class="px-3">
+                            <div class="row">
+
+                                <label class="col-md-2" style="font-weight:bold;">Doc Type</label>
+                                <div class="col-md-3">
+                                    <select id="UploadDocument1" class="form-control slfile" onchange=Checkdup(1)></select>
+                                    <input id="UploadDocumentId1" style="display:none" />
+                                </div>
+                                <label class="col-md-2" style="font-weight:bold;">Document</label>
+                                <div class="col-md-4">
+                                    <input type='file' id="files1" class="btn btn-lg gradient-back-to-earth font-small-2 white p-2 mr-2" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel" />
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary" id="MultipleUploadbtn" onclick="AddUploadDiv(1,2)" style="margin-top:15%">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="MainDivseq" style="height:400px;overflow-y:scroll;overflow-x:hidden;">
+
+                    </div>                       
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="UploadEmployeeFiles()" >Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+                <div style="display:none;" id="listing">
+                    <section>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td><h4 class="card-title" style="font-weight:bold;">Employee List</h4></td>
+                                                <td width="50%"></td>
+                                                <td width="10%" align="right">
+                                                    <select id="typee" class="form-control" onchange="GetRows(0)">
+                                                        <option value="0">--All--</option>
+                                                        <option value="1">Active</option>
+                                                        <option value="2">NonActive</option>
+
+                                                    </select>
+                                                </td>
+                                                <td align="right">
+                                                    <div class="heading-elements">
+                                                        <div>
+                                                            <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                                            <span id="itemListButtonPlace">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+
+                                    </div>
+                                    <div class="card-content collapse show" style="width:inherit;">
+                                        <div class="card-body card-dashboard" style="overflow:auto;">
+                                            <table id="tblemployee" class="table table-striped table-bordered base-style dataTable"></table>
+                                            <br />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+
+
+
+
+                <div style="display:none"><input type="text" value="0" id="EmpId" /></div>
+                <div style="display:none"><input type="text"  id="EditNamesSave" /></div>
+                 <div style="display:none"><input type="text" id="UpdateNamesSave" /></div>
+                    <div style="display:none"><input type="text" id="foldercount" /></div>
+<div style="display:none"><input type="text" id="EmployeeDocId" /></div>
+
+       
+
+                <div class="modal fade text-left show" id="documtdiv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel35" style="display: none; background: rgba(0,0,0,0.5);  padding-right: 17px;">
+
+                    <div style="margin-top:5%;">
+
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background:#00B5B8">
+                                    <h3 class="modal-title" id="modelheader"> Modal Title</h3>
+                                    <button type="button" class="close" data-dismiss="modal" onclick="($('#documtdiv').hide())" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+
+                                <form id="Divpassport">
+                                    <div class="modal-body">
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email"> Number<span class="danger">*</span></label>
+                                            <input type="text" class="form-control" onkeyup="changetoupper(this.id)" id="DocNumber1" autocomplete="off">
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Country<span class="danger">*</span></label>
+                                            <select id="DocCOuntry1" class="form-control"></select>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Issued On<span class="danger">*</span></label>
+                                            <input type="text" id="DocIssue1" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title">Expiry<span class="danger">*</span></label>
+                                            <input type="text" id="DocExpiry1" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title1">Description</label>
+                                            <textarea class="form-control" id="DocDescription1" rows="3" autocomplete="off" style="resize: none;"></textarea>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <input type="text" class="form-control" id="TypeNumber1" value="1" style="display:none" autocomplete="off">
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer" style="background:#f2f2f2">
+                                        <input type="button" style="width:100px" class="btn btn-primary" onclick="popupsubmit(1)" value="Submit" id="submit1" />
+                                        <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc1()" value="Clear">
+                                    </div>
+                                </form>
+                                <form id="Divvisa">
+                                    <div class="modal-body">
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Number<span class="danger">*</span></label>
+                                            <input type="text" class="form-control" onkeyup="changetoupper(this.id)" id="DocNumber2" autocomplete="off">
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Country<span class="danger">*</span></label>
+                                            <select id="DocCOuntry2" class="form-control"></select>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Issued On<span class="danger">*</span></label>
+                                            <input type="text" id="DocIssue2" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title">Expiry<span class="danger">*</span></label>
+                                            <input type="text" id="DocExpiry2" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title1">Description</label>
+                                            <textarea class="form-control" id="DocDescription2" rows="3" autocomplete="off" style="resize: none;"></textarea>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <input type="text" class="form-control" id="TypeNumber2" value="2" style="display:none" autocomplete="off">
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer" style="background:#f2f2f2">
+                                        <input type="button" class="btn btn-primary" style="width:100px" onclick="popupsubmit(2)" value="Submit" id="submit2">
+                                        <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc2()" value="Clear">
+                                    </div>
+                                </form>
+                                <form id="Divnationalid">
+                                    <div class="modal-body">
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Number<span class="danger">*</span></label>
+                                            <input type="text" class="form-control" id="DocNumber3" autocomplete="off">
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Country<span class="danger">*</span></label>
+                                            <select id="DocCOuntry3" class="form-control"></select>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Date Of Issue<span class="danger">*</span></label>
+                                            <input type="text" id="DocIssue3" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title">Expiry<span class="danger">*</span></label>
+                                            <input type="text" id="DocExpiry3" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title1">Description</label>
+                                            <textarea class="form-control" id="DocDescription3" rows="3" autocomplete="off" style="resize: none;"></textarea>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <input type="text" class="form-control" id="TypeNumber3" value="3" style="display:none" autocomplete="off">
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer" style="background:#f2f2f2">
+                                        <input type="button" class="btn btn-primary" style="width:100px" onclick="popupsubmit(3)" value="Submit" id="submit3">
+                                        <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc3()" value="Clear">
+                                    </div>
+                                </form>
+                                <form id="Licenceid">
+                                    <div class="modal-body">
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email"> Number<span class="danger">*</span></label>
+                                            <input type="text" class="form-control" id="DocNumber4" autocomplete="off">
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Country<span class="danger">*</span></label>
+                                            <select id="DocCOuntry4" class="form-control"></select>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Issued On<span class="danger">*</span></label>
+                                            <input type="text" id="DocIssue4" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title">Expiry<span class="danger">*</span></label>
+                                            <input type="text" id="DocExpiry4" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title1">Description</label>
+                                            <textarea class="form-control" id="DocDescription4" rows="3" autocomplete="off" style="resize: none;"></textarea>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <input type="text" class="form-control" id="TypeNumber4" value="4" style="display:none" autocomplete="off">
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer" style="background:#f2f2f2">
+                                        <input type="button" class="btn btn-primary" style="width:100px" onclick="popupsubmit(4)" value="Submit" id="submit4">
+                                        <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc4()" value="Clear">
+                                    </div>
+                                </form>
+                                <form id="Labourid">
+                                    <div class="modal-body">
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email"> Number<span class="danger">*</span></label>
+                                            <input type="text" class="form-control" id="DocNumber5" autocomplete="off">
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Country<span class="danger">*</span></label>
+                                            <select id="DocCOuntry5" class="form-control"></select>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Issued On<span class="danger">*</span></label>
+                                            <input type="text" id="DocIssue5" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title">Expiry<span class="danger">*</span></label>
+                                            <input type="text" id="DocExpiry5" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title1">Description</label>
+                                            <textarea class="form-control" id="DocDescription5" rows="3" autocomplete="off" style="resize: none;"></textarea>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <input type="text" class="form-control" id="TypeNumber5" value="5" style="display:none" autocomplete="off">
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer" style="background:#f2f2f2">
+                                        <input type="button" class="btn btn-primary" style="width:100px" onclick="popupsubmit(5)" value="Submit" id="submit5">
+                                        <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc5()" value="Clear">
+                                    </div>
+                                </form>
+                                <form id="Insurancecmpy">
+                                    <div class="modal-body">
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email"> Number<span class="danger">*</span></label>
+                                            <input type="text" class="form-control" id="DocNumber6" autocomplete="off">
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Insurance Company<span class="danger">*</span></label>
+                                            <select id="DocCmpy6" class="form-control"></select>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="email">Starts On<span class="danger">*</span></label>
+                                            <input type="text" id="DocIssue6" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title">Ends On<span class="danger">*</span></label>
+                                            <input type="text" id="DocExpiry6" class="form-control" data-trigger="hover" data-placement="top" data-title="DOB" data-original-title="" title="" />
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <label for="title1">Description</label>
+                                            <textarea class="form-control" id="DocDescription6" rows="3" autocomplete="off" style="resize: none;"></textarea>
+                                        </fieldset>
+                                        <fieldset class="form-group floating-label-form-group">
+                                            <input type="text" class="form-control" id="TypeNumber6" value="6" style="display:none" autocomplete="off">
+                                        </fieldset>
+                                    </div>
+                                    <div class="modal-footer" style="background:#f2f2f2">
+                                        <input type="button" class="btn btn-primary" style="width:100px" onclick="popupsubmit(6)" value="Submit" id="submit6">
+                                        <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc6()" value="Clear">
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+                    <div class="modal-dialog" role="document" style="top:10%">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary white">
+                                <h3 class="modal-title" id="myheader"></h3>
+                                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <form id="designationdiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Code<span class="danger">*</span></label>
+                                        <input type="text" id="txt_code" class="form-control" onkeyup="changetoupper(this.id)" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatdesc">Description</label>
+                                        <textarea id="txt_des" class="form-control" autocomplete="off" style="resize: none;"></textarea>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btndesignationssave" onclick="SaveDesignation(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                                </div>
+                            </form>
+                            <form id="deptdiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Code<span class="danger">*</span></label>
+                                        <input type="text" id="txt_deptcode" class="form-control" onkeyup="changetoupper(this.id),CodeName()" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Name<span class="danger">*</span></label>
+                                        <input type="text" id="txt_deptname" class="form-control" onkeyup="changetoupper(this.id)" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatdesc">Description</label>
+                                        <textarea id="txt_deptdes" class="form-control" autocomplete="off" style="resize: none;"></textarea>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btndesignationssave" onclick="SaveDept(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                                </div>
+                            </form>
+                            <form id="Locationdiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Code<span class="danger">*</span></label>
+                                        <input type="text" id="txt_loccode" class="form-control" onkeyup="changetoupper(this.id),CodeName()" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Name<span class="danger">*</span></label>
+                                        <input type="text" id="txt_locname" class="form-control" onkeyup="changetoupper(this.id)" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatdesc">Description</label>
+                                        <textarea id="txt_locdes" class="form-control" autocomplete="off" style="resize: none;"></textarea>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btndesignationssave" onclick="SaveLcation(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                                </div>
+                            </form>
+                            <form id="Workinghoursdiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <br>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Working Hour<span class="danger">*</span></label>
+                                        <input type="text" id="txt_hour" class="form-control" autocomplete="off">
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btndesignationssave" onclick="SaveWorkingHours(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                                </div>
+                            </form>
+
+                            <form id="empdiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Code<span class="danger">*</span></label>
+                                        <input type="text" id="txt_divcode" class="form-control" onkeyup="changetoupper(this.id),CodeName()" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Name<span class="danger">*</span></label>
+                                        <input type="text" id="txt_divname" class="form-control" onkeyup="changetoupper(this.id)" autocomplete="off">
+                                    </fieldset>
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatdesc">Description</label>
+                                        <textarea id="txt_divdes" class="form-control" autocomplete="off" style="resize: none;"></textarea>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btndesignationssave" onclick="SaveDivision(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                                </div>
+                            </form>
+                            <form id="Incrementdiv">
+                                <div class="modal-body">
+                                    <div class="form-group row" style="margin-top:2.5%;">
+                                        <label class="col-md-5 label-control" for="userinput2">Increment From</label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="txtincdate" class="form-control" autocomplete="off" onkeyup="" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" style="margin-top:-1%;">
+                                        <label class="col-md-5 label-control" for="userinput2">Increment Type</label>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <select id="txtinctype" class="form-control"></select>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-primary" onclick="incrementwindow()" id="btninc" type="button">+</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row" style="margin-top:-4%;">
+                                        <label class="col-md-5 label-control" for="userinput2">Increment Amount</label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="txtincamt" class="form-control" autocomplete="off" onkeyup="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="background:#f2f2f2">
+                                    <input type="button" class="btn btn-primary" style="width:100px" onclick="popupsubmit(7)" value="Submit" id="submit6">
+                                    <input type="button" class="btn btn-primary" style="width:100px" data-dismiss="modal" onclick="closedoc7()" value="Clear">
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="popupdiv1" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+                    <div class="modal-dialog" role="document" style="top:10%">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary white">
+                                <h3 class="modal-title" id="myheader1"></h3>
+                                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <form id="addincdiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <fieldset class="form-group floating-label-form-group">
+                                        <label for="sbcatname">Increment Type<span class="danger">*</span></label>
+                                        <input type="text" id="txt_inc" class="form-control" autocomplete="off">
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btndesignationssave" onclick="SaveIncrementType(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="CloseWindow()" data-dismiss="modal" value="Clear">
+                                </div>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="salarypopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;">
+                    <div class="modal-dialog" role="document" style="top:5%;">
+                        <div class="modal-content" style="width:800px;">
+                            <div class="modal-header bg-primary white">
+                                <h3 class="modal-title" id="salheader"></h3>
+                                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <form id="salarydiv" style="display:none">
+                                <div class="modal-body">
+
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <td style="width:50%;">
+                                                <u>Earnings</u>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                                <br>
+                                                <div class="form-group row" style="margin-top:8%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Basic Salary<span class="danger">*</span></label>
+                                                    <div class="col-md-6">
+                                                           </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">DA</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtDA" class="form-control" autocomplete="off" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">TA</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtTA" class="form-control" autocomplete="off" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">HRA</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtHRA" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" class="form-control" style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Night Allowance</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtngtalowance" class="form-control" autocomplete="off" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Others</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtothers1" style="text-align:right" autocomplete="off" class="form-control" onblur="basicsaltodecimal()" onkeyup="calctotsalary()" />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Total Earnings<span class="danger">*</span></label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txttotearning" class="form-control" disabled />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="width:50%;" id="s`altd2">
+                                                <u>Deductions</u>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                                <br>
+                                                <div class="form-group row" style="margin-top:8%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">PF</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtPF" autocomplete="off" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" style="text-align:right" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Tax</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtTax" autocomplete="off" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" style="text-align:right" class="form-control" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">ESI</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtESI" autocomplete="off" onblur="basicsaltodecimal()" class="form-control" onkeyup="calctotsalary()" style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Others</label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txtothers2" autocomplete="off" class="form-control" onblur="basicsaltodecimal()" onkeyup="calctotsalary()" style="text-align:right" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2"></label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="aaa" autocomplete="off" class="form-control" onblur="basicsaltodecimal()" onkeyup="calctotsalary()" style="text-align:right;border:none;" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2"></label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="abz" onkeyup="calctotsalary()" onblur="basicsaltodecimal()" class="form-control" style="text-align:right;border:none;" />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <div class="form-group row" style="margin-top:-1%;">
+                                                    <label class="col-md-5 label-control" for="userinput2">Total Deductions<span class="danger">*</span></label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" id="txttotdeduction" disabled class="form-control" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <hr style="margin-top:-2%" />
+                                    @*<div class="form-group row" style="margin-top:-1%;">
+                                    <label class="col-md-5 label-control" for="userinput2">TA<span class="danger">*</span></label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="txtBasicSalary" class="form-control" />
+                                    </div>
+                                </div>*@
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <label class="col-lg-2 "> </label>
+                                        <div class="col-md-3">
+                                        </div>
+                                        <label class="col-lg-3 " style="margin-left:3.5%;margin-top:-2%;"> Total Salary Amount<span class="danger">*</span></label>
+                                        <div class="col-md-3" style="margin-top:-3%;margin-left:-.3%">
+                                            <input type="text" id="txttotalsal" style="width:103%;" disabled class="form-control" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnsalsave" onclick="SaveSalary(1)">
+                                    <input type="reset" class="btn btn-outline-secondary" onclick="salarypopuprefresh(1)" data-dismiss="modal" value="Clear">
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+
+                    function ReportCopy(EId)
+                    {
+                        alert(EId)
+                        var data = {};
+                        data.EmpId = EId;
+                        $.ajax({
+                            type: "POST",
+                            url: "../Master/EmployeeGetandGets",
+                            data: data,
+                            success: function (result) {
+                                    ShowEmployeeGet(result.oList);
+                            }
+                        });
+                    }
+                    var FileArray = [];
+                    $("#SalAccnt").autocomplete({
+                        source: function (request, response) {
+                            var data = {};
+                            data.AccountDescription = $("#SalAccnt").val();
+                            $.ajax({
+                                url: '../Inventory/AccountNumberSearch',
+                                type: "POST",
+                                data: data,
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data);
+                                    response($.map(data, function (item) {
+                                        return ({
+                                            ColCount: '-3',
+                                            label: item.DebitAccount,
+                                            label1: item.AccountDescription,
+                                            DebitAccount: item.DebitAccount,
+                                            AccountDescription: item.AccountDescription,
+                                            AccountId: item.AccountId,
+                                            headers: ["Account Code", "Account Name"]
+                                        })
+                                    }));
+                                }
+                            })
+                        },
+                        autoFocus: true,
+                        select: function (event, ui) {
+                            $('#hiddensalaccId').val(ui.item.AccountId)
+                            $('#SalAccnt').val(ui.item.DebitAccount);
+                            $('#AdvAccnt').focus();
+                        },
+                    });
+                    $("#AdvAccnt").autocomplete({
+                        source: function (request, response) {
+                            var data = {};
+                            data.AccountDescription = $("#AdvAccnt").val();
+                            $.ajax({
+                                url: '../Inventory/AccountNumberSearch',
+                                type: "POST",
+                                data: data,
+                                dataType: "json",
+                                success: function (data) {
+                                    console.log(data);
+                                    response($.map(data, function (item) {
+                                        return ({
+                                            ColCount: '-3',
+                                            label: item.DebitAccount,
+                                            label1: item.AccountDescription,
+                                            DebitAccount: item.DebitAccount,
+                                            AccountDescription: item.AccountDescription,
+                                            AccountId: item.AccountId,
+                                            headers: ["Account Code", "Account Name"]
+                                        })
+                                    }));
+                                }
+                            })
+                        },
+                        autoFocus: true,
+                        select: function (event, ui) {
+                            $('#hiddenadvaccId').val(ui.item.AccountId)
+                            $('#AdvAccnt').val(ui.item.DebitAccount);
+                            $('#SalAccnt').focus();
+                        },
+                    });
+                    $(function () {
+
+                        $('#DocExpiry1,#DocExpiry2,#DocExpiry3,#DocExpiry4,#DocExpiry5,#DocIssue6,#DocExpiry6').daterangepicker({
+                            minDate: minDate,
+                            maxDate: new Date(new Date().getFullYear() + 25, new Date().getMonth(), new Date().getDate()),
+                            singleDatePicker: true,
+                            showDropdowns: true,
+                            locale: {
+                                format: 'DD/MM/YYYY'
+                            }
+                        });
+
+                        $('#DocIssue2,#DocIssue3,#DocIssue4,#DocIssue5').daterangepicker({
+                            minDate: new Date('1/1/1990'),
+                            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                            singleDatePicker: true,
+                            showDropdowns: true,
+                            locale: {
+                                format: 'DD/MM/YYYY'
+                            }
+                        });
+                        $('#DateofJoin').daterangepicker({
+                            minDate: new Date('1/1/1900'),
+                            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 30),
+                            singleDatePicker: true,
+                            showDropdowns: true,
+                            locale: {
+                                format: 'DD/MM/YYYY'
+                            }
+                        });
+                        $('#DOB').daterangepicker({
+                            minDate: 1950,
+                            maxDate: new Date(new Date().getFullYear() - 5, new Date().getMonth(), new Date().getDate()),
+                            singleDatePicker: true,
+                            showDropdowns: true,
+                            locale: {
+                                format: 'DD/MM/YYYY'
+                            }
+                        });
+                        $('#txtincdate').daterangepicker({
+                            minDate: 2018,
+                            maxDate: new Date(new Date().getFullYear() + 5, new Date().getMonth(), new Date().getDate()),
+                            singleDatePicker: true,
+                            showDropdowns: true,
+                            locale: {
+                                format: 'DD/MM/YYYY'
+                            }
+                        });
+                    });
+                    
+                    function isNumbercheck(evt, selectedvalue) {
+                        var charCode = (evt.which) ? evt.which : event.keyCode
+                        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+                        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+                            evt.preventDefault();
+                            warningshow('Digits Only')
+                            return false;
+                        }
+                        return true;
+
+                    }
+
+                    $("#EmployeeUser").autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function (request, response) {
+                            var data1 = {};
+                            data1.UserName = $("#EmployeeUser").val();
+
+                            $.ajax({
+                                url: '../Master/UserSearchInUserMenuSettings',
+                                type: "POST",
+                                data: data1,
+                                dataType: "json",
+                                success: function (data) {
+
+                                    response($.map(data, function (item) {
+
+                                        return ({
+                                            ColCount: '1',
+                                            label: item.UserName,
+                                            UserId: item.UserId,
+                                            UserName: item.UserName,
+                                            UserRole: item.UserRole,
+                                            MenuCode: item.MenuCode,
+                                            headers: ["User"]
+                                        })
+                                    }));
+                                }
+
+                            })
+
+                        },
+                        autoFocus: true,
+                        select: function (event, ui) {
+
+                            $('#EmployeeUserId').val(ui.item.UserId);
+
+                        },
+                    });
+
+                    function UploadEmployeeFiles() {
+                        var newid = rowcount - 1;
+                        for (var k = 1; k <= newid; k++) {
+                            var fi = document.getElementById('files' + newid);
+                            if ((fi.files.length > 0) && ($('#UploadDocument' + newid).val() == 0)) {
+                                warningshow('Please Select Document Type', 'UploadDocument' + newid);
+                                return false;
+                            }
+                            else {
+                                $('#Confirmflag').val('EmployeeFiles'), $('#ConfirmRowId').val(0)
+                                $('#confirmmessage').text('Do You Want To Upload These Files?')
+                                $('#confirm').show();
+                                $('#confirmOk').prop("disabled", false);
+                                $('#confirmOk').focus();
+                            }
+                        }
+                       
+                       
+                    }
+                    function OKUploadEmployeeFiles() {
+                       
+                        if (document.getElementById('files1').files.length > 0) {
+                            swal('Document Uploaded Successfully', '', 'success');
+                            $('#Uploadpopupdiv').hide();
+                                //$("#LoadingSmall").show();
+                            }
+                               
+                            else {
+                            warningshow('No Files Selected', 'files1');
+                                return false;
+                            }                        
+                    }
+                    function FileUploadDBC(id, empId, status) {
+                        if (rowcount >= 2) {
+                            for (var j = 1; j <= rowcount - 1; j++) {
+                                if (document.getElementById('files' + j).files.length > 0) {
+                                    FileArray.push(j)
+                                }
+                            }
+                            CreateFolder(id,empId);
+                        }
+                        else {
+                           // alert(status)
+                            Showalerts(status);
+                        }
+                    }
+                    function CreateFolder(Flag,empId) {
+                        var data = {};                   
+                        data.EmpId = empId;
+                        $.ajax({
+                            type: "POST",
+                            url: "../Master/CreateEmployeeFolderNew",
+                            data: data,
+                            success: function (result) {
+                                FileUploadDB(Flag, empId)
+                            }
+                        });
+                    }
+
+                    //function FileUploadDBC(qwe, mjk) {
+                    //    for (var j = 1; j <= rowcount - 1; j++) {
+                    //        if (document.getElementById('files' + j).files.length > 0) {
+                    //            FileArray.push(j)
+                    //        }
+                    //    }
+                    //    FileUploadDB(qwe, mjk);
+                    //}
+
+
+                    function FileUploadDB(Flag, empId) {                      
+                        // Database Save
+                      
+                        var Firstvalue = FileArray[0];
+                        //alert(FileArray)
+                        var data = {};
+                        data.DepartmentId = ERPDeptId;
+                        data.DocumentName = $("#files" + Firstvalue).get(0).files[Flag].name;
+                        data.Extension = $("#files" + Firstvalue).get(0).files[Flag].name.split('.').pop();
+                        data.DocumentType = $('#UploadDocument' + Firstvalue).val();
+                        data.EmpId = empId;
+                        data.Flag = Flag;
+                        $.ajax({
+                            type: "POST",
+                            url: "../Master/EmployeeFileInsert",
+                            data: data,
+                            success: function (result) {
+                                var DBFlag = result.dList[0].Flag;
+                                var status = result.dList[0].Status;
+                                var CrtEmpId = result.dList[0].EmpId;
+                                var StatusFlag = result.dList[0].StatusFlag;
+                                if (status == 1) {
+                                    var formData = new FormData();
+                                    var imageName = DBFlag
+                                    var browsedFile = document.getElementById("files" + Firstvalue).files[Flag];
+                                    var Extension = $("#files" + Firstvalue).get(0).files[Flag].name.split('.').pop();
+                                    var SlNo = CrtEmpId
+
+                                    formData.append("FileUpload", browsedFile);
+                                    formData.append("FileName", imageName);
+                                    formData.append("SlNo", SlNo);
+                                    formData.append("Extension", Extension);
+                                    console.log(formData)
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '/Master/EmployeeFileUpload',
+                                        data: formData,
+                                        dataType: "html",
+                                        contentType: false,
+                                        processData: false,
+                                        success: function (result) {
+                                            if (Flag < document.getElementById('files' + Firstvalue).files.length - 1) {
+                                                Flag++;
+                                                FileUploadDB(Flag, CrtEmpId);
+                                            }
+                                            else {
+                                                $("#LoadingSmall").hide();
+                                                FileArray.shift();
+                                                if (FileArray.length > 0) {
+                                                    FileUploadDB(0, CrtEmpId);
+                                                }
+                                                else {
+                                                  
+                                                    if (StatusFlag == 1) {
+                                                        Showalerts(StatusFlag)
+                                                        $('.adddelrow').remove();
+                                                        $('#UploadDocument1').val(0);
+                                                        $('#files1').val('');
+                                                        rowcount = 2;
+                                                    }
+                                                    else {
+                                                        Showalerts(StatusFlag)
+                                                        $('.adddelrow').remove();
+                                                        $('#UploadDocument1').val(0);
+                                                        $('#files1').val('');
+                                                        rowcount = 2;
+                                                    }
+                                                   
+                                                }
+                                               
+                                                //ViewSavedFiles();
+                                            }
+                                        }
+                                    });
+
+                                }
+
+                            }
+                        });
+                        }
+                        
+                    
+                        function ViewUploadDoc(EmpId) {
+                            var data = {};
+                            data.EmpId = EmpId;
+                            $.ajax({
+                                type: "POST",
+                                url: "../Master/EmployeeDocumentsView",
+                                data: data,
+                                success: function (result) {
+                                    $('#tbldocumentlist tr').remove()
+                                    ShowViewUploadDoc(result.oList);
+                                }
+                            });
+
+                        }
+                        function ShowViewUploadDoc(result) {
+                            disable_datatable('tbldocumentlist');
+                            var responseText = '';
+                            for (var i = 0; i < result.length; i++) {
+
+                                var extension = (result[i].DocumentName).split('.').pop().toLowerCase();
+
+
+                                if (extension == 'jpeg' || extension == 'jpg' || extension == 'png' || extension == 'gif' || extension == 'tif') {
+                                    var newrow = '<a style="" )>' + result[i].DocumentName + '</a></br>'
+                                    responseText += '<tr id="' + result[i].EmployeeDocumentId + '"><td  align=center><img src="../ProjectImages/Employee/IconImages/imagepng.jpg" style="width:50px;height:40px" /></td><td>' + result[i].DocumentTypeName + '</td><td id="D' + result[i].EmployeeDocumentId + '">' + newrow + '</td><td align=center><a onclick=ViewDocuments(\'' + result[i].EmpId + '\',\'' + result[i].FolderName + '\',\'' + extension + '\')>' + DownloadButtton + '</a></td><td align=center><a onclick=DeleteUploadFile("' + result[i].EmployeeDocumentId + '")>' + DeleteButton + '</a></td></tr>';
+                                }
+
+                                else if (extension == 'pdf') {
+                                    var newrow = '<a style="" )>' + result[i].DocumentName + '</a></br>'
+                                    responseText += '<tr id="' + result[i].EmployeeDocumentId + '"><td  align=center><img src="../ProjectImages/Employee/IconImages/imagepdf.jpg" style="width:50px;height:40px" /></td><td>' + result[i].DocumentTypeName + '</td><td id="D' + result[i].EmployeeDocumentId + '">' + newrow + '</td><td align=center><a onclick=ViewDocuments(\'' + result[i].EmpId + '\',\'' + result[i].FolderName + '\',\'' + extension + '\')>' + DownloadButtton + '</a></td><td align=center><a onclick=DeleteUploadFile("' + result[i].EmployeeDocumentId + '")>' + DeleteButton + '</a></td></tr>';
+                                }
+                                else {
+
+                                    var newrow = '<a style="" )>' + result[i].DocumentName + '</a></br>'
+                                    responseText += '<tr id="' + result[i].EmployeeDocumentId + '"><td  align=center><img src="../ProjectImages/Employee/IconImages/imageexcel.png" style="width:50px;height:40px" /></td><td>' + result[i].DocumentTypeName + '</td><td id="D' + result[i].EmployeeDocumentId + '">' + newrow + '</td><td align=center><a onclick=ViewDocuments(\'' + result[i].EmpId + '\',\'' + result[i].FolderName + '\',\'' + extension + '\')>' + DownloadButtton + '</a></td><td align=center><a onclick=DeleteUploadFile("' + result[i].EmployeeDocumentId + '")>' + DeleteButton + '</a></td></tr>';
+                                }
+
+
+                                $('#tbldocumentlist').html(responseText + '');
+                            }
+
+                        }
+                        function ViewDocuments(DocumentId, CntFile, extension) {
+                            var flname = '../ProjectImages/Employee/' + DocumentId + '/' + CntFile + '.' + extension;
+                            // alert(flname)
+                            window.open(flname);
+                        }
+
+                        function DeleteUploadFile(subdocumentid) {
+                            $('#EmployeeDocId').val(subdocumentid);
+                            $('#Confirmflag').val('Docdelete'), $('#ConfirmRowId').val(subdocumentid)
+                            $('#confirmmessage').text('Do you want to Delete this Document?')
+                            $('#confirm').show();
+                            $('#confirmOk').prop("disabled", false);
+                            $('#confirmOk').focus();
+                        }
+                        function EditUplodedImages() {
+                            var data = {};
+                            data.EmpId = $('#EmployeeDocId').val();
+                            $.ajax({
+                                type: "POST",
+                                url: "../Master/EmployeeDocumentDelete",
+                                data: data,
+                                success: function (result) {
+                                    var status = result.oList[0].Status;
+                                    var EmployeeDocumentId = result.oList[0].EmployeeDocumentId;
+                                    $('#' + EmployeeDocumentId).remove();
+                                    Showalerts(status);
+                                }
+                            });
+
+
+                        }
+
+                </script>
+

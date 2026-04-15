@@ -1,0 +1,363 @@
+﻿
+@{
+    ViewBag.Title = "ImmunizationReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+    #btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnback:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnprint:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="myData" data-x="M387" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+
+
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="15%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#Searchcode').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:20px;display:none" id="btnprint" onclick="PrintthisReportWindows('LABBillREPORT', $('#LabBillLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:.1%;" />
+
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="width:100%;margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Immunization Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:11%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:4%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:3%;"></div>
+                    <div class="row" style="margin-top:2%">
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:8%">Patient</label>
+                        <div class="col-md-9" style="margin-top:2%">
+                            <input type="text" id="Searchcode"  class="form-control" />  
+                            <input type="hidden" id="PatientId" class="form-control" value="0" />  
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:6%" id="btnsubmit" class="btn btn-primary">Go</button>
+                    <input type="hidden" id="LabBillLength" class="form-control" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#Searchcode").focus();
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+    function Showreport(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th align= center>Sl#</th><th>OP Visit#</th><th>Vaccine Name</th><th>Brand Name</th><th>Given Date</th><th>Next Date</th><th>Status</th><th>Patient</th><th>DOB</th><th> Phone#</th><th>Address</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr ><td align= center id = Col1_' + slno + '>' + slno + '</td><td id= Col5_' + slno + '>' + result[i].OPVisit + '</td><td id= Col6_' + slno + '>' + result[i].VaccineName + '</td><td  id= Col7_' + slno + '>' + result[i].BrandName + '</td><td id= Col2_' + slno + '>' + result[i].GivenDate + '</td><td id= Col3_' + slno + '>' + result[i].NextDate + '</td><td id= Col4_' + slno + '>' + result[i].Status + '</td><td id= Col8_' + slno + '>' + result[i].PName + '</td><td id= Col10_' + slno + '>' + result[i].PDOB + '</td><td id= Col9_' + slno + '>' + result[i].PhoneNo + '</td><td  id= Col11_' + slno + '>' + result[i].Address1 + '</td></tr>';
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th> </th><th>OP Visit#</th><th>Vaccine Name</th><th>Brand Name</th><th>Given Date</th><th>Next Date</th><th>Status</th><th>Patient</th><th>DOB</th><th> Phone#</th><th>Address</th></tr> </tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Immunization Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch2('Tblreport', true, title, 'buttonPlace');
+        $('#LabBillLength').val(result.length);
+        $('#header').text(title);
+    }
+
+
+    $(function () {
+
+        $("#Searchcode").autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                $('#PatientId').val(0);
+
+                var data = {};
+                data.PatientName = $("#Searchcode").val();
+                data.DeptId = ERPDeptId;
+                $.ajax({
+                    url: '../Revisit/HMS_PatientSearchRegistration',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '2',
+                                label: item.OPSerName + ' - ' + item.OPNumber,
+                                label1: item.PatientName,
+                                PatientId: item.PatientId,
+                                DOB: item.DOB,
+                                Contact: item.Contact,
+                                OPNumber: item.OPNumber,
+                                PatientName: item.PatientName,
+                                headers: ["RegNo", "Patient"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#PatientId').val(ui.item.PatientId);
+                window.setTimeout(function () {
+                    $("#Searchcode").val(ui.item.PatientName);
+                },100);
+            },
+        });
+
+        $('#User').focus();
+        $('#Dept').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('#DateFrom,#DateTo').val(CurDate);
+
+        $("#btnsubmit").click(function (e) {
+
+
+            if ($('#DateFrom').val() == '') {
+                warningshow('Please Select From Date', 'DateFrom');
+            }
+            else if ($('#DateTo').val() == '') {
+                warningshow('Please Select To Date', 'DateTo');
+            }
+            else {
+                $('#Loading').show();
+
+                var data = {};
+                data.FromDate = $('#DateFrom').val();
+                data.ToDate = $('#DateTo').val();
+                data.PatientId = parseInt($('#PatientId').val() || 0);
+                data.DelFlag = 1;
+                data.Status = '';
+                $.ajax({
+                    type: "POST",
+                    url: "../Report/HMS_ImmunizationReport",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showreport(result);
+                    }
+                });
+            }
+        });
+
+    });
+
+    
+
+    function datatableWithsearch2(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+
+        });
+        var table = null;
+        if (download) {
+
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                "columnDefs": [
+                      { "width": "3%", "targets": 0 },
+                      { "width": "7%", "targets": 1 },
+                      { "width": "15%", "targets": 2 },
+                      { "width": "10%", "targets": 3 },
+                      { "width": "8%", "targets": 4 },
+                      { "width": "8%", "targets": 5 },
+                      { "width": "5%", "targets": 6 },
+                      { "width": "15%", "targets": 7 },
+                      { "width": "5%", "targets": 8 },
+                      { "width": "8%", "targets": 9 },
+                     // { "width": "10%", "targets": 10 },
+
+                ],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }
+                        }
+                    ]
+                },
+                'colvis'
+                ],
+
+            });
+
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+
+
+        }
+        else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+    }
+
+</script>
+
+
+
+
+
+

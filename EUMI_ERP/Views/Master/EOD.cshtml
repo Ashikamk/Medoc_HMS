@@ -1,0 +1,451 @@
+﻿@{
+    ViewBag.Title = "EODId";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="myData" data-x="M346" />
+
+
+<div id="Entry" style="width:60%;height:100%;">
+
+    <div class="row">
+        <div class="col-md-8" style="margin-top:15%;margin-left:50%">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0" style="text-align:center;font-weight:bold;font-size: x-large;">EOD</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="row" style="align-items: center;">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label style="font-weight:bold;height:auto;margin-top:4%;font-size: larger;" >Current Date<span class="danger">*</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" style="height:auto" id="currentdate" class="form-control" autocomplete="off " disabled>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions center" style="margin-left:2%;">
+                                        <button type="button" style="width:140px" id="btnchange" class="btn btn-primary btn-min-width mr-1 mb-1">Change</button>
+                                    </div>
+                                </form>
+                                <div id="OTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+                                    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="col-md-12">
+                                                    <div class="row" id="panel" style="margin-top:2%;">
+
+                                                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                                                        <div class="col-md-7">
+                                                            <input type="text" id="txtotp" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="panel" style="margin-top:2%;">
+
+                                                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                                                        <div class="col-md-7">
+                                                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" style="width:100px;" id="btnotpcancel" onclick="$('#OTPDiv').hide(), $('#txtotp,#otpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                                                <button type="button" style="width:100px" id="btnotpsave" onclick="CheckEditInvoce()" class="btn btn-outline-warning">Continue</button>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="CancelOTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+                                    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" onclick="$('#CancelOTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="col-md-12">
+                                                    <div class="row" id="panel" style="margin-top:2%;">
+
+                                                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                                                        <div class="col-md-7">
+                                                            <input type="text" id="cancelotp" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="panel" style="margin-top:2%;">
+
+                                                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                                                        <div class="col-md-7">
+                                                            <input type="text" id="cancelotpremarks" class="form-control" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#CancelOTPDiv').hide(), $('#cancelotp,#cancelotpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                                                <button type="button" style="width:100px" id="btncnclsave" onclick="CheckCancelInvoce()" class="btn btn-outline-warning">Continue</button>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div style="display:none"><input type="text" value="0" id="EODId" /></div>
+<script>
+    $(document).ready(function () {
+      
+        Defaultfocus();
+        LoadDates();
+        var data = {};
+        data.CmpnyId = 0;
+        $.ajax({
+           
+            type: "POST",
+            url: "../Company/CompanyDetailsGetandGets",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    ShowEdate(result.oList);
+                }
+            }
+
+
+        });
+       
+        
+    });
+   
+   
+
+    $("#btnchange").click(function (e) {
+        $('#confirmmessage').text('Date Will Change to Next Date') //No Further Entry in the data possible
+        $('#confirm').show();
+        $('#confirmOk').focus();
+        $('#Confirmflag').val('NextEOD');
+    });
+
+    function ChangeEOD()
+    {
+        $('#confirmmessage').text('No Further Entry in the current date is possible')
+        $('#confirm').show();
+        $('#confirmOk').focus();
+        $('#Confirmflag').val('ChangeEOD');
+    }
+    function Edate() {
+
+    }
+  
+    function OTPCheck(status) {
+        if (status == 1) {
+            EditInvoice();
+        }
+        else {
+            warningshow('Invalid OTP', 'txtotp');
+            $("#txtotp").select();
+        }
+    }
+    function EditInvoice() {
+        $('#OTPDiv').hide();
+        $('#txtotp').val('')
+        $('#btnotpsave').prop('disabled', true);
+        var data = {};
+        data.EODId = $('#EODId').val();
+        data.EODDate = $('#currentdate').val();
+        data.UserId = ERPUserId;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/HMS_EODUpdate",
+            data: data,
+            success: function (result) {
+               
+                    $('#btnotpsave').prop('disabled', false);
+                    var status = result.oList[0].Status;
+                    var EODDate = result.oList[0].EODDate;
+                    $("#currentdate").val(EODDate);
+                    Showalerts(status);
+
+                
+            }
+
+        });
+
+    }
+    
+
+    function CheckEditInvoce() {
+        if ($.trim($('#txtotp').val()) == '') {
+            warningshow('Enter OTP', 'txtotp');
+        }
+        else if ($.trim($('#otpremarks').val()) == '') {
+            warningshow('Enter Remarks', 'otpremarks');
+        }
+        else {
+            var data = {};
+            data.UserId = ERPUserId;
+            data.OTP = $("#txtotp").val();
+            data.Remarks = $('#otpremarks').val();
+            data.Operation = 'Sales Invoice- OTP - Edit , Bill No : ' + $("#txtBillseriesId ").find("option:selected").text() + ' - ' + $("#txtBillSlNocopy").val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../Home/OTPCheckforUser",
+                data: data,
+                success: function (result) {
+                    for (var i = 0; i < result.oList.length; i++) {
+                        var status = result.oList[i].Status;
+                        OTPCheck(status)
+                    }
+                }
+            });
+        }
+    }
+    function ConfirmboxResult(Result, status, rowid) {
+        
+        $('#dateconfirmOk').prop('disabled', true);
+        if (Result == 'true' && status == 'NextEOD') {
+           // window.setTimeout(function () {
+                ChangeEOD();
+           // }, 500);
+           
+        }
+        else if (Result == 'true' && status == 'ChangeEOD') {
+            OTPCheck(1);
+            $('#confirm').fadeOut();
+        }
+        else
+        {
+            $('#confirm').fadeOut();
+        }
+        $('#datechange').fadeOut();
+       
+        window.setTimeout(function () {
+            $('#dateconfirmOk').prop('disabled', false);
+        }, 2000);
+        
+
+    }
+    function Showalerts(Status) {
+       if (Status == 1) {
+         
+            swal('Data Updated Successfully', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+
+       }
+       
+        else {
+            swal('Failed To Update', "", "warning");
+            $('.swal-button swal-button--confirm').focus();
+       }
+      
+
+    }
+
+    function Defaultfocus() {
+        $('#currentdate').focus();
+      
+    }
+    $("#txtotp").keypress(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 13) {
+            $("#otpremarks").focus();
+        }
+    });
+    $("#otpremarks").keypress(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 13) {
+            $("#btnotpsave").focus();
+        }
+    });
+    $("#cancelotp").keypress(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 13) {
+            $("#cancelotpremarks").focus();
+        }
+    });
+    $("#cancelotpremarks").keypress(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 13) {
+            $("#btncnclsave").focus();
+        }
+    });
+    $("#btnotpsave").keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 37) {
+            $("#btnotpcancel").focus();
+        }
+    });
+    $("#btncnclsave").keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 37) {
+            $("#btndivdelete").focus();
+        }
+    });
+    $("#btnotpcancel").keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 39) {
+            $("#btnotpsave").focus();
+        }
+    });
+    $("#btndivdelete").keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 39) {
+            $("#btncnclsave").focus();
+        }
+    });
+    $("#btnotpsave").focus(function (e) {
+        $("#btnotpsave").removeClass("btn btn-outline-warning");
+        $("#btnotpsave").addClass("btn btn-warning");
+    });
+    $("#btnotpsave").focusout(function (e) {
+        $("#btnotpsave").removeClass("btn btn-warning");
+        $("#btnotpsave").addClass("btn btn-outline-warning");
+    });
+
+    $("#btncnclsave").focus(function (e) {
+        $("#btncnclsave").removeClass("btn btn-outline-warning");
+        $("#btncnclsave").addClass("btn btn-warning");
+    });
+    $("#btncnclsave").focusout(function (e) {
+        $("#btncnclsave").removeClass("btn btn-warning");
+        $("#btncnclsave").addClass("btn btn-outline-warning");
+    });
+
+    $("#btnotpcancel").focus(function (e) {
+        $("#btnotpcancel").removeClass("btn btn-outline-secondary");
+        $("#btnotpcancel").addClass("btn btn-secondary");
+    });
+    $("#btnotpcancel").focusout(function (e) {
+        $("#btnotpcancel").removeClass("btn btn-secondary");
+        $("#btnotpcancel").addClass("btn btn-outline-secondary");
+    });
+
+    function CheckCancelInvoce() {
+        if ($.trim($('#cancelotp').val()) == '') {
+            warningshow('Enter OTP', 'cancelotp');
+        }
+        else if ($.trim($('#cancelotpremarks').val()) == '') {
+            warningshow('Enter Remarks', 'cancelotpremarks');
+        }
+        else {
+            var data = {};
+            data.UserId = ERPUserId;
+            data.OTP = $("#cancelotp").val();
+            data.Remarks = $('#cancelotpremarks').val();
+            data.Operation = 'Sales Invoice- OTP - Cancel , Bill No : ' + $("#txtBillseriesId ").find("option:selected").text() + ' - ' + $("#txtBillSlNocopy").val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../Home/OTPCheckforUser",
+                data: data,
+                success: function (result) {
+                    for (var i = 0; i < result.oList.length; i++) {
+                        var status = result.oList[i].Status;
+                        OTPCancelCheck(status)
+                    }
+                }
+            });
+        }
+    }
+
+    function GoEditInv(flg) {
+      
+            if (flg == 0)         //Edit
+            {
+                $('#OTPDiv').show();
+                $('#txtotp,#otpremarks').val('');
+                $('#txtotp,#otpremarks').prop('disabled', false);
+                $('#txtotp').focus();
+            }
+          
+
+    }
+
+    function formrefresh() {
+        $('#currentdate').val('');
+        $('#EODId').val('0');
+        $('#otpremarks').val('');
+        $('#txtotp').val('');
+        $('#Warningpopup').fadeOut();
+        $('.swal-button swal-button--confirm').focus();
+    }
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    function LoadDates() {
+        $('#currentdate').val(CurDate);
+
+      
+        //$('#currentdate').daterangepicker({
+
+        //    maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+        //    singleDatePicker: true,
+        //    showDropdowns: true,
+        //    locale: { format: 'DD/MM/YYYY' },
+        //});
+    }
+
+    function ShowEdate(result) {
+        {
+            if(result[0].EODDate=='')
+            {
+                $("#currentdate").val(CurDate)
+            }
+            else
+            {
+                $("#currentdate").val(result[0].EODDate);
+            }
+        }
+    }
+   
+
+</script>
+
+
+
+
+
+
+
+
+
+
+

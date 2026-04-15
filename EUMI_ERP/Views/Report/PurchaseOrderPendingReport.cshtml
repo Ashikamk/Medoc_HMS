@@ -1,0 +1,668 @@
+﻿
+
+@{
+    ViewBag.Title = "PurchaseOrderPendingReport";
+}
+
+<style type="text/css">
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+    /* .eumi-search-table tbody td { border:none; } */
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+</style>
+<div class="card">
+    <div class="row m-1">
+        <div class="col-md-6">
+            <h2>Purchase Order Pending </h2>
+        </div>
+        <div class="col-md-6 eumi-button-area" id="divReportOptions" data-download-url="@Url.Action("PurchaseOrderPendingReportDownload","Report")">
+
+
+            <div class="btn-group" role="group">
+                <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Columns
+                </button>
+                <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paramModal">Change Parameters</button>
+
+            <div class="btn-group excelexport" role="group">
+                <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Export
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                    <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                    <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                    <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                    <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary" data-eumi-clear="1" type="button">Clear Search</button>
+        </div>
+    </div>
+
+    <div class="row m-1">
+        <div id="paramOfReport" class="row m-1"></div>
+    </div>
+
+    <div style="overflow:auto;">
+        <table id="PurchaseOrderPending" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:3000px; margin: 0 auto 0 0;">
+            <tfoot>
+                <tr class="eumi-search-row">
+                    <th></th>
+                    <th>Ref.No</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>LPO</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Grand Total</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th id="eumiQuantity" class="text-right">Quantity</th>
+                    <th id="eumiInvQuantity" class="text-right">Inv Quantity</th>
+                    <th id="eumiBalQuantity" class="text-right">Balance Quantity</th>
+                    <th id="eumiValue" class="text-right">Value</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div style="height:100px;clear: both">
+    &nbsp;
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var decimal = (window.Decimal || 1);
+        window.EumiLastSelectedInOrderRpt = null;
+        var table = $('#PurchaseOrderPending').EumiDataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "../Report/PurchaseOrderPendingReportJson",
+                "type": "POST",
+                "data": function (data, settings) {
+                    var addData = (window.EumiLastSelectedInOrderRpt || {});
+                    addData.dateFrom = moment(addData.dateFrom || new Date()).format("YYYY-MM-DD");
+                    addData.dateTo = moment(addData.dateTo || new Date()).format("YYYY-MM-DD");
+                    addData.SupplierId = (addData.SupplierId || 0);
+                    addData.Material = (addData.Material || 0);
+                    addData.Category = (addData.Category || 0);
+                    addData.SubCategory = (addData.SubCategory || 0);
+                    addData.Group = (addData.Group || 0);
+                    addData.SubGroup = (addData.SubGroup || 0);
+                    addData.JobCode = (addData.JobCode || 0);
+                    addData.DepartmentId = (addData.DepartmentId || 0);
+                    if (!addData.title) {
+                        addData.title = "Parameters - " + "From: " + moment(new Date()).format("DD-MM-YYYY") + " To: " + moment(new Date()).format("DD-MM-YYYY")
+                        $("#paramOfReport").text(addData.title);
+                    }
+                    data.addData = addData;
+                    $("#eumiQuantity").text(0);
+                    $("#eumiInvQuantity").text(0);
+                    $("#eumiBalQuantity").text(0);
+                    $("#eumiBaseTotal").text(parseFloat(0).toFixed(decimal));
+                }
+            },
+            "columnDefs": [{
+                "targets": 7,
+                "className": "text-right",
+                "render": function (data) {
+                    return (data || 0).toFixed(decimal);
+                }
+            },
+                {
+                    "targets": 8,
+                    "className": "text-right",
+                    "render": function (data) {
+                        return (data || 0).toFixed(decimal);
+                    }
+                },
+            {
+                "targets": 9,
+                "className": "text-right",
+                "render": function (data) {
+                    return (data || 0).toFixed(decimal);
+                }
+            },
+            {
+                "targets": 10,
+                "className": "text-right",
+                "render": function (data) {
+                    return (data || 0).toFixed(decimal);
+                }
+            }],
+
+            "columns": [
+                { data: "slno", title: "Slno", searchable: false, sortable: false },
+                { data: "OrderNo", title: "Refno", sortable: false },
+                { data: "OrderDate", title: " Date", sortable: false },
+                { data: "CustName", title: "Customer", sortable: false },
+                { data: "LPO", title: "LPO", sortable: false },
+                { data: "ItemCode", title: "Code", sortable: false },
+                { data: "Description", title: "Description", sortable: false },
+                { data: "Quantity", title: "Quantity", sortable: false },
+                { data: "InvQuantity", title: "InvQuantity", sortable: false },
+                { data: "BalQty", title: "Balance Quantity", sortable: false },
+                { data: "Amount", title: "Value", sortable: false },
+            ],
+            "createdRow": function (row, data, index) {
+                if (index == 0) {
+                    $("#eumiQuantity").text(data._quantity.toFixed(decimal));
+                    $("#eumiInvQuantity").text(data._invQuantity.toFixed(decimal));
+                    $("#eumiBalQuantity").text(data._balanceqty.toFixed(decimal));
+                    $("#eumiBaseTotal").text(data._baseTotal.toFixed(decimal));
+                    console.log(index);
+                }
+            },
+        });
+
+        $('#PurchaseOrderPending tbody').on('click', 'tr', function () {
+
+        });
+    });
+</script>
+
+
+
+@section popups {
+
+    <div class="modal" id="paramModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Report Parameters</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dateFrom">From Date:</label>
+                                <input type="text" class="form-control" id="dateFrom">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dateTo">
+                                <label for="dateTo">To Date:</label>
+                                <input type="text" class="form-control" id="dateTo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Supplier">Supplier</label>
+                                <input type="text" class="form-control" id="Supplier">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Product</label>
+                                <input type="text" class="form-control" id="Product">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Category">Category:</label>
+                                <select id="Category" class="form-control">
+                                    <option value="0">- All -</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="SubCategory">Sub Category:</label>
+                                <select id="SubCategory" class="form-control">
+                                    <option value="0">- All -</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Group">Group:</label>
+                                <select id="Group" class="form-control">
+                                    <option value="0">- All -</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="SubGroup">Sub Group:</label>
+                                <select id="SubGroup" class="form-control">
+                                    <option value="0">- All -</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Dept">Department:</label>
+                                <select id="Dept" class="form-control">
+                                    <option value="0">- All -</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-lg-1 text-lg-right">JobCode</label>
+                                <input type="text" id="Jobcode" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="redrawTable();">Apply</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section bottomscripts {
+    <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+    <script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+    <script type="text/javascript">
+
+       $("#Supplier").autocomplete({
+           source: function (request, response) {
+               var data = {};
+               data.CustName = $("#Supplier").val();
+               data.CustType = 'S';
+
+               $.ajax({
+                   url: '../Master/CustomerOrSupplierSearch',
+                   type: "POST",
+                   data: data,
+                   dataType: "json",
+                   success: function (data) {
+
+                       response($.map(data, function (item) {
+                           return ({
+                               ColCount: 'TWOEnq',
+                               label: item.CustAccount,
+                               label1: item.CustName,
+                               value2: item.CustId,
+
+                           })
+                       }));
+                   }
+
+               })
+
+           },
+           autoFocus: true,
+           select: function (event, ui) {
+               $("#Supplier").data("eumi-val", ui.item.value2);
+
+           },
+
+       }).autocomplete("instance")._renderItem = function (ul, item) {
+           var jqLi = $("<li>")
+           var jqRow = getTableRow(item, ["label", "label1"], ["50%", "50%"], ["Code", "Name"]);
+           return jqLi.append($('<table class="tblautocomplete">').css("width", "300px").append(jqRow)).appendTo(ul);
+       };
+
+
+       $("#Jobcode").autocomplete({
+           source: function (request, response) {
+               var data = {};
+               data.JobCode = request.term;
+               $.ajax({
+                   url: '../Master/JobCodeSearch',
+                   type: "POST",
+                   data: data,
+                   dataType: "json",
+                   success: function (resultData) {
+                       var resultData = $.map(resultData, function (item) {
+                           return {
+                               value: item.JobCode,
+                               label: item.Description,
+                               value2: item.ProjectJobId,
+                           }
+                       });
+                       response(resultData);
+                   }
+               });
+           },
+           autoFocus: true,
+           select: function (event, ui) {
+               $("#Jobcode").data("eumi-val", ui.item.value2);
+           },
+       }).autocomplete("instance")._renderItem = function (ul, item) {
+           var jqLi = $("<li>")
+           var jqRow = getTableRow(item, ["value", "label"], ["50%", "50%"], ["Code", "Desc"]);
+           return jqLi.append($('<table class="tblautocomplete">').css("width", "300px").append(jqRow)).appendTo(ul);
+       };
+
+
+        $("#Product").autocomplete({
+                source: function (request, response) {
+                    var data = {};
+                    data.ItemCode = $("#Product").val();
+                    $.ajax({
+                        url: '../Purchase/ProductSearch',
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return ({
+                                    ColCount: '2',
+                                    label: item.ItemCode,
+                                    label1: item.Description,
+                                    ItemId: item.ItemId,
+                                    Description: item.Description,
+
+                                    headers: ["Item Code", "Description"]
+                                })
+                            }));
+                        }
+
+                    })
+
+                },
+                autoFocus: true,
+                select: function (event, ui) {
+                    $('#Product').val(ui.item.label);
+
+                },
+            });
+
+        $(document).ready(function () {
+
+            $('#dateFrom, #dateTo').daterangepicker({
+                minDate: minDate,
+                maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                singleDatePicker: true,
+                showDropdowns: true,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
+            });
+
+        GroupPageLoad(0);
+        CategoryPageLoad(0);
+        GetDepartment(0);
+        });
+
+        function getTableRow(item, keyArray, widthArray, headersArray) {
+            var jqRow = $("<tr>")
+            for (var x = 0; x < keyArray.length; x++) {
+                $("<td>").css({ "border": "1px solid #d6d9db", "width": widthArray[x] })
+                    .html(item[keyArray[x]])
+                    .attr("data-em-header", (headersArray[x] || ""))
+                    .appendTo(jqRow)
+            }
+            return jqRow;
+        }
+
+
+    function GroupPageLoad(id) {
+        var data1 = {};
+        data1.GrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/GroupGetandGets",
+            data: data1,
+            success: function (result) {
+                GroupLoad(result.oList, id);
+            }
+        });
+    }
+
+    function GroupLoad(result) {
+        $("#Group").empty();
+        $("#Group").append("<option value='0'>-Select-</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#Group").append("<option value='" + result[i].GrpId + "'>" + result[i].GrpName + "</option>");
+        }
+        SubGroupGets();
+    }
+
+        function SubGroupGets() {
+            var data = {};
+            data.GroupId = $("#Group").val();
+
+
+            if (data.GroupId == 0) {
+                data.SbgrpId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/SubGroupGetandGets",
+                    data: data,
+                    success: function (result) {
+                        SubGroupLoad(result.oList);
+                    }
+                });
+            }
+            else {
+                data.SbgrpId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/SubGroupGetForGroup",
+                    data: data,
+                    success: function (result) {
+                        SubGroupLoad(result.oList);
+                    }
+                });
+            }
+        }
+
+        function SubGroupLoad(result) {
+            $("#SubGroup").empty();
+            $("#SubGroup").append("<option value='0'>-Select-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#SubGroup").append("<option value='" + result[i].SbgrpId + "'>" + result[i].SbgrpName + "</option>");
+            }
+        }
+
+            function CategoryPageLoad(id) {
+                var data2 = {};
+                data2.CategoryId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/CategoryGetandGets",
+                    data: data2,
+                    success: function (result) {
+                        CategoryLoad(result.oList, id);
+                    }
+                });
+            }
+
+
+            function CategoryLoad(result) {
+                $("#Category").empty();
+                $("#Category").append("<option value='0'>-Select-</option>");
+                for (var i = 0; i < result.length; i++) {
+                    $("#Category").append("<option value='" + result[i].CategoryId + "'>" + result[i].CategoryName + "</option>");
+                }
+                SubCategoryGets();
+            }
+
+            function SubCategoryGets() {
+                var data = {};
+                data.CategoryId = $("#Category").val();
+
+                if (data.CategoryId == 0) {
+                    data.SubCategoryId = 0;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/SubCategoryGetandGets",
+                        data: data,
+                        success: function (result) {
+                            SubCategoryLoad(result.oList);
+
+                        }
+                    });
+                }
+
+                else {
+                    data.SubCategoryId = 0;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/SubCategoryGetforCategory",
+                        data: data,
+                        success: function (result) {
+                            SubCategoryLoad(result.oList);
+                        }
+                    });
+                }
+            }
+
+
+
+
+            function SubCategoryLoad(result) {
+                $("#SubCategory").empty();
+                $("#SubCategory").append("<option value='0'>-Select-</option>");
+                for (var i = 0; i < result.length; i++) {
+                    $("#SubCategory").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+                }
+            }
+
+
+            function GetDepartment(id) {
+                var data = {};
+                data.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/UserDepartmentGetandGets",
+                    data: data,
+                    success: function (result) {
+                        DepartmentLoad(result.oList, id);
+
+
+                    }
+                });
+            }
+
+            function DepartmentLoad(result, a) {
+                $("#vDept").empty();
+                $("#vDept").append("<option value='0'>-All-</option>");
+                for (var i = 0; i < result.length; i++) {
+                    $("#vDept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+                }
+            }
+
+            function redrawTable() {
+                var data = {};
+                data.dateFrom = moment($('#dateFrom').val(), "DD-MM-YYYY").toDate();
+                data.dateTo = moment($('#dateTo').val(), "DD-MM-YYYY").toDate();
+                data.SupplierId = ($('#Supplier').val().match(/^\s*$/) ? 0 : parseInt($('#Supplier').data("eumi-val") || 0));
+                data.Material = parseInt($('#Product').val() || 0);
+                data.Group = parseInt($('#Group').val() || 0);
+                data.SubGroupId = parseInt($('#SubGroup').val() || 0);
+                data.CategoryId = parseInt($('#Category').val() || 0);
+                data.SubCategoryId = parseInt($('#SubCategory').val() || 0);
+                data.DepartmentId = parseInt($('#Dept').val() || 0);
+                data.JobNo = ($('#Jobcode').val().match(/^\s*$/) ? 0 : parseInt($('#Jobcode').data("eumi-val") || 0));
+                data.title = "Parameters - "
+                + "From: " + $('#dateFrom').val()
+                + " To: " + $('#dateTo').val()
+                + " Supplier: " + ($('#Supplier').val() || "(All)")
+                + " Product: " + $('#Product').find("option:selected").text()
+                + " Group: " + $('#Group').find("option:selected").text()
+                + " Sub Group: " + $('#SubGroup').find("option:selected").text()
+                + " Category: " + $('#Category').find("option:selected").text()
+                + " Sub Category: " + $('#SubCategory').find("option:selected").text()
+                + " Department: " + $('#Dept').find("option:selected").text()
+                + "JobCode: " + ($('#Jobcode').val() || "(All)");
+                if ($.fn.DataTable.isDataTable('#PurchaseOrderPending')) {
+                    window.EumiLastSelectedInOrderRpt = data;
+                    $("#PurchaseOrderPending").DataTable().ajax.reload();
+                    $("#paramOfReport").text(data.title);
+                }
+            }
+
+    </script>
+}
+
+
+

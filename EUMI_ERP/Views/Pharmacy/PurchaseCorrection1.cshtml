@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.Title = "PurchaseCorrection";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="~/ProjectScript/PurchaseCorrection.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<style>
+    .FormHeaderColour {
+        background-color: #009da0 !important;
+    }
+
+    .FormHeader {
+        height: 70px;
+    }
+
+    .MainBodyHead {
+        background-color: #E0F3F4;
+    }
+
+    .label-control {
+        font-weight: bold;
+    }
+
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .smallTextbox {
+        height: 34px !important;
+    }
+
+    .borderno {
+        border: hidden !important;
+    }
+
+    #Tbl_Purchase tr td, #tblOtherCost tr td, #tbltaxsplit tr td, #tbltaxsplit tr th, #TBL_TempPurchaseList tr td {
+        border: 1px solid #9faec3 !important;
+    }
+
+    .modal-xl {
+        max-width: 90%;
+    }
+
+    .modal-sxl {
+        max-width: 80%;
+    }
+
+    .modal-slg {
+        max-width: 60%;
+    }
+
+    #customView, #OtherCostView, #TempPurchase {
+        border: 1px solid #CCD6E6;
+    }
+
+    .bordertable {
+        border: 2px solid #CCD6E6;
+    }
+
+    .modalProduct {
+        position: absolute;
+        top: 55px;
+    }
+</style>
+<div class="myData" data-x="M349" />
+
+
+<div style="display:none">
+    <input id="GridLength" value="0" class="dezero" />
+
+
+</div>
+
+<div id="Entry" style="width:100%;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header FormHeaderColour FormHeader">
+
+                    <div class="col-md-12 p-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="card-title mb-0" style="float:left;color:white;font-size:xx-large;">Purchase Correction</h4>
+                            </div>
+                            <div class="col-md-6" style="display:none">
+                                <div class="text-right ml-2">
+                                    
+                                    <h4 class="card-title mb-0 ml-2" style="float:right;color:white;font-size:larger;font-weight:bold" id="CurPurCorrectiontext"></h4>
+                                    <h4 class="card-title mb-0" style="float:right;color:white;font-size:larger;font-weight:bold">Sl# :</h4>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr />
+                                    <div class="MainBodyHead">
+
+                                        <div class="col-md-12 pt-1">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="row mb-2 mt-1">
+                                                        <label class="label-control col-lg-1">Sl#<span class="danger">*</span></label>
+
+
+                                                        <div class="col-md-2">
+                                                            <div class="CopyHide">
+
+                                                                
+                                                                <input type="text" class="form-control smallTextbox dedisa bg-white" id="CurPurCorrection" disabled>
+                                                            </div>
+                                                                <div class="CopyShow" style="display:none">
+                                                            
+                                                                <input type="text" id="Search_0" class="form-control smallTextbox copytext denull" autocomplete="off">
+                                                            </div>
+                                                        </div>
+
+                                                        <label class="label-control col-lg-1 text-lg-right" style="font-weight:bold">Location</label>
+                                                        <div class="col-md-2 ">
+
+                                                            <select id="Location" class="form-control smallTextbox"></select>
+
+
+                                                        </div>
+                                                        <label class="label-control col-lg-1 text-lg-right">Date</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control smallTextbox dedisa bg-white" id="Date" disabled>
+                                                        </div>
+
+                                                    </div>
+                                                    
+
+
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="px-2">
+                                        <div class="row">
+                                            <div id="popupdesc" style="display:none" onclick="$('#popupdesc').fadeOut()">
+                                                <div id="toast-container" class="toast-container toast-middle-left" style="">
+                                                    <div class="toast bg-deep-orange mb-5" aria-live="assertive" style="width:150%">
+                                                        <div class="toast-message">LPCost : <span id="descpopup"></span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row mb-1 px-2 mt-1">
+                                                    
+                                                    <table border="0" width="100%">
+                                                        <tr>
+
+                                                            <td class="pr-1">
+                                                                <label class="label-control">Product<span class="danger">*</span></label>
+                                                                <input type="text" id="Product_0" class="form-control smallTextbox denull" onkeypress="LoadProduct(0)" autocomplete="off">
+                                                            </td>
+                                                            <td class="pr-1" width="170">
+                                                                <label class="label-control">Batch<span class="danger">*</span></label>
+                                                                <input type="text" id="Batch_0" class="form-control batch smallTextbox denull" onkeypress="LoadBatch(0)" autocomplete="off">
+                                                            </td>
+                                                            <td class="pr-1" width="170">
+                                                                <label class="label-control">New Batch<span class="danger">*</span></label>
+                                                                <input type="text" id="NewBatch_0" class="form-control smallTextbox denull"  onkeydown="FocusNext(event, 'NewBatch_0', 'NewBatch_0', 'Expiry_0', '', '')">
+                                                            </td>
+                                                            <td class="pr-1" width="130">
+
+                                                                <label class="label-control">Expiry<span class="danger">*</span></label>
+                                                                <input type="text" id="Expiry_0" class="form-control smallTextbox denull" onkeypress="isNumberDate(event, this)" onkeyup="ExpiryDate('Expiry_0')"  onkeydown="FocusNext(event, 'NewBatch_0', 'Expiry_0', 'SR_0', '', '')">
+
+                                                            </td>
+
+                                                            <td class="pr-1" width="130">
+
+                                                                <label class="label-control">Sell. Rate<span class="danger">*</span></label>
+                                                                <input type="text" id="SR_0" class="form-control smallTextbox denull" onkeypress="isNumber(event, this)"  onkeydown="FocusNext(event, 'Expiry_0', 'SR_0', 'MRP_0', '', '')">
+
+                                                            </td>
+                                                            <td class="pr-1" width="130">
+
+
+                                                                <label class="label-control">MRP<span class="danger">*</span></label>
+                                                                <input type="text" id="MRP_0" class="form-control smallTextbox denull" onkeypress="isNumber(event, this)"  onkeydown="FocusNext(event, 'SR_0', 'MRP_0', 'StockType_0', '', '')">
+
+                                                            </td>
+                                                            <td class="pr-1" width="220">
+
+
+                                                                <label class="label-control">Stock Type & Qty</label>
+
+                                                                <div class="input-group m-0">
+                                                                    <select type="text" id="StockType_0" class="form-control smallTextbox dezero" onchange="CalcStock(0)"  onkeydown="FocusNext(event, 'MRP_0', 'StockType_0', 'Quantity_0', '', '')">
+                                                                        <option value="0">Select</option>
+                                                                        <option value="1">Add</option>
+                                                                        <option value="2">Less</option>
+                                                                    </select>
+                                                                    <input type="text" id="Quantity_0" class="form-control smallTextbox denull input-group-append" onkeypress="isNumber(event,this)" onkeyup="CalcStock(0)"  onkeydown="FocusNext(event, 'StockType_0', 'Quantity_0', 'Reason_0', '', '')">
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="pr-1" width="130">
+
+
+                                                                <label class="label-control">Stock</label>
+                                                                <input type="text" id="NStock_0" class="form-control smallTextbox denull dedisa bg-white" disabled>
+
+                                                            </td>
+                                                            <td class="pr-1" width="220">
+
+
+                                                                <label class="label-control">Reason<span class="danger">*</span></label>
+
+                                                                <select type="text" id="Reason_0" class="form-control smallTextbox dezero"  onkeydown="FocusNext(event, 'Quantity_0', 'Reason_0', 'btnadd', '', '')">
+                                                                    <option value="0">--Select--</option>
+                                                                    
+                                                                </select>
+
+                                                            </td>
+                                                            <td style="display:none">
+                                                                <input type="hidden" id="ProductId_0" class="form-control dezero" value="0" />
+                                                                <input type="hidden" id="CStock_0" class="form-control dezero" value="0" />
+                                                                <input type="hidden" id="BatchSlNo_0" class="form-control dezero" value="0" />
+                                                                <input type="hidden" id="PurSlNo_0" class="form-control dezero" value="0" />
+                                                                <input type="hidden" id="InvId_0" class="form-control dezero" value="0" />
+                                                                <input type="hidden" id="TransType_0" class="form-control dezero" value="0" />
+                                                                <input type="hidden" id="Rate_0" class="form-control dezero" value="0">
+                                                            </td>
+                                                            <td width="50">
+                                                                <label class="label-control">ADD</label>
+                                                                <button type="button" class="btn smallTextbox btn-warning m-0 btndis" id="btnadd"  onkeydown="FocusNext(event, 'Reason_0', 'btnadd', 'btnadd', '', '')"><i class="fa fa-1x fa-plus"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+
+
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <div id="customView" class="jsgrid" style="position: relative; height: 442px; width: 100%;overflow-x: auto;overflow-y:hidden ">
+                                        <div class="jsgrid-grid-header" style="width:100%;">
+                                            <table class="jsgrid-table" style="width:100%;">
+                                                <tr class="jsgrid-header-row">
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:2%"><i class="icon-trash"></i></th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:3%">SL#</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:13%">Name</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Batch</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">New Batch</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Expiry</th>
+
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Sell. Rate</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">MRP</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:9%">Type & Quantity</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Stock</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:7%">Reason</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%;display:none">None</th>
+
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                        <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 400px; width:100%;">
+                                            <table class="jsgrid-table" id="Tbl_Purchase"></table>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="p-2">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                               
+                                                   <div class="row">
+                                                       <span class="col-md-2">
+                                                           <span class="badge badge-primary" id="Mode">Mode : New</span>
+                                                       </span>
+                                                       <div class="col-md-10">
+                                                           <textarea id="txtnotes" style="height:100%;border:none;resize:none;" rows="1" class="form-control denull" placeholder="Remarks"></textarea>
+
+                                                       </div>
+                                                   </div>
+                                                    
+                                                    
+                                                    
+                                               
+                                            </div>
+                                            <div class="col-md-6 p-0">
+                                                <div class="text-right">
+                                                    <button type="button" style="width:120px" id="btnsubmit" class="btn btn-primary mr-1 mb-1 btn-sm"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                    <button type="button" style="width:120px" id="btnlist" class="btn btn-primary mr-1 mb-1 btn-sm">Copy <i class="ft-copy position-right"></i></button>
+                                                    <button type="button" style="width:120px" id="btnnew" class="btn btn-primary mr-1 mb-1 btn-sm">New <i class="ft-refresh-cw position-right"></i></button>
+                                                    <button type="button" style="width:120px;display:none" id="btnprint" class="btn btn-primary mr-1 mb-1 btn-sm">Print <i class="ft-printer position-right"></i></button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="confirmff" class="overlay" style="display:none;">
+    <div class="modal fade text-left show" id="keyboardff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display:none;padding-right: 17px; top:28%;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body" style="text-align:center">
+                    <h3 style="color:red"><B>ADD INVOICE NUMBER !!!</B></h3>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#Date').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+
+        });
+        $('#Date').val(CurDate);
+        
+
+        if (EODType != 'EOD') {
+            $("#Date").removeClass('dedisa');
+            $("#Date").prop('disabled', false);
+        }
+    });
+    $("#Search_0").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+           
+            var data = {};
+            data.Batch = $("#Search_0").val();
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+
+            $.ajax({
+                url: '../Pharmacy/HMS_PurchaseCorrectionSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.SlNo,
+                            label1: item.InvoDate,
+                            SlNo: item.SlNo,
+                            
+                            headers: ["Sl#", "Date"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+
+            $("#CurPurCorrection").val(ui.item.SlNo);
+            
+            var data = {};
+            data.SlNo = ui.item.SlNo;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Pharmacy/HMS_PurchaseCorrectionGets",
+                data: data,
+                success: function (result) {
+
+                    GetPurchaseCorrection(result);
+                }
+            });
+           
+        },
+    });
+</script>

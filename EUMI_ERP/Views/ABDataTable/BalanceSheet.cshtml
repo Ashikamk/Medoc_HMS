@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "BalanceSheet";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script>
+    var decimal = Decimal;
+    function DtGet()
+    {
+        var data = {};
+        $.ajax({
+            type: "POST",
+            url: "../AccountsErp/BalanceSheetGetandGets",
+            data: data,
+            success: function (result) {
+                ShowList(result.oList);
+                $('#divreport').show();
+            }
+        });
+    }
+
+    function ShowList(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th style='width:10%'>Slno</th><th>Purticulars</th><th>Amount</th><th></th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            if (result[i].AccDesc == 'Grand Total') {
+                responseText += '<tr style=background-color:#8ee4f1><td><b>Slno</b></td><td><b>' + result[i].AccDesc + '</b></td><td><b>' + (result[i].AssAmount).toFixed(decimal) + '</b></td><td></td></tr>';
+            }
+            else {
+                responseText += '<tr><td>' + slno + '</td><td>' + result[i].AccDesc + '</td><td>' + (result[i].AssAmount).toFixed(decimal) + '</td><td></td></tr>';
+            }
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th></th><th>Purticulars</th><th>Amount</th><th></th></tr></tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "BalanceSheet";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+
+        $('#header').text(title);
+    }
+
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+          , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+          , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+          , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })
+
+
+</script>
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="48%"></td>
+                                <td align="right"><button type="button" style="width:100px" id="Back" onclick="DtGet()" class="btn btn-outline-primary" hidden>Back</button></td>
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right">
+                            <div class="heading-elements">
+                                <br /><hr style="margin-top:-1%"/>
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        DtGet();
+        });
+</script>

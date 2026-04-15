@@ -1,0 +1,1212 @@
+﻿
+@{
+    ViewBag.Title = "SalaryManagementNew";
+}
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+@*<script type="text/javascript" src="../Projectscript/timepicker.js"></script>*@
+<div class="myData" data-x="M179" />
+
+<style>
+    .modal-xlx {
+        max-width: 100%;
+        margin-left: 4%;
+        margin-right: 1%;
+    }
+
+    #CELL1 {
+        border-right: 1px solid #cccccc;
+        border-left: 1px solid #ffffff;
+        width: 32%;
+    }
+
+    #CELL2 {
+        /*padding-left:50px;*/
+        border-right: 1px solid #cccccc;
+        width: 32%;
+    }
+
+    #CELL3 {
+        /*padding-left:50px;*/
+        border-right: 1px solid #ffffff;
+        width: 36%;
+    }
+
+    #saltd2 {
+        border-left: 5px solid #ffffff;
+        border-bottom: red;
+    }
+</style>
+
+
+<div id="Entry" style="margin-top:-12px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Payroll Calculation</h4>
+                </div>
+                <div class="card-body" style="margin-top:-6px">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:20px;margin-top:-14px;"></div>
+                                <form action="#">
+                                    <div class="form-body" style="margin-right:18px;">
+                                        <hr style="margin-top:-0.3px;" />
+
+                                        <div class="row" style="background-color:#E0F3F4; margin-left:1px;width:100%;height:121px;margin-top:-1.1%;margin-bottom:-2%;">
+                                            <div class="col-md-12" style="margin-top:-.5%;">
+                                                <br />
+                                                <div class="form-group">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                            </div>
+                                                            <div class="col-lg-1 text-right">
+                                                                <label>Date<span class="danger">*</span></label>
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                                <input type="text" id="DateSelect" class="form-control editds ui-autocomplete-input" style="position:absolute;width:150px;" autocomplete="off" />
+                                                            </div>
+                                                            <div class="col-md-1">
+                                                            </div>
+
+                                                            <button type="button" style="width:150px" id="btnPayRollCalc" onclick="PRS();" class="btn btn-primary btn-min-width mr-1 mb-1">Payroll Process<i class="ft-refresh-cw position-right"></i></button>
+                                                            <div class="col-md-1">
+                                                            </div>
+                                                            <div class="col-lg-1 text-right">
+                                                                <label>From<span class="danger">*</span></label>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="DateFrom" style="width:60%;background-color:white" class="form-control editds ui-autocomplete-input" disabled/>
+                                                            </div>
+
+
+                                                            <div class="col-lg-1 text-right" style="margin-left:-12%">
+                                                                <label style="margin-left:3px;">To<span class="danger">*</span></label>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="DateTo" style="width:60%;background-color:white" class="form-control editds" disabled>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                    <br />
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <hr style="margin-top:2.3%;" />
+
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div id="proddiv1" style="width:100%;overflow-x: auto;overflow-y:scroll;height:500px;">
+                                                    <table id="tblMSSummary" class="table table-striped table-bordered base-style dataTable" role="grid" aria-describedby="tblcategory_info"></table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <div class="form-actions">
+                                            <div class="text-right">
+                                                <input id="rowcount" type="hidden" />
+
+                                                <button type="button" style="width:180px" id="btnPayRollSubmit" class="btn btn-primary btn-min-width mr-1 mb-1">Payroll Submit <i class="fa fa-check-square-o"></i></button>
+                                                @*<button type="button" style="width:150px" id="btnPayRollCopy" onclick="Copy();" class="btn btn-primary btn-min-width mr-1 mb-1">PayrollCopy<i class="ft-refresh-cw position-right"></i></button>*@
+                                                <button type="button" id="btnPayRollClear" onclick="formrefresh();" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                <button type="button" id="btnSalary" onclick="ShowSalaryDetails($('#PrevMonth').val())" class="btn btn-primary btn-min-width mr-1 mb-1">Monthly Salary Process <i class="ft-list"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade text-left show" id="iconForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:170%;height:500px; margin-left:-240px;border-color:green">
+            <div class="modal-header bg-primary white" style="height:80px;">
+                <h4 class="modal-title" id="myModalLabel17">Salary Details</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="($('#iconForm').hide())" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="row" style="margin-top:-1%">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="px-3">
+                                <div class="card-content collapse show">
+                                    <div class="card-body">
+                                        <div style="height:15px;"></div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card" style="margin-top:-16px">
+                                                    <table id="">
+                                                        <tr>
+                                                            <td id="CELL1" valign="top">
+                                                                <table width="95%">
+                                                                    <tr><td height="20px"></td></tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="card-content collapse show">
+                                                                                <div class="card-body">
+                                                                                    <form class="form">
+                                                                                        <div class="form-body">
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-12">
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1"> Basic Salary<span class="danger">*</span></label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="PSal" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1"> HRA</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="PHra" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1">DA</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="PDa" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1">TA</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="Pta" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1">Night Allowances</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="PNa" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1">Others</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="Poth" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td id="CELL2" valign="top" style="height:400px;">
+                                                                <table width="95%">
+                                                                    <tr>
+                                                                        <td>
+                                                                            <div class="card-content collapse show">
+                                                                                <div class="card-body">
+                                                                                    <form class="form">
+                                                                                        <div class="form-body" style="margin-top:3%">
+                                                                                            <div class="row" style="margin-left:1%">
+                                                                                                <div class="col-md-12">
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1">PF</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="Ppf" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1"> TAX</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="Ptax" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1"> ESI</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="Pesi" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="form-group row">
+                                                                                                        <label class="col-md-4 label-control" for="userinput1"> Otherss</label>
+                                                                                                        <div class="col-md-8">
+                                                                                                            <input type="text" id="PothrDed" onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" />
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td id="CELL3" valign="top">
+                                                                <div class="col-12 col-md-9 col-lg-9">
+                                                                    <div class="card">
+                                                                        <div class="card-header text-center" style="margin-left:90px">
+                                                                            <img id="img1" src="../app-assets/img/portrait/small/avatar-s-12.png" alt="Brek" width="150" class="rounded-circle gradient-mint" onerror="this.onerror=null; this.src='../app-assets/img/portrait/small/avatar-s-12.png';">
+                                                                        </div>
+                                                                        <div class="card-body">
+                                                                            <div class="card-block text-left">
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-md-3 label-control" for="userinput1" style="margin-left:0px"> Name </label>
+                                                                                    <div class="col-md-8" style="margin-left:4%">
+                                                                                        <input type="text" id="PName" disabled onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" style="background-color:white;width:170%;border:none;margin-top:-7px;margin-left:8%;" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-md-6 label-control" for="userinput1" style="width:180%;margin-left:0px;margin-top:0px"> Designation </label>
+                                                                                    <div class="col-md-6" style="margin-left:-15.5%">
+                                                                                        <input type="text" id="PDes" disabled onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" style="background-color:white;border:none;width:210%" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-md-4 label-control" for="userinput1" style="margin-left:0px;margin-top:0px"> Type </label>
+                                                                                    <div class="col-md-8">
+                                                                                        <input type="text" id="PType" disabled onkeyup="changetoupper(this.id)" class="form-control" autocomplete="off" style="background-color:white;width:180%;border:none;" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="card-body" style="border-top:1px solid #e3e8e8">
+                                                        <br />
+                                                        <div class="form-body">
+                                                            <div class="form-actions">
+                                                                <div class="text-right">
+                                                                    <button type="button" style="width:100px" id="btnUpdate" class="btn btn-primary btn-min-width mr-1 mb-1">Update <i class="fa fa-check-square-o"></i></button>
+                                                                    @*<button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                                        <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>*@
+
+                                                                </div>
+                                                                <input type="hidden" id="POTRate" />
+                                                                <input type="hidden" id="POTHrs" />
+                                                                <input type="hidden" id="PLeaves" />
+                                                                <input type="hidden" id="PHolidays" />
+                                                                <input type="hidden" id="PWorkedSession" />
+                                                                <input type="hidden" id="PTotalEarnings" />
+                                                                <input type="hidden" id="PTotalDeductions" />
+                                                                <input type="hidden" id="PNetSalary" />
+                                                                <input type="hidden" id="RowID" />
+                                                                <input type="hidden" id="PTotalDays_Sess" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div id="popupdiv1" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); height:200%">
+
+    <div id="SalarySettings" style="margin-top:2%; margin-left:30%">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="card" style="width:800px">
+                    <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                        <h4 class="card-title mb-0"> SALARY SLIP</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="px-5" style="width:720px">
+                            <div class="card-content collapse show" style="width:650px">
+                                <div class="card-body">
+                                    <div style="height:15px;"></div>
+                                    <form action="#">
+                                        <div class="form-body">
+
+                                            <div class="form-group row">
+                                                <label class="col-md-3 label-control">Name :</label>
+                                                <div class="col-md-8">
+                                                    <label id="LName" class="label-control editds ui-autocomplete-input" style="height:90%" disabled></label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-3 label-control">Designation :</label>
+                                                <div class="col-md-8">
+                                                    <label id="LDesignation" class="label-control editds ui-autocomplete-input" style="height:90%" disabled>Developer</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-md-3 label-control">Date :</label>
+                                                <div class="col-md-8">
+                                                    <label id="LDate" class="label-control editds ui-autocomplete-input" style="height:90%;width:400px" autocomplete="off" disabled></label>
+                                                </div>
+                                            </div>
+                                            <hr style="margin-bottom:-02px">
+
+
+                                        </div>
+                                        <div style="margin-left:0px;margin-right:0px;">
+                                            <div id="customView" class="" style="position: relative; height: auto; width: 100.5%;border:solid 1px;border-color:#cccccc;border-bottom:1px solid #cccccc;">
+                                                <div class="" style="width:650px;">
+                                                    <table class="jsgrid-table" style="width:650px;">
+
+                                                        <tr class="jsgrid-grid-header" style="background-color:#ebebe0">
+                                                            <th class="jsgrid-header-cell jsgrid-align-center " style="width:155px;"><b>Earning</b></th>
+                                                            <th class="jsgrid-header-cell jsgrid-align-right " style="width:115px"><b></b></th>
+                                                            <th class="jsgrid-header-cell jsgrid-align-center " style="width:155px;"><b>Deduction</b></th>
+                                                            <th class="jsgrid-header-cell jsgrid-align-right " style="width:115px"><b></b></th>
+                                                        </tr>
+                                                        <tr class="jsgrid-header-row ">
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left;margin-left:3%">Basic Salary  </td>
+                                                            <td id="LBasicSalary" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right"> </td>
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left">PF</td>
+                                                            <td id="LPF" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right"></td>
+                                                        </tr>
+                                                        <tr class="jsgrid-header-row">
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;margin-left:auto;text-align:left">HRA  </td>
+                                                            <td id="LHRA" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right">  </td>
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;margin-left:auto;text-align:left">Tax  </td>
+                                                            <td id="LTax" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right">  </td>
+                                                        </tr>
+                                                        <tr class="jsgrid-header-row">
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left">TA </td>
+                                                            <td id="LTA" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right">  </td>
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left">Deduction </td>
+                                                            <td id="LDeduction" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right"> </td>
+                                                        </tr>
+                                                        <tr class="jsgrid-header-row">
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left">OT</td>
+                                                            <td id="LOT" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right"> </td>
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left">ESI </td>
+                                                            <td id="LESI" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right"> </td>
+                                                        </tr>
+                                                        <tr class="jsgrid-header-row">
+                                                            <td class="jsgrid-header-cell jsgrid-align-right " style="width:155px;text-align:left">Other Allowance </td>
+                                                            <td id="LALLOWANCE" class="jsgrid-header-cell jsgrid-align-right " style="width:115px;text-align:right"> </td>
+                                                            <td class="jsgrid-header-cell jsgrid-align-left " style="width:155px">  </td>
+                                                            <td class="jsgrid-header-cell jsgrid-align-left " style="width:115px"></td>
+                                                        </tr>
+
+
+                                                    </table>
+                                                </div>
+                                                <div id="proddiv" class="jsgrid dataTables_scrollBody" style="position: relative; height: 00px; width: 525px;">
+                                                    <table class="jsgrid-table" id="tblDesignationAdd"></table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="height:20px">
+                                            <div class="col-md-12">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 label-control" style="margin-left:300px;margin-bottom:-110px">Total Earnings :</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="label-control" style="margin-left:100%;text-align:right;width:30%;border:none" id="LTot_earnings" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 label-control" style="margin-left:279px;margin-bottom:-110px">Total Deductions :</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="label-control" style="margin-left:100%;text-align:right;width:30%;border:none" id="LTot_deductions" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <label class="col-md-3 label-control" style="margin-left:323px;margin-bottom:-110px">Net Salary :</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="label-control" style="margin-left:100%;text-align:right;width:30%;border:none" id="Lnetsalary" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" id="FromCopy" />
+                                        <input type="hidden" id="ToCopy" />
+
+                                        <div class="form-actions">
+                                            <div class="text-right">
+                                                <button id="btnprint" type="button" onclick="printnew()" class="btn btn-outline-primary" autofocus="">Print</button>
+                                                <button id="btnclose" type="button" onclick="($('#popupdiv1').hide())" class="btn btn-outline-primary" autofocus="">Close</button>
+                                                <input type="hidden" id="rowcount1" value="1" />
+                                                <input type="hidden" id="JobId1" />
+                                                <input type="hidden" id="DesignationId0" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="MonthlySalaryDetails" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="OtherCostheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xlx" role="document" style="top:2%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="MSheader">Salary Details</h4>
+                <button type="button" class="close" onclick="$('#MonthlySalaryDetails').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="MSSub" style="display:none;">
+                <div class="modal-body">
+                    <div class="table-responsive">
+
+                        <div class="overflow-auto" style="height:550px;overflow:scroll;width:100%;overflow:auto;">
+                            <table id="tblMSD" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-outline-primary" id="btnSalarySave" onclick="ADDSalary()" data-dismiss="modal" value="Update">
+                    <input type="button" class="btn btn-outline-secondary" onclick="$('#MonthlySalaryDetails').hide()" data-dismiss="modal" value="Back">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<div style="display:none">
+    <input id="MonthName" class="form-control" />
+    <input id="HiddenMonth" class="form-control"/>
+    <input id="PrevMonth" class="form-control" />
+</div>
+
+
+
+
+
+
+<script>
+    
+    
+
+
+    function isNumber(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+
+    }
+
+    function isNumberInt(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+
+    }
+    function startenddates() {
+        var Dt = $('#DateSelect').val();
+
+        someDate = new Date(Dt.slice(6, 10) + '-' + Dt.slice(3, 5) + '-' + Dt.slice(0, 2));
+
+        someMonth = new Date(Dt.slice(6, 10) + '-' + Dt.slice(3, 5) + '-' + Dt.slice(0, 2));
+
+        someDate.setDate(parseInt(someDate.getDate()));
+
+        var a = new Date(someDate.getFullYear(),
+                         someDate.getMonth() + 1,
+                         0).getDate();
+        var month = someMonth.getMonth() + 1;
+
+        if (month < 10) {
+
+            month = '0' + month;
+        }
+
+
+        StartingDate = "01" + "/" + month + "/" + someMonth.getFullYear();
+
+        EndingDate = a + "/" + month + "/" + someMonth.getFullYear();
+        $('#HiddenMonth').val(month);
+
+        if($('#HiddenMonth').val()==01) { $('#MonthName').val('January') }
+        else if ($('#HiddenMonth').val() == 02) {$('#MonthName').val('February')}
+        else if ($('#HiddenMonth').val() == 03) { $('#MonthName').val('March')}
+        else if ($('#HiddenMonth').val() == 04) {$('#MonthName').val('April')}
+        else if ($('#HiddenMonth').val() == 05) {$('#MonthName').val('May')}
+        else if ($('#HiddenMonth').val() == 06) {$('#MonthName').val('June') }
+        else if ($('#HiddenMonth').val() == 07) {$('#MonthName').val('July') }
+        else if ($('#HiddenMonth').val() == 08) {$('#MonthName').val('August') }
+        else if ($('#HiddenMonth').val() == 09) {$('#MonthName').val('September')}
+        else if ($('#HiddenMonth').val() == 10) {$('#MonthName').val('October')}
+        else if ($('#HiddenMonth').val() == 11) {$('#MonthName').val('November')}
+        else if ($('#HiddenMonth').val() == 12) { $('#MonthName').val('December') }
+    }
+
+    function startenddatesnew() {
+        var Dt = $('#DatePop').val();
+        someDate = new Date(Dt.slice(6, 10) + '-' + Dt.slice(3, 5) + '-' + Dt.slice(0, 2));
+
+        someMonth = new Date(Dt.slice(6, 10) + '-' + Dt.slice(3, 5) + '-' + Dt.slice(0, 2));
+       
+        someDate.setDate(parseInt(someDate.getDate()));
+
+        var a = new Date(someDate.getFullYear(),
+                         someDate.getMonth() + 1,
+                         0).getDate();
+        var month = someMonth.getMonth() + 1;
+
+        if (month < 10) {
+
+            month = '0' + month;
+        }
+
+        StartingDate = "01" + "/" + month + "/" + someMonth.getFullYear();
+        EndingDate = a + "/" + month + "/" + someMonth.getFullYear();
+      
+    }
+
+    function getDateObject(str) {
+        var arr = str.split("/");
+        return new Date(arr[2], arr[1], arr[0]);
+    }
+
+    var clicks = 0;
+    function ShowSalaryDetails(Flag) {
+        clicks += 1;
+        if (clicks == 1 && (Flag != $('#HiddenMonth').val()))
+        {
+            $('#MonthlySalaryDetails').show();
+            $('#MSSub').show();
+            ShowSalaryDetailsGets();
+        }
+       
+        else if (clicks != 1 && (Flag != $('#HiddenMonth').val())) 
+        {
+            $('#MonthlySalaryDetails').show();
+            $('#MSSub').show();
+            ShowSalaryDetailsGets();
+        }
+        else if (clicks != 1 && (Flag == $('#HiddenMonth').val())) {
+           
+            $('#MonthlySalaryDetails').show();
+            $('#MSSub').show();
+        }
+    }
+
+    function ShowSalaryDetailsGets() {
+
+        var data = {};
+        data.Month = $('#HiddenMonth').val();
+        $.ajax({
+            type: "POST",
+            url: "../../PayRoll_LeaveApply/SalaryManagementGets",
+            data: data,
+            success: function (result) {
+                MSDetailsGets(result);
+            }
+        });
+        $('#PrevMonth').val($('#HiddenMonth').val())
+    }
+
+    function MSDetailsGets(result) {
+
+        disable_datatable('tblMSD', 'buttonPlace');
+       
+        var responseText = "<thead><tr><th style=text-align:center>Sl#</th><th>Emp.ID</th><th>Employee Name</th><th>Designation</th>"+
+            "<th style=text-align:center>Working Hrs.</th><th style=text-align:center>Leaves</th><th style=text-align:right>Advance</th><th style=text-align:right>Basic Sal.</th>" +
+            "<th style=text-align:right>HRA</th><th style=text-align:right>DA</th><th style=text-align:right>TA</th><th style=text-align:right>Allowance</th><th style=text-align:right>Other Earnings</th>"+
+            "<th style=text-align:right>PF</th><th style=text-align:right>Tax</th><th style=text-align:right>ESI</th><th style=text-align:right>Other Deductions</th>" +
+            "<th style=text-align:right>Leave Deductions</th><th style=text-align:right>OT Rate</th><th style=text-align:right>OT Amount</th><th style=text-align:right>Total Sal.</th></tr>" +
+
+            "<tr><th style=text-align:center>Sl#</th><th>Emp.ID</th><th>Employee Name</th><th>Designation</th>" +
+            "<th>Working Hrs.</th><th>Leaves</th><th> </th><th> </th>" +
+            "<th> </th><th> </th><th> </th><th> </th><th> </th>"+
+            "<th> </th><th> </th><th> </th><th> </th>" +
+            "<th> </th><th> </th><th> </th><th> </th>"+
+            "</tr></thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+
+            var slno = parseInt(l + 1);
+            console.log('---------------------------------------')
+            var Ded = result[l].Deductions;
+            var OTRate = result[l].OTRate;
+            var WH = result[l].Workinghrs;
+            var Abs = result[l].LeavesTaken;
+            var AD = result[l].SalaryAdvance;
+            var TDM = result[l].TotalDaysInMonth;
+            var BS = parseFloat(result[l].BasicSalary).toFixed(Decimal);
+
+            var HRA = result[l].HRA;
+            var DA = result[l].DA;
+            var TA = result[l].TA;
+            var AL = result[l].Allowance;
+            var OE = result[l].Earnings;
+            var TE = parseFloat(HRA) + parseFloat(DA) + parseFloat(TA) + parseFloat(AL) + parseFloat(OE);
+
+            var PF = result[l].PF;
+            var Tax = result[l].Tax;
+            var ESI = result[l].ESI;
+            var OD = result[l].Deductions;
+            var Sal = BS / TDM;
+            var LD = parseFloat(Sal).toFixed(Decimal) * parseFloat(Abs).toFixed(Decimal);
+            var TD = parseFloat(PF) + parseFloat(Tax) + parseFloat(ESI) + parseFloat(OD) + parseFloat(LD) + parseFloat(AD).toFixed(Decimal);
+
+            var OTCal = parseFloat(Sal / WH).toFixed(Decimal);
+            var OT = parseFloat(OTCal * OTRate).toFixed(Decimal);
+
+            var TS = parseFloat(BS) + parseFloat(OT) + parseFloat(TE);
+
+            var FTS = parseFloat(TS).toFixed(Decimal) - parseFloat(TD).toFixed(Decimal) ;
+
+
+            console.log('---------------------------------------')
+            responseText += '<tr style=background-color:white  id=' + 'Srow' + slno + '>' +
+                            '<td style="text-align:center">' + slno + '</td>' +
+                            '<td id= ' + 'EmpId' + slno + '>' + result[l].EmpId + '<input type=hidden id= ' + 'EmpUId' + slno + '   class="form-control"  value=' + result[l].EmpUserId + '></td>' +
+                            '<td id= ' + 'EmpName' + slno + '>' + result[l].EmpName + '<input type=hidden id= ' + 'EmpCode' + slno + '   class="form-control"  value=' + result[l].EmpCode + '></td>' +
+                            '<td id= ' + 'Designation' + slno + '>' + result[l].Designation + '</td>' +
+                            '<td id= ' + 'Workinghrs' + slno + ' style=text-align:center>' + result[l].Workinghrs + '<input type=hidden id= ' + 'TotalDaysInMonth' + slno + '   class="form-control"  value=' + result[l].TotalDaysInMonth + '></td>' +
+                            '<td id= ' + 'LeavesTaken' + slno + ' style=text-align:center>' + result[l].LeavesTaken + '</td>' +
+                            '<td><input type=text id= ' + 'SalaryAdvance' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup="UpdateSalary(' + slno + ')" onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].SalaryAdvance).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'BS' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup="UpdateSalary(' + slno + ')" onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].BasicSalary).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'HRA' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].HRA).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'DA' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].DA).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'TA' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].TA).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'Allowance' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].Allowance).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'Earnings' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].Earnings).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'PF' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].PF).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'Tax' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].Tax).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'ESI' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].ESI).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'Deductions' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(result[l].Deductions).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'LeaveDeductions' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(LD || 0).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'OTRate' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(OTRate || 0).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'OT' + slno + '  style="width:100px;text-align:right;height:30px;" onkeyup=UpdateSalary(' + slno + ') onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(OT || 0).toFixed(Decimal) + '></td>' +
+                            '<td><input type=text id= ' + 'TotalSalary' + slno + '  style="width:100px;text-align:right;height:30px;"  onkeypress=isNumber(event,this) class="form-control"  value=' + parseFloat(FTS || 0).toFixed(Decimal) + '></td>' +
+                            '</tr>';
+        }
+        $('#tblMSD').html(responseText + '</tbody>');
+        var title = "";
+        datatableWithsearchNS('tblMSD', true, title, 'buttonPlace');
+       
+    }
+
+    function UpdateSalary(RowId)
+    {
+            var BS = $('#BS' + RowId).val();
+            var OT = $('#OT' + RowId).val();
+            var HRA = $('#HRA' + RowId).val();
+            var DA = $('#DA' + RowId).val();
+            var TA = $('#TA' + RowId).val();
+            var Allowance = $('#Allowance' + RowId).val();
+            var OE = $('#Earnings' + RowId).val();
+            var TE = parseFloat(HRA||0) + parseFloat(DA||0) + parseFloat(TA||0) + parseFloat(Allowance||0) + parseFloat(OE||0);
+            var AD = $('#SalaryAdvance' + RowId).val();;
+            var PF = $('#PF' + RowId).val();
+            var Tax = $('#Tax' + RowId).val();
+            var ESI = $('#ESI' + RowId).val();
+            var Deductions = $('#Deductions' + RowId).val();
+            var LD = $('#LeaveDeductions' + RowId).val();
+            var TD = parseFloat(PF||0) + parseFloat(Tax||0) + parseFloat(ESI||0) + parseFloat(Deductions||0) + parseFloat(LD||0) + parseFloat(AD||0);
+            var TS = parseFloat(BS) + parseFloat(TE) + parseFloat(OT);
+            var FTS = parseFloat(TS) - parseFloat(TD);
+            $('#TotalSalary' + RowId).val(parseFloat(FTS||0).toFixed(Decimal));
+
+            $('#BasicSalary' + RowId).text(parseFloat(BS).toFixed(Decimal));
+            $('#TotalEarnings' + RowId).text(parseFloat(TE).toFixed(Decimal));
+            $('#TotalDeductions' + RowId).text(parseFloat(TD).toFixed(Decimal));
+            $('#NetSalary' + RowId).text(parseFloat(FTS).toFixed(Decimal));
+
+    }
+
+    function ADDSalary()
+    {
+        UpdateSalary();
+        $('#MonthlySalaryDetails').hide();
+    }
+
+  
+    function datatableWithsearchNS(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'O Balance' && title != ' ') {
+                $(this).html('<input type="text" class="form-control" placeholder=" ' + title + '" style="width=100%" />');
+            }
+            if (title == 'Employee Name') {
+                $(this).html('<input type="text" class="form-control" placeholder="' + title + '" style="width:350px" />');
+            }
+            if (title == 'Designation') {
+                $(this).html('<input type="text" class="form-control" placeholder="' + title + '" style="width:150px" />');
+            }
+            if (title == 'Emp.ID') {
+                $(this).html('<input type="text" class="form-control" placeholder="' + title + '" style="width:80px" />');
+            }
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+            table = $('#' + tablename).DataTable({
+
+                dom: "<'row'>" +
+                  "<'row'<'col-sm-12'tr>>" +
+                  "<'row'<'col-sm-1'i>>",
+                'bSortable': false,
+                "ordering": false,
+                'aTargets': [0],
+
+                "order": [],
+                "pageLength": -1,
+                buttons: []
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        columns: ':visible',
+                    }
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
+
+    }
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+
+    var UId = ERPUserId;
+    var DeptId = ERPDeptId;
+    var TotalDays = 0;
+    var StartingDate = $('#DateSelect').val();
+    var EndingDate = $('#DateSelect').val();
+
+    function PRS() {
+        startenddates();
+
+        var date1 = getDateObject(StartingDate);
+        var date2 = getDateObject(EndingDate);
+
+        TotalDays = (date2 - date1) / 86400000;
+
+        $('#DateFrom').val(StartingDate);
+        $('#DateTo').val(EndingDate);
+        $('#Days').val(TotalDays + 1);
+
+        var data = {};
+        data.Month = $('#HiddenMonth').val();
+        $.ajax({
+            type: "POST",
+            url: "../../PayRoll_LeaveApply/SalaryManagementGets",
+            data: data,
+            success: function (result) {
+                DetailsGets(result);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#DateSelect').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        })
+        $('#DatePop').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        })
+
+       
+        PRS();
+
+        $('#close').click(function () {
+            $('#popupdiv').hide();
+        });
+
+        $('#btnPayRollSubmit').click(function (e) {
+            SaveSM();
+        });
+    });
+
+    function SaveSM() {
+        var oArray1 = new Array();
+        var Max = $('#tblMSSummary tr').length - 1;
+        for (var k = 1; k < Max ; k++) {
+            var EmpId = $('#EmployeeId' + k).text();
+            var EmpCode = $('#EmployeeCode' + k).text();
+            var EmpName = $('#EmployeeName' + k).text();
+            var EmpUserId = $('#EUId' + k).val();
+            var Designation = $('#MainDesignation' + k).text();
+            var Month = $('#MonthName').val();
+            var WorkingHours = parseInt($('#Workinghrs' + k).text() || 0);
+            var LeavesTaken = parseInt($('#LeavesTaken' + k).text() || 0);
+            var SalaryAdvance = parseInt($('#SalaryAdvance' + k).val() || 0);
+            var BasicSalary = parseFloat($('#BS' + k).val() || 0);
+
+            var HRA = parseFloat($('#HRA' + k).val() || 0);
+            var DA = parseFloat($('#DA' + k).val() || 0);
+            var TA = parseFloat($('#TA' + k).val() || 0);
+            var Allowance = parseFloat($('#Allowance' + k).val() || 0);
+            var Earnings = parseFloat($('#Earnings' + k).val() || 0);
+            var TotalEarnings = parseFloat($('#TotalEarnings' + k).text() || 0);
+            
+            var PF = parseFloat($('#PF' + k).val() || 0);
+            var Tax = parseFloat($('#Tax' + k).val() || 0);
+            var ESI = parseFloat($('#ESI' + k).val() || 0);
+            var Deductions = parseFloat($('#Deductions' + k).val() || 0);
+            var LeaveDeductions = parseFloat($('#LeaveDeductions' + k).val() || 0);
+            var TotalDeductions = parseFloat($('#TotalDeductions' + k).text() || 0);
+
+            var OTRate = parseFloat($('#OTRate' + k).val() || 0);
+            var OTAmount = parseFloat($('#OT' + k).val() || 0);
+            var TotalSalary = parseFloat($('#NetSalary' + k).text() || 0);
+            var TotalDaysInMonth = parseFloat($('#TotalDaysInMonth' + k).val() || 0);
+            var DeptId = ERPDeptId;
+            var UserId = ERPUserId;
+
+            if (typeof (EmpCode != undefined)) {
+                oArray1.push({
+                    'EmpId': EmpId,
+                    'EmpCode': EmpCode,
+                    'EmpName': EmpName,
+                    'EmpUserId': EmpUserId,
+                    'Designation': Designation,
+                    'Month': Month,
+                    'WorkingHours': WorkingHours,
+                    'LeavesTaken': LeavesTaken,
+                    'SalaryAdvance': SalaryAdvance,
+                    'BasicSalary': BasicSalary,
+                   
+                    'HRA': HRA,
+                    'DA': DA,
+                    'TA': TA,
+                    'Allowance': Allowance,
+                    'Earnings': Earnings,
+                    'TotalEarnings': TotalEarnings,
+                    'PF': PF,
+                    'Tax': Tax,
+                    'ESI': ESI,
+                    'Deductions': Deductions,
+                    'LeaveDeductions': LeaveDeductions,
+                    'TotalDeductions': TotalDeductions,
+                    'OTRate': OTRate,
+                    'OTAmount': OTAmount,
+                    'TotalSalary': TotalSalary,
+                    'TotalDaysInMonth': TotalDaysInMonth,
+                    'DeptId': DeptId,
+                    'UserId': UserId,
+                })
+            }
+
+        }
+        console.log(oArray1)
+        if (oArray1 != "") {
+            var data = { 'ReportModel': oArray1 };
+            $.ajax({
+                type: "POST",
+                url: "../PayRoll_LeaveApply/SalaryManagementInsertNew",
+                data: data,
+                success: function (result) {
+                    var status = result.oList[0].Status;
+                    $('#btnsubmit').prop("disabled", false);
+                    Showalerts(status);
+
+                }
+            });
+        }
+    }
+
+    function DetailsGets(result) {
+
+        disable_datatable('tblMSSummary', 'buttonPlace');
+        var responseText = "<thead><tr><th style=text-align:center>Sl#</th><th>Emp.ID</th><th>Employee Code</th><th>Employee Name</th><th>Designation</th><th style=text-align:right>Basic Sal.</th><th style=text-align:center>Total Earnings</th><th style=text-align:right>Total Deductions</th><th style=text-align:right>Total Sal.</th></tr>" +
+                                  "<tr><th>Sl#</th><th>Emp.ID</th><th>Employee Code</th><th>Employee Name</th><th>Designation</th><th> </th><th> </th><th> </th><th> </th></tr></thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+
+            var slno = parseInt(l + 1);
+            console.log('---------------------------------------')
+            var Ded = result[l].Deductions;
+            var OTRate = result[l].OTRate;
+            var WH = result[l].Workinghrs;
+            var Abs = result[l].LeavesTaken;
+            var AD = result[l].SalaryAdvance;
+            var TDM = result[l].TotalDaysInMonth;
+            var BS = parseFloat(result[l].BasicSalary).toFixed(Decimal);
+
+            var HRA = result[l].HRA;
+            var DA = result[l].DA;
+            var TA = result[l].TA;
+            var AL = result[l].Allowance;
+            var OE = result[l].Earnings;
+            var TE = parseFloat(HRA) + parseFloat(DA) + parseFloat(TA) + parseFloat(AL) + parseFloat(OE);
+
+            var PF = result[l].PF;
+            var Tax = result[l].Tax;
+            var ESI = result[l].ESI;
+            var OD = result[l].Deductions;
+            var Sal = BS / TDM;
+            var LD = parseFloat(Sal).toFixed(Decimal) * parseFloat(Abs).toFixed(Decimal);
+            var TD = parseFloat(PF) + parseFloat(Tax) + parseFloat(ESI) + parseFloat(OD) + parseFloat(LD) + parseFloat(AD).toFixed(Decimal);
+
+            var OTCal = parseFloat(Sal / WH).toFixed(Decimal);
+            var OT = parseFloat(OTCal * OTRate).toFixed(Decimal);
+
+            var TS = parseFloat(BS)  + parseFloat(OT) + parseFloat(TE);
+
+            var FTS = parseFloat(TS).toFixed(Decimal) - parseFloat(TD).toFixed(Decimal);
+
+            console.log('---------------------------------------')
+            responseText += '<tr style=background-color:white  id=' + 'Srow' + slno + '>' +
+                            '<td style="text-align:center">' + slno + '</td>' +
+                            '<td id= ' + 'EmployeeId' + slno + '>' + result[l].EmpId + '<input type=hidden id= ' + 'EUId' + slno + '   class="form-control"  value=' + result[l].EmpUserId + '></td>' +
+                            '<td id= ' + 'EmployeeCode' + slno + '>' + result[l].EmpCode + '</td>' +
+                            '<td id= ' + 'EmployeeName' + slno + '>' + result[l].EmpName + '</td>' +
+                            '<td id= ' + 'MainDesignation' + slno + '>' + result[l].Designation + '</td>' +
+                            '<td id= ' + 'BasicSalary' + slno + ' style=text-align:right>' + parseFloat(BS).toFixed(Decimal) + '</td>' +
+                            '<td id= ' + 'TotalEarnings' + slno + ' style=text-align:right>' + parseFloat(TE).toFixed(Decimal) + '</td>' +
+                            '<td id= ' + 'TotalDeductions' + slno + ' style=text-align:right>' + parseFloat(TD).toFixed(Decimal) + '</td>' +
+                            '<td id= ' + 'NetSalary' + slno + ' style=text-align:right>' + parseFloat(FTS || 0).toFixed(Decimal) +
+                            '<input type=hidden id= ' + 'WorkinghrsM' + slno + '   class="form-control"  value=' + $('#Workinghrs').text() + '>' +
+                            '<input type=hidden id= ' + 'LeavesTakenM' + slno + '   class="form-control"  value=' + $('#LeavesTaken').text() + '>' +
+                            '<input type=hidden id= ' + 'SalaryAdvanceM' + slno + '   class="form-control"  value=' + $('#SalaryAdvance').val() + '>' +
+                            '<input type=hidden id= ' + 'BSM' + slno + '   class="form-control"  value=' + $('#BS').val() + '>' +
+                            '<input type=hidden id= ' + 'HRAM' + slno + '   class="form-control"  value=' + $('#HRA').val() + '>' +
+                            '<input type=hidden id= ' + 'DAM' + slno + '   class="form-control"  value=' + $('#DA').val() + '>' +
+                            '<input type=hidden id= ' + 'TAM' + slno + '   class="form-control"  value=' + $('#TA').val() + '>' +
+                            '<input type=hidden id= ' + 'AllowanceM' + slno + '   class="form-control"  value=' + $('#Allowance').val() + '>' +
+                            '<input type=hidden id= ' + 'EarningsM' + slno + '   class="form-control"  value=' + $('#Earnings').val() + '>' +
+                            '<input type=hidden id= ' + 'PFM' + slno + '   class="form-control"  value=' + $('#PF').val() + '>' +
+                            '<input type=hidden id= ' + 'TaxM' + slno + '   class="form-control"  value=' + $('#Tax').val() + '>' +
+                            '<input type=hidden id= ' + 'ESIM' + slno + '   class="form-control"  value=' + $('#ESI').val() + '>' +
+                            '<input type=hidden id= ' + 'DeductionsM' + slno + '   class="form-control"  value=' + $('#Deductions').val() + '>' +
+                            '<input type=hidden id= ' + 'LeaveDeductionsM' + slno + '   class="form-control"  value=' + $('#LeaveDeductions').val() + '>' +
+                            '<input type=hidden id= ' + 'OTRateM' + slno + '   class="form-control"  value=' + $('#OTRate').val() + '>' +
+                            '<input type=hidden id= ' + 'OTM' + slno + '   class="form-control"  value=' + $('#OT').val() + '>' +
+                            '<input type=hidden id= ' + 'TDM' + slno + '   class="form-control"  value=' + result[l].TDM + '>' +
+                            '</td>' +
+
+                            '</tr>';
+        }
+        $('#tblMSSummary').html(responseText + '</tbody>');
+        var title = "";
+        datatableWithsearchNS('tblMSSummary', true, title, 'buttonPlace');
+    }
+
+    function formrefresh() {
+        $('#DateSelect').val(CurDate);
+        startenddates();
+
+        var date1 = getDateObject(StartingDate);
+        var date2 = getDateObject(EndingDate);
+
+        $('#DateFrom').val(StartingDate);
+        $('#DateTo').val(EndingDate);
+
+        var d = new Date();
+        var n = d.getMonth()+1;
+        var data = {};
+        data.Month =n;
+        $.ajax({
+            type: "POST",
+            url: "../../PayRoll_LeaveApply/SalaryManagementGets",
+            data: data,
+            success: function (result) {
+                DetailsGets(result);
+            }
+        });
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+
+            if (title != 'Edit' && title != 'Slno' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != '')
+                $(this).html('<input type="text" class="abc" placeholder="Search ' + title + '" style="width=100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                dom: 'Bfrtip',
+                buttons: [],
+
+            });
+
+
+
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+
+
+        table = $('#' + tablename).DataTable();
+
+
+    }
+
+
+</script>
+
+

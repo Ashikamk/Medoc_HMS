@@ -1,0 +1,438 @@
+﻿
+@{
+    ViewBag.Title = "UserMenuSettings";
+}
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M153" />
+<div class="form-actions">
+   
+    <div class="form-body">
+        <form action="#">
+            <div class="card-body">
+                <div class="px-3">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label>User</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="text" id="User" style="height:40px;" class="form-control" autocomplete="off" onkeyup="checkemptyuser(event, this)">   
+                                        <input type="hidden" id="UserId" />
+                                    </div>
+                                </div>
+                                @*<div class="col-md-1">
+                                    <label>UserRole</label>
+                                </div>*@
+                                @*<div class="col-md-3">
+                                    <div class="form-group">
+                                        <select id="UserRole" class="form-control"style="height:40px;" onchange="UserRoleLoad()" aria-describedby="addsbrole">
+                                            <option value="0">
+                                                ---Select Role---
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>*@
+                                <div class="col-md-1">
+                                    <button type="button" id="btnsubmit" style="" class="btn btn-primary">Submit <i class="fa fa-check-square-o"></i></button>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="text-right">
+                                        <button type="button" id="btncopyuserrights" onclick="ShowPopup()" style="" class="btn btn-warning white">Copy User Rights <i class="fa ft-copy"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+<div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv1">
+    <div id="chatapp" class="col-12">
+        <div class="card-body">
+            <div class="card-block">
+                <ul id="um0" class="list-group"></ul>
+            </div>
+        </div>
+    </div>
+ </div>
+<div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv2">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um1" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+</div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv3">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um2" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+        </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="UMDiv4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="um3" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    </div>
+<div id="div1">
+    <div class="row" id="menutbl">
+
+    </div>
+
+</div>
+
+<div id="CopyDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#CopyDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Copy From User:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="copyuser" class="form-control" autocomplete="off">
+                        </div>
+                        <input type="hidden" id="CopyUserId" value="0"/>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                    </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#CopyDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CopyUserRights()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+    </div>
+    </div>
+
+<script>
+    var MenuLength = 0;
+    $(document).ready(function () {
+        $('#Loading').fadeIn();
+        getallmenus();
+        // GetRows(0);
+
+        Defaultfocus();
+
+        $("#btnsubmit").click(function () {
+
+         if ($('#User').val() == '') 
+            {
+                warningshow("Please Select User", 'User');
+                $('#User').select();
+            }
+         else if ($('#UserId').val() == 0 || $('#UserId').val() == '')
+           {
+            warningshow("Please Select Valid User", 'User');
+            $('#User').select();
+           }
+          else { 
+                var a = '';
+                for (var i = 1; i <= MenuLength; i++) {
+                    if ($("#checklabel" + i).is(":checked")) {
+                        if ($('#head' + i).val() != 'MM') {
+                            a += $('#Menucodeid' + i).val() + ','
+                        }
+                    }
+                }
+
+                var data = {};
+                data.UserId = $('#UserId').val();
+                data.UserRole = '';
+                data.MenuCode = a;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/UserMenuUpdate",
+                    data: data,
+                    success: function (result) {
+                        for (var i = 0; i <= result.oList.length; i++) {
+                            var status = result.oList[i].Status;
+                            Showalerts(status);
+                        }
+                    }
+                });
+
+            }           
+                
+        });
+
+
+       
+    });
+
+
+    function checkemptyuser(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 13) {
+            $('#UserId').val(0);
+            $('#UserRole').val(0);
+            $('.chebox').prop('checked', false);
+        }
+    }
+
+
+    function Defaultfocus() {
+        $('#User').focus();
+    }
+
+
+    function formrefresh() {
+        $('#User').val('');
+        $('#UserId').val(0);
+        $('#CopyUserId').val(0);
+        $('#UserRole').val(0);
+        $('.chebox').prop('checked', false);
+
+    }
+
+    function getallmenus() {
+        var datax = {};
+        datax.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/SubMenuGetandGets",
+            data:datax,
+            success: function (result) {
+                showMenulist(result.oList)
+
+            }
+        });
+
+    }
+
+
+    function showMenulist(result) {
+        MenuLength = result.length;
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            var row = '<li id="row' + slno + '" class="list-group-item"><div style="float:left"><a class="menu-item" target="_blank"><i class="fa fa-paper-plane-o mr-1"></i>  ' + result[i].MenuName + '</a></div> <div style="float:right"<fieldset><div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input chebox" onchange=check(' + slno + ') id="checklabel' + slno + '"><label class="custom-control-label" for="checklabel' + slno + '" ></label><input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+
+            if (result[i].MasterId == 25 || result[i].MasterId == 1 || result[i].MasterId == 2 || result[i].MasterId == 3 || result[i].MasterId == 16 || result[i].MasterId == 23 || result[i].MasterId == 17) {
+                $('#um0').append(row);
+                $('#UMDiv1').show();
+            }
+            else if (result[i].MasterId == 26 || result[i].MasterId == 4 || result[i].MasterId == 5 || result[i].MasterId == 12 || result[i].MasterId == 21 || result[i].MasterId == 24) {
+                $('#um1').append(row);
+                $('#UMDiv2').show();
+            }
+            else if (result[i].MasterId == 27 || result[i].MasterId == 6 || result[i].MasterId == 7 || result[i].MasterId == 14 || result[i].MasterId == 20 || result[i].MasterId == 18) {
+                $('#um2').append(row);
+                $('#UMDiv3').show();
+            }
+            else if (result[i].MasterId == 8 || result[i].MasterId == 9 || result[i].MasterId == 10 || result[i].MasterId == 11 || result[i].MasterId == 13  || result[i].MasterId == 22 || result[i].MasterId == 15 || result[i].MasterId == 19) {
+                $('#um3').append(row);
+                $('#UMDiv4').show();
+            }
+            if ($('#head' + slno).val() == 'MM') {
+                $('#row' + slno).css('background-color', '#009DA0')
+                $("#row" + slno).css("color", "white");
+            }
+
+        }
+        $('#Loading').fadeOut();
+    }
+
+    function check(id) {
+
+        var flag = $("#checklabel" + id).is(":checked")
+        if ($('#head' + id).val() == 'MM') {
+
+            for (var j = 1; j <= MenuLength; j++) {
+
+
+                if ($('#Masterid' + id).val() == $('#Masterid' + j).val()) {
+                    document.getElementById("checklabel" + j).checked = flag;
+                }
+            }
+        }
+    }
+
+    $("#User").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data1 = {};
+            data1.UserName = $("#User").val();
+
+            $.ajax({
+                url: '../Master/UserSearchInUserMenuSettings',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+
+                        return ({
+                            ColCount: '1',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName: item.UserName,
+                            UserRole: item.UserRole,
+                            MenuCode:item.MenuCode,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('.chebox').prop('checked', false);
+            $('#UserId').val(ui.item.UserId);
+            
+            if (ui.item.UserRole == 0 || ui.item.UserRole == '') {
+                $('#UserRole').val(0);
+            } else {
+                $('#UserRole').val(ui.item.UserRole);
+            }
+            GetCurrentMenu(ui.item.MenuCode)
+        },
+    });
+
+
+    $("#copyuser").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data1 = {};
+            data1.UserName = $("#copyuser").val();
+
+            $.ajax({
+                url: '../Master/UserSearchInUserMenuSettings',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName: item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#CopyUserId').val(ui.item.UserId);
+        },
+    });
+
+
+
+    function GetCurrentMenu(MenuCode) {
+        var array = MenuCode.split(',');
+        console.log(array)
+        for (var i = 1; i <= MenuLength; i++) {
+            console.log(array.indexOf($('#Menucodeid' + i).val()));            
+            if(array.indexOf($('#Menucodeid'+i).val())!=-1)
+            {
+                $('#checklabel'+i).prop('checked', true);
+            }
+        }
+        $('#CopyDiv').hide();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    function UserRoleLoad(result) {
+        $("#UserRole").empty();
+        $("#UserRole").append("<option value='0'>Select UserRole</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#UserRole").append("<option value='" + result[i].Name + "</option>");
+        }
+    }
+
+
+
+
+    function ShowPopup()
+    {
+        if ($('#UserId').val() == 0) {
+            warningshow("Please Select User", 'User');
+        }
+        else {
+            $('#copyuser').val('');
+            $('#CopyUserId').val(0);
+            $('#CopyDiv').show();
+            $('#copyuser').focus();
+        }
+    }
+
+    function CopyUserRights() {
+        if ($('#CopyUserId').val() == 0) {
+            warningshow("Please Select User", 'copyuser');
+        }
+        else if ($('#CopyUserId').val() == $('#UserId').val()) {
+            warningshow("Cannot Copy From Same User", 'copyuser');
+        }
+        else {
+            var data = {};
+            data.UserId = $('#CopyUserId').val();
+            $.ajax({
+                type: "POST",
+                url: "../Master/UserMenuSearch",
+                data: data,
+                success: function (result) {
+                    console.log(result.oList[0].MenuCode)
+                    $('.chebox').prop('checked', false);
+
+                    if (result.oList[0].UserRole == 0 || result.oList[0].UserRole == '') {
+                        $('#UserRole').val(0);
+                    } else {
+                        $('#UserRole').val(result.oList[0].UserRole);
+                    }
+                    GetCurrentMenu(result.oList[0].MenuCode);
+                    
+                }
+            });
+        }
+
+    }
+</script>

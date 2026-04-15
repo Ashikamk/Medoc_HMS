@@ -1,0 +1,396 @@
+﻿
+@{
+    ViewBag.Title = "JobLedger";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+</style>
+
+<script>
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+    function Showreport(result) {
+
+        disable_datatable('Tblreport', 'buttonPlace');
+        var PrevAmout = 0;
+        var total = 0;
+        var bal = 0;
+        var ResponseEntity = "<thead><tr><th>Sl#</th><th>Voucher Type</th><th>Voucher#</th><th>Date</th><th>Account Code</th><th>Account Description</th><th>Voucher Description</th><th>Job Code</th><th>Reference#</th><th style=text-align:right>Debit</th><th style=text-align:right>Credit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            if (result[i].VDesc == 'Total') {
+                ResponseEntity += '<tr style=background-color:#cfd8dc;font-weight:bold><td>' + slno + '</td><td>' + result[i].VTypePrefix + '</td><td>' + result[i].VoucherNo + '</td><td>' + result[i].VoucherDate + '</td><td>' + result[i].Acc_Code + '</td><td>' + result[i].AccDesc + '</td><td>' + result[i].VDesc + '</td><td>' + result[i].JobCode + '</td><td>' + result[i].ReferenceNo + '</td><td style=text-align:right>' + parseFloat(result[i].Debit || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].Credit || 0).toFixed(Decimal) + '</td></tr>';
+            }
+            else {
+                ResponseEntity += '<tr><td>' + slno + '</td><td style=text-align:center>' + result[i].VTypePrefix + '</td><td>' + result[i].VoucherNo + '</td><td>' + result[i].VoucherDate + '</td><td style=text-align:center>' + result[i].Acc_Code + '</td><td>' + result[i].AccDesc + '</td><td>' + result[i].VDesc + '</td><td>' + result[i].JobCode + '</td><td>' + result[i].ReferenceNo + '</td><td style=text-align:right>' + parseFloat(result[i].Debit || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].Credit || 0).toFixed(Decimal) + '</td></tr>';
+            }
+        }
+        $('#Tblreport').html(ResponseEntity + '</tbody><tfoot><tr><th>Sl#</th><th>Voucher Type</th><th>Voucher#</th><th>Date</th><th>Account Code</th><th>Account Description</th><th>Voucher Description</th><th>Job Code</th><th>Reference#</th><th style=text-align:right> </th><th style=text-align:right> </th></tr> </tfoot>');
+        $('#Tblreportprint').html(ResponseEntity + '</tbody>');
+        var title = "Job Ledger - from " + $("#dpDateFrom").val() + " to " + $("#dpDateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+
+        $('#blnce').text('Balance : ' + bal);
+        $("#blnce").css("opacity", '100');
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'O Balance' && title != ' ') {
+                $(this).html('<input type="text" placeholder=" ' + title + '" style="width=100%" />');
+            }
+            if (title == 'Date') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Voucher Type') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Voucher#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Reference#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Cheque#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+
+            if (title == 'Account Code') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) {
+                //console.log("download table need title and button container");
+            }
+
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'Blfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+
+    function checkcustempty() {
+        $('#JobCodeId').val(0);
+    }
+
+    $(document).ready(function () {
+        $('#txtJobCode').focus();
+        $('#txtJobCode').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnGo').focus();
+                e.preventDefault();
+            }
+        });
+
+      //  $('#dpDateFrom').val(FinanceStartDate)
+
+        $('#dpDateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+        $('#dpDateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+        $("#btnGo").click(function (e) {
+            $('#Loading').show();
+            if ($('#Supplier').val() == '') {
+                $('#SupplierId').val(0);
+            }
+            if ($('#txtJobCode').val() == '') {
+                $('#JobCodeId').val(0);
+            }
+            var data = {};
+            data.DateFrom = $('#dpDateFrom').val();
+            data.DateTo = $('#dpDateTo').val();
+            data.JobCode = $('#JobCodeId').val();
+            data.SupplierId = $('#SupplierId').val();
+
+            $.ajax({
+                type: "POST",
+                url: "../AccountsReport/JobLedgerGets",
+                data: data,
+                success: function (result) {
+                    Showreport(result);
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                    $('#popupdiv').hide();
+                }
+            });
+        });
+    });
+
+</script>
+
+
+<div class="myData" data-x="M293" />
+<div id="Main">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="30%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(),$('#txtJobCode').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+                            <div class="heading-elements">
+                                <hr />
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog " role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h2 class="modal-title" id="myheader">Job Ledger</h2>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold;">From</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="dpDateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <div class="col-md-2"> 
+                         <label style="font-weight:bold">To</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="dpDateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:3%">
+                        <div class="col-md-2">
+                         <label style="font-weight:bold">JobCode</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="txtJobCode" class="form-control">
+                            <input type="hidden" id="JobCodeId" class="form-control" />
+                        </div>
+
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold">Supplier</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="Supplier"  class="form-control">
+                            <input type="hidden" id="SupplierId" class="form-control" />
+                        </div>
+
+                    </div>
+
+                </div>
+                <hr />
+                <div class="text-center">
+                    <button type="button" style="width:100px" id="btnGo" class="btn btn-primary">Go</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $("#txtJobCode").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.JobCode = $("#txtJobCode").val();
+            $.ajax({
+                url: '../Master/JobCodeSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.JobCode,
+                            label1: item.Description,
+
+                            Description: item.Description,
+                            JobcodeId: item.ProjectJobId,
+                            headers: ["Job Code", "Job Description"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#JobCodeId').val(ui.item.JobcodeId);
+        },
+
+    });
+
+
+    $("#Supplier").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.CustName = $("#Supplier").val();
+            data.CustType = 'S';
+
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.CustAccount,
+                            label1: item.CustName,
+                            CustId: item.CustId,
+                            headers: ["Supplier Code", "Supplier Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#SupplierId').val(ui.item.CustId)
+        },
+
+    });
+</script>

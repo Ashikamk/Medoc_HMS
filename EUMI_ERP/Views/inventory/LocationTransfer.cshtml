@@ -1,0 +1,1017 @@
+﻿
+@{
+    ViewBag.Title = "LocationTransfer";
+}
+
+
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+
+<script type="text/javascript" src="~/app-assets/FromStack/dist/JsBarcode.all.js"></script>
+
+<script type="text/javascript" src="../Projectscript/LocationTransfer.js"></script>
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<script>
+
+    //Print After Copy
+    //function PrintthisBill() {
+    //    PrintthisBillWindows('LOCATIONTRANSFER', i, 'MAIN');
+    //}
+
+
+    //Print After Copy
+    function PrintthisBill(flg) {
+
+        if ($('#tblLocationTransfer tr').length > 0) {
+            if (flg == 0)            //Save
+            { PrintthisBillWindows('LOCATIONTRANSFER', i, 'MAIN'); }
+            else if (flg == 1)       //Copy
+            { PrintthisBillWindows('LOCATIONTRANSFER', i, 'COPY'); }
+
+        }
+        else {
+            warningshow('Please select a TR# to print', 'TRNo');
+            $('#TRNo').select();
+        }
+
+    }
+ </script>
+
+<style>
+        .modal-lgl {
+        max-width: 70%;
+        margin-left: 16%;
+        margin-right: 14%;
+    }
+</style>
+
+<div class="myData" data-x="M109" />
+
+<div id="Entry" style="margin-top:-12px;">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0" style="font-weight:bold;">Location Transfer</h4>
+                </div>
+                <div class="card-body" style="margin-top:-6px">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;margin-top:-14px;"></div>
+                                <form action="#">
+                                    <div class="form-body" style="margin-right:18px;border-bottom:1px solid  #cccccc;border-top:1px solid  #cccccc;">
+                                        <div class="row" style="background-color:#E0F3F4; margin-left:1px;width:100%;height:180px;margin-top:4px;margin-bottom:4px;">
+                                            <div class="col-md-12">
+                                                <br />
+                                                <div class="form-group">
+                                                    @*<div class="hopscotch-bubble animated tour-demo-tour" id="tour1" style="position: absolute; top: 65px; left:160px;display:none">
+                                                        <div class="hopscotch-bubble-container" style="width: 280px; padding: 10px;">
+                                                            <div class="hopscotch-bubble-content">
+                                                                <h3 class="hopscotch-title">Search tr Number Here.</h3>
+                                                                <div class="hopscotch-content"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="hopscotch-bubble-arrow-container hopscotch-arrow up">
+                                                            <div class="hopscotch-bubble-arrow-border"></div>
+                                                            <div class="hopscotch-bubble-arrow"></div>
+                                                        </div>
+                                                    </div>*@
+                                                    <div class="row">
+                                                        <label class="col-lg-1" style="font-weight:bold;">TR #<span class="danger">*</span></label>
+                                                        <div class="col-lg-11">
+                                                            <div class="row">
+                                                                <div class="col-md-1">
+                                                                    <input type="text" id="TRNo" class="form-control" disabled style="position:absolute;"  onkeydown="$('#tour1').hide();" />
+                                                                </div>
+                                                                <label class="col-lg-2 text-lg-right " style="font-weight:bold;">From Location<span class="danger">*</span></label>
+                                                                <div class="col-md-2">
+                                                                    <select id="Location" onchange="GetBin(0, $('#ProductId0').val())" class="form-control" style="width:99%;height:100%"></select>
+                                                                </div>
+                                                                <label class="col-lg-2 text-lg-right" style="font-weight:bold;">To Location<span class="danger">*</span></label>
+                                                                <div class="col-md-2">
+                                                                    <select id="ToLocation" class="form-control" style=""></select>
+                                                                </div>
+                                                                <label class="col-lg-1 text-lg-center" style="font-weight:bold;">Tr Date<span class="danger">*</span></label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" class="form-control" id="TRDate" style="width:92%;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    </div>
+                                                    <div class="row" style="margin-top:7px;">
+                                                        <label class="col-lg-1" style="font-weight:bold;">Db. A/c<span class="danger">*</span></label>
+                                                        <div class="col-lg-11">
+                                                            <div class="row">
+                                                                <div class="col-md-5">
+                                                                    <table width="100%">
+                                                                        <tr>
+                                                                            <td width="29%">
+                                                                                <input type="hidden" id="hiddendebit" />
+                                                                                <input type="text" id="DebitAccount" class="form-control" onkeyup="checkDebitAccounttextempty(event)" style="border-right:none;border-top-right-radius:0px;border-bottom-right-radius:0px">
+                                                                            </td>
+                                                                            <td width="71%">
+                                                                                <input type="text" id="txtdacnt" maxlength="4" class="form-control" name="acnt1" style="border-top-left-radius:0px;border-bottom-left-radius:0px;border-left:none;background-color:white;" disabled />
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </table>
+
+                                                                </div>
+                                                                <label class="col-lg-2 text-lg-right" style="font-weight:bold;">Comments<span class="danger"></span></label>
+                                                                <div class="col-md-5">
+                                                                    <textarea id="Comments" class="form-control" style="position:absolute;width:92.6%; height:235%;resize: none;"></textarea>
+                                                                  
+                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row" style="margin-top:8px;">
+                                                                <label class="col-lg-1" style="font-weight:bold;">Cr. A/c<span class="danger">*</span></label>
+                                                                <div class="col-lg-11">
+                                                                    <div class="row">
+                                                                        <div class="col-md-5">
+                                                                            <table width="100%">
+                                                                                <tr>
+                                                                                    <td width="29%">
+                                                                                        <input type="hidden" id="hiddenCredit" />
+                                                                                        <input type="text" id="CreditAccount" class="form-control" onkeyup="checkCreditAccounttextempty(event)" style="border-right:none;border-top-right-radius:0px;border-bottom-right-radius:0px">
+                                                                                    </td>
+                                                                                    <td width="71%">
+                                                                                        <input type="text" id="txtcacnt" maxlength="4" class="form-control" name="acnt2" style="border-top-left-radius:0px;border-bottom-left-radius:0px;border-left:none;background-color:white;" disabled />
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-body" style="margin-top:-15px">
+                                        <div style="">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <br />
+                                                    <div class="row" style="height:28px;">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label style="font-weight:bold;">Product/Material</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label style="font-weight:bold;">Unit</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label style="font-weight:bold;">Quantity<span class="danger">*</span></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label style="font-weight:bold;">Rate</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label style="font-weight:bold;">Total Amount</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="row" style="margin-top:1px;">
+                                                        <div class="col-md-3">
+                                                            <div class="input-group">
+                                                                <input type="text" id="txtproduct0" class="form-control" style="" onkeyup="checkpdcttextempty(event)" onkeypress="CheckLocationselected()">
+                                                                <input type="hidden" id="ProductId0" value="0" />
+                                                                <div class="input-group-append" id="addProduct">
+                                                                    <button class="btn btn-outline-primary" onclick="window.open('../master/ItemMaster')" id="btnaddprd" type="button">+</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" id="Description" />
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+
+                                                                <select id="select_unit0" class="form-control" style=""></select>
+                                                                <input type="text" id="txtunit" style="display:none" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <input type="hidden" id="hiddenquantitycheck" />
+                                                                <input type="text" id="txtquantity" class="form-control" onkeyup="checkquantity(),tot()" onkeypress="return isNumber1(event)" style="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <input type="text" id="txtrate" class="form-control" onkeyup="tot()" onkeypress="return isNumber(event,this.id)" style="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <input type="text" id="txttotal" class="form-control" readonly style="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+
+                                                                <button type="button" id="btnadd" onclick="productadd()" class="btn btn-outline-primary ">+ </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-left:0px;margin-right:0px;margin-top:-25px">
+                                        <div id="customView" class="jsgrid" style="position: relative; height: auto; width: 98.9%;border:solid 1px;border-color:#cccccc;border-bottom:1px solid #cccccc;overflow-x:auto;overflow-y: hidden;">
+                                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:100%;">
+                                                <table class="jsgrid-table">
+                                                    <tr class="jsgrid-header-row">
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:3%">SL#</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Code</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:20%">Description</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:5%">Unit</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:5%">Qty.</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Price</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-center" style="width:6%">Total</th>
+                                                        <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:3%"><i class="icon-pencil"></i>&nbsp;<i class="icon-trash"></i></th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div id="proddiv" class="jsgrid dataTables_scrollBody" style="position: relative;overflow-x:hidden;overflow-y: scroll; height: 290px; width: 100%;">
+                                                <table class="jsgrid-table" id="tblLocationTransfer"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:13px;">
+                                        <div class="col-lg-11">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                </div>
+
+
+                                                <label class="col-lg-2 text-lg-right" style="color:#00B5B8 "><b>Total Qty</b> </label>
+                                                <div class="col-md-2">
+                                                    <input type="text" id="NoofQty" class="form-control" disabled style="text-align:center;font-weight:bold">
+                                                </div>
+
+
+                                                <div style="display:none">
+                                                    <label class="col-lg-2 text-lg-right" style="color:#00B5B8 "><b>Grand Total</b> </label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" id="GrandTotal" class="form-control" disabled style="text-align:center;font-weight:bold">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <div class="text-right">
+                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:100px;display:none" id="btnlist" onclick="enablenobox()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:100px" id="btnview" onclick="$('#ViewFromDate,#ViewToDate').val(CurDate), $('#UserDepartments').val(0), GetLocTransferList()" class="btn btn-primary btn-min-width mr-1 mb-1">View <i class="ft-eye"></i></button>
+                                            <button style="display:none" type="button" id="btnprint" onclick="PrintthisBill(1)" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                            <button type="button" style="width:100px" id="btnnew" onclick="createnew()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btnedit"  class="btn btn-secondary btn-min-width mr-1 mb-1" onclick="$('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp,#otpremarks').val(''), $('#txtotp').focus()">Edit<i class="fa ft-edit"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btndelete" class="btn btn-danger btn-min-width mr-1 mb-1">Cancel<i class="fa fa-times"></i></button>
+                                            <button style="display:none;width:120px" type="button" id="btnsaveedit" onclick="UpdateLocationTransfer()" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:120px;font-size: 0.875rem;" id="btnnewinv" onclick="window.open('../inventory/LocationTransfer')" class="btn btn-primary btn-min-width mr-1 mb-1" autocomplete="off">New Transfer <i class="position-right">⇆</i></button>
+                                         </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-left show" id="purchaseViewForm" tabindex="-1" role="dialog" aria-labelledby="purchaseviewheader" style="padding-right: 17px; display: none;display: none;background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lgl" role="document" style="top:0%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="purchaseviewheader"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#purchaseViewForm').hide()" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="">
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="col-md-12">
+                            <div class="row" style="background-color:#E0F3F4;">
+
+                                <div class="col-md-1" style="margin-top:17px;text-align:left;">
+                                    <label for="ViewFromDate">From Date</label>
+                                </div>
+                                <div class="col-md-2" style="margin-top:17px;">
+
+                                    <input type="text" id="ViewFromDate" class="form-control" placeholder="From Date" style="height:35px;font-weight:200;">
+
+                                </div>
+                                <div class="col-md-1" style="margin-top:17px;text-align:right;">
+                                    <label for="ViewToDate">To Date</label>
+                                </div>
+                                <div class="col-md-2" style="margin-top:17px;">
+                                    <div class="form-group">
+                                        <input type="text" id="ViewToDate" class="form-control" placeholder="To Date" style="height:35px;font-weight:200;">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style="margin-top:17px;">
+                                    <div class="form-group">
+                                        <select id="UserDepartments" class="form-control" style="height:35px;font-weight:200;">
+                                            <option value="0">-All-</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1" style="margin-top:16px;">
+                                    <div class="form-group">
+                                        <button type="button" id="" onclick="GetLocTransferList()" class="btn btn-primary btn-min-width mr-1 mb-1 " style="position:absolute;width:100px;font-weight:400;">Search <i class="fa fa-search position-right"></i>  </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="overflow-auto" style="height:525px; ">
+                            <table id="tbl_PIViewList" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="alertpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:25%">
+        <div class="modal-content" style="width:600px">
+            <form id="alertdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="placeholder"></div>
+                        <div class="col-md-12" style="overflow:scroll;height:auto;width:100%;overflow:auto;">
+                            <div class="swal2-icon swal2-success animate" style="display: block;"><span class="line tip animate-success-tip"></span> <span class="line long animate-success-long"></span><div class="placeholder"></div> <div class="fix"></div></div>
+                            <br />
+                            <h2 id="savealert" class="text-center"></h2>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <input type="button" class="btn btn-primary" value="Print" id="btnok">
+                        <input type="button" class="btn btn-outline-primary" value="Cancel" id="btncnclalrt">
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@*<div id="productpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="height:210px;display:none;margin-left:-1%;margin-top:75px;">
+    <div id="productpopupdiv" class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#E0F3F4;height:60px">
+                <h5 class="modal-title" id="prodheader" style="height:1px;"></h5>
+                <button type="button" class="close" onclick="productpopuprefresh()" style="height:2px">
+                    <span>×</span>
+                </button>
+            </div>
+            <section id="productdiv" style="display:none;height:10px;margin-top:-5px">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card card-body" style="margin-top:-10px">
+
+                            @*<div class="card-body">
+                            <div class="card-block" style="overflow:scroll;height:116px;width:100%;overflow:auto;">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                            </div>
+                            @*</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </div>
+    </div>
+
+</div>*@
+<div id="productpopupdiv" style="display:none;border-radius: 25px;">
+    <div id="toast-containerinfo" class="toast-container toast-top-half-width" style="position:absolute; top:0; right:0%;opacity:100">
+
+        <div class="toast-primary" style="height:180px;margin-top:70px;font-weight:500;text-align:center;opacity:100;width:100%" id="infomessage">
+            @*<h5 class="modal-title" id="prodheader"></h5>*@
+            <button type="button" class="close" onclick="productpopuprefresh()" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <section id="productdiv" style="display:none;height:25%;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <input type="hidden" id="LPCost" value="0" />
+                            <input type="hidden" id="AvgCost" value="0" />
+                            <input type="hidden" id="Sumtotqty" value="0" />
+                            <input type="hidden" id="LastSellingPrice" value="0" />
+                            <div class="card-block" style="height:115px;width:100%;">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </div>
+
+    </div>
+</div>
+<div id="alertpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:20%">
+        <div class="modal-content">
+            <form id="alertdiv" style="display:none">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" style="overflow:scroll;height:auto;width:100%;overflow:auto;">
+                            <table class="table table-responsive-md-md text-center" id="tblAlert"></table>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <input type="button" class="btn btn-outline-primary" value="Ok" id="btntermssave" onclick="alertpopuprefresh()">
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div id="CancelOTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#CancelOTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="cancelotp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="cancelotpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#CancelOTPDiv').hide(), $('#cancelotp,#cancelotpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CheckCancelTransfer()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<div id="OTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="txtotp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btnotpcancel" onclick="$('#OTPDiv').hide(), $('#txtotp,#otpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btnotpsave" onclick="CheckEditTransfer()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="swal-overlay swal-overlay--show-modal" id="canceldiv" tabindex="-1" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block;display:none">
+    <div class="swal-modal" style="margin-top:-10%">
+        <div class="swal-icon swal-icon--error">
+            <div class="swal-icon--error__x-mark">
+                <span class="swal-icon--error__line swal-icon--error__line--left"></span>
+                <span class="swal-icon--error__line swal-icon--error__line--right"></span>
+            </div>
+        </div><div class="swal-title" style="" id="cancelmsg"></div><div class="swal-footer">
+            <div class="swal-button-container">
+
+                <button id="btncancel" onclick="returnpopclose()" class="swal-button swal-button--confirm">OK</button>
+
+                <div class="swal-button__loader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Loadingsave" class="overlay1" style="background: none;display:none">
+    <div style="position:fixed;top:40%;left:50%">
+        <img src="/app-assets/img/Loading_1.gif">
+    </div>
+</div>
+<div class="" id="PopUpDetailbin" style="">
+
+</div>
+    <div style="display:none">
+        <input type="text" id="TRNoCopy" />
+        <input type="text" id="Deptid" />
+        <input type="text" id="Deptcode" />
+        <input type="text" id="User" />
+        <select id="LocationHide"></select>
+        <img id="barcode1" />
+    </div>
+
+    <div id="alertpopup1" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+        <div class="modal-dialog" role="document" style="top:20%">
+            <div class="modal-content" style="width:600px">
+                <form id="alertdiv1" style="display:none;">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12" style="overflow:scroll;height:200px;width:100%;overflow:auto;">
+                                <table class="table table-responsive-md-md text-center" id="tblAlert1"></table>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" class="btn btn-outline-primary" value="Ok" id="btnokalert1" onclick="$('#alertpopup1,#alertdiv1').hide()">
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function CheckLocationselected() {
+           if($('#ToLocation').val()==0){
+                warningshow('Please Select To Location', 'ToLocation');
+            }
+        }
+
+        //product
+
+        $("#txtproduct0").autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                if ($('#Location').val() == 0) {
+                    warningshow('Please Select Location', 'Location');
+                    $("#txtproduct0").val('');
+                    return false;
+                }
+                else if ($('#Location').val() == ($('#ToLocation').val())) {
+                    warningshow('From Location and To Location Cannot be same', 'ToLocationIn');
+                    $('#txtproduct0').val('');
+                    return false;
+                }
+                else {
+                    var data = {};
+                    data.ItemCode = $("#txtproduct0").val();
+                    data.LocId = $("#Location").val();
+                    data.DeptId = ERPDeptId;
+                    data.UserId = ERPUserId;
+                    data.CustId = 0;
+                    data.ProductMultiPriceId = 0;
+                    $.ajax({
+                        url: '../SalesInvoice/ProductSearchSales',
+                        type: "POST",
+                        data: data,
+                        dataType: "json",
+                        success: function (data) {
+
+                            response($.map(data, function (item) {
+                                return ({
+                                    ColCount: '-9s',
+                                    label: item.ItemCode,
+                                    label1: item.Description,
+                                    //label2: item.UnitName,
+                                    label3: item.stocktotloseqty,
+                                    label4: item.SellingPrice.toFixed(Decimal),
+                                    label5: item.GrpName.substring(0, 15),
+                                    label6: item.SbgrpName.substring(0, 15),
+                                    label7: item.CategoryName.substring(0, 15),
+                                    label8: item.SubCategoryName.substring(0, 15),
+                                    Unit: item.UnitId,
+                                    Description: item.Description,
+                                    Rates: item.SellingPrice,
+                                    UnitName: item.UnitName,
+                                    ProductId: item.ItemId,
+                                    Product: item.ItemCode,
+                                    Qty: item.stocktotloseqty,
+                                    headers: ["Product Code", "Product Description", "Quantity", "Price", "Group", "Sub Group", "Category", "Sub Ctegory"]
+                                })
+                            }));
+                        }
+                    })
+                }
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                LOcQty = ui.item.Qty;
+                if (ui.item.Qty == 0) {
+                    var data = {};
+                    data.ProductId = ui.item.ProductId;
+                    data.CustId = 0;
+                    data.DeptId = ERPDeptId;
+                    $.ajax({
+                        type: "POST",
+                        url: '../SalesInvoice/CustomerProductDetailsSearch',
+                        data: data,
+                        success: function (result) {
+                            CustPrdctLoad(result.oList);
+                        }
+                    });
+                    $('#txtproduct0').val(ui.item.Product);
+                    warningshow('Not enough stock!', 'txtproduct0');
+                    $('#ProductId0').val(ui.item.ProductId);
+                    $('#txtproduct0').select();
+                    qtyflag = 1;
+                    return false;
+                }
+                else {
+                    $('#ProductId0').val(ui.item.ProductId);
+                    $('#select_unit0').val(ui.item.Unit);
+                    $('#Description').val(ui.item.Description);
+                    $('#txtrate').val(ui.item.Rates);
+                    $('#hiddenquantitycheck').val(ui.item.Qty);
+                    $('#txtquantity').focus();
+                    qtyflag = 0;
+                    var data = {};
+                    data.ProductId = ui.item.ProductId;
+                    data.CustId = 0;
+                    data.DeptId = ERPDeptId;
+                    $.ajax({
+                        type: "POST",
+                        url: '../SalesInvoice/CustomerProductDetailsSearch',
+                        data: data,
+                        success: function (result) {
+                            CustPrdctLoad(result.oList);
+                        }
+                    });
+                }
+            },
+        });
+        $("#DebitAccount").autocomplete({
+            source: function (request, response) {
+                var data = {};
+                data.AccountDescription = $("#DebitAccount").val();
+                data.DeptId = ERPDeptId;
+                $.ajax({
+                    url: '../Inventory/AccountNumberSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-3',
+                                label: item.DebitAccount,
+                                label1: item.AccountDescription,
+                                DebitAccount: item.DebitAccount,
+                                AccountDescription: item.AccountDescription,
+                                AccountId: item.AccountId,
+                                headers: ["Account Code", "Account Name"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#hiddendebit').val(ui.item.AccountId)
+                $('#DebitAccount').val(ui.item.DebitAccount);
+                $('#txtdacnt').val(ui.item.AccountDescription);
+                $("#CreditAccount").focus();
+            },
+        });
+        //Credit Account
+
+        $("#CreditAccount").autocomplete({
+            source: function (request, response) {
+                var data = {};
+                data.AccountDescription = $("#CreditAccount").val();
+                $.ajax({
+                    url: '../Inventory/AccountNumberSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-3',
+                                label: item.DebitAccount,
+                                label1: item.AccountDescription,
+                                DebitAccount: item.DebitAccount,
+                                AccountDescription: item.AccountDescription,
+                                AccountId: item.AccountId,
+                                headers: ["Account Code", "Account Name"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#hiddenCredit').val(ui.item.AccountId)
+                $('#CreditAccount').val(ui.item.DebitAccount);
+                $('#txtcacnt').val(ui.item.AccountDescription);
+                $('#Comments').focus();
+            },
+        });
+
+        //L Tr No#
+        $("#TRNo").autocomplete({
+            source: function (request, response) {
+                var data = {};
+                data.trNo = $("#TRNo").val();
+                data.FromLocation = UserLocationId;
+                data.DeptId = ERPDeptId;
+                data.UnitId = ERPUserId; //UserId
+                data.flag = 1;
+                $.ajax({
+                    url: '../Inventory/LocationTransfernumbersearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-4',
+                                label1: item.LocFrom + '  -->   ' + item.LocTo,
+                                label: item.trNo,
+                                label2: item.TRDate,
+                                label3: item.Description,
+                                trNo: item.trNo,
+                                TRDate: item.TRDate,
+                                FromLocation: item.FromLocation,
+                                ToLocation: item.ToLocation,
+                                TRDate: item.TRDate,
+                                DAccount: item.DAccount,
+                                CAccount: item.CAccount,
+                                DAccountId: item.DAccountId,
+                                CAccountId: item.CAccountId,
+                                Comments: item.Comments,
+                                DAccountName: item.DAccountName,
+                                CAccountName: item.CAccountName,
+                                DeptId: item.DeptId,
+                                Qty: item.Qty,
+                                User: item.User,
+                                headers: ["tr No", "Transfer from->To", "Date", "Department"]
+                            })
+                        }));
+                    }
+                })
+            },
+
+            autoFocus: true,
+            select: function (event, ui) {
+                LOcQty = ui.item.Qty;
+                $("#tblLocationTransfer tr").remove();
+                $('#TRNo').val(ui.item.trNo);
+                $('#Location').val(ui.item.FromLocation);
+                $('#ToLocation').val(ui.item.ToLocation);
+                $('#TRDate').val(ui.item.TRDate);
+                $('#DebitAccount').val(ui.item.DAccount);
+                $('#CreditAccount').val(ui.item.CAccount);
+                $('#Comments').val(ui.item.Comments);
+                $('#txtdacnt').val(ui.item.DAccountName);
+                $('#txtcacnt').val(ui.item.CAccountName);
+                $('#hiddendebit').val(ui.item.DAccountId);
+                $('#hiddenCredit').val(ui.item.CAccountId);
+                $('#User').val(ui.item.User);
+                var trNo = ui.item.trNo;
+                var dep = ui.item.DeptId;
+                var data = {};
+                data.trNo = trNo;
+                data.DeptId = ui.item.DeptId;
+                data.LocId = $("#Location").val();
+                $.ajax({
+                    type: "POST",
+                    url: "../../inventory/LocationTransferGetansGets",
+                    data: data,
+                    success: function (result) {
+                        if (trNo != 0) {
+                            JsBarcode("#barcode1", dep + '-' + trNo);
+                            LocationTransferGet(result.oList);
+                        }
+
+
+                    }
+                });
+                $('#TRDate').prop('disabled', true);
+                $('#DebitAccountIn').prop('disabled', true);
+                $('#CreditAccountIn').prop('disabled', true);
+                $('#Comments').prop('disabled', true);
+
+            },
+        });
+
+
+        function GetLocTransferList() {
+            var dataPI = {};
+            dataPI.FromDate = $('#ViewFromDate').val();
+            dataPI.ToDate = $('#ViewToDate').val();
+            dataPI.TransferDeptId = $('#UserDepartments').val();
+            dataPI.DeptId = ERPDeptId;
+            dataPI.UId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Inventory/LocationTransferList",
+                data: dataPI,
+                success: function (result) {
+
+                    GetLocTransListView(result);
+
+
+                }
+            });
+        }
+
+
+        function GetLocTransListView(result) {
+
+            $('#ViewFromDate,#ViewToDate,#UserDepartments').prop("disabled", false);
+            disable_datatable('tbl_PIViewList');
+            $('#purchaseViewForm').show();
+            var responseText = "<thead><tr></th><th style='width:90px;'>Sl#</th><th>Transfer#</th><th>Date</th><th>From</th><th>To</th><th>DeptCode</th><th>Print</th></tr>" +
+                "<tr><th> </th><th>Transfer#</th><th>Date</th><th>From</th><th>To</th><th>DeptCode</th><th> </th></tr></thead><tbody>";
+            for (var l = 0; l < result.length; l++) {
+                var slno = parseInt(l + 1);
+
+                responseText += "<tr ondblclick=\"CopyFromView('" + result[l].trNo + "','"
+                    + result[l].DeptId + "','"
+                    + result[l].FromLocation + "','"
+                    + result[l].ToLocation + "','"
+                    + result[l].TRDate + "','"
+                    + result[l].Qty + "','"
+                    + result[l].DAccount + "','"
+                    + result[l].CAccount + "','"
+                    + result[l].DAccountName + "','"
+                    + result[l].CAccountName + "','"
+                    + result[l].DAccountId + "','"
+                    + result[l].CAccountId + "','"
+                    + $.trim(result[l].Comments) + "','"
+                    + result[l].User + "',0)\">"
+
+                    + "<td style='width:90px;' >" + slno + "</td>"
+                    + "<td id=" + "InvoView_" + slno + ">" +
+                    result[l].trNo + "</td><td>" +
+                    result[l].TRDate + "</td><td>" +
+                    result[l].LocFrom + "</td><td>" +
+                    result[l].LocTo + "</td><td>" +
+                    result[l].Description + "</td>"
+                    + "<td><button class='btn white btn-round btn-xs' style='background-color:#009DA0;font-size:smaller;margin:0' " +
+
+                    "onclick=\"CopyFromView('" + result[l].trNo + "','"
+                    + result[l].DeptId + "','"
+                    + result[l].FromLocation + "','"
+                    + result[l].ToLocation + "','"
+                    + result[l].TRDate + "','"
+                    + result[l].Qty + "','"
+                    + result[l].DAccount + "','"
+                    + result[l].CAccount + "','"
+                    + result[l].DAccountName + "','"
+                    + result[l].CAccountName + "','"
+                    + result[l].DAccountId + "','"
+                    + result[l].CAccountId + "','"
+                    + $.trim(result[l].Comments) + "','"
+                    + result[l].User + "',1)\" autocomplete='off'>Print <i class='ft-printer'></i></button></td></tr>";
+            }
+            $('#tbl_PIViewList').html(responseText + '</tbody>');
+            datatableWithsearch('tbl_PIViewList', 'Multiple');
+        }
+
+        function CopyFromView(trNo, DeptId, FromLocation, ToLocation, TRDate, Qty, DAccount, CAccount, DAccountName, CAccountName, DAccountId, CAccountId, Comments, User, Print) {
+            JsBarcode("#barcode1", DeptId + '-' + trNo);
+            $('#tblLocationTransfer tr').remove();
+            enablecopy(FromLocation, ToLocation);
+            $('#purchaseViewForm').hide();
+            $("#tblLocationTransfer tr").remove();
+
+
+            var data = {};
+            data.trNo = trNo;
+            data.DeptId = DeptId;
+            data.LocId = FromLocation;
+            $.ajax({
+                type: "POST",
+                url: "../../inventory/LocationTransferGetansGets",
+                data: data,
+                success: function (result) {
+
+                    if (trNo != 0)
+
+                        $('#Location').val(FromLocation);
+                    $('#LocationHide').val(FromLocation);
+
+                    LocationTransferGet(result.oList);
+                    $('#TRNo').val(trNo);
+
+                    $('#ToLocation').val(ToLocation);
+                    $('#TRDate').val(TRDate);
+                    $('#DebitAccount').val(DAccount);
+                    $('#CreditAccount').val(CAccount);
+                    $('#Comments').val(Comments);
+                    $('#txtdacnt').val(DAccountName);
+                    $('#txtcacnt').val(CAccountName);
+                    $('#hiddendebit').val(DAccountId);
+                    $('#hiddenCredit').val(CAccountId);
+                    $('#User').val(User);
+                    LOcQty = Qty;
+                    if (Print == 1) {
+                        $('#btnprint').click();
+                    }
+                }
+            });
+            $('#TRDate').prop('disabled', true);
+            $('#DebitAccountIn').prop('disabled', true);
+            $('#CreditAccountIn').prop('disabled', true);
+            $('#Comments').prop('disabled', true);
+
+
+
+        }
+    </script>

@@ -1,0 +1,939 @@
+﻿
+@{
+    ViewBag.Title = "OutstandingStatement";
+}
+
+
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+   
+</style>
+
+
+
+<table style="display:none" id="Tblreportprint"></table>
+<table style="display:none" id="Tblreportprint1"></table>
+<script>
+
+    var decimal = Decimal;
+    $(function () {
+        $("#AccountGrp").focus();
+        GetDepartment(0);
+        GetCostCode(0);
+        $('#DateFrom').val(FinanceStartDate)
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+20, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+     
+    });
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+</script>
+
+<div class="myData" data-x="M83" />
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="height:80px;border-bottom:1px solid #e6e6e6">
+                    <div>
+
+                        <table width="100%">
+                            <tr>
+                                <td ><h5 id="header"></h5></td>
+                                <td style="display:none;"><h5 id="header1"></h5></td>
+                                <td style="display:none;"><h5 id="header2"></h5></td>
+                                <td width="25%"></td>
+                                
+                                <td id="td1" style="display:none">
+
+                                    <div class="input-group" style="margin-left:20px">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline1" name="customRadioInline1" onclick="SearchOutStanding(5,0)" class="custom-control-input">
+                                            <label class="custom-control-label" for="customRadioInline1">Summary</label>
+                                        </div>
+                                    </div>
+
+
+                                </td>
+                                <td id="td2"  style="display:none">
+                                    <div class="input-group">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline2" name="customRadioInline2" onclick="SearchOutStanding(6,0)" class="custom-control-input">
+                                            <label class="custom-control-label" for="customRadioInline2">Detailed</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#AccountGrp').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                @*<td align="right"><button type="button" style="width:100px;margin-left:20px" onclick="SearchOutStanding(5)" id="btnAll" class="btn btn-outline-primary">Detailed</button></td>*@
+                                <td id="td3"  style="display:none"><button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintOutStanding()" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div align="right">
+                            <div class="heading-elements" style="margin-top:1%">
+                               
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport1" style="display:none" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%;width:650px;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Outstanding Statement</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+               
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold;">From</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <div class="col-md-2">
+                            <label style="font-weight:bold;">To</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:2.5%;"></div>
+
+                    <div class="row" style="margin-top:2%">
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold;">AccountGrp</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" onkeyup="CodeClear(),$('#AccountGrpId').val(0)" id="AccountGrp" class="form-control">
+                            <input type="hidden" id="AccountGrpId" class="form-control" />
+                        </div>
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold;">Code</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text"  onkeyup="GroupClear(), $('#AccountCodeId').val(0)" id="AccountCode" class="form-control">
+                            <input type="hidden" id="AccountCodeId" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+                        <div class="col-md-2">
+                            <label style="font-weight:bold;">Dept.</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Dept" name="priority" class="form-control"></select>
+                        </div>
+                        <div class="col-md-2">
+                        <label style="font-weight:bold;">Type</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Flag">
+                                <option value="1">Summary</option>
+                                <option value="0">Detailed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%">
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold">CostCode </label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="CostCode" name="priority" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    @*<div class="form-group floating-label-form-group">*@
+                        <div class="custom-control custom-checkbox" style="margin-right:60px">
+                            <input type="checkbox" class="custom-control-input" name="customCheck" id="FC">
+                            <label class="custom-control-label"  for="FC" style="font-weight:bold">with FC</label>
+                        </div>
+                    @*</div>*@
+                    @*<div class="form-group floating-label-form-group">*@
+                        <div class="custom-control custom-checkbox" style="margin-right:60px">
+                            <input type="checkbox" class="custom-control-input" checked="" name="customCheck" id="opening">
+                            <label class="custom-control-label" for="opening" style="font-weight:bold">with Opening</label>
+                        </div>
+                    @*</div>*@
+                    @*<div class="form-group floating-label-form-group" style="margin-left:5%">*@
+                        <div class="custom-control custom-checkbox" style="margin-right:60px">
+                            <input type="checkbox" class="custom-control-input" checked="checked" name="customCheck" id="Linked">
+                            <label class="custom-control-label" for="Linked">Linked</label>
+                        </div>
+                    @*</div>*@
+                    <button type="button" id="btnsubmit" class="btn btn-primary" data-dismiss="modal" onclick="SearchOutStanding(1,0)">Apply</button>
+                    <input type="hidden" id="ResultLength" class="form-control" />
+                    <input type="hidden" class="form-control" id="Address1" />
+                    <input type="hidden" class="form-control" id="Address2" />
+                    <input type="hidden" class="form-control" id="Address3" />
+                    <input type="hidden" class="form-control" id="Address4" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function GetCostCode(id) {
+        var data5 = {};
+        data5.CostCenterId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CostCenterGetandGets",
+            data: data5,
+            success: function (result) {
+                CostCenterLoad(result.oList);
+
+            }
+        });
+    }
+    function CostCenterLoad(result) {
+        $("#CostCode").empty();
+        $("#CostCode").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#CostCode").append("<option value='" + result[i].CostCenterId + "'>" + result[i].CostCenterCode + "</option>");
+        }
+    }
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var SummaryFlag = 0;
+    function PrintOutStanding() {
+        if (VoucherBillType == 'LOCAL') {
+            if (SummaryFlag == 0)
+                PrintthisReportWindows('OUTSTANDINGREPORT', $('#ResultLength').val())
+            else
+                PrintthisReportWindows('OUTSTANDINGREPORTSummary', $('#ResultLength').val())
+        }
+        else if (VoucherBillType == 'DEFAULT') {
+            if (SummaryFlag == 0)
+                PrintthisReportWindows('OUTSTANDINGREPORTNew', $('#ResultLength').val())
+            else
+                PrintthisReportWindows('OUTSTANDINGREPORTSummaryNew', $('#ResultLength').val())
+
+        }
+    }
+
+    if (getQueryString('AccId') != null) {
+        $('#AccountCode').val(getQueryString('AccountCode'))
+        $("#AccountCodeId").val(getQueryString('AccId'));
+        $('#popupdiv').hide();
+        $('#Entry').show();
+        var flg = $('#Type').val();
+        SearchOutStanding(flg,getQueryString('AccId'));
+    }
+
+
+   
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    $("#AccountCode").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.AccountDescription = $("#AccountCode").val();
+            $.ajax({
+                url: '../Inventory/AccountNumberSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.DebitAccount,
+                            label1: item.AccountDescription,
+                            DebitAccount: item.DebitAccount,
+                            AccountId: item.AccountId,
+                            headers: ["Code", "Decription"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $("#AccountCodeId").val(ui.item.AccountId);
+            $("#AccountCode").val(ui.item.DebitAccount);
+            $('#btnsubmit').focus();
+        },
+    });
+
+    $("#AccountGrp").autocomplete({
+        source: function (request, response) {
+
+            var data = {};
+            data.AccountCode = $("#AccountGrp").val();
+            $.ajax({
+                url: '../Master/AccountScheduleSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.AccountCode,
+                            label1: item.AcntDescription,
+                            AcntId: item.AcntId,
+                            AccountCode: item.AccountCode,
+                            headers: ["Code", "Decription"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#AccountGrpId').val(ui.item.AcntId);
+            $('#AccountGrp').val(ui.item.AccountCode);
+            $('#btnsubmit').focus();
+        },
+
+    });
+
+   
+
+    function SearchOutStanding(Flag, AccountCodeId) {
+        if ($('#AccountCodeId').val() == 0 && $('#AccountGrpId').val() == 0) {
+            warningshow('Please Select Account');
+            return false;
+        }
+
+        $('#Loading').show();
+
+        if (AccountCodeId != 0) {
+            $('#DateFrom').val(FinanceStartDate);
+            $('#DateTo').val(CurDate);
+        }
+        else {
+            AccountCodeId = $('#AccountCodeId').val();
+        }
+
+        if (Flag == 5)
+        {
+            $("#Flag").val(1);
+
+        }
+        else if (Flag == 6) {
+            $("#Flag").val(0);
+        }
+       
+       
+            if ($('#AccountCode').val() == '') {
+                $('#AccountCodeId').val('');
+            }
+            if ($('#AccountGrp').val() == '') {
+                $('#AccountGrpId').val('');
+            }
+                console.log($('#opening').prop("checked"))
+            var status = 0;
+            if ($('#opening').prop("checked"))
+                status = 1;
+
+            var Curr = 0;
+            if ($('#FC').prop("checked")) {
+                Curr = 1;
+            }
+            var Linked = 0;
+            if ($('#Linked').prop("checked")) {
+                Linked = 1;
+            }
+
+            var data = {};
+            data.DateFrom = $('#DateFrom').val();
+            data.DateTo = $('#DateTo').val();
+            data.AccountCode = parseInt($('#AccountCodeId').val()||0);
+            data.AccountGroup = parseInt($('#AccountGrpId').val()||0);
+            data.CostCode = parseInt($('#CostCode').val()||0);
+            data.Opening = status;
+            data.DeptId = parseInt($('#Dept').val() || 0);
+            data.UserId = ERPUserId;
+            data.Condition = $("#Flag").val();
+            data.Currency = Curr;
+            data.Var1 = Linked;
+            data.Var2 = 0;
+
+
+            console.log('data ')
+            console.log(data)
+            if ($("#Flag").val() == 0)
+            {
+                SummaryFlag = 0;
+                $('#customRadioInline1').prop('checked', false);
+                $('#customRadioInline2').prop('checked', true);
+                
+                //$('#btnAll').text('Summary')
+            }
+              
+             else
+            {
+                SummaryFlag = 1;
+                $('#customRadioInline1').prop('checked', true);
+                $('#customRadioInline2').prop('checked', false);
+                //$('#btnAll').text('Detailed');
+
+                }
+                
+           
+            $.ajax({
+                type: "POST",
+                url: "../AccountsReport/OutstandingStatement",
+                data: data,
+                success: function (result) {
+                    $('#popupdiv').hide();
+                    $('#divreport').show();
+
+                    $('#Address1').val(result[0].VDesc);
+                    $('#Address2').val(result[1].VDesc);
+                    $('#Address3').val(result[2].VDesc);
+                    $('#Address4').val(result[3].VDesc);
+
+                   
+
+                    disable_datatable('Tblreport', 'buttonPlace');
+
+                    var RunningBalance = 0;
+                    var RunningBalanceVar = 0, GrandBalance = 0;
+                    if (data.Condition != 1) {                                                                                      //Detail
+                        if ($('#FC').prop("checked"))
+                        {
+                            
+                        var PrevAmout = 0;
+                        var total = 0;
+                        var HideAmount = 0;
+                        var responseText = "<thead><tr><th>Sl#</th><th>Date</th><th>Voucher#</th><th>Reference#</th><th>Account Code</th><th>Account Name</th><th>Description</th><th>Fx.</th><th>Fx.Rate</th><th>Debit</th><th>Credit</th><th>Balance</th><th style=display:none>Amt</th></thead><tbody>";
+                        
+                        for (var i = 4; i < result.length; i++) {
+
+
+                            var slno;
+
+
+                            slno = parseInt(i - 3);
+
+                            var Balance = parseFloat(result[i].Amount || 0);
+
+
+                            
+                            Amount = result[i].Amount;
+
+                            if (result[i].VDesc != 'Total' && result[i].VDesc != 'GrandTotal') {
+
+
+                                RunningBalance = RunningBalance + parseFloat(result[i].Amount || 0);
+
+                                if (RunningBalance < 0) {
+
+                                    RunningBalanceVar = RunningBalance * -1;
+                                    RunningBalanceVar = parseFloat(RunningBalanceVar).toFixed(Decimal) + ' Cr';
+                                }
+                                else {
+
+                                    RunningBalanceVar = parseFloat(RunningBalance).toFixed(Decimal) + ' Dr';
+                                }
+                            }
+
+                            var CreditAmt = parseFloat(result[i].Credit || 0).toFixed(Decimal)
+                            if (CreditAmt == 0)
+                                CreditAmt = '';
+                            var DebitAmt = parseFloat(result[i].Debit || 0).toFixed(Decimal)
+                            if (DebitAmt == 0)
+                                DebitAmt = '';
+
+                            HideAmount = parseFloat(result[i].Amount || 0).toFixed(Decimal)
+                            if (HideAmount < 0) {
+
+                                HideAmount = HideAmount * -1;
+                                HideAmount = parseFloat(HideAmount).toFixed(Decimal) + ' Cr';
+                            }
+                            else {
+
+                                HideAmount = parseFloat(HideAmount).toFixed(Decimal) + ' Dr';
+                            }
+
+
+                            if (result[i].VDesc == 'Total') {
+
+                                GrandBalance = GrandBalance + RunningBalance;
+                                responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td>' + result[i].Currency + '</td><td style=text-align:right></td><td id="Col7_' + slno + '" style=text-align:right   ><b>' + DebitAmt + '</b></td><td id="Col8_' + slno + '" style=text-align:right><b>' + CreditAmt + '</b></td><td id="Col9_' + slno + '" style=text-align:right   ><b>' + RunningBalanceVar + ' </b></td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + ' </td></tr>';
+                                RunningBalance = 0;
+                            }
+                            else if (result[i].VDesc == 'Opening') {
+                                RunningBalance = parseFloat(result[i].Amount || 0);
+                                responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" >' + result[i].VDesc + '</td><td>' + result[i].Currency + '</td><td style=text-align:right></td><td id="Col7_' + slno + '" style=text-align:right ></td><td id="Col8_' + slno + '" style=text-align:right></td><td  id="Col9_' + slno + '"  style=text-align:right  >' + RunningBalanceVar + ' </td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + ' </td></tr>';
+
+                            }
+                            else if (result[i].VDate == 'Group') {
+                                responseText += '<tr style=background-color:#B0BEC5><td>' + slno + '</td><td   id="Col1_' + slno + '" ></td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" ><b>' + result[i].AccountCode + '</b></td><td id="Col5_' + slno + '"><b>' + result[i].AccDesc + '</b></td><td  id="Col6_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td>' + result[i].Currency + '</td><td style=text-align:right></td><td id="Col7_' + slno + '" style=text-align:right ></td><td id="Col8_' + slno + '" style=text-align:right></td><td  id="Col9_' + slno + '" style=text-align:right  ></td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + ' </td></tr>';
+
+                            }
+                           
+                            else if (result[i].VDesc == 'GrandTotal') {
+
+                                responseText += '<tr style=background-color:#B0BEC5><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td>' + result[i].Currency + '</td><td style=text-align:right></td><td id="Col7_' + slno + '" style=text-align:right ><b></b></td><td id="Col8_' + slno + '" style=text-align:right><b></b></td><td id="Col9_' + slno + '"  style=text-align:right   ><b>' + ReplaceNumberWithCommas(parseFloat(result[i].Amount || 0).toFixed(Decimal)) + ' </b></td><td id="Col12_' + slno + '"  style=display:none>' + ReplaceNumberWithCommas(HideAmount) + ' </td></tr>';
+                                GrandBalance = 0;
+                            }
+                            else {
+                                responseText += '<tr><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" >' + result[i].VDesc + '</td><td>' + result[i].Currency + '</td><td style=text-align:right>' + parseFloat(result[i].CurrencyRate || 0).toFixed(Decimal) + '</td><td id="Col7_' + slno + '" style=text-align:right >' + DebitAmt + '</td><td id="Col8_' + slno + '" style=text-align:right>' + CreditAmt + '</td><td id="Col9_' + slno + '" style=text-align:right   >' + RunningBalanceVar + ' </td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + ' </td></tr>';
+
+                            }
+                        }
+
+                        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th> </th><th>Date</th><th>Voucher#</th><th>Reference#</th><th>Account Code</th><th>Account Name</th><th>Voucher Description</th><th>Fx.</th><th> </th><th> </th><th> </th><th> </th><th style=display:none> </th></tr></tfoot>');
+                        $('#Tblreportprint').html(responseText);
+                        $('#Loading').hide();
+
+                        var title = "Outstanding Statement - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+
+                        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+                        $('#header').text(title);
+                        $('#ResultLength').val($("#Tblreportprint tbody tr").length);
+
+                        $('#td1,#td2,#td3').show();
+
+                        var FromDate = []; var ToDate = [];
+                        FromDate = ($("#DateFrom").val()).split('/');
+                        ToDate = ($("#DateTo").val()).split('/');
+
+                        var FromDatePrint = FromDate[0] + '-' + monthNames[parseInt(FromDate[1] - 1)] + '-' + FromDate[2];
+                        var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+                        $('#header1').text("Outstanding Statement - from " + FromDatePrint + " to " + ToDatePrint + "");
+                        $('#header2').text("from " + FromDatePrint + " to " + ToDatePrint + "");
+                        }
+                    else
+                    {
+                        
+                        var PrevAmout = 0;
+                        var total = 0;
+                        var HideAmount = 0;
+                        var responseText = "<thead><tr><th>Sl#</th><th>Date</th><th>Voucher#</th><th>Reference#</th><th>Account Code</th><th>Account Name</th><th>Description</th><th>Debit</th><th>Credit</th><th>Balance</th><th style='display:none'>Amount</th></thead><tbody>";
+                        
+                        for (var i = 4; i < result.length; i++) {
+
+
+                            var slno;
+
+
+                            slno = parseInt(i - 3);
+
+                            var Balance = parseFloat(result[i].Amount || 0);
+
+
+                            
+                            Amount = result[i].Amount;
+
+                            if (result[i].VDesc != 'Total' && result[i].VDesc != 'GrandTotal') {
+
+
+                                RunningBalance = RunningBalance + parseFloat(result[i].Amount || 0);
+
+                                if (RunningBalance < 0) {
+
+                                    RunningBalanceVar = RunningBalance * -1;
+                                    RunningBalanceVar = parseFloat(RunningBalanceVar).toFixed(Decimal) + ' Cr';
+                                }
+                                else {
+
+                                    RunningBalanceVar = parseFloat(RunningBalance).toFixed(Decimal) + ' Dr';
+                                }
+                            }
+
+                            var CreditAmt = parseFloat(result[i].Credit || 0).toFixed(Decimal)
+                            if (CreditAmt == 0)
+                                CreditAmt = '';
+                            var DebitAmt = parseFloat(result[i].Debit || 0).toFixed(Decimal)
+                            if (DebitAmt == 0)
+                                DebitAmt = '';
+
+                            HideAmount = parseFloat(result[i].Amount || 0).toFixed(Decimal)
+                            if (HideAmount < 0) {
+
+                                HideAmount = HideAmount * -1;
+                                HideAmount = parseFloat(HideAmount).toFixed(Decimal) + ' Cr';
+                            }
+                            else {
+
+                                HideAmount = parseFloat(HideAmount).toFixed(Decimal) + ' Dr';
+                            }
+
+
+                            if (result[i].VDesc == 'Total') {
+
+                                GrandBalance = GrandBalance + RunningBalance;
+                                responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td id="Col7_' + slno + '" style=text-align:right   ><b>' + DebitAmt + '</b></td><td id="Col8_' + slno + '" style=text-align:right><b>' + CreditAmt + '</b></td><td id="Col9_' + slno + '" style=text-align:right   ><b>' + RunningBalanceVar + ' </b></td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + '</td></tr>';
+                                RunningBalance = 0;
+                            }
+                            else if (result[i].VDesc == 'Opening') {
+                                RunningBalance = parseFloat(result[i].Amount || 0);
+                                responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" >' + result[i].VDesc + '</td><td id="Col7_' + slno + '" style=text-align:right ></td><td id="Col8_' + slno + '" style=text-align:right></td><td  id="Col9_' + slno + '"  style=text-align:right  >' + RunningBalanceVar + ' </td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + '</td></tr>';
+
+                            }
+                            else if (result[i].VDate == 'Group') {
+                                responseText += '<tr style=background-color:#B0BEC5><td>' + slno + '</td><td   id="Col1_' + slno + '" ></td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" ><b>' + result[i].AccountCode + '</b></td><td id="Col5_' + slno + '"><b>' + result[i].AccDesc + '</b></td><td  id="Col6_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td id="Col7_' + slno + '" style=text-align:right ></td><td id="Col8_' + slno + '" style=text-align:right></td><td  id="Col9_' + slno + '" style=text-align:right  ></td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + '</td></tr>';
+
+                            }
+                           
+                            else if (result[i].VDesc == 'GrandTotal') {
+
+                                responseText += '<tr style=background-color:#B0BEC5><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td id="Col7_' + slno + '" style=text-align:right ><b></b></td><td id="Col8_' + slno + '" style=text-align:right><b></b></td><td id="Col9_' + slno + '"  style=text-align:right   ><b>' + ReplaceNumberWithCommas(parseFloat(result[i].Amount || 0).toFixed(Decimal)) + ' </b></td><td id="Col12_' + slno + '"  style=display:none>' + ReplaceNumberWithCommas(HideAmount) + '</td></tr>';
+                                GrandBalance = 0;
+                            }
+                            else {
+                                responseText += '<tr><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].ReferenceNo + '</td><td   id="Col3_' + slno + '" >' + result[i].VNum + '</td><td   id="Col4_' + slno + '" >' + result[i].AccountCode + '</td><td id="Col5_' + slno + '">' + result[i].AccDesc + '</td><td  id="Col6_' + slno + '" >' + result[i].VDesc + '</td><td id="Col7_' + slno + '" style=text-align:right >' + DebitAmt + '</td><td id="Col8_' + slno + '" style=text-align:right>' + CreditAmt + '</td><td id="Col9_' + slno + '" style=text-align:right   >' + RunningBalanceVar + ' </td><td id="Col12_' + slno + '"  style=display:none>' + HideAmount + '</td></tr>';
+
+                            }
+                        }
+
+                        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th> </th><th>Date</th><th>Voucher#</th><th>Reference#</th><th>Account Code</th><th>Account Name</th><th>Voucher Description</th><th> </th><th> </th><th> </th><th style=display:none> </th></tr></tfoot>');
+                        $('#Tblreportprint').html(responseText);
+                        $('#Loading').hide();
+
+                        var title = "Outstanding Statement - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+
+                        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+                        $('#header').text(title);
+                        $('#ResultLength').val($("#Tblreportprint tbody tr").length);
+
+                        $('#td1,#td2,#td3').show();
+
+                        var FromDate = []; var ToDate = [];
+                        FromDate = ($("#DateFrom").val()).split('/');
+                        ToDate = ($("#DateTo").val()).split('/');
+
+                        var FromDatePrint = FromDate[0] + '-' + monthNames[parseInt(FromDate[1] - 1)] + '-' + FromDate[2];
+                        var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+                        $('#header1').text("Outstanding Statement - from " + FromDatePrint + " to " + ToDatePrint + "");
+                        $('#header2').text("from " + FromDatePrint + " to " + ToDatePrint + "");
+                    }
+                    }
+                    else {                                                                               //Summary
+
+
+                        var responseText = "<thead><tr><th>Sl#</th><th>Account Code</th><th>Account Name</th><th class=text-right>Debit</th><th class=text-right>Credit</th><th style='display:none'></th></tr></thead><tbody>";
+
+                        for (var i = 4; i < result.length; i++) {
+
+
+                            var slno;
+                            slno = parseInt(i - 3);
+
+                            var DebitAmt = parseFloat(result[i].Amount || 0).toFixed(Decimal);
+                            var CreditAmt = parseFloat(result[i].RecAmount || 0).toFixed(Decimal);
+                            if (DebitAmt == 0)
+                                DebitAmt = '';
+
+                            if (CreditAmt == 0)
+                                CreditAmt = '';
+                             
+                            if (result[i].BillSeriesId == 1 && result[i].AccDesc != 'Balance') {
+
+                                responseText += '<tr style="background-color:#cfd8dc"><td><b>' + slno + '</b></td><td   id="Col1_' + slno + '" ><b>' + result[i].AccountCode + '</b></td><td   id="Col2_' + slno + '" ><b>' + result[i].AccDesc + '</b></td><td   id="Col3_' + slno + '" style="text-align:right"><b>' + DebitAmt + '</b></td><td id="Col4_' + slno + '" style="text-align:right"><b>' + CreditAmt + '</b></td><td id="Col5_' + slno + '" style="text-align:right;display:none"><b>1</b></td></tr>';
+                            }
+                            else if (result[i].AccDesc == 'Balance')
+                            {
+                                responseText += '<tr style="background-color:#cfd8dc"><td><b>' + slno + '</b></td><td   id="Col1_' + slno + '" ><b>' + result[i].AccountCode + '</b></td><td   id="Col2_' + slno + '" ><b>' + result[i].AccDesc + '</b></td><td   id="Col3_' + slno + '" style="text-align:right"><b>' + ReplaceNumberWithCommas(parseFloat(result[i].Amount || 0).toFixed(Decimal)) + '</b></td><td id="Col4_' + slno + '" style="text-align:right"><b>' + ReplaceNumberWithCommas(CreditAmt) + '</b></td><td id="Col5_' + slno + '" style="text-align:right;display:none"><b>1</b></td></tr>';
+                            }
+                            else {
+                                responseText += '<tr><td>' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].AccountCode + '</td><td   id="Col2_' + slno + '" >' + result[i].AccDesc + '</td><td   id="Col3_' + slno + '" style="text-align:right">' + DebitAmt + '</td><td id="Col4_' + slno + '" style="text-align:right">' + CreditAmt + '</td><td id="Col5_' + slno + '" style="text-align:right;display:none"><b>0</b></td></tr>';
+                            }
+                        }
+
+                        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>Account Code</th><th>Account Name</th><th align=right> </th><th align=right> </th><th style="display:none"></th></tr></tfoot>');
+                        $('#Tblreportprint').html(responseText);
+                        $('#Loading').hide();
+
+
+                        var title = "Outstanding Statement - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+
+                        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+                        $('#header').text(title);
+                        $('#ResultLength').val($("#Tblreportprint tbody tr").length);
+
+                        $('#td1,#td2,#td3').show();
+
+                        var FromDate = []; var ToDate = [];
+                        FromDate = ($("#DateFrom").val()).split('/');
+                        ToDate = ($("#DateTo").val()).split('/');
+
+                        var FromDatePrint = FromDate[0] + '-' + monthNames[parseInt(FromDate[1] - 1)] + '-' + FromDate[2];
+                        var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+                        $('#header1').text("Outstanding Summary - from " + FromDatePrint + " to " + ToDatePrint + "");
+                        $('#header2').text("from " + FromDatePrint + " to " + ToDatePrint + "");
+                    }
+
+              
+                }
+            });
+
+
+
+            var data1 = {};
+            data1.DateFrom = $('#DateFrom').val();
+            data1.DateTo = $('#DateTo').val();
+            data1.AccountCode = $('#AccountCodeId').val();
+            data1.AccountGroup = 0;
+            data1.Opening = status;
+            data1.DeptId = $('#Dept').val();
+            data1.UserId = ERPUserId;
+
+            $.ajax({
+                type: "POST",
+                url: "../AccountsReport/AgeingOutstandingStatement",
+                data: data1,
+                success: function (result) {
+                    $('#divreport1').show();
+
+                    var responseText = "<thead><tr><th>30 Days</th><th>60 Days</th><th>90 Days</th><th>120 Days</th><th>Above 120 Days</th></thead><tbody>";
+                    for (var i = 0; i < result.length; i++) {
+                        var slno = parseInt(i + 1);
+                        responseText += '<tr><td  id="ColD1_' + slno + '" >' + parseFloat(result[i].ThirtyDays || 0).toFixed(Decimal) + '</td><td   id="ColD2_' + slno + '" >' + parseFloat(result[i].SixtyDays || 0).toFixed(Decimal) + '</td><td   id="ColD3_' + slno + '" >' + parseFloat(result[i].NinetyDays || 0).toFixed(Decimal) + '</td><td   id="ColD4_' + slno + '" >' + parseFloat(result[i].OneTwentyDays || 0).toFixed(Decimal) + '</td><td style=text-align:right   id="ColD5_' + slno + '" >' + parseFloat(result[i].AboveOneTwentyDays || 0).toFixed(Decimal) + '</td></tr>';
+                    }
+                    $('#Tblreport1').html(responseText + '</tbody><tfoot><tr><th>30 Days</th><th>60 Days</th><th>90 Days</th><th>120 Days</th><th>Above 120 Days</th></tr> </tfoot>');
+                    $('#Tblreportprint1').html(responseText + '</tbody>');
+                }
+            });
+
+    }
+
+    function GetDepartment(id) {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UserDepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result, a) {
+        $("#Dept").empty();
+        $("#Dept").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Dept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+    }
+
+
+
+    function GroupClear() {
+        $("#AccountGrp").val('');
+        $("#AccountGrpId").val(0);
+    }
+    function CodeClear() {
+        $("#AccountCode").val('');
+        $("#AccountCodeId").val(0);
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Slno' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Date' || title == 'Voucher#' || title == 'Reference#')
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:90px" />');
+            if (title == 'Account Code')
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:110px" />');
+            //if (title == 'Fx.')
+            //    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            if (SummaryFlag == 0)
+            {
+                table = $('#' + tablename).DataTable({
+                    dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                    buttons: [],
+                    "columnDefs": [
+                        { "width": "5%", "targets": 1 },
+                        { "width": "10%", "targets": 4 },
+                        { "width": "20%", "targets": 5 },
+                        { "width": "50%", "targets": 6 },
+                         { "width": "50%", "targets": 7 },
+                        { "width": "15%", "targets": 9},
+
+                    ],
+                    "aaSorting": []
+
+                });
+            }
+            
+            else
+            {
+                table = $('#' + tablename).DataTable({
+                    dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                   "<'row'<'col-sm-12'tr>>" +
+                   "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                    buttons: [],
+                    "columnDefs": [
+                       { "width": "1%", "targets": 0 },
+                       { "width": "5%", "targets": 1 },
+                       { "width": "40%", "targets": 2 },
+                       { "width": "10%", "targets": 3 },
+                       { "width": "10%", "targets": 4 },
+                    ],
+                    "aaSorting": []
+
+                });
+            }
+                
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+</script>
+
+
+
+
+
+
+

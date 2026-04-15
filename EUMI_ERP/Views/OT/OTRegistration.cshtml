@@ -1,0 +1,1307 @@
+﻿    @{
+        ViewBag.Title = "OTRegistration";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <style>
+        /* ===== AUTOCOMPLETE DROPDOWN (from OTRegistration) ===== */
+        .ui-autocomplete {
+            z-index: 9999999 !important;
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background-color: #ffffff !important;
+            border: 2px solid #009DA0 !important;
+            border-radius: 6px !important;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.175) !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            width: auto !important;
+            min-width: 900px !important;
+            padding: 0 !important;
+        }
+
+        .ui-menu-item {
+            padding: 0 !important;
+            margin: 0 !important;
+            list-style: none;
+        }
+
+        .ui-menu-item-wrapper.ui-state-active,
+        .ui-menu-item-wrapper.ui-state-focus,
+        .ui-state-active,
+        .ui-state-focus {
+            background: teal !important;
+            color: #ffffff !important;
+            border: none !important;
+        }
+
+            .ui-state-active a,
+            .ui-state-focus a {
+                background: teal !important;
+                color: #ffffff !important;
+            }
+
+        .ui-menu-item .ui-state-active {
+            background: teal !important;
+        }
+
+        .ac-header-row {
+            display: grid;
+            grid-template-columns: 160px 220px 120px 320px 140px;
+            background-color: teal;
+            font-weight: bold;
+            color: white !important;
+            font-size: 18px;
+            border-bottom: 1px solid #cccccc;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .ac-data-row {
+            display: grid;
+            grid-template-columns: 160px 220px 120px 320px 140px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+            .ac-data-row:hover {
+                background-color: teal !important;
+                color: white !important;
+                cursor: pointer;
+            }
+
+        /* HEADER TEXT */
+        .ac-header-row span {
+            padding: 4px 8px;
+            white-space: nowrap;
+            font-weight: 700;
+            color: #ffffff !important;
+            font-size: 13px;
+            border-right: 1px solid #dddddd;
+        }
+
+        /* DATA TEXT */
+        .ac-data-row span {
+            padding: 4px 8px;
+            white-space: nowrap;
+            font-weight: 600;
+            color: #000;
+            font-size: 17px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-right: 1px solid #dddddd;
+        }
+
+        /* Hover */
+        .ac-data-row:hover span {
+            color: #ffffff !important;
+        }
+
+        .ac-header-row span:last-child,
+        .ac-data-row span:last-child {
+            border-right: none;
+        }
+
+        .ac-data-row:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* ===== FORM INPUTS ===== */
+        .form-control,
+        .form-control[readonly],
+        .form-control:disabled {
+            background-color: #ffffff !important;
+        }
+
+            .form-control[readonly] {
+                opacity: 1;
+            }
+
+            .form-control:disabled {
+                color: #000;
+            }
+
+        /* ===== TWO COLUMN LAYOUT ===== */
+        .ot-container {
+            display: flex;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        .ot-left, .ot-right {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .ot-right .ot-card {
+                margin-right: 30px;
+            }
+
+        /* ===== CARD STYLE ===== */
+        .ot-card {
+            flex: 1;
+            background-color: #CFE7E9;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+            .ot-card:hover {
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            color: #009DA0;
+            font-weight: 1000;
+            font-size: 22px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #009DA0;
+            padding-bottom: 8px;
+        }
+
+        /* ===== LABELS ===== */
+        .label-control {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* ===== INPUT SIZE ===== */
+        #PatientName, #Age, #Gender, #ContactNo, #OpNo, #RevisitId, #IpNo,
+        #AdmissionStatus, #OpDate, #OpTime, #OperationTheatre, #DoctorConsultant,
+        #Status, #Notes, #RegNo, #Opseriesname {
+            height: 50px;
+            font-size: 18px;
+            padding: 12px 14px;
+            border-radius: 8px;
+        }
+
+        textarea#Notes {
+            height: 80px;
+        }
+
+        /* ===== BUTTON STYLE ===== */
+        .btn {
+            height: 42px;
+            font-size: 15px;
+            border-radius: 6px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        /* ===== LOADING OVERLAY ===== */
+        #Loadingsave {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.7);
+            z-index: 99999;
+            display: none;
+        }
+
+            #Loadingsave > div {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+        /* ===== TOP ALERT ===== */
+        .top-alert {
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff5c70;
+            color: white;
+            padding: 14px 35px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 6px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 999999;
+        }
+
+        /* ===== STATUS BADGES ===== */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 12px;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .scheduled {
+            background: #3498db;
+        }
+
+        .badge-progress {
+            background: #f39c12;
+        }
+
+        .completed {
+            background: #27ae60;
+        }
+
+        .cancelled {
+            background: #e74c3c;
+        }
+
+        .postponed {
+            background: #7f8c8d;
+        }
+
+        body.ot-modal-open {
+            overflow: hidden !important;
+        }
+
+        /* Dark blurred overlay */
+        #OTModalOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        #OTListModal {
+            display: none;
+            position: fixed;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9100;
+            width: 70vw;
+            max-width: 1500px; /* allow large screens */
+
+            height: 70vh;
+            max-height: 70vh; /* fit viewport */
+
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+            overflow: hidden;
+        }
+
+            #OTListModal.ot-visible {
+                animation: otModalIn 0.22s ease forwards;
+            }
+
+        /* ── Header ─────────────────────────── */
+        .ot-modal-header {
+            flex-shrink: 0; /* never shrinks */
+            background: linear-gradient(135deg, #009DA0 0%, #006f72 100%);
+            color: white;
+            padding: 13px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+            .ot-modal-header h4 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.6px;
+                text-transform: uppercase;
+            }
+
+        .ot-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 4px;
+            opacity: 0.85;
+            transition: opacity 0.15s;
+        }
+
+            .ot-close-btn:hover {
+                opacity: 1;
+            }
+
+        /* ── Filter bar ──────────────────────── */
+        .ot-modal-filters {
+            flex-shrink: 0; /* never shrinks */
+            padding: 12px 22px 10px;
+            background: #f3fafa;
+            border-bottom: 1px solid #cce8e8;
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ot-filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .ot-filter-group label {
+                font-weight: 600;
+                font-size: 12px;
+                color: #444;
+                margin-bottom: 4px;
+            }
+        /* Override the global tall-input rule inside filter bar */
+        .ot-modal-filters .form-control {
+            height: 34px !important;
+            font-size: 13px !important;
+            padding: 4px 10px !important;
+            border-radius: 6px !important;
+            width: 160px;
+        }
+
+        .ot-modal-filters select.form-control {
+            width: 160px;
+        }
+
+        .btn-go {
+            height: 34px;
+            padding: 0 24px;
+            font-size: 13px;
+            font-weight: 700;
+            background: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            margin-bottom: 0;
+            align-self: flex-end;
+        }
+
+            .btn-go:hover {
+                background: #d06000;
+            }
+
+        /* ── Table wrapper (THE ONLY SCROLLABLE PART) ── */
+        .ot-modal-table-wrap {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: auto;
+            padding: 0;
+            background: #fff;
+            min-height: 0;
+            /* DataTables controls row */
+            .ot-modal-table-wrap .dataTables_wrapper
+
+        {
+            padding: 10px 16px 8px;
+        }
+
+        .ot-modal-table-wrap .dataTables_filter input,
+        .ot-modal-table-wrap .dataTables_length select {
+            height: 28px;
+            font-size: 12px;
+        }
+
+        /* The table itself */
+        #tblOTList {
+            width: 100% !important;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+            #tblOTList thead th {
+                position: sticky;
+                top: 0;
+                z-index: 3;
+                background: #009DA0 !important;
+                color: white !important;
+                padding: 9px 12px;
+                text-align: center;
+                border: 1px solid #007c7f;
+                white-space: nowrap;
+            }
+
+            #tblOTList td {
+                padding: 7px 10px;
+                text-align: center;
+                border: 1px solid #e0e0e0;
+                white-space: nowrap;
+            }
+
+            #tblOTList tbody tr:nth-child(even) {
+                background: #f5fbfb;
+            }
+
+            #tblOTList tbody tr:hover {
+                background: #d4eeee;
+                cursor: pointer;
+            }
+
+        /* Empty / placeholder row */
+        .ot-empty-row td {
+            text-align: center;
+            color: #aaa;
+            padding: 28px !important;
+            font-size: 13px;
+        }
+    </style>
+
+    <!-- ==================== MAIN FORM ==================== -->
+    <div id="Entry" style="margin-top:-20px;">
+        <div id="topAlert" class="top-alert"></div>
+        <section class="grid-row-label">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header" style="border-bottom:1px solid #e6e6e6; background-color:#009DA0; height:70px">
+                            <div class="row">
+                                <table width="100%">
+                                    <tr>
+                                        <td>
+                                            <h2 class="card-title mb-0" style="font-weight:bold; font-size:x-large; color:white;">
+                                                OPERATION THEATRE REGISTRATION
+                                            </h2>
+                                        </td>
+                                        <td class="text-right" width="59%">
+                                            <i class="ft-calendar" style="font-weight:normal; font-size:x-large; color:white"></i>
+                                            <input type="text" id="CurrentDate"
+                                                   style="border:none; background-color:#009DA0; color:white; font-weight:normal; font-size:x-large;"
+                                                   class="disb" disabled>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card-content collapse show">
+                            <div class="card-body" style="margin-top:-20px">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <hr style="margin-top:1.2%" />
+
+                                        <!-- Hidden fields -->
+                                        <input type="hidden" id="OTRegistrationId" value="0" />
+                                        <input type="hidden" id="PatientId" />
+                                        <input type="hidden" id="HiddenRegNo" />
+                                        <input type="hidden" id="RegSeries" />
+                                        <input type="hidden" id="RoomId" />
+                                        <input type="hidden" id="HiddenRevisitId" />
+
+                                        <div class="ot-container">
+                                            <!-- LEFT : PATIENT INFO -->
+                                            <div class="ot-left col-md-6">
+                                                <div class="ot-card">
+                                                    <h4 class="section-title"><i class="ft-user"></i> PATIENT INFORMATION</h4>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Reg No *</label>
+                                                            <table width="100%">
+                                                                <tr>
+                                                                    <td width="30%">
+                                                                        <input type="text" id="Opseriesname" class="form-control" readonly placeholder="Series">
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" id="RegNo" class="form-control"
+                                                                               placeholder="Type Reg No or Name" autocomplete="off">
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Patient Name</label>
+                                                            <input type="text" id="PatientName" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-6 mt-2">
+                                                            <label class="label-control">Age</label>
+                                                            <input type="text" id="Age" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-6 mt-2">
+                                                            <label class="label-control">Gender</label>
+                                                            <input type="text" id="Gender" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-6 mt-2">
+                                                            <label class="label-control">IP ID</label>
+                                                            <input type="text" id="IpNo" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-6 mt-2">
+                                                            <label class="label-control">Admission Status</label>
+                                                            <input type="text" id="AdmissionStatus" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-4 mt-2">
+                                                            <label class="label-control">Contact</label>
+                                                            <input type="text" id="ContactNo" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-4 mt-2">
+                                                            <label class="label-control">OP ID</label>
+                                                            <input type="text" id="OpNo" class="form-control" readonly>
+                                                        </div>
+                                                        <div class="col-md-4 mt-2">
+                                                            <label class="label-control">Revisit ID</label>
+                                                            <input type="text" id="RevisitId" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- RIGHT : OPERATION DETAILS -->
+                                            <div class="ot-right col-md-6">
+                                                <div class="ot-card">
+                                                    <h4 class="section-title"><i class="ft-info"></i> OPERATION DETAILS</h4>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">OP Date *</label>
+                                                            <input type="text" id="OpDate" class="form-control" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">OP Time *</label>
+                                                            <input type="time" id="OpTime" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-6 mt-2">
+                                                            <label class="label-control">Operation Theatre *</label>
+                                                            <select id="OperationTheatre" class="form-control" onchange="GetRows(this.value)">
+                                                                <option value="">Select OT</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6 mt-2">
+                                                            <label class="label-control">Status *</label>
+                                                            <select id="Status" class="form-control">
+                                                                <option value="">Select Status</option>
+                                                                <option value="1">Scheduled</option>
+                                                                <option value="2">In Progress</option>
+                                                                <option value="3">Completed</option>
+                                                                <option value="4">Cancelled</option>
+                                                                <option value="5">Postponed</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-12 mt-2">
+                                                            <label class="label-control">Consultant Doctor *</label>
+                                                            <select id="DoctorConsultant" class="form-control">
+                                                                <option value="">Select Consultant</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-12 mt-2">
+                                                            <label class="label-control">Notes / Remarks</label>
+                                                            <textarea id="Notes" class="form-control" placeholder="Enter notes"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div class="form-actions mt-3">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button type="button" onclick="SaveOTRegistration()"
+                                                            class="btn btn-primary btn-min-width mr-1 mb-1">
+                                                        <u>S</u>ave <i class="fa fa-check-square-o"></i>
+                                                    </button>
+                                                    <button type="button" style="width:120px" onclick="ClearForm()"
+                                                            class="btn btn-primary btn-min-width mr-1 mb-1">
+                                                        New <i class="ft-refresh-cw position-right"></i>
+                                                    </button>
+                                                    <button type="button" style="width:120px" onclick="ShowOTList()"
+                                                            class="btn btn-secondary btn-min-width mr-1 mb-1">
+                                                        View List <i class="ft-list"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- =====================================================
+         CUSTOM MODAL
+    ===================================================== -->
+    <!-- Blurred overlay -->
+    <div id="OTModalOverlay" onclick="CloseOTList()"></div>
+
+    <!-- Modal: flex column — header+filter fixed, only table scrolls -->
+    <div id="OTListModal">
+
+        <!-- HEADER -->
+        <div class="ot-modal-header">
+            <h4><i class="ft-list"></i> &nbsp;THEATRE REGISTRATIONS</h4>
+            <button class="ot-close-btn" onclick="CloseOTList()" title="Close">&times;</button>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="ot-modal-filters">
+            <!-- In the modal filter bar -->
+            <div class="ot-filter-group">
+                <label>Registered From <span style="color:#ff6b6b">*</span></label>
+                <input type="text" id="FilterFromInsDate" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off">
+            </div>
+            <div class="ot-filter-group">
+                <label>Registered To</label>
+                <input type="text" id="FilterToInsDate" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off">
+            </div>
+            <div class="ot-filter-group">
+                <label>Status</label>
+                <select id="FilterStatus" class="form-control">
+                    <option value="">All</option>
+                    <option value="1">Scheduled</option>
+                    <option value="2">In Progress</option>
+                    <option value="3">Completed</option>
+                    <option value="4">Cancelled</option>
+                    <option value="5">Postponed</option>
+                </select>
+            </div>
+            <button class="btn-go" onclick="LoadOTRegistrationList()">GO &rarr;</button>
+        </div>
+
+        <!-- TABLE (only this scrolls) -->
+        <div class="ot-modal-table-wrap">
+            <table id="tblOTList" class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Op Date</th>
+                        <th>Time</th>
+                        <th>Patient Name</th>
+                        <th>Reg No</th>
+                        <th>Doctor</th>
+                        <th>OT</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="ot-empty-row">
+                        <td colspan="9">Enter a date range and click <strong>GO</strong> to load records</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="Loadingsave">
+        <div><img src="/app-assets/img/Loading_1.gif"></div>
+    </div>
+
+    <!-- Dependencies -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        var PRID = 0;   
+
+        $(document).ready(function () {
+            document.title = "Operation Theatre";
+            SetCurrentDateTime();
+            LoadDoctors();
+            LoadRegNumber();
+            LoadOperationTheatres();
+            Defaultfocus();
+
+            // Default status = Scheduled
+            $('#Status').val('1');
+
+            $("#OpDate").datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1900:+0",
+                showAnim: "fadeIn"
+            });
+
+            $("#FilterFromInsDate, #FilterToInsDate").datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                changeYear: true
+            });
+
+            $(document).on('keydown', function (e) {
+                if (e.key === 'Escape') CloseOTList();
+            });
+        });
+
+        function SetCurrentDateTime() {
+            var now = new Date();
+            var dd = ('0' + now.getDate()).slice(-2);
+            var mm = ('0' + (now.getMonth() + 1)).slice(-2);
+            var ds = dd + '/' + mm + '/' + now.getFullYear();
+            var ts = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+            $('#OpDate').val(ds);
+            $('#OpTime').val(ts);
+            $('#CurrentDate').val(ds);
+        }
+
+        // ==================== CACHED DROPDOWNS ====================
+        function LoadDoctors() {
+            var cached = sessionStorage.getItem('otDoctors');
+            if (cached) {
+                $('#DoctorConsultant').html(cached);
+                return;
+            }
+            $.ajax({
+                type: "POST", url: "../OT/HMS_OTDoctorGets",
+                data: { DoctorId: 0, DeptId: ERPDeptId },
+                success: function (r) {
+                    var o = '<option value="">Select Consultant</option>';
+                    if (r.oList && r.oList.length)
+                        $.each(r.oList, function (i, x) { o += '<option value="' + x.DoctorId + '">' + x.DoctorName + '</option>'; });
+                    $('#DoctorConsultant').html(o);
+                    sessionStorage.setItem('otDoctors', o);
+                }
+            });
+        }
+
+        function LoadOperationTheatres() {
+            var cached = sessionStorage.getItem('otTheatres');
+            if (cached) {
+                $('#OperationTheatre').html(cached);
+                return;
+            }
+            $.ajax({
+                type: "POST", url: "../Master/RoomGetandGets", data: { RoomId: 0 },
+                success: function (r) {
+                    var o = '<option value="">Select OT</option>';
+                    if (r && r.length)
+                        $.each(r, function (i, x) { o += '<option value="' + x.RoomId + '">' + x.RoomName + '</option>'; });
+                    $('#OperationTheatre').html(o);
+                    sessionStorage.setItem('otTheatres', o);
+                }
+            });
+        }
+
+        // ==================== AUTOCOMPLETE (with delay) ====================
+        function LoadRegNumber() {
+            $("#RegNo").autocomplete({
+                delay: 100,              
+                minLength: 0,              
+                source: function (req, resp) {
+                    ClearPatientData();
+                    $.ajax({
+                        url: '../OT/HMS_OTPorPatientSearch', type: "POST",
+                        data: { PatientName: $("#RegNo").length ? $("#RegNo").val() : "", DeptId: ERPDeptId },
+                        dataType: "json",
+                        success: function (data) {
+                            resp($.map(data, function (item) {
+                                return {
+                                    label: item.OPSerName + ' - ' + item.OPNumber,
+                                    value: item.OPNumber,
+                                    opser: item.OPSerName,
+                                    PatientId: item.PatientId,
+                                    DOB: item.DOB,
+                                    Contact: item.Contact,
+                                    OPNumber: item.OPNumber,
+                                    PatientName: item.PatientName,
+                                    IpNo: item.AadharNo || '',
+                                    Address: cleanAddress(item.Add1),
+                                    Mobile: item.Mobile || item.Contact || '',
+                                    Gender: item.Gender,
+                                    Flag: item.Flag
+                                };
+                            }));
+                        }
+                    });
+                },
+                autoFocus: true,
+                create: function () {
+                    var ac = $(this).data('ui-autocomplete');
+                    ac._renderMenu = function (ul, items) {
+                        var self = this; ul.empty();
+                        ul.append($('<li class="ac-header-row"></li>').append(
+                            '<span>Reg No</span><span>Patient</span><span>IP No</span><span>Address</span><span>Mobile</span>'
+                        ));
+                        $.each(items, function (i, item) { self._renderItemData(ul, item); });
+                    };
+                    ac._renderItem = function (ul, item) {
+                        return $('<li>').append($('<div class="ac-data-row"></div>').append(
+                            '<span>' + _esc(item.opser + ' - ' + item.OPNumber) + '</span>' +
+                            '<span>' + _esc(item.PatientName) + '</span>' +
+                            '<span>' + _esc(item.IpNo) + '</span>' +
+                            '<span>' + _esc(item.Address) + '</span>' +
+                            '<span>' + _esc(item.Mobile) + '</span>'
+                        )).appendTo(ul);
+                    };
+                },
+                select: function (e, ui) {
+                    $('#Opseriesname').val(ui.item.opser);
+                    $('#PatientName').val(ui.item.PatientName);
+                    $('#IpNo').val(ui.item.IpNo);
+                    $('#ContactNo').val(ui.item.Contact);
+                    $('#AdmissionStatus').val(ui.item.IpNo && ui.item.IpNo.trim() ? "Admitted" : "Not Admitted");
+                    PRID = ui.item.PatientId;
+                    $('#PatientId').val(ui.item.PatientId);
+                    $('#RegNo').data('dob', ui.item.DOB).data('gender', ui.item.Gender).data('flag', ui.item.Flag);
+                    GetLastRevisitDetails(ui.item.PatientId);
+                }
+            });
+        }
+
+        function _esc(s) {
+            return s == null ? '' : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function cleanAddress(address) {
+
+            if (!address) return '';
+            address = address.replace(/\d{10}/g, '');
+            address = address.replace(/#/g, ' ');
+            address = address.replace(/,+/g, ' ');
+            address = address.replace(/\s+/g, ' ').trim();
+            return address;
+        }
+
+        function ClearPatientData() {
+
+            $('#PatientId').val('');   
+
+            $('#PatientName,#Age,#Gender,#ContactNo,#OpNo,#IpNo,#RevisitId,#AdmissionStatus').val('');
+            $('#DoctorConsultant').val('');
+        }
+
+        function GetLastRevisitDetails(pid) {
+            $.ajax({
+                type: "POST", url: "../OT/HMS_OTLastRevisitGetsop",
+                data: { PatientId: pid, DeptId: ERPDeptId },
+                success: function (r) {
+                    if (r.oList && r.oList.length) FillPatientData(r.oList[0]);
+                    else FallbackFillPatientData();
+                },
+                error: function () { FallbackFillPatientData(); }
+            });
+        }
+
+        function FallbackFillPatientData() {
+            var dob = $('#RegNo').data('dob'), g = $('#RegNo').data('gender'), f = $('#RegNo').data('flag');
+            if (dob) $('#Age').val(AgeCalculation(dob));
+            if (g) $('#Gender').val(g);
+            else if (f) $('#Gender').val(convertGender(f));
+        }
+
+        function FillPatientData(d) {
+            if (d.DOB) $('#Age').val(AgeCalculation(d.DOB));
+            if (d.Flag !== undefined && d.Flag !== null && d.Flag !== '')
+                $('#Gender').val($.isNumeric(d.Flag) ? convertGender(d.Flag) : d.Flag);
+            else if (d.Gender) $('#Gender').val(d.Gender);
+            $('#OpNo').val(d.RevisitId || '');
+            if (d.DoctorId) $('#DoctorConsultant').val(d.DoctorId);
+            $('#RegSeries').val(d.OPSerId || '');
+        }
+
+        function convertGender(f) {
+            return f == 1 ? 'Male' : f == 2 ? 'Female' : f == 3 ? 'Others' : '';
+        }
+
+        // ==================== OPTIMISED AGE CALCULATION ====================
+        function AgeCalculation(dob) {
+            if (!dob) return '';
+            var birthDate = parseDate(dob);
+            if (!birthDate) return dob;
+
+            var today = new Date();
+            var years = today.getFullYear() - birthDate.getFullYear();
+            var months = today.getMonth() - birthDate.getMonth();
+            var days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            if (years === 0)
+                return months + ' Month' + (months > 1 ? 's' : '');
+            return years + ' Year' + (years > 1 ? 's' : '');
+        }
+
+        function parseDate(dateStr) {
+            // support dd/mm/yyyy and yyyy-mm-dd
+            var parts;
+            if (dateStr.indexOf('/') > -1) {
+                parts = dateStr.split('/');
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            } else if (dateStr.indexOf('-') > -1) {
+                parts = dateStr.split('-');
+                return parts[0].length === 4 ? new Date(parts[0], parts[1] - 1, parts[2]) : new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return new Date(dateStr);
+        }
+
+        function GetRows(RoomId) {
+            $('#RoomId').val(RoomId);
+            $.ajax({ type:"POST", url:"../Master/RoomGetandGets", data:{RoomId:RoomId}, success:function(){} });
+        }
+        function Defaultfocus() { $('#RegNo').focus().select(); }
+
+
+        // ==================== MODAL OPEN / CLOSE ====================
+        function ShowOTList() {
+            var now = new Date();
+            var dd = ('0' + now.getDate()).slice(-2);
+            var mm = ('0' + (now.getMonth() + 1)).slice(-2);
+            var today = dd + '/' + mm + '/' + now.getFullYear();
+
+            $('#FilterFromInsDate').val(today);
+            $('#FilterToInsDate').val(today);
+            $('#FilterStatus').val('');
+
+            // Destroy any existing DataTable before re-initialising
+            if ($.fn.DataTable.isDataTable('#tblOTList')) {
+                $('#tblOTList').DataTable().destroy();
+            }
+            $('#tblOTList tbody').html(
+                "<tr class='ot-empty-row'>" +
+                "<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>" +
+                "<td>Loading...</td>" +
+                "</tr>"
+            );
+
+            $('body').addClass('ot-modal-open');
+            $('#OTModalOverlay').show();
+            $('#OTListModal').css('display', 'flex');
+
+            // Immediately load list (with server-side DataTables)
+            LoadOTRegistrationList();
+        }
+
+        // ==================== LIST – SERVER‑SIDE DATATABLES ====================
+        function getStatusBadge(s) {
+            var key = parseInt(s);
+            var m = {
+                1: ['scheduled', 'Scheduled'],
+                2: ['badge-progress', 'In Progress'],
+                3: ['completed', 'Completed'],
+                4: ['cancelled', 'Cancelled'],
+                5: ['postponed', 'Postponed']
+            };
+            return m[key] ? "<span class='status-badge " + m[key][0] + "'>" + m[key][1] + "</span>"
+                : "<span>" + (s || '') + "</span>";
+        }
+
+        function LoadOTRegistrationList() {
+            if (!$('#FilterFromInsDate').val()) {
+                warningshow("Please enter From Registration Date");
+                $('#FilterFromInsDate').focus();
+                return;
+            }
+
+            // Destroy existing DataTable if any
+            if ($.fn.DataTable.isDataTable('#tblOTList')) {
+                $('#tblOTList').DataTable().destroy();
+            }
+
+            // Initialise with server-side processing
+            $('#tblOTList').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '../OT/HMS_OTRegistrationList',
+                    type: 'POST',
+                    data: {
+                        FromInsDate: $('#FilterFromInsDate').val(),
+                        ToInsDate: $('#FilterToInsDate').val(),
+                        Status: $('#FilterStatus').val()
+                    },
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'OTRegistrationId' },
+                    { data: 'OpDate' },
+                    { data: 'OpTime' },
+                    { data: 'PatientName' },
+                    { data: 'RegNo' },
+                    { data: 'DoctorName' },
+                    { data: 'RoomName' },
+                    {
+                        data: 'Status',
+                        render: function(data) { return getStatusBadge(data); }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var safeName = (row.PatientName || '').replace(/'/g, "\\'");
+                            return '<button class="btn btn-sm btn-info mr-1" style="height:30px;width:34px;border-radius:50%;padding:0" onclick="EditOTRecord(' + row.OTRegistrationId + ')">' +
+                                '<i class="fa fa-pencil"></i></button>' +
+                                '<button class="btn btn-sm btn-danger" style="height:30px;width:34px;border-radius:50%;padding:0" onclick="DeleteOTRecord(' + row.OTRegistrationId + ', \'' + safeName + '\')">' +
+                                '<i class="fa fa-trash"></i></button>';
+                        }
+                    }
+                ],
+                pageLength: 10,
+                order: [[2, 'asc']],   // sort by OpDate ascending
+                language: {
+                    emptyTable: "No records found for the selected filters"
+                }
+            });
+        }
+
+        // ==================== EDIT / DELETE ====================
+        function EditOTRecord(id) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetOTRegistrationById","OT")',
+                data: { OTRegistrationId: id },
+                success: function (data) {
+                    $('#OTRegistrationId').val(data.OTRegistrationId);
+                    $('#PatientId').val(data.PatientId);
+                    $('#RegNo').val(data.RegNo);
+                    $('#PatientName').val(data.PatientName);
+                    $('#Age').val(data.Age);
+                    $('#Gender').val(data.Gender);
+                    $('#ContactNo').val(data.ContactNo);
+                    $('#IpNo').val(data.IpNo);
+                    $('#OpNo').val(data.OpNo);
+                    $('#RevisitId').val(data.RevisitId);
+                    $('#AdmissionStatus').val(data.IpNo && data.IpNo !== "" ? "Admitted" : "Not Admitted");
+                    $('#OpDate').val(data.OpDate);
+                    $('#OpTime').val(data.OpTime);
+                    $('#OperationTheatre').val(data.OperationTheatre);
+                    $('#DoctorConsultant').val(data.DoctorConsultant);
+                    $('#Status').val(data.Status);
+                    $('#Notes').val(data.Notes);
+
+                    CloseOTList();
+                }
+            });
+        }
+
+        function DeleteOTRecord(id, patientName) {
+            Swal.fire({
+                title: "Do you want to delete this record?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Delete"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../OT/DeleteOTRegistration",
+                        data: { OTRegistrationId: id },
+                        success: function (res) {
+                            if (res.Status == 1) {
+                                Swal.fire({ icon: "success", title: "Deleted!", html: "<b>" + patientName + "</b> has been successfully deleted.", confirmButtonColor: "#009DA0", confirmButtonText: "OK" });
+                                // Refresh the DataTable (reload current page)
+                                $('#tblOTList').DataTable().ajax.reload(null, false);
+                            } else {
+                                Swal.fire("Error deleting record");
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // ==================== SAVE (combined existence check) ====================
+        function SaveOTRegistration() {
+
+            if (!$("#RegNo").val().trim()) {
+                warningshow("Please enter Register Number");
+                $('#RegNo').focus();
+                return;
+            }
+
+            if (!$("#PatientId").val()) {
+                warningshow("Please select a patient from list");
+                $('#RegNo').focus();
+                return;
+            }
+            if (!$("#OpDate").val()) { warningshow("Please select operation date"); $('#OpDate').focus(); return; }
+            if (!$("#OpTime").val()) { warningshow("Please select operation time"); $('#OpTime').focus(); return; }
+            if (!$("#OperationTheatre").val()) { warningshow("Please select operation theatre"); $('#OperationTheatre').focus(); return; }
+            if (!$("#DoctorConsultant").val()) { warningshow("Please select consultant doctor"); $('#DoctorConsultant').focus(); return; }
+            if (!$("#Status").val()) { warningshow("Please select status"); $('#Status').focus(); return; }
+
+            var id = $('#OTRegistrationId').val();
+
+            var confirmText = id == 0 ? "Do you want to save this record?" : "Do you want to update this record?";
+
+            Swal.fire({
+                title: confirmText,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#009DA0"
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    SaveOTRegistrationConfirm();
+                }
+
+            });
+        }
+
+        function SaveOTRegistrationConfirm() {
+
+            $("#Loadingsave").show();
+
+            var isNew = ($('#OTRegistrationId').val() == 0 || $('#OTRegistrationId').val() == '');
+
+            $.ajax({
+                type: "POST",
+                url: "../OT/OTRegistrationInsert",
+                data: {
+                    OTRegistrationId: $('#OTRegistrationId').val(),
+                    PatientId: $('#PatientId').val(),
+                    RegNo: $('#RegNo').val(),
+                    RegSeries: $('#RegSeries').val(),
+                    OpNo: $('#OpNo').val(),
+                    RevisitId: $('#RevisitId').val(),
+                    IpNo: $('#IpNo').val(),
+                    PatientName: $('#PatientName').val(),
+                    Age: $('#Age').val(),
+                    Gender: $('#Gender').val(),
+                    ContactNo: $('#ContactNo').val(),
+                    IpYear: 0,
+                    OpDate: $('#OpDate').val(),
+                    OpTime: $('#OpTime').val(),
+                    OperationTheatre: parseInt($('#OperationTheatre').val()),
+                    DoctorConsultant: parseInt($('#DoctorConsultant').val()),
+                    Status: parseInt($('#Status').val()),
+                    Notes: $('#Notes').val(),
+                    UserId: ERPUserId,
+                    DeptId: ERPDeptId
+                },
+
+                success: function (r) {
+
+                    $("#Loadingsave").hide();
+
+                    // ================= SUCCESS =================
+                    if (r.Status > 0) {
+
+                        var actionLabel = isNew ? "Registered successfully" : "Updated successfully";
+                        var actionMsg = isNew
+                            ? "Operation Theatre registration completed successfully for"
+                            : "Operation Theatre registration updated successfully for";
+
+                        var patient = $('#PatientName').val();
+
+                        Swal.fire({
+                            icon: "success",
+                            html:
+                                "<div style='font-family:Segoe UI, sans-serif; text-align:center;'>" +
+                                "<div style='font-size:22px; font-weight:700; color:#009DA0; margin-bottom:10px;'>" + actionLabel + "</div>" +
+                                "<div style='font-size:16px; color:#444;'>" + actionMsg + "</div>" +
+                                "<div style='font-size:20px; font-weight:700; color:#2c3e50; margin-top:8px;'>" + patient + "</div>" +
+                                "</div>",
+                            confirmButtonColor: "#009DA0",
+                            confirmButtonText: "OK",
+                            allowOutsideClick: false
+                        }).then(() => {
+
+                            ClearForm();
+
+                            setTimeout(function () {
+                                Defaultfocus();
+                            }, 200);
+
+                        });
+
+                    }
+
+                    // ================= OT THEATRE CONFLICT =================
+                    else if (r.Status == 0 && r.ConflictType === 'OT_THEATRE_CONFLICT') {
+                        var otName = $('#OperationTheatre option:selected').text();
+                        Swal.fire({
+                            icon: "warning",
+                            title: "OT Already Booked",
+                            html: "<b>" + otName + "</b> is already booked by <b>" + (r.PatientName || '—') + "</b> on<br><br><b style='color:#e74c3c; font-size:18px;'>" + (r.OpDate || '—') + "</b>",                        confirmButtonColor: "#009DA0",
+                            confirmButtonText: "OK"
+                        });
+                    }
+
+                    else if (r.Status == 0 && r.ConflictType === 'PATIENT_CONFLICT') {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Already Registered",
+                            html: "<b>" + ($('#PatientName').val() || '—') + "</b> already has an OT registration on<br><br><b style='color:#e74c3c; font-size:18px;'>" + ($('#OpDate').val() || '—') + "</b>",
+                            confirmButtonColor: "#f39c12"
+                        });
+                    }
+
+                    // ================= OTHER WARNING =================
+                    else {
+
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Warning",
+                            text: r.Message || "Unable to save record"
+                        });
+
+                    }
+
+                },
+
+                error: function () {
+
+                    $("#Loadingsave").hide();
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Server Error",
+                        text: "Unable to process request"
+                    });
+
+                }
+            });
+
+        }
+
+        function CloseOTList() {
+            $('#OTModalOverlay').hide();
+            $('#OTListModal').hide();
+            $('body').removeClass('ot-modal-open');
+            setTimeout(function () {
+                Defaultfocus();
+            }, 200);
+        }
+
+        function warningshow(message, Id) {
+            $('#popupmessage').text(message);
+            $('#Warningpopup').stop(true, true).show();
+            if (Id) { $('#' + Id).focus().select(); }
+            clearTimeout(window._warningTimer);
+            window._warningTimer = setTimeout(function () {
+                $('#Warningpopup').fadeOut();
+            }, 3000);
+        }
+
+        function ClearForm() {
+
+            $('#OTRegistrationId').val('0');
+            $('#RegNo').val('');
+            $('#Opseriesname').val('');
+            ClearPatientData();
+            $('#HiddenRegNo,#RegSeries,#Notes').val('');
+            $('#Status').val('1');
+            $('#OperationTheatre').val('');
+            SetCurrentDateTime();
+            setTimeout(function () {
+                $('#RegNo').focus().select();
+            }, 100);
+        }
+    </script>

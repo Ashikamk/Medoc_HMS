@@ -1,0 +1,241 @@
+﻿
+@{
+    ViewBag.Title = "PharmaLocationTransfer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .hestyle{
+        font-weight:bold !important;
+        font-size:x-large !important;
+        color:white !important;
+        text-transform:uppercase !important;
+    }
+    .heport{
+        background-color:#E0F3F4 !important;
+        color:black !important;
+        border-bottom: 1px solid #808080;
+    }
+    .label-control{
+        font-weight:500 !important;
+    }
+    .my-in-sm{
+        height:36px !important;
+    }
+    .dedisa{
+        background-color:white!important;
+    }
+     #customView, #OtherCostView, #TempPurchase {
+        border: 1px solid #CCD6E6;
+    }
+     .jsgrid-header-cell{
+         background-color:#009DA0 !important;
+         color:white !important;
+         padding:5px;
+         border:1px solid white;
+     }
+     .my-btn{
+         width:100px;
+     }
+     .gridcell{
+         border:none !important;
+     }
+     .modal-xl{
+         max-width: 80%;
+     }
+     .modal-sxl{
+         max-width: 60%;
+     }
+     .TotalCls{
+        color:red;
+        font-weight: 500;
+        font-size: x-large;
+     }
+</style>
+<div class="myData" data-x="M109"/>
+<script src="~/ProjectScript/PharmaLocationTransfer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="~/app-assets/vendors/css/hopscotch.css">
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary p-2">
+                <h4 class="card-title white hestyle">Location Transfer</h4>
+
+            </div>
+            <div class="card-body">
+                <div class="">
+                    <form class="form form-horizontal" onsubmit="return false;">
+                        <div class="form-body">
+                            <div class="heport p-2">
+                                <div class="row my-1">
+                                    <label class="col-md-1 label-control">Transfer# :<span class="danger">&nbsp;*</span></label>
+                                    <div class="col-md-2">
+                                        <fieldset>
+                                            <div class="input-group m-0">
+                                                <input type="text" class="form-control my-in-sm denull dedisa deshow" aria-describedby="button-addon2" id="TransferNo" disabled>
+                                                <input type="text" class="form-control my-in-sm denull dehide" aria-describedby="button-addon2" id="CTransferNo" style="display:none;" onkeypress="SearchLocationTransfer()">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-btn" id="button-addon2">
+                                                        <button class="btn btn-primary my-in-sm" id="btncopy" type="button"><i class="fa fa-search"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                    <label class="col-md-1 label-control">Date :<span class="danger">&nbsp;*</span></label>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control my-in-sm dedate cpdisa" id="Date">
+                                    </div>
+                                    <label class="col-md-1 label-control">From:<span class="danger">&nbsp;*</span></label>
+                                    <div class="col-md-2">
+                                        <select class="form-control my-in-sm deselect cpdisa" id="FromLoc" onchange="CheckLocation()"></select>
+                                    </div>
+                                    <label class="col-md-1 label-control">To:<span class="danger">&nbsp;*</span></label>
+                                    <div class="col-md-2">
+                                        <select class="form-control my-in-sm deselect cpdisa" id="ToLoc"></select>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <label class="col-md-1 label-control">Remarks:</label>
+                                    <div class="col-md-5">
+                                        <textarea class="form-control denull cpdisa" id="Remarks" rows="2" style="height:100%;width:100%;resize:none;"></textarea>
+                                    </div>
+                                    <div class="col-md-3  m-auto text-center">
+                                        <span class="TotalCls">Total Qty : <span id="TotalQty" class="detxzero">0</span></span>
+                                    </div>
+                                    <div class="col-md-3  m-auto text-center">
+                                        <span class="TotalCls">Amount : <span id="Totalamt" class="detxzero">0</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-2">
+                                <div class="row mb-1">
+                                    <div id="psearch" class="col-md-3 pr-0">
+                                        <label id="lbl0" class="label-control">Product:<span class="danger">&nbsp;*</span></label>
+                                        <input class="form-control denull my-in-sm cpdisa" id="Product_0" onkeypress="LoadProduct(0)" name="NoEnterFlow" />
+                                    </div>
+                                    <div class="col-md-2 pr-0">
+                                        <label class="label-control">Batch:<span class="danger">&nbsp;*</span></label>
+                                        <input class="form-control denull my-in-sm cpdisa" id="Batch_0" onkeypress="LoadBatch(0)" name="NoEnterFlow" />
+                                    </div>
+                                    <div class="col-md-2 pr-0">
+                                        <label class="label-control">Quantity:<span class="danger">&nbsp;*</span></label>
+                                        <input class="form-control denull my-in-sm cpdisa" id="Quantity_0" onkeyup="CalAmount(0)" onkeypress="isNumberInt(event,this)" name="NoEnterFlow" />
+                                    </div>
+                                    <div class="col-md-2 pr-0">
+                                        <label class="label-control">Rate:</label>
+                                        <input class="form-control denull my-in-sm dedisa" disabled id="SellPrice_0" onkeypress="isNumberInt(event,this)" />
+                                    </div>
+                                    <div class="col-md-2 pr-0">
+                                        <label class="label-control">Amount:</label>
+                                        <input class="form-control denull my-in-sm dedisa" disabled id="Amount_0" onkeypress="isNumberInt(event,this)"  />
+                                    </div>
+                                    <div class="col-md-1 pr-0 mt-auto">
+                                        <button type="button" class="btn btn-primary m-0 cpdisa" id="btnadd"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div id="customView" class="jsgrid" style="position: relative; height: 300px; width: auto;overflow-x: auto;overflow-y:hidden ">
+                                    <div class="jsgrid-grid-header" style="width:99%;">
+                                        <table class="jsgrid-table" width="100%">
+                                            <tr class="jsgrid-header-row">
+                                                <th class="jsgrid-header-cell" style="width:2%;text-align:center;"><i class="icon-trash"></i></th>
+                                                <th class="jsgrid-header-cell" style="width:3%;text-align:center;">SL#</th>
+                                                <th class="jsgrid-header-cell" style="width:15%">Name</th>
+                                                <th class="jsgrid-header-cell" style="width:5%">Batch</th>
+                                                <th class="jsgrid-header-cell" style="width:10%">Company</th>
+                                                <th class="jsgrid-header-cell" style="width:5%">Expiry</th>
+                                                <th class="jsgrid-header-cell" style="width:5%;text-align:center;">Qty</th>
+                                                <th class="jsgrid-header-cell" style="width:5%;text-align:right;">Rate</th>
+                                                <th class="jsgrid-header-cell" style="width:5%;text-align:right;">Amount</th>
+                                                <th class="jsgrid-header-cell" style="width:5%">Drug Sch.</th>
+                                                <th class="jsgrid-header-cell" style="display:none">None</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 260px; width:100%;">
+                                        <table class="jsgrid-table table-bordered" id="TblSalesInvoice" width="100%"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions right px-2">
+                            <button class="btn btn-primary btn-sm my-btn deshow" id="btnsubmit">Save&nbsp;<i class="fa fa-check-square-o"></i></button>
+                            <button class="btn btn-outline-primary btn-sm my-btn deshow" id="btnview" onclick="ShowView()">View&nbsp;<i class="fa fa-eye"></i></button>
+                            <button class="btn btn-outline-primary btn-sm my-btn deshow" id="btnnew">New&nbsp;<i class="fa fa-refresh"></i></button>
+                            @*<button class="btn btn-secondary btn-sm my-btn dehide" id="btnedit" style="display:none;">Edit&nbsp;<i class="fa fa-pencil"></i></button>*@
+                            <button class="btn btn-warning white btn-sm my-btn dehide" id="btnupdate" style="display:none;">Update&nbsp;<i class="fa fa-check-circle-o"></i></button>
+                            @*<button class="btn btn-danger btn-sm my-btn dehide" id="btndelete" style="display:none;">Delete&nbsp;<i class="fa fa-trash"></i></button>*@
+                            <button class="btn btn-primary btn-sm my-btn dehide" id="btnprint" style="display:none;">Print&nbsp;<i class="fa fa-print"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="modal fade text-left" id="LocationView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h4 class="modal-title white" id="myModalLabel17">Location Transfer</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="row heport p-3">
+                        <label class="label-control">From Date</label>
+                        <div class="col-md-2">
+                            <input type="text" id="ViewFromDate" class="form-control my-in-sm dedate" placeholder="From Date">
+                        </div>
+                        <label class="label-control">To Date</label>
+                        <div class="col-md-2">
+                            <input type="text" id="ViewToDate" class="form-control my-in-sm dedate" placeholder="To Date">
+                        </div>
+                        <button type="button" id="" onclick="GetLocationTransferList()" class="btn btn-primary btn-sm my-btn">Search <i class="fa fa-search position-right"></i></button>
+                    </div>
+                </div>
+
+                <table id="tbl_LTView" class="table table-striped table-bordered zero-configuration dataTable" width="100%"></table>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade modalProduct" id="productpdiv" role="dialog" style="height:200px;overflow:hidden">
+        <div class="modal-dialog modal-sxl">
+
+            <!-- Modal content-->
+            <div class="modal-content  bg-primary">
+                <div class="modal-body">
+                    <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <input id="ProductId_0" class="dezero" />
+    <input id="BatchSlNo_0" class="dezero" />
+    <input id="Stock_0" class="dezero" />
+    <input id="Company_0" class="denull" />
+    <input id="DrugSchedule_0" class="denull" />
+    <input id="PHSNCode_0" class="denull" />
+    <input id="Expiry_0" class="denull" />
+    <input id="GridLength" class="dezero" />
+
+</div>

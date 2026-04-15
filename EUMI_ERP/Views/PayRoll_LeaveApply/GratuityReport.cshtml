@@ -1,0 +1,603 @@
+﻿
+@{
+    ViewBag.Title = "IPWorkSheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="~/ProjectScript/IPWorkSheet.js"></script>
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1;
+    }
+
+    #divContainerNew {
+        border: solid 1px black;
+        min-width: 200px;
+        min-height: 40px;
+        width: auto;
+        height: auto;
+        background-color: white;
+        cursor: pointer !important;
+        font-weight: bold;
+    }
+
+    .divpop {
+        position: absolute;
+        text-align: left;
+        display: none;
+        color: black;
+        border-radius: 3px;
+    }
+
+    .pointer:hover {
+        background-color: #acd6f5;
+        text-decoration: underline;
+    }
+
+    .modal-xl {
+        max-width: 1200px;
+    }
+</style>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M265" />
+
+<script>
+
+
+    $(function () {
+
+        $('#Vaidto').daterangepicker({
+            minDate: minDate,
+            // maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+        $('#Vaidfrom').daterangepicker({
+            minDate: minDate,
+            // maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+    GetRows(0)
+    function GetRows(InsuranceCompanyId) {
+        $('#InsuranceCompanyId').val(InsuranceCompanyId)
+        var data = {};
+        data.InsuranceCompanyId = InsuranceCompanyId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/InsuranceCompanymasterGetandGets",
+            data: data,
+            success: function (result) {
+                if (InsuranceCompanyId == 0)
+                    ShowInsuranceCompanylist(result.oList);
+                else
+                    ShowInsuranceCompanyGet(result.oList);
+
+            }
+        });
+
+    }
+
+    function ShowInsuranceCompanylist(result) {
+        $('#insurence').html('')
+        var responseText = "";
+        for (var i = 0; i < result.length; i++) {
+            responseText += '<option value=' + result[i].InsuranceCompanyId + '>' + result[i].InsuranceCompanyName + '</option>'
+        }
+        $('#insurence').append(responseText);
+    
+    }
+
+    GetinsRows(0)
+    function GetinsRows(CostCenterId) {
+      
+        var data = {};
+        data.CostCenterId = CostCenterId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CostCentermasterGetandGets",
+            data: data,
+            success: function (result) {
+                if (CostCenterId == 0)
+                    ShowCostCenterlist(result.oList);
+                else
+                    ShowCostCenterGet(result.oList);
+
+            }
+        });
+
+    }
+
+    function ShowCostCenterlist(result) {
+        $('#disease').html('')
+        var responseText = "<option>Select</option>";
+        for (var i = 0; i < result.length; i++) {
+            responseText += '<option value=' + result[i].CostCenterId + '>' + result[i].CostCenterName + '</option>'
+      
+        }
+        $('#disease').append(responseText)
+    }
+       
+
+</script>
+
+
+<div style="display:none;">
+    <label class="label-control">Doctor</label>
+    <input type="text" id="Doctor" class="form-control col-md-2" />
+    <input type="hidden" id="DoctorId" class="form-control" value="0" />
+</div>
+<div id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%" style="" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <h4 class="card-title pt-2 pb-2" style="font-weight:bold;">Insurance Client Desk</h4>
+                                </td>
+                                <td align="right">
+
+                                    <div class="heading-elements">
+                                        <div>
+                                            @*<button type="button" class="btn btn-outline-info" onclick="ShowModal(1)">Room Change <i class="fa fa-bed"></i></button>*@
+                                            <button type="button" class="btn btn-outline-info" onclick="ShowModal(0)">Insurance Client Mapping <i class="fa fa-bed"></i></button>
+
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                        <table width="100%" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <label class="label-control">Date :</label>
+                                </td>
+                                <td width="150px;">
+                                    <input type="text" id="FromDate" class="form-control dedate" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-2 pr-1">-</label>
+                                </td>
+                                <td width="150px;">
+                                    <input type="text" id="ToDate" class="form-control dedate" />
+                                </td>
+
+                                <td>
+                                    <label class="label-control pl-1">Reg# :</label>
+                                </td>
+                                <td width="350px;">
+                                    <input type="text" id="RegNo" onfocus="RegNoLoad('RegNo')" class="form-control denull" />
+                                    <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                </td>
+                                <td align="left">
+                                    <button type="button" id="btnsearch" class="btn btn-outline-primary mt-2 ml-1">
+                                        Search <i class="fa fa-search"></i>
+                                    </button>
+
+                                    <button id="btnrefresh" type="button" class="btn btn-outline-info mt-2">
+                                        <i class="ft-refresh-cw"></i>
+                                    </button>
+                                </td>
+                                <td align="left">
+                                    <div class="d-inline-block custom-control custom-radio mr-2 ml-2">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btnadmitted" checked>
+                                        <label class="custom-control-label" for="btnadmitted">Pending </label>
+                                    </div>
+                                    <div class="d-inline-block custom-control custom-radio mr-2">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btndischarged">
+                                        <label class="custom-control-label" for="btndischarged">Closed </label>
+                                    </div>
+                                    <div class="d-inline-block custom-control custom-radio mr-2">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btnall">
+                                        <label class="custom-control-label" for="btnall">All </label>
+                                    </div>
+                                </td>
+                                <td style="display:none" align="right">
+                                    <button type="button" class="btn btn-outline-danger mt-2"><i class="fa fa-thermometer"></i></button>
+                                    <button type="button" class="btn btn-outline-success mt-2" onclick="GoPage('Revisit/OPWorkSheet_D');">OP WorkSheet <i class="fa fa-table"></i></button>
+                                    <button type="button" class="btn btn-outline-warning mt-2">Case Sheet <i class="fa fa-file-archive-o"></i></button>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show" oncontextmenu="return false">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="divContainerNew" class="row divpop" onmouseleave="$('#divContainerNew').slideUp()" oncontextmenu="return false">
+
+    <div class="pointer pl-1 pt-1" id="Context_1" onclick="RedirectTo('1')">Case Sheet</div>
+    <div class="pointer pl-1 pt-1" id="Context_2" onclick="RedirectTo('2')">Test Result</div>
+    <div class="pointer pl-1 pt-1" id="Context_2" onclick="RedirectTo('3')">Tempature</div>
+    <div class="pointer pl-1 pt-1" id="Context_3" onclick="RedirectTo('4')">IP Statement</div>
+
+    <div style="display:none">
+        <input type="text" id="CurrentselectedId" class="form-control dezro" value="0" />
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold" id="HeaderModal">Insurance Client Mapping</h4>
+                        </div>
+                        <div class="col-md-5">
+
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(0)">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">Reg#<span class="danger">*</span></label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_RegNumber" class="form-control denull" onfocus="RegNoLoad('RA_RegNumber')" autocomplete="off" placeholder="Search Patient" />
+                        </div>
+                        <label class="col-md-2 label-control">IP#<span class="danger">*</span></label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_IPNumber" class="form-control denull" disabled style="background-color:white;" />
+                        </div>
+
+                    </div>
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">Name</label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_PatName" class="form-control denull" autocomplete="off" disabled style="background-color:white;" />
+                        </div>
+                        <label class="col-md-2 label-control">Date</label>
+                        <div class="col-md-4">
+                            <table width="=100%">
+                                <tr>
+                                    <td>  <input type="text" id="RA_Date" class="form-control denull dedate" style="background-color:white;" /></td>
+                                    <td>  <input type="text" id="RA_Time" class="form-control denull" style="background-color:white;" /></td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                    </div>
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">Insurance<span class="danger">*</span></label>
+                        <div class="col-md-4">
+                           <select id="insurence"  class="form-control denull" >
+
+                           </select>
+                            <input type="hidden" id="RA_RoomId" value="0" />
+                        </div>
+                        <label class="col-md-2 label-control">Policy No</label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_Time" class="form-control denull" style="background-color:white;" />
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">Disease</label>
+                        <div class="col-md-4">
+                            <select id="disease" class="form-control denull" ></select>
+                        </div>
+                        <label class="col-md-2 label-control">Policy Amount</label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_RoomRate" class="form-control denull"  style="background-color:white;" />
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">Co-Payment Type<span class="danger">*</span></label>
+                        <div class="col-md-4">
+                            <select id="copaytype" class="form-control denull">
+                                <option>percentage</option>
+                            </select>
+
+                        </div>
+                        <label class="col-md-2 label-control">Co-Payment(%)</label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_Time" class="form-control denull" style="background-color:white;" />
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">policy Holder<span class="danger">*</span></label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_Time" class="form-control denull" style="background-color:white;" />
+                        </div>
+                        <label class="col-md-2 label-control">Sub insurar</label>
+                        <div class="col-md-4">
+                            <input type="text" id="RA_Time" class="form-control denull" style="background-color:white;" />
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-2 label-control">Valid From<span class="danger">*</span></label>
+                        <div class="col-md-4">
+                            <input type="text" id="Vaidfrom" class="form-control denull" style="background-color:white;" />
+                        </div>
+                        <label class="col-md-2 label-control">Valid To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="Vaidto" class="form-control denull" style="background-color:white;" />
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="RA_IPYear" value="0" class="dezero" />
+
+                    <button type="button" class="btn btn-default" onclick="ngOnDestroy(0)">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btnRASave" onclick="SaveRoomAllocation()">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal_2" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold" id="HeaderModal">Room Change</h4>
+                        </div>
+                        <div class="col-md-5">
+
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(1)">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-1 label-control">Reg#<span class="danger">*</span></label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_RegNumber" onfocus="RegNoLoad('RC_RegNumber')" class="form-control denull" autocomplete="off" placeholder="Search Patient" />
+                        </div>
+                        <label class="col-md-1 label-control">IP#</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_IPNumber" class="form-control denull" disabled style="background-color:white;" />
+                        </div>
+                        <label class="col-md-1 label-control">Patient</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_PatName" class="form-control denull" disabled style="background-color:white;" />
+                        </div>
+                    </div>
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-1 label-control">Room<span class="danger">*</span></label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_RoomCode" onfocus="RoomSearch('RC_RoomCode')" class="form-control denull" autocomplete="off" placeholder="Search Room" />
+                            <input type="hidden" id="RC_RoomId" value="0" />
+                        </div>
+                        <label class="col-md-1 label-control">Name</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_RoomName" class="form-control denull" disabled style="background-color:white;" />
+                        </div>
+                        <label class="col-md-1 label-control">Rate</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_RoomRate" class="form-control denull" disabled style="background-color:white;" />
+                        </div>
+                    </div>
+                    <div class="row mb-1 mt-1">
+                        <label class="col-md-1 label-control">Admit Date/Time</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_AdmitDate" class="form-control denull" disabled style="background-color:white;" />
+
+                        </div>
+                        <label class="col-md-1 label-control">Date</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_Date" class="form-control dedate" disabled style="background-color:white;" />
+                        </div>
+                        <label class="col-md-1 label-control">Time</label>
+                        <div class="col-md-3">
+                            <input type="text" id="RC_Time" class="form-control denull" />
+                            <input type="hidden" id="RC_TimeID" class="dezero" value="A" />
+                        </div>
+                    </div>
+                    <hr class="mt-0" />
+
+                    <label class="label-control">History</label>
+
+                    <div class="row mb-1 mt-1" style="height:300px;overflow-y:scroll">
+                        <table id="tbl_RoomDetails" width="100%" class="table table-striped table-bordered base-style dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="hidden" id="RC_IPYear" value="0" class="dezero" />
+                                <textarea id="RC_Remarks" placeholder="Remarks" class="form-control denull" style="height:50px;" autocomplete="off"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-default" onclick="ngOnDestroy(1)">Cancel</button>
+                                    <button type="button" class="btn btn-primary" id="btnRCSave" onclick="SaveRoomChange()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+
+    $("#RC_Time").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $("#RC_TimeID").val(0);
+
+            var ABC = ($("#RC_Time").val()).split(':');
+
+
+            var data = {};
+            data.InTime = ABC[0];
+            if (ABC.length > 1)
+                data.DTime = ABC[1];
+            else
+                data.DTime = '';
+
+            $.ajax({
+                url: '../Revisit/HMS_TimeSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '1',
+                            label: item.InTime,
+                            InTime: item.InTime,
+                            Id: item.Flag,
+                            headers: ["Time"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#RC_TimeID").val(ui.item.Id);
+            $("#btnRCSave").focus();
+        },
+
+    }).on('keydown', function (e) {
+        if ((e.which == 13)) {
+            $("#btnRCSave").focus();
+        }
+
+    });
+
+
+
+    $("#Doctor").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val(0);
+            var data = {};
+            data.DoctorName = $("#Doctor").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_WorkSheetDoctorSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DoctorName,
+                            label1: item.Status,
+                            DoctorId: item.DoctorId,
+                            headers: ["Doctor", "Department"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#DoctorId").val(ui.item.DoctorId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    $("#btnsearch").focus(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-primary");
+    });
+
+    $("#btnsearch").focusout(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-outline-primary");
+    });
+
+    setInterval(function () {
+        var date = new Date();
+        var Hour = date.getHours(); if (Hour < 10) Hour = '0' + Hour;
+        var Minutes = date.getMinutes(); if (Minutes < 10) Minutes = '0' + Minutes;
+        $('#RA_Time').val(Hour + ":" + Minutes);
+    }, 500);
+</script>
+
+

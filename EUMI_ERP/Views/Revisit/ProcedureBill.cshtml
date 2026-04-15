@@ -1,0 +1,980 @@
+﻿
+@{
+    ViewBag.Title = "ProcedureBill";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="../Projectscript/ProcedureBill.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="~/ProjectScript/DosPrint.js"></script>
+
+
+<style>
+    #Cell1 {
+        width: 75%;
+    }
+
+    #Cell2 {
+        width: 25%;
+        text-align: right;
+    }
+
+    .mgtpin {
+        margin-top: 10px;
+    }
+
+    .mgtpin1 {
+        margin-top: 5px;
+    }
+
+    .mgtpdec {
+        margin-top: -10px;
+    }
+
+    .mglftin {
+        margin-left: 5px;
+    }
+
+    .label-control {
+        font-weight: bold;
+    }
+
+    .p-1 {
+        padding-top: .1rem !important;
+        padding-bottom: .1rem !important;
+    }
+
+    select.form-control:not([size]):not([multiple]) {
+        height: calc(2.25rem + 4px);
+    }
+
+    .headertable tr {
+        border: 1px solid #BABFC7;
+        height: 30px;
+    }
+
+    .modal-xl {
+        max-width: 1200px;
+    }
+
+    .jsgrid-cell {
+        border: 1px solid #9faec3;
+    }
+      .jsgrid-cell {
+    padding: .3em!important;
+     font-weight: 500;
+}
+    .jsgrid input {
+    font-size: 1em;
+    font-weight: 500;
+}
+</style>
+
+
+
+<script type="text/javascript" src="~/app-assets/FromStack/dist/QRCODE.js"></script>
+<div style="display:none" class="p-1 text-center" id="QRCodebill"></div>
+<div class="myData" data-x="M359" />
+
+
+<div id="casualityInfoPopUp" style="display:none;">
+    <div class="toast-container toast-top-right">
+        <div class="toast-deep-purple" aria-live="assertive" style="opacity:1">
+            <div class="toast-message row" style="font-weight:400;font-size:large;margin-left:-5%">
+                <div id="casualityMsg" class="col-md-10 p-0" onclick="ShowcasualityPrescription()">
+                    Service Bill Available
+                </div>
+                <div class="col-md-2 p-0" onclick="$('#casualityInfoPopUp').fadeOut('slow')">
+                    <i class="fa fa-close"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="ShowCreditBillPopUp" style="display:none;">
+    <div class="toast-container toast-top-left">
+        <div class="toast-deep-purple" aria-live="assertive" style="opacity:1">
+            <div class="toast-message row" style="font-weight:400;font-size:large;margin-left:-5%">
+                <div id="PrescriptionMsg" class="col-md-10 p-0" onclick="ShowCreditBillGets()">
+                    Pending bills found
+                </div>
+                <div class="col-md-2 p-0" onclick="$('#ShowCreditBillPopUp').fadeOut('slow')">
+                    <i class="fa fa-close"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="Entry" style="margin-top:-20px;">
+
+    <section class="grid-row-label">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom:1px solid #e6e6e6;background-color:#009DA0;height:70px">
+
+                        <h3 class="text-md-right" id="fc" style="float:right;opacity:0;color:red;font-weight:500;display:none">fc </h3>
+
+                        <div class="row">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <h2 class="card-title mb-0" style="font-weight:bold;font-size:x-large;color:white;">PROCEDURE BILLING</h2>
+                                    </td>
+                                    @*<td>
+                                        <div class="custom-control custom-radio display-inline-block white" style="float:right;font-weight:normal;font-size:x-large;margin-top:2%">
+                                            <input type="radio" id="Cash" name="customRadioInline3" class="custom-control-input" checked="">
+                                            <label class="custom-control-label custsize" for="Cash">Cash</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-radio display-inline-block white" style="float:right;font-weight:normal;font-size:x-large;margin-top:2%">
+                                            <input type="radio" id="Credit" name="customRadioInline3" class="custom-control-input">
+                                            <label class="custom-control-label custsize" for="Credit">Credit</label>
+                                        </div>
+                                    </td>*@
+                                    <td class="text-right" width="59%">
+                                        <i class="ft-calendar" style="font-weight:normal;font-size:x-large;color:white"></i>
+                                        <input type="text" id="BillDate" style="border:none;background-color:#009DA0;color:white;font-weight:normal;font-size:x-large;" class="disb" disabled>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body" style="margin-top:-20px">
+
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr id="" style="margin-top:1.2%" />
+                                    <div class="p-1" style="background-color:#E0F3F4;margin-top:-1.5%">
+                                        <div class="row p-1" style="background-color:#E0F3F4;">
+
+                                            <div class="col-md-1">
+                                                <label class="label-control">Bill#</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="BillNoCopy" class="form-control cpybl avdclr disb" style="display:none" onfocus="LoadBillSearch()" onkeypress='isNumber(event,this)'>
+                                                <input type="text" id="BillNo" class="form-control avdclr disb" disabled style="background-color:white">
+
+                                            </div>
+                                            <div class="col-md-1 text-right">
+                                                <label class="label-control">OP/IP#</label>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input type="text" id="OpNo" class="form-control rdonl patdet">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input type="text" id="IpNo" class="form-control rdonl patdet">
+                                            </div>
+
+                                            <div class="col-md-1 text-right">
+                                                <label class="label-control">PayType#</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select id="PayType"  onchange="paytypechange()" name="priority" class="form-control smallTextbox topfocs">
+                                                    <option value="1">Cash</option>
+                                                    <option value="3">UPI Pay</option>
+                                                    <option value="4">Card Pay</option>
+                                                    <option value="2">Credit</option>
+
+
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-md-3 text-center">
+                                                <h3 style="font-weight:bold">TOTAL</h3>
+                                            </div>
+                                        </div>
+
+                                        <div class="row p-1" style="">
+                                            <div class="col-md-1 ">
+                                                <label class="label-control">Reg No</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                               <table width="100%"><tr><td width="30%">
+                                               <input type="text" id="Opseriesname" readonly class="form-control atcm" >
+                                               </td>
+                                               <td>
+                                               <input type="text" id="RegNo" class="form-control atcm" onfocus="LoadRegNumber()">
+                                               </td>
+                                               </tr></table>
+                                            </div>
+                                            <div class="col-md-1 text-right" style="min-width: 8%;">
+                                                <label class="label-control" style="width: 130%;margin-left:-30%">Patient Name</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="Name" class="form-control  patdet">
+                                            </div>
+                                            <div class="col-md-1 text-right">
+                                                <label class="label-control">Age/Sex</label>
+                                            </div>
+                                            <div class="col-md-2 input-group m-0">
+                                                <input type="text" id="Age" class="form-control patdet">
+
+                                                <select type="text" id="Gender" class="form-control">
+                                                    <option value="0" class="">
+                                                        Select
+                                                    </option>
+                                                    <option value="1" class="">
+                                                        Male
+                                                    </option>
+                                                    <option value="2" class="">
+                                                        Female
+                                                    </option>
+                                                    <option value="3" class="">
+                                                        Others
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <h3 id="GrandTotal" style="font-weight:bold;color:red;font-size:45px;margin-bottom:-.45rem"></h3>
+                                            </div>
+                                        </div>
+                                        <div class="row p-1" style="">
+                                            <div class="col-md-1 ">
+                                                <label class="label-control">Doctor</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select id="Doctor" class="form-control patdet"></select>
+                                            </div>
+
+                                            <div class="col-md-1  text-right">
+                                                <label class="label-control">Rate Type</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select type="text" disabled id="RateType0" class="form-control">
+                                                    <option value="0">Normal Rate</option>
+                                                    <option value="1">Special Rate</option>
+                                                    <option value="2">Very Special Rate</option>
+                                                    <option value="3">Outside Rate</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 text-right">
+                                                <label class="label-control">Hospital</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select id="Hospital" class="form-control">
+                                                    <option value="0">-</option>
+                                                   
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top:3px" />
+                                    <div class="px-0">
+                                        <div class="row" style="margin-top:-15px;margin-left:3px">
+                                            <div class="col-md-12">
+                                                <div class="row" style="height:26px;">
+                                                    <div class="col-md-3">
+
+                                                        <label class="label-control">Procedure Code<span class="danger">*</span></label>
+
+                                                    </div>
+                                                    <div class="col-md-1">
+
+                                                        <label class="label-control">Qty.<span class="danger">*</span></label>
+
+                                                    </div>
+                                                    <div class="col-md-1">
+
+                                                        <label class="label-control">Rate<span class="danger">*</span></label>
+
+                                                    </div>
+                                                    <div class="col-md-1">
+
+                                                        <label class="label-control">Amount<span class="danger">*</span></label>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+
+                                                        <input type="text" id="TestName0" class="form-control atcm" onfocus="LoadTest(0)">
+                                                        <input type="text" id="TestId0" style="display:none">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="text" id="PQty0" class="form-control" onkeyup="AmountCalc(0)" onkeypress="isNumberInt(event,this)">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="text" id="PRate0" class="form-control" onkeyup="AmountCalc(0)" onkeypress="isNumber(event,this)">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input type="text" id="TestAmount0" style="" class="form-control rdonl" readonly> 
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" style="font-weight:bold;width:37%" id="btnadd" onclick="AddTest()" class="btn btn-outline-primary">+Add</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <div id="customView" class="jsgrid" style="position: relative; height: 277px; width: 100%; border:solid 1px;border-color:#e9e9e9;margin-top:-5px;overflow-x: auto;overflow-y: hidden;">
+                                        <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width: 100%;">
+                                            <table class="jsgrid-table" id="">
+                                                <tr class="jsgrid-header-row">
+                                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;"><i class="icon-trash"></i></th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 5%;">SL#</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 20%;">Procedure Code</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 40%;">Procedure Name</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 5%;">Qty.</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 12%;">Rate.</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 12%;">Amount</th>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                        <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:233px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                            <table class="jsgrid-table" id="TblLabBill"></table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-actions" style="padding-top:5px">
+                                    <div class="row">
+                                        <div class="col-md-7 row">
+
+                                            <div class="col-md-12" style="padding-left:3%">
+                                                <table class="headertable" id="" style="background-color:white;width:100%;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-center" width="15%" style="border-left:1px solid #BABFC7;">
+                                                                <b>Cash </b>
+                                                                <div class="custom-control custom-checkbox" style="float:right;margin-top:-3px">
+                                                                    <input type="checkbox" class="custom-control-input" id="paydis"  autocomplete="off" onchange="partpayenable()">
+                                                                    <label class="custom-control-label" for="paydis"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-center" width="15%" style="border-left:1px solid #BABFC7;"><b>UPI </b></td>
+                                                            <td class="text-center" width="15%" style="border-left:1px solid #BABFC7;"><b>Card</b></td>
+                                                            <td class="text-center" width="14%" style="border-left:1px solid #BABFC7;"><b>Total </b></td>
+                                                            <td class="text-center" width="14%" style="border-left:1px solid #BABFC7;"><b>Dis%</b></td>
+                                                            <td class="text-center" width="14%" style="border-left:1px solid #BABFC7;"><b>Dis Amt</b></td>
+                                                            <td class="text-center" width="15%" style="border-left:1px solid #BABFC7;"><b>Net Amount</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <input type="text" class="form-control text-center" style="font-weight:bold;border:none" onclick="this.select()" disabled id="paycash" onkeyup="paymentamountcalcul(this.id)" onkeypress='isNumber(event,this)' />
+
+                                                            </td>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <input type="text" class="form-control text-center" style="font-weight:bold;border:none" onclick="this.select()" disabled id="payupi" onkeyup="paymentamountcalcul(this.id)" onkeypress='isNumber(event,this)' />
+
+                                                            </td>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <input type="text" class="form-control text-center" style="font-weight:bold;border:none" onclick="this.select()" disabled id="paycard" onkeyup="paymentamountcalcul(this.id)" onkeypress='isNumber(event,this)' />
+
+                                                            </td>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <label class="totlbl" style="font-weight:bold;" id="TotalAmt"></label>
+                                                            </td>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <input type="text" class="form-control text-center" style="font-weight:bold;border:none" onclick="this.select()" id="DiscPercent" onkeypress='isNumber(event,this)' onkeyup="CalcGrandTotal(0)" onblur="$('#DiscPercent').val(parseFloat($('#DiscPercent').val()).toFixed(Decimal));">
+                                                            </td>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <input type="text" class="form-control text-center" style="font-weight:bold;border:none" onclick="this.select()" id="DiscAmt" onkeypress='isNumber(event,this)' onkeyup="CalcGrandTotal(2)" onblur="$('#DiscAmt').val(parseFloat($('#DiscAmt').val()).toFixed(Decimal));">
+                                                                @*<label class="totlbl" style="font-weight:bold;" id="DiscAmt"></label>*@
+                                                            </td>
+                                                            <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                                <label class="totlbl" style="font-weight:bold;" id="NetAmt"></label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-5 text-right">
+                                            <button type="button" style="width:120px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:120px" id="btnview" onclick="GetRows(1)" class="btn btn-primary btn-min-width mr-1 mb-1" autocomplete="off">View <i class="ft-eye"></i></button>
+                                            <button type="button" style="width:120px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:120px" id="btnnew" onclick="formrefreshconfirm()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none" type="button" id="btnprint" onclick="PrintthisBill(1)" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                            <button style="display:none;width:120px" type="button" id="btnedit" onclick="$('#otptype').val(0), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-secondary btn-min-width mr-1 mb-1">Edit<i class="fa fa-check-square-o"></i></button>
+                                            <button style="display:none;width:120px" type="button" id="btnupdate" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                            <button style="display:none;width:120px" type="button" id="btndelete" onclick="$('#otptype').val(1), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-danger btn-min-width mr-1 mb-1">Delete<i class="fa fa-times"></i></button>
+                                            <button style="display:none" type="button" id="btnacctran" onclick="GetTrans()" class="btn btn-info white btn-min-width mr-1 mb-1">Accounts Details <i class="fa ft-info"></i></button>
+                                        </div>
+                                    </div>
+                                    <span id="printiuserdet" style="font-weight:bold;margin-left:20px"></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="confirmff" class="overlay" style="display:none;">
+    <div class="modal fade text-left show" id="keyboardff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display:none;padding-right: 17px; top:28%;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body" style="text-align:center">
+                    <h3 style="color:red"><B>ADD BILL NUMBER !!!</B></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="SavedAlert" role="dialog" style="top:25%;pointer-events: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="swal-icon swal-icon--success">
+                        <span class="swal-icon--success__line swal-icon--success__line--long"></span>
+                        <span class="swal-icon--success__line swal-icon--success__line--tip"></span>
+
+                        <div class="swal-icon--success__ring"></div>
+                        <div class="swal-icon--success__hide-corners"></div>
+                    </div>
+                    <div class="swal-title font-medium-5" id="SaveText"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSavedCancel" class="btn btn-outline-warning btn-sizebig avdbtn" data-dismiss="modal" onclick="formrefresh(0);">Cancel</button>
+                    <button type="button" id="btnSavedOk" class="btn btn-outline-primary btn-sizebig avdbtn" onclick="SavePrintConfirm()" autofocus><i class="icon-printer"></i> Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="PrescriptionModal1" role="dialog" >
+        <div class="modal-dialog modal-xxl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        @*<div class="col-md-4">
+                                <h6 class="modal-title font-weight-bold">Pending bills</h6>
+                            </div>*@
+
+                        <div style="font-weight:bold" id="cctotal" class="col-md-12">
+
+                        </div>
+                        <div id="cctotalselect" style="font-weight:bold;display:none" class="col-md-">
+
+                        </div>
+
+                        @*<div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="CloseCreditBillGets()">&times;</button>
+                        </div>*@
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div id="customView" class="jsgrid" style="position: relative; height: 340px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                            <div class="jsgrid-grid-header" style="width:100%;">
+                                <table class="jsgrid-table">
+                                    <tr class="jsgrid-header-row">
+                                        @*<th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:2%"><input type="checkbox" disabled onchange="SelectAllcbills()" id="SlNoHeadCheck" /></th>*@
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%;">BillNo</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%;">Type</th>
+                                        @*<th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:50px;">PayType</th>*@
+                                        <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:40px;"> Amount</th>
+                                        @*<th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:50px;">Cash Pay</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">UPI Pay</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Card Pay</th>*@
+                                    </tr>
+
+                                </table>
+                            </div>
+                            <div id="proddiv" class="" style="position: relative; overflow-x: hidden;overflow-y:scroll; height: 296px; width:100%;">
+                                <table class="jsgrid-table" id="tbl_IPGrid" style="table-layout:fixed;"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+                    <div class="col-md-6">
+                        @*<span style="font-weight:normal;margin-top:-100px">
+                                &#160;&#160;1. RV-Revisit &#160;&#160;,
+                                2. REG-Registration&#160;&#160;
+                            </span>*@
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="text-right">
+                            <button type="button" class="btn btn-default btnpresc" onclick="CloseCreditBillGets()">Cancel</button>
+
+                            <button type="button" class="btn btn-primary btnpresc" onclick="AddCreditBill()">PAY</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-primary white">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">PROCEDURE BILLS</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy()">&times;</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="text" style="" id="DateFrom" class="form-control disb" onchange="">
+                        </div>
+                        <div style="margin-top:.6%">
+                            -
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" style="" id="DateTo" class="form-control disb" onchange="">
+                        </div>
+                        <div class="col-md-1" style="margin-top:.6%">
+                            Department
+                        </div>
+                        <div class="col-md-2">
+                            <select id="select_dept" class="form-control disb"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="btnsubmitsgo" class="btn btn-warning" onclick="CallViewList()">GO</button>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row" style="height:500px;overflow-y:auto">
+                        <table id="tblViewList" width="100%" class="table table-striped table-bordered base-style dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-default" onclick="ngOnDestroy()">OK</button>*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="OTPDiv" class="modal fade text-left show ImpDiv" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="txtotp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div style="display:none">
+                        <input type="text" class="form-control" id="otptype" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btnotpcancel" onclick="$('#OTPDiv').hide(),$('#txtotp,#otpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btnotpsave" onclick="CheckEditandDeleteBill($('#otptype').val())" class="btn btn-outline-warning">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Loadingsave" class="overlay1" style="background: none;display: none;">
+    <div style="margin-top:23%;margin-left: 50%;">
+        <img src="/app-assets/img/Loading_1.gif">
+    </div>
+</div>
+
+<div style="display:none">
+    <input type="text" id="RegSeries" class="form-control patdet">
+    <input type="text" id="Genderhid" class="form-control rdonl patdet">
+    <input type="text" id="TestCode0" class="form-control rdonl patdet">
+    <input type="text" id="IpYear" class="form-control rdonl patdet">
+    <table id="DosPrint" class="dataTableprint"></table>
+
+</div>
+
+<script>
+
+    createQRCode(printurl);
+    function createQRCode(data) {
+        
+        var data = printurl;
+        $('#QRCodebill').empty();
+        $('#QRCodebill').qrcode(data, 120, 90);
+
+        var can = document.getElementById('regqrimg');
+        var ctx = can.getContext('2d');
+
+        //ctx.fillRect(50, 50, 50, 50);
+
+        var img = new Image();
+        img.src = can.toDataURL();
+        img.id = "printqrr";
+
+        document.body.appendChild(img);
+
+       // $('#printqrr').hide();
+
+    };
+
+
+
+
+
+</script>
+
+<script>
+
+    debugger;
+
+    @*if ("@Request.QueryString["flag"]" == "pb") {
+        setTimeout(function () {
+            GetRows(1)
+        }, 1000);
+    }*@
+    if ("@Request.QueryString["flag"]" == "bill") {
+
+
+        setTimeout(function () {
+           GetRows(0)
+           GetBillDetails("@Request.QueryString["billno"]",1)
+        }, 1000);
+
+
+    }
+    if ("@Request.QueryString["flag"]" == "reg") {
+
+        debugger;
+        var PatientId = sessionStorage.getItem("BSOP_PI");
+        var IPNumber = sessionStorage.getItem("BSOP_IP");
+        $('#Opseriesname').val('OP')
+
+        sessionStorage.removeItem("BSOP_PI");
+        sessionStorage.removeItem("BSOP_IP");
+        debugger;
+
+        if (PatientId != null) {
+            setTimeout(function () {
+
+                $('#IpNo').val(IPNumber);
+                GetLastRevisitDetails(PatientId);
+
+                $('#TestName0').focus();
+            }, 300);
+
+        }
+
+    }
+
+
+    if ("@Request.QueryString["flag"]" == "scanreg") {
+
+
+        var PatientId = sessionStorage.getItem("BSOP_PI");
+        var IPNumber = sessionStorage.getItem("BSOP_IP");
+
+        sessionStorage.removeItem("BSOP_PI");
+        sessionStorage.removeItem("BSOP_IP");
+
+
+        if (PatientId != null) {
+            setTimeout(function () {
+
+                $('#IpNo').val(IPNumber);
+                GetLastRevisitDetails(PatientId);
+                getBillProcedures(PatientId);
+                $('#TestName0').focus();
+            }, 300);
+
+        }
+
+    }
+
+
+
+
+
+
+    function CreditBillGets(id) {
+
+        var data = {};
+        data.Patient = PRID;
+        data.RegNo = $("#RegNo").val();
+        data.OPVisit = $("#OpNo").val();
+        data.DeptId = $("#IpNo").val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_CreditBillGets",
+            data: data,
+            success: function (result) {
+                LoadCreditBill(result.oList)
+            }
+        });
+    }
+
+
+    var creditbillllenths = 0
+    function LoadCreditBill(result) {
+        $('#tbl_IPGrid tr').remove();
+        $("#GridLength").val(0);
+
+        var balamount = result[0].Days;
+        var Adamount = result[0].Status;
+        if (balamount > 0) {
+            $('#btncreditbill').show();
+            $('#ShowCreditBillPopUp').show();
+        }
+        else {
+            $('#btncreditbill').hide();
+            $('#ShowCreditBillPopUp').hide();
+        }
+
+        var totalpending = 0;
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            var CashType = '';
+            if (result[i].Status == '1') CashType = '<span class="badge badge-danger">Cash</span>';
+            else if (result[i].Status == '2') CashType = '<span class="badge badge-success">Credit</span>';
+
+            var BillNo = '';
+            //  if (result[i].BillYear != 0) BillNo = result[i].BillYear;
+            BillNo = result[i].BillNo;
+
+            var id = slno;
+
+            var ProdEditRow = "<tr class='jsgrid-row Billtr TotalBill' id='Brow_" + id + "'>" +
+                /*'<td class= "jsgrid-cell jsgrid-align-center" style="width:2%"><input type="checkbox"  id="BillId_' + id + '"       onclick="SumChange(' + id + ')" data-toggle="tooltip" ></td>' +*/
+                "<td id='BillSlNo_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center' >" + id + "</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' ><b>" + result[i].Date + "</b></td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='BillNo_" + id + "' style= 'width:15%;text-align:center;' ><b>" + BillNo + "</b></td>" +
+                "<td id='Dept_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:15%;text-align:center' ><b>" + result[i].Department + "</b></td>" +
+                /*   "<td class='jsgrid-cell p-1 GridBRow' id='CashType_" + id + "'  style= 'width:50px;' align=center>" + CashType + "</td>" +*/
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:40px;' align=center ><b>" + parseFloat(result[i].Amount || 0).toFixed(Decimal) + "</b></td>" +
+                //"<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr1_" + id + "'  style= 'width:50px;' align=right >" +
+                //"<input type='text' id='cash_" + id + "' class='form-control GridTextBox' onkeypress='isNumber(event,this)' onkeyup='CalcAmount(this.id," + id + ")' value='' /></td>" +
+                //"<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr2_" + id + "'  style= 'width:50px;' align=right >" +
+                //"<input type='text' id='Upi_" + id + "' class='form-control GridTextBox' onkeypress='isNumber(event,this)' onkeyup='CalcAmount(this.id," + id + ")' value='' /></td>" +
+                //"<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr3_" + id + "'  style= 'width:50px;' align=right >" +
+                //"<input type='text' id='Card_" + id + "' class='form-control GridTextBox' onkeypress='isNumber(event,this)' onkeyup='CalcAmount(this.id," + id + ")' value='' />" +
+                "</td>" +
+                "</tr>";
+
+            totalpending = totalpending + parseFloat(result[i].Amount || 0)
+            $('#tbl_IPGrid').append(ProdEditRow);
+
+
+        }
+
+        creditbillllenths = result.length;
+        $('#cctotal').html('');;
+        $('#cctotal').append('<span style=color:red>Bill Amount :&#160;&#160;&#160;' + totalpending.toFixed(Decimal) + '&#160;&#160;&#160;Advance Rec :&#160;&#160;&#160;' + Adamount + ' &#160;&#160;&#160;Pending :&#160;&#160;&#160;' + (balamount).toFixed(2) + '</span>');
+
+        $("#GridLength").val(id);
+        $('#proddiv').animate({ scrollTop: 5000 }, 900);
+    }
+
+
+
+    function ShowCreditBillGets() {
+        if (!($('#PrescriptionModal1').is(':visible'))) {
+            $("#PrescriptionModal1").modal("show");
+            $("#PrescriptionModal1").appendTo("body");
+            $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+        }
+    }
+
+    function CloseCreditBillGets() {
+        $("#PrescriptionModal1").modal("hide");
+    }
+
+
+
+    function AddCreditBill(id) {
+        window.open('../AccountsErp/PDCReceived?pid=' + $('#HPatientId').val() + '&Preg=' + $('#HRegNowithseries').val());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function getBillProcedures(PatientId) {
+        var data = {};
+        data.OpNo = PatientId;
+        data.RegNo = $('#RegNo').val();
+        data.RegSeries = $('#RegSeries').val();
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_ProcAdvicegets",
+            data: data,
+            success: function (result) {
+                LabAdviceLoad(result.oList);
+            }
+        });
+        //$('#PrescriptionInfoPopUp').hide();
+    }
+
+    function LabAdviceLoad(result) {
+        for (var n = 0; n <= result.length; n++) {
+            $('#PQty0').val(1);
+            $('#TestId0').val(result[n].TestId);
+            $('#TestName0').val(result[n].TestName);
+            $('#TestCode0').val(result[n].TestName)
+            $('#TestAmount0').val(result[n].PRate);
+            $('#PRate0').val(result[n].PRate);
+            AddTest()
+
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+
+    SelectPayType()
+    function SelectPayType() {
+        if (SalesPayType == 'Credit') {
+            $('#PayType').val(2);
+        }
+        else if (SalesPayType == 'UPI Pay') {
+            $('#PayType').val(3);
+        }
+        else if (SalesPayType == 'Card Pay') {
+            $('#PayType').val(4);
+        }
+        else {
+            $('#PayType').val(1);
+        }
+    }
+
+
+    function paytypechange() {
+
+        var py = $('#PayType').val();
+        var Amt = parseFloat($('#GrandTotal').text()).toFixed(2)
+        $('#paycash').val(0); $('#payupi').val(0); $('#paycard').val(0)
+        if (py == 1) { $('#paycash').val(Amt) }
+        else if (py == 3) { $('#payupi').val(Amt) }
+        else if (py == 4) { $('#paycard').val(Amt) }
+    }
+
+
+    function partpayenable() {
+
+        let checkbox = document.getElementById("paydis");
+        if (checkbox.checked) {
+            $("#paycash").removeAttr("disabled");
+            $("#payupi").removeAttr("disabled");
+            $("#paycard").removeAttr("disabled");
+        }
+        else {
+            $("#paycash").attr("disabled", "disabled");
+            $("#payupi").attr("disabled", "disabled");
+            $("#paycard").attr("disabled", "disabled");
+        }
+    }
+
+
+    function paymentamountcalcul(ID) {
+        var a = parseFloat($('#paycash').val() || 0)
+        var b = parseFloat($('#payupi').val() || 0)
+        var c = parseFloat($('#paycard').val() || 0)
+        var Amt = parseFloat($('#GrandTotal').text()).toFixed(2)
+        var Tot = parseFloat(a + b + c)
+        if (Tot > Amt) {
+            warningshow('Received Amount must be Equal Bill Amount', 'paycash' + ID);
+            $('#' + ID).val(0).select();
+        }
+    }
+
+
+
+    var data = {};
+    data.HospitalId = 0;
+    $.ajax({
+        type: "POST",
+        url: "../Master/HospitalGetandGets",
+        data: data,
+        success: function (result) {            
+            ShowTermlist(result.oList);
+        }
+    });
+
+    function ShowTermlist(result)
+    {
+        //console.log(result)
+        $("#Hospital").html('')
+        for (var i = 0; i < result.length; i++) 
+        {
+            $("#Hospital").append("<option value=" + result[i].HospitalId + ">" + result[i].HospitalName + "</option>");
+        }
+    }
+
+
+</script>

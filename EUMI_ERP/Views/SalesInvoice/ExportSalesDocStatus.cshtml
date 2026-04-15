@@ -1,0 +1,657 @@
+﻿
+
+@{
+    ViewBag.Title = "ExportSalesDocStatus"; 
+}
+
+<style>
+    #radiodiv {
+        margin-left: -5%;
+    }
+</style>
+
+
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script src="~/Scripts/Chart/export-data.js"></script>
+<script src="~/Scripts/Chart/exporting.js"></script>
+<script src="~/app-assets/data/table2excel.js" type="text/javascript"></script>
+
+@*<script type="text/javascript" src="../Projectscript/Common.js"></script>*@
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .checkmark {
+        background-color: #eee;
+    }
+
+    input[name="Checkimeino"]:not(:checked),
+    input[name="Checkimeino"]:checked {
+        position: absolute;
+        left: -9999px;
+    }
+
+        input[name="Checkimeino"]:not(:checked) + label,
+        input[name="Checkimeino"]:checked + label {
+            position: relative;
+            padding-left: 25px;
+            padding-top: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            input[name="Checkimeino"]:not(:checked) + label:before,
+            input[name="Checkimeino"]:checked + label:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: -5px;
+                width: 30px;
+                height: 30px;
+                background: white;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, .1);
+                background-color: white;
+                outline: none;
+            }
+
+            input[name="Checkimeino"]:not(:checked) + label:after,
+            input[name="Checkimeino"]:checked + label:after {
+                content: '✔';
+                position: absolute;
+                top: 3px;
+                left: 6px;
+                font-size: 24px;
+                line-height: 0.8;
+                color: #0097a7;
+                transition: all .2s;
+            }
+
+            input[name="Checkimeino"]:not(:checked) + label:after {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            input[name="Checkimeino"]:checked + label:after {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+
+
+    input[name="gridheadchk"]:not(:checked),
+    input[name="gridheadchk"]:checked {
+        position: absolute;
+        left: -9999px;
+    }
+
+        input[name="gridheadchk"]:not(:checked) + label,
+        input[name="gridheadchk"]:checked + label {
+            position: relative;
+            padding-left: 25px;
+            padding-top: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            input[name="gridheadchk"]:not(:checked) + label:before,
+            input[name="gridheadchk"]:checked + label:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: -5px;
+                width: 30px;
+                height: 30px;
+                background: white;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, .1);
+                background-color: white;
+                outline: none;
+            }
+
+            input[name="gridheadchk"]:not(:checked) + label:after,
+            input[name="gridheadchk"]:checked + label:after {
+                content: '✔';
+                position: absolute;
+                top: 3px;
+                left: 6px;
+                font-size: 24px;
+                line-height: 0.8;
+                color: black;
+                transition: all .2s;
+            }
+
+            input[name="gridheadchk"]:not(:checked) + label:after {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            input[name="gridheadchk"]:checked + label:after {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+    .modal-xl {
+        max-width: 100%;
+        margin-left: 10%;
+        margin-right: 3%;
+    }
+</style>
+<div class="myData" data-x="M327" />
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>                     
+                        <div>
+                            <div class="heading-elements">
+                                <div style="margin-left:0.5%">
+                                    <h3>EXPORT SALES DOCUMENTS</h3>
+                                </div>
+                                <hr />
+                                <div id="divreport" style="overflow:auto;display:none;height:620px">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable" style="width:100%"></table><br />
+                                </div>                              
+                                <br /><br />
+                                <div class="form-actions">
+                                    <div class="text-right">
+                              
+                                        <button type="button" style="width:100px" id="btnback" class="btn btn-outline-primary btn-min-width mr-1 mb-1" onclick="$('#popupdiv').show(), Defaultfocus()">Back</button>
+                                        <button type="button" style="width:100px" id="btnsave" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>                                      
+                                        <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<input type="hidden" id="RowGet" />
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">EXPORT SALES DOCUMENTS</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3">
+                            <label style="margin-top:5px;">Type</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select type="text" class="form-control" id="Type" onkeydown="Focusnext(event, 'Branch')">
+                                <option value="0">All</option>
+                                <option value="1">Pending Only</option>  
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <label style="margin-top:5px;">Branch</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select type="text" class="form-control" id="Branch" onkeydown="Focusnext(event, 'DateFrom')">
+                              
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <div class="col-md-3">
+                            <label style="margin-top:5px;">From Date </label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="DateFrom" class="form-control" onkeydown="Focusnext(event, 'DateTo')">
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <label style="margin-top:5px;">To Date </label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="DateTo" class="form-control" onkeydown="Focusnext(event, 'btnsubmit')">
+                        </div>
+                    </div>                                                     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary">Go</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function GetDepartment() {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UserDepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result) {
+        $("#Branch").empty();
+        $("#Branch").append("<option value='0'>--All--</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Branch").append("<option value='" + result[i].DepartmentId + "' >" + result[i].DepartmentName + "</option>");
+        }
+    }
+
+    $(document).keydown(function (e) {
+
+        if (e.keyCode == 27) { //ESC       :   Popup Close
+            $('#OrderPopup').hide();
+            $('#iconForm').hide();
+            $('#Chkflg').val('');
+            salestranspopuprefresh();
+            $('#MonthwisePurchase').hide();
+        }
+
+    });
+
+    $(document).ready(function () {
+
+
+
+        $(".btn-outline-warning").focus(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-outline-warning");
+            $('#' + Id).addClass("btn-warning");
+        });
+        $(".btn-outline-warning").focusout(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-warning");
+            $('#' + Id).addClass("btn-outline-warning");
+        });
+
+        GetDepartment();
+
+        $('#DateFrom,#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        var Decimal = Decimal;
+
+        $("#btnsubmit").click(function (e) {
+            GetExpStatus(0);
+        });     
+
+        $('#btnsave').click(function (e) {
+            var oTable = $("#Tblreport").dataTable();
+            var oArray1 = new Array();
+            $(".checkbox1", oTable.fnGetNodes()).each(function () {
+                var id = "";
+                var k = 0; var CurrentCheked = 0; var CurrentId = 0;
+                CurrentCheked = $(this).attr('id')
+                CurrentId = CurrentCheked.split('_')
+                k = CurrentId[1];
+                var CHKSts = '';
+                if ($('#CheckBoxId_' + k).prop("checked") == true) {
+                    CHKSts = 'YES';
+                }
+
+                var BillSeriesId = $('#series' + k).val();
+                var BillSlNo = $('#billno' + k).text();
+                var Status = CHKSts;
+
+                if (typeof (BillSlNo != undefined)) {
+                    oArray1.push({
+                        'BillSeriesId': BillSeriesId,
+                        'BillSlNo': BillSlNo,
+                        'Status': Status,
+                    })
+                }
+            });
+
+
+            if (oArray1 != "") {
+                var data = { 'SalesInvoiceModel': oArray1 };
+                $.ajax({
+                    type: "POST",
+                    url: "../SalesInvoice/ExportSalesDocsSave",
+                    data: data,
+                    success: function (result) {
+                        var status = result.oList[0].Status;
+                        $('#btnsave').prop("disabled", false);
+                        Showalerts(status);
+                        GetExpStatus(1);
+                    }
+                });
+            }
+        });
+
+        Defaultfocus();
+
+      
+    });
+
+    function GetExpStatus(flg) {
+        var Condition = '';
+        var FromDate = $('#DateFrom').val();
+        var ToDate = $('#DateTo').val();
+        var Type = $('#Type').val();
+
+        if (flg == 0)
+        { $('#Loading').show(); }
+
+        var data = {};
+        data.Condition = Condition;
+        data.DeptId = $('#Branch').val();
+        data.FromDate = FromDate;
+        data.ToDate = ToDate;
+        data.checkflag = $('#Type').val();
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            type: "POST",
+            url: "../SalesInvoice/ExportSalesDocStatusGets",
+            data: data,
+            success: function (result) {
+                $('#Loading').hide();
+                $('#Entry').show();
+                $('#divreport').show();
+                $('#popupdiv').hide();
+                ShowsSalesExport(result);
+
+            }
+        });
+    }
+
+    function ShowsSalesExport(result) {
+
+        $('#NumPending').text('');
+        $('#ExportStatus').hide();
+
+        var nm = 0; var PDocs = 0;
+
+        $('#divreport').show();
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr>" +
+            "<th align=center> </th>" +
+            "<th align=center> </th>" +
+            "<th>Bill Description</th>" +
+            "<th>Bill Number</th>" +
+            "<th>Invoice Date</th>" +
+            "<th>Customer Name</th>" +
+            "<th>Customer Address</th>" +
+            "<th>Grand Total</th>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<th align=center>Sl#</th>" +
+            "<th align=center><input type='checkbox' style='zoom:1' align=center id='checkall' onchange='checkmeall()' name='gridheadchk'>" +
+            "<label for='checkall' align=center></label></th>" +
+            "<th>Bill Description</th>" +
+            "<th>Bill Number</th>" +
+            "<th>Invoice Date</th>" +
+            "<th>Customer Name</th>" +
+            "<th>Customer Address</th>" +
+            "<th>Grand Total</th>" +
+            "</tr></thead><tbody>"
+
+
+        for (var i = 0; i < result.length; i++) {
+
+            var slno = parseInt(i + 1);
+
+            if (result[i].Status == '') {                                                                          //Pending
+                responseText += '<tr id="RowTr_' + slno + '" class="rowclass">' +
+                  '<td align=center id= "' + 'visibletdno' + slno + '">' + slno + '</td>' +
+                  '<td  align=center><input type="checkbox"  style="zoom:1"  id= "CheckBoxId_' + slno + '"  onclick=Allchksts()  name="Checkimeino" class="checkbox1"><label for="CheckBoxId_' + slno + '"></label></td>' +
+                  '<td id= "' + 'desc' + slno + '" >' + result[i].BillDescription + ' <input id= "' + 'series' + slno + '"  type=hidden value=' + result[i].BillSeriesId + '></td>' +
+                  '<td id= "' + 'billno' + slno + '" >' + result[i].BillSlNo + '</td>' +
+                  '<td id= "' + 'invdate' + slno + '" >' + result[i].InvDate + '</td>' +
+                  '<td id= "' + 'custname' + slno + '" >' + result[i].CustName + '</td>' +
+                  '<td id= "' + 'custaddres' + slno + '" >' + result[i].CustAddress + '</td>' +
+                  '<td id= "' + 'gnftot' + slno + '" >' + result[i].GrandTotal + '</td>' +
+                  '</tr>';
+                PDocs = parseInt(PDocs) + 1;
+            }
+            else {                                                                                               //Docs Received
+                responseText += '<tr id="RowTr_' + slno + '" class="rowclass">' +
+                  '<td align=center id= "' + 'visibletdno' + slno + '">' + slno + '</td>' +
+                  '<td  align=center><input type="checkbox"  style="zoom:1"  id= "CheckBoxId_' + slno + '" checked onclick=Allchksts()   name="Checkimeino" class="checkbox1"><label for="CheckBoxId_' + slno + '"></label></td>' +
+                  '<td id= "' + 'desc' + slno + '" >' + result[i].BillDescription + ' <input id= "' + 'series' + slno + '"  type=hidden value=' + result[i].BillSeriesId + '></td>' +
+                  '<td id= "' + 'billno' + slno + '" >' + result[i].BillSlNo + '</td>' +
+                  '<td id= "' + 'invdate' + slno + '" >' + result[i].InvDate + '</td>' +
+                  '<td id= "' + 'custname' + slno + '" >' + result[i].CustName + '</td>' +
+                  '<td id= "' + 'custaddres' + slno + '" >' + result[i].CustAddress + '</td>' +
+                  '<td id= "' + 'gnftot' + slno + '" >' + result[i].GrandTotal + '</td>' +
+                  '</tr>';
+                nm = parseInt(nm) + 1;
+            }
+        }
+        $('#Tblreport').html(responseText + '</tbody>');
+        if ((nm == result.length) && nm > 0) {
+            $('#checkall').prop('checked', true);           
+        }
+        else {
+            $('#checkall').prop('checked', false);
+            if ((PDocs > 0) && (usermenu1.indexOf("M328") != -1))
+            {
+                $('#NumPending').text(PDocs + ' Pending Invoice');
+                $('#ExportStatus').fadeIn();
+            }          
+        }
+        var title = "";
+        datatableWithsearchsupplier('Tblreport', true, title, 'buttonPlace');
+        $('#RowGet').val(result.length);
+
+    }
+
+    function Allchksts() {
+        var checkboxes = document.getElementsByName("Checkimeino");
+        var nm = 0;
+        for (var b = 0; b < checkboxes.length; b++)
+        {
+            if (checkboxes[b].checked == true) {
+                nm++;
+            }
+        }
+        if(nm==checkboxes.length)
+        {
+            $('#checkall').prop('checked', true);
+        }
+        else {
+            $('#checkall').prop('checked', false);
+        }
+    }
+
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+   
+    function ConfirmboxResult(Result, status, rowid) {
+        if (Result == 'true' && status == 'delete') {         
+        }
+        else {
+            $('#confirm').fadeOut();
+        }
+    }
+   
+    function Showalerts(Status) {
+        if (Status == 1) {
+            swal('Data Saved Successfully', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        else if (Status == 3) {
+            swal('Row Deleted', "", "error");
+            $('.swal-button swal-button--confirm').focus();
+
+        }
+    }
+   
+    function Defaultfocus()
+    {
+        $('#Type').focus();
+    }
+
+    function formrefresh()
+    {
+        $('#DateFrom,#DateTo').val(CurDate);
+        $('#Type,#Branch').val(0);
+        $('#btnnew').blur();
+        $('#btnback').click();
+      // GetExpStatus(0);       
+    }
+   
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+    function checkmeall() {
+        var checked = $("#checkall").is(":checked")
+        if (checked) {
+           $('input[name=Checkimeino]').prop('checked', true);
+        } else {
+
+            $('input[name=Checkimeino]').prop('checked', false);
+        }
+    }
+
+    function Focusnext(e,target)
+    {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if(key==13)
+        {
+            window.setTimeout(function () {
+                $('#' + target).focus();
+            }, 10);
+           
+        }
+    }
+    function isNumber(e) {
+        var charCode = (e.which) ? e.which : e.keyCode
+        if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    }
+   
+    function datatableWithsearchsupplier(tablename, download, title, tableButtonContainerId) {
+        var a = '#' + tablename + ' tr:eq(0) th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text"  style="width:100%"  placeholder="' + title + '"/>')
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) {
+                //console.log("download table need title and button container");
+            }
+            table = $('#' + tablename).DataTable({
+
+                dom: "<'row'<'col-sm-12'f>>" +
+                  "<'row'<'col-sm-12'tr>>" +
+                  "<'row'<'col-sm-1'i>>",
+                'bSortable': false,
+                "ordering": false,
+                'aTargets': [0],
+                "columnDefs": [
+                    { "width": "1%", "targets": 0 },
+                    { "width": "1%", "targets": 1 },
+                    { "width": "3%", "targets": 2 },
+                    { "width": "3%", "targets": 3 },
+                    { "width": "5%", "targets": 4 },
+                    { "width": "10%", "targets": 5 },
+                    { "width": "20%", "targets": 6 },
+                    { "width": "5%", "targets": 7 },
+                    // { "width": "3%", "targets": 11 },
+                    //{ "width": "4%", "targets": 12 },
+                    //{ "width": "4%", "targets": 13 },
+                    //{ "width": "6%", "targets": 14 },
+                    //{ "width": "6%", "targets": 15 },
+                    //{ "width": "6%", "targets": 16 },
+                    //{ "width": "6%", "targets": 17 },
+                    //{ "width": "6%", "targets": 18 },
+                    //{ "width": "6%", "targets": 19 },
+                    //{ "width": "6%", "targets": 20 },
+                    //{ "width": "6%", "targets": 21 },
+
+
+                ],
+                "order": [],
+                "pageLength": -1,
+                buttons: []
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'colvis',
+                        columns: ':visible',
+                    }
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(0) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+</script>

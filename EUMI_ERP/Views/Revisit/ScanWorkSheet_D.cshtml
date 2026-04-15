@@ -1,0 +1,1129 @@
+﻿
+@{
+    ViewBag.Title = "OPWorkSheet_D";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/app-assets/Wordexport/FileSaver.js"></script>
+<script src="~/app-assets/Wordexport/jquery.wordexport.js"></script>
+<style>
+
+
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1;
+    }
+
+    #divContainerNew {
+        border: solid 1px black;
+        min-width: 200px;
+        min-height: 40px;
+        width: auto;
+        height: auto;
+        background-color: white;
+        cursor: pointer !important;
+        font-weight: bold;
+    }
+
+    .divpop {
+        position: absolute;
+        text-align: left;
+        display: none;
+        color: black;
+        border-radius: 3px;
+    }
+
+    .pointer:hover {
+        background-color: #acd6f5;
+        text-decoration: underline;
+    }
+
+
+    #patifotbl tr td, #patifotbl tr th {
+        border: 1px solid #9faec3 !important;
+    }
+
+</style>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M390" />
+
+
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="TaxSpliPopup" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title font-weight-bold">Scan info</h4>
+
+
+
+                </div>
+                <div class="modal-body">
+
+                    <div id="transsplitdiv" class="jsgrid" style="overflow:auto;width:100%;">
+
+                    <table class="headertable" id="patifotbl" style="width:100%;border:0px solid #BABFC7;background-color:white;font-weight:bold; table-layout:fixed;">
+                            
+                           
+                          
+                            </table>
+</div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="" style="width:120px" onclick="Saanststusupdate(1)" class="btn btn-outline-primary mr-1 mb-1 btn-sm" autocomplete="off">Complete</button>
+                    <button type="button" id="" style="width:120px" onclick="Saanststusupdate(-1)" class="btn btn-outline-warning mr-1 mb-1 btn-sm">Pending</button>
+                    <button type="button" id="WORDF" onclick="htmltowordconvert()" style="width:120px" class="btn btn-outline-warning mr-1 mb-1 btn-sm">Report</button>
+                    <button type="button"  onclick="sentmeassge()" style="width:120px" class="btn btn-outline-warning mr-1 mb-1 btn-sm">Send Report</button>
+
+                    <button type="button" onclick="PopUpClose(1)" style="width:120px" class="btn btn-outline-danger mr-1 mb-1 btn-sm">Close</button>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div style="display:none;">
+    <label class="label-control">Doctor</label>
+    <input type="text" id="Doctor" class="form-control col-md-2" />
+    <input type="hidden" id="DoctorId" class="form-control" value="0" />
+</div>
+<div id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="border:2px solid black">
+                            <span style="height:5px"></span>
+                            <table width="100%" style="table-layout:fixed;" class="bgcolor">
+                                <tr>
+                                    <td>
+                                        <h4 class="card-title pt-2 pb-2" style="font-weight:bold;">&#160;&#160;Scan Worksheet</h4>
+                                    </td>
+                                    <td>
+                                        <table width="80%">
+                                            <tr>
+                                                <td>  <label id="T0" class="label-control">case(s):</label></td>
+                                                <td>  <label id="T1" class="label-control"> Done:</label></td>
+                                                <td>  <label id="T2" class="label-control">Pending:</label></td>
+                                                <td>  <label id="T3" class="label-control">Waiting:</label></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+
+                                    <td align="right">
+                                        <div class="heading-elements">
+                                            <div>
+                                                <span id="itemListButtonPlace">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                            <table width="100%" class="bgcolor">
+                                <tr>
+                                    <td>
+                                        <label class="label-control">&#160;&#160;Date :</label>
+                                    </td>
+                                    <td width="150px;">
+                                        <input type="text" id="FromDate" class="form-control dedate" />
+                                    </td>
+                                    <td>
+                                        <label class="label-control pl-2 pr-1">-</label>
+                                    </td>
+                                    <td width="150px">
+                                        <input type="text" id="ToDate" class="form-control dedate" />
+                                    </td>
+
+                                    <td align="center">
+                                        <label class="label-control pl-1">Reg# :</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="RegNo" class="form-control denull" />
+                                        <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                    </td>
+                                    <td align="left">
+                                        <button type="button" id="btnsearch" class="btn btn-outline-primary mt-2 ml-1">
+                                            Search <i class="fa fa-search"></i>
+                                        </button>
+
+                                        <button id="btnrefresh" type="button" class="btn btn-outline-info mt-2">
+                                            <i class="ft-refresh-cw"></i>
+                                        </button>&#160;&#160;
+                                    </td>
+                                    <td width="30%"></td>
+                                    @*<td align="right">
+                                            <button type="button" class="btn btn-outline-success mt-2" onclick="GoPage('Revisit/IPWorkSheet');">IP WorkSheet</button>
+
+
+                                            <button type="button" class="btn btn-outline-info mt-2">New Case Sheet</button>
+
+                                            <button type="button" class="btn btn-outline-warning mt-2" onclick="GoPage('Revisit/LabResult');">Lab Result</button>
+                                        </td>*@
+                                </tr>
+                            </table>
+                            <span style="height:5px"></span>
+                        </div>
+
+                    </div>
+                    <div class="card-content collapse show" oncontextmenu="return false">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div style="display:none" id="page-content">
+
+    
+</div>
+
+
+<div id="divContainerNew" class="row divpop" onmouseleave="$('#divContainerNew').slideUp()" oncontextmenu="return false">
+
+    <div class="pointer pl-1 pt-1" id="Context_1" onclick="RedirectTo('1')">Case Sheet</div>
+    <div class="pointer pl-1 pt-1" id="Context_2" onclick="RedirectTo('2')">Test Result</div>
+
+    <div style="display:none">
+        <input type="text" id="CurrentselectedId" class="form-control dezro" value="0" />
+    </div>
+</div>
+
+<script type="text/javascript">
+    var CLINTFILENAME = 'Proced-1';
+    var PNAME = ''
+    jQuery(document).ready(function ($) {
+    
+        $("#WORDF").click(function (event) {
+            $("#page-content").html('')
+            $("#page-content").append('<table width=100%><tr><td>' + header + '</td></tr><tr><td>' + PNAME + '</td></tr><tr><td>' + footer + '</td></tr></table>')
+            $("#page-content").wordExport();
+        });
+    });
+</script>
+
+<script>
+
+
+    function sentmeassge() {   
+            var Msg = "sdsdsdsdsdsd"
+            var whatsapp_url = "https://api.whatsapp.com/send/?phone=91" + senderMObile + "&text=" + Msg + "&app_absent=0"
+            window.open(whatsapp_url, '_blank');
+       
+    }
+
+
+
+    var RECID = 0;
+
+
+    //1	USG ABDOMEN female
+
+    var proc1='<table><tr><td ><br>'+
+'<h3 style="text-align: center;">ULTRASOUND  ABDOMEN</span></u></h3>'+        
+'<p><strong><span >Liver </span></strong><span >&nbsp;is normal in size and shows normal parenchymal echoes.  No focal lesion noted. Hepatic veins normal. Portal vein is normal. No IHBRD. CBD is not dilated.</span></p>'+
+'<p><strong><span >Gall bladder  </span></strong><span >&nbsp;is distended. Lumen is clear. No wall oedema/ pericholecystic collection.</span></p>  '+
+'<p><strong><span >Pancreas :&nbsp;</span></strong><span >appears sonologically  normal in its head and body regions. Tail part is obscured. MPD is not dilated in the visualised part.</span></p>'+
+'<p><strong><span >Para aortic region :&nbsp;</span></strong><span >Obscured by bowel gas. </span></p>'+
+'<p><strong><span >Spleen </span></strong><span >is normal in size (cm) and shows normal echotexture. No focal lesions.</span></p>'+
+'<p><strong><span >Right kidney &nbsp;</span></strong><span >is normal in size, measures cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.</span></p>'+
+'<p><strong><span >Left kidney &nbsp;</span></strong><span >is normal in size, measures 10.4 x 4.9cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.</span></p>'+
+'<p><strong><span >Urinary bladder </span></strong><span >is distended. Lumen appear clear. Wall thickness is within normal limits.</span></p>'+
+'<p><strong><span >Uterus  &nbsp;</span></strong><span >is anteverted, normal in size and  measures cm. Myometrium appears normal.<br> Endometrium measures mm.</span></p>'+
+'<p><strong><span >Right ovary :&nbsp;</span></strong><span >measures cm.  Left ovary measures cm. </span></p>'+         
+'<p><span>No adnexal mass lesion.&nbsp;</span></p><p><span>No ascites.&nbsp;</span></p><p><strong><u><b>IMPRESSION</b></span></u></strong></p>'+
+'<p><ul><li><strong>&nbsp; <b>No significant sonographically detectable abnormalities detected in the present study.</b></span></strong></li></ul></p><br><br><br>'+
+'</td></tr></table>'
+
+    
+    
+    
+    var ABDOMENMALE='<table><tr><td ><br><h3 style="text-align: center;">ULTRASOUND  ABDOMEN</span></u></h3>'+        
+        '<p><strong><span >Liver </span></strong><span >&nbsp;is normal in size (cm) and shows normal parenchymal echoes.  No focal lesion noted. Hepatic veins normal. Portal vein is normal. No IHBRD. CBD is not dilated.<br><br>Gall bladder is distended. Lumen is clear. No wall oedema/ pericholecystic collection.</span></p>'+
+        '<p><strong><span >Pancreas :&nbsp;</span></strong><span >appears sonologically normal in its head and body regions. Tail part is obscured. No demonstrable calcifications. MPD is not dilated in the visualised part.</span></p>'+
+        '<p><strong><span >Para aortic region :&nbsp;</span></strong><span >Obscured by bowel gas. </span></p>'+
+        '<p><strong><span >Spleen </span></strong><span >is normal in size (cm) and shows normal echotexture. No focal lesions.</span></p>'+
+        '<p><strong><span >Right kidney &nbsp;</span></strong><span >is normal in size, measures cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.</span></p>'+
+        '<p><strong><span >Left kidney &nbsp;</span></strong><span >is normal in size, measures cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.	</span></p>'+
+        '<p><strong><span >Urinary bladder </span></strong><span >is distended. Lumen appear clear. Wall thickness is within normal limits.</span></p>'+
+        '<p><strong><span >Prostate &nbsp;</span></strong><span >is normal in size. Measures cc in volume.</span></p>'+
+        '<p><span >No ascites.&nbsp;</span></p>'+
+        '<p><strong><u><b>IMPRESSION</b></span></u></strong></p><p> <ul><li><strong>&nbsp; <b>	No significant sonographically detectable abnormalities detected in the present study.</b></span></strong></li></ul></p></table>'
+   
+    
+    
+    //7	ANOMALY SCAN
+    var proc7='<table><tr><td ><br><h3 style="text-align: center;"><u>ANOMALY SCAN  </u>   </h3> '+      
+    '<p  ><strong><span >LMP : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '+    
+    '<span >EDD  BY LMP : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>'+    
+    '<p>  <span > Gest Age By LMP&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong> weeks days</p>'+
+    '<p>  <span >Gest Age by USG &nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>weeks days</p>'+        
+    '<table><tr><td style="width:120px ;">Gestation</td><td style="width:60px ;">:</td><td>Single live intra uterine fetus.</td></tr>'+
+    '<tr><td style="width:120px ;">Presentation</td><td style="width:60px ;">:</td><td>Cephalic, spine to maternal ……</td></tr>'+
+    '<tr><td style="width:120px ;">Cardiac</td><td style="width:60px ;">:</td><td>Activity seen./ FHR - bpm</td></tr>'+
+    '<tr><td style="width:120px ;">Placenta</td><td style="width:60px ;">:</td><td></td></tr>'+
+    '<tr><td style="width:120px ;">Liquor</td><td style="width:60px ;">:</td><td>Adequate, SDP : cm</td></tr>'+
+    '<tr><td style="width:120px ;">Cervix (TAS)</td><td style="width:60px ;">:</td><td>cm. Internal os is closed.</td></tr></table>'+
+    '<table style="float: left;width:100%; border-collapse:collapse;border:none; border: 1px solid black;"><h4><U>BIOMETRY</U></h4>' +
+    '<tr><td style="  width: 250.15pt;   border: 1pt solid black;"><span><h4>BPD </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4>  </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4> </h4></td></tr>'+
+    '<tr><td style="  width: 250.15pt; border: 1pt solid black;"><span><h4>HC </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4>  </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4> </h4></td></tr>'+
+    '<tr><td style="  width: 250.15pt; border: 1pt solid black;"><span><h4>AC </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4>  </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4> </h4></td></tr>'+
+    '<tr><td style="  width: 250.15pt; border: 1pt solid black;"><span><h4>FL </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4>  </h4></td><td style="  width: 250.15pt; border: 1pt solid black;"> <h4> </h4></td></tr> <tr>'+
+    '<td colspan="3"> <span><h4>EFW :...........    gm +/-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gms       </h4></td></tr></table>'+
+    '<p><strong> <u><b>Fetal Anatomy :</b> </u> </strong><br> </p><p><strong> <b>Head  :</b>  </strong> Both lateral ventricles appear normal. Cisterna magna appears normal. Mid line falx seen. Posterior fossa appears normal. </p>'+
+    '<p><strong> <b>Neck  :</b>  </strong> Fetal neck appears normal.</p><p><strong> <b>Spine  :</b>  </strong> Appear normal. No obvious skin defects.</p>'+
+    '<p><strong> <b>Face  :</b>  </strong> Both orbits , nose, lips appear normal. </p><p><strong> <b>Thorax  :</b>  </strong> Both lungs seen . No significant plueral/ pericardial effusion.</p>'+
+    '<p><strong> <b>Heart  :</b>  </strong> Normal in position and situs. 4 chamber view normal.<i>(Detailed fetal echo not done).</i></p>'+
+    '<p><strong> <b>Abdomen  :</b>  </strong> Stomach and bowel appear normal. No ascites. Abdominal wall is intact.</p>'+
+    '<p><strong> <b>Kidneys  :</b>  </strong> Both kidneys appear normal.</p><p><strong> <b>U.Bladder  :</b>  </strong> Appears normal .</p>'+
+    '<p><strong> <b>Extremities  :</b>  </strong>Three segments of both upper limbs and lower limbs are seen .</p>'+
+    '<p><strong> <b>Umbilical cord : </b>  </strong>Three vessels (two arteries and one vein).</p><p><strong> <b> <u><i>Doppler study of Uterine arteries :</i></u> </b>  </strong><br> </p>'+
+    '<p><strong> <b>Right Uterine artery PI  : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>  '+
+    '</strong><strong> <b>Left Uterine artery PI  :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>  </strong> </p>'+
+    '<p><strong> <b>Mean Uterine artery PI : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>  '+
+    '</strong><strong> <b>Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>  </strong> </p>'+
+    '<p><strong> <b>IMPRESSION</b>  </strong></p><p> <ul><li><strong>&nbsp; <b>Single live intrauterine gestation with average gestational age of .. W and.. D by USG .</b> </strong></li></ul></p>'+
+    '<p> <ul><li><strong>&nbsp; <b>No obvious structural congenital abnormalities detected at this gestation.</b> </strong></li></ul></p><p> <ul><li><strong>&nbsp; <b>Suggested follow up for interval growth / late anomalies.</b> </strong></li></ul></p>'+
+    '<p>I declare that while conducting the ultrasonography I have neither detected nor disclosed sex of the fetus to anybody in any manner.</p><br><br><br> '+
+    '<p><i>Please note : All fetal abnormalities cannot be detected by ultrasound. <br>-	Over all detection rate of major chromosomal abnormalities (structural, genetic or chromosomal ) with antenatal ultrasound is about 70%. Antenatal ultrasonography is a screening test for structural abnormalities. It does not confirm or exclude chromosomal problems in the fetus. <br>'+
+    ' -	Small VSD and ASD cannot be diagnosed antenatally. Advanced fetal cardiac ECHO and assessment of small body parts like finegrs, toes and ears do not come within the scope of the targeted anomaly scan. <br>'+
+    '-	Some congenital anomalies are only seen in the third trimester.</i></p><br><br><br><br> </td></tr></table>'
+        
+        
+   
+
+    //15	ARTERIAL DOPPLER LOWERLIMB- BILATERAL
+
+    var proc15 = '<table><tr>  <td> <br><h3 style="text-align: center;"><u>ARTERIAL DOPPLER OF RIGHT LOWER LIMB</u> </span></u></h3><table  style="float: left; width:100%; border-collapse:collapse; border:none;">'+
+        '<tr style="width: 70%;"><td style="width: 250.15pt;border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style="width: 250.15pt;border: 1pt solid black;"><h4> Spectral pattern</h4></td><td style="width: 250.15pt;border: 1pt solid black;">'+
+        '<h4>Flow velocity(cm/sec)</h4></td></tr><tr><td style="width: 250.15pt;border: 1pt solid black;">  Common femoral artery  (CFA)</td><td style="width: 250.15pt;border: 1pt solid black;">   Triphasic  </td><td style="width: 250.15pt;border: 1pt solid black;"></td></tr>'+
+        '<tr><td style="width: 250.15pt;border: 1pt solid black;">Superficial femoral artery  (SFA) </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr>'+
+        '<tr><td style="width: 250.15pt;border: 1pt solid black;">     Popliteal artery     </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td> </tr><tr><td style="width: 250.15pt;border: 1pt solid black;">     Posterior tibial artery  (PTA)</td>'+
+        '<td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td> </tr><tr><td style="width: 250.15pt;border: 1pt solid black;">        Anterior tibial artery  (ATA)</td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr>'+
+        '<tr><td style="width: 250.15pt;border: 1pt solid black;">           Dorsalis pedis artery  (DPA)       </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr></table><br><ul>'+
+        '<p>•	CFA, SFA and popliteal artery shows good calibre with normal colour uptake and pulsatile flow.  </p><p>•	PTA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p><p>•	ATA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p><p>•	DPA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p></ul>'+
+        '<p><strong><u><b>IMPRESSION</b> </u></strong></p><ul><li><strong>&nbsp; <b>	Adequate colour flow in the lower limb arteries. </b></strong></li><li><strong>&nbsp; <b>	No hemodynamically significant stenosis/occlusion.</b></strong></li></ul><br><br><br></td></tr></table> '+
+        '</br></br></br></br></br></br><table><tr><td ><br><h3 style="text-align: center;"><u>ARTERIAL DOPPLER OF LEFT LOWER LIMB</u> </span></u></h3><table  style="float: left; width:100%; border-collapse:collapse; border:none;"> <tr style="width: 70%;"><td style="width: 250.15pt;border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style="width: 250.15pt;border: 1pt solid black;"><h4> Spectral pattern</h4></td><td style="width: 250.15pt;border: 1pt solid black;"><h4>Flow velocity(cm/sec)</h4></td>'+
+        '</tr><tr><td style="width: 250.15pt;border: 1pt solid black;">  Common femoral artery  (CFA)       </td><td style="width: 250.15pt;border: 1pt solid black;">   Triphasic  </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr><tr><td style="width: 250.15pt;border: 1pt solid black;">Superficial femoral artery  (SFA) </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td> </tr><tr><td style="width: 250.15pt;border: 1pt solid black;">     Popliteal artery     </td>'+
+        '<td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td> </tr><tr><td style="width: 250.15pt;border: 1pt solid black;">     Posterior tibial artery  (PTA)</td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr><tr><td style="width: 250.15pt;border: 1pt solid black;">        Anterior tibial artery  (ATA)           </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td>'+
+        '</tr><tr><td style="width: 250.15pt;border: 1pt solid black;">           Dorsalis pedis artery  (DPA)       </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr></table><ul><p>•	CFA, SFA and popliteal artery shows good calibre with normal colour uptake and pulsatile flow.  </p><p>•	PTA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p><p>•	ATA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p><p>•	DPA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p></ul>'+
+        '<p><strong><u><b>IMPRESSION</b> </u></strong></p><ul><li><strong>&nbsp; <b>	Adequate colour flow in the lower limb arteries. </b></strong></li><li><strong>&nbsp; <b>	No hemodynamically significant stenosis/occlusion.</b></strong></li></ul><br><br><br></td></tr></table>'
+
+    //14	ARTERIAL DOPPLER  LOWERLIMB- UNILATERAL
+
+    var proc14='<table><tr><td > <br><h3 style="text-align: center;"><u>ARTERIAL DOPPLER OF <span style="color: red"> RIGHT/LEFT </span>LOWER LIMB</u> </span></u></h3>'+
+         '<table  style="float: left; width:100%; border-collapse:collapse; border:none;">'+ 
+'<tr style="width: 70%;"><td style="width: 250.15pt;border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style="width: 250.15pt;border: 1pt solid black;"><h4> Spectral pattern</h4></td><td style="width: 250.15pt;border: 1pt solid black;">'+ 
+'<h4>Flow velocity(cm/sec)</h4></td></tr><tr><td style="width: 250.15pt;border: 1pt solid black;">  Common femoral artery  (CFA)</td><td style="width: 250.15pt;border: 1pt solid black;">   Triphasic  </td><td style="width: 250.15pt;border: 1pt solid black;"></td></tr> '+ 
+'<tr><td style="width: 250.15pt;border: 1pt solid black;">Superficial femoral artery  (SFA) </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr>'+ 
+'<tr><td style="width: 250.15pt;border: 1pt solid black;">     Popliteal artery     </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td> </tr><tr><td style="width: 250.15pt;border: 1pt solid black;">     Posterior tibial artery  (PTA)</td>'+ 
+'<td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td> </tr><tr><td style="width: 250.15pt;border: 1pt solid black;">        Anterior tibial artery  (ATA)</td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr>'+ 
+'<tr><td style="width: 250.15pt;border: 1pt solid black;">           Dorsalis pedis artery  (DPA)       </td><td style="width: 250.15pt;border: 1pt solid black;">    </td><td style="width: 250.15pt;border: 1pt solid black;">   </td></tr></table><br><ul>'+ 
+'<p>•	CFA, SFA and popliteal artery shows good calibre with normal colour uptake and pulsatile flow.  </p><p>•	PTA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p><p>•	ATA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p><p>•	DPA shows  fair  calibre without significant luminal narrowing  and  good colour flow.</p></ul>'+ 
+'<p><strong><u><b>IMPRESSION</b> </u></strong></p><ul><li><strong>&nbsp; <b>	Adequate colour flow in the lower limb arteries. </b></strong></li><li><strong>&nbsp; <b>	No hemodynamically significant stenosis/occlusion.</b></strong></li></ul><br><br><br></td></tr></table>'
+          
+
+
+
+    //10002	ARTERIAL DOPPLER UPPERLIMB- UNILATERAL
+
+    var proc10002 ='<table style=" float: left; width:100%; border-collapse:collapse; border:none;"> <tr><td ><br><h3 style="text-align: center;"><u><span style="color: red">RIGHT/LEFT</span>  UPPER LIMB ARTERIAL DOPPLER</u> </span></u></h3>'+
+'<table style=" float: left; width:100%; border-collapse:collapse; border:none;">       <tr style="width: 70%;"><td    style=" width: 250.15pt; border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style=" width: 250.15pt; border: 1pt solid black;"><h4>Flow velocity <br>(cm/sec)</h4></td><td style=" width: 250.15pt; border: 1pt solid black;"><h4> Spectral pattern</h4></td></tr>   '+
+'<tr><td    style=" width: 250.15pt; border: 1pt solid black;">  Subclavian</td><td    style=" width: 250.15pt; border: 1pt solid black;"></td><td    style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td    style=" width: 250.15pt; border: 1pt solid black;">  Axillary </td><td    style=" width: 250.15pt; border: 1pt solid black;"></td><td    style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td    style=" width: 250.15pt; border: 1pt solid black;">Brachial</td><td    style=" width: 250.15pt; border: 1pt solid black;"></td><td    style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td    style=" width: 250.15pt; border: 1pt solid black;">Ulnar</td><td    style=" width: 250.15pt; border: 1pt solid black;"></td><td    style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td    style=" width: 250.15pt; border: 1pt solid black;">Radial</td>'+
+'<td    style=" width: 250.15pt; border: 1pt solid black;"></td><td    style=" width: 250.15pt; border: 1pt solid black;"></td></tr></table>'+   
+'<ul><li><p>Visualised part of subclavian artery appears normal in calibre, shows normal  colour flow and spectral pattern. </p></li><li><p>Axillary and brachial artery show good calibre, normal colour uptake and spectral pattern. </p></li><li><p>Ulnar artery  shows  fair  calibre  and  colour flow.</p></li><li><p>Radial artery  shows  fair calibre  and  colour flow.</p></li></ul>'+
+'<p><strong><u><b>IMPRESSION</b> </u></strong></p><p> <ul><li><strong>&nbsp; <b>	Adequate Doppler flow in the upper limb arteries.  </b></strong></li><br><li><strong>&nbsp; <b>	No hemodynamically significant stenosis/occlusion.</b></strong></li></ul></p><br><br><br></td></tr></table>'    
+
+
+
+    //10003	ARTERIAL DOPPLER UPPERLIMB- BILATERAL
+            
+    var proc10003='<table><tr><td ><br><h3 style="text-align: center;"><u>RIGHT UPPER LIMB ARTERIAL DOPPLER</u></h3>'+
+        '<table style=" float: left; width:100%; border-collapse:collapse; border:none;"><tr><td style=" width: 250.15pt; border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style=" width: 250.15pt; border: 1pt solid black;"><h4>Flow velocity <br>(cm/sec)</h4></td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;"><h4> Spectral pattern</h4></td></tr><tr><td  style=" width: 250.15pt; border: 1pt solid black;">  Subclavian</td><td  style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr><td  style=" width: 250.15pt; border: 1pt solid black;">  Axillary </td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td  style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Brachial</td><td  style=" width: 250.15pt; border: 1pt solid black;"></td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Ulnar</td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td  style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td  style=" width: 250.15pt; border: 1pt solid black;">Radial</td><td  style=" width: 250.15pt; border: 1pt solid black;"></td>'+
+        '<td  style=" width: 250.15pt; border: 1pt solid black;"></td></tr></table><br><ul><li><p>Visualised part of subclavian artery appears normal in calibre, shows normal  colour flow and spectral pattern. </p></li><li><p>Axillary and brachial artery show good calibre, normal colour uptake and spectral pattern. </p></li><li><p>Ulnar artery  shows  fair  calibre  and  colour flow.</p></li><li><p>Radial artery  shows  fair calibre  and  colour flow.</p></li></ul>'+
+        '<p><strong><u><b>IMPRESSION</b> </u></strong></p><p> <ul><li><strong>&nbsp; <b>	Adequate Doppler flow in the upper limb arteries.  </b></strong></li><li><strong>&nbsp; <b>	No hemodynamically significant stenosis/occlusion.</b></strong></li></ul></p><br><br><br></td></tr></table><table><tr><td ><br><h3 style="text-align: center;"><u>LEFT UPPER LIMB ARTERIAL DOPPLER</u></h3>'+
+        '<table style=" float: left; border-collapse:collapse; border:none;"><tr><td style=" width: 250.15pt; border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style=" width: 250.15pt; border: 1pt solid black;"><h4>Flow velocity <br>(cm/sec)</h4></td><td style=" width: 250.15pt; border: 1pt solid black;"><h4> Spectral pattern</h4></td></tr><tr><td  style=" width: 250.15pt; border: 1pt solid black;">  Subclavian</td><td  style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr><td  style=" width: 250.15pt; border: 1pt solid black;">  Axillary </td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td  style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Brachial</td><td  style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Ulnar</td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;"></td><td  style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td  style=" width: 250.15pt; border: 1pt solid black;">Radial</td><td  style=" width: 250.15pt; border: 1pt solid black;"></td><td  style=" width: 250.15pt; border: 1pt solid black;"></td></tr></table><ul><li><p>	Visualised part of subclavian artery appears normal in calibre, shows normal  colour flow and spectral pattern. </p></li><li><p>	Axillary and brachial artery show good calibre, normal colour uptake and specttral pattern. </p></li><li><p>	Ulnar artery  shows  fair  calibre  and  colour flow.</p></li><li><p>	Radial artery  shows  fair calibre  and  colour flow.</p></li></ul>'+
+        '<p><strong><u><b>IMPRESSION</b> </u></strong></p><p> <ul><li><strong>&nbsp; <b> Adequate Doppler flow in the upper limb arteries. </b></strong></li><li><strong>&nbsp; <b>	No hemodynamically significant stenosis/occlusion.</b></strong></li></ul></p></td></tr>'
+       
+
+
+    //BREAST- BOTH
+    var proc28 ='<table><tr><td ><br><h3 style="text-align: center;"><br><br><u>BREASTS</u> </span></u></h3><p><i>CLINICAL DATA :   </i></p><h4><u>Right Breast</u></h4>'+
+        '<p><ul><li>	Parenchyma shows normal echotexture.</li> </ul><ul><li>	No obvious focal lesion/cysts.</li> </ul><ul><li>	Nipple and subareola appears normal.</li> </ul><ul><li>	No dilatation of lactiferous ducts.</li> </ul><ul><li>	A few axillary lymphnodes with preserved fatty hilum noted, largest measuring mm.</li> </ul></p>'+
+        '<h4><u>Left Breast</u></h4><ul><li>Parenchyma shows normal echotexture.</li> </ul><ul><li>No obvious focal lesion/cysts.</li> </ul><ul><li>Nipple and subareola appears normal.</li> </ul><ul><li>No dilatation of lactiferous ducts.</li> </ul><ul><li>A few axillary lymphnodes with preserved fatty hilum noted, largest measuring mm.</li> </ul><p><strong><u><b>IMPRESSION</b></span></u></strong></p>'+
+        '<p> <ul><li><strong>&nbsp; <b>	No significant focal lesions in either breasts</b></span></strong></li></ul><ul><li><strong>&nbsp; <b>		A few axillary lymphnodes with preserved fatty hilum on both sides-<i> likely reactive.</i></b></span></strong></li></ul></p>'+
+        '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></td></tr></table>'
+
+
+    //BREAST- SINGLE
+    var proc27 ='<table><tr><td ><br><h3 style="text-align: center;"><br><u>USG <span style="color: red">RIGHT/LEFT</span>  BREAST</u></h3><p><i>CLINICAL DATA :   </i></p><ul><li>Parenchyma shows normal echotexture.</li> </ul><ul><li>	No obvious focal lesion/cysts.</li> </ul><ul><li>	Nipple and subareola appears normal.</li> </ul><ul><li>	No dilatation of lactiferous ducts.</li> </ul>'+
+        '<ul><li>	A few axillary lymphnodes with preserved fatty hilum noted, largest measuring mm.</li> </ul> <p><strong><u><b>IMPRESSION</b></span></u></strong></p><p> <ul><li><strong>&nbsp; <b>		No significant focal lesions in either breasts</b></span></strong></li></ul><ul><li><strong>&nbsp; <b>		A few axillary lymph nodes with preserved fatty hilum on both sides-<i> likely reactive.</i></b></span></strong></li></ul></p><br><br><br>'+
+        '<br><br><br><br></td></tr></table>'
+
+    //CAROTID DOPPLER
+    var proc12='<table><tr><td ><br><h3 style="text-align: center;"><u>CAROTID DOPPLER</u> </span></u></h3> '+
+        '<table style="float: left; width:100%; border-collapse:collapse; border:none;"><tr style="width: 70%;text-align: center;"><td style=" width: 250.15pt; border: 1pt solid black;"><h4><b>Artery </b></h4></td><td style="width: 250.15pt;border: 1pt solid black;"><h4> PSV <br>(cm/sec)</h4></td>'+
+        '<td style="width: 250.15pt;border: 1pt solid black;"><h4>EDV <br>(cm/sec)</h4></td></tr><tr><td colspan="3" style="border: 1px solid black;"> <b> RIGHT</b></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">CCA </td><td style="width: 250.15pt;border: 1pt solid black;"> </td><td style="width: 250.15pt;border: 1pt solid black;"></td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;"> ICA </td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">  ECA</td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Vertebral Artery </td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td style="width: 250.15pt;border: 1pt solid black;"></td></tr><tr><td colspan="3" style="border: 1px solid black;"> <b>LEFT</b> </td>  </tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">CCA </td><td style="width: 250.15pt;border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;"> ICA   </td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">ECA  </td><td style="width: 250.15pt;border: 1pt solid black;"></td><td style="width: 250.15pt;border: 1pt solid black;"></td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;"> Vertebral Artery </td><td style=" width: 250.15pt; border: 1pt solid black;"></td><td style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr></table>'+
+        ' <h4><u>Observations</u></h4><p>Right CCA  IMT -          mm, within normal limits.</p>'+
+        '<p>Left  CCA  IMT  -          mm, within normal limits.</p><p><strong>Internal carotid </strong>arteries on both sides traced upto the mastoid.</p><p><strong><u>Right CCA, BULB, ICA & ECA - </u> </strong>No significant plaques. No hemodynamically significant stenosis/occlusion.</p>  '+
+        '<p><strong><u>Left CCA, BULB, ICA & ECA - </u> </strong>No significant plaques. No hemodynamically significant stenosis/occlusion.</p> <p><strong><u>Vertebral arteries:  </u> </strong>Visualized parts on both sides show adequate doppler flow.</p> '+
+       '<p><strong><u><b>IMPRESSION</b> </u></strong></p><p> <ul><li><strong>&nbsp; <b>Adequate Doppler flow in both carotid and vertebral arteries. </b></strong></li><li><strong>&nbsp; <b>No hemodynamically significant stenosis/occlusion.</b></strong></li></ul></p><br><br><br></td></tr></table> '
+
+
+    //CHEST
+    var proc26 ='<table><tr><td ><br><h3 style="text-align: center;"><br><br><u>USG CHEST</u></h3><p>No pleural effusion on either side.</p>'+
+        '<p>No areas of consolidation in the visualized superficial lung fields.</p><p>Normal lung sliding movements seen in all visualized lung fields.</p><p>No pericardial effusion.</p><p>Diaphragmatic movements appear normal.</p><p><strong><u><b>IMPRESSION</b></span></u></strong></p><p>'+
+        '<ul><li><strong>&nbsp; <b>Sonography of the lung within normal limits.</b></span></strong></li></ul></p><h3 style="text-align: center;"><i>Suggested Chest X-ray correlation</i></h3><br><br><br><br> <br><br><br><br><br></td></tr>  </table>'
+
+
+    //DVT DOPPLER BILATERAL
+    var proc20 ='<table><tr><td ><br><h3 style="text-align: center;"><br><br><u>RIGHT LOWER LIMB VENOUS DOPPLER (FOR DVT)</u> </span></u></h3><h4><br><br><u>OBSERVATIONS</u> </span></u></h4>'+
+        '<p>Normal Doppler flow with augmentation, compressibility, and phasicity noted in common femoral, superficial femoral and popliteal veins.</p><p>Doppler flow with compressibility noted in the posterior tibial and anterior tibial veins.</p>'+
+        '<p>Calf veins appear compressible.</p><p><span style="color: red;">Diffuse subcutaneous oedema noted involving the lower leg extending into the dorsum of the foot.</span></p><p><strong><u><b>IMPRESSION</b></span></u></strong></p>'+
+        '<h3> <ul><li><strong>&nbsp; <b>	No evidence of DVT. </b></span></strong></li></ul></h3><br><br><br><br> <br> <br><br><br><br></td></tr></table>'
+
+
+    //19	DVT DOPPLER UNILATERAL
+    var proc19='<table><tr><td ><br><h3 style="text-align: center;"><u><span style="color: red;">RIGHT/LEFT  </span> LOWER LIMB VENOUS DOPPLER (FOR DVT)</u> </span></u></h3><h4><u>OBSERVATIONS</u> </span></u></h4>'+
+        '<p>Normal Doppler flow with augmentation, compressibility, and phasicity noted in common femoral, superficial femoral and popliteal veins.</p>'+
+        '<p>Doppler flow with compressibility noted in the posterior tibial and anterior tibial veins.</p>'+
+        '<p>Calf veins appear compressible.</p><p><span style="color: red;">Diffuse subcutaneous oedema noted involving the lower leg extending into the dorsum of the foot.</span></p>'+
+        '<p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3> <ul><li><strong>&nbsp; <b>	No evidence of DVT.</b></span></strong></li></ul></h3><br><br><br><br> <br><br><br> <br><br><br><br> <br><br><br><br></td></tr></table>'
+
+   
+    //5	EARLY PREGNANCY
+    var proc5 ='<table><tr><td ><br><h3 style="text-align: center;"><u>ANTENATAL  SCAN</u> </span></u></h3><h4>LMP :   </h4><h4 style="text-align: center;">GA (LMP)  : &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;   EDD by LMP :&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    </h4>'+
+        '<h4 style="text-align: center;">GA (USG)  : &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  EDD by USG :&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   </h4>'+
+        '<p>Uterus shows mild uniform enlargement.</p><p>Single Intrauterine gestational sac with regular walls seen in its cavity. </p><h4>Fetal pole with cardiac activity noted. FHR – bpm</h4>'+
+        '<h4 >CRL   :  &nbsp; &nbsp; &nbsp;  mm   &nbsp; &nbsp; &nbsp; &nbsp;   wks  &nbsp; &nbsp; &nbsp; &nbsp;     days   &nbsp; &nbsp; &nbsp; &nbsp;       </h4>'+
+        '<p>Yolk sac measures mm noted. </p><p>Both ovaries normal. </p><p>No adnexal mass lesion seen.</p><p>Cervix  measures  cm. Internal os is closed. </p><p>No free fluid seen in the POD.</p><p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3>' +
+        ' <ul><li><strong>&nbsp; <b>		Single live intra uterine pregnancy of  wks  days gestational age.</b></span></strong></li><li><strong>&nbsp; <b>EDD by USG-  </b></span></strong></li></ul></h3>'+
+        '<p style="text-align: center;"><i>    Suggested NT scan around 12-13 weeks of gestation</i></p><br><br><br><br></td></tr></table>'
+
+
+
+   
+    var EARLYPREGNANCYGSAC ='<table><tr><td ><br><h3 style="text-align: center;"><u>ANTENATAL  SCAN</u> </span></u></h3><h4>LMP :   </h4><P>GA- LMP       : </P><P>EDD by LMP :      </P><p>Uterus shows mild uniform enlargement.</p>'+
+        '<p><B>Single Intrauterine gestational sac with regular borders noted with MSD of weeks days.  </B></p><p><B>No fetal pole/yolk sac at present.</B> </p><P>Both ovaries normal. </P><P>No adnexal mass lesion seen.</P><P>Cervix measures  cm. Internal os is closed. </P><P>No free fluid seen in the POD.</P><p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3>'+
+        '<ul><li><strong>&nbsp; <b>	Early intrauterine gestation. No fetal pole/yolk sac. </b></span></strong></li></ul></h3><p style="text-align: center;"><i> Suggested review scan after 2 weeks for fetal viability.</i></p><br><br><br><br> <br><br><br> <br><br><br><br> <br><br><br><br></td></tr></table>'
+    
+
+    var EARLYPREGNANCYOLKSAC ='<table><tr><td ><br><h3 style="text-align: center;"><u>ANTENATAL  SCAN</u> </span></u></h3><h4>LMP :   </h4><P>GA- LMP       : </P><P>EDD by LMP :      </P><p>Uterus shows mild uniform enlargement.</p>'+
+        '<h3>Single Intrauterine gestational sac with regular borders of MSD  mm noted. <br>'+
+        '<br>Yolk sac noted, measures mm. <br><br>No fetal pole at present.</h3> <b><p>Subchorionic heamorrhage measuring 17 x 14.4 x 1.2cm (Vol. 1.5cc)</p> </b> <P>Both ovaries normal. </P><p>Corpus luteal cyst in right ovary.</p><P>No adnexal mass lesion seen.</P><P>Cervix  measures  cm. Internal os is closed.  </P><P>No free fluid seen in the POD.</P><p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3>'+
+        '<ul><li><strong>&nbsp; <b>	Early intrauterine gestational sac with yolk sac. </b></span></strong></li></ul></h3><p style="text-align: center;"><i> Suggested review scan after 11 days for fetal viability.</i></p><br><br><br><br> <br><hr><p style="text-align: center; font-size: 13px;">Ultrasound scan findings are not 100% accurate and should be correlated clinically<br> Repeat study is suggested if clinically indicated.</p><br><br><br><br></td></tr></table>'
+
+
+    
+    //4	FOLLICULAR STUDY
+    var proc4='<table><tr><td ><br><h3 style="text-align: center;"><u>ANTENATAL  SCAN</u> </span></u></h3><h4>Day - </h4><p><strong>Uterus</strong>is anteverted, measures  cm. normal in size. </p>'+
+        '<p>Myometrium appears normal. <br><br> Endometrium measures mm. </p> <p><strong>Right ovary </strong>measures cm. </p><p><strong>  Left ovary </strong>measures cm. </p><p> No adnexal mass lesion.</p>' +
+        '<table style=" float: left; width:100%; border-collapse:collapse; border:none;"><header><tr style="text-align: center;" ><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Right ovarian Follicle</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Left ovarian Follicle</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Endometrial <br> thickness <br> (mm)</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">POD Fluid</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Remarks</td></tr>'+
+        '<tr style="height:22px ;"><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr style="height:22px ;"><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr style="height:22px ;"><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr style="height:22px ;" ><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr style="height:22px ;" ><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+        '<tr style="height:22px ;"><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr></header></table></td></tr></table>'
+
+    //10004	HIP- PEDIATRIC
+    var proc10004='<table><tr><td ><br><h3 style="text-align: center;"><u>USG HIP JOINTS </u> </span></u></h3>'+
+        '<p>Coronal sections of both hip joints studied with and without stress</p>'+
+        '<ul><li>Cartilage of femoral head on both sides show normal contour and echoes. </li>'+
+        '<li>Femoral head on both sides appears contained in acetabular fossa with normal congruence.</li>'+
+        '<li>Acetabulum appears normal on both sides.</li></ul><p><b><u>Measurements </u></b></p>'+
+        '<table style=" float: left; width:100%; border-collapse:collapse; border:none;"><tr style="text-align: center;"><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"><b>Alpha angle</b></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"><b>Beta angle</b></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"><b>d/D</b></td></tr>'+
+        '<tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Right </td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Left </td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr></table>'+
+        '<ul><li>No evidence of subluxation / dislocation of femoral head on posterolateral stress on femora. </li><li>Any joint effusion is not seen.</li></ul>'+
+        '<p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3> <ul><li><strong>&nbsp; <b>•	No evidence of DDH on both sides.</b></span></strong></li></ul></h3></td></tr></table>'
+
+
+ 
+    var KUBFEMALE='<table><tr><td ><br><h3 style="text-align: center;"><u>ULTRASOUND  KUB</u></span></u></h3>'+
+        '<p  ><strong><span >Right kidney  </span></strong><span >&nbsp;is normal in size, measures cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.</span></p>'+
+        '<p  ><strong><span >Left kidney   </span></strong><span >&nbsp;is normal in size, measures 10.4 x 4.9cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter. </span></p>'+
+        '<p><strong><span >Urinary bladder &nbsp;</span></strong><span >is distended. Lumen appear clear. Wall thickness is within normal limits.</span></p>'+
+        '<p ><strong><span >Uterus &nbsp;</span></strong><span > is anteverted, measures cm. Normal in size. Myometrium appears normal.  </span></p>'+
+        '<p  >Endometrium measures mm.</p><p ><strong><span >Right ovary :&nbsp;</span></strong><span >measures cm.  Left ovary measures cm. </span></p><p  ><span >  No adnexal mass lesion.&nbsp;</span></p>'+
+        '<p  ><span >No ascites.&nbsp;</span></p><p><strong><u><b>IMPRESSION</b></span></u></strong></p><p> <ul><li><strong>&nbsp; <b>No significant sonographically detectable abnormalities detected in the present study.</b></span></strong></li></ul></p><br><br><br>'
+    //'<hr><p style="text-align: center; font-size: 10px;">The report is only a professional opinion based on imaging findings. Kindly correlate USG observations with clinical findings</p><br><br><br><br></td></tr></table> '
+
+
+
+    //3	USG KUB male
+    var proc3='<table><tr><td ><br><h3 style="text-align: center;"><u>ULTRASOUND  KUB</u></span></u></h3>'+
+        '<p  ><strong><span >Right kidney  </span></strong><span >&nbsp;is normal in size, measures cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.</span></p>'+
+        '<p  ><strong><span >Left kidney   </span></strong><span >&nbsp;is normal in size, measures cms. Shows normal cortical echotexture with maintained CMD. No focal lesions. No obvious calculus. No hydronephrosis/dilated ureter.	</span></p>'+
+        '<p><strong><span >Urinary bladder &nbsp;</span></strong><span >is distended. Lumen appear clear. Wall thickness is within normal limits.</span></p><p ><strong><span >Prostate  &nbsp;</span></strong><span > is normal in size. Measures cc in volume.  </span></p>'+
+        '<p><strong><u><b>IMPRESSION</b></span></u></strong></p><p><ul><li><strong>&nbsp; <b>No significant sonographically detectable abnormalities detected in the present study.</b></span></strong></li></ul></p><br><br><br><br><br> <br><br><br><br> <br>'
+    //'<hr><p style="text-align: center; font-size: 10px;">The report is only a professional opinion based on imaging findings. Kindly correlate USG observations with clinical findings</p><br><br><br><br></td></tr></table>'
+
+
+    //22	NEUROSONOGRAM
+    var proc22 = '<table><tr><td ><br><h3 style="text-align: center;"><u> NEUROSONOGRAM</u> </span></u></h3><p>No focal intra axial lesions detected in the brain parenchyma.</p>'+
+        '<p>Corpus callosum appears normal.</p><p>Posterior fossa appears grossly normal.</p><p>Periventricular areas show normal sonographic appearance</p><p>Both lateral ventricles are normal.</p>'+
+        '<p>There is no abnormal extra axial fluid collection.</p><p><strong><u><b>IMPRESSION</b></span></u></strong></p>'+
+        '<h3><ul><li><strong>&nbsp; <b>Neurosonogram study is within normal limits.  </b></span></strong><i>Followup suggested. </i></li></ul></h3></td></tr></table>'
+
+    
+    
+    //6	NT SCAN
+    var proc6 ='<table><tr><td ><br><h3 style="text-align: center;"><u>FIRST TRIMESTER NT SCAN</u> </span></u></h3><h4>LMP :   </h4>'+
+        '<h4 >GA - LMP  : &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; GA - USG  :  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    </h4>'+
+        '<h4 >EDD by LMP : &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  EDD by USG :&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   </h4>'+
+        '<p>Uterus shows uniform enlargement.</p><p>Single live intrauterine gestation with good cardiac activity noted.</p>'+
+        '<ul><h4>CRL   : &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  mm    &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; wks &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;    days.      </h4>'+
+        '<h4>            FHR :    bpm.  </h4><h4>NT measures mm (thin).</h4><h4>Nasal bone visualized.</h4><h4>  Ductus venosus doppler shows no ‘a’ wave reversal.</h4><h4> No Tricuspid regurgitation.</h4></ul>'+
+        '<p>No adnexal mass lesion seen.</p><p>Cervix  measures  cm. Internal os is closed. </p><p>No free fluid seen in the POD.</p><p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3>'+
+        '<ul><li><strong>&nbsp; <b>	Single live intra uterine pregnancy of  wks  days gestational age. </b></span></strong></li></ul></h3>'+
+        '<p style="text-align: center;"><i> Suggested Double marker correlation     </i></p><br><br><br><br> <br></td></tr></table>'
+
+
+    //9	OBG GROWTH SCAN + DOPPLER
+    var proc9 = '<table><tr><td ><br><h3 style="text-align: center;"><u>OBSTETRIC  GROWTH  SCAN  WITH  DOPPLER</u> </span></u></h3>'+
+        '<p  ><strong><span >LMP : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+        '<span >EDD  BY LMP : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>'+
+        '<p><span ><b> Gest Age By LMP&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong> weeks days</b>  </p>'+
+        '<p>  <span ><b>Gest Age by USG&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>weeks days</p>      </b>    <table>'+
+        '<tr><td style="width:120px ;">Gestation</td><td style="width:60px ;">:</td><td>Single live intra uterine fetus.</td></tr>'+
+        '<tr><td style="width:120px ;">Presentation</td><td style="width:60px ;">:</td><td>Cephalic, spine to maternal ……</td></tr>'+
+        '<tr><td style="width:120px ;">Cardiac activity</td><td style="width:60px ;">:</td><td>Present. FHR - bpm</td></tr>'+
+        '<tr><td style="width:120px ;">Placenta</td><td style="width:60px ;">:</td><td></td></tr><tr><td style="width:120px ;">Liquor</td><td style="width:60px ;">:</td><td>Adequate, SDP : cm</td></tr>'+
+        '<tr><td style="width:120px ;">Cervical length (TAS)</td><td style="width:60px ;">:</td><td>Could not be assessed.</td></tr></table>'+
+        '<table style="float: left; width:100%; border-collapse:collapse; border:none;"><tr><td style=" width: 250.15pt; border: 1pt solid black;">1. Breathing movement</td><td  style=" width: 250.15pt; border: 1pt solid black;">Present</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">2. Fetal movement</td><td  style=" width: 250.15pt; border: 1pt solid black;">Present</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">3. Tone</td><td  style=" width: 250.15pt; border: 1pt solid black;">Good</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">4. AFI</td><td  style=" width: 250.15pt; border: 1pt solid black;"> &nbsp;&nbsp;&nbsp;cm. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: cm</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;"><strong>BPP</strong></td><td  style=" width: 250.15pt; border: 1pt solid black;">8/8</td></tr></table>'+
+        '<p>Anomalies : Limited visualization due to advanced gestational age.</p>' +
+        '<table style="float: left;width:100%; border-collapse:collapse;border:none; border: 1px solid black;"><h4><U>BIOMETRY</U></h4>' +
+        '<tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>BPD </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td>   </tr>'+
+        '<tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>HC </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td> </tr>'+
+        '<tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>AC </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td></tr><tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>FL </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td></tr> '+
+        '<tr> <td colspan="2">     <h4>EFW :...........    gm +/-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gms       </h4></td></tr></table><br><br>'+
+        '<h3 style="text-align: center ;">OBSTETRIC DOPPLER</h3><table style=" float: left; width:100%; border-collapse:collapse; border:none;"><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">S/D ratio</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">RI</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">PI</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Umbilical Artery</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">MCA</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr></table>'+
+        '<p>Umbilical artery Doppler within normal limits.</p><p>MCA Doppler within normal limits.</p><p>CPR normal.</p><p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3><ul><li>	Single viable intrauterine fetus in …… presentation with an average gestational age of    wks   days.</li><li>Adequate Liqour volume.</li><li>	Normal Doppler parameters.</li></ul></h3></td></tr></table>'
+
+
+
+    //8	OBG GROWTH SCAN
+    var proc8 ='<table><tr><td ><br><h3 style="text-align: center;"><u>OBSTETRIC  GROWTH  SCAN</u> </span></u></h3>'+
+        '<p  ><strong><span >LMP : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span >EDD  BY LMP : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>'+
+        '<p><span ><b> Gest Age By LMP&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong> weeks days</b>  </p><p>  <span ><b>Gest Age by USG&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>weeks days</p>      </b>    <table>'+
+        '<tr><td style="width:120px ;">Gestation</td><td style="width:60px ;">:</td><td>Single live intra uterine fetus.</td></tr><tr><td style="width:120px ;">Presentation</td><td style="width:60px ;">:</td><td>Cephalic, spine to maternal ……</td></tr>'+
+        '<tr><td style="width:120px ;">Cardiac activity</td><td style="width:60px ;">:</td><td>Present. FHR - bpm</td></tr><tr><td style="width:120px ;">Placenta</td><td style="width:60px ;">:</td><td></td></tr><tr><td style="width:120px ;">Liquor</td><td style="width:60px ;">:</td><td>Adequate, SDP : cm</td></tr>'+
+        '<tr><td style="width:120px ;">Cervical length (TAS)</td><td style="width:60px ;">:</td><td>Could not be assessed.</td></tr></table><table style="float: left; width:100%; border-collapse:collapse; border:none;"><tr><td style=" width: 250.15pt; border: 1pt solid black;">1. Breathing movement</td><td  style=" width: 250.15pt; border: 1pt solid black;">Present</td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">2. Fetal movement</td><td  style=" width: 250.15pt; border: 1pt solid black;">Present</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">3. Tone</td><td  style=" width: 250.15pt; border: 1pt solid black;">Good</td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">4. AFI</td><td  style=" width: 250.15pt; border: 1pt solid black;"> &nbsp;&nbsp;&nbsp;cm. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SDP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: cm</td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;"><strong>BPP</strong></td><td  style=" width: 250.15pt; border: 1pt solid black;">8/8</td></tr></table>'+
+        '<p>Anomalies : Limited visualization due to advanced gestational age.</p><table style="float: left;width:100%; border-collapse:collapse;border:none; border: 1px solid black;"><h4><U>BIOMETRY</U></h4><tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>BPD </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td>   </tr><tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>HC </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td> </tr>'+
+        '<tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>AC </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td></tr>'+
+        '<tr><td style="  width: 250.15pt; border: 1pt solid black;">    <h4>FL </h4></td><td style="  width: 250.15pt; border: 1pt solid black;">     </td><td style="  width: 250.15pt; border: 1pt solid black;">      </td></tr> <tr> <td colspan="2">     <h4>EFW :...........    gm +/-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gms       </h4></td></tr></table><br><br><p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3><ul><li>	Single viable intrauterine fetus in …… presentation with an average gestational age of    wks   days.</li>'
+
+
+    //2	USG PELVIS
+    var proc2 ='<table><tr><td ><br><h3 style="text-align: center;"><u>ULTRASOUND  PELVIS</u> </span></u></h3><p><strong>Uterus </strong>is anteverted, normal in size and measures cm. </p>'+
+        '<p>Myometrium appears normal. </p><p>Endometrium measures mm.</p><p><strong>Right ovary </strong>measures cm.  </p><p><strong>Left  ovary </strong>measures cm.  </p><p>No adnexal mass lesion.</p><p>No ascites. </p>'+
+        '<p><strong><u><b>IMPRESSION</b></span></u></strong></p><h3> <ul> <li><strong>&nbsp; <b>	No significant sonographically detectable abnormalities detected in the present study.</b></span></strong></li></ul></h3>'+
+        '<br><br><br> <br><br><br><hr>        <p style="text-align: center; font-size: 10px;">The report is only a professional opinion based on imaging findings. Kindly correlate USG observations with clinical findings</p><br><br></td></tr></table>'
+            
+            
+    //29	USG SCROTUM
+
+    var proc29 ='<table><tr><td ><br><h3 style="text-align: center;">ULTRASOUND AND COLOUR DOPPLER OF SCROTUM</span></u></h3>'+
+        '<ul><p  >Right testis measures </p><p  >Left testis measures </p><p  >Grey scale imaging of scrotum shows normal size and homogenous medium level <br> echoes of both testes and epididymi.</p>'+
+        '<p >Colour Doppler shows normal flow in both testes and epididymi.</p><p  >There is no mass lesion in both testes and epididymis.</p>'+
+        '<p  >There is no abnormal fluid collection in both tunica vaginalis sacs. </p><p  >No obvious abnormality of cord structures.</p>'+
+        '<p  >No significant varicocele.</p></ul><br><br><p><strong><u><b>CONCLUSION :</b></span></u></strong></p><p> <ul>'+
+        '<li><strong>&nbsp; <b>Normal study of scrotum.  </b></span></strong></li></ul></p><br><br><br></td></tr></table>'
+
+    //         17	VENOUS DOPPLER BILATERAL
+    var proc17 = '<table><tr><td ><br><h3 style="text-align: center;"><u>BILATERAL LOWER LIMB VENOUS DOPPLER</u> </span></u></h3>'+          
+             '<table style=" text-align: center; float: left; width:100%; border-collapse:collapse; border:none;" ><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">RIGHT</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">LEFT</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">DVT</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Absent</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Absent</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SFJ</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+          
+             '<tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">GSV</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm in mid thigh</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm in mid thigh</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SPJ</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SSV</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm </td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">PERFORATORS<br>(PROMINENT/ INCOMPETENT)</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+             '<tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SUPERFICIAL <br> VARICOSITIES</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">OTHER SIGNIFICANT FINDINGS</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"> NIL</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"> NIL</td></tr></table></td></tr></table>'     
+
+    
+
+    //16	VENOUS DOPPLER UNILATERAL
+    var proc16 = '<table><tr><td ><br><h3 style="text-align: center;"><u><span style="color: red;">RIGHT/LEFT</span> LOWER LIMB VENOUS DOPPLER</u> </span></u></h3>'+          
+             '<table style=" text-align: center; float: left; width:100%; border-collapse:collapse; border:none;" ><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">RIGHT</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">LEFT</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">DVT</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Absent</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Absent</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SFJ</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+          
+             '<tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">GSV</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm in mid thigh</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm in mid thigh</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SPJ</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SSV</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm </td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">Measures mm</td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">PERFORATORS<br>(PROMINENT/ INCOMPETENT)</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr>'+
+             '<tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">SUPERFICIAL <br> VARICOSITIES</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"></td></tr><tr><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;">OTHER SIGNIFICANT FINDINGS</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"> NIL</td><td colspan="2" style=" width: 250.15pt; border: 1pt solid black;"> NIL</td></tr></table></td></tr></table>'     
+
+
+    //usg orbit
+    var orbits='<table><tr><td ><br><h3 style="text-align: center;">USG ORBITS</span></u></h3><br><ul><li style="list-style-type: none;">Anterior chamber appears normal.</li><br><li style="list-style-type:none;">Lens appears normal.</li><br>'+
+        '<li style="list-style-type:none;">Vitreous chamber appear clear.</li> <br><li style="list-style-type:none;">Optic nerve head seen normally. No evidence of calcification / mass lesion. </li> <br><li style="list-style-type:none;">No evidence of retinal / choroidal detachment.</li> <br></ul><p><strong><u><b>IMPRESSION</b></span></u></strong></p>'+
+        '<p> <ul><li>&nbsp;No significant abnormalities detected in the present study.</li></ul></p><br><br><br></td></tr></table>'
+
+
+    //13	RENAL DOPPLER
+    var proc13='<table><tr><td><br><h3 style="text-align: center;">RENAL DOPPLER</span></u></h3>'+
+        '<p  >Clinical Data provided:-  <strong><span >&nbsp;To r/o significant renal artery stenosis. </span></strong><span ></span></p><p><strong><u>Observations </u></strong></p>'+
+        '<ul style="list-style-type: none;">Right kidney measures cm. Parenchymal thickness is  cm. <br>Left kidney measures cm. Parenchymal thickness is  cm.<br>Both kidneys show normal cortical echotexture with well-maintained corticomedullary differentiation. No evidence of hydronephrosis, calculi or focal lesions.<br>Aorta is normal in calibre. The flow and spectral tracing are normal. <br>Doppler flow and the spectral pattern of both main renal arteries are normal. <br>Intra renal segmental arteries show normal flow and spectral pattern.</ul>'+
+        '<table style="width: 70%;float: left; width:100%; border-collapse:collapse; border:none;" ><tr><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td colspan="3"style=" width: 250.15pt; border: 1pt solid black;text-align:center;">RIGHT</td><td colspan="3"style=" width: 250.15pt; border: 1pt solid black;text-align:center;">LEFT</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp;&nbsp;&nbsp;</td><td style="text-align:center; width: 250.15pt; border: 1pt solid black;"">V max <br>(cm/sec)</td><td style=" width: 250.15pt; border: 1pt solid black;">V min<br>(cm/sec)</td><td style=" width: 250.15pt; border: 1pt solid black;">RI</td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;">V max <br>(cm/sec)</td><td style=" width: 250.15pt; border: 1pt solid black;">V min<br>(cm/sec)</td><td style=" width: 250.15pt; border: 1pt solid black;">RI</td></tr>'+
+        '<tr><td style=" width: 250.15pt; border: 1pt solid black;">Renal artery at hilum</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;"> Upper Polar segmental artery </td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Lower polar segmental artery </td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td></tr><tr><td style=" width: 250.15pt; border: 1pt solid black;">Mid pole segmental artery. </td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td>'+
+        '<td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td><td style=" width: 250.15pt; border: 1pt solid black;">&nbsp</td></tr></table><p><strong><u><b>IMPRESSION :</b></span></u></strong></p><p> <ul><li><strong>&nbsp; <b>Doppler study of renal arteries is within normal limits.</b></span></strong></li></ul></p><br><br><br></td></tr></table>'
+
+    //30	TRUS
+    var proc30='<table><br><tr><td ><h3 style="text-align: center; width: 100%;">TRANSRECTAL ULTRASOUND</span></u></h3>'+
+        '<ul> Prostatic parenchyma shows no obvious focal lesions  <br>Peripheral and central zones of prostate appeared normal.   <br>'+
+        'Capsule appear intact.    <br>   Both seminal vesicles and ejaculatory ducts are normal. <br>'+ 
+        'Rectum appeared normal.       </ul><p><strong><u><b>IMPRESSION</b></span></u></strong></p><p><ul>   &nbsp;No evidence of prostatitis/prostatic abcess in the present study   </ul></p></td></tr></table>'   
+
+
+
+
+
+    var footer ='<div style="text-align: right;"> &nbsp;DR. JOMON SUNNY MDRD <br>CONSULTANT  RADIOLOGIST</div>'
+            
+
+
+
+    var header = ''
+
+
+    function Saanststusupdate(Ststus) {
+
+        if (RECID == 0) {
+            alert('Try again')
+        }
+        else {
+            var data = {};
+            data.RevId = RECID;
+            data.Flag = Ststus;
+            $.ajax({
+                url: '../Revisit/ScanStatusUpdate',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    formrefresh(0);
+                    swal('Casesheet  Updated', "", "success");
+                    $('.swal-button swal-button--confirm').focus();
+                }
+            });
+        }
+    }
+
+    function formrefresh() {
+        PopUpClose(1);
+        $('#btnrefresh').click();
+    }
+
+
+    function htmltowordconvert() {
+
+    }
+
+    function PopUpClose(Flag) {
+        if (Flag == 1)
+            $("#TaxSpliPopup").modal("hide");
+        else if (Flag == 2)
+            $("#TempPurchasePopup").modal("hide");
+        else if (Flag == 3)
+            $("#PurchaseView").modal("hide");
+        else if (Flag == 4)
+            $("#productpdiv").modal("hide");
+        else if (Flag == 5)
+            $("#PurchaseTransactionPopup").modal("hide");
+        else if (Flag == 6)
+            $("#PurchaseDocument").modal("hide");
+    }
+
+
+    var colorArray = ['#33ccff', '#ff66cc', '#ff9966', '#FFFF99', '#00B3E6',
+		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D'];
+    $(function () {
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('.dedate').val(CurDate);
+
+        GetList(CurDate, CurDate, 0, 0);
+
+        $("#btnsearch").click(function (e) {
+            GetList($('#FromDate').val(), $('#ToDate').val(), $("#DoctorId").val(), $("#PatientId").val());
+        });
+        $("#btnrefresh").click(function (e) {
+            $('.dedate').val(CurDate);
+            $('.denull').val('');
+            $('.dezero').val(0);
+
+            GetList(CurDate, CurDate, 0, 0);
+        });
+
+        //$("#tbl_WorkSheet").on('touchstart mousedown', function (e) {
+
+        //    if (e.button == 2) {
+        //        var o = {
+        //            left: e.pageX,
+        //            top: e.pageY
+        //        };
+        //        $("#divContainerNew").offset(o);
+        //    }
+        //});
+    });
+
+    $("#RegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#PatientId").val(0);
+            var data = {};
+            data.PatientName = $("#RegNo").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#PatientId").val(ui.item.PatientId);
+            $("#btnsearch").focus();
+        },
+
+    });
+    $("#Doctor").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val(0);
+            var data = {};
+            data.DoctorName = $("#Doctor").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_WorkSheetDoctorSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DoctorName,
+                            label1: item.Status,
+                            DoctorId: item.DoctorId,
+                            headers: ["Doctor", "Department"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#DoctorId").val(ui.item.DoctorId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    $("#btnsearch").focus(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-primary");
+    });
+
+    $("#btnsearch").focusout(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-outline-primary");
+    });
+
+    function GetList(FromDate, ToDate, Doctor, Patient) {
+        var data = {};
+        data.FromDate = FromDate;
+        data.ToDate = ToDate;
+        data.DoctorId = Doctor;
+        data.PatientId = Patient;
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_OPWorkSheetScan",
+            data: data,
+            success: function (result) {
+
+                LoadList(result);
+            }
+        });
+    }
+
+    var senderMObile='';
+
+    function LoadList(result) {
+
+
+        var ST = result[0].BloodGroup
+        const MYP = ST.split("#");
+
+
+        $('#T0').text('Total-' + MYP[0]);
+        $('#T1').text('Done-' + MYP[1]);
+        $('#T2').text('Pending-' + MYP[2]);
+        $('#T3').text('Waiting-' + MYP[3]);
+
+
+
+        disable_datatable('tbl_WorkSheet');
+        var responseText = "<thead><tr>" +
+            "<th style='align=center'>Sl#</th>" +
+            "<th>Reg#</th>" +
+            "<th>Date</th>" +
+            "<th>Patient</th>" +
+            "<th>Scan Part</th>" +
+            "<th>Token</th>" +
+            "<th>Status</th>" +
+            "</tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+
+            var Status = ''
+
+            if (result[i].ShiftName == '0') {
+                 Status = '<span class="badge badge-warning white">Waiting</span>';
+            }
+            else  if (result[i].ShiftName == '1') {
+                Status = '<span class="badge badge-success white">Done</span>';
+            }
+            else  if (result[i].ShiftName == '-1') {
+                Status = '<span class="badge badge-purple white">Pending</span>';
+            }
+            var Style = '';
+            //if (result[i].CSFlag != 0) {
+            //    Style = 'background-color:green;color:white;';
+            //}
+
+            var slno = parseInt(i + 1);
+            responseText += '<tr  onmousedown="WhichButton(event,' + slno + ')" oncontextmenu="return false" onclick=GetCaseSheet(' + result[i].RevId + ') style="'+Style+'">' +
+                '<td align=center>'+ slno +
+                '<input type="hidden" id="OPVisitId_' + slno + '" value="' + result[i].RevisitId + '" />' +
+                '<input type="hidden" id="OPSerName_' + slno + '" value="' + result[i].OPSerName + '" />' +
+                '<input type="hidden" id="OPNumber_' + slno + '" value="' + result[i].OPNumber + '" />' +
+                '<input type="hidden" id="PatientId_' + slno + '" value="' + result[i].PatientId + '" />' +
+                '<input type="hidden" id="DOB_' + slno + '" value="' + result[i].DOB + '" />' +
+                '<input type="hidden" id="BloodGroup_' + slno + '" value="' + result[i].BloodGroup + '" />' +
+                '<input type="hidden" id="PatientName_' + slno + '" value="' + result[i].PatientName + '" />' +
+                '<input type="hidden" id="Gender_' + slno + '" value="' + result[i].Gender + '" />' +
+                '<input type="hidden" id="IPNumber_' + slno + '" value="' + result[i].IPNumber + '" />' +                '</td>' +
+                '<td  style="background-color: #ff3399">' + result[i].OPNumber + '</td>' +
+                '<td>' + result[i].RevisitDate + '</td>' +
+                '<td>' + result[i].PatientName +'</td>' +
+                '<td>' + result[i].DoctorName + '</td>' +
+                '<td align=center style="color:red;font-weight:bold">' + result[i].TokenNumber + '</td>' +
+                '<td align=center>' + Status + '</td>' +
+                '</tr>';
+        }
+        $('#tbl_WorkSheet').html(responseText + "</tbody>");
+        var title = 'OP WorkSheet From ' + $("#FromDate").val() + ' To ' + $("#ToDate").val();
+        datatableWithsearch('tbl_WorkSheet', true, title, 'itemListButtonPlace');
+    }
+
+    function GetCaseSheet(PatientId)
+    {
+        $("#TaxSpliPopup").modal("show");
+        $("#TaxSpliPopup").appendTo("body");
+
+        GetLastRevisitDetails(PatientId);
+        @*var PatientId = PatientId;
+        sessionStorage.setItem("PatientId", PatientId);
+        window.location = "@Url.Action("CaseSheet", "Hospital", new { from = "OPWorkSheet_D" })";*@
+    }
+
+
+
+    function GetLastRevisitDetails(PatientId) {
+    
+        RECID = PatientId;
+        var data = {};                                       //dropdownbind
+        data.PatientId = PatientId;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_LAstRevisitGetsscan",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    GetPatientData(result.oList, 0);
+                }
+            }
+        });
+    }
+
+
+    function GetPatientData(result) {
+
+
+        const Data = (result[0].Occupation).split("#");
+
+
+        senderMObile = Data[3]
+       // $('#printpinfo').html('')
+        $('#patifotbl').html('')
+        var A = '<tr><td>MRNO#</td><td>' + result[0].OPNumber + '/' + (result[0].RegDate).substring(8) + '</td><td>Date</td><td>' + result[0].RegDate + '</td></tr><tr><td>Name</td><td colspan=3>' + result[0].PatientName + '</td></tr>' +
+            ' < tr ><td>Gender</td><td>' + result[0].Gender + '</td><td>Age </td><td>' + result[0].Age + '</td></tr>' +
+            '<tr><td>Scan</td><td>' + Data[1] + '</td><td>Ref</td><td>' + Data[2] + '</td></tr><tr></tr>'
+        $('#patifotbl').append(A);
+       // $('#printpinfo').append(A)
+
+        $('#htmlname').text(result[0].PatientName)
+        $('#htmlgender').text(result[0].Gender)
+        $('#htmldname').text();
+        $('#htmldate').text(result[0].RegDate);
+
+
+
+        header = '<br><table style=" float: left; width:100%; border-collapse:collapse; border:none;"> <tr ><td align=center colspan="2" style=" width: 250.15pt; border: 1pt solid black;padding: 10px 0;"><h4>Patient Name  :' + result[0].PatientName + '</h4> </td>'+
+            '<td align=center style=" width: 250.15pt; border: 1pt solid black;padding: 10px 0;"><h4>Age/Gender :  &nbsp;&nbsp;&nbsp;&nbsp;' + result[0].Age + '/' + result[0].Gender + '</h4></td></tr><tr><td align=center colspan="1" style=" width: 250.15pt; border: 1pt solid black;"><h4>Reg. No: ' + result[0].OPNumber + '/' + (result[0].RegDate).substring(8) + '</h4></td>' +
+            '<td colspan="1" align=center style=" width: 250.15pt; border: 1pt solid black;"><h4>Ref Doctor:' + Data[2] + '</span></h4></td><td align=center style=" width: 250.15pt; border: 1pt solid black;"><h4>Date : ' + result[0].RegDate + '</span></h4></td></tr></table>'
+
+        CLINTFILENAME = result[0].PatientName + '(' + Data[1] + ')'
+
+        procedurepartappend(Data[0]);
+
+       
+    }
+
+
+    function procedurepartappend(ProcId)
+    {
+
+             if (ProcId == 1) { PNAME = proc1 }
+             else if (ProcId == 2) { PNAME = proc2 }
+             else if (ProcId == 3) { PNAME = proc3 }
+             else if (ProcId == 4) { PNAME = proc4 }
+             else if (ProcId == 5) { PNAME = proc5 }
+             else if (ProcId == 6) { PNAME = proc6 }
+             else if (ProcId == 7) { PNAME = proc7 }
+             else if (ProcId == 8) { PNAME = proc8 }
+             else if (ProcId == 9) { PNAME = proc9 }
+             else if (ProcId == 10) { PNAME = proc10 }
+             else if (ProcId == 11) { PNAME = proc11 }
+             else if (ProcId == 12) { PNAME = proc12 }
+             else if (ProcId == 13) { PNAME = proc13 }
+             else if (ProcId == 14) { PNAME = proc14 }
+             else if (ProcId == 15) { PNAME = proc15 }
+             else if (ProcId == 16) { PNAME = proc16 }
+             else if (ProcId == 17) { PNAME = proc17 }
+             else if (ProcId == 18) { PNAME = proc18 }
+             else if (ProcId == 19) { PNAME = proc19 }
+             else if (ProcId == 20) { PNAME = proc20 }
+             else if (ProcId == 21) { PNAME = proc21 }
+             else if (ProcId == 22) { PNAME = proc22 }
+             else if (ProcId == 23) { PNAME = proc23 }
+             else if (ProcId == 24) { PNAME = proc24 }
+             else if (ProcId == 25) { PNAME = proc25 }
+             else if (ProcId == 26) { PNAME = proc26 }
+             else if (ProcId == 27) { PNAME = proc27 }
+             else if (ProcId == 28) { PNAME = proc28 }
+             else if (ProcId == 29) { PNAME = proc29 }
+             else if (ProcId == 30) { PNAME = proc30 }
+             else if (ProcId == 31) { PNAME = proc31 }
+             else if (ProcId == 10002) { PNAME = proc10002 }
+             else if (ProcId == 10003) { PNAME = proc10003 }
+             else if (ProcId == 10004) { PNAME = proc10004 }  
+
+    }
+
+   
+
+
+    function WhichButton(e, Id) {
+        //if (e.button == 2)  //Right Click
+        //{
+        //    $("#divContainerNew").slideDown(500);
+        //    $("#CurrentselectedId").val(Id);
+        //}
+    }
+
+    function RedirectTo(Flag) {
+        if ($("#CurrentselectedId").val() != 0) {
+            var Id = $("#CurrentselectedId").val();
+
+            if (Flag == 1) //Case Sheet
+            {
+                //window.open('../Revisit/LabBill?from=SOPWorkSheet', '_blank');
+            }
+            else if (Flag == 2)    //Lab Result
+            {
+                sessionStorage.setItem("SOP_OV", $("#OPVisitId_"+Id).val());
+                sessionStorage.setItem("SOP_RS", $("#OPSerName_"+Id).val());
+                sessionStorage.setItem("SOP_RN", $("#OPNumber_"+Id).val());
+                sessionStorage.setItem("SOP_PI", $("#PatientId_"+Id).val());
+                sessionStorage.setItem("SOP_DO", $("#DOB_"+Id).val());
+                sessionStorage.setItem("SOP_BG", $("#BloodGroup_"+Id).val());
+                sessionStorage.setItem("SOP_PN", $("#PatientName_"+Id).val());
+                sessionStorage.setItem("SOP_GE", $("#Gender_" + Id).val());
+                sessionStorage.setItem("SOP_IP", $("#IPNumber_" + Id).val());
+
+
+                window.open('../Revisit/LabResult?from=SOPWorkSheet', '_blank');
+            }
+        }
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                "pageLength": 100,
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                "columnDefs": [
+                                       { "width": "1%", "targets": 0 },
+                                       { "width": "2%", "targets": 1 },
+                                       { "width": "2%", "targets": 2 },
+                                       { "width": "20%", "targets": 3 },
+                                       { "width": "20%", "targets": 4 },
+                                       { "width": "1%", "targets": 5 },
+                                       { "width": "2%", "targets": 6 },
+
+                ],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        }
+        else {
+            table = $('#' + tablename).DataTable({
+            });
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+</script>

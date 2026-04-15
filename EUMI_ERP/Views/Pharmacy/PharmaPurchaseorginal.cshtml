@@ -1,0 +1,1237 @@
+﻿
+@{
+    ViewBag.Title = "PharmaPurchase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="~/ProjectScript/PharmaPurchase.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<style>
+    .FormHeaderColour {
+        background-color: #009da0 !important;
+    }
+
+    .FormHeader {
+        height: 70px;
+    }
+
+    .MainBodyHead {
+        background-color: #E0F3F4;
+    }
+
+    .label-control {
+        font-weight: bold;
+    }
+
+    hr {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .smallTextbox1
+    {
+         height: 34px !important;
+    }
+    .smallTextbox {
+        height: 34px !important;
+    }
+
+    .borderno {
+        border: hidden !important;
+    }
+
+    #Tbl_Purchase tr td, #tblOtherCost tr td, #tbltaxsplit tr td, #tbltaxsplit tr th, #TBL_TempPurchaseList tr td ,.taxsplittb tr td, .taxsplittb tr th {
+        border: 1px solid #9faec3 !important;
+    }
+
+
+    .modal-xl {
+        max-width: 90%;
+    }
+
+    .modal-sxl {
+        max-width: 80%;
+    }
+
+    .modal-slg {
+        max-width: 60%;
+    }
+
+    #customView, #OtherCostView, #TempPurchase {
+        border: 1px solid #CCD6E6;
+    }
+
+    .bordertable {
+        border: 2px solid #CCD6E6;
+    }
+
+    .modalProduct {
+        position: absolute;
+        top: 55px;
+    }
+      .txtbl{
+     color:royalblue !important;
+     font-weight:500!important;
+     /*font-size:x-large!important;*/
+     }
+</style>
+<div class="myData" data-x="M347" />
+
+<div style="display:none">
+
+    <input type="text" id="GridLength" value="0" class="dezero">
+    <input type="text" id="CostGridLength" value="0" class="dezero">
+    <input type="text" id="BInvoiceTotal" class="dezero" value="0">
+    <input type="text" id="JobId" class="dezero" value="0">
+
+    <input type="text" id="BaseAmount" class="dezero" value="0">
+    <input type="text" id="FCAmount" class="dezero" value="0">
+    <input type="text" id="BaseTaxable" class="dezero" value="0">
+    <input type="text" id="BaseTax" class="dezero" value="0">
+
+    <input type="text" id="BaseDiscount" class="dezero" value="0">
+
+    <input type="text" id="HiddenGrandTotal" class="dezero" value="0">
+    <input type="text" id="HiddenTaxable" class="dezero" value="0">
+    <input type="text" id="HiddenTax" class="dezero" value="0">
+    <input type="text" id="TempSlNo" class="dezero" value="0">
+</div>
+<div id="Entry" style="width:100%;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header FormHeaderColour FormHeader">
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <h4 class="card-title mb-0 col-md-10" style="float:left;color:white;font-size:xx-large;">Purchase Invoice</h4>
+                            <div class="col-md-2 text-right">
+                                <div class="row  text-right">
+
+                                    <i class="ft-calendar" style="font-weight:normal;font-size:xx-large;color:white;"></i>
+                                    <input type="text" id="PharmaPIDate" style="width:150%;background-color:#009da0;border:none;color:white;font-size:xx-large" onfocus="FocusDate(this)" onkeydown="DateKeyDown(event,this)" class="form-control FormHeaderColour input-lg col-md-10 dedisa" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr />
+                                    <div class="MainBodyHead">
+
+                                        <div class="col-md-12 pt-1">
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <div class="row mb-1">
+                                                        <label class="label-control col-lg-1">Invoice#<span class="danger">*</span></label>
+                                                        <div class="col-md-1">
+                                                            <input type="text" class="form-control smallTextbox dedisa" id="PINo_A" disabled>
+                                                        </div>
+                                                        @*=====div for page load======*@
+                                                        <div class="col-md-3" id="purchaseinv">
+                                                            <div class="input-group m-0">
+                                                                <input type="text" class="form-control smallTextbox denull" id="PINo_S" onkeyup="SearchSupplierInvoice()">
+                                                                <div class="input-group-append">
+                                                                    <button type="button" id="btnlist" class="btn btn-outline-primary smallTextbox"><i class="ft-search"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*============================*@
+
+                                                        @*===div for copy===*@
+                                                        <div class="col-md-3" id="copypurchase" style="display:none;position:inherit;">
+                                                            <div class="input-group m-0">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-btn" title="Previous">
+                                                                        <button type="button" id="btnprvs" onclick="GetBillPrevousornext(-1)" class="btn smallTextbox btn-outline-primary"><i class="ft-chevron-left"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                                <input type="text" class="form-control smallTextbox denull" id="PINo_C" placeholder="Search Invoice">
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-btn" title="Next">
+                                                                        <button type="button" id="btnnxt" onclick="GetBillPrevousornext(1)" class="btn smallTextbox btn-outline-primary"> <i class="ft-chevron-right"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*=================*@
+                                                        <label class="label-control col-lg-1 text-lg-right" style="font-weight:bold">Location<span class="danger">*</span></label>
+                                                        <div class="col-md-2 ">
+                                                            <select id="Location" class="form-control smallTextbox"></select>
+                                                        </div>
+                                                        <label class="label-control col-lg-1 text-lg-right">PR. Type<span class="danger">*</span></label>
+                                                        <div class="col-md-2">
+                                                            <select id="PRType" name="priority" class="form-control smallTextbox" onchange="CalcAmt(), ResetBillDiscount();">
+
+                                                                <option value="Local">Local</option>
+                                                                <option value="Import">Import</option>
+
+                                                            </select>
+                                                            <input type="hidden" id="ImpTax" />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-1">
+                                                        <label class="label-control col-lg-1" style="font-weight:bold">Supplier<span class="danger">*</span></label>
+
+                                                        <div class="col-md-4 ">
+                                                            <input type="text" id="Supplier" class="form-control smallTextbox denull">
+
+                                                        </div>
+                                                        <input type="hidden" id="SupplierId" class="form-control dezero" value="0" />
+
+                                                        <label class="label-control col-lg-1 text-lg-right">Pay Type<span class="danger">*</span></label>
+                                                        <div class="col-md-2">
+                                                            <select id="PayType" name="priority" class="form-control smallTextbox">
+
+                                                                <option value="2">Credit</option>
+                                                                <option value="1">Cash</option>
+
+                                                            </select>
+                                                        </div>
+
+                                                        <label class="col-lg-1 text-lg-right" style="font-weight:bold">Inv. Total</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" id="FCInvoiceTotal" value="0.00" class="form-control smallTextbox dediszero" onkeypress="isNumber(event, this)" onkeyup="CalcInvoice()">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <h1 class="text-center m-0 p-1 detextdiszero" id="FCTextTotal" style="color:red;font-weight:500">0.00</h1>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="display:none;">
+                                                        <div class="col-md-12">
+                                                            <h2 class="text-right m-0 detextnull" id="BaseTextTotal" style="color:red;font-weight:500"></h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="px-2">
+                                        <div class="row">
+                                            <div id="popupdesc" style="display:none" onclick="$('#popupdesc').fadeOut()">
+                                                <div id="toast-container" class="toast-container toast-middle-left" style="">
+                                                    <div class="toast bg-deep-orange mb-5" aria-live="assertive" style="width:110%">
+                                                        <div class="toast-message">LPCost : <span id="descpopup"></span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row mb-1 px-2">
+
+                                                    <table border="0" width="100%">
+                                                        <tr>
+                                                            <td class="pr-1">
+                                                                <label class="label-control">Product<span class="danger">*</span></label>
+                                                                <input type="text" id="Product_0" class="form-control smallTextbox denull" name="NoEnterFlow">
+                                                                <input type="hidden" id="Cess_0" class="form-control smallTextbox dezero" value="0">
+                                                                <input type="hidden" id="ProductId_0" class="form-control dezero" />
+                                                                <input type="hidden" id="ProductDesc_0" class="form-control denull" />
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+                                                                <label class="label-control">Batch<span class="danger">*</span></label>
+                                                                <input type="text" id="Batch_0" class="form-control smallTextbox1 denull" onkeydown="FocusNext(event, 'Product_0', 'Batch_0', 'Expiry_0', '', '')"  name="NoEnterFlow">
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Expiry<span class="danger">*</span></label>
+                                                                <input type="text" id="Expiry_0" class="form-control smallTextbox1 denull" onkeypress="isNumberDate(event, this)" onkeyup="ExpiryDate('Expiry_0')" onkeydown="FocusNext(event, 'Batch_0', 'Expiry_0', 'Pack_0', '', '')"  name="NoEnterFlow">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+
+                                                                <label class="label-control">Pack<span class="danger">*</span></label>
+                                                                <input type="text" id="Pack_0" class="form-control smallTextbox1 denull" onkeypress="isNumberInt(event, this)" onkeyup="CalcDiscRow(0, 0,0)" onkeydown="FocusNext(event, 'Expiry_0', 'Pack_0', 'Qty_0', '', '')"  name="NoEnterFlow">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Quantity<span class="danger">*</span></label>
+                                                                <input type="text" id="Qty_0" class="form-control smallTextbox1 denull" onkeypress="isNumberInt(event, this)" onkeyup="CalcDiscRow(0, 0,0)" onkeydown="FocusNext(event, 'Pack_0', 'Qty_0', 'Rate_0', '', '')"  name="NoEnterFlow">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Free<span class="danger"></span></label>
+                                                                <input type="text" id="Free_0" class="form-control smallTextbox1 denull" onkeypress="isNumberInt(event, this)" onkeyup="CalcDiscRow(0, 0,0)" onkeydown="FocusNext(event, 'Qty_0', 'Free_0', 'Loose_0', '', '')">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Loose<span class="danger"></span></label>
+                                                                <input type="text" id="Loose_0" class="form-control smallTextbox1 denull" onkeypress="isNumberInt(event, this)" onkeyup="CalcDiscRow(0, 0,0)" onkeydown="FocusNext(event, 'Free_0', 'Loose_0', 'Rate_0', '', '')">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Pur. Rate<span class="danger">*</span></label>
+                                                                <input type="text" id="Rate_0" class="form-control smallTextbox1 denull" onkeypress="isNumber(event, this)" onkeyup="CalcAmount(0),CalcDiscRow(0, 0, 0)" onkeydown="FocusNext(event, 'Qty_0', 'Rate_0', 'Discount_0', '', '')" >
+
+                                                            </td>
+              
+                                                            <td class="pr-1" width="130">
+
+                                                                <label class="label-control">Tax<span class="danger">*</span></label>
+                                                                <select type="text" id="TaxId_0" class="form-control smallTextbox1 dezero" onkeydown="FocusNext(event, 'Rate_0', 'TaxId_0', 'DiscountPer_0', '', '')"></select>
+                                                                <input type="hidden" id="TaxRate_0" value="0" />
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Disc (%)<span class="danger"></span></label>
+                                                                <input type="text" id="DiscountPer_0" class="form-control smallTextbox1 denull" onkeypress="isNumber(event, this)" onkeyup="CalcDiscRow(0, 1,0)" onkeydown="FocusNext(event, 'TaxId_0', 'DiscountPer_0', 'MRP_0', '', '')">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Disc Amt<span class="danger"></span></label>
+                                                                <input type="text" id="Discount_0" class="form-control smallTextbox1 denull" onkeypress="isNumber(event, this)" onkeyup="CalcDiscRow(0, 0,0)" onkeydown="FocusNext(event, 'DiscountPer_0', 'Discount_0', 'MRP_0', '', '')">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+
+                                                                <label class="label-control">MRP<span class="danger">*</span></label>
+                                                                <input type="text" id="MRP_0" class="form-control smallTextbox1 denull" onkeypress="isNumber(event, this)" onkeydown="FocusNext(event, 'Discount_0', 'MRP_0', 'SR_0', '', '')">
+
+                                                            </td>
+
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Margin(%)</label>
+                                                                <input type="text" id="Margin_0" class="form-control smallTextbox1 denull" onkeypress="isNumber(event, this)" onkeyup="CalcSellingPriceWithMargin(0)" keydown="FocusNext(event, 'Rate_0', 'Margin_0', 'SR_0', '', '')" name="NoEnterFlow">
+
+                                                            </td>
+                                                            <td class="pr-1" width="110">
+
+                                                                <label class="label-control">Sell. Rate<span class="danger">*</span></label>
+                                                                <input type="text" id="SR_0" class="form-control smallTextbox1 denull" onkeyup="ChangeSellRate(event)" onkeypress="isNumber(event, this)" onkeydown="CalcAmount(0),FocusNext(event, 'MRP_0', 'SR_0', 'MRP_0', '', '')"  name="NoEnterFlow">
+
+                                                            </td>
+                                                           
+                                                            <td width="50">
+                                                                <label class="label-control">ADD</label>
+                                                                <button type="button" class="btn smallTextbox btn-warning m-0 btndis" id="btnadd" onkeydown="FocusNext(event, 'MRP_0', 'btnadd', '', '', '')"><i class="fa fa-1x fa-plus"></i></button>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="col-md-1" style="display:none">
+
+                                                        <label class="label-control">Distributer Rate<span class="danger">*</span></label>
+                                                        <input type="text" id="DR_0" class="form-control smallTextbox denull">
+                                                        <label class="label-control">Location<span class="danger">*</span></label>
+                                                        <select id="Locn_0" class="form-control smallTextbox dezero"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="px-2">
+                                    <div id="customView" class="jsgrid" style="position: relative; height: 426px; width: 100%;overflow-x: auto;overflow-y:hidden ">
+                                        <div class="jsgrid-grid-header" style="width:200%;">
+                                            <table class="jsgrid-table" style="width:100%;">
+                                                <tr class="jsgrid-header-row">
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:2%"><i class="icon-trash"></i></th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:3%">SL#</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:13%">Name</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Batch</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Expiry</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Pack</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Qty</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Free</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Loose</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Rate</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Tax</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%;">Dis (%)</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%;">Discount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Sell. Rate</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">MRP</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">TQty</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">TLQty</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Taxable</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Tax Amt</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Amount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Margin %</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Cess</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">Other Cost</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%;display:none">None</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 360px; width:200%;">
+                                            <table class="jsgrid-table" id="Tbl_Purchase"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-2">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <table style="width:100%">
+                                                    <tr>
+                                                        <td class="p-0" width="20%" valign="top">
+                                                            <textarea id="txtnotes" style="height:100%;border:none;resize:none;" rows="1" class="form-control denull" placeholder="Remarks"></textarea>
+
+                                                        </td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;">
+                                                            <b>Discount</b>
+                                                            <div class="custom-control custom-checkbox" style="float:right;">
+                                                                <input type="checkbox" class="custom-control-input" id="DiscFromGrandTotal" onchange="CalcDiscountSplitTax()" autocomplete="off" disabled>
+                                                                <label class="custom-control-label" for="DiscFromGrandTotal"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;"><b>Discount%</b></td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;"><b>Tot. Discount</b></td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;"><b>Total Taxable</b></td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;"><b>Total Tax</b></td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;">
+                                                            <b>Cess</b>
+                                                            <div class="custom-control custom-checkbox" style="float:right;">
+                                                                <input type="checkbox" class="custom-control-input" id="CessCheck" onchange="CalcAmt(), ResetBillDiscount();" autocomplete="off">
+                                                                <label class="custom-control-label" for="CessCheck"></label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="bordertable" width="8%" valign="middle" style="text-align:center;font-weight:500;"><b>OtherCost</b></td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="top">
+                                                            <span class="btn p-0" onclick="$('#ShortCutDiv').toggle('slow','linear')">
+                                                                <span id="CrntMode" class="badge badge-primary">Mode : New</span>
+                                                            </span>
+                                                            <button type="button" class="btn btn-outline-danger mb-0 mr-1 btn-sm" onclick="TaxSplitShow()">Tax Split</button>
+                                                            <button type="button" class="btn btn-outline-info mb-0 mr-1 btn-sm" onclick="TempPurchaseShow()">Temporary</button>
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" id="disc" value="0.00" class="form-control billdisc dediszero" style="width:100%;font-weight:bold;text-align:center;border:none;" onclick="$('#disc').select()" onkeypress="isNumber(event, this)" onkeyup="CalcDiscountSplitTax();">
+                                                            <input type="hidden" id="basedisc" />
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" id="Discountpercent" value="0.00" style="font-weight:bold;text-align:center;width:100%;border:none;" class="form-control billdisc dediszero" onclick="$('#Discountpercent').select()" onkeypress="isNumber(event, this)" onkeyup="CalcDiscountSplitTaxbyPrecentage();">
+
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" id="totdisc" value="0.00" class="form-control bg-white dediszero" style="width:100%;border:none;font-weight:bold;text-align:center" disabled>
+
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" id="tottaxable" value="0.00" class="form-control bg-white dediszero" style="width:100%;border:none;font-weight:bold;text-align:center" disabled>
+
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" id="tottax" value="0.00" class="form-control bg-white dediszero" style="width:100%;border:none;font-weight:bold;text-align:center" disabled>
+
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" id="FCTotalCess" value="0.00" class="form-control bg-white dediszero" style="width:100%;font-weight:bold;text-align:center;border:none;" disabled>
+                                                            <input type="hidden" id="BaseTotalCess" class="dezero" />
+                                                        </td>
+                                                        <td class="bordertable" valign="top">
+                                                            <input type="text" value="0.00" id="otrcost" class="form-control bg-white dediszero" style="width:100%;border:none;font-weight:bold;text-align:center" disabled />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3 p-0">
+                                                <div class="text-right">
+                                                    <button type="button" id="btnsubmit" style="width:120px" class="btn btn-primary mr-1 mb-1 btn-sm"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+
+
+                                                    <button type="button" style="width:120px" id="btnlistpurchase" onclick="GetPurchaseListDefault()" class="btn btn-primary mr-1 mb-1 btn-sm">View <i class="ft-eye"></i></button>
+                                                    <button type="button" style="width:120px" id="btnnew" class="btn btn-primary mr-1 mb-1 btn-sm">New <i class="ft-refresh-cw position-right"></i></button>
+                                                    <button type="button" id="btnothercost" style="width:120px" onclick="OtherCostPopUp()" class="btn btn-outline-primary mr-1 mb-1 btn-sm">Other Cost</button>
+                                                    <button type="button" id="btntempsave" style="width:120px" class="btn btn-outline-warning mr-1 mb-1 btn-sm">Temporary Save</button>
+                                                    <button style="display:none;width:120px" type="button" id="btnacctran" onclick="GetTrans()" class="btn btn-info white btn-sm mr-1 mb-1">Accounts <i class="fa ft-info"></i></button>
+                                                    @*<button style="display:none;width:120px" type="button" id="btnprint" onclick="PrintthisBillWindows('PUR', i, 'COPY')" class="btn btn-primary mr-1 mb-1 btn-sm">Print <i class="ft-printer"></i></button>*@
+                                                    <button style="display:none;width:120px" type="button" id="btnedit" class="btn btn-secondary white mr-1 mb-1 btn-sm">Edit<i class="fa ft-edit"></i></button>
+                                                    <button style="display:none;width:120px" type="button" id="btndelete" class="btn btn-danger mr-1 mb-1 btn-sm">Delete <i class="fa fa-times"></i></button>
+                                                    <button style="display:none;width:120px" type="button" id="btnsaveedit" class="btn btn-warning white mr-1 mb-1 btn-sm">Update<i class="fa fa-check-square-o"></i></button>
+                                                    <button type="button" id="btnHistory" onclick="PurchaseHistory($('#purchaseinvoiceno').val())" style="display:none;width:120px" value="History" class="btn btn-dark  mr-1 mb-1 btn-sm">History <i class="fa fa-history"></i></button>
+
+                                                    <button type="button" id="ViewFiles" class="btn btn-info  mr-1 mb-1 btn-sm white" style="display:none;width:120px;">Documents <i class="fa fa-file-archive-o"></i></button>
+                                                    <button type="button" id="btnExport" class="btn btn-outline-secondary mr-1 mb-1 btn-sm" style="display:none;width:120px">Export <i class="fa fa-file-excel-o"></i></button>
+                                                    <div id="fileuploaddiv" style="display:none">
+                                                        <input type="file" id="fileUpload" style="display:none;width:250px;" onchange="Upload()" class="btn gradient-back-to-earth mr-1 mb-1 btn-sm white" />
+                                                        <button type="button" id="upload" class="btn gradient-back-to-earth mr-1 mb-1 btn-sm white" style="display:none;" onclick="Upload()"><i class="fa fa-upload"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="ShortCutDiv" style="display:none">
+                                            <div class="row mt-2">
+                                                <div class="col-md-12">
+                                                    <span class="badge badge-deep-orange">ShortCuts : </span>
+                                                    <span class="badge badge-info">Close Popups : Esc</span>
+                                                    <span class="badge badge-info">Last Sales : F7</span>
+                                                    <span class="badge badge-info">Last Purchase : F8</span>
+                                                    <span class="badge badge-info">All Transaction : F9</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmff" class="overlay" style="display:none;">
+    <div class="modal fade text-left show" id="keyboardff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display:none;padding-right: 17px; top:28%;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body" style="text-align:center">
+                    <h3 style="color:red"><B>ADD INVOICE NUMBER !!!</B></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="Othercostpopup" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-primary white">
+                    <h4 class="modal-title" id="OtherCostheader"></h4>
+                    <button type="button" class="close" onclick="CloseOtherCost()" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                <div class="col-md-1">
+
+                                    <label class="label-control">Type<span class="danger">*</span></label>
+                                    <select id="acctype" class="form-control smallTextbox">
+                                        <option value="D">Debit</option>
+                                        <option value="C">Credit</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+
+                                    <label class="label-control">Account<span class="danger">*</span></label>
+                                    <input type="hidden" id="accid" class="dezero" />
+                                    <div class="input-group m-0">
+                                        <input type="text" id="account" class="form-control smallTextbox denull" />
+                                        <div class="input-group-append" id="">
+                                            <button class="btn btn-outline-primary smallTextbox btndis" id="addbtnacc" type="button" onclick="window.open('../Master/AccountHead')">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+
+                                    <label class="label-control">Description</label>
+                                    <input type="text" id="accountdescription" class="form-control smallTextbox denull">
+                                </div>
+                                <div class="col-md-2">
+
+                                    <label class="label-control">Currency<span class="danger">*</span></label>
+                                    <div class="input-group">
+                                        <select id="CostCurrency" class="form-control smallTextbox"></select>
+                                        <input type="text" id="CostCurrRate" class="form-control smallTextbox input-group-append" onkeypress="isNumber(event, this)" onkeyup="CalcFCCost();">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+
+                                    <label class="label-control">Amount<span class="danger">*</span></label>
+                                    <input type="text" id="costamount" class="form-control smallTextbox dediszero" value="0.00" onkeypress="isNumber(event, this)" onkeyup="CalcFCCost();">
+                                </div>
+                                <div class="col-md-1 mt-1">
+
+
+                                    <button type="button" class="btn smallTextbox pb-0 mt-3 btn-primary btndis" id="btnaddcost" onclick="OtherCostAdd()">ADD <i class="fa fa-plus"></i></button>
+
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+
+                                <input type="hidden" id="creditamount" class="form-control dezero" onkeypress="isNumber(event, this)">
+                                <input type="hidden" id="debitamount" class="form-control dezero" onkeypress="isNumber(event, this)">
+
+                                <input type="hidden" id="BaseCost" value="0.00" class="form-control dezero" onkeypress="isNumber(event, this)">
+                                <input type="hidden" id="BaseCredit" class="form-control dezero" onkeypress="isNumber(event, this)">
+                                <input type="hidden" id="BaseDebit" class="form-control dezero" onkeypress="isNumber(event, this)">
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="OtherCostView" class="jsgrid" style="position:relative;height:405px; width:100%;">
+                        <div class="jsgrid-grid-header jsgrid-header-scrollbar">
+                            <table class="jsgrid-table" style="width:99.3%;">
+                                <tr class="jsgrid-header-row">
+                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:2%">Sl#</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:10%">Account</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Description</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Currency</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Rate</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Type</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Credit</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Debit</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:6%">Base Amount</th>
+                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:2%"><i class="icon-trash"></i></th>
+                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:50px;display:none;"></th>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div id="OthreCostdiv" class="jsgrid dataTables_scrollBody" style="position: relative; overflow-y: scroll; height: 365px; width: 100%;">
+                            <table class="jsgrid-table" id="tblOtherCost"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <label class="col-md-1" style="">Credit</label>
+                    <div class="col-md-1">
+                        <input type="hidden" id="totcredit" class="form-control dezero" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                        <input type="text" id="totbasecredit" class="form-control dediszero" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                    </div>
+                    <label class="col-md-1" style="">Debit</label>
+                    <div class="col-md-1">
+                        <input type="hidden" id="totdebit" class="form-control dezero" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                        <input type="text" id="totbasedebit" class="form-control dediszero" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                    </div>
+                    <label class="col-md-1" style="">Difference</label>
+                    <div class="col-md-1">
+                        <input type="hidden" id="costdiff" class="form-control dezero" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                        <input type="text" id="costbasediff" class="form-control dediszero" style="background-color:white;width:120px;border:none;font-weight:bold;color:red" disabled>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-right">
+                            <input type="button" class="btn btn-outline-secondary btndis" onclick="ClearOtherCost(0)" id="btncrncyclear" data-dismiss="modal" value="Clear">
+                            <input type="button" class="btn btn-primary btndis" value="Save" id="btnothercostsave" onclick="SaveOtherCost()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="TaxSpliPopup" role="dialog" style="">
+        <div class="modal-dialog modal-sxl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title font-weight-bold">Tax Split Details</h4>
+
+
+
+                </div>
+                <div class="modal-body">
+
+                    <div id="transsplitdiv" class="jsgrid" style="overflow:auto;width:100%;">
+                        <table class="headertable" id="tbltaxsplit" style="width:100%;border:1px solid #BABFC7;background-color:white;table-layout:fixed;">
+                            <tr>
+                                <th class="text-center" style="font-weight:500;height:40px" rowspan="2"><b>Group</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px" rowspan="2"><b>Taxable</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px" colspan="7"><b>Tax</b></th>
+
+                            </tr>
+                            <tr>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>Tax</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>CGST(%)</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>CGST</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>SGST(%)</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>SGST</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>IGST(%)</b></th>
+                                <th class="text-center" style="font-weight:500;height:40px"><b>IGST</b></th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="jsgrid" style="overflow:auto;width:100%;">
+                        <table class="headertable taxsplittb" style="width:100%;border:1px solid #BABFC7;background-color:white;table-layout:fixed;">
+                            <tr>
+                                <td class="text-center" style="height:40px;">SUB TOTAL</td>
+                                <td class="text-center" style="height:40px"> <input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno txtbl' id="SubTaxable"> </td>
+                                <td class="text-center" style="height:40px">  <input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno txtbl' id="SubTax"></td>
+                                <td class="text-center" style="height:40px"></td>
+                                <td class="text-center" style="height:40px">  <input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno txtbl' id="SubCGST"> </td>
+                                <td class="text-center" style="height:40px"></td>
+                                <td class="text-center" style="height:40px"> <input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno txtbl' id="SubSGST"></td>
+                                <td class="text-center" style="height:40px"></td>
+                                <td class="text-center" style="height:40px"> <input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno txtbl' id="SubIGST"> </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="PopUpClose(1)">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="TempPurchasePopup" role="dialog" style="">
+        <div class="modal-dialog modal-sxl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title font-weight-bold">Temporary Saved Bills</h4>
+
+
+
+                </div>
+                <div class="modal-body">
+
+                    <div id="TempPurchase" class="jsgrid" style="position: relative; height: 265px; width: 100%;overflow-x: auto;overflow-y: hidden;">
+                        <div class="jsgrid-grid-header" style="width:100%;">
+                            <table class="jsgrid-table" width="100%">
+                                <tbody>
+                                    <tr class="jsgrid-header-row">
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:80px;">Sl#</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:150px;">Date</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:300px;">Invoice#</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:130px;">PayType</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:130px;">PR. Type</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="">Supplier</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:100px;"></th>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="proddiv1" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 220px; width:100%;">
+                            <table id="TBL_TempPurchaseList" width="100%"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="PopUpClose(2)">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="PurchaseView" role="dialog" style="">
+        <div class="modal-dialog modal-sxl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold">Purchase Bill List</h4>
+                    <button type="button" class="close" onclick="PopUpClose(3)" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                <div class="col-md-1">
+                                    <label for="ViewFromDate" class="label-control">From</label>
+                                </div>
+                                <div class="col-md-2">
+
+                                    <input type="text" id="ViewFromDate" class="form-control smallTextbox" placeholder="From Date">
+
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="ViewToDate" class="label-control">To</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input type="text" id="ViewToDate" class="form-control smallTextbox" placeholder="To Date">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" id="" onclick="GetPurchaseList()" class="btn btn-primary btn-sm mr-1 mb-1 " style="position:absolute;width:100px;font-weight:400;">Search <i class="fa fa-search position-right"></i>  </button>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="overflow-auto" style="height:525px; ">
+                            <table id="tbl_PIViewList" class="table table-striped table-bordered zero-configuration dataTable" width="100%"></table>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="PopUpClose(3)">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade modalProduct" id="productpdiv" role="dialog" style="height:200px;overflow:hidden;margin-top:-50px;">
+        <div class="modal-dialog modal-slg">
+
+            <!-- Modal content-->
+            <div class="modal-content  bg-primary">
+                <div class="modal-body">
+                    <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="PurchaseDocument" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold">Documents</h4>
+                    <button type="button" class="close" onclick="PopUpClose(6)" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="px-3 card-body card-dashboard overflow-auto" style="height:500px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="file" multiple name="Purchasefile[]" id="PURCHASEfileUpload" class="btn btn-info mr-1 mb-1 btn-sm white" />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" style="width:100px" id="btnuploadpurchasefiles" onclick="UploadPurchaseFiles()" class="btn btn-outline-info">Upload</button>
+                            </div>
+                        </div>
+                        <table id="tbl_documentlist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="PurchaseTransactionPopup" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold col-md-10" id="PurchaseTransactionheader"></h4>
+
+                    <div id="PurchaseStatusDiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                        <input type="checkbox" class="custom-control-input" id="select_status" onchange="LastPurchaseTransactions()">
+                        <label class="custom-control-label" for="select_status">All</label>
+                    </div>
+                    <div id="SalesStatusDiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                        <input type="checkbox" class="custom-control-input" id="select_status_sales" onchange="LastSalesTransactions()">
+                        <label class="custom-control-label" for="select_status_sales">All</label>
+                    </div>
+                    <div id="AllStatusDiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                        <input type="checkbox" class="custom-control-input" id="select_status_PREV" onchange="AllTransaction()">
+                        <label class="custom-control-label" for="select_status_PREV">Previous</label>
+                    </div>
+
+                    <button type="button" class="close col-md-1" onclick="PopUpClose(5)" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <section id="PurchaseTrans" style="display:none">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col-md-2">
+                                            <label style="font-weight:bold">Total Purchase :</label>
+                                            <label style="font-weight:bold" id="totalnopurchase"></label>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label style="font-weight:bold">Total Purchase Qty :</label>
+                                            <label style="font-weight:bold" id="totalnopurchaseqty"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblpurchasetrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="SalesTrans" style="display:none">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label style="font-weight:bold">Total Sales :</label>
+                                            <label style="font-weight:bold" id="totalnosales"></label>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label style="font-weight:bold">Total Sales Qty :</label>
+                                            <label style="font-weight:bold" id="totalnosalesqty"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblsalestrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                    <section id="AllTrans" style="display:none">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblalltrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="OTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#OTPDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CheckEditInvoce(0)" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+
+    <label class="col-lg-1 text-lg-right" id="lblcashaccount" style="font-weight:bold;">Account</label>
+    <div class="col-md-3 input-group onlywhencash" style="display:none1">
+        <input type="text" id="cpaccount" disabled class="form-control col-md-4 denull" style="">
+        <input type="text" id="cpaccountname" disabled class="form-control denull" style="">
+
+    </div>
+    <input type="hidden" id="cpaccountid" class="dezero">
+
+    <label class="label-control col-lg-1 text-right" style="font-weight:bold">FX<span class="danger">*</span></label>
+
+    <div class="input-group m-0">
+        <select id="Currency" class="form-control smallTextbox"></select>
+        <input type="text" id="Curr_Rate" class="form-control smallTextbox input-group-append" onkeypress="isNumber(event, this)" onkeyup="CalcAmt(),ResetBillDiscount();">
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#PharmaPIDate,#ViewFromDate,#ViewToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+
+        });
+        $("#PharmaPIDate,#ViewFromDate,#ViewToDate").val(CurDate);
+
+        if (EODType != 'EOD') {
+            $("#PharmaPIDate").removeClass('dedisa');
+            $("#PharmaPIDate").prop('disabled', false);
+        }
+    });
+
+
+
+    $("#Product_0").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            ClearProductRow(0);
+
+            var data = {};
+            data.ItemCode = $("#Product_0").val();
+            data.SlNumber = $("#SupplierId").val();
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+
+            $.ajax({
+                url: '../Pharmacy/HMS_PurchaseProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4PurchasePro',
+                            label: item.Description,
+                            label1: item.ItemCode,
+                            label2: item.Group,
+                            label3: item.Category,
+
+                            ItemId: item.ItemId,
+                            ItemCode: item.ItemCode,
+                            Description: item.Description,
+                            Tax: item.VatId,
+                            Taxper: item.VatPer,
+                            Rate: (item.AvgCost).toFixed(Decimal),
+                            SellingPrice: (item.SellingPrice).toFixed(Decimal),
+                            MRP: (item.MRP).toFixed(Decimal),
+                            LPCost: (item.LPCost).toFixed(Decimal),
+                            Cess: item.Model1,
+                            headers: ["Name", "Code", "Company", "Type"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+
+            $("#ProductId_0").val(ui.item.ItemId);
+            $("#Pack_0").val(1);
+            $("#Qty_0").val(1);
+            $("#Rate_0").val(ui.item.Rate);
+            $("#TaxId_0").val(ui.item.Tax);
+            $("#TaxRate_0").val(ui.item.Taxper);
+            $("#SR_0").val(ui.item.SellingPrice);
+            $("#MRP_0").val(ui.item.MRP);
+            $("#Cess_0").val(ui.item.Cess);
+            $("#Batch_0").focus().select();
+            CalcAmount(0);
+            var data = {};
+            data.ProductId = ui.item.ItemId;
+            data.CustId = 0;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: '../SalesInvoice/CustomerProductDetailsSearch',
+                data: data,
+                success: function (result) {
+                    CustPrdctLoad(result.oList);
+                }
+            });
+        },
+    });
+    $("#Supplier").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#SupplierId").val(0);
+            var data = {};
+            data.CustName = $("#Supplier").val();
+            data.CustType = 'S';
+
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2ph',
+                            label: item.CustName,
+                            label1: item.CustAccount,
+                            label2: item.PhoneNumber,
+                            CustId: item.CustId,
+                            CurncyId: item.CurrencyId,
+                            CustTermsId: item.CustTermsId,
+                            AreaId: item.AreaId,
+                            headers: ["Supplier Name", "Account Code", "Phone Number"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#SupplierId').val(ui.item.CustId)
+            SearchSupplierInvoice();
+            //GetCurrency(ui.item.CurncyId)
+            //$('#disc,#Discountpercent').val('0.00');
+        },
+
+    });
+
+    $("#account").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.AccountDescription = $("#account").val();
+            $.ajax({
+                url: '../Inventory/AccountNumberSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '1',
+                            label: item.DebitAccount + "-" + item.AccountDescription,
+                            label1: item.AccountDescription,
+                            DebitAccount: item.DebitAccount,
+                            AccountDescription: item.AccountDescription,
+                            AccountId: item.AccountId,
+                            headers: ["Account Code - Description"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#accid').val(ui.item.AccountId)
+            $('#account').val(ui.item.DebitAccount + "-" + ui.item.AccountDescription);
+
+        },
+    });
+
+    $("#PINo_C").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.InvoNo = $("#PINo_C").val();
+            data.LocnId = UserLocationId;
+            data.DepartmentId = ERPDeptId;
+            $.ajax({
+                url: '../Purchase/SerialNoSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4Purchase',
+                            label: item.SlNo,
+                            label1: item.InvoNo,
+                            label2: item.InvoDate,
+                            label3: item.SupplierName,
+                            SlNo: item.SlNo,
+                            DepartmentId: item.DepartmentId,
+                            headers: ["Serial No", "Invoice No", "Date", "Supplier"]
+
+
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            var data = {};
+            data.SlNo = ui.item.SlNo;
+            data.DeptId = ui.item.DepartmentId;
+            $.ajax({
+                type: "POST",
+                url: "../Pharmacy/HMS_PurchaseGetandGets",
+                data: data,
+                success: function (result) {
+                    formrefresh(1);
+                    PurchaseGets(result);
+                    $('#btnnew').focus();
+                }
+            });
+        },
+
+    });
+
+    function ChangeSellRate(e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key != 13 && key != 37 && key != 38 && key != 39 && key != 40 && key != 32) {
+            var Sellrate = $('#SR_0').val() || 0;
+            //if (Sellrate != 0) {
+            //    $('#MRP_0').val(Sellrate);
+            //}
+            //else {
+            //    $('#MRP_0').val('');
+            //}
+        }
+    }
+
+</script>

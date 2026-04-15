@@ -1,0 +1,273 @@
+﻿@{
+    ViewBag.Title = "PersonForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["UpdateMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["UpdateMessage"]
+    </div>
+}
+
+<style>
+    .page-wrapper {
+        padding: 30px;
+    }
+
+    .card-box {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        padding: 25px;
+        height: 100%;
+    }
+
+    .form-title, .table-title {
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #4e73df;
+    }
+
+    .form-control-custom {
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #d1d3e2;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .btn-custom {
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-weight: 500;
+        border: none;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .btn-submit {
+        background-color: #4e73df;
+        color: #fff;
+    }
+
+    .btn-list {
+        background-color: #1cc88a;
+        color: #fff;
+    }
+
+        .btn-submit:hover,
+        .btn-list:hover {
+            opacity: 0.9;
+        }
+
+    /* EDIT BUTTON */
+    .btn-edit {
+        background-color: #36b9cc;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        .btn-edit:hover {
+            background-color: #2c9faf;
+        }
+
+    /* DELETE BUTTON */
+    .btn-delete {
+        background-color: #e74a3b;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background-color: #4e73df;
+        color: white;
+        padding: 10px;
+        text-align: left;
+    }
+
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+        background-color: #f8f9fc;
+    }
+
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="row">
+
+        <!-- LEFT FORM -->
+        <div class="col-md-4">
+            <div class="card-box">
+                <h5 class="form-title">Registration Form</h5>
+
+                <input type="text" id="txtname" placeholder="Enter Name" class="form-control-custom" />
+                <input type="number" id="txtage" placeholder="Enter Age" class="form-control-custom" />
+
+                <select id="txtgender" class="form-control-custom">
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+
+                <textarea id="txtaddress" rows="3" placeholder="Enter Address" class="form-control-custom"></textarea>
+
+                <input type="tel" id="txtphonenumber" placeholder="Enter Phone Number" class="form-control-custom" />
+
+                <button class="btn-custom btn-submit" onclick="submitform()">Submit</button>
+                <button class="btn-custom btn-list" onclick="loadPersons()">List</button>
+            </div>
+        </div>
+
+        <!-- RIGHT TABLE -->
+        <div class="col-md-8" id="tableSection" style="display:none;">
+            <div class="card-box">
+                <h5 class="table-title">Person List</h5>
+
+                <div class="table-responsive">
+                    <table id="personTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function submitform() {
+
+        var Data = {
+            ProcedureName: $('#txtname').val(),
+            ProcedureAge: $('#txtage').val(),
+            ProcedureGender: $('#txtgender').val(),
+            ProcedureAddress: $('#txtaddress').val(),
+            ProcedureNumber: $('#txtphonenumber').val()
+        };
+
+        if (Data.ProcedureName === '') {
+            alert('Enter name');
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "../Master/PersonInsert",
+            data: Data,
+            success: function (result) {
+                alert("Saved Successfully");
+                clearForm();
+            },
+            error: function () {
+                alert("Error occurred");
+            }
+        });
+    }
+
+    function loadPersons() {
+
+        $.ajax({
+            type: "GET",
+            url: "../Master/GetPersons",
+            success: function (result) {
+
+                var tableBody = $("#personTable tbody");
+                tableBody.empty();
+
+                if (result.length === 0) {
+                    tableBody.append("<tr><td colspan='6'>No Records Found</td></tr>");
+                }
+                else {
+                    $.each(result, function (i, item) {
+
+                        var row = "<tr>" +
+                            "<td>" + item.ProcedureName + "</td>" +
+                            "<td>" + item.ProcedureAge + "</td>" +
+                            "<td>" + item.ProcedureGender + "</td>" +
+                            "<td>" + item.ProcedureAddress + "</td>" +
+                            "<td>" + item.ProcedureNumber + "</td>" +
+                            "<td>" +
+                            "<button class='btn-edit' onclick='editPerson(" + item.PersonId + ")'>Edit</button> " +
+                            "<button class='btn-delete' onclick='deletePerson(" + item.PersonId + ")'>Delete</button>" +
+                            "</td>" +
+                            "</tr>";
+
+                        tableBody.append(row);
+                    });
+                }
+
+                $("#tableSection").fadeIn();
+            },
+            error: function () {
+                alert("Error loading data");
+            }
+        });
+    }
+
+    function editPerson(id) {
+        window.location.href = '../Master/EditPerson?id=' + id;
+    }
+
+    function deletePerson(id) {
+
+        if (!confirm("Are you sure you want to delete this record?")) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "../Master/DeletePerson",
+            data: { id: id },
+            success: function (result) {
+                alert("Deleted Successfully");
+                loadPersons();
+            },
+            error: function () {
+                alert("Error deleting record");
+            }
+        });
+    }
+
+    function clearForm() {
+        $('#txtname').val('');
+        $('#txtage').val('');
+        $('#txtgender').val('');
+        $('#txtaddress').val('');
+        $('#txtphonenumber').val('');
+    }
+</script>

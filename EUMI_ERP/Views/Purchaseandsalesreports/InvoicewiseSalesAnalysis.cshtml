@@ -1,0 +1,567 @@
+﻿
+@{
+    ViewBag.Title = "InvoicewiseSalesAnalysis";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style type="text/css">
+ 
+    .form-control {
+        font-weight: bold;
+    }
+</style>
+
+
+
+<div class="myData" data-x="M68" />
+<div id="Main">
+  
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+       
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="42%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#txtCustomer').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+
+
+
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+                                <hr style="margin-top:-1px;" />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog " role="document" style="top:5%;max-width:35%;margin-left:33%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Invoicewise Sales Analysis</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                @*<div class="modal-body">
+
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="dpDateFrom">From Date</label>
+                        <input type="text" id="dpDateFrom" class="form-control">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="dpDateTo">To Date</label>
+                        <input type="text" id="dpDateTo" maxlength="100" class="form-control">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="cmbSalesMan">Salesman</label>
+                        <select id="cmbSalesMan" class="form-control" name="priority"></select>
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="txtCustomer">Customer</label>
+                        <input type="text" id="txtCustomer" onkeyup="checkcustempty()" class="form-control">
+                        <input type="hidden" id="CustomerID" value="0" class="form-control" />
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="txtJob">Job</label>
+                        <input type="text" id="txtJob" onkeyup="Jobempty()" class="form-control">
+                        <input type="hidden" id="JobID" value="0" class="form-control" />
+                    </fieldset>
+                </div>*@
+
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+
+                        <label class="col-md-2 text-right" style="font-weight:bold;">From</label>
+                        <div class="col-md-3">
+                            <input type="text" id="dpDateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label class="col-md-2 text-right" style="font-weight:bold;">To</label>
+                        <div class="col-md-3">
+                            <input type="text" id="dpDateTo" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="col-md-1"></div>
+
+                    </div>
+
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:2%"></div>
+                    <div class="row" style="margin-top:2%;">
+                        <div class="col-md-1"></div>
+                        <label class="col-md-2 text-right" style="font-weight:bold;">Customer</label>
+                        <div class="col-md-8">
+                            <table width="100%">
+                                <tr>
+                                    <td width="30%">
+                                        <input type="text" id="txtCustomer" class="form-control" onkeyup="checkcustempty(),$('#custnames').val('')" style="border-right:none;border-top-right-radius:0px;border-bottom-right-radius:0px;text-align:left">
+                                        <input type="hidden" id="CustomerID" value="0" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" id="custnames" class="form-control" onchange="" autocomplete="off" style="border-top-left-radius:0px;border-bottom-left-radius:0px;border-left:none;background-color:white" disabled>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <div class="row" style="margin-top:2%">
+                        <div class="col-md-1"></div>
+
+                        <label class="col-md-2 text-right" style="font-weight:bold;">Salesman</label>
+                        <div class="col-md-3" >
+                            <select id="cmbSalesMan" class="form-control" name="priority"></select>
+                        </div>
+                        <label class="col-md-2 text-right" style="font-weight:bold">JobCode</label>
+                        <div class="col-md-3" >
+                            <input type="text" id="txtJob" onkeyup="Jobempty()" class="form-control">
+                            <input type="hidden" id="JobID" value="0" class="form-control" />
+                        </div>
+
+                        @*<label style="margin-top:2%;font-weight:bold;margin-left:-1%">Customer</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <input type="text" id="txtCustomer" onkeyup="checkcustempty()" class="form-control">
+                            <input type="hidden" id="CustomerID" value="0" class="form-control" />
+                        </div>*@
+                    </div>
+                    @*<div class="row" style="margin-top:2%">
+                       
+
+                    </div>*@
+                    <div class="col-md-1"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:43%" id="btnGo" class="btn btn-primary">Go</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $("#txtCustomer").autocomplete({
+        source: function (request, response) {
+
+            var data = {};
+            data.CustName = $("#txtCustomer").val();
+            data.CustType = 'C';
+
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.CustAccount,
+                            label1: item.CustName,
+                            CustId: item.CustId,
+                            CustName: item.CustName,
+                            headers: ["Customer Code", "Customer Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#CustomerID').val(ui.item.CustId)
+            $("#custnames").val(ui.item.CustName);
+            $('#cmbSalesMan').focus();
+        },
+
+    });
+
+    $("#txtJob").autocomplete({
+        source: function (request, response) {
+
+            var data = {};
+            data.JobCode = $("#txtJob").val();
+            data.CustType = 'C';
+
+            $.ajax({
+                url: '../SalesInvoice/JobSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.JobCode,
+                            label1: item.Description,
+                            ProjectJobId: item.ProjectJobId,
+                            headers: ["Job Code", "Job Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#JobID').val(ui.item.ProjectJobId)
+        },
+
+    });
+
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+
+    //function Showreport(result) {
+    //    disable_datatable('Tblreport', 'buttonPlace');
+
+    //    var responseText = "<thead><tr><th>Slno</th><th>Bill Series</th><th>Bill SlNo</th><th>Bill Date</th><th>Customer</th><th>Job Number</th><th>Salesman</th><th>Sales Value</th><th>Tax Amount</th><th>Sales Return</th><th>Net Sales Value</th><th>Collection</th><th>Amount Due</th></tr></thead><tbody>";
+    //    for (var i = 0; i < result.length; i++) {
+    //        var slno = parseInt(i + 1);
+
+    //        if (result[i].BillSlNo == '') {
+    //            responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td>' + result[i].BillSeries + '</td><td>' + result[i].BillSlNo + '</td><td>' + result[i].InvDate + '</td><td>' + result[i].CustName + '</td><td>' + result[i].JobNumber + '</td><td>' + result[i].SalesManName + '</td><td>' + parseFloat(result[i].GrandTotal || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].TaxAmount || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].SalesReturn || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].TaxableAmount || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].Collection || 0).toFixed(Decimal) + '</td><td> ' + parseFloat(result[i].AmountDue || 0).toFixed(Decimal) + ' </td></tr>';
+    //        }
+    //        else {
+    //            responseText += '<tr onclick=gotoInvoNo(' + result[i].BillSeriesId + "," + result[i].BillSlNo + "," + result[i].DeptId + ')><td>' + slno + '</td><td>' + result[i].BillSeries + '</td><td>' + result[i].BillSlNo + '</td><td>' + result[i].InvDate + '</td><td>' + result[i].CustName + '</td><td>' + result[i].JobNumber + '</td><td>' + result[i].SalesManName + '</td><td>' + parseFloat(result[i].GrandTotal || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].TaxAmount || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].SalesReturn || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].TaxableAmount || 0).toFixed(Decimal) + '</td><td>' + parseFloat(result[i].Collection || 0).toFixed(Decimal) + '</td><td> ' + parseFloat(result[i].AmountDue || 0).toFixed(Decimal) + ' </td><td style=display:none><input type="hidden" id="Dept_' + i + '" value=' + result[i].DeptId + '/></td><td style=display:none><input type="hidden" id="BillSeries_' + i + '" value=' + result[i].BillSeriesId + '/></td></tr>';
+    //        }
+    //    }
+    //    $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>Bill Series</th><th>Bill SlNo</th><th>Bill Date</th><th>Customer</th><th>Job Number</th><th>Salesman</th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th></tr></tfoot>');
+    //    var title = "Invoicewise Report - from " + $("#dpDateFrom").val() + " to " + $("#dpDateTo").val() + "";
+    //    datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+    //    $('#header').text(title);
+    //}
+
+
+
+
+
+    function Showreport(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+       
+        var responseText = "<thead><tr><th>Sl#</th><th>Bill Series</th><th>Bill#</th><th>Date</th><th>Customer</th><th>Customer Details</th><th>Job#</th><th>Salesman</th><th>Sales Value</th><th>Tax Amount</th><th>Sales Return</th><th>Net Sales Value</th><th>Collection</th><th>Amount Due</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            if (result[i].BillSlNo == '') {
+                responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td>' + result[i].BillSeries + '</td><td>' + result[i].BillSlNo + '</td><td><b>' + result[i].InvDate + '</b></td><td>' + result[i].CustName + '</td><td><b>' + result[i].CustAddress + '</b></td><td>' + result[i].JobNumber + '</td><td>' + result[i].SalesManName + '</td><td style=text-align:right><b>' + parseFloat(result[i].TaxableAmount || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].TaxAmount || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].SalesReturn || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].GrandTotal || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].Collection || 0).toFixed(Decimal) + '</b></td><td style=text-align:right><b>' + parseFloat(result[i].AmountDue || 0).toFixed(Decimal) + '</b></td></tr>';
+            }
+            else {
+                responseText += '<tr ondblclick=gotoInvoNo(' + result[i].BillSeriesId + "," + result[i].BillSlNo + "," + result[i].DeptId + ')><td>' + slno + '</td><td>' + result[i].BillSeries + '</td><td>' + result[i].BillSlNo + '</td><td>' + result[i].InvDate + '</td><td>' + result[i].CustName + '</td><td>' + result[i].CustAddress + '</td><td>' + result[i].JobNumber + '</td><td>' + result[i].SalesManName + '</td><td style=text-align:right>' + parseFloat(result[i].TaxableAmount || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].TaxAmount || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].SalesReturn || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].GrandTotal || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].Collection || 0).toFixed(Decimal) + '</td><td style=text-align:right> ' + parseFloat(result[i].AmountDue || 0).toFixed(Decimal) + ' </td></tr>';
+
+            }
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Bill Series</th><th>Bill#</th><th>Date</th><th>Customer</th><th>Customer Details</th><th>Job#</th><th>Salesman</th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th></tr></tfoot>');
+        var title = "Invoicewise Report - from " + $("#dpDateFrom").val() + " to " + $("#dpDateTo").val() + "";
+
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        
+        $('#header').text(title);
+    }
+
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'O Balance' && title != ' ') {
+                $(this).html('<input type="text" placeholder=" ' + title + '" style="width=100%" />');
+            }
+            if (title == 'Date') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Bill#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Bill Series') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Pay Type') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Job#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100px" />');
+            }
+            if (title == 'Customer') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:300px" />');
+            }
+            if (title == 'Customer Details') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:500px" />');
+            }
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'Blfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function gotoInvoNo(BillSeriesId, BillSlNo, DeptId) {
+        sessionStorage.setItem("sales_srs", BillSeriesId);
+        sessionStorage.setItem("sales_slno", BillSlNo);
+        sessionStorage.setItem("sales_deptid", DeptId);
+        window.location = "@Url.Action("SalesInvoice", "inventory", new { from = "SalesReport" })";
+    }
+
+    function GetSalesMan(id) {
+        var data = {};
+        data.Id = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/SalesmanGetandGets",
+            data: data,
+            success: function (result) {
+                SalesManLoad(result.oList, id);
+            }
+        });
+    }
+
+    function SalesManLoad(result, a) {
+        $("#cmbSalesMan").empty();
+        $("#cmbSalesMan").append("<option value='0'>-All-</option>")
+        for (var i = 0; i < result.length; i++) {
+            $("#cmbSalesMan").append("<option value='" + result[i].Id + "'>" + result[i].FirstName + "</option>");
+        }
+      
+    }
+
+    function checkcustempty() {
+        $('#CustomerID').val(0);
+    }
+
+    function Jobempty() {
+        $('#JobID').val(0);
+    }
+
+
+    $(function ()
+    {
+        $("#txtCustomer").focus();
+        GetSalesMan(0);
+
+        $('#dpDateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#dpDateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('#cmbSalesMan').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#txtJob').focus();
+                e.preventDefault();
+            }
+        });
+
+        $('#txtJob').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnGo').focus();
+                e.preventDefault();
+            }
+        });
+        //$('#txtJob').keydown(function (e) {
+        //    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        //    if (key == 13) {
+        //        $('#btnGo').focus();
+        //        e.preventDefault();
+        //    }
+        //});
+    });
+        $("#btnGo").click(function (e) {
+
+
+            var Condition = '';
+            var FromDate = $('#dpDateFrom').val();
+            var ToDate = $('#dpDateTo').val();
+            var Salesman = parseInt($('#cmbSalesMan').val() || 0);
+            var Customer = parseInt($('#CustomerID').val() || 0);
+            var Job = parseInt($('#JobID').val() || 0);
+            //var Userid = ERPUserId;
+
+
+
+            $('#Loading').show();
+            if (Salesman == 0 && Customer == 0 && Job == 0) {
+                Condition = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+            else if (Salesman != 0 && Customer == 0 && Job == 0) {
+                Condition = 'SalesManId=' + Salesman + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+            else if (Salesman == 0 && Customer != 0 && Job == 0) {
+                Condition = 'CustId=' + Customer + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+            else if (Salesman == 0 && Customer == 0 && Job != 0) {
+                Condition = 'JobNumber=' + Job + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+
+
+            else if (Salesman != 0 && Customer != 0 && Job == 0) {
+                Condition = 'SalesManId=' + Salesman + ' and CustId=' + Customer + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+            else if (Salesman != 0 && Customer == 0 && Job != 0) {
+                Condition = 'SalesManId=' + Salesman + ' and JobNumber=' + Job + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+            else if (Salesman == 0 && Customer != 0 && Job != 0) {
+                Condition = 'CustId=' + Customer + ' and JobNumber=' + Job + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+
+            else{
+                Condition = 'SalesManId=' + Salesman + ' and CustId=' + Customer + ' and JobNumber=' + Job + ' and  CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+            }
+            var data = {};
+            data.Condition = Condition;
+            data.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/InvoicewiseSalesAnalysisGet",
+                data: data,
+                success: function (result) {
+
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                    $('#popupdiv').hide();
+                    Showreport(result);
+
+                }
+            });
+        });
+    
+
+
+
+
+</script>
+

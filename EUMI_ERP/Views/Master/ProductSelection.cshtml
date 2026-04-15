@@ -1,0 +1,652 @@
+﻿
+@{
+    ViewBag.Title = "ProductSelection";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M386" />
+
+<div id="Entry" style="">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" style="min-height:700px">
+                <div class="card-header p-1" style="border-bottom:1px solid #e6e6e6;">
+                    <h4 class="card-title mb-0 p-2 font-weight-bold" style="text-transform:uppercase">Item History</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body mt-2">
+                                        <div class="row">
+                                            <div class="col-md-1  text-right">
+                                                <label class="label-control mt-1">Code </label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" id="MCodeSearch" class="form-control denull" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <select id="SearchType" class="form-control denull" autocomplete="off" onchange="CheckTransType()">
+                                                    <option value="0">All Transactions</option>
+                                                    <option value="1">Sales Transactions</option>
+                                                    <option value="2">Purcahse Transactions</option>
+                                                    <option value="3">Purcahse Correction</option>
+                                                </select>
+                                            </div>
+                                            <div id="alltranscheckboxdivsales" class="custom-control custom-checkbox col-md-1 mt-1">
+                                                <input type="checkbox" class="custom-control-input" id="status_type" onchange="CheckTransType()" autocomplete="off">
+                                                <label class="custom-control-label mt-1" for="status_type">Previous</label>
+                                            </div>
+                                            @*<div class="col-md-1">
+                                                <button type="button" class="btn btn-outline-primary mb-0"><i class="fa fa-search"></i></button>
+                                            </div>*@
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-outline-primary mb-0" onclick="NewSearch(1)"><i class="fa fa-refresh"></i></button>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                          <div class="col-md-12 mb-1 mt-1">
+                                            <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped font-small-3" id="tbltransaction" style="width:100%;overflow-x:scroll;overflow-y:scroll;"></table>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="d-none">
+    <input type="text" id="ItemId" class="form-control denull" autocomplete="off">
+</div>
+
+<script>
+
+    var ReasonArray = [];
+
+    $(document).ready(function () {
+        GetReason();
+        Defaultfocus();
+        DataLoad(0, 0);
+    });
+
+    function GetReason() {
+        var data = {};
+        data.ReasonId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/ReasonGetandGets",
+            data: data,
+            success: function (result) {
+                ReasonLoadResult(result.oList);
+            }
+        });
+    }
+
+    function ReasonLoadResult(result) {
+        ReasonArray = [];
+        for (var i = 0; i < result.length; i++) {
+                ReasonArray.push({ "Id": result[i].ReasonId, "Reason": result[i].Reasons });
+        }
+    }
+
+    $("#MCodeSearch").autocomplete({
+        source: function (request, response) {
+
+            NewSearch(0);
+
+            var data = {};
+            data.ItemCode = $("#MCodeSearch").val();
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            ItemId: item.ItemId,
+                            Product: item.Description,
+                            productcode: item.ItemCode,
+                            GrpId: item.GrpId,
+                            CategoryId: item.CategoryId,
+                            headers: ["Code", "Name"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            //$('#Loading').show();
+            $('#ItemId').val(ui.item.ItemId);
+            $("#MCodeSearch").select();
+            CheckTransType();
+        },
+    }).keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 8) {
+            NewSearch(0);
+        }
+    });;
+
+    function NewSearch(flg)
+    {
+        if(flg==1)
+        {
+            $('#SearchType').val(0);
+            $('#MCodeSearch').val('');
+            Defaultfocus();
+        }
+        $('#ItemId').val('');
+        DataLoad(0, 0);
+    }
+
+    function Defaultfocus()
+    {
+        $("#MCodeSearch").focus();
+    }
+
+    function CheckTransType()
+    {
+        var flag;
+        if ($('#status_type').prop("checked")) { flag = 1; }
+        else{ flag = 0; }
+
+        if ($('#MCodeSearch').val()==0) { $('#ItemId').val(0) }
+
+        var ItemId = $('#ItemId').val() || 0;
+
+        //if (ItemId != 0)
+        //{
+            DataLoad(ItemId, flag);
+        //}
+    }
+
+    function DataLoad(ItemId, flag)
+    {
+        var SearcT=$('#SearchType').val()||0;
+        if (SearcT == 0)
+        { 
+            var data = {};
+            data.ItemId = ItemId;
+            data.DepartmentId = ERPDeptId;
+            data.UserId = ERPUserId;
+            data.Type = flag;
+            $.ajax({
+                type: "POST",
+                url: "../Purchase/TransactionSearch",
+                data: data,
+                success: function (result) {
+                    AllTransLoad(result);
+                }
+            });
+        }
+        else if(SearcT == 1)
+        {
+            var data = {};   //array
+            data.ProductId = ItemId;
+            data.DeptId = ERPDeptId;
+            data.type = flag;
+            data.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../SalesInvoice/SalesTransGetandGets",
+                data: data,
+                success: function (result) {
+                    SalesTransLoad(result);
+                }
+            });
+        }
+        else if(SearcT == 2)
+        {
+            var data = {};   //array
+            data.ItemId = ItemId;
+            data.DepartmentId = ERPDeptId;
+            data.UserId = ERPUserId;
+            data.Type = flag;
+            $.ajax({
+                type: "POST",
+                url: "../Purchase/PurchaseTransactionSearch",
+                data: data,
+                success: function (result) {
+                    PurchaseTransLoad(result);
+                }
+            });
+        }
+        else if (SearcT == 3) {
+            var data = {};
+            data.SlNo = 0;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+            data.ItemId = ItemId;
+            data.Status = '';
+            $.ajax({
+                type: "POST",
+                url: "../Pharmacy/HMS_PurchaseCorrectionGetsbyItem",
+                data: data,
+                success: function (result) {
+                    PurchaseCorrectionLoad(result);
+                }
+            });
+        }
+    }
+
+    function AllTransLoad(result)
+    {
+        var BalQty = 0;
+        disable_datatable('tbltransaction');
+        var responseText = "<thead><tr><th>Bill#</th><th class='text-center'>Date</th><th class='text-center'>Type</th><th>Salesman</th><th class='text-center'>Status</th><th>Account Name</th><th>Remarks</th><th>Qty.</th><th style='text-align:right'>Balance</th><th style='text-align:right'>Cost</th><th style='text-align:right'>Price</th><th style='text-align:center'>Location</th><th>Department</th><th>JobCode</th></tr>" +
+                          "<tr><th>Bill#</th><th>Date</th><th class='text-center'>Type</th><th>Salesman</th><th class='text-center'>Status</th><th>Account Name</th><th>Remarks</th><th> </th><th style='text-align:right'> </th><th style='text-align:right'> </th><th style='text-align:right'> </th><th>Location</th><th>Department</th><th>JobCode</th></tr></thead><tbody>";
+
+        for (var n = 0; n < result.length; n++) {
+
+            if (result[n].Status == 'IN') {
+                BalQty += (result[n].Quantity)
+            }
+            else {
+                BalQty = BalQty - (result[n].Quantity)
+            }
+
+            if ((usermenu1.indexOf("M31") == -1) && (usermenu1.indexOf("M35") == -1) && (usermenu1.indexOf("M159") == -1) && (usermenu1.indexOf("M233") == -1) && result[n].TransType == 'PI')
+            {
+                responseText += "<tr style='display:none' class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                            "<td class='text-left'> " + result[n].BillNo + "</td>" +
+                                              "<td class='text-center'>" + result[n].InvoDate + " </td>" +
+                                            "<td class='text-center'>" + result[n].TransType + "  </td>" +
+                                           "<td class='text-left'>" + result[n].Salesman + " </td>" +
+                                             "<td class='text-center' >" + result[n].Status + "  </td>" +
+                                           "<td class='text-left'>" + result[n].AccountName + " </td>" +
+                                             "<td class='text-left'>" + result[n].Remarks + " </td>" +
+                                           "<td class='text-center QtyColour'>" + result[n].Quantity + " </td>" +
+                                           "<td class='text-center'>" + (BalQty).toFixed(Decimal) + "  </td>" +
+                                           "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                                           "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                                            "<td style='text-align:center'>" + result[n].Locnname + " </td>" +
+                                             "<td class='text-left'>" + result[n].DeptName + "  </td>" +
+                                             "<td class='text-left'>" + result[n].JobCode + "  </td>" + "</tr>";
+            }
+            else if ((usermenu1.indexOf("M54") == -1) && (usermenu1.indexOf("M162") == -1) && (usermenu1.indexOf("M173") == -1) && (usermenu1.indexOf("M192") == -1) && (usermenu1.indexOf("M227") == -1) && result[n].TransType == 'SI') {
+                responseText += "<tr style='display:none' class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                 "<td class='text-left'> " + result[n].BillNo + "</td>" +
+                      "<td class='text-center'>" + result[n].InvoDate + " </td>" +
+                    "<td class='text-center'>" + result[n].TransType + "  </td>" +
+                   "<td class='text-left'>" + result[n].Salesman + " </td>" +
+                     "<td class='text-center'>" + result[n].Status + "  </td>" +
+                   "<td class='text-left'>" + result[n].AccountName + " </td>" +
+                     "<td class='text-left'>" + result[n].Remarks + " </td>" +
+                   "<td class='text-center QtyColour'>" + result[n].Quantity + " </td>" +
+                   "<td class='text-center'>" + (BalQty).toFixed(Decimal) + "  </td>" +
+                   "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                   "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                    "<td style='text-align:center'>" + result[n].Locnname + " </td>" +
+                     "<td class='text-left'>" + result[n].DeptName + "  </td>" +
+                     "<td class='text-left'>" + result[n].JobCode + "  </td>" + "</tr>";
+            }
+
+            else {
+                responseText += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                            "<td class='text-left'> " + result[n].BillNo + "</td>" +
+                                              "<td class='text-center'>" + result[n].InvoDate + " </td>" +
+                                            "<td class='text-center'>" + result[n].TransType + "  </td>" +
+                                           "<td class='text-left'>" + result[n].Salesman + " </td>" +
+                                             "<td class='text-center'>" + result[n].Status + "  </td>" +
+                                           "<td class='text-left'>" + result[n].AccountName + " </td>" +
+                                             "<td class='text-left'>" + result[n].Remarks + " </td>" +
+                                           "<td class='text-center QtyColour'>" + result[n].Quantity + " </td>" +
+                                           "<td class='text-center'>" + (BalQty).toFixed(Decimal) + "  </td>" +
+                                           "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                                           "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                                            "<td style='text-align:center'>" + result[n].Locnname + " </td>" +
+                                             "<td class='text-left'>" + result[n].DeptName + "  </td>" +
+                                             "<td class='text-left'>" + result[n].JobCode + "  </td>" + "</tr>";
+            }
+        }
+
+        $('#tbltransaction').html(responseText + '</tbody>');
+        datatableWithsearch('tbltransaction', 'MultipleAllTransaction');
+    }
+
+    function SalesTransLoad(result)
+    {
+        var qty = 0;
+        disable_datatable('tbltransaction');        
+        var ProdRow = "<thead><tr>" +
+            "<th>SalesInvoice</th>" +
+            "<th class='text-center'>Date</th>" +
+            "<th>AccountName</th>" +
+            "<th>Delivery Details</th>" +
+            "<th>Qty.</th>" +
+            "<th style='text-align:right'>Price</th>" +
+            "<th>Location</th>" +
+            "<th>Salesman</th>" +
+            "<th>Department</th></tr>" +
+
+            "<tr>" +
+            "<th>SalesInvoice</th>" +
+            "<th class='text-center'>Date</th>" +
+            "<th>AccountName</th>" +
+            "<th>Delivery Details</th>" +
+            "<th>Qty.</th>" +
+            "<th style='text-align:right'>Price</th>" +
+            "<th>Location</th>" +
+            "<th>Salesman</th>" +
+            "<th>Department</th>" +
+            "</tr></thead><tbody>";
+
+        if (result.length != 0) {
+
+            for (var n = 0; n < result.length; n++) {
+                if (result[n].ProdQty > 0) {
+                    ProdRow += "<tr  ondblclick=gotoSales(" + result[n].BillSlNo + "," + result[n].BillSeriesId + "," + result[n].DeptId + ") class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                       "<td class='text-center'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+                       "<td class='text-center'>" + result[n].InvDate + "    </td>" +
+                       "<td class='text-left'>" + result[n].CustName + "    </td>" +
+                        "<td class='text-left'>" + result[n].GarageName + "       </td>" +
+                       "<td class='text-center' style='color:#0033cc;font-weight:bold'>" + result[n].ProdQty + "                                   </td>" +
+                       "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                       "<td class='text-left'>" + result[n].Location + " </td>" +
+                       "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                       "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                        "</tr>";
+                }
+                else {
+                    ProdRow += "<tr ondblclick=gotoSales(" + result[n].BillSlNo + "," + result[n].BillSeriesId + "," + result[n].DeptId + ") class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
+                                                  "<td class='text-center'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+                                                  "<td class='text-center'>" + result[n].InvDate + "                                   </td>" +
+                                                  "<td class='text-left'>" + result[n].CustName + "                                   </td>" +
+                                                   "<td class='text-left'>" + result[n].GarageName + "       </td>" +
+                                                  "<td class='text-center' style='color:red;font-weight:bold'>" + result[n].ProdQty + "                                  </td>" +
+                                                  "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+                                                  "<td class='text-left'>" + result[n].Location + " </td>" +
+                                                  "<td class='text-left'>" + result[n].SalesMan + " </td>" +
+                                                  "<td class='text-left'>" + result[n].DepartmentName + "                                   </td>" +
+                                                   "</tr>";
+                }
+                qty += (result[n].ProdQty);
+
+            }
+            
+            $('#tbltransaction').html(ProdRow + '</tbody>');
+            datatableWithsearch('tbltransaction', 'MultipleSalesT');
+            $('#tbltransaction').scrollTop(0);
+            qty = 0;
+        }
+        else {
+            $('#tbltransaction').html(ProdRow + '</tbody>');
+            datatableWithsearch('tbltransaction', 'MultipleSalesT');
+        }
+
+    }
+
+    function PurchaseTransLoad(result)
+    {
+        disable_datatable('tbltransaction');
+        var ProdRow = "<thead><tr><th>Invoice No</th><th class='text-center'>Date</th><th>Supplier</th><th>Supp_No</th><th>Qty.</th><th style='text-align:right'>FC Cost</th><th style='text-align:right'>Cost</th><th>Location</th><th>Currency</th><th>Department</th><th>PO_Ref</th><th style='text-align:right'>OtherCost</th></tr>" +
+                          "<tr><th>Invoice No</th><th class='text-center'>Date </th><th>Supplier</th><th>Supp_No</th><th>Qty.</th><th style='text-align:right'>FC Cost</th><th style='text-align:right'>Cost</th><th>Location</th><th>Currency </th><th>Department</th><th>PO_Ref</th><th style='text-align:right'>OtherCost</th></tr></thead><tbody>";
+        if (result.length != 0) {
+            for (var p = 0; p < result.length; p++) {
+                var a = (result[p].Rate + result[p].OtherCost).toFixed(Decimal);
+                var lpotr = '';
+                if (result[p].LPO != '0')
+                    lpotr = result[p].LPO;
+
+                if (result[p].PurchaseType == 'Local' || SuppDetailsRight == 'Yes') {
+                    ProdRow = ProdRow + "<tr  id=" + 'pdctrow' + (p + 1) + ">" +
+                        "<td style='width:10%' class='text-left'>" + result[p].InvoNo + "</td>" +
+                        "<td class='text-center'>" + result[p].InvoDate + "</td>" +
+                        "<td style='width:20%' class='text-left'>" + result[p].SupplierName + "</td>" +
+                        "<td class='text-left'>" + result[p].AccName + "</td>" +
+                        "<td style='text-align:center' class='QtyColour'>" + result[p].Quantity + "</td>" +
+                        "<td style='text-align:right'>" + parseFloat(result[p].FCGrandTotal).toFixed(Decimal) + "</td>" +
+                         "<td style='text-align:right'>" + a + "</td>" +
+                        "<td class='text-left'>" + result[p].Locnname + "</td>" +
+                        "<td class='text-left'>" + result[p].CurrencyName + "</td>" +
+                        "<td class='text-left'>" + result[p].DeptName + "</td>" +
+                        "<td class='text-left'>" + lpotr + "</td>" +
+                         "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                        "</tr>";
+                }
+                else {
+                    ProdRow = ProdRow + "<tr id=" + 'pdctrow' + (p + 1) + ">" +
+                       "<td style='width:10%' class='text-left'>" + result[p].InvoNo + "</td>" +
+                        "<td class='text-center'>" + result[p].InvoDate + "</td>" +
+                        "<td></td>" +
+                        "<td></td>" +
+                        "<td style='text-align:center' class='QtyColour'>" + result[p].Quantity + "</td>" +
+                        "<td style='text-align:right'>" + parseFloat(result[p].FCGrandTotal).toFixed(Decimal) + "</td>" +
+                         "<td style='text-align:right'>" + a + "</td>" +
+                        "<td class='text-left'>" + result[p].Locnname + "</td>" +
+                        "<td class='text-left'>" + result[p].CurrencyName + "</td>" +
+                        "<td class='text-left'>" + result[p].DeptName + "</td>" +
+                        "<td class='text-left'>" + lpotr + "</td>" +
+                         "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                        "</tr>";
+                }
+            }
+            $('#tbltransaction').html(ProdRow + '</tbody>');
+            datatableWithsearch('tbltransaction', 'MultiplePurchaseT');
+            $('#tbltransaction').scrollTop(0);
+        }
+        else {
+            $('#tbltransaction').html(ProdRow + '</tbody>');
+            datatableWithsearch('tbltransaction', 'MultiplePurchaseT');
+        }
+
+    }
+
+    function PurchaseCorrectionLoad(result) {
+        disable_datatable('tbltransaction');
+        var ProdRow = "<thead><tr class='font-small-2'><th >SI NO</th><th class='text-center'>Item</th><th>Batch</th><th>New Batch</th><th>Old Expiry</th><th >New Expiry</th><th >Old SPrice</th><th >New SPrice</th><th>Old Qty</th><th>New Qty</th><th>Loaction</th><th>Reason</th><th>Remarks</th></tr>" +
+                          "<tr><th>SI No</th><th class='text-center'>Item </th><th>Batch</th><th>New Batch</th><th>Old Expiry</th><th >New Expiry</th><th >Old SPrice</th><th >New SPrice</th><th>Old Qty </th><th>New Qty</th><th>Loaction</th><th>Reason</th><th>Remarks</th></tr></thead><tbody>";
+        if (result.length != 0) {
+            for (var p = 0; p < result.length; p++) {
+                var RID = parseInt(result[p].Status); var Indx = ReasonArray.findIndex(obj => obj.Id == RID);
+                var ReasonTxt = ReasonArray[Indx].Reason;
+                    ProdRow = ProdRow + "<tr  id=" + 'pdctrow' + (p + 1) + ">" +
+                        "<td class='text-center'>" + result[p].SlNo + "</td>" +
+                        "<td class='text-left'>" + result[p].ItemCode + "</td>" +
+                        "<td class='text-left'>" + result[p].Batch + "</td>" +
+                        "<td class='text-left'>" + result[p].ItemDescription + "</td>" +
+                        "<td >" + result[p].Expiry + "</td>" +
+                        "<td >" + result[p].InvoDate + "</td>" +
+                        "<td style='text-align:right'>" + parseFloat(result[p].SellingRate).toFixed(Decimal) + "</td>" +
+                        "<td style='text-align:right'>" + parseFloat(result[p].Amount).toFixed(Decimal) + "</td>" +
+                        "<td class='text-center'>" + result[p].Loose + "</td>" +
+                        "<td class='text-center'>" + result[p].Free + "</td>" +
+                        "<td >" + result[p].DueDate + "</td>" +
+                        "<td class='text-left'>" + ReasonTxt + "</td>" +
+                        "<td >" + result[p].Remarks + "</td>" +
+                        "</tr>";
+            }
+            $('#tbltransaction').html(ProdRow + '</tbody>');
+            datatableWithsearch('tbltransaction', 'MultiplePurchaseTnn');
+            $('#tbltransaction').scrollTop(0);
+        }
+        else {
+            $('#tbltransaction').html(ProdRow + '</tbody>');
+            datatableWithsearch('tbltransaction', 'MultiplePurchaseTnn');
+        }
+
+    }
+
+    function datatableWithsearch(tablename, Type) {
+
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                if (title == 'Currency' || title == 'OrderNo' || title == 'SerialNo' || title == 'InvoiceNo') {
+                    $(this).html('<input type="text" class="form-control"  style="width:120px"  placeholder="' + title + '"/>')
+                }
+                else {
+                    $(this).html('<input type="text" class="form-control"   placeholder="' + title + '"/>')
+                }
+        });
+
+        var table = null;
+
+        if (Type == 'Single') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                orderCellsTop: true,
+                //"order": false,
+                paging: false,
+            });
+
+        }
+        else if (Type == 'Multiple') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tir',
+                orderCellsTop: true,
+                "order": [],
+                paging: false,
+              
+            });
+
+
+        }
+        else if (Type == 'MultiplePurchaseT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "10%", "targets": 0 },
+                    { "width": "15%", "targets": 2 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                paging: false,
+              
+            });
+
+        }
+        else if (Type == 'MultiplePurchaseTnn') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "15%", "targets": 1 },
+                    //{ "width": "10%", "targets": 2 },
+                    //{ "width": "10%", "targets": 3 },
+                    //{ "width": "10%", "targets": 4 },
+                    //{ "width": "15%", "targets": 5 },
+                    //{ "width": "15%", "targets": 6 },
+                    //{ "width": "15%", "targets": 7 },
+                    //{ "width": "15%", "targets": 8 },
+                    //{ "width": "15%", "targets": 9 },
+                   // { "width": "10%", "targets": 10 },
+                    { "width": "10%", "targets": 11 },
+                    { "width": "10%", "targets": 12 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                paging: false,
+                
+            });
+
+        }
+        else if (Type == 'MultiplePurchaseOrderT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "5%", "targets": 1 },
+                    { "width": "30%", "targets": 2 },
+                    { "width": "10%", "targets": 3 },
+                    { "width": "10%", "targets": 4 },
+                    { "width": "15%", "targets": 5 },
+                    { "width": "15%", "targets": 6 },
+                    { "width": "15%", "targets": 7 },
+                    { "width": "15%", "targets": 8 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                paging: false
+                
+            });
+
+        }
+        else if (Type == 'MultipleSalesT') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "3%", "targets": 1 },
+                    { "width": "30%", "targets": 2 },
+                    { "width": "40%", "targets": 3 },
+                    { "width": "5%", "targets": 4 },
+                    { "width": "10%", "targets": 5 },
+                    { "width": "5%", "targets": 6 },
+                    { "width": "5%", "targets": 7 },
+                    { "width": "5%", "targets": 8 },
+                ],
+                orderCellsTop: true,
+                "order": [],
+                paging: false
+                // "pageLength": -1
+            });
+
+
+        }
+
+        else if (Type == 'MultipleAllTransaction') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                "columnDefs": [
+                    { "width": "1%", "targets": 1 },
+                    { "width": "15%", "targets": 3 },
+                    { "width": "12%", "targets": 5 },
+                    { "width": "30%", "targets": 6 },
+                    { "width": "10%", "targets": 11 },
+                     { "width": "10%", "targets": 13 },
+                ],
+                orderCellsTop: true,
+                paging: false,
+               
+            });
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+    }
+
+    function disable_datatable(tablename) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            return;
+        }
+    }
+</script>
+
+
+
+
+

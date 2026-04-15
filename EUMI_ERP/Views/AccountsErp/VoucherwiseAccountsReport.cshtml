@@ -1,0 +1,500 @@
+﻿
+@{
+    ViewBag.Title = "VoucherwiseAccountsReport";
+}
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+  
+
+
+</style>
+<div class="myData" data-x="M91" />
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td style="display:none;"><h5 id="header2"></h5></td>
+                                <td width="30%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#VoucherType').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintthisReportWindows('VOCHERWISEACCOUNTSREPORT', $('#ResultLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+
+
+
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+                                <br /><hr style="margin-top:-1%" />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable" width="150%"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%;width:580px;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Voucherwise Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:15.5%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:5.5%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:2.5%;"></div>
+                    <div class="row" style="margin-top:1%">
+                        <label style="margin-top:2%;font-weight:bold;margin-left:4%">Voucher Type</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="VoucherType" name="priority" class="form-control">
+                                <option value="0" name="All">All-</option>
+                                <option value="1" name="JV">JV-Journal Voucher</option>
+                                <option value="2">RV-Reciept Voucher </option>
+                                <option value="3">PV-Payment Voucher </option>
+                                <option value="4">SI-Sales Invoice </option>
+                                <option value="5">PI-Purchase Invoice </option>
+                                <option value="6">DB-Debit To Bank </option>
+                                <option value="15">CB-Credit To Bank </option>
+                                <option value="7">PC-Petty Cash Voucher </option>
+                                <option value="8">CV-Contra Voucher </option>
+                                <option value="9">AV-Adjustment Voucher </option>
+                                <option value="10">TV-Transfer Voucher </option>
+                                <option value="11">CN-Credit Note Voucher </option>
+                                <option value="12">DN-Debit Note Voucher </option>
+                                <option value="13">BPV-Bank Payment Voucher </option>
+                                <option value="14">BRV-Bank Receipt Voucher </option>
+                                
+                            </select>
+                        </div>
+
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:1%">Dept.</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="department" name="priority" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    
+                 </div>
+               
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:40%" id="btnsubmit" class="btn btn-primary">Go</button>
+                    <input type="hidden" id="ResultLength" class="form-control" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+    
+
+    function GetDepartment(id) {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UserDepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result, a) {
+        $("#department").empty();
+        $("#department").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#department").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+    }
+
+    //function VoucherTypeLoad(result) {
+    //    $("#VoucherType").empty();
+    //    VoucherType = "<option value='0'>Select</option>";
+    //    for (var i = 0; i < result.length; i++) {
+    //        VoucherType += "<option value='" + result[i].VoucherTypeId + "'name=" + result[i].Description + ">" + result[i].Description + "</option>";
+    //    }
+    //    $("#VoucherType").append(VoucherType);
+    //}
+
+    $(function () {
+   
+
+        GetDepartment(0);
+        $('#VoucherType').focus()
+        //var data1 = {};
+        //data1.VoucherTypeId = 0;
+        //$.ajax({
+        //    type: "POST",
+        //    url: "../Master/VoucherTypeGetandGets",
+        //    data: data1,
+        //    success: function (result) {
+        //        VoucherTypeLoad(result.oList);
+        //    }
+        //});
+
+        $('#VoucherType').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#department').focus();
+                e.preventDefault();
+            }
+        });
+        $('#department').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+       // $('#DateFrom').val(FinanceStartDate)
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+20, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+
+        $("#btnsubmit").click(function (e) {
+            var Condition = '';
+            var FromDate = $('#DateFrom').val();
+            var ToDate = $('#DateTo').val();
+            var VoucherType = parseInt($('#VoucherType').val() || 0);
+            console.log('VoucherType')
+            var Department = 0//parseInt($('#department').val() || 0);
+            if ($('#DateFrom').val() == '')
+            {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+            else {
+                $('#Loading').show();
+               
+
+                Condition = 'VTypeId=' + VoucherType + ' and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+                var data = {};
+
+                data.Condition = Condition;
+                data.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../AccountsErp/VoucherwiseAccountGetandGets",
+                    data: data,
+                    success: function (result) {
+
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showreport(result);
+                    }
+                });
+            }
+        });
+        function Showreport(result) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            var FromDate = []; var ToDate = [];
+            FromDate = ($("#DateFrom").val()).split('/');
+            ToDate = ($("#DateTo").val()).split('/');
+
+            var FromDatePrint = FromDate[0] + '-' + monthNames[parseInt(FromDate[1] - 1)] + '-' + FromDate[2];
+            var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+            disable_datatable('Tblreport', 'buttonPlace');
+            var responseText = "<thead><tr><th style='width:1%'>Sl#</th><th>Voucher#</th><th style=text-align:center>Date</th><th>Voucher Type</th><th>Type</th><th>Reference#</th><th style=text-align:center>Account#</th><th>Account Name</th><th style=text-align:right>Debit</th><th style=text-align:right>Credit</th><th>Description</th><th>Dept.Code</th><th>Cheque/ Transaction#</th><th>Cheque/ Transaction Date</th><th>Tax#</th><th>Transaction Type</th><th>User</th></tr></thead><tbody>";
+            for (var i = 0; i < result.length; i++) {
+                var slno = parseInt(i + 1);               
+                if (result[i].VoucherNo == '') {
+                    responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td id="Col8_' + slno + '">' + result[i].VoucherNo + '</td><td id="Col7_' + slno + '" style=text-align:center><b>' + result[i].VDate + '</b></td><td style=text-align:center>' + result[i].VTypePrefix + '</td><td id="Coltype_' + slno + '">' + result[i].VType + '</td><td id="Col4_' + slno + '">' + result[i].ReferenceNo + '</td><td id="Col1_' + slno + '" style=text-align:center>' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].Acc_Description + '</td><td id="Col5_' + slno + '" style=text-align:right><b>' + parseFloat(result[i].Debit || 0).toFixed(Decimal) + '</b></td><td id="Col6_' + slno + '" style=text-align:right><b>' + parseFloat(result[i].Credit || 0).toFixed(Decimal) + '</b></td><td id="Col3_' + slno + '">' + result[i].VDescription + ' </td><td>' + result[i].DepartmentName + '</td><td>' + result[i].ChequeNo + '</td><td>' + result[i].ChequeDate + '</td><td>' + result[i].TaxNo + '</td><td>' + result[i].TxnType + '<td></td>' + result[i].UserName + '</td></tr>';
+
+                }
+                else if (result[i].VTypePrefix != '') {
+
+                    responseText += '<tr ondblclick=gotoreport(' + result[i].VoucherNo + "," + result[i].VTypeId + ",'" + result[i].VTypePrefix + "'," + result[i].BillSerId + "," + result[i].DeptId + ')><td>' + slno + '</td><td id="Col8_' + slno + '">' + result[i].VoucherNo + '</td><td id="Col7_' + slno + '" style=text-align:center>' + result[i].VDate + '</td><td style=text-align:center>' + result[i].VTypePrefix + '</td><td id="Coltype_' + slno + '" style=text-align:center>' + result[i].VType + '</td><td id="Col4_' + slno + '">' + result[i].ReferenceNo + '</td><td id="Col1_' + slno + '" style=text-align:center>' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].Acc_Description + '</td><td id="Col5_' + slno + '" style=text-align:right>' + parseFloat(result[i].Debit || 0).toFixed(Decimal) + '</td><td id="Col6_' + slno + '" style=text-align:right>' + parseFloat(result[i].Credit || 0).toFixed(Decimal) + '</td><td id="Col3_' + slno + '">' + result[i].VDescription + ' </td><td>' + result[i].DepartmentName + '</td><td>' + result[i].ChequeNo + '</td><td>' + result[i].ChequeDate + '</td><td>' + result[i].TaxNo + '</td><td>' + result[i].TxnType + '</td><td>' + result[i].UserName + '</td></tr>';
+
+                }
+               
+
+            }
+            $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Voucher#</th><th>Date</th><th>Voucher Type</th><th>Type</th><th>Reference#</th><th>Account#</th><th>Account Name</th><th> </th><th> </th><th>Description</th><th>Dept.Code</th><th>Cheque/ Transaction#</th><th>Cheque/ Transaction Date</th><th>Tax#</th><th>Transaction Type</th><th>User</th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            var title = "Voucherwise Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+            datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+            $('#header').text(title);
+            $('#header2').text("From " + FromDatePrint + " to " + ToDatePrint + "");
+            $('#ResultLength').val(result.length);
+        }
+    });
+
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'lBfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                     "<'row'<'col-sm-12'tr>>" +
+                     "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                "columnDefs": [
+                                { "width": "1%", "targets": 0 },
+                                { "width": "3%", "targets": 1 },
+                                { "width": "3%", "targets": 2 },
+                                { "width": "2%", "targets": 3 },
+                                { "width": "3%", "targets": 4 },
+                                { "width": "4%", "targets": 5 },
+                                { "width": "5%", "targets": 6 },
+                                { "width": "15%", "targets": 7 },
+                                { "width": "5%", "targets": 8 },
+                                { "width": "3%", "targets": 9 },
+                                { "width": "18%", "targets": 10 },
+                                { "width": "3%", "targets": 11 },
+                                { "width": "3%", "targets": 12 },
+                                { "width": "3%", "targets": 13 },
+                                { "width": "3%", "targets": 14 },
+                                { "width": "3%", "targets": 15 },
+                ],
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+           
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+    function gotoreport(VNum, VTypeId, VType, BillSeriesId, DeptId) {
+
+        if (VType == 'SI') {
+            if ((usermenu1.indexOf("M54") != -1)) {
+                window.open('../inventory/SalesInvoice?slno=' + VNum + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+            }
+            else if ((usermenu1.indexOf("M227") != -1)) {
+                window.open('../inventory/SalesInvoiceNew?slno=' + VNum + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+        }
+
+
+        else if (VType == 'PI') {
+            if ((usermenu1.indexOf("M31") != -1)) {
+                window.open('../inventory/PurchaseInvoice?slno=' + VNum + '&dept=' + DeptId);
+            }
+            else if ((usermenu1.indexOf("M233") != -1)) {
+                window.open('../Purchase/PurchaseInvoiceNew?slno=' + VNum + '&dept=' + DeptId);
+
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+        }
+
+
+        else if (VType == 'SR') {
+            if ((usermenu1.indexOf("M56") != -1)) {
+                window.open('../SalesInvoice/SalesReturn?billseries=' + BillSeriesId + '&slno=' + VNum + '&dept=' + DeptId);
+
+            }
+            else if ((usermenu1.indexOf("M241") != -1)) {
+                window.open('../SalesInvoice/SalesReturnNew?billseries=' + BillSeriesId + '&slno=' + VNum + '&dept=' + DeptId);
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+        }
+
+
+        else if (VType == 'PR') {
+
+            if ((usermenu1.indexOf("M32") != -1)) {
+                window.open('../Purchase/PurchaseReturn?slno=' + VNum + '&dept=' + DeptId);
+            }
+            else if ((usermenu1.indexOf("M239") != -1)) {
+                window.open('../Purchase/PurchaseReturnNew?slno=' + VNum + '&dept=' + DeptId);
+
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+        }
+        else {
+            window.open('../AccountsErp/VoucherEntryModify?vno=' + VNum + '&vtypeid=' + VTypeId);
+
+        }
+
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+</script>

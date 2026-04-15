@@ -1,0 +1,827 @@
+﻿@{
+    ViewBag.Title = "Medicine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="~/ProjectScript/Medicine.js"></script>
+<style>
+    .rightborder {
+        border-right: 1px solid #d3dce9;
+    }
+
+    .label-control {
+        font-weight: bold;
+    }
+
+    hr {
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        border-color: #d3dce9 !important;
+    }
+
+    #myImg {
+        max-width: 220px;
+        max-height: 220px;
+    }
+
+    #barcode1 {
+        max-width: 250px;
+        max-height: 110px;
+    }
+</style>
+<div class="myData" data-x="M345" />
+
+<div id="Entry" style="">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" style="">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6;">
+                    <div class="row">
+                        <div class="col-md-6 text-left">
+                            <h4 class="card-title mb-0" style="font-weight:bold;">Medicine</h4>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <fieldset id="BlCostCheck" style="display:none">
+                                <div class="custom-control custom-checkbox" style="float:right">
+                                    <input type="checkbox" class="custom-control-input" id="BelowCostflg">
+                                    <label class="custom-control-label" for="BelowCostflg">BelowCost Sale</label>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="custom-control custom-checkbox" style="float:right">
+                                    <input type="checkbox" class="custom-control-input" id="select_status" checked="">
+                                    <label class="custom-control-label" for="select_status">IsActive</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-4 rightborder">
+                                                    <div class="row mt-1 mb-2">
+                                                        <label class="col-md-4 label-control">Code<span class="danger">*</span></label>
+                                                        <div class="col-md-8 input-group m-0">
+                                                            <input type="text" id="MCode" onkeyup="changetoupper(this.id)" class="form-control denull" autocomplete="off">
+                                                            <input type="text" id="MCodeSearch" class="form-control denull" autocomplete="off" style="display:none;">
+                                                            <button type="button" class="btn btn-outline-info" id="btnsearch"><i class="fa fa-search"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <label class="col-md-4 label-control">Name<span class="danger">*</span></label>
+                                                        <div class="col-md-8">
+                                                            <input type="text" id="MName" class="form-control enterflow denull">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <label class="col-md-4 label-control">Generic Name</label>
+                                                        <div class="col-md-8">
+                                                            <input type="text" id="MGName" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                    <div class="row mt-2 mb-2">
+                                                        <label class="col-md-4 label-control">Unit<span class="danger">*</span></label>
+                                                        <div class="col-md-8 input-group m-0">
+                                                            <select class="form-control enterflow dezero" id="MUnit"></select>
+                                                            <button class="btn btn-outline-primary" type="button" onclick="Addpopupwindow(0)" id="addunit">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-1 mb-2">
+                                                        <label class="col-md-4 label-control">Company<span class="danger">*</span></label>
+                                                        <div class="col-md-8  input-group m-0">
+                                                            <select class="form-control enterflow dezero" id="MCompany"></select>
+                                                            <button class="btn btn-outline-primary" onclick="Addpopupwindow(1)" type="button" id="addgroup">+</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <label class="col-md-4 label-control">AIOCD</label>
+                                                        <div class="col-md-8">
+                                                            <input type="text" id="MAIOCD" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+
+                                                    <hr />
+                                                    <div class="row mt-2 mb-1">
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Open. Qty</label>
+                                                            <input type="text" id="MOpenQty" readonly onclick="EditInvoice(0)" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Open. Cost</label>
+                                                            <input type="text" id="MOpenCost" readonly onclick="EditInvoice(1)" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1">
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Qty in Box</label>
+                                                            <input type="text" id="MQtyBox" class="form-control enterflow denull" onkeypress="isNumberInt(event,this)" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Pack</label>
+                                                            <input type="text" id="MPack" class="form-control enterflow denull" onkeypress="isNumberInt(event,this)" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1">
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">HSN</label>
+                                                            <input type="text" id="MHSN" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Cess</label>
+                                                            <input type="text" id="MCess" class="form-control enterflow denull" onkeypress="isNumber(event,this)" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 rightborder">
+                                                    <div class="row mt-1 mb-1">
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Type<span class="danger">*</span></label>
+                                                            <div class="input-group m-0">
+                                                                <select class="form-control enterflow dezero" id="MType"></select>
+                                                                <button class="btn btn-outline-primary" onclick="Addpopupwindow(3)" type="button" id="addcat">+</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Schedule<span class="danger">*</span></label>
+                                                            <div class="input-group m-0">
+                                                                <select class="form-control enterflow dezero" id="MSchedule"></select>
+                                                                <button class="btn btn-outline-primary" onclick="Addpopupwindow(4)" type="button" id="addsbcat">+</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-1">
+
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Minimum Quantity</label>
+                                                            <input type="text" id="MMinQty" class="form-control enterflow denull" onkeypress="isNumberInt(event,this)" autocomplete="off">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Maximum Quantity</label>
+                                                            <input type="text" id="MMaxQty" class="form-control enterflow denull" onkeypress="isNumberInt(event,this)" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Cold Storage</label>
+                                                            <select class="form-control enterflow deno" id="MColdStorage">
+                                                                <option value="NO">No</option>
+                                                                <option value="YES">Yes</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="label-control">Banned</label>
+                                                            <select class="form-control enterflow deno" id="MBanned">
+                                                                <option value="NO">No</option>
+                                                                <option value="YES">Yes</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                    <div class="row mt-2 mb-2">
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">LP Cost</label>
+                                                            <input type="text" id="MLPCost" disabled class="form-control denull" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Avg Cost</label>
+                                                            <input type="text" id="MAvgCost" disabled class="form-control denull" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Tax<span class="danger">*</span></label>
+                                                            <select class="form-control enterflow deone" id="MTaxId"></select>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Tax %</label>
+                                                            <input type="text" id="MTaxPer" disabled class="form-control denull" autocomplete="off">
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-2">
+
+
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">MRP</label>
+                                                            <input type="text" id="MMRP" class="form-control enterflow denull" onkeypress="isNumber(event,this)" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Selling Price</label>
+                                                            <input type="text" id="MSP1" class="form-control enterflow denull" onkeypress="isNumber(event,this)" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Selling Price</label>
+                                                            <input type="text" id="MSP2" class="form-control enterflow denull" onkeypress="isNumber(event,this)" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Selling Price</label>
+                                                            <input type="text" id="MSP3" class="form-control enterflow denull" onkeypress="isNumber(event,this)" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                    <div class="row mt-2 mb-1">
+                                                        <div class="col-md-3">
+                                                            <label class="label-control">Bins</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1">
+                                                        <div class="col-md-3">
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinA" placeholder="A" autocomplete="off">
+
+                                                        </div>
+                                                        <div class="col-md-3">
+
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinB" placeholder="B" autocomplete="off">
+
+                                                        </div>
+                                                        <div class="col-md-3">
+
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinC" placeholder="C" autocomplete="off">
+
+                                                        </div>
+                                                        <div class="col-md-3">
+
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinD" placeholder="D" autocomplete="off">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2 mb-1">
+                                                        <div class="col-md-3">
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinE" placeholder="E" autocomplete="off">
+
+                                                        </div>
+                                                        <div class="col-md-3">
+
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinF" placeholder="F" autocomplete="off">
+
+                                                        </div>
+                                                        <div class="col-md-3">
+
+
+                                                            <input class="form-control enterflow denull" type="text" id="BinG" placeholder="G" autocomplete="off">
+
+                                                        </div>
+                                                        <div class="col-md-3">
+
+
+                                                            <input class="form-control denull" type="text" id="BinH" placeholder="H" autocomplete="off">
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="row mt-1 mb-1">
+                                                        <div class="col-md-12 text-right">
+                                                            <span id="CrntMode" class="badge badge-primary">Mode : Insert</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="height:220px;border:red">
+                                                        <div class="card m-0 col-md-12">
+                                                            <div class="card-header text-center p-0" style="">
+                                                                <img id="myImg" src="~/app-assets/img/elements/Pills.png" alt="Gini" class="img-thumbnail  gray" onerror="this.onerror = null; this.src = '../app-assets/img/elements/Pills.png';">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-header p-0">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input type="file" class="btn gradient-back-to-earth font-small-2 white" id="selectedImage" style="width:100%" autocomplete="off">
+                                                            </div>
+                                                            <div class="col-md-2" style="display:none;">
+                                                                <button id="ViewImages" class="btn btn-outline-warning"><i class="fa fa-eye"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class="row" style="">
+                                                            <div class="col-md-4 ">
+
+                                                                <label class="label-control">QR code</label>
+                                                                <div class="" style="border:1px solid black;height:90px; width:110px;" id="">
+                                                                    <div class="p-1 text-center" id="QRCode"></div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-8">
+
+                                                                <label class="label-control">Barcode</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-append text-center" style="height:90px; width:300px; border:1px solid black;overflow:auto" id="printbarcode">
+                                                                        <img id="barcode1" src="data:image/png;base64,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">
+                                                                    </div>
+                                                                    <input class="form-control" type="text" id="barcode" disabled="" style="display:none;background-color:white">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-0">
+                                                            <div class="col-md-12">
+                                                                <div class="text-lg-center">
+                                                                    <label class="label-control">STOCK</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input type="text" id="MStock" class="form-control denull" disabled style="background-color:white;height:90px;text-align:center;font-size:40px;font-weight:bolder;color:red;" autocomplete="off">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-actions">
+                                            <div class="text-right">
+                                                <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                <button type="button" style="width:100px" id="btnlist" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                                <button type="button" style="width:100px" id="btnnew" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                <button type="button" id="btnprintbarcode" onclick="QuantityBarcode()" class="btn btn-primary btn-min-width mr-1 mb-1">Barcode <i class="ft-printer"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none;width:100%;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold">Product List</h4></td>
+                                <td align="right">
+                                    <div class="heading-elements">
+
+                                        <div>
+
+                                            <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                            <span id="itemListButtonPlace">
+
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+
+                            </tr>
+                        </table>
+                        <div style="border-bottom:1px solid #c5cdd3;margin-top:5px;width:100%"></div>
+
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table id="tblItem" class="table table-condensed table-light table-striped table-bordered eumi-search-table">
+                                <tfoot>
+                                    <tr>
+                                        <th> </th>
+                                        <th> </th>
+                                        <th>Item Code</th>
+                                        <th>Description</th>
+                                        <th>Unit</th>
+                                        <th>Company</th>
+
+                                        <th>Type</th>
+
+                                        <th>Tax%</th>
+                                        <th> </th>
+                                        <th> </th>
+                                        <th>ROL</th>
+
+                                        <th> </th>
+                                        <th>Status</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <br />
+                            <br />
+                        </div>
+                    </div><br /><br />
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none;">
+    <input type="text" id="MedicineId" value="0" class="dezero" />
+    <input type="text" id="HSNId" value="0" class="dezero" />
+
+    <div class="row mb-1">
+        <label class="col-md-4 label-control">ROL</label>
+        <div class="col-md-8">
+            <input type="text" id="MROL" class="form-control enterflow denull" autocomplete="off">
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content" style="width:95%">
+            <div class="modal-header bg-primary white" style="height:50px">
+                <h4 class="modal-title" id="myheader" style="margin-top:-2%"> Group Master</h4>
+                <button type="button" class="close" onclick="PopUprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="openingentry" style="display:none">
+                <div id="divopenig" class="modal-body" style="height:300px;overflow-y:scroll">
+
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="NoOfLocations" value="0" />
+                    <input type="reset" class="btn btn-outline-secondary" onclick="PopUprefresh(), locationwiseqtyupdateclear()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="" onclick="locationwiseqtyupdate()" data-dismiss="modal">
+                </div>
+            </form>
+
+
+            <form id="unitdiv" style="display:none">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:13%">Unit Name<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:8.9%">
+                            <input type="text" class="form-control" id="unitname" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Unit Description</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="unitdesc" onkeypress="fousnextbutton(event,'btnunitsave');">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" style="margin-right:2%" onclick="PopUprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" style="margin-right:35%" value="Save" id="btnunitsave" onclick="SaveUnit(1)">
+                </div>
+            </form>
+            <form id="groupdiv" style="display:none">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:13%">Code<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:11.5%">
+                            <input type="text" class="form-control" id="groupcode" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Name<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:10.5%">
+                            <input type="text" class="form-control" id="groupname" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Description</label>
+                        <div class="col-md-5" style="margin-left:2%">
+                            <input type="text" class="form-control" id="groupdesc">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" style="margin-right:2%" onclick="PopUprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" style="margin-right:35%" value="Save" id="btngroupsave" onclick="SaveGroup(1)">
+                </div>
+            </form>
+            <form id="subgroupdiv" style="display:none">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:13%">Select Group<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:17.5%">
+                            <select class="form-control" id="grp">
+                                <option value='0'>---Select Group---</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Sub Group Name<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:11.5%">
+                            <input type="text" class="form-control" id="sbgroupname" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Sub Group Description</label>
+                        <div class="col-md-5" style="margin-left:3%">
+                            <input type="text" class="form-control" id="sbgroupdesc">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" style="margin-right:2%" onclick="PopUprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" style="margin-right:35%" value="Save" id="btnsbgroupsave" onclick="SaveSubGroup(1)">
+                </div>
+            </form>
+            <form id="categorydiv" style="display:none">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:13%">Type Code<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:13%">
+                            <input type="text" class="form-control" id="catcode" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Type Name<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:12%">
+                            <input type="text" class="form-control" id="catname" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Type Description</label>
+                        <div class="col-md-5" style="margin-left:3%">
+                            <input type="text" class="form-control" id="catdesc">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" style="margin-right:2%" onclick="PopUprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" style="margin-right:35%" value="Save" id="btncategorysave" onclick="SaveCategory(1)">
+                </div>
+            </form>
+            <form id="subcatdiv" style="display:none">
+                <div class="modal-body">
+
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:13%">Select Type<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:13.5%">
+                            <select class="form-control" id="cat">
+                                <option value='0'>---Select Type---</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Schedule Name<span class="danger">*</span></label>
+                        <div class="col-md-5" style="margin-left:7.5%">
+                            <input type="text" class="form-control" id="sbcatname" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:3%">
+                        <label style="font-weight:bold;margin-left:13%">Schedule Description</label>
+                        <div class="col-md-5" style="margin-left:-1%">
+                            <input type="text" class="form-control" id="sbcatdesc">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" style="margin-right:2%" onclick="PopUprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" style="margin-right:35%" value="Save" id="btnsbcategorysave" onclick="SaveSubCategory(1)">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="OTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#OTPDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CheckEditInvoce(0)" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<div style="display:none">
+    <table id="tblBarcode" class="dataTableA"></table>
+
+
+</div>
+
+<div id="QuantityPrintDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;display:none">
+    <div class="modal-dialog" role="document" style="margin-top:5%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#QuantityPrintDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="">Number of Copies:</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" id="PrintQty" value="0" onclick="$('#PrintQty').select()" onkeypress="isNumberInt(event,this)" />
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px" id="" onclick="PrintBarcodesItemMaster($('#PrintQty').val())" class="btn btn-outline-warning">Print</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/app-assets/FromStack/dist/JsBarcode.all.js"></script>
+<script type="text/javascript" src="~/app-assets/FromStack/dist/jquery-2.0.3.js"></script>
+<script type="text/javascript" src="~/app-assets/FromStack/dist/QRCODE.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script>
+    var createQRCode = function () {
+        var data = $('#MCode').val();
+        $('#QRCode').empty();
+        $('#QRCode').qrcode(data);
+        //$('#qrcode').append('</br><strong>' + data + '</strong>');
+    };
+
+    function generatebarcode() {
+        var Code = $('#MCode').val(); if ($('#MCode').val() == '') { Code = 0; } JsBarcode("#barcode1", Code);
+    }
+
+    $('#MCode').keyup(function () { createQRCode(); generatebarcode(); });
+    $('#MCode').change(function () { createQRCode(); generatebarcode(); });
+    createQRCode();
+    generatebarcode();
+
+    $("#MCodeSearch").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#MCodeSearch").val();
+
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            ItemId: item.ItemId,
+                            Product: item.Description,
+                            productcode: item.ItemCode,
+                            GrpId: item.GrpId,
+                            CategoryId: item.CategoryId,
+                            headers: ["Code", "Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#Loading').show();
+
+
+            GetItem(ui.item.ItemId, ui.item.GrpId, ui.item.CategoryId);
+            $('#MCode').show();
+            $('#MCodeSearch').hide();
+            $('#btnsubmit').prop("disabled", false);
+            $('#btnsubmit').show();
+            $('#btnsearch').removeClass();
+            $('#btnsearch').addClass('btn btn-outline-info');
+        },
+    });
+
+
+    $("#MName").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#MName").val();
+
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            ItemId: item.ItemId,
+                            Product: item.Description,
+                            productcode: item.ItemCode,
+                            GrpId: item.GrpId,
+                            CategoryId: item.CategoryId,
+                            headers: ["Code", "Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+
+
+        },
+    });
+
+
+
+
+
+
+
+
+
+    $("#MHSN").autocomplete({
+        source: function (request, response) {
+            $("#HSNId").val(0);
+            var data = {};
+            data.ItemCode = $("#MHSN").val();
+
+            $.ajax({
+                url: '../Master/HMS_HSNSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.Hsncode,
+                            label1: item.Name,
+                            HsnId: item.DivId,
+                            Hsncode: item.Hsncode,
+                            Name: item.Name,
+                            headers: ["HSN Code", "HSN Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $("#HSNId").val(ui.item.HsnId);
+        },
+    });
+</script>

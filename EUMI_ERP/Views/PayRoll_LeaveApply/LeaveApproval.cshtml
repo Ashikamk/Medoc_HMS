@@ -1,0 +1,353 @@
+﻿
+@{
+    ViewBag.Title = "LeaveApproval";
+
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="../Projectscript/LeaveApproval.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<style>
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+</style>
+
+
+<style>
+    .icon-clock:hover {
+        color: orange;
+    }
+
+    .icon-clock {
+        margin-left: 3%;
+        color: #17a2b8;
+    }
+</style>
+<div class="myData" data-x="M182" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                <h4 class="card-title mb-0">Leave Approval</h4>
+            </div>
+      <div class="card-body">
+          <form action="#">
+              <div class="px-3">
+                  <div class="card-content collapse show">
+                      <div class="card-body" style="height:600px">
+
+
+
+                          <div class="form-body" style="background-color:#F0F6F6;margin-left:-10px;margin-bottom:-35px">
+
+
+
+
+                              <div class="row" style="height:50px">
+                                  <div class="text-left" style="margin-left:1270px">
+                                      <button type="button" style="width:130px;margin-bottom:-30px" class="btn btn-primary" id="btnapprovedlist" onclick="GettheList()">Approved List </button>
+                                      <button type="button" style="width:130px;margin-bottom:-30px" class="btn btn-primary" id="btnrejectedlist" onclick="GettheRejList()">Reject List </button>
+                                      <button type="button" style="display:none;margin-bottom:-30px;margin-left:-1510px" id="backbtn" class="btn btn-primary" onclick="backshow()">Leave Approval</button>
+                                  </div>
+
+
+                                  <div style="margin-top:-10px" id="enterdate">
+                                      <div style="margin-bottom:10px">
+                                          <label style="margin-top:-20px;margin-bottom:-00px;margin-left:30px;text-align:right "><b>Enter Date :</b> </label>
+                                          <input type="text" style="width:130px; margin-top:-30px;margin-left:130px" class="form-control" id="SelectDate" onchange="GetList()" autocomplete="off">
+                                      </div>
+                                  </div>
+                              </div>
+
+
+                              @*<div class="row" style="margin-top:30px" id="enterdate">
+                                <div style="margin-bottom:20px">
+                                    <label style="margin-top:-20px;margin-bottom:-00px;margin-left:1280px;text-align:left "><b>Enter Date :</b> </label>
+                                    <input type="text" style="width:120px; margin-top:-30px;margin-left:1380px" class="form-control" id="SelectDate" onchange="GetList()" autocomplete="off">
+                                </div>
+                             </div>*@
+
+
+                              <table id="AttendanceList" class="table table-striped table-bordered zero-configuration dataTable"></table>
+
+
+
+
+                              <table id="ApprovedList" class="table table-striped table-bordered zero-configuration dataTable" style="display:none"></table>
+
+
+
+
+                              <table id="RejectedList" class="table table-striped table-bordered zero-configuration dataTable" style="display:none"></table>
+
+
+                          </div>
+
+
+                          @*<div class="form-actions">
+                               <div class="text-right" style="margin-right:50px">
+                              <button type="button" style="width:130px;margin-bottom:-21px" class="btn btn-primary" id="btnapprovedlist" onclick="GettheList()">Approved List </button>
+                              <button type="button" style="width:130px;margin-bottom:-21px" class="btn btn-primary" id="btnrejectedlist" onclick="GettheRejList()">Reject List </button>
+                              <button type="button" style="display:none;margin-bottom:-20px;margin-left:10px" id="backbtn" class="btn btn-primary" onclick="backshow()">Back</button>
+                         </div>
+                         </div>*@
+
+
+                      </div>
+                  </div>
+              </div>
+          </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+  
+
+
+
+<script>
+ $(document).ready(function () {
+     $('#SelectDate').daterangepicker({
+         minDate: minDate,
+         singleDatePicker:true,
+         showDropdowns: true,
+         locale: {
+             format: 'DD/MM/YYYY'
+         }
+     });
+ });
+
+
+ $(document).ready(function () {
+ });
+
+ function GetList() {
+
+     var UId = 0;
+     var DeptId = 0;
+     var data = {};
+     data.Date = $('#SelectDate').val();
+     data.Flag = 1;
+     // alert(data.Date)
+     $.ajax({
+         type: "POST",
+         url: "../PayRoll_LeaveApply/LeaveApplyGetandGets",
+         data: data,
+         success: function (result) {
+             ShowEmployeeList(result.oList);
+         }
+     });
+ }
+ function ShowEmployeeList(result)
+ {
+
+     $("#AttendanceList tr").remove();
+     $("#backbtn").hide();
+
+    var responseText = "<thead><tr><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Slno</th><th>Name</th><th>LeaveFrom</th> <th>LeaveUpTo</th> <th>LeaveType</th><th>Total Leaves</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Status</th> </tr></thead><tbody>";
+      for (var l = 0; l < result.length; l++)
+      {
+          var slno = parseInt(l + 1);
+       
+         //  alert(result[l].TotalDays)
+          responseText += '<tr id=' + 'row' + slno +' ><td style="width:1.0%;text-align:center;">' + slno + '</td>       <td style="width:2.5%;display:none;" id= ' + 'hiddencode' + slno + '>' + result[l].EmpId + '</td>       <td style="width:2.2%;" id= ' + 'EmpCode' + slno + '>' + result[l].Name + '</td>        <td style="width:1.8%;"  id= ' + 'leavefrom' + slno + ' > ' + result[l].LeaveFrom + '</td>        <td style="width:1.8%;"  id= ' + 'leavesupto' + slno + ' > ' + result[l].LeavesUpto + '</td>          <td style="width:2.0%;" id= ' + 'leavetype' + slno + '>' + result[l].LeaveType + '</td>        <td style="width:2.0%;" id= ' + 'txtdays' + slno + '>' + result[l].TotalDays + '</td>  <td id=' + 'Approved' + slno
+          + '  class= "jsgrid-cell jsgrid-control-field jsgrid-align-left"  style="width:3.0%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <button type="button" title=Approve class="badge badge-default round  btn-success" id="btnemail" style="font-weight:normal;color:white;border:none;" onclick="approved(' + slno + ' ,' + 1 + ')">Approve</button>      <button type="button" title= Reject  class="badge badge-default round  btn-warning" id="delete" style="font-weight:normal;color:white;border:none;"  onclick="approved(' + slno + ' ,' + 2 + ')">Reject</button> </td>  </tr> ';
+
+          //  $('#RowGet').val(result.length);
+     }
+     $('#AttendanceList').append(responseText);
+     $('#div1').animate({ scrollTop: 0 });
+ }
+
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+ ////////////////////////////works when EMAIL button clicks\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ function SendEmail() {
+     //alert("enter");
+     $.ajax({
+         type: "POST",
+         url: "../PayRoll_LeaveApply/SendMailToUser",
+         success: function (result) {
+
+             for (var i = 0; i <= result.oList.length; i++) {
+                 var Status = result.oList[i].Status;
+                 Showstatus1(Status);
+             }
+             //if (result == 'true') {
+             //    alert("Mail Send Sucessfully")
+             //}
+         }
+     });
+ }
+ function Showstatus1(Status) {
+     if (Status == 1) {
+         //formrefresh();
+         swal('The Mail Approved', "", "success");
+         $('.swal-button swal-button--confirm').focus();
+
+     }
+     else if (Status == 2) {
+         //formrefresh();
+         swal('The MailRejected', "", "success");
+         $('.swal-button swal-button--confirm').focus();
+     }
+ }
+
+ ///////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+
+
+
+
+ function GettheList() {
+     var flag = 1;
+     var data = {};
+     data.DeptId = ERPDeptId;
+     data.Flag = 1;
+     
+     $.ajax({
+         type: "POST",
+
+         url: "../../PayRoll_LeaveApply/ApprovedList",
+         data: data,
+         success: function (result) {
+
+             ShowStockList(result.oList);
+
+         }
+     });
+ }
+
+
+ function ShowStockList(result) {
+
+     $("#AttendanceList").hide();
+     $("#RejectedList").hide();
+     $("#ApprovedList").show();
+     $("#enterdate").hide();
+     $("#backbtn").show();
+     
+     var responseText = "<thead><tr><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Slno</th>  <th>Name</th> <th>EmpCode</th> <th>LeaveFrom</th> <th>LeaveUpTo</th> <th>LeaveType</th> </tr></thead><tbody>";
+         for (var l = 0; l < result.length; l++) {
+
+
+             var slno = parseInt(l + 1);
+             if (result[l].Flag == 1) {
+                 $("#div1").hide();
+               
+            
+
+                 responseText += '<tr> <td style="width:3.0%;text-align:center;">' + slno + '</td>   <td>' + result[l].Name + '</td> <td>' + result[l].EmpCode + '</td> <td>' + result[l].LeaveFrom + '</td> <td>' + result[l].LeavesUpto + '</td> <td>' + result[l].LeaveType + '</td> </tr>';
+             }
+
+        
+     }
+     
+    // $('AttendanceList thead tr').remove();
+    
+     $('#ApprovedList').html(responseText + '</tbody>'); 
+
+ }
+
+
+
+
+
+
+
+
+
+ function GettheRejList() {
+     var flag = 2;
+     var data = {};
+     data.DeptId = ERPDeptId;
+     data.Flag = 2;
+
+     $.ajax({
+         type: "POST",
+
+         url: "../../PayRoll_LeaveApply/RejectedList",
+         data: data,
+         success: function (result) {
+
+             ShowList(result.oList);
+
+         }
+     });
+ }
+
+
+ function ShowList(result) {
+
+
+     $("#AttendanceList").hide();
+     $("#ApprovedList").hide();
+     $("#RejectedList").show();
+     $("#enterdate").hide();
+     $("#backbtn").show();
+
+     var responseText = "<thead><tr><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Slno</th>  <th>Name</th> <th>EmpCode</th> <th>LeaveFrom</th> <th>LeaveUpTo</th> <th>LeaveType</th> </tr></thead><tbody>";
+     for (var l = 0; l < result.length; l++) {
+
+
+         var slno = parseInt(l + 1);
+         if (result[l].Flag == 2) {
+             $("#div1").hide();
+             $("#div2").hide();
+            
+        
+             responseText += '<tr> <td style="width:3.0%;text-align:center;">' + slno + '</td>   <td>' + result[l].Name + '</td> <td>' + result[l].EmpCode + '</td> <td>' + result[l].LeaveFrom + '</td> <td>' + result[l].LeavesUpto + '</td> <td>' + result[l].LeaveType + '</td> </tr>';
+         }
+
+     }
+
+     // $('AttendanceList thead tr').remove();
+
+     $('#RejectedList').html(responseText + '</tbody>');
+
+ }
+
+
+
+
+
+ function backshow()
+ {
+     $("#AttendanceList").show();
+     $("#ApprovedList").hide();
+     $("#RejectedList").hide();
+     GetList();
+     $("#enterdate").show();
+ }
+
+
+
+
+</script>
+
+
+
+
+
+
+

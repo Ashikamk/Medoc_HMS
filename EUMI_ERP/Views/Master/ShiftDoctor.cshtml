@@ -1,0 +1,336 @@
+﻿
+@{
+    ViewBag.Title = "Shiftmaster";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+
+
+<div class="myData" data-x="M337" />
+<div id="Entry" style="width:40%;margin-left:30%;height:100%;">
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:20%;">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0" style="text-align:center;font-weight:bold;font-size:x-large">Shift</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;margin-top: 15px;"></div>
+                                <form action="#" class="form">
+                                    <div class="form-body" style="margin-left:2%;">
+                                        <div class="row">
+                                            <div class="col-md-1">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label style="font-weight:bold;font-size: larger;"> Shift Name<span class="danger">*</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" style="margin-left:-2%">
+                                                <div class="form-group">
+                                                    <input type="text" onkeyup="changetoupper(this.id)" id="txtname" class="form-control" name="Name">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-actions center">
+
+                                        <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                        <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                        <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                        <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin-top:2%;margin-left:5%;display:none;width:90%;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Shift List</h4></td>
+                                <td>
+                                    <div class="heading-elements">
+                                        <div class="text-right">
+                                            <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto;">
+                            <table id="tblProcedure" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    $(document).ready(function () {
+        Defaultfocus();
+        $('.form-control').attr('autocomplete', 'off');
+        $("#btnsubmit").click(function (e) {
+            SaveAndUpdate(1)
+        });
+
+
+
+    });//Document Close
+
+    function Defaultfocus() {
+        $('#txtcode').focus();
+    }
+
+    function SaveAndUpdate(Flag) {
+
+
+      if ($('#txtname').val() == "") {
+            warningshow('Please Enter Name', 'txtname');
+        }
+
+        else {
+            $('#btnsubmit').prop('disabled', true);
+            var data = {};   //array
+            data.ShiftId = $.trim($('#ShiftId').val());
+            data.ShiftName = $.trim($('#txtname').val());
+            data.DelFlag = Flag;
+
+            $.ajax({
+                type: "POST",
+                url: "../Master/ShiftInsertandUpdate",
+                data: data,
+                success: function (result) {
+                    for (var i = 0; i < result.oList.length; i++) {
+                        var status = result.oList[i].Status;
+                        $('#btnsubmit').prop('disabled', false);
+                        Showalerts(status);
+                    }
+                }
+            });
+
+        }
+
+
+    }
+
+    function changetoupper(Id) {
+        $('#' + Id).val($('#' + Id).val().toUpperCase())
+    }
+
+
+    function formrefresh() {
+
+        $('#txtname').val('');
+
+        $('#txtname').focus();
+
+        $('#btndelete').hide();
+        $('#Warningpopup').fadeOut();
+        $('.swal-button swal-button--confirm').focus();
+
+    }
+
+    function closetable(value) {
+        $('#Entry').show();
+        $('#listing').hide();
+        if (value == 1)
+            formrefresh();
+    }
+
+    function ShowTermlist(result) {
+        $('#Entry').hide();
+        $('#listing').show();
+        disable_datatable('tblProcedure');
+        var responseText = "<thead><tr><th width=1%;align=center>Sl#</th><th  width=35%>Name</th><th width=3%>Edit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td align=center>' + slno + '</td><td>' + result[i].ShiftName + '</td><td onclick="GetRows(' + result[i].ShiftId + ')" align=center width=10px bgcolor="#00ffff "><a>' + Editbutton + '</a></td></tr>';
+        }
+        $('#tblProcedure').html(responseText + '</tbody> <tfoot> <tr><th> </th><th>Name</th><th> </th></tr></tfoot>');
+        datatableWithsearch1('tblProcedure');
+    }
+
+    function ShowTermGet(result) {
+        for (var i = 0; i < result.length; i++) {
+
+            $('#txtname').val(result[i].ShiftName);
+
+
+        }
+        $('#Entry').show();
+        $('#listing').hide();
+        $('#btndelete').show();
+        $('#txtname').focus();
+    }
+
+
+
+    //Get List and Single Row from table
+
+    function GetRows(ShiftId) {
+
+        $('#ShiftId').val(ShiftId)
+        var data = {};
+        data.ShiftId = ShiftId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/ShiftGetandGets",
+            data: data,
+            success: function (result) {
+                if (ShiftId == 0)
+                    ShowTermlist(result.oList);
+                else
+                    ShowTermGet(result.oList);
+
+            }
+        });
+
+    }
+
+    function datatableWithsearch1(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ' )
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:-webkit-fill-available" />');
+           
+        });
+        //var table = null;
+        //if (download) {
+        //    if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+        // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+        table = $('#' + tablename).DataTable({
+            dom: 'Blfrtip',
+            dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+            buttons: [],
+
+        });
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: [0, 1] }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: [0, 1] }
+                    },
+                    {
+                        extend: 'print',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: [0, 1] }
+                    }
+                ]
+            },
+            //'colvis'
+            ],
+            "columnDefs": [
+                      { "width": "0%", "targets": 0 },
+                      { "width": "0%", "targets": 1 },
+                      { "width": "100%", "targets": 2 },
+                      { "width": "0%", "targets": 3 },
+                        { "width": "0%", "targets": 4 },
+
+            ],
+        });
+
+        table.buttons(0, null).container().appendTo($("#itemListButtonPlace"));
+        $("#itemListButtonPlace").find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+
+        //$("#" + tableButtonContainerId).off("click.emButtonEvent").on("click.emButtonEvent", "[data-em-col]", function () {
+        //    var column = table.column($(this).attr('data-em-col'));
+        //    console.log($(this).attr('data-em-col'));
+        //    console.log(column);
+        //    column.visible($(this).prop("checked"));
+        //});
+        //} else {
+        //    table = $('#' + tablename).DataTable();
+        //}
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+    }
+    function closelist() {
+        $('#Entry').show();
+        $('#listing').hide();
+        formrefresh();
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+</script>
+
+<div style="display:none"><input type="text" value="0" id="ShiftId" /></div>
+
+
+
+
+
+
+
+

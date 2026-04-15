@@ -1,0 +1,644 @@
+﻿
+@{
+    ViewBag.Title = "ReportsMenu";
+}
+
+<style>
+   .hhover:hover {
+        box-shadow: 13px 15px 88px rgba(0, 0, 0, 0.5);
+        -webkit-transition: box-shadow 0.5s;
+        transform: scale(1.1);
+        transition: transform 0.5s;
+        cursor: pointer;
+        background: #77deee;
+        color: black;
+        border: 0px solid white;
+    }
+</style>
+<script type="text/javascript">
+
+    function GotomenuPage(URL) {
+        var win = window.open('../' + URL, '_blank');
+        win.focus();
+    }
+
+
+</script>
+
+<script>
+    var MenuLength = 0;
+
+    $(document).ready(function () {
+        getallmenus();
+    });
+
+    function getallmenus() {
+
+        var data = {};
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Home/ReportUserMenus",
+            data: data,
+            success: function (result) {
+                showMenulist(result.oList)
+
+            }
+        });
+
+    }
+    function showMenulist(result) {
+        MenuLength = result.length;
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            var url = result[i].URL;
+            if(url!='')
+                var row = '<li id="row' + slno + '" class="list-group-item hhover" onclick="GotomenuPage(' + "'" + url + "'" + ')" target="_blank"><div style="float:left"><a class="menu-item" target="_blank"><i class="fa fa-paper-plane-o mr-1"></i><b>  ' + result[i].MenuName + '</b></a></div> <input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+            else
+                var row = '<li id="row' + slno + '" class="list-group-item" onclick="" target="_blank"><div style="float:left"><a class="menu-item" target="_blank"><b>  ' + result[i].MenuName + '</b></a></div> <input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+
+            if (result[i].MasterId == 5) {
+                $('#dd').append(row)
+                $('#ReprtDiv1').show();
+            }
+            else if (result[i].MasterId == 7) {
+                $('#dd1').append(row);
+                $('#ReprtDiv2').show();
+            }
+            else if (result[i].MasterId == 9 || result[i].MasterId == 10 || result[i].MasterId == 18) {
+                $('#dd2').append(row);
+                $('#ReprtDiv3').show();
+            }
+            else if (result[i].MasterId == 11 || result[i].MasterId == 13 || result[i].MasterId == 14) {
+                $('#dd3').append(row);
+                $('#ReprtDiv4').show();
+            }
+            if ($('#head' + slno).val() == 'MM') {
+                $('#row' + slno).css('background-color', '#009DA0')
+                $("#row" + slno).css("color", "white");
+            }
+
+        }
+    }
+
+
+
+</script>
+
+
+<div class="row">
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="ReprtDiv1">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="dd" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="ReprtDiv2">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="dd1" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="ReprtDiv3">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="dd2" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="ReprtDiv4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="dd3" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@*<div class="row app-color overflow-hidden">
+        <div class="color-group col-sm-3 mb-4">
+            <div id="chatapp" class="col-12">
+                <div class="card-body">
+                    <div class="card-block">
+                        <ul class="list-group">
+
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+                               <h5><b>SALES</b></h5>
+                            </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Report/SalesReport')">
+                                <a class="menu-item" href="../Report/SalesReport">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Sales Report
+                                </a>
+                            </li>
+
+
+                            <li class="list-group-item"onclick="GotomenuPage('Report/ItemwiseSalesReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Itemwise Report</a>
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Report/MonthwiseSalesReport')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Datewise Report
+                                </a>
+
+                            </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/CustomerEnquiryMain')">
+
+                                <a class="menu-item" href="#">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Customer Enquiry Report</a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/CustomerEnquirySub')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Customer Enquiry-Itemwise Report
+                                </a>
+
+                            </li>
+
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/QuotationEntryMain')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Quotation Entry Report
+                                </a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/QuotationEntrySub')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Quotation Entry-Itemwise Report
+                                </a>
+
+                            </li>
+
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/SalesOrderMain')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Sales Order Report
+                                </a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/SalesOrderSub')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Sales Order-Itemwise Report
+                                </a>
+
+                            </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/AreaGroupwiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Area Groupwise Report</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/AreawiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Area SubGroupwise Report</a>
+
+                            </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/CustomerwiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i> Customerwise Report</a>
+
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/SalesmanwiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Salesmanwise Report</a>
+                             </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/AreaSalesmanwiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Area/Salesmanwise Report</a>
+                               </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/AreaCustomerwiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Area/Customerwise Report</a>
+                               </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/SalesmanwiseSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Salesman/Customerwise Report</a>
+                               </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/InvoicewiseSalesAnalysis')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Invoicewise - Project</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/TopCustomerAnalysis')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Top Customer Analysis Report</a>
+                             </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/MonthwiseSalesbyCustomerReport')">
+                                <a class="menu-item" href="#">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Monthwise Report by Customer </a>
+                                </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/MonthwiseSalesbyItemReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Monthwise Report by Item</a>
+                              </li>
+                            <li class="list-group-item"onclick="GotomenuPage('PendingReport/PendingCustomerEnquiry')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Customer Enquiry Pending Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('PendingReport/PendingQuotation')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Quotation Pending Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('PendingReport/PendingSalesOrder')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Sales Order Pending Report
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="color-group col-sm-3 mb-4">
+            <div id="chatapp" class="col-12">
+                <div class="card-body">
+                    <div class="card-block">
+                        <ul class="list-group">
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                <h5><b>PURCHASE</b></h5>
+                                 <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/DatewisePurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Report</a>
+                              </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Report/ItemwiseReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Itemwise Report</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Report/MonthwiseReportDemo')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Datewise Report</a>
+                            </li>
+
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/PurchaseEnquiryMain')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Enquiry Report
+                                </a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/PurchaseEnquirySub')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Enquiry-Itemwise Report
+                                </a>
+
+                            </li>
+
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/PurchaseOrderMain')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Order Report
+                                </a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/PurchaseOrderSub')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Order-Itemwise Report
+                                </a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/MRVPurchaseMain')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>MRV Purchase Report
+                                </a>
+
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/MRVPurchaseSub')">
+
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>MRV Purchase-Itemwise Report
+                                </a>
+
+                            </li>
+
+
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/AreaGroupwiseReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Area Groupwise Report</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/AreawisePurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Area SubGroupwise Report</a>
+                              </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/LocationwisePurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Locationwise Report</a>
+                                </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/SupplierwisePurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Supplierwise Report</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/ItemPurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Analysis</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/TopSupplierAnalysis')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Top Supplier Analysis</a>
+                           </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/MonthwisePurchaseReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Monthwise Report by Supplier </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/MonthlyItemPurchaseReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Monthwise Report by Item
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/MonthlySupplierItemPurchaseReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Monthwise Report by Item with Supplier</a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('PendingReport/PendingPurchaseOrder')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Order Pending Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('PendingReport/PendingPurchaseEnquiry')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Enquiry Pending Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('PendingReport/PendingMRVPurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>MRV Purchase Pending Report
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="color-group col-sm-3 mb-4">
+            <div id="chatapp" class="col-12">
+                <div class="card-body">
+                    <div class="card-block">
+                        <ul class="list-group">
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                <h5><b>STOCK</b></h5>
+
+                            <li class="list-group-item"onclick="GotomenuPage('StockReport/StockReport')">
+                                <a class="menu-item" href="../StockReport/StockReport">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Detailed Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/StockReportDetailed')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Locationwise Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('StockReport/StockTransferInReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Stock Transfer In Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('StockReport/StockTransferOutReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Stock Transfer Out Report</a>
+                               </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/FastMovingItemsReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Fast Moving Item Report</a>
+                              </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/NonMovingItemsReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Non- Moving Item Report </a>
+                            </li>
+
+
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                <h5><b>TAX</b></h5>
+                            <li class="list-group-item"onclick="GotomenuPage('TaxReport/SalesTaxReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Sales Tax Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('TaxReport/SalesReturnTaxReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Sales Return Tax Report
+                                </a>
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('TaxReport/PurchaseTaxReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Tax Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('TaxReport/PurchaseReturnTaxReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Purchase Return Tax Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('TaxReport/ExpenseTaxReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Expense Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/GSTSales')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>GST Sales Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/GSTPurchase')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>GST Purchase Report
+                                </a>
+                            </li>
+                            <li class="list-group-item" >
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Tax E-Return
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="color-group col-sm-3 mb-4">
+            <div id="chatapp" class="col-12">
+                <div class="card-body">
+                    <div class="card-block">
+                        <ul class="list-group">
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                <h5><b>ACCOUNTS</b></h5>
+
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/AccountTransactions')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Accounts Statement
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/OutstandingStatement')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Outstanding Statement
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/TrailBalance')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Trial Balance with OpeningBalance
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/TrilaBalanceGroupwise')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Trial Balance Groupwise
+                                </a>
+                            </li>
+
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/BalanceSheetAsOn')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Balance Sheet
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/BalanceSheetSummary')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>BalanceSheet-Summary
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/ProfitandLoss')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Profit and Loss
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('ABDataTable/OutstatndingStatmentPDC')">
+                                <a class="menu-item" href="../ABDataTable/OutstatndingStatmentPDC">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Outstatnding Statement PDC
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('AccountsReport/JobReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Job Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('AccountsErp/VoucherwiseAccountsReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Voucherwise Accounts Report
+                                </a>
+                            </li>
+
+
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                <h5><b>PROFIT ANALYSIS</b></h5>
+                            <li class="list-group-item"onclick="GotomenuPage('Report/ProfitAnalysisInvoReport')">
+                                <a class="menu-item" href="#>
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Profit Analysis-Invoicewise Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Report/ProfitAnalysisItemReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Profit Analysis-Itemwise Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/ProfitAnalysisSalesReturn')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Profit Analysis-Invoicewise with Sales Return Report
+                                </a>
+                            </li>
+                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                <h5><b>OTHERS</b></h5>
+                            <li class="list-group-item"onclick="GotomenuPage('Report/ProductionEntryReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Production Entry Report
+                                </a>
+                            </li>
+                            <li class="list-group-item" onclick="GotomenuPage('Purchaseandsalesreports/DetailedProduction')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Detailed Production Entry Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/BOQReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>BOQ Report
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Purchaseandsalesreports/InvoicewiseSalesAnalysis')">
+                                <a class="menu-item" href="../Purchaseandsalesreports/InvoicewiseSalesAnalysis">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Invoicewise - Project
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('master/projectjobdashboard')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Project Job Dashboard
+                                </a>
+                            </li>
+                            <li class="list-group-item"onclick="GotomenuPage('Master/LogReport')">
+                                <a class="menu-item" href="#">
+                                    <i class="fa fa-paper-plane-o mr-1"></i>Log Report
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

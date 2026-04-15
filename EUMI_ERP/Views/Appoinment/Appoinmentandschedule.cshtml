@@ -1,0 +1,990 @@
+﻿
+@{
+    ViewBag.Title = "Appoinmentandschedule";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Screen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom scrollbar hiding for clean horizontal scroll */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Custom Select Arrow */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+
+        /* Tooltip Animation */
+        .tooltip-content {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px) translateX(-50%);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .group:hover .tooltip-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) translateX(-50%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans font-bold antialiased pb-24 md:pb-12">
+
+    <!-- Header -->
+    <div class="bg-indigo-900 text-white p-4 sticky top-0 z-50 shadow-md">
+        <!-- Changed: Removed max-w-3xl, added w-full -->
+        <div class="w-full flex justify-between items-center px-4">
+            <button class="p-2 hover:bg-indigo-800 rounded-full transition">
+                <i class="fas fa-chevron-left text-xl"></i>
+            </button>
+            <h1 class="text-xl font-extrabold tracking-wide">Appointment</h1>
+            <button onclick="clearAllData()" class="p-2 hover:bg-indigo-800 rounded-full transition text-xs font-bold border border-indigo-700 bg-indigo-800 px-3">
+                Reset All
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Single Column -->
+    <!-- Changed: Significantly increased horizontal padding (md:px-40 lg:px-96) for more space -->
+    <main class="p-6 md:px-40 lg:px-96 space-y-8 w-full max-w-full">
+
+        <!-- 1. Doctor Selection -->
+        <div class="bg-white rounded-3xl shadow-sm p-6">
+            <label class="block text-sm font-extrabold text-gray-700 mb-2 ml-1">Select Doctor</label>
+            <div class="relative">
+                <select id="doctor-select" onchange="handleDoctorChange(this.value)" class="custom-select block w-full pl-3 pr-10 py-3 text-base border-gray-300 bg-gray-50 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm rounded-xl border transition-shadow shadow-sm hover:shadow-md cursor-pointer text-gray-800 font-bold">
+                    <!-- Options populated by JS -->
+                </select>
+            </div>
+        </div>
+
+        <!-- 2. Consultation Fee Card -->
+        <div class="relative bg-white rounded-3xl shadow-sm p-6 overflow-hidden hover:shadow-md transition-shadow">
+            <!-- Decorative Background Shapes -->
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-gray-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
+
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <!-- Doctor Avatar Placeholder -->
+                <div id="doctor-avatar" class="w-20 h-20 rounded-full bg-cover bg-center border-4 border-white shadow-md -mt-4 mb-4 transition-all duration-300" style="background-image: url('');"></div>
+
+                <h2 id="doctor-name" class="text-2xl font-extrabold text-gray-900 transition-all">--</h2>
+                <p id="doctor-specialty" class="text-sm font-bold text-gray-600 mb-4 transition-all">--</p>
+
+                <div class="w-full border-t border-gray-100 my-2"></div>
+
+                <h2 class="text-sm font-bold text-gray-500 mt-2">Consultation Fee</h2>
+                <div class="flex items-baseline justify-center gap-2 mt-1">
+                    <span id="consultation-fee" class="text-4xl font-black text-indigo-900 transition-all">--</span>
+                    <span class="text-sm font-bold text-gray-400">Inc. VAT</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Date Selection -->
+        <div class="bg-white rounded-3xl shadow-sm p-6 relative group/date-section">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-extrabold text-gray-900">Select Date</h2>
+
+                <!-- Month Display -->
+                <div class="flex items-center gap-3 bg-gray-50 rounded-full px-4 py-2 border border-gray-100">
+                    <button onclick="changeMonth(-1)" class="p-1 hover:text-indigo-600 transition font-bold text-gray-500 text-xs">
+                        <i class="fas fa-chevron-left"></i> Prev Month
+                    </button>
+                    <h3 id="month-display" class="text-sm font-extrabold text-gray-800 select-none min-w-[100px] text-center">Month Year</h3>
+                    <button onclick="changeMonth(1)" class="p-1 hover:text-indigo-600 transition font-bold text-gray-500 text-xs">
+                        Next Month <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Date Horizontal Scroll with Arrows -->
+            <div class="relative flex items-center">
+                <!-- Left Scroll Arrow -->
+                <!-- Changed: Removed negative translate, added ml-2 -->
+                <button onclick="scrollDates(-1)" class="absolute left-0 z-10 p-3 bg-white border-2 border-gray-100 rounded-full shadow-lg hover:border-cyan-400 hover:text-cyan-500 text-gray-400 transition hidden md:flex items-center justify-center ml-2">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <!-- Scrollable Container -->
+                <!-- Changed: Added md:px-14 to prevent overlap with arrows -->
+                <div class="flex space-x-3 overflow-x-auto hide-scrollbar pb-2 px-4 md:px-14 w-full scroll-smooth" id="date-container">
+                    <!-- Dates generated by JS -->
+                </div>
+
+                <!-- Right Scroll Arrow -->
+                <!-- Changed: Removed translate, added mr-2 -->
+                <button onclick="scrollDates(1)" class="absolute right-0 z-10 p-3 bg-white border-2 border-gray-100 rounded-full shadow-lg hover:border-cyan-400 hover:text-cyan-500 text-gray-400 transition hidden md:flex items-center justify-center mr-2">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 4. Time Slot Selection -->
+        <div class="bg-white rounded-3xl shadow-sm p-6">
+            <div class="flex justify-between items-end mb-4">
+                <h2 class="text-2xl font-extrabold text-gray-900">Select Time Slot</h2>
+            </div>
+
+            <!-- SETTINGS GRID -->
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-6">
+                <div class="mb-4">
+                    <p class="text-xs text-gray-600 font-extrabold uppercase tracking-wider mb-3">Session Schedules</p>
+
+                    <!-- Morning Config -->
+                    <!-- Changed: Increased gap from 1 to 4 -->
+                    <div class="grid grid-cols-12 gap-4 items-center mb-3">
+                        <div class="col-span-3 text-xs font-bold text-gray-700 flex items-center gap-1">
+                            <i class="fas fa-coffee text-orange-400 w-3"></i> Morn
+                        </div>
+                        <div class="col-span-4">
+                            <input type="time" id="morning-start" value="09:00" onchange="generateSlots()" class="w-full rounded-lg border-gray-300 shadow-sm border p-1 text-xs font-bold text-gray-800 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none bg-white">
+                        </div>
+                        <div class="col-span-1 text-center text-gray-400 font-bold">-</div>
+                        <div class="col-span-4">
+                            <input type="time" id="morning-end" value="12:00" onchange="generateSlots()" class="w-full rounded-lg border-gray-300 shadow-sm border p-1 text-xs font-bold text-gray-800 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none bg-white">
+                        </div>
+                    </div>
+
+                    <!-- Afternoon Config -->
+                    <!-- Changed: Increased gap from 1 to 4 -->
+                    <div class="grid grid-cols-12 gap-4 items-center mb-3">
+                        <div class="col-span-3 text-xs font-bold text-gray-700 flex items-center gap-1">
+                            <i class="fas fa-sun text-yellow-500 w-3"></i> Aftn
+                        </div>
+                        <div class="col-span-4">
+                            <input type="time" id="afternoon-start" value="13:00" onchange="generateSlots()" class="w-full rounded-lg border-gray-300 shadow-sm border p-1 text-xs font-bold text-gray-800 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none bg-white">
+                        </div>
+                        <div class="col-span-1 text-center text-gray-400 font-bold">-</div>
+                        <div class="col-span-4">
+                            <input type="time" id="afternoon-end" value="16:00" onchange="generateSlots()" class="w-full rounded-lg border-gray-300 shadow-sm border p-1 text-xs font-bold text-gray-800 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none bg-white">
+                        </div>
+                    </div>
+
+                    <!-- Evening Config -->
+                    <!-- Changed: Increased gap from 1 to 4 -->
+                    <div class="grid grid-cols-12 gap-4 items-center">
+                        <div class="col-span-3 text-xs font-bold text-gray-700 flex items-center gap-1">
+                            <i class="fas fa-moon text-indigo-500 w-3"></i> Eve
+                        </div>
+                        <div class="col-span-4">
+                            <input type="time" id="evening-start" value="17:00" onchange="generateSlots()" class="w-full rounded-lg border-gray-300 shadow-sm border p-1 text-xs font-bold text-gray-800 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none bg-white">
+                        </div>
+                        <div class="col-span-1 text-center text-gray-400 font-bold">-</div>
+                        <div class="col-span-4">
+                            <input type="time" id="evening-end" value="21:00" onchange="generateSlots()" class="w-full rounded-lg border-gray-300 shadow-sm border p-1 text-xs font-bold text-gray-800 focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 outline-none bg-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DURATION SELECTION -->
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="text-xs text-gray-600 font-extrabold uppercase tracking-wider mb-2">Slot Duration</p>
+                    <div class="flex flex-wrap gap-2" id="duration-container">
+                        <button onclick="setDuration(5)" class="duration-chip px-2 py-1 rounded-md text-xs font-bold border-2 border-gray-200 bg-white text-gray-600 hover:border-cyan-400 hover:text-cyan-600 transition-colors" data-duration="5">5m</button>
+                        <button onclick="setDuration(10)" class="duration-chip px-2 py-1 rounded-md text-xs font-bold border-2 border-gray-200 bg-white text-gray-600 hover:border-cyan-400 hover:text-cyan-600 transition-colors" data-duration="10">10m</button>
+                        <button onclick="setDuration(15)" class="duration-chip px-2 py-1 rounded-md text-xs font-bold border-2 border-gray-200 bg-white text-gray-600 hover:border-cyan-400 hover:text-cyan-600 transition-colors" data-duration="15">15m</button>
+                        <button onclick="setDuration(20)" class="duration-chip px-2 py-1 rounded-md text-xs font-bold border-2 border-gray-200 bg-white text-gray-600 hover:border-cyan-400 hover:text-cyan-600 transition-colors" data-duration="20">20m</button>
+                        <button onclick="setDuration(25)" class="duration-chip px-2 py-1 rounded-md text-xs font-bold border-2 border-gray-200 bg-white text-gray-600 hover:border-cyan-400 hover:text-cyan-600 transition-colors" data-duration="25">25m</button>
+                        <button onclick="setDuration(30)" class="duration-chip px-2 py-1 rounded-md text-xs font-bold border-2 border-gray-200 bg-white text-gray-600 hover:border-cyan-400 hover:text-cyan-600 transition-colors" data-duration="30">30m</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Morning Slots -->
+            <div id="morning-container">
+                <h3 class="text-md font-extrabold text-gray-900 mb-2 flex items-center gap-2">
+                    <i class="fas fa-coffee text-orange-400"></i> Morning
+                </h3>
+                <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2" id="morning-slots">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Afternoon Slots -->
+            <div id="afternoon-container">
+                <h3 class="text-md font-extrabold text-gray-900 mb-2 flex items-center gap-2 mt-4">
+                    <i class="fas fa-sun text-yellow-500"></i> Afternoon
+                </h3>
+                <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2" id="afternoon-slots">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Evening Slots -->
+            <div id="evening-container">
+                <h3 class="text-md font-extrabold text-gray-900 mb-2 flex items-center gap-2 mt-4">
+                    <i class="fas fa-moon text-indigo-500"></i> Evening
+                </h3>
+                <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2" id="evening-slots">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Patient Information Modal -->
+    <div id="patient-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <!-- Increased width for the complex form (max-w-4xl) -->
+        <div class="bg-white rounded-3xl w-full max-w-4xl shadow-2xl transform transition-all scale-95 opacity-0 flex flex-col max-h-[90vh]" id="patient-modal-content">
+
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-indigo-900 rounded-t-3xl text-white">
+                <div>
+                    <h2 class="text-xl font-extrabold tracking-wide">Appointment Details</h2>
+                    <p class="text-xs font-bold text-indigo-200 mt-1" id="patient-slot-info">New Entry</p>
+                </div>
+                <button onclick="closePatientModal()" class="text-indigo-200 hover:text-white transition">
+                    <i class="fas fa-times text-2xl font-bold"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 overflow-y-auto bg-gray-50">
+                <form id="patient-form" onsubmit="event.preventDefault(); submitPatientDetails();">
+
+                    <div class="card bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                        <!-- ROW 1: Personal Info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- First Name -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">First Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="AppFirst" required class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                            </div>
+
+                            <!-- MR # -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">MR # (Existing)</label>
+                                <input type="text" id="AppLast" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                            </div>
+                        </div>
+
+                        <!-- ROW 2: Gender & Contact -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- Gender -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Gender <span class="text-red-500">*</span></label>
+                                <select id="PGender" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                                    <option value="0">Select</option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                    <option value="3">Others</option>
+                                </select>
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Contact No <span class="text-red-500">*</span></label>
+                                <input type="tel" id="MobileNo" required class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200 my-4">
+
+                        <!-- ROW 3: DOB & Nationality -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- DOB / Age Breakdown -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Age</label>
+                                <div class="md:w-2/3 w-full flex gap-2">
+                                    <input type="number" id="Age" placeholder="YR" class="w-1/3 rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                    <input type="number" id="Age1" placeholder="MO" class="w-1/3 rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                    <input type="number" id="Age2" placeholder="DA" class="w-1/3 rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Email</label>
+                                <input type="email" id="EmailId" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+                        </div>
+
+                        <!-- ROW 4: DOB Date & Nationality Select -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- DOB Date -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">DOB</label>
+                                <input type="date" id="PDOB" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+
+                            <!-- Nationality -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Nationality <span class="text-red-500">*</span></label>
+                                <select id="Country" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                                    <option>India</option>
+                                    <option>USA</option>
+                                    <option>UK</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200 my-4">
+
+                        <!-- ROW 5: Dept & Patient Type -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- Department -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Department</label>
+                                <select id="txt_docdeptname" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                                    <option>General</option>
+                                    <option>Cardiology</option>
+                                    <option>Neurology</option>
+                                    <option>Pediatrics</option>
+                                </select>
+                            </div>
+
+                            <!-- Patient Type -->
+                            <div class="flex flex-col md:flex-row md:items-start gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Patient Type</label>
+                                <div class="md:w-2/3 w-full flex flex-col gap-2">
+                                    <label class="inline-flex items-center text-xs font-bold text-gray-700">
+                                        <input type="radio" name="patientType" value="self" checked class="form-radio text-indigo-600 h-4 w-4">
+                                        <span class="ml-2">Self Paying Patient</span>
+                                    </label>
+                                    <label class="inline-flex items-center text-xs font-bold text-gray-700">
+                                        <input type="radio" name="patientType" value="insurance" class="form-radio text-indigo-600 h-4 w-4">
+                                        <span class="ml-2">Insurance Patient</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 6: Token & Priority -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- Token -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Token No <span class="text-red-500">*</span></label>
+                                <input type="text" id="Branch" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none">
+                            </div>
+
+                            <!-- Priority -->
+                            <div class="flex flex-col md:flex-row md:items-start gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Stay Ahead?</label>
+                                <div class="md:w-2/3 w-full flex gap-4">
+                                    <label class="inline-flex items-center text-xs font-bold text-gray-700">
+                                        <input type="radio" name="stayAhead" value="yes" class="form-radio text-indigo-600 h-4 w-4">
+                                        <span class="ml-2">Yes</span>
+                                    </label>
+                                    <label class="inline-flex items-center text-xs font-bold text-gray-700">
+                                        <input type="radio" name="stayAhead" value="no" checked class="form-radio text-indigo-600 h-4 w-4">
+                                        <span class="ml-2">No</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200 my-4">
+
+                        <!-- ROW 7: Doctor & Fast Track Info -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <!-- Doctor Select -->
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Doctor <span class="text-red-500">*</span></label>
+                                <select id="Doctor" class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+
+                            <!-- Fast Track Options (Disabled visual display) -->
+                            <div class="flex flex-col md:flex-row md:items-start gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Fast Track For:</label>
+                                <div class="md:w-2/3 w-full flex flex-col gap-1">
+                                    <label class="inline-flex items-center text-xs font-bold text-green-600">
+                                        <input type="radio" disabled checked class="form-radio text-green-500 h-3 w-3">
+                                        <span class="ml-2">No Waiting</span>
+                                    </label>
+                                    <label class="inline-flex items-center text-xs font-bold text-green-600">
+                                        <input type="radio" disabled checked class="form-radio text-green-500 h-3 w-3">
+                                        <span class="ml-2">1-on-1 Assist</span>
+                                    </label>
+                                    <label class="inline-flex items-center text-xs font-bold text-green-600">
+                                        <input type="radio" disabled checked class="form-radio text-green-500 h-3 w-3">
+                                        <span class="ml-2">Refreshment</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROW 8: Date & Time -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Appt Date</label>
+                                <input type="text" id="PDATE" readonly class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-600 bg-gray-100 outline-none">
+                            </div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-2">
+                                <label class="md:w-1/3 text-sm font-extrabold text-gray-700">Appt Time</label>
+                                <input type="text" id="PTime" readonly class="md:w-2/3 w-full rounded-lg border border-gray-300 p-2 text-sm font-bold text-gray-600 bg-gray-100 outline-none">
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-gray-200 bg-gray-100 rounded-b-3xl flex justify-end gap-3">
+                <button type="button" onclick="closePatientModal()" class="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 font-extrabold rounded-lg hover:bg-gray-50 transition shadow-sm">
+                    <i class="fas fa-times mr-2"></i> Cancel
+                </button>
+                <button type="button" onclick="document.getElementById('patient-form').reset()" class="px-5 py-2.5 bg-yellow-500 text-white font-extrabold rounded-lg hover:bg-yellow-600 transition shadow-sm">
+                    <i class="fas fa-sync-alt mr-2"></i> Clear
+                </button>
+                <button onclick="submitPatientDetails()" class="px-6 py-2.5 bg-indigo-900 text-white font-extrabold rounded-lg hover:bg-indigo-800 transition shadow-md">
+                    <i class="fas fa-save mr-2"></i> Save Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal (Success) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl transform transition-all scale-95 opacity-0" id="modal-content">
+            <!-- Green Check Icon -->
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-4xl text-green-500"></i>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Request Sent!</h2>
+
+            <div id="modal-text">
+                <!-- Content injected by JS -->
+            </div>
+
+            <button onclick="closeModal()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-extrabold py-4 rounded-xl transition shadow-lg mt-8 text-lg">
+                Okay, Great
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- SCROLL LOGIC ---
+        function scrollDates(direction) {
+            const container = document.getElementById('date-container');
+            const scrollAmount = 200; // Scroll distance in pixels
+            if (direction === -1) {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
+        }
+
+        // --- DATA STORAGE LOGIC ---
+        // Format: { "docID-YYYY-MM-DD": { "timeSlot": { name, age, gender, phone, symptoms } } }
+        let bookedAppointments = JSON.parse(localStorage.getItem('hospitalAppointments')) || {};
+
+        function saveBooking(time, patientDetails) {
+            if (!selectedDate || !selectedDoctor) return;
+
+            const dateKey = `${selectedDoctor.id}-${selectedDate.year}-${selectedDate.month}-${selectedDate.day}`;
+
+            if (!bookedAppointments[dateKey]) {
+                bookedAppointments[dateKey] = {};
+            }
+
+            bookedAppointments[dateKey][time] = patientDetails;
+
+            // Persist to local storage
+            localStorage.setItem('hospitalAppointments', JSON.stringify(bookedAppointments));
+
+            // Refresh slots
+            generateSlots();
+        }
+
+        function getBooking(time) {
+            if (!selectedDate || !selectedDoctor) return null;
+            const dateKey = `${selectedDoctor.id}-${selectedDate.year}-${selectedDate.month}-${selectedDate.day}`;
+
+            if (bookedAppointments[dateKey] && bookedAppointments[dateKey][time]) {
+                return bookedAppointments[dateKey][time];
+            }
+            return null;
+        }
+
+        function clearAllData() {
+            if (confirm("Are you sure you want to reset all bookings?")) {
+                localStorage.removeItem('hospitalAppointments');
+                bookedAppointments = {};
+                generateSlots();
+            }
+        }
+
+
+        // --- DOCTOR DATA & SELECTION LOGIC ---
+        const doctors = [
+            {
+                id: 1,
+                name: "Dr. Sarah Smith",
+                specialty: "Cardiologist",
+                fee: 199,
+                image: "https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg"
+            },
+            {
+                id: 2,
+                name: "Dr. Michael Chen",
+                specialty: "Neurologist",
+                fee: 250,
+                image: "https://img.freepik.com/free-photo/smiling-doctor-with-strethoscope-isolated-grey_651396-974.jpg"
+            },
+            {
+                id: 3,
+                name: "Dr. Emily Rose",
+                specialty: "Pediatrician",
+                fee: 150,
+                image: "https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg"
+            }
+        ];
+
+        let selectedDoctor = doctors[0];
+        let currentDuration = 30; // Default duration
+
+        function initDoctors() {
+            const select = document.getElementById('doctor-select');
+
+            // Populate select box
+            doctors.forEach(doc => {
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.text = doc.name;
+                select.appendChild(option);
+            });
+
+            // Initialize view with first doctor
+            handleDoctorChange(doctors[0].id);
+        }
+
+        function handleDoctorChange(id) {
+            // Find doctor object
+            const doctor = doctors.find(d => d.id == id);
+            selectedDoctor = doctor;
+
+            // Update UI
+            document.getElementById('doctor-name').innerText = doctor.name;
+            document.getElementById('doctor-specialty').innerText = doctor.specialty;
+            document.getElementById('consultation-fee').innerText = `$${doctor.fee}`;
+            document.getElementById('doctor-avatar').style.backgroundImage = `url('${doctor.image}')`;
+
+            // Re-generate slots for new doctor
+            generateSlots();
+        }
+
+        // --- EXISTING DATE/TIME LOGIC ---
+
+        let selectedDate = null;
+        let selectedTime = null;
+        let currentViewDate = new Date(); // State for the currently viewed month
+
+        function changeMonth(offset) {
+            const newDate = new Date(currentViewDate);
+            newDate.setMonth(newDate.getMonth() + offset);
+
+            const today = new Date();
+            // Prevent going to past months (compare YYYY-MM)
+            if (newDate.getFullYear() < today.getFullYear() ||
+                (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() < today.getMonth())) {
+                return; // Do nothing if trying to go to past month
+            }
+
+            currentViewDate = newDate;
+            initDates();
+        }
+
+        function initDates() {
+            const container = document.getElementById('date-container');
+            const monthDisplay = document.getElementById('month-display');
+
+            const today = new Date();
+            const viewYear = currentViewDate.getFullYear();
+            const viewMonth = currentViewDate.getMonth();
+
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            // Set Month Label
+            monthDisplay.innerText = `${months[viewMonth]} ${viewYear}`;
+
+            // Determine start day
+            // If viewing current month, start from Today. Else start from 1st.
+            let startDay = 1;
+            if (viewYear === today.getFullYear() && viewMonth === today.getMonth()) {
+                startDay = today.getDate();
+            }
+
+            // Get total days in viewed month
+            const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+            container.innerHTML = '';
+
+            // Generate days for the viewed month
+            for (let i = startDay; i <= daysInMonth; i++) {
+                const date = new Date(viewYear, viewMonth, i);
+
+                const dayName = days[date.getDay()];
+                const dayNumber = date.getDate();
+
+                // Check if this card represents the currently selected date (if any)
+                let isSelected = false;
+                if (selectedDate &&
+                    selectedDate.year === viewYear &&
+                    selectedDate.month === viewMonth &&
+                    selectedDate.day == dayNumber) {
+                    isSelected = true;
+                }
+                // Auto-select Today only on initial load if nothing selected
+                else if (!selectedDate && i === startDay && viewYear === today.getFullYear() && viewMonth === today.getMonth()) {
+                    isSelected = true;
+                    // Set initial state
+                    selectedDate = { day: dayNumber, weekday: dayName, month: viewMonth, year: viewYear };
+                }
+
+                // Create Card
+                // CHANGED: Added min-w and removed w-full for horizontal scroll
+                const card = document.createElement('div');
+                card.className = `date-card min-w-[5rem] border-2 border-cyan-400 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 ${isSelected
+                        ? 'bg-cyan-400 shadow-lg transform scale-105 active'
+                        : 'bg-white hover:shadow-md group'
+                    }`;
+
+                // Set Data Attributes
+                card.dataset.day = dayNumber;
+                card.dataset.weekday = dayName;
+                card.dataset.month = viewMonth;
+                card.dataset.year = viewYear;
+
+
+                // Inner HTML
+                card.innerHTML = `
+                        <span class="text-sm font-bold ${isSelected ? 'text-white' : 'text-cyan-400 group-hover:text-cyan-600'}">${dayName}</span>
+                        <span class="text-xl font-extrabold ${isSelected ? 'text-white' : 'text-cyan-400 group-hover:text-cyan-600'}">${dayNumber}</span>
+                    `;
+
+                // Add Click Event
+                card.addEventListener('click', () => handleDateClick(card));
+
+                container.appendChild(card);
+            }
+        }
+
+        function handleDateClick(card) {
+            // Remove active classes from all
+            document.querySelectorAll('.date-card').forEach(c => {
+                c.classList.remove('bg-cyan-400', 'active', 'shadow-lg', 'transform', 'scale-105');
+                c.classList.add('bg-white');
+
+                // Reset text colors
+                const spans = c.querySelectorAll('span');
+                spans.forEach(s => {
+                    s.classList.remove('text-white');
+                    s.classList.add('text-cyan-400');
+                    s.classList.add('group-hover:text-cyan-600');
+                });
+            });
+
+            // Add active classes to clicked
+            card.classList.remove('bg-white');
+            card.classList.add('bg-cyan-400', 'active', 'shadow-lg', 'transform', 'scale-105');
+
+            // Change text colors for active
+            const activeSpans = card.querySelectorAll('span');
+            activeSpans.forEach(s => {
+                s.classList.remove('text-cyan-400', 'group-hover:text-cyan-600');
+                s.classList.add('text-white');
+            });
+
+            selectedDate = {
+                day: card.dataset.day,
+                weekday: card.dataset.weekday,
+                month: parseInt(card.dataset.month),
+                year: parseInt(card.dataset.year)
+            };
+
+            // Refresh slots to show correct bookings for new date
+            generateSlots();
+        }
+
+        // --- UPDATED DYNAMIC TIME SLOT GENERATION LOGIC ---
+
+        function setDuration(duration) {
+            currentDuration = duration;
+
+            // Update UI Chips
+            document.querySelectorAll('.duration-chip').forEach(chip => {
+                if (parseInt(chip.dataset.duration) === duration) {
+                    chip.classList.remove('border-gray-200', 'text-gray-600', 'bg-white');
+                    chip.classList.add('bg-cyan-400', 'text-white', 'border-cyan-400', 'shadow-md');
+                } else {
+                    chip.classList.add('border-gray-200', 'text-gray-600', 'bg-white');
+                    chip.classList.remove('bg-cyan-400', 'text-white', 'border-cyan-400', 'shadow-md');
+                }
+            });
+
+            generateSlots();
+        }
+
+        // Helper: Convert "HH:MM" string to minutes
+        function parseTime(timeStr) {
+            if (!timeStr) return 0;
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function generateSlots() {
+            // Clear current selection when settings change
+            selectedTime = null;
+
+            // Generate slots for each section independently
+            generateSessionSlots('morning-slots', 'morning-start', 'morning-end');
+            generateSessionSlots('afternoon-slots', 'afternoon-start', 'afternoon-end');
+            generateSessionSlots('evening-slots', 'evening-start', 'evening-end');
+
+            // Hide empty sections
+            toggleSection('morning-container', document.getElementById('morning-slots'));
+            toggleSection('afternoon-container', document.getElementById('afternoon-slots'));
+            toggleSection('evening-container', document.getElementById('evening-slots'));
+        }
+
+        function generateSessionSlots(containerId, startId, endId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            const startStr = document.getElementById(startId).value;
+            const endStr = document.getElementById(endId).value;
+
+            if (!startStr || !endStr) return;
+
+            const startMinutes = parseTime(startStr);
+            const endMinutes = parseTime(endStr);
+
+            let current = startMinutes;
+
+            while (current + currentDuration <= endMinutes) {
+                const timeString = formatTime(current);
+
+                // Check if booked
+                const booking = getBooking(timeString);
+
+                const btnContainer = document.createElement('div');
+                btnContainer.className = "relative group"; // Needed for tooltip positioning
+
+                const btn = document.createElement('button');
+
+                if (booking) {
+                    // BLOCKED SLOT STYLE
+                    btn.className = "w-full py-2 px-1 text-xs font-extrabold text-red-400 bg-red-50 border-2 border-red-100 rounded-lg cursor-not-allowed line-through";
+                    btn.innerText = timeString;
+                    btn.disabled = true;
+
+                    // TOOLTIP HTML
+                    const tooltip = document.createElement('div');
+                    tooltip.className = "tooltip-content absolute bottom-full left-1/2 mb-2 w-48 p-3 bg-gray-900 text-white text-xs font-bold rounded-lg shadow-xl z-50 pointer-events-none";
+                    tooltip.innerHTML = `
+                            <div class="font-extrabold text-sm mb-1 text-red-300">Booked</div>
+                            <div class="space-y-1">
+                                <p><span class="text-gray-400 font-normal">Pt:</span> ${booking.name}</p>
+                                <p><span class="text-gray-400 font-normal">Age:</span> ${booking.age} / ${booking.gender}</p>
+                                <p class="truncate"><span class="text-gray-400 font-normal">Sym:</span> ${booking.symptoms || '--'}</p>
+                            </div>
+                            <div class="absolute top-full left-1/2 -ml-1 border-4 border-transparent border-t-gray-900"></div>
+                        `;
+                    btnContainer.appendChild(tooltip);
+                } else {
+                    // AVAILABLE SLOT STYLE
+                    btn.className = "time-slot w-full py-2 px-1 text-xs font-extrabold text-cyan-500 border-2 border-cyan-400 rounded-lg hover:bg-cyan-50 transition-colors";
+                    btn.innerText = timeString;
+                    btn.onclick = () => selectTime(btn);
+                }
+
+                btnContainer.appendChild(btn);
+                container.appendChild(btnContainer);
+
+                current += currentDuration;
+            }
+        }
+
+        function toggleSection(containerId, slotContainer) {
+            const section = document.getElementById(containerId);
+            if (slotContainer.children.length === 0) {
+                section.classList.add('hidden');
+            } else {
+                section.classList.remove('hidden');
+            }
+        }
+
+        function formatTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            let displayHour = hours % 12;
+            displayHour = displayHour ? displayHour : 12; // the hour '0' should be '12'
+
+            const displayMin = mins < 10 ? '0' + mins : mins;
+
+            return `${displayHour}:${displayMin} ${ampm}`;
+        }
+
+
+        // --- TIME SELECTION & PATIENT MODAL LOGIC ---
+
+        const patientModal = document.getElementById('patient-modal');
+        const patientModalContent = document.getElementById('patient-modal-content');
+
+        function selectTime(btn) {
+            // Visual Selection Logic
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('bg-cyan-400', 'text-white', 'ring-2', 'ring-cyan-200');
+                slot.classList.add('text-cyan-500');
+            });
+
+            // Select clicked
+            btn.classList.remove('text-cyan-500');
+            btn.classList.add('bg-cyan-400', 'text-white', 'ring-2', 'ring-cyan-200');
+
+            selectedTime = btn.innerText;
+
+            // Open Patient Modal immediately
+            openPatientModal();
+        }
+
+        function openPatientModal() {
+            // Update Header Info
+            document.getElementById('patient-slot-info').innerText = `${selectedDate.weekday}, ${selectedDate.day} • ${selectedTime}`;
+
+            // PRE-FILL FORM DATA
+            // Fill Date
+            const formattedDate = `${selectedDate.year}-${String(selectedDate.month + 1).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
+            document.getElementById('PDATE').value = formattedDate;
+
+            // Fill Time
+            document.getElementById('PTime').value = selectedTime;
+
+            // Fill Doctor (Populate Select and Set Value)
+            const docSelect = document.getElementById('Doctor');
+            docSelect.innerHTML = '';
+            doctors.forEach(doc => {
+                const opt = document.createElement('option');
+                opt.value = doc.id;
+                opt.text = doc.name;
+                docSelect.appendChild(opt);
+            });
+            docSelect.value = selectedDoctor.id;
+
+            // Show modal
+            patientModal.classList.remove('hidden');
+            setTimeout(() => {
+                patientModalContent.classList.remove('scale-95', 'opacity-0');
+                patientModalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closePatientModal() {
+            patientModalContent.classList.remove('scale-100', 'opacity-100');
+            patientModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                patientModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function submitPatientDetails() {
+            // NEW VALIDATION LOGIC FOR NEW IDS
+            const name = document.getElementById('AppFirst').value;
+            const mobile = document.getElementById('MobileNo').value;
+
+            // Basic validation
+            if (!name || !mobile) {
+                alert("Please fill in First Name and Contact No.");
+                return;
+            }
+
+            const ageYear = document.getElementById('Age').value || '0';
+            const genderSelect = document.getElementById('PGender');
+            const genderText = genderSelect.options[genderSelect.selectedIndex].text;
+
+            // Close Patient Modal
+            closePatientModal();
+
+            // SAVE BOOKING (Using new field structure)
+            const patientDetails = {
+                name: name,
+                age: ageYear, // Storing just the year for the tooltip summary
+                gender: genderText,
+                phone: mobile,
+                symptoms: "General Appointment" // Default since new form has no symptoms field
+            };
+
+            saveBooking(selectedTime, patientDetails);
+
+            // Trigger Success Modal
+            confirmAppointment(name);
+        }
+
+        // --- SUCCESS MODAL LOGIC ---
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function confirmAppointment(patientName) {
+            // Update modal text to match the reference image design
+            document.getElementById('modal-text').innerHTML = `
+                    <p class="text-gray-500 font-bold mb-1">Appointment Confirmed with</p>
+                    <h3 class="text-2xl font-black text-indigo-900 mb-6">${selectedDoctor.name}</h3>
+
+                    <div class="space-y-3 text-base">
+                        <div class="flex justify-center gap-2">
+                            <span class="text-gray-500 font-bold">Date:</span>
+                            <span class="font-extrabold text-gray-800">${selectedDate.weekday} ${selectedDate.day}</span>
+                        </div>
+                        <div class="flex justify-center gap-2">
+                            <span class="text-gray-500 font-bold">Time:</span>
+                            <span class="font-extrabold text-gray-800">${selectedTime}</span>
+                        </div>
+                         <div class="flex justify-center gap-2">
+                            <span class="text-gray-500 font-bold">Duration:</span>
+                            <span class="font-extrabold text-gray-800">${currentDuration} Minutes</span>
+                        </div>
+                    </div>
+                `;
+
+            modal.classList.remove('hidden');
+            // Small animation delay for smooth entrance
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 300); // Wait for patient modal to close roughly
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Reset form
+                document.getElementById('patient-form').reset();
+            }, 300);
+        }
+
+        // Initialize on load
+        initDates();
+        initDoctors();
+        setDuration(30); // Initial slots
+    </script>
+</body>
+</html>
