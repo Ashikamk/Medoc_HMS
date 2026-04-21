@@ -280,26 +280,39 @@ namespace EUMI_ERP.Controllers
         public JsonResult GetVitalsRevisitIds()
         {
             WorkSheet obj = new WorkSheet();
-            List<long> ids = new List<long>();
+            var vitalsIds = new List<long>();
+            var caseSheetIds = new List<long>();
+            var labBillIds = new List<long>();
+            var procedureBillIds = new List<long>();
+            var labResultIds = new List<long>();
+            var labAdviceIds = new List<long>();
+            var medicineAdviceIds = new List<long>();  // ✅ NEW
+
             try
             {
                 DataSet dsDataSet = obj.HMS_GetVitalsRevisitIds(dbName);
                 if (dsDataSet == null || dsDataSet.Tables.Count == 0 || dsDataSet.Tables[0].Rows.Count == 0)
-                    return Json(ids, JsonRequestBehavior.AllowGet);
+                    return Json(new { vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds }, JsonRequestBehavior.AllowGet);
 
                 foreach (DataRow row in dsDataSet.Tables[0].Rows)
                 {
-                    if (Convert.ToInt32(row["VitalsStatus"]) == 1)
-                    {
-                        ids.Add(Convert.ToInt64(row["Revisit_Id"].ToString()));
-                    }
+                    long revisitId = Convert.ToInt64(row["Revisit_Id"].ToString());
+
+                    if (Convert.ToInt32(row["VitalsStatus"]) == 1) vitalsIds.Add(revisitId);
+                    if (Convert.ToInt32(row["CaseSheetStatus"]) == 1) caseSheetIds.Add(revisitId);
+                    if (Convert.ToInt32(row["LabBillStatus"]) == 1) labBillIds.Add(revisitId);
+                    if (Convert.ToInt32(row["ProcedureBillStatus"]) == 1) procedureBillIds.Add(revisitId);
+                    if (Convert.ToInt32(row["LabResultStatus"]) == 1) labResultIds.Add(revisitId);
+                    if (Convert.ToInt32(row["LabAdviceStatus"]) == 1) labAdviceIds.Add(revisitId);
+                    if (Convert.ToInt32(row["MedicineAdviceStatus"]) == 1) medicineAdviceIds.Add(revisitId);  // ✅ NEW
                 }
             }
             catch (Exception ex)
             {
                 return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-            return Json(ids, JsonRequestBehavior.AllowGet);
+
+            return Json(new { vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds }, JsonRequestBehavior.AllowGet);
         }
         ///get
 

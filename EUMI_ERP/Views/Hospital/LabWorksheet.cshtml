@@ -1447,7 +1447,7 @@
 
 
 
-    
+
 
             var row = '<table style="font-family: tahoma; font-size:13px;font-weight: normal;" width=100% >';
             if ($('#PPatComplaint').val() != '') {
@@ -2493,83 +2493,97 @@
             });
         }
 
-    function SaveVerifiedBy() {
-        var billNo = window._currentBill ? window._currentBill.BillNo : 0;
-        var patientId = window._currentPatientId || 0;
-        var regNo = window._currentRegNo || 0;
-        var verifiedUser = $("#LRD_VerifiedBy").val();
-        var approvedUser = $("#LRD_LabIncharge").val();
-        var sampleDate = $("#LRD_CollDate").text();
-
-        if (!billNo || billNo == 0) { swal("Please open a lab result first.", "", "warning"); return; }
-
-
-        var data = {};
-        data.SampleId     = billNo;
-        data.Pid          = patientId;
-        data.RegNo        = regNo;
-        data.VerifiedUser = verifiedUser;
-        data.ApprovedUser = approvedUser;
-        data.userid       = ERPUserId;
-        data.SampleDate   = sampleDate;
-
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("HMS_LabResultVerificationInsert", "Revisit")',
-            data: data,
-            success: function (result) {
-                if (result.oList && result.oList.length > 0) {
-                    if (result.oList[0].Status == "1") {
-                        swal("Verified By saved successfully.", "", "success");
-                    } else {
-                        swal("Failed to save.", "", "wrong");
-                    }
-                }
-            },
-            error: function () {
-                swal("Error saving. Please try again.", "", "wrong");
-            }
-        });
-    }
-
     function SaveApprovedBy() {
-        var billNo = window._currentBill ? window._currentBill.BillNo : 0;
-        var patientId = window._currentPatientId || 0;
-        var regNo = window._currentRegNo || 0;
-        var verifiedUser = $("#LRD_VerifiedBy").val();
-        var approvedUser = $("#LRD_LabIncharge").val();
-        var sampleDate = $("#LRD_CollDate").text();
+    var billNo = window._currentBill ? window._currentBill.BillNo : 0;
+    var patientId = window._currentPatientId || 0;
+    var regNo = window._currentRegNo || 0;
+    var approvedUser = $("#LRD_LabIncharge").val();  // ✅ Only check approved
+    var verifiedUser = $("#LRD_VerifiedBy").val();
+    var sampleDate = $("#LRD_CollDate").text();
 
-        if (!billNo || billNo == 0) { swal("Please open a lab result first.", "", "warning"); return; }
+    if (!billNo || billNo == 0) { swal("Please open a lab result first.", "", "warning"); return; }
 
-
-        var data = {};
-        data.SampleId     = billNo;
-        data.Pid          = patientId;
-        data.RegNo        = regNo;
-        data.VerifiedUser = verifiedUser;
-        data.ApprovedUser = approvedUser;
-        data.userid       = ERPUserId;
-        data.SampleDate   = sampleDate;
-
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("HMS_LabResultVerificationInsert", "Revisit")',
-            data: data,
-            success: function (result) {
-                if (result.oList && result.oList.length > 0) {
-                    if (result.oList[0].Status == "1") {
-                        swal("Approved By saved successfully.", "", "success");
-                    } else {
-                        swal("Failed to save.", "", "wrong");
-                    }
-                }
-            },
-            error: function () {
-                swal("wrong saving. Please try again.", "", "wrong");
-            }
-        });
+    // ✅ Block if approved not selected
+    if (!approvedUser || approvedUser === '') {
+        swal("Please select a user to approve.", "", "warning");
+        return;   // ← MUST return here, do not fall through
     }
+
+    var data = {};
+    data.SampleId     = billNo;
+    data.Pid          = patientId;
+    data.RegNo        = regNo;
+    data.VerifiedUser = verifiedUser;
+    data.ApprovedUser = approvedUser;
+    data.userid       = ERPUserId;
+    data.SampleDate   = sampleDate;
+
+    $.ajax({
+        type: "POST",
+        url: '@Url.Action("HMS_LabResultVerificationInsert", "Revisit")',
+        data: data,
+        success: function (result) {
+            if (result.oList && result.oList.length > 0) {
+                if (result.oList[0].Status == "1") {
+                    // ✅ Update icon immediately on success
+                    $("#LRD_ApprovedIcon").html('<span style="color:green;font-size:22px;">&#10004;</span>');
+                    swal("Approved By saved successfully.", "", "success");
+                } else {
+                    swal("Failed to save.", "", "error");
+                }
+            }
+        },
+        error: function () {
+            swal("Error saving. Please try again.", "", "error");
+        }
+    });
+}
+
+function SaveVerifiedBy() {
+    var billNo = window._currentBill ? window._currentBill.BillNo : 0;
+    var patientId = window._currentPatientId || 0;
+    var regNo = window._currentRegNo || 0;
+    var verifiedUser = $("#LRD_VerifiedBy").val();   
+    var approvedUser = $("#LRD_LabIncharge").val();
+    var sampleDate = $("#LRD_CollDate").text();
+
+    if (!billNo || billNo == 0) { swal("Please open a lab result first.", "", "warning"); return; }
+
+
+    if (!verifiedUser || verifiedUser === '') {
+        swal("Please select a user to verify.", "", "warning");
+        return;  
+    }
+
+    var data = {};
+    data.SampleId     = billNo;
+    data.Pid          = patientId;
+    data.RegNo        = regNo;
+    data.VerifiedUser = verifiedUser;
+    data.ApprovedUser = approvedUser;
+    data.userid       = ERPUserId;
+    data.SampleDate   = sampleDate;
+
+    $.ajax({
+        type: "POST",
+        url: '@Url.Action("HMS_LabResultVerificationInsert", "Revisit")',
+        data: data,
+        success: function (result) {
+            if (result.oList && result.oList.length > 0) {
+                if (result.oList[0].Status == "1") {
+                   
+                    $("#LRD_VerifiedIcon").html('<span style="color:green;font-size:22px;">&#10004;</span>');
+                    swal("Verified By saved successfully.", "", "success");
+                } else {
+                    swal("Failed to save.", "", "error");
+                }
+            }
+        },
+        error: function () {
+            swal("Error saving. Please try again.", "", "error");
+        }
+    });
+}
         function ShowhealthdetailsGet(result) {
 
             $('#PatWeight').val(result[0].Weight);

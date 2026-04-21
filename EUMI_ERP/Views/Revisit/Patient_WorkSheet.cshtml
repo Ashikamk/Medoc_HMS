@@ -1,338 +1,361 @@
-﻿@{
-    ViewBag.Title = "OPWorkSheet_S";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<style>
-    .label-control {
-        font-weight: bold;
+﻿    @{
+        ViewBag.Title = "OPWorkSheet_S";
+        Layout = "~/Views/Shared/_Layout.cshtml";
     }
 
-    .bgcolor {
-        background-color: #daeff1;
-    }
-
-        .bgcolor td {
-            vertical-align: middle !important;
+    <style>
+        .label-control {
+            font-weight: bold;
         }
 
-    #btnsearch, #btnrefresh {
-        height: 38px;
-    }
-
-    #FromDate, #ToDate {
-        height: 38px;
-    }
-
-    #tbl_WorkSheet tfoot input {
-        width: 100%;
-        height: 28px;
-        font-size: 11px;
-        padding: 2px 4px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-    }
-
-    #tbl_WorkSheet tfoot th {
-        padding: 4px;
-        background-color: #f9f9f9;
-    }
-
-    #tbl_WorkSheet_wrapper {
-        overflow-x: hidden !important;
-    }
-
-    #tbl_WorkSheet {
-        width: 100% !important;
-        font-size: 11px;
-        border: 1px solid #c7c7c7;
-    }
-
-        #tbl_WorkSheet th,
-        #tbl_WorkSheet td {
-            padding: 4px 5px !important;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
-            vertical-align: middle;
+        .bgcolor {
+            background-color: #daeff1;
         }
 
-            #tbl_WorkSheet th:nth-child(6),
-            #tbl_WorkSheet td:nth-child(6),
-            #tbl_WorkSheet th:nth-child(9),
-            #tbl_WorkSheet td:nth-child(9) {
-                max-width: 120px;
+            .bgcolor td {
+                vertical-align: middle !important;
             }
 
-        #tbl_WorkSheet thead th {
-            border: 1px solid #c7c7c7 !important;
-            text-align: center;
+        #btnsearch, #btnrefresh {
+            height: 38px;
         }
 
-        #tbl_WorkSheet tbody td {
-            border: 1px solid #e0e0e0 !important;
+        #FromDate, #ToDate {
+            height: 38px;
         }
 
-    #tbl_WorkSheet_wrapper .dataTables_length {
-        float: left;
-    }
+        #tbl_WorkSheet tfoot input {
+            width: 100%;
+            height: 28px;
+            font-size: 11px;
+            padding: 2px 4px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
 
-    #tbl_WorkSheet_wrapper .dataTables_filter {
-        float: right;
-        text-align: right;
-    }
+        #tbl_WorkSheet tfoot th {
+            padding: 4px;
+            background-color: #f9f9f9;
+        }
 
-    #tbl_WorkSheet_wrapper .dataTables_info {
-        float: left;
-    }
+        #tbl_WorkSheet_wrapper {
+            overflow-x: hidden !important;
+        }
 
-    #tbl_WorkSheet_wrapper .dataTables_paginate {
-        float: right;
-    }
-</style>
+        #tbl_WorkSheet {
+            width: 100% !important;
+            font-size: 11px;
+            border: 1px solid #c7c7c7;
+        }
 
-<div id="listing">
-    <section>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <table width="100%" style="table-layout:fixed;" class="bgcolor">
-                            <tr>
-                                <td><h4 class="card-title pt-2 pb-2" style="font-weight:bold;">Patient Worksheet</h4></td>
-                                <td align="right">
-                                    <div class="heading-elements">
-                                        <div><span id="itemListButtonPlace"></span></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <table width="100%" class="bgcolor">
-                            <tr style="height:60px; vertical-align:middle;">
-                                <td style="width:80px;">
-                                    <label class="label-control mb-0">Date :</label>
-                                </td>
-                                <td style="width:160px;">
-                                    <input type="text" id="FromDate" class="form-control" />
-                                </td>
-                                <td style="width:20px; text-align:center;">-</td>
-                                <td style="width:160px;">
-                                    <input type="text" id="ToDate" class="form-control" />
-                                </td>
-                                <td style="width:200px;padding-left:40px;">
-                                    <button type="button" id="btnsearch" class="btn btn-outline-primary mr-2">
-                                        Search <i class="fa fa-search"></i>
-                                    </button>
-                                    <button id="btnrefresh" type="button" class="btn btn-outline-info">
-                                        <i class="ft-refresh-cw"></i>
-                                    </button>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="card-content collapse show" oncontextmenu="return false">
-                        <div class="card-body card-dashboard" style="overflow:hidden">
-                            <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style">
-                                <thead>
-                                    <tr>
-                                        <th>Sl#</th>
-                                        <th>Reg#</th>
-                                        <th>OP#</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Patient</th>
-                                        <th>Age/Sex</th>
-                                        <th>Contact</th>
-                                        <th>Doctor</th>
-                                        <th>Vitals</th>
-                                        <th>CaseSheet</th>
-                                        <th>Lab Bill</th>
-                                        <th>Procedure Bill</th>
-                                        <th>Pharmacy Bill</th>
-                                        <th>Service Bill</th>
-                                        <th>Lab Result</th>
-                                        <th>Lab Advice</th>
-                                        <th>Medicine Advice</th>
-                                        <th>Prescription</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
+            #tbl_WorkSheet th,
+            #tbl_WorkSheet td {
+                padding: 4px 5px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 80px;
+                vertical-align: middle;
+            }
+
+                #tbl_WorkSheet th:nth-child(6),
+                #tbl_WorkSheet td:nth-child(6),
+                #tbl_WorkSheet th:nth-child(9),
+                #tbl_WorkSheet td:nth-child(9) {
+                    max-width: 120px;
+                }
+
+            #tbl_WorkSheet thead th {
+                border: 1px solid #c7c7c7 !important;
+                text-align: center;
+            }
+
+            #tbl_WorkSheet tbody td {
+                border: 1px solid #e0e0e0 !important;
+            }
+
+        #tbl_WorkSheet_wrapper .dataTables_length {
+            float: left;
+        }
+
+        #tbl_WorkSheet_wrapper .dataTables_filter {
+            float: right;
+            text-align: right;
+        }
+
+        #tbl_WorkSheet_wrapper .dataTables_info {
+            float: left;
+        }
+
+        #tbl_WorkSheet_wrapper .dataTables_paginate {
+            float: right;
+        }
+    </style>
+
+    <div id="listing">
+        <section>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <table width="100%" style="table-layout:fixed;" class="bgcolor">
+                                <tr>
+                                    <td><h4 class="card-title pt-2 pb-2" style="font-weight:bold;">Patient Worksheet</h4></td>
+                                    <td align="right">
+                                        <div class="heading-elements">
+                                            <div><span id="itemListButtonPlace"></span></div>
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
-                            <br />
+                            <table width="100%" class="bgcolor">
+                                <tr style="height:60px; vertical-align:middle;">
+                                    <td style="width:80px;">
+                                        <label class="label-control mb-0">Date :</label>
+                                    </td>
+                                    <td style="width:160px;">
+                                        <input type="text" id="FromDate" class="form-control" />
+                                    </td>
+                                    <td style="width:20px; text-align:center;">-</td>
+                                    <td style="width:160px;">
+                                        <input type="text" id="ToDate" class="form-control" />
+                                    </td>
+                                    <td style="width:200px;padding-left:40px;">
+                                        <button type="button" id="btnsearch" class="btn btn-outline-primary mr-2">
+                                            Search <i class="fa fa-search"></i>
+                                        </button>
+                                        <button id="btnrefresh" type="button" class="btn btn-outline-info">
+                                            <i class="ft-refresh-cw"></i>
+                                        </button>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="card-content collapse show" oncontextmenu="return false">
+                            <div class="card-body card-dashboard" style="overflow:hidden">
+                                <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl#</th>
+                                            <th>Reg#</th>
+                                            <th>OP#</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>Patient</th>
+                                            <th>Age/Sex</th>
+                                            <th>Contact</th>
+                                            <th>Doctor</th>
+                                            <th>Vitals</th>
+                                            <th>CaseSheet</th>
+                                            <th>Lab Bill</th>
+                                            <th>Procedure Bill</th>
+                                            <th>Pharmacy Bill</th>
+                                            <th>Service Bill</th>
+                                            <th>Lab Result</th>
+                                            <th>Lab Advice</th>
+                                            <th>Medicine Advice</th>
+                                            <th>Prescription</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <br />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
 
-<script>
-    $(function () {
-        var today = moment();
+    <script>
+        $(function () {
+            var today = moment();
 
-        $('#FromDate,#ToDate').daterangepicker({
-            minDate: minDate,
-            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
-            singleDatePicker: true,
-            showDropdowns: true,
-            startDate: today,
-            locale: { format: 'DD/MM/YYYY' }
-        });
+            $('#FromDate,#ToDate').daterangepicker({
+                minDate: minDate,
+                maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+                singleDatePicker: true,
+                showDropdowns: true,
+                startDate: today,
+                locale: { format: 'DD/MM/YYYY' }
+            });
 
-        $('#FromDate').val(today.format('DD/MM/YYYY'));
-        $('#ToDate').val(today.format('DD/MM/YYYY'));
+            $('#FromDate').val(today.format('DD/MM/YYYY'));
+            $('#ToDate').val(today.format('DD/MM/YYYY'));
 
-        GetList($('#FromDate').val(), $('#ToDate').val(), '', '');
-
-        $('#btnsearch').click(function () {
             GetList($('#FromDate').val(), $('#ToDate').val(), '', '');
+
+            $('#btnsearch').click(function () {
+                GetList($('#FromDate').val(), $('#ToDate').val(), '', '');
+            });
+
+            $('#btnrefresh').click(function () {
+                GetList($('#FromDate').val(), $('#ToDate').val(), '', '');
+            });
         });
 
-        $('#btnrefresh').click(function () {
-            GetList($('#FromDate').val(), $('#ToDate').val(), '', '');
-        });
-    });
+        function GetList(FromDate, ToDate, Doctor, Patient) {
+            $('#LoadingSmall').show();
 
-    function GetList(FromDate, ToDate, Doctor, Patient) {
-        $('#LoadingSmall').show();
+            var data = {};
+            data.FromDate = FromDate;
+            data.ToDate = ToDate;
+            data.DoctorId = Doctor;
+            data.PatientId = Patient;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
 
-        var data = {};
-        data.FromDate = FromDate;
-        data.ToDate = ToDate;
-        data.DoctorId = Doctor;
-        data.PatientId = Patient;
-        data.DeptId = ERPDeptId;
-        data.UserId = ERPUserId;
+            $.when(
+                $.ajax({ type: "POST", url: "../Revisit/HMS_OPWorkSheetStaff", data: data }),
+                $.ajax({ type: "POST", url: "../Revisit/GetVitalsRevisitIds" })
+            ).done(function (result1, result2) {
+                var worksheetData = result1[0];
+                var apiResponse = result2[0];
 
-        $.when(
-            $.ajax({ type: "POST", url: "../Revisit/HMS_OPWorkSheetStaff", data: data }),
-            $.ajax({
-                type: "POST",
-                url: "../Revisit/GetVitalsRevisitIds"
-            })
-        ).done(function (result1, result2) {
-            var worksheetData = result1[0];
-            var vitalsIds = result2[0];
+                var vitalsIds = apiResponse.vitalsIds || apiResponse.VitalsIds || [];
+                var caseSheetIds = apiResponse.caseSheetIds || apiResponse.CaseSheetIds || [];
+                var labBillIds = apiResponse.labBillIds || apiResponse.LabBillIds || [];
+                var procedureBillIds = apiResponse.procedureBillIds || apiResponse.ProcedureBillIds || [];
+                var labResultIds = apiResponse.labResultIds || apiResponse.LabResultIds || [];
+                var labAdviceIds = apiResponse.labAdviceIds || apiResponse.LabAdviceIds || [];
+                var medicineAdviceIds = apiResponse.medicineAdviceIds || apiResponse.MedicineAdviceIds || [];  // ✅ NEW
 
-            if (!Array.isArray(vitalsIds)) {
-                console.error("Vitals API error:", vitalsIds);
-                vitalsIds = [];
-            }
+                LoadList(worksheetData, vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds);
+            }).fail(function () {
+                $('#LoadingSmall').hide();
+            });
+        }
 
-            LoadList(worksheetData, vitalsIds);
-        }).fail(function () {
+        function LoadList(result, vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds) {
+
             $('#LoadingSmall').hide();
-        });
-    }
 
-    function LoadList(result, vitalsIds) {
-
-        $('#LoadingSmall').hide()
-
-        console.log("First worksheet item:", result[0]);
-        console.log("VitalsIds from API:", vitalsIds);    ;
-
-        if ($.fn.DataTable.isDataTable('#tbl_WorkSheet')) {
-            $('#tbl_WorkSheet').DataTable().clear().destroy();
-        }
-
-        $('#tbl_WorkSheet thead').empty();
-        $('#tbl_WorkSheet tbody').empty();
-        $('#tbl_WorkSheet tfoot').empty();
-
-        var thead = '<tr>' +
-            '<th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th>' +
-            '<th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th>' +
-            '<th>Vitals</th><th>CaseSheet</th><th>Lab Bill</th><th>Procedure Bill</th>' +
-            '<th>Pharmacy Bill</th><th>Service Bill</th><th>Lab Result</th>' +
-            '<th>Lab Advice</th><th>Medicine Advice</th><th>Prescription</th>' +
-            '</tr>';
-        $('#tbl_WorkSheet thead').html(thead);
-
-        var tbody = '';
-        if (result && result.length > 0) {
-            for (var i = 0; i < result.length; i++) {
-                var item = result[i];
-                var blood = item.BloodGroup || "";
-                var bloodSplit = blood.split("##");
-                var gender = item.Gender || "";
-                var genderShort = gender ? gender.substring(0, 1) : "";
-                var Style = '';
-                //if (bloodSplit.length > 1 && bloodSplit[1] != 0) {
-                //    Style = 'background-color:green;color:white;';
-                //}
-
-                var revisitId = parseInt(item.Revisit_Id || item.RevisitId || 0);
-                var vitalsIdsNum = vitalsIds ? vitalsIds.map(function (id) { return parseInt(id); }) : [];
-                var hasVitals = vitalsIdsNum.indexOf(revisitId) !== -1;
-                // ✅ If row is green background, use white tick/cross — else use green tick / red cross
-                var isGreenRow = (bloodSplit.length > 1 && bloodSplit[1] != 0);
-                var vitalsHtml = hasVitals
-                    ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
-                    : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
-                tbody += '<tr style="' + Style + '">' +
-                    '<td>' + (i + 1) + '</td>' +
-                    '<td>' + (item.OPSerName || '') + '-' + (item.OPNumber || '') + '</td>' +
-                    '<td>' + revisitId + '</td>' +
-                    '<td>' + (item.RevisitDate || '') + '</td>' +
-                    '<td>' + (item.DOB || '') + '</td>' +
-                    '<td>' + (item.PatientName || '') + '</td>' +
-                    '<td>' + (bloodSplit[0] || '') + '/' + genderShort + '</td>' +
-                    '<td>' + (item.Contact || '') + '</td>' +
-                    '<td>' + (item.DoctorName || '') + '</td>' +
-                    '<td style="text-align:center;">' + vitalsHtml + '</td>' +
-                    '<td>' + (item.CaseSheet || '') + '</td>' +
-                    '<td>' + (item.LabBill || '') + '</td>' +
-                    '<td>' + (item.ProcedureBill || '') + '</td>' +
-                    '<td>' + (item.PharmacyBill || '') + '</td>' +
-                    '<td>' + (item.ServiceBill || '') + '</td>' +
-                    '<td>' + (item.LabResult || '') + '</td>' +
-                    '<td>' + (item.LabAdvice || '') + '</td>' +
-                    '<td>' + (item.MedicineAdvice || '') + '</td>' +
-                    '<td>' + (item.Prescription || '') + '</td>' +
-                    '</tr>';
+            if ($.fn.DataTable.isDataTable('#tbl_WorkSheet')) {
+                $('#tbl_WorkSheet').DataTable().clear().destroy();
             }
-        }
-        $('#tbl_WorkSheet tbody').html(tbody);
 
-        var tfoot = '<tr>' +
-            '<th></th>' +
-            '<th><input type="text" class="col-search" placeholder="Search Reg"></th>' +
-            '<th><input type="text" class="col-search" placeholder="Search OP"></th>' +
-            '<th></th><th></th>' +
-            '<th><input type="text" class="col-search" placeholder="Search Patient"></th>' +
-            '<th></th>' +
-            '<th><input type="text" class="col-search" placeholder="Search Contact"></th>' +
-            '<th><input type="text" class="col-search" placeholder="Search Doctor"></th>' +
-            '<th></th><th></th><th></th><th></th><th></th><th></th>' +
-            '<th></th><th></th><th></th><th></th>' +
-            '</tr>';
-        $('#tbl_WorkSheet tfoot').html(tfoot);
+            $('#tbl_WorkSheet thead').empty();
+            $('#tbl_WorkSheet tbody').empty();
+            $('#tbl_WorkSheet tfoot').empty();
 
-        var table = $('#tbl_WorkSheet').DataTable({
-            paging: true,
-            searching: true,
-            info: true,
-            lengthChange: true,
-            pageLength: 10,
-            lengthMenu: [10, 25, 50, 100],
-            dom: 'lfrtip',
-            ordering: true,
-            language: {
-                paginate: { previous: "Previous", next: "Next" },
-                info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                infoEmpty: "Showing 0 to 0 of 0 entries",
-                lengthMenu: "Show _MENU_ entries",
-                zeroRecords: "No Data Available"
+            var thead = '<tr>' +
+                '<th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th>' +
+                '<th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th>' +
+                '<th>Vitals</th><th>CaseSheet</th><th>Lab Bill</th><th>Procedure Bill</th>' +
+                '<th>Pharmacy Bill</th><th>Service Bill</th><th>Lab Result</th>' +
+                '<th>Lab Advice</th><th>Medicine Advice</th><th>Prescription</th>' +
+                '</tr>';
+            $('#tbl_WorkSheet thead').html(thead);
+
+            var tbody = '';
+            if (result && result.length > 0) {
+                for (var i = 0; i < result.length; i++) {
+                    var item = result[i];
+                    var blood = item.BloodGroup || "";
+                    var bloodSplit = blood.split("##");
+                    var gender = item.Gender || "";
+                    var genderShort = gender ? gender.substring(0, 1) : "";
+                    var Style = '';
+
+                    var revisitId = parseInt(item.Revisit_Id || item.RevisitId || 0);
+
+                    // Vitals
+                    var vitalsHtml = vitalsIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    // CaseSheet
+                    var caseSheetHtml = caseSheetIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    // Lab Bill
+                    var labBillHtml = labBillIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    // Procedure Bill
+                    var procedureBillHtml = procedureBillIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    // Lab Result
+                    var labResultHtml = labResultIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    // Lab Advice
+                    var labAdviceHtml = labAdviceIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    // Medicine Advice ✅ NEW
+                    var medicineAdviceHtml = medicineAdviceIds.map(function (id) { return parseInt(id); }).indexOf(revisitId) !== -1
+                        ? '<span style="color:green;font-weight:bold;font-size:15px;">✔</span>'
+                        : '<span style="color:red;font-weight:bold;font-size:15px;">✘</span>';
+
+                    tbody += '<tr style="' + Style + '">' +
+                        '<td>' + (i + 1) + '</td>' +
+                        '<td>' + (item.OPSerName || '') + '-' + (item.OPNumber || '') + '</td>' +
+                        '<td>' + revisitId + '</td>' +
+                        '<td>' + (item.RevisitDate || '') + '</td>' +
+                        '<td>' + (item.DOB || '') + '</td>' +
+                        '<td>' + (item.PatientName || '') + '</td>' +
+                        '<td>' + (bloodSplit[0] || '') + '/' + genderShort + '</td>' +
+                        '<td>' + (item.Contact || '') + '</td>' +
+                        '<td>' + (item.DoctorName || '') + '</td>' +
+                        '<td style="text-align:center;">' + vitalsHtml + '</td>' +
+                        '<td style="text-align:center;">' + caseSheetHtml + '</td>' +
+                        '<td style="text-align:center;">' + labBillHtml + '</td>' +
+                        '<td style="text-align:center;">' + procedureBillHtml + '</td>' +
+                        '<td>' + (item.PharmacyBill || '') + '</td>' +
+                        '<td>' + (item.ServiceBill || '') + '</td>' +
+                        '<td style="text-align:center;">' + labResultHtml + '</td>' +
+                        '<td style="text-align:center;">' + labAdviceHtml + '</td>' +
+                        '<td style="text-align:center;">' + medicineAdviceHtml + '</td>' +  // ✅ NEW
+                        '<td>' + (item.Prescription || '') + '</td>' +
+                        '</tr>';
+                }
             }
-        });
+            $('#tbl_WorkSheet tbody').html(tbody);
 
-        $('#tbl_WorkSheet tfoot .col-search').on('keyup change', function () {
-            var colIndex = $(this).closest('th').index();
-            table.column(colIndex).search(this.value).draw();
-        });
-    }
-</script>
+            var tfoot = '<tr>' +
+                '<th></th>' +
+                '<th><input type="text" class="col-search" placeholder="Search Reg"></th>' +
+                '<th><input type="text" class="col-search" placeholder="Search OP"></th>' +
+                '<th></th><th></th>' +
+                '<th><input type="text" class="col-search" placeholder="Search Patient"></th>' +
+                '<th></th>' +
+                '<th><input type="text" class="col-search" placeholder="Search Contact"></th>' +
+                '<th><input type="text" class="col-search" placeholder="Search Doctor"></th>' +
+                '<th></th><th></th><th></th><th></th><th></th><th></th>' +
+                '<th></th><th></th><th></th><th></th>' +
+                '</tr>';
+            $('#tbl_WorkSheet tfoot').html(tfoot);
+
+            var table = $('#tbl_WorkSheet').DataTable({
+                paging: true,
+                searching: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                lengthMenu: [10, 25, 50, 100],
+                dom: 'lfrtip',
+                ordering: true,
+                language: {
+                    paginate: { previous: "Previous", next: "Next" },
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "Showing 0 to 0 of 0 entries",
+                    lengthMenu: "Show _MENU_ entries",
+                    zeroRecords: "No Data Available"
+                }
+            });
+
+            $('#tbl_WorkSheet tfoot .col-search').on('keyup change', function () {
+                var colIndex = $(this).closest('th').index();
+                table.column(colIndex).search(this.value).draw();
+            });
+        }
+    </script>

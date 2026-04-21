@@ -413,9 +413,15 @@ function SaveAndUpdate(Flag) {
     else if (parseInt($('#MTaxId').val() || 0) == 0) {
         warningshow('Please Select Tax', 'MTaxId');
     }
-    else if ($("#HSNId").val() == 0 && $.trim($('#MHSN').val()) != '') {
-        warningshow('Please Select Valid HSN', 'MHSN');
+    else if ($.trim($('#MHSN').val()) == '') {
+        warningshow('Please Enter HSN', 'MHSN');
     }
+    else if (parseInt($("#HSNId").val() || 0) == 0) {
+        warningshow('Please Select Valid HSN from list', 'MHSN');
+    }
+    //else if ($("#HSNId").val() == 0 && $.trim($('#MHSN').val()) != '') {
+    //    warningshow('Please Select Valid HSN', 'MHSN');
+    //}
     else {                   //ajax code for insert and update to master controller 
         if (parseInt($("#MedicineId").val() || 0) == 0) {
             $('#confirm').show();

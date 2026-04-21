@@ -1502,7 +1502,7 @@ namespace EUMI_ERP.DataLayer
         {
             try
             {
-                arlParms = new SqlParameter[8]; // ← was 7, now 8
+                arlParms = new SqlParameter[8];
                 arlParms[0] = new SqlParameter("@SampleId", model.SampleId);
                 arlParms[1] = new SqlParameter("@Pid", model.Pid);
                 arlParms[2] = new SqlParameter("@RegNo", model.RegNo);
@@ -1510,7 +1510,7 @@ namespace EUMI_ERP.DataLayer
                 arlParms[4] = new SqlParameter("@ApprovedUser", model.ApprovedUser);
                 arlParms[5] = new SqlParameter("@userid", model.userid);
                 arlParms[6] = new SqlParameter("@SampleDate", model.SampleDate);
-                arlParms[7] = new SqlParameter("@Flag", 0); // ← INSERT flag
+                arlParms[7] = new SqlParameter("@Flag", model.Flag);
                 return SQLHelper.ExecuteDataset("HMS_LabResultVerificationInsert", dbName, arlParms);
             }
             catch (SqlException exMe)
@@ -1519,13 +1519,14 @@ namespace EUMI_ERP.DataLayer
                 return null;
             }
         }
+
         public DataSet HMS_LabResultVerificationGet(LabWorksheetSave model, string dbName)
         {
             try
             {
                 arlParms = new SqlParameter[2];
                 arlParms[0] = new SqlParameter("@SampleId", model.SampleId);
-                arlParms[1] = new SqlParameter("@Flag", 1);
+                arlParms[1] = new SqlParameter("@Flag", model.Flag);
                 return SQLHelper.ExecuteDataset("HMS_LabResultVerificationInsert", dbName, arlParms);
             }
             catch (SqlException exMe)
@@ -1882,16 +1883,12 @@ namespace EUMI_ERP.DataLayer
             try
             {
                 arlParms = new SqlParameter[6];
-                arlParms[0] = new SqlParameter("@FromDate",
-     DateTime.ParseExact(WorkSheet.FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
-
-                arlParms[1] = new SqlParameter("@ToDate",
-                    DateTime.ParseExact(WorkSheet.ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate); // pass as string directly
+                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);     // pass as string directly
                 arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
                 arlParms[3] = new SqlParameter("@PatientId", WorkSheet.PatientId);
                 arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
                 arlParms[5] = new SqlParameter("@UserId", WorkSheet.UserId);
-
                 return SQLHelper.ExecuteDataset("HMS_OPWorkSheetLabAdvice", dbName, arlParms);
             }
             catch (SqlException exMe)

@@ -964,7 +964,7 @@ function ShowCaseSheetGet(result, Flag) {
 
 
 
-    $('#Entry').show(); HMS_LAstRevisitGetsOP 
+    $('#Entry').show();
     $('#listing').hide();
     $('#btndelete').show();
 }
@@ -3128,7 +3128,7 @@ function Noftabs(Id) {
     var Selrate = parseFloat($('#medselrate' + Id).val() || 0).toFixed(2)
     var totrate = parseFloat(xx * Selrate).toFixed(2)
     $('#spanrate' + Id).text('(×) ' + Selrate + '=' + totrate)
-    //debugger;
+    debugger;
     Apxtotal = 0;
     for (var d = 1; d <= Id; d++) {
         var Qty = parseFloat($('#Daily' + d).val() || 0).toFixed(2)
@@ -3139,7 +3139,7 @@ function Noftabs(Id) {
 
     $('#medprestotal').text('₹:' + (Apxtotal).toFixed(2))
 
-    //"1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd","Local application tds"]
+    //"1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd","Local application tds"]
 
 
 
@@ -3215,14 +3215,16 @@ function Getdosages() {
     });
 }
 
+//const Dosages = [];
+//function Loaddosagelist(result) {
+//   for (var i = 0; i < result.length; i++) {
+//       Dosages.push(result[i].DosageName);
+//      }
+
+//}
+
 var Dosages = ["AF", "BF"];
 
-function Loaddosagelist(result) {
-    Dosages = [];
-    for (var i = 0; i < result.length; i++) {
-        Dosages.push(result[i].DosageName);
-    }
-}
 
 
 function mednoteload3(ID) {
@@ -3256,7 +3258,7 @@ function mednoteload1(ID) {
 function mednoteload(ID) {
 
 
-    var availableTags = ["1-0-0", "0-1-0", "0-0-1", "1-0-1", "1-1-1", "1-1-1-1", "1/2-0-0", "0-1/2-0", "0-0-1/2", "1/2-0-1/2", "1/2-1/2-1/2", "1/2-1/2-1/2-1/2", "0-0-2", "2-0-2", "2-2-2", "3/4-0-3/4", "3/4-3/4-3/4", "SOS", "STAT", "1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "5Ml BD", "5ML TDS", "5ML HS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "10Ml BD", "10ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd", "Local application tds"];
+    var availableTags = ["1-0-0", "0-1-0", "0-0-1", "1-0-1", "1-1-1", "1-1-1-1", "1/2-0-0", "0-1/2-0", "0-0-1/2", "1/2-0-1/2", "1/2-1/2-1/2", "1/2-1/2-1/2-1/2", "0-0-2", "2-0-2", "2-2-2", "3/4-0-3/4", "3/4-3/4-3/4", "SOS", "STAT", "1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "5Ml BD", "5ML TDS", "5ML HS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "10Ml BD", "10ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd", "Local application tds"];
     $(function () {
         $("#Dosage" + ID).autocomplete({
             source: availableTags, delay: 0, autoFocus: false,

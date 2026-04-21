@@ -781,32 +781,27 @@ namespace EUMI_ERP.Models
 
     public class LabWorksheetSave
     {
-        public long SampleId { get; set; }  
-        public long Pid { get; set; }  
-        public long RegNo { get; set; } 
-        public long VerifiedUser { get; set; }  
-        public long ApprovedUser { get; set; } 
+        public long SampleId { get; set; }
+        public long Pid { get; set; }
+        public long RegNo { get; set; }
+        public long VerifiedUser { get; set; }
+        public long ApprovedUser { get; set; }
         public long userid { get; set; }
         public int Flag { get; set; }
         public string Status { get; set; }
         public long RecId { get; set; }
-
         public string SampleDate { get; set; }
-
         DReVisit oDReVisit = new DReVisit();
-
         public DataSet HMS_LabResultVerificationInsert(
             LabWorksheetSave model, string dbName)
         {
             return oDReVisit.HMS_LabResultVerificationInsert(model, dbName);
         }
-
         public DataSet HMS_LabResultVerificationGet(
             LabWorksheetSave model, string dbName)
         {
             return oDReVisit.HMS_LabResultVerificationGet(model, dbName);
         }
-
     }
 
     public class NurseModal
