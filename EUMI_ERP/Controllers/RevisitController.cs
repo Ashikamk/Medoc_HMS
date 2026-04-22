@@ -286,13 +286,14 @@ namespace EUMI_ERP.Controllers
             var procedureBillIds = new List<long>();
             var labResultIds = new List<long>();
             var labAdviceIds = new List<long>();
-            var medicineAdviceIds = new List<long>();  // ✅ NEW
+            var medicineAdviceIds = new List<long>();
+            var serviceBillIds = new List<long>();  // ✅ NEW
 
             try
             {
                 DataSet dsDataSet = obj.HMS_GetVitalsRevisitIds(dbName);
                 if (dsDataSet == null || dsDataSet.Tables.Count == 0 || dsDataSet.Tables[0].Rows.Count == 0)
-                    return Json(new { vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds }, JsonRequestBehavior.AllowGet);
+                    return Json(new { vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds, serviceBillIds }, JsonRequestBehavior.AllowGet);
 
                 foreach (DataRow row in dsDataSet.Tables[0].Rows)
                 {
@@ -304,7 +305,8 @@ namespace EUMI_ERP.Controllers
                     if (Convert.ToInt32(row["ProcedureBillStatus"]) == 1) procedureBillIds.Add(revisitId);
                     if (Convert.ToInt32(row["LabResultStatus"]) == 1) labResultIds.Add(revisitId);
                     if (Convert.ToInt32(row["LabAdviceStatus"]) == 1) labAdviceIds.Add(revisitId);
-                    if (Convert.ToInt32(row["MedicineAdviceStatus"]) == 1) medicineAdviceIds.Add(revisitId);  // ✅ NEW
+                    if (Convert.ToInt32(row["MedicineAdviceStatus"]) == 1) medicineAdviceIds.Add(revisitId);
+                    if (Convert.ToInt32(row["ServiceBillStatus"]) == 1) serviceBillIds.Add(revisitId);  // ✅ NEW
                 }
             }
             catch (Exception ex)
@@ -312,7 +314,7 @@ namespace EUMI_ERP.Controllers
                 return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(new { vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds }, JsonRequestBehavior.AllowGet);
+            return Json(new { vitalsIds, caseSheetIds, labBillIds, procedureBillIds, labResultIds, labAdviceIds, medicineAdviceIds, serviceBillIds }, JsonRequestBehavior.AllowGet);
         }
         ///get
 
