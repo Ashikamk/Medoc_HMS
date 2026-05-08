@@ -522,6 +522,26 @@ namespace EUMI_ERP.DataLayer
                 return null;
             }
         }
+        //public DataSet HMS_SalesRevisitGets(SaleInvoiceHospital SaleInvoiceHospital, string dbName)
+        //{
+        //    try
+        //    {
+        //        arlParms = new SqlParameter[6];
+        //        arlParms[0] = new SqlParameter("@RegSer", SaleInvoiceHospital.RegSer);
+        //        arlParms[1] = new SqlParameter("@RegNo", SaleInvoiceHospital.RegNo);
+        //        arlParms[2] = new SqlParameter("@FromDate", SaleInvoiceHospital.HSalesDate);
+        //        arlParms[3] = new SqlParameter("@ToDate", SaleInvoiceHospital.Status);
+        //        arlParms[4] = new SqlParameter("@DeptId", SaleInvoiceHospital.DeptId);
+        //        arlParms[5] = new SqlParameter("@Flag", SaleInvoiceHospital.Flag);
+        //        return SQLHelper.ExecuteDataset("HMS_SalesRevisitGets", dbName, arlParms);
+        //    }
+        //    catch (SqlException exMe)
+        //    {
+        //        Console.WriteLine(exMe.Message);
+        //        return null;
+        //    }
+        //}
+
         public DataSet HMS_SalesRevisitGets(SaleInvoiceHospital SaleInvoiceHospital, string dbName)
         {
             try
@@ -535,15 +555,15 @@ namespace EUMI_ERP.DataLayer
                 arlParms[5] = new SqlParameter("@Flag", SaleInvoiceHospital.Flag);
                 return SQLHelper.ExecuteDataset("HMS_SalesRevisitGets", dbName, arlParms);
             }
-            catch (SqlException exMe)
+            catch (Exception exMe)  
             {
-                Console.WriteLine(exMe.Message);
+                Console.WriteLine("HMS_SalesRevisitGets Error: " + exMe.Message + exMe.StackTrace);
                 return null;
             }
         }
 
-        
-             public DataSet HMS_SalesInvoiceUpdteStockOut(DataTable dt, string dbName)
+
+        public DataSet HMS_SalesInvoiceUpdteStockOut(DataTable dt, string dbName)
         {
             try
             {

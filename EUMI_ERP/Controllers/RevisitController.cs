@@ -3909,6 +3909,55 @@ namespace EUMI_ERP.Controllers
         }
 
         [HttpPost]
+        public ActionResult HMS_OPWorkSheetMedicineAdvice(WorkSheet WorkSheet)
+        {
+            WorkSheet obj = new WorkSheet();
+            List<WorkSheet> oList = new List<WorkSheet>();
+            try
+            {
+                DataSet dsDataSet = obj.HMS_OPWorkSheetMedicineAdvice(WorkSheet, dbName);
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        WorkSheet m = new WorkSheet();
+                        m.Status = row["Status"].ToString();
+                        m.Gender = row["Gender"].ToString();
+                        m.PatientName = row["PatientName"].ToString();
+                        m.BloodGroup = row["BloodGroup"].ToString();
+                        m.Contact = row["Contact"].ToString();
+                        m.ShiftName = row["ShiftName"].ToString();
+                        m.DoctorName = row["DoctorName"].ToString();
+                        m.DOB = row["DOB"].ToString();
+                        m.IPNumber = Convert.ToInt64(row["IPNumber"].ToString());
+                        m.PatientId = Convert.ToInt64(row["PatientId"].ToString());
+                        m.RevisitId = Convert.ToInt64(row["RevisitId"].ToString());
+                        m.OPSerName = row["OPSerName"].ToString();
+                        m.OPNumber = row["OPNumber"].ToString();
+                        m.DoctorId = Convert.ToInt64(row["Doctor_Id"].ToString());
+                        m.TokenNumber = row["TokenNumber"].ToString();
+                        m.RevisitDate = row["RevisitDate"].ToString();
+                        m.Flag = Convert.ToInt64(row["Flag"].ToString());
+                        m.DelFlag = Convert.ToInt32(row["DelFlag"].ToString());
+                        m.MedicineAdvice = row["MedicineAdvice"].ToString();
+                        m.MedicineAdviceCount = Convert.ToInt32(row["MedicineAdviceCount"].ToString());
+                        oList.Add(m);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult()
+                {
+                    Data = new { error = ex.Message, stack = ex.StackTrace },
+                    MaxJsonLength = 86753090
+                };
+            }
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090 };
+        }
+
+
+        [HttpPost]
         public ActionResult HMS_LabResultVerificationInsert(LabWorksheetSave model)
         {
             LabWorksheetSave obj = new LabWorksheetSave();

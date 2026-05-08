@@ -241,18 +241,18 @@
                         </table>
                     </div>
 
-                    <!-- Notes -->
+                  
                     <div id="LRD_Notes" style="font-size:15px; color:#333; padding:10px 0; font-weight:bold; min-height:30px; background-color:#f9f9f9; margin-top:10px; border-radius:4px;"></div>
 
 
 
-                    <!-- Signature Row -->
+                  
                     <div style="display:flex; justify-content:space-between; padding:15px 40px 8px 40px; font-size:15px; font-weight:600; text-align:center; color:#333; gap:20px;">
 
-                        <div style="flex:1; text-align:center;">
+                        <div style="flex:1; text-align:center;" id="verifiedby">
                             <div style="margin-bottom:6px; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:8px;">
                                 VERIFIED BY
-                                <span id="LRD_VerifiedIcon"></span>  <!-- ✅ icon here -->
+                                <span id="LRD_VerifiedIcon"></span> 
                             </div>
                             <div style="display:flex; gap:6px; justify-content:center; align-items:center;">
                                 <select id="LRD_VerifiedBy" style="width:200px; height:38px; font-size:13px; font-weight:normal; padding:6px 8px; border:1px solid #ced4da; border-radius:4px;">
@@ -261,10 +261,10 @@
                             </div>
                         </div>
 
-                        <div style="flex:1; text-align:center;">
+                        <div style="flex:1; text-align:center;" id="approvedby">
                             <div style="margin-bottom:6px; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:8px;">
                                 APPROVED BY
-                                <span id="LRD_ApprovedIcon"></span>  <!-- ✅ icon here -->
+                                <span id="LRD_ApprovedIcon"></span> 
                             </div>
                             <div style="display:flex; gap:6px; justify-content:center; align-items:center;">
                                 <select id="LRD_LabIncharge" style="width:200px; height:38px; font-size:13px; font-weight:normal; padding:6px 8px; border:1px solid #ced4da; border-radius:4px;">
@@ -2313,8 +2313,9 @@
 
 
         }
+function LoadUserDropdowns(billNo) {
+    billNo = parseInt(billNo || 0);  // ← ensure it's a number
 
-  function LoadUserDropdowns(billNo) {
     var data = {};
     data.UserId = 0;
     $.ajax({
@@ -2329,11 +2330,9 @@
             $("#LRD_VerifiedBy").html(opts);
             $("#LRD_LabIncharge").html(opts);
 
-            // Clear icons
             $("#LRD_VerifiedIcon").html('');
             $("#LRD_ApprovedIcon").html('');
 
-            // No BillNo → show -- Select -- + ❌
             if (!billNo || billNo == 0) {
                 $("#LRD_VerifiedBy").val('');
                 $("#LRD_LabIncharge").val('');
@@ -2342,12 +2341,17 @@
                 return;
             }
 
-            // BillNo exists → check DB
+            // ← ADD THIS: confirm what BillNo is being sent
+            console.log("LoadUserDropdowns BillNo = ", billNo);
+
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("HMS_LabResultVerificationGet", "Revisit")',
                 data: { SampleId: billNo },
                 success: function (res) {
+                    // ← ADD THIS: confirm what comes back
+                    console.log("VerificationGet result = ", res);
+
                     if (res.oList && res.oList.length > 0) {
                         var saved = res.oList[0];
                         var vUser = parseInt(saved.VerifiedUser || 0);
@@ -2355,6 +2359,8 @@
 
                         if (vUser > 0) {
                             $("#LRD_VerifiedBy").val(vUser);
+                            // ← Verify the value actually got set
+                            console.log("Set VerifiedBy to:", vUser, "| Dropdown shows:", $("#LRD_VerifiedBy").val());
                             $("#LRD_VerifiedIcon").html('<span style="color:green;font-size:22px;">&#10004;</span>');
                         } else {
                             $("#LRD_VerifiedBy").val('');
@@ -2368,16 +2374,15 @@
                             $("#LRD_LabIncharge").val('');
                             $("#LRD_ApprovedIcon").html('<span style="color:red;font-size:22px;">&#10006;</span>');
                         }
-
                     } else {
-                        // No DB record
                         $("#LRD_VerifiedBy").val('');
                         $("#LRD_LabIncharge").val('');
                         $("#LRD_VerifiedIcon").html('<span style="color:red;font-size:22px;">&#10006;</span>');
                         $("#LRD_ApprovedIcon").html('<span style="color:red;font-size:22px;">&#10006;</span>');
                     }
                 },
-                error: function () {
+                error: function (xhr) {
+                    console.error("VerificationGet error:", xhr.responseText); 
                     $("#LRD_VerifiedBy").val('');
                     $("#LRD_LabIncharge").val('');
                     $("#LRD_VerifiedIcon").html('<span style="color:red;font-size:22px;">&#10006;</span>');
@@ -2543,7 +2548,7 @@ function SaveVerifiedBy() {
     var billNo = window._currentBill ? window._currentBill.BillNo : 0;
     var patientId = window._currentPatientId || 0;
     var regNo = window._currentRegNo || 0;
-    var verifiedUser = $("#LRD_VerifiedBy").val();   
+    var verifiedUser = $("#LRD_VerifiedBy").val();
     var approvedUser = $("#LRD_LabIncharge").val();
     var sampleDate = $("#LRD_CollDate").text();
 
@@ -2552,7 +2557,7 @@ function SaveVerifiedBy() {
 
     if (!verifiedUser || verifiedUser === '') {
         swal("Please select a user to verify.", "", "warning");
-        return;  
+        return;
     }
 
     var data = {};
@@ -2571,7 +2576,7 @@ function SaveVerifiedBy() {
         success: function (result) {
             if (result.oList && result.oList.length > 0) {
                 if (result.oList[0].Status == "1") {
-                   
+
                     $("#LRD_VerifiedIcon").html('<span style="color:green;font-size:22px;">&#10004;</span>');
                     swal("Verified By saved successfully.", "", "success");
                 } else {

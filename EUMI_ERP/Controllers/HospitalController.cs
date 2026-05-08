@@ -63,6 +63,11 @@ namespace EUMI_ERP.Controllers
         {
             return View();
         }
+
+        public ActionResult MedicineWorksheet()
+        {
+            return View();
+        }
         public ActionResult DischargeSummary() 
         {
             return View();
@@ -2354,6 +2359,9 @@ obj.RightFarCyl, obj.RightFarAxs, obj.RightFarVA, obj.RightFarPD, obj.RightFarAd
             {
                 DataSet dsDataSet = new DataSet();
                 dsDataSet = obj.HMS_SalesRevisitGets(SaleInvoiceHospital, dbName);
+
+                if (dsDataSet == null || dsDataSet.Tables.Count == 0)
+                    return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
                 foreach (DataRow row in dsDataSet.Tables[0].Rows)
                 {
                     SaleInvoiceHospital MModels = new SaleInvoiceHospital();

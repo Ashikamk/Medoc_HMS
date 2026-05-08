@@ -570,6 +570,10 @@ namespace EUMI_ERP.Models
         public string Sample { get; set; }
         public string Advice { get; set; }
 
+        public string MedicineAdvice { get; set; }
+        public int MedicineAdviceCount { get; set; }
+
+
         DReVisit oDReVisit = new DReVisit();
 
 
@@ -581,6 +585,11 @@ namespace EUMI_ERP.Models
         public DataSet HMS_OPWorkSheetLabAdvice(WorkSheet WorkSheet, string dbName)
         {
             return oDReVisit.HMS_OPWorkSheetLabAdvice(WorkSheet, dbName);
+        }
+
+        public DataSet HMS_OPWorkSheetMedicineAdvice(WorkSheet WorkSheet, string dbName)
+        {
+            return oDReVisit.HMS_OPWorkSheetMedicineAdvice(WorkSheet, dbName);
         }
         public DataSet HMS_OPWorkSheetScan(WorkSheet WorkSheet, string dbName)
         {
@@ -946,7 +955,7 @@ public class VaccineModal
     public string Status { get; set; }
     public string Daily { get; set; }
     public string Days { get; set; }
-
+    
     DHospital oDHospital = new DHospital();
 
     public DataSet HMS_ImmunizationUpdate(DataTable dt, string dbName)

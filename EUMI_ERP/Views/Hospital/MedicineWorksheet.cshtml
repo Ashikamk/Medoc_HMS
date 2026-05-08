@@ -1,0 +1,735 @@
+﻿@{
+    ViewBag.Title = "MedicineWorksheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1;
+    }
+
+    #divContainerNew {
+        border: solid 1px black;
+        min-width: 200px;
+        min-height: 40px;
+        width: auto;
+        height: auto;
+        background-color: white;
+        cursor: pointer !important;
+        font-weight: bold;
+    }
+
+    .divpop {
+        position: absolute;
+        text-align: left;
+        display: none;
+        color: black;
+        border-radius: 3px;
+    }
+
+    .pointer:hover {
+        background-color: #acd6f5;
+        text-decoration: underline;
+    }
+
+    .btn-close-custom {
+        padding: 8px 20px;
+        border: 1px solid #cbd5e0;
+        background: #fff;
+        border-radius: 6px;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-close-custom:hover {
+            background: #5B4FCF;
+            color: #fff;
+            border-color: #5B4FCF;
+        }
+
+    .label-control.custom-label {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 20px !important;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        font-family: "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+
+    #T0 {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        min-width: unset;
+        width: auto;
+        white-space: nowrap;
+        font-weight: 600;
+        background: #E6F1FB;
+        color: #185FA5;
+        border: 1px solid #B5D4F4;
+    }
+
+    #T1 {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: unset;
+        width: auto;
+        white-space: nowrap;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #EAF3DE;
+        color: #3B6D11;
+        border: 1px solid #C0DD97;
+    }
+
+    #T2 {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: unset;
+        width: auto;
+        white-space: nowrap;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #FAEEDA;
+        color: #854F0B;
+        border: 1px solid #FAC775;
+    }
+
+    .badge-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .badge-icon::before {
+            content: "➤";
+            font-size: 18px;
+            opacity: 0.8;
+            animation: bounceArrow 1.2s infinite ease-in-out;
+        }
+
+    @@keyframes bounceArrow {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(4px);
+        }
+    }
+
+    #SimpleMedModal .med-header {
+        background: #5B4FCF;
+    }
+
+    #SimpleMedModal .med-info-bg {
+        background: #F0EEFF;
+        border-bottom: 0.5px solid #C4B8F8;
+    }
+
+    #SimpleMedModal .med-info-card {
+        background: #fff;
+        border: 1px solid #C4B8F8;
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    #SimpleMedModal .med-info-label {
+        margin: 0;
+        font-size: 13px;
+        color: #3A2D9A;
+    }
+
+    #SimpleMedModal .med-info-value {
+        margin: 5px 0 0;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    #SimpleMedModal .med-info-value-sm {
+        margin: 5px 0 0;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    #SimpleMedModal .med-footer {
+        background: #F0EEFF;
+        border-top: 1px solid #C4B8F8;
+    }
+
+    #SimpleMedModal .med-pill-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #EDE9FF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<div class="myData" data-x="M361" />
+
+<div class="modal fade" id="SimpleMedModal">
+    <div class="modal-dialog" style="max-width:720px;">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden; border:none; font-family:'Segoe UI',sans-serif;">
+
+ 
+            <div class="med-header" style="padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div>
+                        <p style="margin:0; font-size:20px; font-weight:700; color:#fff;">MEDICINE ADVICE DETAILS</p>
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal"
+                        style="color:#fff; font-size:22px; background:rgba(255,255,255,0.2); border-radius:50%; width:28px; height:28px; border:none;">
+                    &times;
+                </button>
+            </div>
+
+            <div class="med-info-bg" style="padding:20px 24px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                    <div class="med-info-card">
+                        <p class="med-info-label">Name</p>
+                        <p id="MM_Patient" class="med-info-value"></p>
+                    </div>
+                    <div class="med-info-card">
+                        <p class="med-info-label">Age / Sex</p>
+                        <p id="MM_AgeSex" class="med-info-value"></p>
+                    </div>
+                    <div class="med-info-card">
+                        <p class="med-info-label">Phone</p>
+                        <p id="MM_Phone" class="med-info-value"></p>
+                    </div>
+                    <div class="med-info-card">
+                        <p class="med-info-label">Reg#</p>
+                        <p id="MM_RegNo" class="med-info-value"></p>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px;">
+                    <div class="med-info-card">
+                        <p class="med-info-label">Date</p>
+                        <p id="MM_Date" class="med-info-value-sm"></p>
+                    </div>
+                    <div class="med-info-card">
+                        <p class="med-info-label">Time</p>
+                        <p id="MM_Time" class="med-info-value-sm"></p>
+                    </div>
+                    <div class="med-info-card">
+                        <p class="med-info-label">OP#</p>
+                        <p id="MM_OPNo" class="med-info-value-sm"></p>
+                    </div>
+                    <div class="med-info-card">
+                        <p class="med-info-label">Doctor</p>
+                        <p id="MM_Doctor" class="med-info-value-sm"></p>
+                    </div>
+                </div>
+            </div>
+        <div style="padding:20px 24px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+                    <p style="margin:0; font-size:18px; font-weight:700;">Medicines Advised</p>
+                    <span id="MM_MedCount" style="font-size:13px; color:#6b7280;"></span>
+                </div>
+                <ul id="MM_MedicineList" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;"></ul>
+            </div>
+
+
+            <div class="med-footer" style="padding:14px 24px; display:flex; justify-content:flex-end; align-items:center;">
+                <button type="button" data-dismiss="modal" class="btn-close-custom">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+
+     
+                        <table width="100%" style="table-layout:fixed;" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <h4 class="card-title pt-2 pb-2" style="font-weight:bold;">Worksheet (Medicine Advice)</h4>
+                                </td>
+                                <td>
+                                    <table width="80%">
+                                        <tr>
+                                            <td><span id="T0" class="label-control custom-label">case(s):</span></td>
+                                            <td><span id="T1" class="label-control custom-label badge-icon">Done:</span></td>
+                                            <td><span id="T2" class="label-control custom-label badge-icon">Pending:</span></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <span id="itemListButtonPlace"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+     
+                        <table width="100%" class="bgcolor">
+                            <tr>
+                                <td><label class="label-control">Date :</label></td>
+                                <td width="150px;"><input type="text" id="FromDate" class="form-control dedate" /></td>
+                                <td><label class="label-control pl-2 pr-1">-</label></td>
+                                <td width="150px;"><input type="text" id="ToDate" class="form-control dedate" /></td>
+                                <td><label class="label-control pl-1">Doctor :</label></td>
+                                <td>
+                                    <input type="text" id="Doctor" class="form-control denull" />
+                                    <input type="hidden" id="DoctorId" class="form-control dezro" value="0" />
+                                </td>
+                                <td><label class="label-control pl-1">Reg# :</label></td>
+                                <td width="10%">
+                                    <input type="text" id="RegNo" class="form-control denull" />
+                                    <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                </td>
+                                <td align="left">
+                                    <button type="button" id="btnsearch" class="btn btn-outline-primary mt-2 ml-1">
+                                        Search <i class="fa fa-search"></i>
+                                    </button>
+                                    <button id="btnrefresh" type="button" class="btn btn-outline-info mt-2">
+                                        <i class="ft-refresh-cw"></i>
+                                    </button>
+                                </td>
+                                <td align="right">
+                                    <button type="button" class="btn btn-outline-success mt-2" onclick="GoPage('Revisit/LabBill');">New Lab Bill</button>
+                                    <button type="button" class="btn btn-outline-warning mt-2">New Procedure Bill</button>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                    <div class="card-content collapse show" oncontextmenu="return false">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table width="100%" id="tbl_WorkSheet"
+                                   class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Context menu (right-click) -->
+<div id="divContainerNew" class="row divpop"
+     onmouseleave="$('#divContainerNew').slideUp()"
+     oncontextmenu="return false">
+    <div class="pointer pl-1 pt-1" id="Context_1" onclick="RedirectTo('1')">Lab Bill</div>
+    <div class="pointer pl-1 pt-1" id="Context_2" onclick="RedirectTo('2')">Test Result</div>
+    <div class="pointer pl-1 pt-1" id="Context_3" onclick="RedirectTo('3')">Procedure Bill</div>
+    <div class="pointer pl-1 pt-1" id="Context_4" onclick="RedirectTo('4')">Reg Bill Copy</div>
+    <div style="display:none">
+        <input type="text" id="CurrentselectedId" class="form-control dezro" value="0" />
+    </div>
+</div>
+
+
+
+<script>
+
+    var colorArray = ['#33ccff', '#ff66cc', '#ff9966', '#FFFF99', '#00B3E6',
+        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D'];
+
+    $(function () {
+        $("#SimpleMedModal").appendTo("body");
+
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'DD/MM/YYYY' }
+        });
+        var today = new Date();
+
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var year = today.getFullYear();
+
+        var formattedDate = day + '/' + month + '/' + year;
+
+        $('#FromDate').val(formattedDate);
+        $('#ToDate').val(formattedDate);
+      
+        GetList($('#FromDate').val(), $('#ToDate').val(), 0, 0);
+     
+        $("#btnsearch").click(function () {
+            GetList($('#FromDate').val(), $('#ToDate').val(), $("#DoctorId").val(), $("#PatientId").val());
+        });
+
+ 
+        $("#btnrefresh").click(function () {
+            var today = moment().format('DD/MM/YYYY');
+            $('#FromDate').val(today);
+            $('#ToDate').val(today);
+            $('.denull').val('');
+            $('.dezro').val(0);
+            GetList($('#FromDate').val(), $('#ToDate').val(), 0, 0);
+        });
+
+     
+        $("#tbl_WorkSheet").on('touchstart mousedown', function (e) {
+            if (e.button == 2) {
+                $("#divContainerNew").offset({ left: e.pageX, top: e.pageY });
+            }
+        });
+    });
+
+    $("#Doctor").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val(0);
+            $.ajax({
+                url: '../Revisit/HMS_WorkSheetDoctorSearch',
+                type: "POST",
+                data: { DoctorName: $("#Doctor").val(), DeptId: ERPDeptId },
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return {
+                            ColCount: '2',
+                            label: item.DoctorName,
+                            label1: item.Status,
+                            DoctorId: item.DoctorId,
+                            headers: ["Doctor", "Department"]
+                        };
+                    }));
+                }
+            });
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $("#DoctorId").val(ui.item.DoctorId);
+            $("#btnsearch").focus();
+        }
+    });
+
+    $("#btnsearch").focus(function () { $(this).removeClass("btn-outline-primary").addClass("btn-primary"); });
+    $("#btnsearch").focusout(function () { $(this).removeClass("btn-primary").addClass("btn-outline-primary"); });
+
+    function GetList(FromDate, ToDate, Doctor, Patient) {
+
+        if (!FromDate || FromDate.length < 10) {
+            alert("Invalid From Date");
+            return;
+        }
+
+        if (!ToDate || ToDate.length < 10) {
+            alert("Invalid To Date");
+            return;
+        }
+
+        $('#LoadingSmall').show();
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_OPWorkSheetMedicineAdvice",
+            data: {
+                FromDate: FromDate,
+                ToDate: ToDate,
+                DoctorId: Doctor,
+                PatientId: Patient,
+                DeptId: ERPDeptId,
+                UserId: ERPUserId
+            },
+            success: function (result) {
+                LoadList(result);
+            },
+            error: function () {
+                $('#LoadingSmall').hide();
+                alert("Failed to load data.");
+            }
+        });
+    }
+
+    var globalWorkSheetData = [];
+
+    function LoadList(result) {
+        globalWorkSheetData = result;
+        disable_datatable('tbl_WorkSheet');
+
+        var totalCases = result.length;
+        var pendingCases = 0;
+        var doneCases = 0;
+
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].Status === 'BILLED') doneCases++;
+            else pendingCases++;
+        }
+
+        $("#T0").html('case(s): <strong>' + totalCases + '</strong>');
+        $("#T1").html('Done: <strong>' + doneCases + '</strong>');
+        $("#T2").html('Pending: <strong>' + pendingCases + '</strong>');
+
+        var responseText =
+            "<thead><tr>" +
+            "<th style='align:center'>Sl#</th>" +
+            "<th>Reg#</th>" +
+            "<th>OP#</th>" +
+            "<th>Date</th>" +
+            "<th>Time</th>" +
+            "<th>Patient</th>" +
+            "<th>Age/Sex</th>" +
+            "<th>Contact</th>" +
+            "<th>Doctor</th>" +
+            "<th>Action</th>" +
+            "<th>Bill</th>" +
+            "<th>Status</th>" +
+            "</tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+            var r = result[i];
+            var slno = i + 1;
+
+            var StatusBadge = '';
+            if (r.Status === 'BILLED') {
+                StatusBadge = '<span class="badge badge-success" ' +
+                    'style="color:#fff;background-color:green;">BILLED</span>';
+            } else {
+                StatusBadge = '<span class="badge badge-warning" ' +
+                    'style="color:#fff;">PENDING</span>';
+            }
+            responseText +=
+                '<tr onmousedown="WhichButton(event,' + slno + ')" oncontextmenu="return false">' +
+                '<td align="center">' + slno +
+                '<input type="hidden" id="OPVisitId_' + slno + '" value="' + r.RevisitId + '" />' +
+                '<input type="hidden" id="OPSerName_' + slno + '" value="' + r.OPSerName + '" />' +
+                '<input type="hidden" id="OPNumber_' + slno + '" value="' + r.OPNumber + '" />' +
+                '<input type="hidden" id="PatientId_' + slno + '" value="' + r.PatientId + '" />' +
+                '<input type="hidden" id="DOB_' + slno + '" value="' + r.DOB + '" />' +
+                '<input type="hidden" id="BloodGroup_' + slno + '" value="' + r.BloodGroup + '" />' +
+                '<input type="hidden" id="PatientName_' + slno + '" value="' + r.PatientName + '" />' +
+                '<input type="hidden" id="Gender_' + slno + '" value="' + r.Gender + '" />' +
+                '<input type="hidden" id="IPNumber_' + slno + '" value="' + r.IPNumber + '" />' +
+                '<input type="hidden" id="TokenNo_' + slno + '" value="' + r.TokenNumber + '" />' +
+                '<input type="hidden" id="RowStatus_' + slno + '" value="' + r.Status + '" />' +
+                '</td>' +
+                '<td>' + r.OPSerName + '-' + r.OPNumber + '</td>' +
+                '<td>' + r.RevisitId + '</td>' +
+                '<td id="RevisitDate_' + slno + '">' + r.RevisitDate + '</td>' +
+                '<td>' + r.DOB + '</td>' +
+                '<td>' + r.PatientName + '</td>' +
+                '<td>' + (r.BloodGroup || '').split("##")[0] + '/' + (r.Gender || '').substring(0, 1) + '</td>' +
+                '<td>' + r.Contact + '</td>' +
+                '<td id="ddname' + slno + '">' + r.DoctorName + '</td>' +
+                '<td align="center">' +
+                '<button type="button" class="btn btn-sm" ' +
+                'style="background:#5B4FCF; color:#fff;" onclick="HandleAction(' + i + ')">' +
+                '<i class="fa fa-eye"></i> View' +
+                '</button>' +
+                '</td>' +
+                '<td align="center">' +
+                '<button type="button" class="btn btn-sm btn-info" onclick="GoToBill(' + i + ')">' +
+                '<i class="fa fa-file-text"></i> Go to Bill' +
+                '</button>' +
+                '</td>' +
+                '<td align="center">' + StatusBadge + '</td>' +
+                '</tr>';
+        }
+
+        $('#tbl_WorkSheet').html(
+            responseText +
+            "</tbody><tfoot><tr>" +
+            "<th> </th>" +
+            "<th>Reg#</th>" +
+            "<th>OP#</th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "<th>Patient</th>" +
+            "<th> </th>" +
+            "<th>Contact</th>" +
+            "<th>Doctor</th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "</tr></tfoot>"
+        );
+
+        var title = 'Medicine WorkSheet From ' + $("#FromDate").val() + ' To ' + $("#ToDate").val();
+        datatableWithsearch('tbl_WorkSheet', true, title, 'itemListButtonPlace');
+        $('#LoadingSmall').hide();
+    }
+
+    function GoToBill(index) {
+        var row = globalWorkSheetData[index];
+
+        var token = 'ws_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+        sessionStorage.clear();
+
+        sessionStorage.setItem("SI_Token", token);
+        sessionStorage.setItem("SI_FromWorksheet", "1");
+        sessionStorage.setItem("SI_PatientId", row.PatientId);
+        sessionStorage.setItem("SI_OPNumber", row.OPNumber);
+        sessionStorage.setItem("SI_OPSeries", row.OPSerName);
+        sessionStorage.setItem("SI_RevisitId", row.RevisitId);
+        sessionStorage.setItem("SI_PatientName", row.PatientName);
+        sessionStorage.setItem("SI_Gender", row.Gender);
+        sessionStorage.setItem("SI_Contact", row.Contact);
+        sessionStorage.setItem("SI_DoctorId", row.Doctor_Id);
+        sessionStorage.setItem("SI_MedAdvice", row.MedicineAdvice);
+
+        window.open("/Hospital/SaleInvoiceHospital?token=" + token, "_blank");
+    }
+
+    function WhichButton(e, slno) { }
+
+
+    function HandleAction(index) {
+        var data = globalWorkSheetData[index];
+
+        $("#MM_Patient").text(data.PatientName || '-');
+        $("#MM_AgeSex").text(
+            (data.BloodGroup ? data.BloodGroup.split("##")[0] : '-') + ' Yrs / ' + (data.Gender || '-')
+        );
+        $("#MM_Phone").text(data.Contact || '-');
+        $("#MM_RegNo").text((data.OPSerName || '-') + '-' + (data.OPNumber || '-'));
+        $("#MM_OPNo").text(data.RevisitId || '-');
+        $("#MM_Date").text(data.RevisitDate || '-');
+        $("#MM_Time").text(data.DOB || '-');
+        $("#MM_Doctor").text(data.DoctorName || '-');
+
+
+        var medicines = data.MedicineAdvice ? data.MedicineAdvice.split(',') : [];
+        var listHtml = '';
+
+        medicines.forEach(function (med) {
+            listHtml +=
+                '<li style="display:flex; align-items:center; gap:12px; padding:12px; ' +
+                'border:1px solid #C4B8F8; border-radius:8px; background:#fff;">' +
+                '<span style="flex:1; font-size:15px; font-weight:600;">' + med.trim() + '</span>' +
+                '</li>';
+        });
+
+        $("#MM_MedicineList").html(
+            listHtml ||
+            '<li style="color:#718096; font-size:14px; padding:10px;">No medicines advised.</li>'
+        );
+
+        $("#MM_MedCount").text('');
+
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+        $("#SimpleMedModal").modal("show");
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+        var a = '#' + tablename + ' tfoot th';
+        $(a).each(function () {
+            var t = $(this).text();
+            if (t !== ' ')
+                $(this).html('<input type="text" placeholder="Search ' + t + '" style="width:100%" />');
+        });
+
+        var table;
+        if (download) {
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                columnDefs: [
+                    { width: "1%", targets: 0 },
+                    { width: "2%", targets: 1 },
+                    { width: "2%", targets: 2 },
+                    { width: "2%", targets: 3 },
+                    { width: "1%", targets: 4 },
+                    { width: "13%", targets: 5 },
+                    { width: "1%", targets: 6 },
+                    { width: "6%", targets: 7 },
+                    { width: "8%", targets: 8 },
+                    { width: "8%", targets: 9 },
+                    { width: "8%", targets: 10 },
+                    { width: "5%", targets: 11 }
+                ]
+            });
+
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Export',
+                        className: 'excelexport',
+                        buttons: [
+                            { extend: 'excelHtml5', title: title, messageTop: 'MEDOC HMS', exportOptions: { columns: ":visible" } },
+                            { extend: 'pdfHtml5', title: title, messageTop: 'MEDOC HMS', exportOptions: { columns: ":visible" } },
+                            { extend: 'print', title: title, messageTop: 'MEDOC HMS', exportOptions: { columns: ":visible" } }
+                        ]
+                    },
+                    'colvis'
+                ]
+            });
+
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection")
+                .addClass("btn-outline-primary mx-1")
+                .css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that.search(this.value).draw();
+                }
+            });
+        });
+
+        if (typeof ExcelExport !== 'undefined' && ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+        }
+    }
+
+</script>
+
+<script>
+    var inputs = document.querySelectorAll("input,select");
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("keypress", function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                var nextInput = document.querySelectorAll('[tabIndex="' + (this.tabIndex + 1) + '"]');
+                if (nextInput.length === 0) nextInput = document.querySelectorAll('[tabIndex="1"]');
+                nextInput[0].focus();
+            }
+        });
+    }
+</script>

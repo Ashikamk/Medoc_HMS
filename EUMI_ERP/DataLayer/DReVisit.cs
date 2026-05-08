@@ -1524,10 +1524,10 @@ namespace EUMI_ERP.DataLayer
         {
             try
             {
-                arlParms = new SqlParameter[2];
+                arlParms = new SqlParameter[1]; 
                 arlParms[0] = new SqlParameter("@SampleId", model.SampleId);
-                arlParms[1] = new SqlParameter("@Flag", model.Flag);
-                return SQLHelper.ExecuteDataset("HMS_LabResultVerificationInsert", dbName, arlParms);
+                return SQLHelper.ExecuteDataset("HMS_LabResultVerificationGet", dbName, arlParms);
+                
             }
             catch (SqlException exMe)
             {
@@ -1883,8 +1883,8 @@ namespace EUMI_ERP.DataLayer
             try
             {
                 arlParms = new SqlParameter[6];
-                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate); // pass as string directly
-                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);     // pass as string directly
+                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate); 
+                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);     
                 arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
                 arlParms[3] = new SqlParameter("@PatientId", WorkSheet.PatientId);
                 arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
@@ -1895,6 +1895,18 @@ namespace EUMI_ERP.DataLayer
             {
                 throw;
             }
+        }
+        
+        public DataSet HMS_OPWorkSheetMedicineAdvice(WorkSheet WorkSheet, string dbName)
+        {
+            arlParms = new SqlParameter[6];
+            arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate);
+            arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);
+            arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
+            arlParms[3] = new SqlParameter("@PatientId", WorkSheet.PatientId);
+            arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
+            arlParms[5] = new SqlParameter("@UserId", WorkSheet.UserId);
+            return SQLHelper.ExecuteDataset("HMS_OPWorkSheetMedicineAdvice", dbName, arlParms);
         }
 
         public DataSet HMS_LAstRevisitGetsayurvetha(ReVisitModel ReVisitModel, string dbName)

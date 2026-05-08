@@ -365,7 +365,7 @@ function PrintthisBillWindowsHMS(Flag, Rowlen, type,Bill)
         //else if (type == 'SAVE')
         //{ PrintthisBillHMSSales(Rowlen, 0, 1) }
     }
-}
+} 
 
 //GST medical shop bill
 
