@@ -1436,36 +1436,78 @@ function GetAppointment(AppointmentId,TknNo) {
 
 
 function ShowAppointmentlist(result) {
-    debugger;
     $("#tblAppointments tbody").empty();
     var EmptyFlag = 0;
     LayouEOD = $('#LayouEOD').text();
-    var responseText = "<table width=100%><thead><tr><th align=center>Sl#</th><th>Name</th><th>Doctor</th><th>Date</th><th>Time</th><th>Mob.No</th>  <th>Tok#</th>  <th>Edit</th></tr></thead><tbody>";
+
+    var responseText = "<table width=100%>" +
+        "<thead><tr>" +
+        "<th>Sl#</th>" +
+        "<th>Name</th>" +
+        "<th>OP No</th>" +
+        "<th>Doctor</th>" +
+        "<th>Date</th>" +
+        "<th>Time</th>" +
+        "<th>Mobile No</th>" +
+        "<th>Token No</th>" +
+        "<th>Apply</th>" +
+        "</tr></thead><tbody>";
+
     var slno = 0;
     for (var i = 0; i < result.length; i++) {
-        if (result[i].LastName == '' && result[i].Status1 == 0 && result[i].AppointmentDate == LayouEOD) {
-            slno = parseInt(slno + 1);
+        function normAppDate(d) {
+            if (!d) return '';
+            d = d.toString().trim().split(' ')[0].split('T')[0];
+            if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+                var p = d.split('-');
+                return p[2] + '/' + p[1] + '/' + p[0];
+            }
+            return d;
+        }
+
+        if (normAppDate(result[i].AppointmentDate) == LayouEOD &&
+            (result[i].Status1 == 'Booked' || result[i].Status1 == 'Rescheduled') &&
+            (parseInt(result[i].Status2 || 0) == 0)) {
+
+            slno++;
             EmptyFlag = 1;
-            responseText += '<tr><td align=center>' + slno
-                + '</td><td>' + result[i].FirstName
-                + '</td><td>' + result[i].Doctor
-                + '</td><td>' + result[i].AppointmentDate
-                + '</td><td>' + result[i].AppointmentTime
-                + '</td><td>' + result[i].Contact
 
-                + '</td><td>' + result[i].Branch
-
-                + '</td><td>  <button type="button" style="width:100px"  class="btn btn-primary btn-min-width mr-1 mb-1" onclick="GetAppointment(' + result[i].AppointmentId + ',' + result[i].Branch+')">Apply</button>'
-                + '</td></tr>';
+            responseText += '<tr>' +
+                '<td>' + slno + '</td>' +
+                '<td>' + (result[i].FirstName || '') + '</td>' +
+                '<td>' + (result[i].LastName || '') + '</td>' +
+                '<td>' + (result[i].Name || result[i].DoctorName || result[i].Doctor || '') + '</td>' +
+                '<td>' + (result[i].AppointmentDate || '') + '</td>' +
+                '<td>' + (result[i].AppointmentTime || '') + '</td>' +
+                '<td>' + (result[i].Contact || '') + '</td>' +
+                '<td>' + (result[i].Branch || '') + '</td>' +
+                '<td>' +
+                '<button type="button" ' +
+                'class="btn btn-primary btn-sm" ' +
+                'onclick="ApplyAppointmentReg(' +
+                result[i].AppointmentId + ',' +
+                (parseInt(result[i].Branch) || 0) + ',' +
+                (result[i].DoctorId || 0) + ',' +
+                (result[i].Status2 || 0) + ',' +
+                '\'' + (result[i].AppointmentTime || '') + '\'' +
+                ')">Apply</button>' +
+                '</td>' +
+                '</tr>';
         }
     }
 
     $('#tblAppointments').html(responseText + '</tbody></table>');
+
     if (EmptyFlag == 0) {
-        $('#tblAppointments').html('<table><tbody><tr><td  align=center>NO APPOINMENT DATA</td></tr></tbody></table>');
+        $('#tblAppointments').html(
+            '<table><tbody>' +
+            '<tr><td align=center style="padding:20px;color:red;">' +
+            'NO APPOINTMENT DATA FOR TODAY' +
+            '</td></tr>' +
+            '</tbody></table>'
+        );
     }
 }
-
 
 
 function ShowAppointmentGet(result, fl) {
@@ -1484,6 +1526,97 @@ function ShowAppointmentGet(result, fl) {
     $('#EmailId').val(result[0].Email);
     $('#MobileNo').val(result[0].Contact);
     $('#Doctor').val(result[0].DoctorId);
+}
+
+function ApplyAppointmentReg(AppointmentId, TokenNo, DoctorId, PatientRegId, AppointmentTime) {
+
+    closeAppPop();
+    if (parseInt(PatientRegId) > 0) {
+        GetRows(PatientRegId, 0);
+        setTimeout(function () {
+            $('#TokenNo').val(TokenNo);
+            if (DoctorId > 0) {
+                $('#Doctor').val(DoctorId);
+                ChangeFee();
+            }
+            if (AppointmentTime) {
+                var shift = getShiftFromAppointmentTimeReg(AppointmentTime);
+                if (shift) {
+                    $('#Shift').val(shift);
+                }
+            }
+            TokenLoad();
+        }, 1500);
+    }
+    else {
+        var data = {};
+        data.AppointmentId = AppointmentId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Master/AppointmentGetandGets",
+            data: data,
+            success: function (result) {
+                if (result.oList && result.oList.length > 0) {
+                    var item = result.oList[0];
+                    $('#PName').val(item.FirstName || '');
+                    $('#MobileNo').val(item.Contact || '');
+                    $('#EmailId').val(item.Email || '');
+                    var g = item.Gender;
+                    if (g == 'Male' || g == '1')
+                        $('#PGender').val(1);
+                    else if (g == 'Female' || g == '2')
+                        $('#PGender').val(2);
+                    else if (g == 'Others' || g == '3')
+                        $('#PGender').val(3);
+                    if (item.DOB && item.DOB != '' &&
+                        item.DOB != '01/01/0001' &&
+                        item.DOB != '01/01/1900') {
+                        $('#PDOB').val(item.DOB);
+                        GetPatientAge();
+                    }
+                    else if (item.Age &&
+                        parseInt(item.Age) > 0) {
+                        $('#Age').val(item.Age);
+                    }
+                    if (DoctorId && DoctorId > 0) {
+                        $('#Doctor').val(DoctorId);
+                        ChangeFee();
+                    }
+                    if (AppointmentTime) {
+                        var shift = getShiftFromAppointmentTimeReg(AppointmentTime);
+                        if (shift) {
+                            $('#Shift').val(shift);
+                        }
+                    }
+                    TokenLoad();
+
+                    if (TokenNo && TokenNo > 0) {
+                        $('#TokenNo').val(TokenNo);
+                    }
+                    $('#AppointmentId').val(AppointmentId);
+                    $('#PName').focus();
+
+                    warningshow(
+                        'Appointment loaded! ' +
+                        'Please fill remaining details and Save.',
+                        'PName'
+                    );
+                }
+            }
+        });
+    }
+}
+
+function getShiftFromAppointmentTimeReg(timeStr) {
+    if (!timeStr) return null;
+    var hour = parseInt(timeStr.split(':')[0]);
+    var isPM = timeStr.toUpperCase().includes('PM');
+    if (isPM && hour != 12) hour += 12;
+    if (!isPM && hour == 12) hour = 0;
+    if (hour < 12) return 1;
+    if (hour < 17) return 2;
+    return 3;
 }
 
 

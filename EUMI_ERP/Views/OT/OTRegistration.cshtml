@@ -772,18 +772,25 @@
 
         function LoadOperationTheatres() {
             var cached = sessionStorage.getItem('otTheatres');
-            if (cached) {
+            if (cached && cached.indexOf('<option value="') !== -1) {  // ← validate cache has real options
                 $('#OperationTheatre').html(cached);
                 return;
             }
+            sessionStorage.removeItem('otTheatres');  // ← clear bad cache
+
             $.ajax({
                 type: "POST", url: "../Master/RoomGetandGets", data: { RoomId: 0 },
                 success: function (r) {
                     var o = '<option value="">Select OT</option>';
                     if (r && r.length)
-                        $.each(r, function (i, x) { o += '<option value="' + x.RoomId + '">' + x.RoomName + '</option>'; });
+                        $.each(r, function (i, x) {
+                            o += '<option value="' + x.RoomId + '">' + x.RoomName + '</option>';
+                        });
                     $('#OperationTheatre').html(o);
-                    sessionStorage.setItem('otTheatres', o);
+                    // Only cache if we actually got data
+                    if (r && r.length) {
+                        sessionStorage.setItem('otTheatres', o);
+                    }
                 }
             });
         }

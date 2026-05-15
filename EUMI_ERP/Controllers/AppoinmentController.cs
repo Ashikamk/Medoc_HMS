@@ -27,7 +27,6 @@ namespace EUMI_ERP.Controllers
 
         public class AppointmentsController : Controller
         {
-            // Get Connection String from Web.config
             private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             // GET: Appointments
@@ -36,10 +35,6 @@ namespace EUMI_ERP.Controllers
                 return View();
             }
 
-            /// <summary>
-            /// Gets list of booked slots for a specific doctor and date.
-            /// Called via AJAX when date/doctor changes.
-            /// </summary>
             [HttpGet]
             public JsonResult GetBookedSlots(string doctorId, string date)
             {
@@ -79,11 +74,6 @@ namespace EUMI_ERP.Controllers
                 }
             }
 
-            /// <summary>
-            /// Saves a new appointment.
-            /// Called via AJAX on Form Submit.
-            /// </summary>
-            [HttpPost]
             public JsonResult BookAppointment(Appointment model)
             {
                 if (!ModelState.IsValid)
@@ -119,7 +109,6 @@ namespace EUMI_ERP.Controllers
 
                             con.Open();
 
-                            // ExecuteScalar to get the result code from SP
                             using (SqlDataReader rdr = cmd.ExecuteReader())
                             {
                                 if (rdr.Read())
@@ -133,7 +122,7 @@ namespace EUMI_ERP.Controllers
                                     }
                                     else
                                     {
-                                        return Json(new { success = false, message = message }); // e.g., Slot already booked
+                                        return Json(new { success = false, message = message });
                                     }
                                 }
                             }

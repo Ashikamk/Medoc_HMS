@@ -70,11 +70,30 @@ namespace EUMI_ERP.DataLayer
 
         }
 
+        public DataSet HMS_LabPurchaseProductSearch(ItemMasterModel ItemMasterModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[5];
+                arlParms[0] = new SqlParameter("@ItemCode", ItemMasterModel.ItemCode);
+                arlParms[1] = new SqlParameter("@SupplierId", ItemMasterModel.SlNumber);
+                arlParms[2] = new SqlParameter("@JobNo", ItemMasterModel.JobNo);
+                arlParms[3] = new SqlParameter("@DeptId", ItemMasterModel.DeptId);
+                arlParms[4] = new SqlParameter("@UserId", ItemMasterModel.UserId);
+                return SQLHelper.ExecuteDataset("HMS_LabPurchaseProductSearch", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
 
 
-        
 
-             public DataSet HMS_OpeningPurchaseInsert(DataTable dt, string dbName)
+
+
+        public DataSet HMS_OpeningPurchaseInsert(DataTable dt, string dbName)
         {
             try
             {

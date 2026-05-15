@@ -3,7 +3,7 @@
     //Document Ready
     $(document).ready(function () {
 
-   
+   /////////////////////////
 
             // Get token from URL
             var urlParams = new URLSearchParams(window.location.search);
@@ -47,6 +47,7 @@
                 sessionStorage.removeItem("LB_CorrectOpNo");
                 sessionStorage.removeItem("LB_Tests");
             }
+////////////////////////////////
 
         $('.form-control').attr('autocomplete', 'off');
         $('.rdonl').attr('readonly', true).css('background-color', 'white');

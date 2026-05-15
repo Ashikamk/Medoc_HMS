@@ -17,6 +17,12 @@ namespace EUMI_ERP.Controllers
         {
             return View();
         }
+
+        public ActionResult LabPurchaseInvoice()
+        {
+            return View();
+        }
+
         public ActionResult Medicine()
         {
             return View();
@@ -200,9 +206,110 @@ namespace EUMI_ERP.Controllers
 
         }
 
-        
+        public ActionResult HMS_LabPurchaseProductSearch(ItemMasterModel ItemMasterModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            List<ItemMasterModel> oList = new List<ItemMasterModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_LabPurchaseProductSearch(ItemMasterModel, dbName);
 
-            [HttpPost]
+                // ADD THIS NULL CHECK
+                if (dsDataSet == null || dsDataSet.Tables.Count == 0)
+                    return Json(oList, JsonRequestBehavior.AllowGet);
+
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    ItemMasterModel MModels = new ItemMasterModel();
+
+                    MModels.ItemId = row["ItemId"] != DBNull.Value ? Convert.ToInt32(row["ItemId"]) : 0;
+
+                    MModels.ItemCode = row["ItemCode"] != DBNull.Value
+                        ? row["ItemCode"].ToString()
+                        : "";
+
+                    MModels.Description = row["Description"] != DBNull.Value
+                        ? row["Description"].ToString()
+                        : "";
+
+                    MModels.VatId = row["VatId"] != DBNull.Value
+                        ? Convert.ToInt32(row["VatId"])
+                        : 0;
+
+                    MModels.VatPer = row["TaxRate"] != DBNull.Value
+                        ? Convert.ToDecimal(row["TaxRate"])
+                        : 0;
+
+                    MModels.SellingPrice = row["SellingPrice"] != DBNull.Value
+                        ? Convert.ToDecimal(row["SellingPrice"])
+                        : 0;
+
+                    MModels.MRP = row["MrpRate"] != DBNull.Value
+                        ? Convert.ToDecimal(row["MrpRate"])
+                        : 0;
+
+                    MModels.AvgCost = row["AvgCost"] != DBNull.Value
+                        ? Convert.ToDecimal(row["AvgCost"])
+                        : 0;
+
+                    MModels.LPCost = row["LPCost"] != DBNull.Value
+                        ? Convert.ToDecimal(row["LPCost"])
+                        : 0;
+
+                    MModels.GrpId = row["GroupId"] != DBNull.Value
+                        ? Convert.ToInt32(row["GroupId"])
+                        : 0;
+
+                    MModels.Group = row["GrpCode"] != DBNull.Value
+                        ? row["GrpCode"].ToString()
+                        : "";
+
+                    MModels.CategoryId = row["CategoryId"] != DBNull.Value
+                        ? Convert.ToInt32(row["CategoryId"])
+                        : 0;
+
+                    MModels.Category = row["CategoryCode"] != DBNull.Value
+                        ? row["CategoryCode"].ToString()
+                        : "";
+
+                    MModels.SubCategoryId = row["SubCategoryId"] != DBNull.Value
+                        ? Convert.ToInt32(row["SubCategoryId"])
+                        : 0;
+
+                    MModels.SubCategoryName = row["SubCategoryName"] != DBNull.Value
+                        ? row["SubCategoryName"].ToString()
+                        : "";
+
+                    MModels.UnitId = row["UnitId"] != DBNull.Value
+                        ? Convert.ToInt32(row["UnitId"])
+                        : 0;
+
+                    MModels.UnitName = row["UnitName"] != DBNull.Value
+                        ? row["UnitName"].ToString()
+                        : "";
+
+                    MModels.Model1 = row["Model1"] != DBNull.Value
+                        ? row["Model1"].ToString()
+                        : "0";
+
+                    MModels.NoQty = row["Model3"] != DBNull.Value
+                        ? Convert.ToInt32(row["Model3"])
+                        : 0;
+
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return Json(oList, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [HttpPost]
         public JsonResult HMS_OpeningPurchaseInsert(List<PharmacyModel> PharmacyModel)
         {
             PharmacyModel obj = new PharmacyModel();

@@ -1339,38 +1339,158 @@ function GetAppointment(AppointmentId) {
 function ShowAppointmentlist(result) {
     LabelDate = $('#LabelDate').text();
 
-    $("#tblAppointments tbody").empty();
-    var EmptyFlag = 0
-    var slno = 0;
-    var responseText = "<table width=100%><thead><tr><th align=center>Sl#</th><th>RegId</th><th>Name</th><th>Doctor</th><th>Date</th><th>Time</th><th>Mob.No</th><th>Tok.No</th><th>Edit</th></tr></thead><tbody>";
+    console.log('ShowAppointmentlist called');
+    console.log('LabelDate (today):', LabelDate);
+    console.log('Result count:', result ? result.length : 'NULL');
 
+    if (!result || result.length === 0) {
+        $('#tblAppointments').html(
+            '<table><tbody>' +
+            '<tr><td align=center style="padding:20px;color:red;">' +
+            'NO APPOINTMENT DATA' +
+            '</td></tr>' +
+            '</tbody></table>'
+        );
+        return;
+    }
+
+    $("#tblAppointments tbody").empty();
+    var EmptyFlag = 0;
+    var slno = 0;
+
+    var responseText = "<table width=100%>" +
+        "<thead><tr>" +
+        "<th>Sl#</th>" +
+        "<th>Name</th>" +
+        "<th>OP No</th>" +
+        "<th>Doctor</th>" +
+        "<th>Date</th>" +
+        "<th>Time</th>" +
+        "<th>Mobile No</th>" +
+        "<th>Token No</th>" +
+        "<th>Status</th>" +
+        "<th>Apply</th>" +
+        "</tr></thead><tbody>";
 
     for (var i = 0; i < result.length; i++) {
 
+        var apptDate = normalizeDateRev(result[i].AppointmentDate);
+        var todayDate = normalizeDateRev(LabelDate);
+        var status = (result[i].Status1 || '').toString().trim();
 
-        if (result[i].LastName != '' && result[i].AppointmentDate == LabelDate && result[i].Status1 == 0) {
-            var slno = parseInt(slno + 1);
-            EmptyFlag = 1;
-            responseText += '<tr><td align=center>' + slno
-                + '</td><td>' + result[i].LastName
-                + '</td><td>' + result[i].FirstName
-                + '</td><td>' + result[i].Doctor
-                + '</td><td>' + result[i].AppointmentDate
-                + '</td><td>' + result[i].AppointmentTime
-                + '</td><td>' + result[i].Contact
-                + '</td><td>' + result[i].Branch
+        console.log('Row ' + i + ': Date=' + apptDate +
+            ' | Today=' + todayDate +
+            ' | Match=' + (apptDate == todayDate) +
+            ' | Status=' + status);
 
-                + '</td><td>  <button type="button" style="width:100px"  class="btn btn-primary btn-min-width mr-1 mb-1"  onclick="GetAppointmentinfopatient(' + result[i].Status2 + ',' + parseInt(result[i].Branch||0) + ',' + result[i].DoctorId+')">Apply</button>'
-                + '</td></tr>';
+        if (apptDate == todayDate) {
+            console.log('TODAY ROW - Status2=' + result[i].Status2 +
+                ' | Status1=' + status);
         }
 
+        if (apptDate == todayDate &&
+            (status == 'Booked' || status == 'Rescheduled') &&
+            (parseInt(result[i].Status2 || 0) > 0)) {
+
+            slno++;
+            EmptyFlag = 1;
+
+            responseText += '<tr>' +
+                '<td>' + slno + '</td>' +
+                '<td>' + (result[i].FirstName || '') + '</td>' +
+                '<td>' + (result[i].LastName || '') + '</td>' +
+                '<td>' + (result[i].Name || result[i].DoctorName || result[i].Doctor || '') + '</td>' +
+                '<td>' + apptDate + '</td>' +
+                '<td>' + (result[i].AppointmentTime || '') + '</td>' +
+                '<td>' + (result[i].Contact || '') + '</td>' +
+                '<td>' + (result[i].Branch || '') + '</td>' +
+                '<td>' + status + '</td>' +
+                '<td>' +
+                '<button type="button" ' +
+                'class="btn btn-primary btn-sm" ' +
+                'onclick="ApplyAppointmentRevisit(' +
+                result[i].AppointmentId + ',' +
+                (parseInt(result[i].Branch) || 0) + ',' +
+                (result[i].DoctorId || result[i].Doctor || 0) + ',' +
+                (result[i].Status2 || 0) + ',' +
+                '\'' + (result[i].AppointmentTime || '') + '\'' +
+                ')">Apply</button>' +
+                '</td>' +
+                '</tr>';
+        }
     }
 
     $('#tblAppointments').html(responseText + '</tbody></table>');
-    if (EmptyFlag == 0) {
-        $('#tblAppointments').html('<table><tbody><tr><td  align=center>NO APPOINMENT DATA</td></tr></tbody></table>');
 
+    if (EmptyFlag == 0) {
+        $('#tblAppointments').html(
+            '<table><tbody>' +
+            '<tr><td align=center style="padding:20px;color:red;font-weight:bold;">' +
+            'No Appointments Today' +
+            '</td></tr>' +
+            '</tbody></table>'
+        );
     }
+}
+
+function ApplyAppointmentRevisit(AppointmentId, TokenNo, DoctorId, PatientRegId, AppointmentTime) {
+
+    closeAppPop();
+    if (parseInt(PatientRegId) > 0) {
+        var data = {};
+        data.PatientId = PatientRegId;
+        data.DeptId = ERPDeptId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_PatientSearchGet",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    GetPatientData(result.oList, 0);
+                    setTimeout(function () {
+                        if (DoctorId && DoctorId > 0) {
+                            $('#DocName').val(DoctorId);
+                            ChangeFee();
+                        }
+                        if (AppointmentTime) {
+                            var shift = getShiftFromAppointmentTime(AppointmentTime);
+                            $('#Shift').val(shift);
+                        }
+                        TokenNumberLoad();
+
+                        if (TokenNo && TokenNo > 0) {
+                            $('#PatTokenNumber').val(TokenNo);
+                        }
+                        $('#DocName').focus();
+                    }, 800);
+                    $('#AppointmentId').val(AppointmentId);
+                }
+            },
+            error: function () {
+                warningshow('Failed to load patient data');
+            }
+        });
+    }
+    else {
+        warningshow(
+            'This patient is not registered yet! ' +
+            'Please register the patient first.',
+            'RegNumber'
+        );
+    }
+}
+
+function getShiftFromAppointmentTime(timeStr) {
+    if (!timeStr) return null;
+    var hour = parseInt(timeStr.split(':')[0]);
+    var isPM = timeStr.toUpperCase().includes('PM');
+    if (isPM && hour != 12) hour += 12;
+    if (!isPM && hour == 12) hour = 0;
+
+    if (hour < 12) return 1;
+    if (hour < 17) return 2;
+    return 3;
 }
 
 

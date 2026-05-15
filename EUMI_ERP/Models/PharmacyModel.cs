@@ -155,7 +155,10 @@ namespace EUMI_ERP.Models
             return oDPurchase.HMS_PurchaseProductSearch(oItemMasterModel, dbName);
         }
 
-        
+        public DataSet HMS_LabPurchaseProductSearch(ItemMasterModel oItemMasterModel, string dbName)
+        {
+            return oDPurchase.HMS_LabPurchaseProductSearch(oItemMasterModel, dbName);
+        }
 
         public DataSet HMS_OpeningPurchaseInsert(DataTable dt, string dbName)
         {

@@ -6966,29 +6966,35 @@ namespace EUMI_ERP.Controllers
             List<Appointment> oList = new List<Appointment>();
             try
             {
-                DataSet dsDataSet = new DataSet();
-                dsDataSet = obj.AppointmentInsertandUpdate(Appointment, dbName);
-                foreach (DataRow row in dsDataSet.Tables[0].Rows)
-                {
-                    Appointment MModels = new Appointment();
-                    MModels.Status = row["Status"].ToString();
-                    MModels.AppointmentId = Convert.ToInt32(row["AppointmentId"].ToString());
-                    oList.Add(MModels);
-                }
+                DataSet dsDataSet = obj.AppointmentInsertandUpdate(Appointment, dbName);
 
+                if (dsDataSet == null)
+                    return Json(new { oList, success = false, message = "DB returned null" },
+                                JsonRequestBehavior.AllowGet);
+
+                if (dsDataSet.Tables.Count > 0 && dsDataSet.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        Appointment MModels = new Appointment();
+                        MModels.Status = row["Status"].ToString();
+                        MModels.AppointmentId = Convert.ToInt32(row["AppointmentId"].ToString());
+                        oList.Add(MModels);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+                Console.WriteLine("Message :" + ex.Message + "+" + ex.StackTrace);
+                return Json(new { oList, success = false, message = ex.Message },
+                            JsonRequestBehavior.AllowGet);
             }
-
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
 
 
 
 
-        
 
 
         [HttpPost]
@@ -7020,42 +7026,46 @@ namespace EUMI_ERP.Controllers
         [HttpPost]
         public ActionResult AppointmentGetandGets(Appointment Appointment)
         {
-            Appointment obj = new Appointment();
+            // ✅ Add this debug line temporarily
+            System.Diagnostics.Debug.WriteLine("Status1 received: " + Appointment.Status1);
 
+            Appointment obj = new Appointment();
             List<Appointment> oList = new List<Appointment>();
             try
             {
-                DataSet dsDataSet = new DataSet();
-                dsDataSet = obj.AppointmentGetandGets(Appointment, dbName);
-                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                DataSet dsDataSet = obj.AppointmentGetandGets(Appointment, dbName);
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0)
                 {
-                    Appointment MModels = new Appointment();
-                    MModels.AppointmentId = Convert.ToInt32(row["AppointmentId"].ToString());
-                    MModels.FirstName = row["FirstName"].ToString();
-                    MModels.LastName = row["LastName"].ToString();
-                    MModels.DOB = row["DOB"].ToString();
-                    MModels.Age = Convert.ToInt32(row["Age"].ToString());
-                    MModels.Department = row["Department"].ToString();
-                    MModels.Gender = row["Gender"].ToString();
-                    MModels.Email = row["Email"].ToString();
-                    MModels.Nationality = row["Nationality"].ToString();
-                    MModels.Contact = row["Contact"].ToString();
-                    MModels.Branch = row["Branch"].ToString();
-                    MModels.Doctor = row["Name"].ToString();
-                    MModels.DoctorId = Convert.ToInt32(row["Doctor"].ToString());
-                    MModels.AppointmentTime = row["AppointmentTime"].ToString();
-                    MModels.AppointmentDate = row["AppointmentDate"].ToString();
-                    MModels.Status1 = row["Status1"].ToString();
-                    MModels.Status2 = row["Status2"].ToString();
-                    oList.Add(MModels);
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        Appointment MModels = new Appointment();
+                        MModels.AppointmentId = Convert.ToInt64(row["AppointmentId"]);
+                        MModels.FirstName = row["FirstName"].ToString();
+                        MModels.LastName = row["LastName"].ToString();
+                        MModels.DOB = row["DOB"].ToString();
+                        MModels.Age = Convert.ToInt32(row["Age"]);
+                        MModels.Department = row["Department"].ToString();
+                        MModels.Gender = row["Gender"].ToString();
+                        MModels.Email = row["Email"].ToString();
+                        MModels.Nationality = row["Nationality"].ToString();
+                        MModels.Contact = row["Contact"].ToString();
+                        MModels.Branch = row["Branch"].ToString();
+                        MModels.Doctor = row["Doctor"].ToString();
+                        MModels.DoctorId = Convert.ToInt32(row["DoctorId"]);
+                        MModels.AppointmentTime = row["AppointmentTime"].ToString();
+                        MModels.AppointmentDate = row["AppointmentDate"].ToString();
+                        MModels.Status1 = row["Status1"].ToString();
+                        MModels.Status2 = row["Status2"].ToString();
+                        try { MModels.Name = row["Name"].ToString(); } catch { }
+                        oList.Add(MModels);
+                    }
                 }
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+                return Json(new { oList, success = false, message = ex.Message },
+                            JsonRequestBehavior.AllowGet);
             }
-
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
 

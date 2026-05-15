@@ -5136,55 +5136,48 @@ namespace EUMI_ERP
             try
             {
                 arlParms = new SqlParameter[17];
-                arlParms[0] = new SqlParameter("@FirstName", Appointment.FirstName);
-                arlParms[1] = new SqlParameter("@LastName", Appointment.LastName);
-                arlParms[2] = new SqlParameter("@DOB", Appointment.DOB);
-                arlParms[3] = new SqlParameter("@Age", Appointment.Age);
-                arlParms[4] = new SqlParameter("@Gender", Appointment.Gender);
-                arlParms[5] = new SqlParameter("@Nationality", Appointment.Nationality);
-                arlParms[6] = new SqlParameter("@Contact", Appointment.Contact);
-                arlParms[7] = new SqlParameter("@Email", Appointment.Email);
-                arlParms[8] = new SqlParameter("@Department", Appointment.Department);
-                arlParms[9] = new SqlParameter("@Branch", Appointment.Branch);
-                arlParms[10] = new SqlParameter("@Doctor", Appointment.Doctor);
-                arlParms[11] = new SqlParameter("@AppointmentDate", Appointment.AppointmentDate);
-                arlParms[12] = new SqlParameter("@AppointmentTime", Appointment.AppointmentTime);
-                arlParms[13] = new SqlParameter("@DelFlag", Appointment.DelFlag);
-                arlParms[14] = new SqlParameter("@AppointmentId", Appointment.AppointmentId);
-                arlParms[15] = new SqlParameter("@Status1", Appointment.Status1);
-                arlParms[16] = new SqlParameter("@Status2", Appointment.Status2);
-                return SQLHelper.ExecuteDataset("AppointmentInsertandUpdate", dbName, arlParms);
+                arlParms[0] = new SqlParameter("@AppointmentId", Appointment.AppointmentId);
+                arlParms[1] = new SqlParameter("@FirstName", Appointment.FirstName);
+                arlParms[2] = new SqlParameter("@LastName", Appointment.LastName);
+                arlParms[3] = new SqlParameter("@DOB", Appointment.DOB);
+                arlParms[4] = new SqlParameter("@Age", Appointment.Age);
+                arlParms[5] = new SqlParameter("@Department", Appointment.Department);
+                arlParms[6] = new SqlParameter("@Gender", Appointment.Gender);
+                arlParms[7] = new SqlParameter("@Nationality", Appointment.Nationality);
+                arlParms[8] = new SqlParameter("@Contact", Appointment.Contact);
+                arlParms[9] = new SqlParameter("@Email", Appointment.Email);
+                arlParms[10] = new SqlParameter("@Branch", Appointment.Branch);
+                arlParms[11] = new SqlParameter("@Doctor", Appointment.Doctor);
+                arlParms[12] = new SqlParameter("@AppointmentDate", Appointment.AppointmentDate);
+                arlParms[13] = new SqlParameter("@AppointmentTime", Appointment.AppointmentTime);
+                arlParms[14] = new SqlParameter("@Status1", Appointment.Status1);
+                arlParms[15] = new SqlParameter("@Status2", Appointment.Status2);
+                arlParms[16] = new SqlParameter("@DelFlag", Appointment.DelFlag);
 
+                return SQLHelper.ExecuteDataset("AppointmentInsertandUpdate", dbName, arlParms);
             }
             catch (SqlException exMe)
             {
-                Console.WriteLine(exMe.Message);
                 return null;
             }
         }
         public DataSet AppointmentGetandGets(Appointment Appointment, string dbName)
         {
-            try
-            {
-                arlParms = new SqlParameter[1];
-                arlParms[0] = new SqlParameter("@AppointmentId", Appointment.AppointmentId);
-                return SQLHelper.ExecuteDataset("AppoinmentGetandGets", dbName, arlParms);
-            }
-            catch (SqlException exMe)
-            {
-                Console.WriteLine(exMe.Message);
-                return null;
-            }
-
+            arlParms = new SqlParameter[5];  // ✅ must be 5, not 4
+            arlParms[0] = new SqlParameter("@AppointmentId", Appointment.AppointmentId);
+            arlParms[1] = new SqlParameter("@DoctorId", Appointment.DoctorId);
+            arlParms[2] = new SqlParameter("@FromDate", Appointment.FromDate ?? "");
+            arlParms[3] = new SqlParameter("@ToDate", Appointment.ToDate ?? "");
+            arlParms[4] = new SqlParameter("@Status1", Appointment.Status1 ?? ""); // ✅ this must exist
+            return SQLHelper.ExecuteDataset("AppoinmentGetandGets", dbName, arlParms);
         }
 
 
-        
-            public DataSet GetBookedSession(Appointment Appointment, string dbName)
+        public DataSet GetBookedSession(Appointment Appointment, string dbName)
         {
             try
             {
-                arlParms = new SqlParameter[3];
+                arlParms = new SqlParameter[2];
                 arlParms[0] = new SqlParameter("@Date", Appointment.Date);                
                 arlParms[1] = new SqlParameter("@Doctor", Appointment.DoctorId);
                 return SQLHelper.ExecuteDataset("GetBookedSession", dbName, arlParms);
