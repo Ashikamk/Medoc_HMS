@@ -3,6 +3,38 @@
 var CountryId = 0; var SearchFlag = 0; var Bl = 0;
 var BillFlag = 0;
 $(document).ready(function () {
+    // Auto fill from Registration Save & Bill
+    if (window.location.search.indexOf('flag=reg') !== -1) {
+        var LB_PatientId = sessionStorage.getItem("LB_PatientId");
+        var LB_OPNumber = sessionStorage.getItem("LB_OPNumber");
+        var LB_OPSeries = sessionStorage.getItem("LB_OPSeries");
+        var LB_OPSeriesId = sessionStorage.getItem("LB_OPSeriesId");
+        var LB_Contact = sessionStorage.getItem("LB_Contact");
+
+        if (LB_PatientId) {
+            setTimeout(function () {
+                // Fill Reg No Series (small box)
+                $('#OPSeries').val(LB_OPSeriesId);   // <-- change OPSeries to your actual field ID
+
+                // Fill Reg No number
+                $('#OPIP').val(LB_OPNumber);          // <-- change OPIP to your actual field ID
+
+                // Fill Contact
+                $('#Contact').val(LB_Contact);        // <-- change Contact to your actual field ID
+
+                // This triggers patient data load (like clicking search)
+                GetLabPatient(LB_PatientId);          // <-- change to your actual load function name
+
+                // Clear storage
+                sessionStorage.removeItem("LB_PatientId");
+                sessionStorage.removeItem("LB_OPNumber");
+                sessionStorage.removeItem("LB_OPSeries");
+                sessionStorage.removeItem("LB_OPSeriesId");
+                sessionStorage.removeItem("LB_Contact");
+
+            }, 1000); // 1 second wait for page to fully load
+        }
+    }
     Defaultfocus();
 
     LoadDate();
@@ -39,12 +71,17 @@ $(document).ready(function () {
         SaveAndUpdate(1)
     });
 
-   
     $("#btnsavesubmit").click(function (e) {
-
         BillFlag = 1;
         SaveAndUpdate(1);
     });
+
+   
+    //$("#btnsavesubmit").click(function (e) {
+
+    //    BillFlag = 1;
+    //    SaveAndUpdate(1);
+    //});
    
     $("#TokenNo").keydown(function (e) {
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
@@ -485,10 +522,14 @@ function SaveAndUpdate(flag)
     if (($('#RegSeries').val()||0) == 0) {
         warningshow('Please Enter the RegNo', 'RegNo');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     else if ($.trim($('#RegNo').val()||0) == 0) {
         warningshow('Please Enter the RegNo', 'RegNo');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
 
     //else if ($.trim($('#PName').val()).substring(0, 1) != $("#RegSeries option:selected").text()) {
@@ -499,20 +540,32 @@ function SaveAndUpdate(flag)
     else if ($.trim($('#PName').val()) == "") {
         warningshow('Please Enter the Name', 'PName');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     else if (($('#PGender').val() || 0) == 0) {
         warningshow('Please Select the Gender', 'PGender');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     else if (($.trim($("#Bloodgroup").val()) != '') && (Bl == 0))
-    { warningshow('Please Select a valid Blood Group', 'Bloodgroup'); $('#btnsubmit').removeAttr("disabled"); }
+    {
+        warningshow('Please Select a valid Blood Group', 'Bloodgroup'); $('#btnsubmit').removeAttr("disabled");
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;
+}
     else if (($('#Age').val() == '') && ($('#Age1').val() == '') && ($('#Age2').val() == '')) {
         warningshow('Please Select the DOB', 'PDOB');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }   
     else if ($.trim($('#MobileNo').val()) == "") {
         warningshow('Please Enter the MobileNo', 'MobileNo');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     //else if ($.trim($('#Address1').val()) == '') {
     //    warningshow('Please Enter the Address', 'Address1');
@@ -521,10 +574,14 @@ function SaveAndUpdate(flag)
     else if (($('#Doctor').val()||0) == 0) {
         warningshow('Please Select the Doctor', 'Doctor');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     else if (($('#Shift').val() || 0) == 0 || $.trim($('#Shift').val()) == '' || $('#Shift').val() == undefined) {
         warningshow('Please Select the Shift', 'Shift');
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     //else if ($.trim($('#AdharNo').val()) == '') {
     //    warningshow('Please Enter AdharNo', 'AdharNo');
@@ -533,6 +590,8 @@ function SaveAndUpdate(flag)
     {
         return Validateemail();
         $('#btnsubmit').show();
+        $('#btnsavesubmit').show(); // ADD THIS
+        BillFlag = 0;  
     }
     else {
         if (flag == 3) { $('#MFlag').val(1); }
@@ -993,10 +1052,31 @@ function ShowPrintAlerts(Status, RegId) {
     }
 
 
+    //if (BillFlag == 1) {
+    //    window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
+    //    BillFlag = 0;
+    //    $('.swal-button--cancel').click();
+    //}
+
     if (BillFlag == 1) {
-        window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
         BillFlag = 0;
-        $('.swal-button--cancel').click();
+
+        var token = Date.now().toString();
+        var seriesText = $("#RegSeries option:selected").text();
+
+        sessionStorage.setItem("LB_Token", token);
+        sessionStorage.setItem("LB_FromWorksheet", "1");
+        sessionStorage.setItem("LB_PatientId", RegId);
+        sessionStorage.setItem("LB_OPNumber", $('#RegNo').val());
+        sessionStorage.setItem("LB_CorrectOpNo", REVID);
+        sessionStorage.setItem("LB_Contact", $('#MobileNo').val());
+        sessionStorage.setItem("LB_OPSeries", seriesText);
+
+        setTimeout(function () {
+            window.open('../Revisit/LabBill?flag=reg&token=' + token, '_blank');
+        }, 300);
+        formrefresh();
+        return;
     }
 
 }
@@ -1593,7 +1673,7 @@ function ApplyAppointmentReg(AppointmentId, TokenNo, DoctorId, PatientRegId, App
 
                     if (TokenNo && TokenNo > 0) {
                         $('#TokenNo').val(TokenNo);
-                    }
+                    }proc
                     $('#AppointmentId').val(AppointmentId);
                     $('#PName').focus();
 

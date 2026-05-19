@@ -7024,6 +7024,52 @@ namespace EUMI_ERP.Controllers
         }
 
         [HttpPost]
+        public ActionResult AppointmentGets(Appointment Appointment)
+        {
+            // ✅ Add this debug line temporarily
+            System.Diagnostics.Debug.WriteLine("Status1 received: " + Appointment.Status1);
+
+            Appointment obj = new Appointment();
+            List<Appointment> oList = new List<Appointment>();
+            try
+            {
+                DataSet dsDataSet = obj.AppointmentGetandGets(Appointment, dbName);
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        Appointment MModels = new Appointment();
+                        MModels.AppointmentId = Convert.ToInt64(row["AppointmentId"]);
+                        MModels.FirstName = row["FirstName"].ToString();
+                        MModels.LastName = row["LastName"].ToString();
+                        MModels.DOB = row["DOB"].ToString();
+                        MModels.Age = Convert.ToInt32(row["Age"]);
+                        MModels.Department = row["Department"].ToString();
+                        MModels.Gender = row["Gender"].ToString();
+                        MModels.Email = row["Email"].ToString();
+                        MModels.Nationality = row["Nationality"].ToString();
+                        MModels.Contact = row["Contact"].ToString();
+                        MModels.Branch = row["Branch"].ToString();
+                        MModels.Doctor = row["Doctor"].ToString();
+                        MModels.DoctorId = Convert.ToInt32(row["DoctorId"]);
+                        MModels.AppointmentTime = row["AppointmentTime"].ToString();
+                        MModels.AppointmentDate = row["AppointmentDate"].ToString();
+                        MModels.Status1 = row["Status1"].ToString();
+                        MModels.Status2 = row["Status2"].ToString();
+                        try { MModels.Name = row["Name"].ToString(); } catch { }
+                        oList.Add(MModels);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { oList, success = false, message = ex.Message },
+                            JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public ActionResult AppointmentGetandGets(Appointment Appointment)
         {
             // ✅ Add this debug line temporarily

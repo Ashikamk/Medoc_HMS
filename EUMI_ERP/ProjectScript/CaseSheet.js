@@ -3139,7 +3139,7 @@ function Noftabs(Id) {
 
     $('#medprestotal').text('₹:' + (Apxtotal).toFixed(2))
 
-    //"1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd","Local application tds"]
+    //"1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd","Local application tds"]
 
 
 
@@ -3258,7 +3258,7 @@ function mednoteload1(ID) {
 function mednoteload(ID) {
 
 
-    var availableTags = ["1-0-0", "0-1-0", "0-0-1", "1-0-1", "1-1-1", "1-1-1-1", "1/2-0-0", "0-1/2-0", "0-0-1/2", "1/2-0-1/2", "1/2-1/2-1/2", "1/2-1/2-1/2-1/2", "0-0-2", "2-0-2", "2-2-2", "3/4-0-3/4", "3/4-3/4-3/4", "SOS", "STAT", "1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "5Ml BD", "5ML TDS", "5ML HS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "10Ml BD", "10ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd", "Local application tds"];
+    var availableTags = ["1-0-0", "0-1-0", "0-0-1", "1-0-1", "1-1-1", "1-1-1-1", "1/2-0-0", "0-1/2-0", "0-0-1/2", "1/2-0-1/2", "1/2-1/2-1/2", "1/2-1/2-1/2-1/2", "0-0-2", "2-0-2", "2-2-2", "3/4-0-3/4", "3/4-3/4-3/4", "SOS", "STAT", "1ml BD", "1ml TDS", "2Ml BD", "2ML TDS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "5Ml BD", "5ML TDS", "5ML HS", "2.5Ml BD", "2.5ML TDS", "2.5ML HS", "10Ml BD", "10ML TDS", "Up to 10 ML", "7.5 ML BD", "7.5 ML TDs", "Local application  bd", "Local application tds"];
     $(function () {
         $("#Dosage" + ID).autocomplete({
             source: availableTags, delay: 0, autoFocus: false,

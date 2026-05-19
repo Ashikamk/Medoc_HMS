@@ -5163,13 +5163,24 @@ namespace EUMI_ERP
         }
         public DataSet AppointmentGetandGets(Appointment Appointment, string dbName)
         {
-            arlParms = new SqlParameter[5];  // ✅ must be 5, not 4
+            arlParms = new SqlParameter[5];  
             arlParms[0] = new SqlParameter("@AppointmentId", Appointment.AppointmentId);
             arlParms[1] = new SqlParameter("@DoctorId", Appointment.DoctorId);
             arlParms[2] = new SqlParameter("@FromDate", Appointment.FromDate ?? "");
             arlParms[3] = new SqlParameter("@ToDate", Appointment.ToDate ?? "");
-            arlParms[4] = new SqlParameter("@Status1", Appointment.Status1 ?? ""); // ✅ this must exist
+            arlParms[4] = new SqlParameter("@Status1", Appointment.Status1 ?? ""); 
             return SQLHelper.ExecuteDataset("AppoinmentGetandGets", dbName, arlParms);
+        }
+
+        public DataSet AppointmentGets(Appointment Appointment, string dbName)
+        {
+            arlParms = new SqlParameter[5];
+            arlParms[0] = new SqlParameter("@AppointmentId", Appointment.AppointmentId);
+            arlParms[1] = new SqlParameter("@DoctorId", Appointment.DoctorId);
+            arlParms[2] = new SqlParameter("@FromDate", Appointment.FromDate ?? "");
+            arlParms[3] = new SqlParameter("@ToDate", Appointment.ToDate ?? "");
+            arlParms[4] = new SqlParameter("@Status1", Appointment.Status1 ?? "");
+            return SQLHelper.ExecuteDataset("AppoinmentGets", dbName, arlParms);
         }
 
 

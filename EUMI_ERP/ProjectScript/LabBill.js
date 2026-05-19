@@ -389,6 +389,11 @@
         $('#RegSeries').val(result[0].OPSerId);
         // $('#TestName0'), focus();
 
+        var savedSeries = sessionStorage.getItem("LB_OPSeries");
+        if (savedSeries) { $('#Opseriesname').val(savedSeries); sessionStorage.removeItem("LB_OPSeries"); }
+        var savedContact = sessionStorage.getItem("LB_Contact");
+        if (savedContact) { $('#contnum').val(savedContact); sessionStorage.removeItem("LB_Contact"); }
+
         CreditBillGets(PRID)
         if (sessionStorage.getItem("LB_Tests")) {
             ShowPrescription();

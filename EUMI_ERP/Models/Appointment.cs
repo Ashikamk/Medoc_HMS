@@ -69,6 +69,14 @@ namespace EUMI_ERP.Models
 
         }
 
+        public DataSet AppointmentGets(Appointment Appointment, string dbName)
+
+        {
+
+            return oDMasters.AppointmentGetandGets(Appointment, dbName);
+
+        }
+
 
         public DataSet GetBookedSession(Appointment Appointment, string dbName)
         {

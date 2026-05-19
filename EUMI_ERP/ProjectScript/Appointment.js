@@ -18,7 +18,7 @@ $(document).ready(function () {
     // Load appointments FIRST, then load doctors and show list
     $.ajax({
         type: "POST",
-        url: "../Master/AppointmentGetandGets",
+        url: "../Master/AppointmentGets",
         data: { AppointmentId: 0, DoctorId: 0, FromDate: '', ToDate: '' },
         success: function (result) {
             window._appointmentList = result.oList || [];
@@ -320,11 +320,13 @@ function renderTimeSlots(bookedTimes) {
             btn.disabled = true;
             btn.style.cursor = "not-allowed";
             btn.style.opacity = "0.7";
+            btn.style.textDecoration = "line-through";
             btn.style.position = "relative";
 
             // Find patient name from appointment list
             var patientName = '';
             var patientContact = '';
+            var patientOP = '';
             if (window._appointmentList) {
                 window._appointmentList.forEach(function (appt) {
                     if (appt.AppointmentTime &&
@@ -341,6 +343,7 @@ function renderTimeSlots(bookedTimes) {
                             String(appt.DoctorId) === String(selectedDoctor)) {
                             patientName = appt.FirstName || '';
                             patientContact = appt.Contact || '';
+                            patientOP = appt.LastName || '';   // OP number stored in LastName
                         }
                     }
                 });
@@ -351,10 +354,13 @@ function renderTimeSlots(bookedTimes) {
 
             var tooltipText = bookedEntry.cancelled
                 ? 'Cancelled appointment'
-                : 'Already booked' + (patientName ? ' by ' + patientName : '');
+                : 'Already booked' + (patientName ? ' by ' + patientName : '') +
+                (patientOP ? ' | OP: ' + patientOP : '') +
+                (patientContact ? ' | Ph: ' + patientContact : '');
 
             btn.title = tooltipText;
 
+            // Custom styled tooltip
             btn.setAttribute('data-tooltip', tooltipText);
             btn.addEventListener('mouseenter', function () {
                 var tip = document.createElement('div');
@@ -686,7 +692,7 @@ function showCalendarView() {
     // Always refresh appointment list when going to calendar
     $.ajax({
         type: "POST",
-        url: "../Master/AppointmentGetandGets",
+        url: "../Master/AppointmentGets",
         data: { AppointmentId: 0, DoctorId: 0, FromDate: '', ToDate: '' },
         success: function (result) {
             window._appointmentList = result.oList || [];
@@ -699,19 +705,17 @@ function showCalendarView() {
     });
 }
 function loadAppointmentList(doctorId, fromDate, toDate, status) {
-    console.log('Sending → DoctorId:', doctorId,
-        'From:', fromDate, 'To:', toDate,
-        'Status:', status); // ✅ check this in console
+   
 
     $.ajax({
         type: "POST",
-        url: "../Master/AppointmentGetandGets",
+        url: "../Master/AppointmentGets",
         data: {
             AppointmentId: 0,
             DoctorId: doctorId || 0,
             FromDate: fromDate || '',
             ToDate: toDate || '',
-            Status1: status || ''   // ✅ key must match model property name exactly
+            Status1: status || ''   
         },
         success: function (result) {
             console.log('Records returned:', result.oList ? result.oList.length : 0);
@@ -756,11 +760,12 @@ function loadAppointmentList(doctorId, fromDate, toDate, status) {
 //}
 
 function renderAppointmentTable(list) {
-    // Destroy existing DataTable if exists
-    if (appointmentDataTable) {
-        appointmentDataTable.destroy();
-        appointmentDataTable = null;
+    if ($.fn.DataTable.isDataTable('#Tblreport')) {
+        $('#Tblreport').DataTable().destroy();
     }
+    $('#Tblreport tfoot th').each(function () {
+        $(this).html($(this).text());
+    });
 
     var tbody = document.getElementById('appointment-tbody');
     tbody.innerHTML = '';
@@ -788,41 +793,33 @@ function renderAppointmentTable(list) {
             '<td>' + (item.Branch || '') + '</td>' +
             '<td>' + getStatusBadge(item.Status1) + '</td>' +
             '<td><button onclick="openEditModal(' + index + ')" style="padding:5px 14px;background:#3c2a8c;color:white;border:none;border-radius:6px;cursor:pointer;font-size:13px;">Edit</button></td>';
-
         tr.setAttribute('data-index', index);
         tbody.appendChild(tr);
     });
 
     window._appointmentList = list;
 
-    // Initialize DataTable with column search
-    appointmentDataTable = $('#appointment-table').DataTable({
-        "paging": true,
-        "pageLength": 10,
-        "ordering": true,
-        "info": true,
-        "searching": true,
-        "pagingType": "simple_numbers",
-        "columnDefs": [
-            { "orderable": false, "targets": [9, 10] }
-        ],
-        initComplete: function () {
-            this.api().columns().every(function (index) {
-                // Skip Status and Edit columns
-                if (index === 9 || index === 10) return;
-                var column = this;
-                var th = $(column.footer());
-                var title = th.text();
-                if (title.trim() === '') return;
-                th.html('<input type="text" placeholder="Search ' + title + '" style="width:100%;padding:4px;font-size:12px;border:1px solid #d1d5db;border-radius:4px;" />');
-                $('input', th).on('keyup change', function () {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
-                    }
-                });
-            });
-        }
-    });
+    // Update badges
+    var totalCount = list.length;
+    var bookedCount = list.filter(function (i) {
+        return i.Status1 === 'Booked' || !i.Status1 || i.Status1.trim() === '';
+    }).length;
+    var cancelledCount = list.filter(function (i) { return i.Status1 === 'Cancelled'; }).length;
+    var rescheduledCount = list.filter(function (i) { return i.Status1 === 'Rescheduled'; }).length;
+    var notAnsweredCount = list.filter(function (i) { return i.Status1 === 'NotAnswered'; }).length;
+    var othersCount = list.filter(function (i) { return i.Status1 === 'Others'; }).length;
+    var completedCount = list.filter(function (i) { return i.Status1 === 'Completed'; }).length;
+
+    document.getElementById('badge-total').innerText = 'All: ' + totalCount;
+    document.getElementById('badge-booked').innerText = '▶ Booked: ' + bookedCount;
+    document.getElementById('badge-cancelled').innerText = '▶ Cancelled: ' + cancelledCount;
+    document.getElementById('badge-rescheduled').innerText = '▶ Rescheduled: ' + rescheduledCount;
+    document.getElementById('badge-notanswered').innerText = '▶ Not Answered: ' + notAnsweredCount;
+    document.getElementById('badge-others').innerText = '▶ Others: ' + othersCount;
+    document.getElementById('badge-completed').innerText = '▶ Completed: ' + completedCount;
+
+    datatableWithsearch('Tblreport', false, 'Appointment List', 'buttonPlace');
+    $('#Tblreport').DataTable().columns([0, 1]).visible(true);
 }
 
 function getStatusBadge(status) {
@@ -1070,23 +1067,28 @@ function Defaultfocus() {
 
 $(document).ready(function () {
 
-    var todayFormatted = $.datepicker.formatDate('dd/mm/yy', new Date());
+    $('#search-from').daterangepicker({
+        minDate: minDate,
+        maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    });
 
-    $("#search-from").datepicker({
-        dateFormat: "dd/mm/yy",
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "1900:2100"
-    }).val(todayFormatted);
+    $('#search-to').daterangepicker({
+        minDate: minDate,
+        maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    });
 
-    $("#search-to").datepicker({
-        dateFormat: "dd/mm/yy",
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "1900:2100"
-    }).val(todayFormatted);
+    $('#search-from, #search-to').val(CurDate);
 
 });
-
 
 
