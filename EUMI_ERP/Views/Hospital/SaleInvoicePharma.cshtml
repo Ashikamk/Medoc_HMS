@@ -138,7 +138,7 @@
             if (isEscape) {
                 $('#HPatient').select()
                 $('#HPatient').focus()
-              
+
             }
         };
     });
@@ -148,9 +148,38 @@
 
 <script>
 
+    //function drchange() {
+    //    var Dname = $("#HDoctor option:selected").text();
+    //    $('#Doctorname').val(Dname)
+    //}
+
+
+    var doctorMode = 'dropdown'; 
+
     function drchange() {
         var Dname = $("#HDoctor option:selected").text();
-        $('#Doctorname').val(Dname)
+        $('#Doctorname').val(Dname === '--Select--' ? '' : Dname);
+    }
+
+    function toggleDoctorMode() {
+        if (doctorMode === 'dropdown') {
+            // switch to manual
+            doctorMode = 'manual';
+            $('#HDoctor').hide();
+            $('#HDoctorManual').show().focus();
+            $('#iconDoctorMode').removeClass('fa-pencil').addClass('fa-list');
+            $('#btnDoctorMode').attr('title', 'Switch to dropdown');
+            $('#Doctorname').val(''); // clear hidden field
+        } else {
+            // switch back to dropdown
+            doctorMode = 'dropdown';
+            $('#HDoctorManual').hide().val('');
+            $('#HDoctor').show();
+            $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
+            $('#btnDoctorMode').attr('title', 'Switch to manual entry');
+            // sync hidden field with current dropdown selection
+            drchange();
+        }
     }
 
 
@@ -577,7 +606,7 @@
                 '<td id="PMedicinedaily_' + parseInt(i + 1) + '" class="" align=center style="width: 10%;">' + result[i].Daily + '</td>' +
                 '<td id="PDosage_' + parseInt(i + 1) + '" class="" align=center style="width: 10%;">' + result[i].Dosage + '</td>' +
                 '<td id="PDays_' + parseInt(i + 1) + '" class="" align=center style="width: 10%;">' + result[i].Days + ' </td>' +
-               /* '<td id="PMedicinetot_' + parseInt(i + 1) + '" class="" align=center style="width: 10%;">' + parseInt(result[i].Days || 0) * parseInt(result[i].Daily || 0) + ' </td>' +*/
+                /* '<td id="PMedicinetot_' + parseInt(i + 1) + '" class="" align=center style="width: 10%;">' + parseInt(result[i].Days || 0) * parseInt(result[i].Daily || 0) + ' </td>' +*/
                 '</tr>';
         }
         $('#TblMedicineadv').append(MedRow);
@@ -741,13 +770,35 @@
                                                                 </tr>
                                                             </table>
                                                         </div>
+                                                        @*<label class="label-control col-lg-1 text-lg-right">Doctor</label>
+        <div class="col-md-2">
+            <div class="input-group m-0">
+                <select id="HDoctor" onchange="drchange()" name="priority" class="form-control smallTextbox topfocs">
+                    <option value="1">Select</option>
+                </select> <div class="input-group-append">
+                    <button type="button" id="btndctradd" class="btn btn-outline-primary smallTextbox avdbtn" onclick="adddoctor(0)">+</button>
+                </div>
+            </div>
+        </div>*@
+
                                                         <label class="label-control col-lg-1 text-lg-right">Doctor</label>
                                                         <div class="col-md-2">
                                                             <div class="input-group m-0">
-                                                                <select id="HDoctor" onchange="drchange()" name="priority" class="form-control smallTextbox topfocs">
-                                                                    <option value="1">Select</option>
-                                                                </select> <div class="input-group-append">
-                                                                    <button type="button" id="btndctradd" class="btn btn-outline-primary smallTextbox avdbtn" onclick="adddoctor(0)">+</button>
+                                                                <select id="HDoctor" onchange="drchange()" name="priority"
+                                                                        class="form-control smallTextbox topfocs">
+                                                                    <option value="0">--Select--</option>
+                                                                </select>
+                                                                <input type="text" id="HDoctorManual"
+                                                                       class="form-control smallTextbox"
+                                                                       placeholder="Type doctor name..."
+                                                                       style="display:none;"
+                                                                       oninput="$('#Doctorname').val($(this).val())" />
+                                                                <div class="input-group-append">
+                                                                    <button type="button" id="btnDoctorMode" title="Switch to manual entry"
+                                                                            class="btn btn-outline-primary smallTextbox avdbtn"
+                                                                            onclick="toggleDoctorMode()">
+                                                                        <i class="fa fa-pencil" id="iconDoctorMode"></i>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -775,14 +826,14 @@
                                                             </select>
                                                         </div>
 
-                                                            <label class="label-control col-lg-1 text-lg-right">Location<span class="danger">*</span></label>
-                                                            <div class="col-md-2">
-                                                                <select id="HLocation" name="priority" class="form-control smallTextbox topfocs" onchange="LocationChange(0)">
-                                                                    <option value="1">Select</option>
-                                                                </select>
-                                                            </div>
+                                                        <label class="label-control col-lg-1 text-lg-right">Location<span class="danger">*</span></label>
+                                                        <div class="col-md-2">
+                                                            <select id="HLocation" name="priority" class="form-control smallTextbox topfocs" onchange="LocationChange(0)">
+                                                                <option value="1">Select</option>
+                                                            </select>
                                                         </div>
                                                     </div>
+                                                </div>
                                                 <div class="col-md-2">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -1674,7 +1725,7 @@
                                 <tr class="text-left" style="border:hidden">
                                     <th>Doctor Name</th>
                                     @*<th>Phone</th>
-                                    <th>Address</th>*@
+                                        <th>Address</th>*@
 
                                 </tr>
                                 <tr>

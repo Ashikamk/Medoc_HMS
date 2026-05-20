@@ -17,8 +17,7 @@ $(document).keydown(function (event) {
 
     var X = event.keyCode;
 
-    if (X == 115)
-    {
+    if (X == 115) {
         PopUpShow(3);
     }
 
@@ -48,13 +47,13 @@ $(document).keydown(function (event) {
         return false;
     }
     else if (X == 27) {                         //ESC       :   Popup Close
-            PopUpClose(1);
-            PopUpClose(2);
-            PopUpClose(3);
-            PopUpClose(4);
-            PopUpClose(5);
-            ngOnPrescription();
-            CloseAlert();
+        PopUpClose(1);
+        PopUpClose(2);
+        PopUpClose(3);
+        PopUpClose(4);
+        PopUpClose(5);
+        ngOnPrescription();
+        CloseAlert();
     }
 
 });
@@ -101,9 +100,8 @@ $(document).ready(function () {
         var current = parseInt($.trim($('#HLocation').val()));
         var LocNmae = $('#HLocation :selected').text();
         if (current != 0) { LocNmae = ' to ' + LocNmae }
-        else { LocNmae = ' '}
-        if ((LocArray.indexOf(current) == -1) && (current != UserLocationId))  
-        {
+        else { LocNmae = ' ' }
+        if ((LocArray.indexOf(current) == -1) && (current != UserLocationId)) {
             $('#HLocation').val(OldLoc);
             warningshow('No access' + LocNmae, 'HLocation');
         }
@@ -124,11 +122,11 @@ $(document).ready(function () {
     }
 
     $("#btnsubmit").click(function (e) {
-       // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+        // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
         SaveAndUpdateConfirm(1);
     });
     $("#btnsaveedit").click(function (e) {
-       // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+        // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
         SaveAndUpdateConfirm(2);
     });
 
@@ -148,9 +146,9 @@ $(document).ready(function () {
 
     $('#HDoctor').keydown(function (e) {
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
-        if (key == 13) {          
+        if (key == 13) {
             $('#select_salesman').focus();
-            
+
         }
     });
 
@@ -173,16 +171,14 @@ $(document).ready(function () {
                 $('#proceadd').focus();
             }
 
-            
+
             //var inputs = $(this).closest('body').find('.proccls0:enabled');
-           // inputs.eq(inputs.index(this) + 1).focus().select();
+            // inputs.eq(inputs.index(this) + 1).focus().select();
 
         }
-        else if (key == 37)
-        {
-           
-            if (ElId == 'ProcFee0')
-            {
+        else if (key == 37) {
+
+            if (ElId == 'ProcFee0') {
                 e.preventDefault();
                 $('#ProcQty0').focus().select();
             }
@@ -218,9 +214,9 @@ $(document).ready(function () {
         }
     });
 
-    
 
-    
+
+
 
     $('#ProcedurePopup').on('shown.bs.modal', function () {
         $('#Procedure0').focus();
@@ -251,8 +247,7 @@ $(document).ready(function () {
     SelectPayType();
 });
 
-function SelectPayType()
-{   
+function SelectPayType() {
     if (SalesPayType == 'Credit') {
         $('#PayType').val(2);
     }
@@ -283,30 +278,28 @@ function BillLoad() {
 }
 
 function Billseriesload(result) {
-   if (result.length == 0) {
-       $("#confirmff").show();
-   }
-   else {
-       $("#confirmff").hide();
-       $("#HBillSeries").empty();
-       for (var i = 0; i < result.length; i++) {
-           if (result[i].BillType == 'Sales Invoice') {
-               $("#HBillSeries").append("<option value='" + result[i].id + "' name='" + result[i].CurrentNo + "' >" + result[i].BillDescription + "</option>");
-           }
-       }
-       $("#HBillSeries").val(result[0].id);
-       $('#HBillNo').val(result[0].CurrentNo);
-       CurrentBillNo = result[0].CurrentNo;
-   }
+    if (result.length == 0) {
+        $("#confirmff").show();
+    }
+    else {
+        $("#confirmff").hide();
+        $("#HBillSeries").empty();
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].BillType == 'Sales Invoice') {
+                $("#HBillSeries").append("<option value='" + result[i].id + "' name='" + result[i].CurrentNo + "' >" + result[i].BillDescription + "</option>");
+            }
+        }
+        $("#HBillSeries").val(result[0].id);
+        $('#HBillNo').val(result[0].CurrentNo);
+        CurrentBillNo = result[0].CurrentNo;
+    }
 }
 
-function LoadBillNum()
-{
+function LoadBillNum() {
     $('#HBillNo').val($("#HBillSeries :selected").attr('name'));
     CurrentBillNo = $('#HBillNo').val();
 
-    if (Copyflag == 1)
-    { copyrefresh(2); $('#HBillNoCopy').val($("#HBillSeries :selected").attr('name')); }
+    if (Copyflag == 1) { copyrefresh(2); $('#HBillNoCopy').val($("#HBillSeries :selected").attr('name')); }
 }
 //--------------------------End Bill Load
 
@@ -319,9 +312,9 @@ function LoadDate() {
         showDropdowns: true,
         locale: { format: 'DD/MM/YYYY' },
     }).val(CurDate);
-   
+
     $('#DateFrom,#DateTo,#PrescFromDate,#PrescToDate').daterangepicker({
-       
+
         singleDatePicker: true,
         showDropdowns: true,
         locale: { format: 'DD/MM/YYYY' },
@@ -343,7 +336,7 @@ function LoadDate() {
         locale: { format: 'DD/MM/YYYY' },
     }).val(CurDate);
 
-     CheckEOD();
+    CheckEOD();
 }
 
 function CheckEOD() {
@@ -366,7 +359,7 @@ function DoctorLoad(ID) {
         success: function (result) {
             if (result.oList.length > 0) {
                 $("#HDoctor").empty();
-               // $("#HDoctor").append("<option value='0' Fee='0'>Select</option>");
+                // $("#HDoctor").append("<option value='0' Fee='0'>Select</option>");
                 for (var i = 0; i < result.oList.length; i++) {
                     $("#HDoctor").append("<option value='" + result.oList[i].DoctorId + "' Fee='" + result.oList[i].ConsultFees + "'>" + result.oList[i].DoctorName + "</option>");
                 }
@@ -379,7 +372,7 @@ function DoctorLoad(ID) {
         }
     });
 
-   
+
 }
 
 function LocnLoad() {
@@ -401,7 +394,7 @@ function LocationLoad(result) {
     LocnSelect = "<option value=0>-Select-</option>";
     for (var i = 0; i < result.length; i++) {
         LocnSelect += "<option value='" + result[i].LocationId + "' name='" + result[i].NegativeBillingFlag + "'>" + result[i].LocationCode + "</option>";
-     }
+    }
     $("#HLocation").append(LocnSelect);
     $('#HLocation').val(UserLocationId);
 }
@@ -429,40 +422,38 @@ function TaxLoad(result) {
         TaxSelect += "<option value='" + result[i].TaxId + "'name='" + result[i].TaxRate + "' title='" + result[i].TaxName + "'>" + result[i].TaxName + "</option>";
         s = i + 1;
         TaxSplit = "<tr class='jsgrid-row' id='" + result[i].TaxId + "'>" +
-        "<td class='text-center' id='TaxGrpname" + result[i].TaxRate + "'><input type='hidden' id='mtaxid" + s + "' value='" + result[i].TaxId + "'><input type='hidden' id='splitaxrate_" + result[i].TaxId + "' value='" + result[i].TaxRate + "'> " + result[i].TaxName + "</td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='splittaxable_" + result[i].TaxRate + "' value='0.00'><input type='hidden' class='distxtbox' id='hiddensplittaxable_" + result[i].TaxRate + "' value='0.00' /></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox  text-center distxtbox dedisa bg-white borderno' id='splittax_" + result[i].TaxRate + "' value='0.00'><input type='hidden' class='distxtbox' id='hiddensplittax_" + result[i].TaxRate + "' value='0.00' /></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center bg-white borderno'  value='" + result[i].TaxRate / 2 + " %'></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='CGST_" + result[i].TaxRate + "' value='0.00'></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center bg-white borderno'  value='" + result[i].TaxRate / 2 + " %'></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='SGST_" + result[i].TaxRate + "' value='0.00'></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center bg-white borderno'  value='" + result[i].TaxRate + " %'></td>" +
-        "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='IGST_" + result[i].TaxRate + "' value='0.00'></td>" +
-        "</tr>";
+            "<td class='text-center' id='TaxGrpname" + result[i].TaxRate + "'><input type='hidden' id='mtaxid" + s + "' value='" + result[i].TaxId + "'><input type='hidden' id='splitaxrate_" + result[i].TaxId + "' value='" + result[i].TaxRate + "'> " + result[i].TaxName + "</td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='splittaxable_" + result[i].TaxRate + "' value='0.00'><input type='hidden' class='distxtbox' id='hiddensplittaxable_" + result[i].TaxRate + "' value='0.00' /></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox  text-center distxtbox dedisa bg-white borderno' id='splittax_" + result[i].TaxRate + "' value='0.00'><input type='hidden' class='distxtbox' id='hiddensplittax_" + result[i].TaxRate + "' value='0.00' /></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center bg-white borderno'  value='" + result[i].TaxRate / 2 + " %'></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='CGST_" + result[i].TaxRate + "' value='0.00'></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center bg-white borderno'  value='" + result[i].TaxRate / 2 + " %'></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='SGST_" + result[i].TaxRate + "' value='0.00'></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center bg-white borderno'  value='" + result[i].TaxRate + " %'></td>" +
+            "<td class='text-center'><input type='text' disabled class='form-control smallTextbox dedisa text-center distxtbox bg-white borderno' id='IGST_" + result[i].TaxRate + "' value='0.00'></td>" +
+            "</tr>";
 
         $('#tbltaxsplit').append(TaxSplit);
 
         TaxRateArray.push(parseInt(result[i].TaxRate));
 
-        if (result[i].TaxRate == 0)
-        { IPTax = result[i].TaxId; }
+        if (result[i].TaxRate == 0) { IPTax = result[i].TaxId; }
     }
     $("#Tax0,#ProcTax0").append(TaxSelect);
     TaxChange(0); ProcedTaxChange(0);
 }
 
-function TaxChange(Id)
-{
+function TaxChange(Id) {
     $("#TaxPercent" + Id).val($('#Tax' + Id).find("option:selected").attr("name") || 0);
     AmountCalc(Id);
-    ClearFields(4,0);
+    ClearFields(4, 0);
     CalcGrandTotal(1);
     roundoffcalcn(0);
 }
 
 function ProcedTaxChange(Id) {
     $("#ProcTaxPerc" + Id).val($('#ProcTax' + Id).find("option:selected").attr("name") || 0);
-    ProcedureAmountCalc(Id); 
+    ProcedureAmountCalc(Id);
     ProcedureGrandTotalCalc(1);
 }
 
@@ -481,16 +472,15 @@ function SubCategoryGets() {       //DrugSchedule
 
 function SubCategoryLoad(result) {
     $("#DrugSchedule0").empty();
-    DrugSchedule+="<option value='0'>-Select-</option>";
+    DrugSchedule += "<option value='0'>-Select-</option>";
     for (var i = 0; i < result.length; i++) {
         DrugSchedule += "<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>";
     }
     $("#DrugSchedule0").append(DrugSchedule);
 }
 
-function DeptLoad()
-{
-     var data = {};
+function DeptLoad() {
+    var data = {};
     data.UserId = ERPUserId;
     $.ajax({
         type: "POST",
@@ -512,7 +502,7 @@ function DeptLoad()
 
 //--------------------------Transaction
 function LastPurchaseTransactions() {
-   
+
     var Type = 0;
     if ($('#select_status').prop("checked") == true)
         var Type = 1;
@@ -530,80 +520,79 @@ function LastPurchaseTransactions() {
             data: data,
             success: function (result) {
                 DivHideShow(0);
-            if (result.length > 0)
-            {
-               
-                disable_datatable('tblpurchasetrans');
+                if (result.length > 0) {
 
-                var ProdRow = "<thead><tr><th>Invoice No</th><th>Date</th><th>Supplier</th><th>Supp_No</th><th>Quantity</th><th>Cost</th><th>AvgCost</th><th>Location</th><th>Currency</th><th>Department</th><th>PO_Ref</th><th>OtherCost</th></tr>" +
-                      "<tr><th>Invoice No</th><th>Date </th><th>Supplier</th><th>Supp_No</th><th>Quantity</th><th>Cost</th><th>AvgCost</th><th>Location</th><th>Currency </th><th>Department</th><th>PO_Ref</th><th>OtherCost</th></tr></thead><tbody>";
-                var Qty = 0;
+                    disable_datatable('tblpurchasetrans');
 
-                for (var p = 0; p < result.length; p++) {
-                    Z = p + 1;
-                    var a = (result[p].Rate + result[p].OtherCost).toFixed(Decimal);
-                    var lpotr = '';
-                    if (result[p].LPO != '0')
-                        lpotr = result[p].LPO;
+                    var ProdRow = "<thead><tr><th>Invoice No</th><th>Date</th><th>Supplier</th><th>Supp_No</th><th>Quantity</th><th>Cost</th><th>AvgCost</th><th>Location</th><th>Currency</th><th>Department</th><th>PO_Ref</th><th>OtherCost</th></tr>" +
+                        "<tr><th>Invoice No</th><th>Date </th><th>Supplier</th><th>Supp_No</th><th>Quantity</th><th>Cost</th><th>AvgCost</th><th>Location</th><th>Currency </th><th>Department</th><th>PO_Ref</th><th>OtherCost</th></tr></thead><tbody>";
+                    var Qty = 0;
 
-                    if (result[p].PurchaseType == 'Local' || SuppDetailsRight == 'Yes') {
-                        ProdRow = ProdRow + "<tr  id='pid_" + Z + "'>" +
-                            "<td>" + result[p].InvoNo + "</td>" +
-                            "<td>" + result[p].InvoDate + "</td>" +
-                            "<td>" + result[p].SupplierName + "</td>" +
-                            "<td>" + result[p].AccName + "</td>" +
-                            "<td style='text-align:right'>" + result[p].Quantity + "</td>" +
-                            "<td style='text-align:right'>" + a + "</td>" +
-                            "<td style='text-align:right'>" + parseFloat(result[p].Cost).toFixed(Decimal) + "</td>" +
-                            "<td>" + result[p].Locnname + "</td>" +
-                            "<td>" + result[p].CurrencyName + "</td>" +
-                            "<td>" + result[p].DeptName + "</td>" +
-                            "<td>" + lpotr + "</td>" +
-                             "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
-                            "</tr>";
+                    for (var p = 0; p < result.length; p++) {
+                        Z = p + 1;
+                        var a = (result[p].Rate + result[p].OtherCost).toFixed(Decimal);
+                        var lpotr = '';
+                        if (result[p].LPO != '0')
+                            lpotr = result[p].LPO;
+
+                        if (result[p].PurchaseType == 'Local' || SuppDetailsRight == 'Yes') {
+                            ProdRow = ProdRow + "<tr  id='pid_" + Z + "'>" +
+                                "<td>" + result[p].InvoNo + "</td>" +
+                                "<td>" + result[p].InvoDate + "</td>" +
+                                "<td>" + result[p].SupplierName + "</td>" +
+                                "<td>" + result[p].AccName + "</td>" +
+                                "<td style='text-align:right'>" + result[p].Quantity + "</td>" +
+                                "<td style='text-align:right'>" + a + "</td>" +
+                                "<td style='text-align:right'>" + parseFloat(result[p].Cost).toFixed(Decimal) + "</td>" +
+                                "<td>" + result[p].Locnname + "</td>" +
+                                "<td>" + result[p].CurrencyName + "</td>" +
+                                "<td>" + result[p].DeptName + "</td>" +
+                                "<td>" + lpotr + "</td>" +
+                                "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                                "</tr>";
+                        }
+                        else {
+                            ProdRow = ProdRow + "<tr  id='pid_" + Z + "'>" +
+                                "<td>" + result[p].InvoNo + "</td>" +
+                                "<td>" + result[p].InvoDate + "</td>" +
+                                "<td></td>" +
+                                "<td></td>" +
+                                "<td style='text-align:right'>" + result[p].Quantity + "</td>" +
+                                "<td style='text-align:right'>" + a + "</td>" +
+                                "<td style='text-align:right'>" + parseFloat(result[p].Cost).toFixed(Decimal) + "</td>" +
+                                "<td>" + result[p].Locnname + "</td>" +
+                                "<td>" + result[p].CurrencyName + "</td>" +
+                                "<td>" + result[p].DeptName + "</td>" +
+                                "<td>" + lpotr + "</td>" +
+                                "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
+                                "</tr>";
+                        }
+
+                        Qty = Qty + result[p].Quantity;
+
                     }
-                    else {
-                        ProdRow = ProdRow + "<tr  id='pid_" + Z + "'>" +
-                            "<td>" + result[p].InvoNo + "</td>" +
-                            "<td>" + result[p].InvoDate + "</td>" +
-                            "<td></td>" +
-                            "<td></td>" +
-                            "<td style='text-align:right'>" + result[p].Quantity + "</td>" +
-                            "<td style='text-align:right'>" + a + "</td>" +
-                            "<td style='text-align:right'>" + parseFloat(result[p].Cost).toFixed(Decimal) + "</td>" +
-                            "<td>" + result[p].Locnname + "</td>" +
-                            "<td>" + result[p].CurrencyName + "</td>" +
-                            "<td>" + result[p].DeptName + "</td>" +
-                            "<td>" + lpotr + "</td>" +
-                             "<td style='text-align:right'>" + parseFloat(result[p].OtherCost).toFixed(Decimal) + "</td>" +
-                            "</tr>";
-                    }
 
-                    Qty = Qty + result[p].Quantity;
+                    $("#totalnopurchase").text(result.length);
+                    $("#totalnopurchaseqty").text(Qty);
+
+                    $('#tblpurchasetrans').html(ProdRow + "</tbody>");
+
+                    datatableWithsearch('tblpurchasetrans', 'MultiplePurchaseT');
 
                 }
-
-                $("#totalnopurchase").text(result.length);
-                $("#totalnopurchaseqty").text(Qty);
-
-                $('#tblpurchasetrans').html(ProdRow + "</tbody>");
-
-                datatableWithsearch('tblpurchasetrans', 'MultiplePurchaseT');
-
             }
-        }
         });
     }
 }
 
 function LastSalesTransactions() {
-    
+
 
     var Type = 0;
     if ($('#select_status_sales').prop("checked") == true)
         var Type = 1;
 
-    if (($('#ProductId0').val()||0) != 0) {
+    if (($('#ProductId0').val() || 0) != 0) {
         var data = {};   //array
         data.ProductId = $('#ProductId0').val();
         data.DeptId = ERPDeptId;
@@ -614,7 +603,7 @@ function LastSalesTransactions() {
             url: "../SalesInvoice/SalesTransGetandGets",
             data: data,
             success: function (result) {
-                    SalesTransLoad(result);
+                SalesTransLoad(result);
             }
         });
     }
@@ -625,22 +614,22 @@ function SalesTransLoad(result) {
     disable_datatable('tblsalestrans');
 
     var ProdRow = "<thead><tr class='text-left'><th>SalesInvoice</th><th>Date</th><th style='width:27%'>AccountName</th><th style='width:6%'>Quantity</th><th>Price</th><th>Location</th><th style='width:20%'>SalesMan</th><th>Department</th></tr>" +
-                             "<tr class='text-left'><th>SalesInvoice</th><th>Date</th><th style='width:27%'>AccountName</th><th style='width:6%'>Quantity</th><th>Price</th><th>Location</th><th style='width:20%'>SalesMan</th><th>Department</th></tr></thead><tbody>";
+        "<tr class='text-left'><th>SalesInvoice</th><th>Date</th><th style='width:27%'>AccountName</th><th style='width:6%'>Quantity</th><th>Price</th><th>Location</th><th style='width:20%'>SalesMan</th><th>Department</th></tr></thead><tbody>";
 
     var Qty = 0;
     for (var n = 0; n < result.length; n++) {
 
         ProdRow += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
-                       "<td class='text-left'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
-                       "<td class='text-left'>" + result[n].InvDate + "</td>" +
-                       "<td style='' class='text-left'>" + result[n].CustName + "</td>" +
-                       "<td style='' class='text-right'>" + result[n].ProdQty + "</td>" +
-                       "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
-                       "<td class='text-left'>" + result[n].Location + " </td>" +
-                       "<td class='text-left' style=''>" + result[n].SalesMan + " </td>" +
-                       "<td class='text-left'>" + result[n].DepartmentName + "</td>" +
-                        "</tr>";
-        
+            "<td class='text-left'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+            "<td class='text-left'>" + result[n].InvDate + "</td>" +
+            "<td style='' class='text-left'>" + result[n].CustName + "</td>" +
+            "<td style='' class='text-right'>" + result[n].ProdQty + "</td>" +
+            "<td class='text-right'>" + parseFloat(result[n].ProdRate || 0).toFixed(Decimal) + " </td>" +
+            "<td class='text-left'>" + result[n].Location + " </td>" +
+            "<td class='text-left' style=''>" + result[n].SalesMan + " </td>" +
+            "<td class='text-left'>" + result[n].DepartmentName + "</td>" +
+            "</tr>";
+
         Qty = Qty + parseInt(result[n].ProdQty || 0);
     }
     $('#tblsalestrans').html(ProdRow + "</tbody>");
@@ -652,7 +641,7 @@ function SalesTransLoad(result) {
 }
 
 function AllTransaction() {
-   
+
     if (($('#ProductId0').val() || 0) != 0) {
         DivHideShow(2);
 
@@ -671,13 +660,13 @@ function AllTransaction() {
             data: data,
             success: function (result) {
                 if (result.length > 0) {
-                 
+
                     disable_datatable('tblalltrans');
 
                     var BalQty = parseInt(result[0].OpeningQty);
 
                     var responseText = "<thead><tr><th>Bill#</th><th>Date</th><th>Type</th><th>Supplier</th><th>Status</th><th>Account</th><th>Quantity</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Department</th></tr>" +
-                                  "<tr><th>Bill Number</th><th> Date</th><th>TransType</th><th>Supplier</th><th>Status</th><th>Account</th><th>Quantity</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Department</th></tr></thead><tbody>";
+                        "<tr><th>Bill Number</th><th> Date</th><th>TransType</th><th>Supplier</th><th>Status</th><th>Account</th><th>Quantity</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Department</th></tr></thead><tbody>";
 
 
                     for (var n = 0; n < result.length; n++) {
@@ -690,21 +679,21 @@ function AllTransaction() {
                         }
 
                         responseText += "<tr class='jsgrid-row' id=" + 'pdctrow' + (n + 1) + ">" +
-                       "<td >" + result[n].BillNo + "  </td>" +
-                       "<td > " + result[n].InvoDate + "</td>" +
-                       "<td  class='text-center'>" + result[n].TransType + " </td>" +
-                       "<td >" + result[n].Salesman + " </td>" +
-                       "<td >" + result[n].Status + "  </td>" +
-                       "<td >" + result[n].AccountName + " </td>" +
-                       //"<td >" + result[n].Remarks + "  </td>" +
-                       "<td class='text-center'>" + result[n].Quantity + " </td>" +
-                       "<td class='text-center'>" + BalQty + "  </td>" +
-                       "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
-                       "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
-                       "<td >" + result[n].Locnname + " </td>" +
-                       "<td >" + result[n].DeptName + "  </td>" +
-                       //"<td >" + result[n].JobCode + " </td>" +
-                       "</tr>";
+                            "<td >" + result[n].BillNo + "  </td>" +
+                            "<td > " + result[n].InvoDate + "</td>" +
+                            "<td  class='text-center'>" + result[n].TransType + " </td>" +
+                            "<td >" + result[n].Salesman + " </td>" +
+                            "<td >" + result[n].Status + "  </td>" +
+                            "<td >" + result[n].AccountName + " </td>" +
+                            //"<td >" + result[n].Remarks + "  </td>" +
+                            "<td class='text-center'>" + result[n].Quantity + " </td>" +
+                            "<td class='text-center'>" + BalQty + "  </td>" +
+                            "<td class='text-right'>" + parseFloat(result[n].Cost || 0).toFixed(Decimal) + "   </td>" +
+                            "<td class='text-right'>" + parseFloat(result[n].TransPrice || 0).toFixed(Decimal) + " </td>" +
+                            "<td >" + result[n].Locnname + " </td>" +
+                            "<td >" + result[n].DeptName + "  </td>" +
+                            //"<td >" + result[n].JobCode + " </td>" +
+                            "</tr>";
 
                     }
 
@@ -715,7 +704,7 @@ function AllTransaction() {
 
                     disable_datatable('tblalltrans');
                     var responseText = "<thead><tr><th>Bill Number</th><th>Invoice Date</th><th>TransType</th><th>Salesman</th><th>Status</th><th>Account</th><th>Remarks</th><th>Quantity</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Department</th><th>Job Code</th></tr>" +
-                                 "<tr><th>Bill Number</th><th> Date</th><th>TransType</th><th>Salesman</th><th>Status</th><th>Account</th><th>Remarks</th><th>Quantity</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Department</th><th>Job Code</th></tr></thead><tbody>";
+                        "<tr><th>Bill Number</th><th> Date</th><th>TransType</th><th>Salesman</th><th>Status</th><th>Account</th><th>Remarks</th><th>Quantity</th><th>Balance</th><th>Cost</th><th>Price</th><th>Location</th><th>Department</th><th>Job Code</th></tr></thead><tbody>";
                     $('#tblalltrans').html(responseText + '</tbody>');
                     datatableWithsearch('tblalltrans', 'Single');
 
@@ -731,7 +720,7 @@ function AllTransaction() {
 //--------------------------AutoComplete
 function LoadAutoComplete() {
 
-   
+
 
     $("#HPatient").autocomplete({
         delay: 0,
@@ -780,10 +769,10 @@ function LoadAutoComplete() {
         autoFocus: true,
         select: function (event, ui) {
             $('#IPNumber').val(parseInt(ui.item.IpNo || 0));
-            $('#HRegNowithseries').val(ui.item.label1);            
+            $('#HRegNowithseries').val(ui.item.label1);
             $('#custaddress1').val(ui.item.address)
-            GetRevisitMedicines(ui.item.OPSerId, ui.item.OPNumber,0);
-            
+            GetRevisitMedicines(ui.item.OPSerId, ui.item.OPNumber, 0);
+
             var data = {};                                       //dropdownbind
             data.PatientId = ui.item.PatientId;
             data.DeptId = ERPDeptId;
@@ -793,20 +782,20 @@ function LoadAutoComplete() {
                 data: data,
                 success: function (result) {
                     if (result.oList.length > 0) {
-                            $('#HRegNo').val(result.oList[0].OPNumber);
-                            $('#HRegSeries').val(result.oList[0].OPSerId);
-                            $('#HOpNo').val(result.oList[0].RevisitId);
-                            $('#HDoctor').val(result.oList[0].DoctorId);
-                            $('#HPatientId').val(result.oList[0].PatientId);
-                           // $('#IPNumber').val((result.oList[0].OPSerName || 0));
+                        $('#HRegNo').val(result.oList[0].OPNumber);
+                        $('#HRegSeries').val(result.oList[0].OPSerId);
+                        $('#HOpNo').val(result.oList[0].RevisitId);
+                        $('#HDoctor').val(result.oList[0].DoctorId);
+                        $('#HPatientId').val(result.oList[0].PatientId);
+                        // $('#IPNumber').val((result.oList[0].OPSerName || 0));
 
-                            $('#SendSMS').val(result.oList[0].SendSMS);
-                            $('#SpecialFees').val(result.oList[0].SpecialFees);
-                            drchange()
+                        $('#SendSMS').val(result.oList[0].SendSMS);
+                        $('#SpecialFees').val(result.oList[0].SpecialFees);
+                        drchange()
 
-                            $('#HGender').val(result.oList[0].Gender);
-                            GetPatientAge(result.oList[0].DOB);
-                            Gettestadviceget(result.oList[0].OPNumber, result.oList[0].OPSerId, result.oList[0].RevisitId);
+                        $('#HGender').val(result.oList[0].Gender);
+                        GetPatientAge(result.oList[0].DOB);
+                        Gettestadviceget(result.oList[0].OPNumber, result.oList[0].OPSerId, result.oList[0].RevisitId);
 
                         if ($('#IPNumber').val() != 0) {
                             if (AutoIPPaytype = 'CREDIT') {
@@ -820,30 +809,30 @@ function LoadAutoComplete() {
 
                         IPPAtiemtSelect(0);
                         CreditBillGets();
-                       
+
                     }
                 }
             });
-           
+
             $('#HDoctor').focus();
-            
+
         },
     }).on('keydown', function (e) {
-        if ((e.which == 13) && (($('#HRegNo').val() == '') && (($('#HRegSeries').val() || 0) != 0))) { 
+        if ((e.which == 13) && (($('#HRegNo').val() == '') && (($('#HRegSeries').val() || 0) != 0))) {
             $('#HDoctor').focus();
-          
+
         }
     });
 
     LoadProduct(0);
     LoadBatch(0);
-   
+
 }
 
 
 
 function ShowcasualityPrescription() {
-    
+
     $('#casualityInfoPopUp').hide();
     var data = {};
     data.OpNo = $('#HOpNo').val();;
@@ -866,7 +855,7 @@ function ShowcasualityPrescription() {
                     ProcedureAmountCalc(0);
                     AddProcedureConfrm(0)
                 }
-               
+
             }
         }
     });
@@ -891,8 +880,7 @@ function Gettestadviceget(OPNumber, OPSerId, RevisitId) {
     });
 }
 
-function LoadProduct(Id)
-{
+function LoadProduct(Id) {
     $("#Product" + Id).autocomplete({
         delay: 0,
         minLength: 0,
@@ -900,36 +888,36 @@ function LoadProduct(Id)
             ClearFields(1, Id);
             if (($('#HLocation').val() || 0) == 0) {
                 warningshow('Please Select Location', 'HLocation');
-                $("#Product"+ Id).val('');
+                $("#Product" + Id).val('');
                 return false;
             }
             else {
-            var data = {};
-            data.ItemCode = $("#Product" + Id).val();
-            data.SlNumber = 0;
-            data.DeptId = ERPDeptId;
-            data.UserId = ERPUserId;
-            $.ajax({
-                url: '../Pharmacy/HMS_PurchaseProductSearch',
-                type: "POST",
-                data: data,
-                dataType: "json",
-                success: function (data) {
-                    response($.map(data, function (item) {
-                        return ({
-                            ColCount: '4PurchasePros',
-                            label: item.Description,
-                            label1: item.ItemCode,
-                            label2: item.Model1,
-                            label3: item.Group,
-                            label4: item.Category,
-                            ProductId: item.ItemId,
-                            headers: ["Name", "Code","Stock", "Company", "Type"]
-                        })
-                    }));
-                }
+                var data = {};
+                data.ItemCode = $("#Product" + Id).val();
+                data.SlNumber = 0;
+                data.DeptId = ERPDeptId;
+                data.UserId = ERPUserId;
+                $.ajax({
+                    url: '../Pharmacy/HMS_PurchaseProductSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '4PurchasePros',
+                                label: item.Description,
+                                label1: item.ItemCode,
+                                label2: item.Model1,
+                                label3: item.Group,
+                                label4: item.Category,
+                                ProductId: item.ItemId,
+                                headers: ["Name", "Code", "Stock", "Company", "Type"]
+                            })
+                        }));
+                    }
 
-            })
+                })
             }
         },
         autoFocus: true,
@@ -941,41 +929,40 @@ function LoadProduct(Id)
             GetProdDetails(ui.item.ProductId, ERPDeptId);
         },
     })
-    .on('autocompleteselect  autocompletefocus', function (ev, ui) {
-        GetProdDetails(ui.item.ProductId, ERPDeptId);
-    }).on('keydown', function (e) {
-        if (Id == 0 && e.which == 40 && ($('#Product' + Id).val() == '')) {
-            var Idf = 0;
+        .on('autocompleteselect  autocompletefocus', function (ev, ui) {
+            GetProdDetails(ui.item.ProductId, ERPDeptId);
+        }).on('keydown', function (e) {
+            if (Id == 0 && e.which == 40 && ($('#Product' + Id).val() == '')) {
+                var Idf = 0;
 
-            try {
-                Idf = parseInt($('#TblSalesInvoice tr:first').attr('id').match(/\d+/)[0]);
-            }
-            catch (err) {
+                try {
+                    Idf = parseInt($('#TblSalesInvoice tr:first').attr('id').match(/\d+/)[0]);
+                }
+                catch (err) {
 
+                }
+                if (Idf != 0) {
+                    $('#Product' + Idf).focus().select();
+                }
             }
-            if (Idf != 0) {
-                $('#Product' + Idf).focus().select();
+            else if (Id != 0 && e.which == 13 && ($('#ProductId' + Id).val() > 0)) {
+                $('#Quantity' + Id).focus().select();
             }
-        }
-        else if (Id != 0 && e.which == 13 && ($('#ProductId' + Id).val() > 0)) {
-            $('#Quantity' + Id).focus().select();
-        }
-    });
+        });
 }
 
 function LoadBatch(Id) {
     ItemIdArray = []; QtyFlg = 0;
-    $("#ProductDesc" + Id).autocomplete({ 
+    $("#ProductDesc" + Id).autocomplete({
         delay: 0,
         minLength: 0,
         source: function (request, response) {
             ClearFields(2, Id);
             ItemIdArray = [];
             for (var k = 1; k <= RowCount; k++) {
-                if ($("#ProductDesc" + k).length != 0)
-                { ItemIdArray.push(parseInt($.trim($("#BatchSlNo" + k).val()||0))); }
+                if ($("#ProductDesc" + k).length != 0) { ItemIdArray.push(parseInt($.trim($("#BatchSlNo" + k).val() || 0))); }
             }
-            if (($('#ProductId'+Id).val() || 0) == 0) {
+            if (($('#ProductId' + Id).val() || 0) == 0) {
                 //warningshow('Please Select Product', 'ProductId' + Id);
                 //$("#ProductDesc"+Id).val('');
                 return false;
@@ -996,13 +983,102 @@ function LoadBatch(Id) {
                     dataType: "json",
                     success: function (data) {
                         if (data.length) {
+
+                            // ── AUTO SELECT if only 1 batch ──────────────
+                            if (data.length === 1) {
+                                var item = data[0];
+
+                                // Check expiry first
+                                var D1 = (('28/' + item.ItemExpiry).split("/"));
+                                var D2 = ($('#HSalesDate').val().split("/"));
+                                const oneDay = 24 * 60 * 60 * 1000;
+                                const firstDate = new Date(
+                                    parseInt(D1[2]),
+                                    parseInt(D1[1]) - 1,   // ← month is 0-based
+                                    parseInt(D1[0])
+                                );
+                                const secondDate = new Date(
+                                    parseInt(D2[2]),
+                                    parseInt(D2[1]) - 1,   // ← month is 0-based
+                                    parseInt(D2[0])
+                                );
+                                const diffDays = Math.round(
+                                    Math.abs((firstDate - secondDate) / oneDay)
+                                );
+
+                                // Block expired items
+                                if (diffDays <= 0) {
+                                    warningshow(
+                                        'Item Expired! Billing Not Possible',
+                                        'ProductDesc' + Id
+                                    );
+                                    QtyFlg = 1;
+                                    response([]);
+                                    return;
+                                }
+
+                                // Check if batch already added
+                                if (ItemIdArray.includes(item.BatchSlNo) == true) {
+                                    warningshow('Batch Already Added', 'ProductDesc' + Id);
+                                    response([]);
+                                    return;
+                                }
+
+                                // Check stock
+                                if (parseInt(item.Stock || 0) <= 0) {
+                                    warningshow(
+                                        'Not Enough stock! Current Stock is ' + item.Stock,
+                                        'ProductDesc' + Id
+                                    );
+                                    QtyFlg = 1;
+                                    response([]);
+                                    return;
+                                }
+
+                                // ── Fill all fields using CORRECT field names ──
+                                $('#ProductDesc' + Id).val(item.Batch);          // batch text
+                                $('#StockQty' + Id).val(item.Stock);           // stock qty
+                                $('#Company' + Id).val(item.Companycode);     // company code
+                                $('#Expiry' + Id).val(item.ItemExpiry);      // expiry
+                                $('#BatchSlNo' + Id).val(item.BatchSlNo);       // batch slno
+                                $('#PHSNCode' + Id).val(item.Variable3);       // HSN
+                                $('#PurPrice' + Id).val(item.Mrp);             // MRP
+                                $('#DrugSchedule' + Id).val(item.Drugschedule);    // drug schedule
+                                $('#Cess' + Id).val(item.Cess);            // cess
+
+                                // Rate — based on rateType selection
+                                if ($('#rateType').val() == 1) {
+                                    $('#SellPrice' + Id).val(item.Mrp);
+                                } else {
+                                    $('#SellPrice' + Id).val(item.Sellingrate);   // ← correct name
+                                }
+
+                                // Tax
+                                if (IPPAtiemtSelect(1) == false) {
+                                    $('#Tax' + Id).val(item.Taxpers);
+                                    TaxChange(Id);
+                                } else {
+                                    IPPAtiemtSelect(0);
+                                }
+
+                                // Show expiry days
+                                $('#expdayse').text('Exp with in ' + diffDays + ' days');
+
+                                QtyFlg = 0;
+
+                                // Move to Qty field
+                                setTimeout(function () {
+                                    $('#Quantity' + Id).val(1).focus().select();
+                                }, 50);
+
+                                // Don't show dropdown
+                                response([]);
+                                return;
+                            }
+
+                            // ── Multiple batches → show list as normal ────
                             response($.map(data, function (item) {
                                 return ({
-                                    //ColCount: '4',                                                                      
-                                    //label: item.Batch,                                                                                        
-                                    //label1: item.ProductDesc,
-                                    //label2: item.Company,
-                                    //label3: item.ItemExpiry,
                                     ColCount: '7',
                                     label: item.Batch,
                                     label1: item.ProductDesc,
@@ -1021,14 +1097,14 @@ function LoadBatch(Id) {
                                     Cess: item.Cess,
                                     Mrp: item.Mrp,
                                     HSN: item.Variable3,
-                                    TotQty:item.Stock,
-                                    headers: ["Batch", "Pack Dis Rate/Mrp", "Company", "ItemExpiry", "Stock", "Selling Price", "Mrp"]
+                                    TotQty: item.Stock,
+                                    headers: ["Batch", "Pack Dis Rate/Mrp", "Company",
+                                        "ItemExpiry", "Stock", "Selling Price", "Mrp"]
                                 })
                             }));
                             QtyFlg = 0;
                         }
-                        else {   
-                           // $("#ProductDesc" + Id).val('');
+                        else {
                             warningshow('No Stock Available!', 'Product' + Id);
                             QtyFlg = 1;
                         }
@@ -1038,7 +1114,7 @@ function LoadBatch(Id) {
         },
         autoFocus: true,
         select: function (event, ui) {
-           
+
             var D1 = (('28/' + ui.item.Expiry).split("/"));
             var D2 = ($('#HSalesDate').val().split("/"));
             const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
@@ -1046,65 +1122,67 @@ function LoadBatch(Id) {
             const secondDate = new Date(D2[2], D2[1], D2[0]);
             const diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
 
-           if (ItemIdArray.includes(ui.item.BatchSlNo)==true)
-           {
-            warningshow('Batch Already Added', "ProductDesc" + Id);
-           }
+            if (ItemIdArray.includes(ui.item.BatchSlNo) == true) {
+                warningshow('Batch Already Added', "ProductDesc" + Id);
+            }
 
-           else if (diffDays<=0) {
+            else if (diffDays <= 0) {
                 warningshow('Item Expired ! Billing Not Possible', "ProductDesc" + Id);
-           }
-           //else if (diffDays <= 90) {
-           //    warningshow('Near Expiry', "ProductDesc" + Id);
-           //}
+            }
+            //else if (diffDays <= 90) {
+            //    warningshow('Near Expiry', "ProductDesc" + Id);
+            //}
 
 
-           else
-           {
-              if (ui.item.TotQty > 0)
-            {
-                $('#StockQty' + Id).val(ui.item.TotQty);
-                $('#Company' + Id).val(ui.item.Company);
-                $('#Expiry' + Id).val(ui.item.Expiry);
+            else {
+                if (ui.item.TotQty > 0) {
+                    $('#StockQty' + Id).val(ui.item.TotQty);
+                    $('#Company' + Id).val(ui.item.Company);
+                    $('#Expiry' + Id).val(ui.item.Expiry);
 
-                if ($('#rateType').val() == 1) { $('#SellPrice' + Id).val(ui.item.label6);}
-                else { $('#SellPrice' + Id).val(ui.item.SellPrice); }
-               
-                $('#PHSNCode' + Id).val(ui.item.HSN);
-                $('#BatchSlNo' + Id).val(ui.item.BatchSlNo);
-                $('#Quantity' + Id).val(1).focus().select();
-                if (IPPAtiemtSelect(1) == false) {
-                    $('#Tax' + Id).val(ui.item.Taxpers);
-                    TaxChange(Id);
+                    if ($('#rateType').val() == 1) { $('#SellPrice' + Id).val(ui.item.label6); }
+                    else { $('#SellPrice' + Id).val(ui.item.SellPrice); }
+
+                    $('#PHSNCode' + Id).val(ui.item.HSN);
+                    $('#BatchSlNo' + Id).val(ui.item.BatchSlNo);
+                    $('#Quantity' + Id).val(1).focus().select();
+                    if (IPPAtiemtSelect(1) == false) {
+                        $('#Tax' + Id).val(ui.item.Taxpers);
+                        TaxChange(Id);
+                    }
+                    else {
+                        IPPAtiemtSelect(0);
+                    }
+                    $('#PurPrice' + Id).val(ui.item.Mrp);
+                    $('#DrugSchedule' + Id).val(ui.item.Drugschedule);
+                    $("#Cess" + Id).val(ui.item.Cess);
+                    QtyFlg = 0;
+                    $('#expdayse').text('Exp with in  ' + diffDays + ' days');
+
+
                 }
                 else {
-                    IPPAtiemtSelect(0);
+                    //$('#ProductDesc' + Id).val('');
+                    warningshow('Not Enought stock! Current Stock is ' + (ui.item.TotQty), 'ProductDesc' + Id);
+                    QtyFlg = 1;
                 }
-                $('#PurPrice' + Id).val(ui.item.Mrp);
-                $('#DrugSchedule' + Id).val(ui.item.Drugschedule);
-                $("#Cess" + Id).val(ui.item.Cess);
-                QtyFlg = 0;
-                $('#expdayse').text('Exp with in  '+diffDays +' days');
-
-
             }
-            else
-            {
-                //$('#ProductDesc' + Id).val('');
-                  warningshow('Not Enought stock! Current Stock is ' + (ui.item.TotQty), 'ProductDesc' + Id);
-                  QtyFlg = 1;
-            }
-           }
         },
     })
-    .on('autocompleteselect  autocompletefocus', function (ev, ui) {
-    }).bind('focus', function () {       
-        $(this).keydown();
-    });
+        .on('autocompleteselect  autocompletefocus', function (ev, ui) {
+            //}).bind('focus', function () {
+            //    $(this).keydown();
+            //});
+
+        }).bind('focus', function () {
+            var self = this;
+            setTimeout(function () {
+                $(self).autocomplete('search', '');
+            }, 100);
+        }); 
 }
 
-function SerachSalesBill()
-{
+function SerachSalesBill() {
     $("#HBillNoCopy").autocomplete({
         delay: 0,
         minLength: 0,
@@ -1129,7 +1207,7 @@ function SerachSalesBill()
                             label2: item.InvDate,
                             billsl: item.BillSlNo,
                             billseries: item.BillSeriesId,
-                            DeptId:item.DeptId,
+                            DeptId: item.DeptId,
                             headers: ["Bill No", "Customer Name", "Inv Date"]
                         })
                     }));
@@ -1143,8 +1221,7 @@ function SerachSalesBill()
     });
 }
 
-function ProcedureSearch(Id)
-{
+function ProcedureSearch(Id) {
     $('#Procedure' + Id).autocomplete({
         delay: 0,
         minLength: 0,
@@ -1167,7 +1244,7 @@ function ProcedureSearch(Id)
                             label1: item.ProcedureName,
                             ProcedureId: item.ProcedureId,
                             Rate: item.Procedurecharge,
-                            ProcedureName:item.ProcedureName,
+                            ProcedureName: item.ProcedureName,
                             headers: ["Procedure Code", "Procedure Name"]
                         })
                     }));
@@ -1179,7 +1256,7 @@ function ProcedureSearch(Id)
             $('#ProcedureId' + Id).val(ui.item.ProcedureId);
             $('#ProcQty' + Id).val(1).focus().select();
             $('#ProcFee' + Id).val(parseFloat(ui.item.Rate).toFixed(Decimal));
-            ProcedureAmountCalc(Id);            
+            ProcedureAmountCalc(Id);
         },
     }).on('keydown', function (e) {
         if ((e.which == 13) && (($('#ProcQty' + Id).val() || 0) != 0)) {
@@ -1195,13 +1272,20 @@ function SaveAndUpdateConfirm(flg) {
     if ($.trim($('#HBillNo').val()) == '') {
         warningshow('Please Enter the BillNo', 'HBillNo');
     }
-    else if (($('#HDoctor').val() || 0) == 0) {
+    //else if (($('#HDoctor').val() || 0) == 0) {
+    //    warningshow('Please Select Doctor', 'HDoctor');
+        //}
+    else if (doctorMode === 'dropdown' && ($('#HDoctor').val() || 0) == 0) {
         warningshow('Please Select Doctor', 'HDoctor');
     }
+    else if (doctorMode === 'manual' && $.trim($('#HDoctorManual').val()) == '') {
+        warningshow('Please Enter Doctor Name', 'HDoctorManual');
+    }
+    ////
     else if ($.trim($('#HPatient').val()) == '') {
         warningshow('Please Select Patient', 'HPatient');
     }
-    else if ((($('#HPatientId').val() || 0) == 0) && (($('#PayType').val()||0) == 2)) {
+    else if ((($('#HPatientId').val() || 0) == 0) && (($('#PayType').val() || 0) == 2)) {
         warningshow('Please Select a valid Patient', 'HPatient');
     }
     else if (($('#HLocation').val() || 0) == 0) {
@@ -1216,16 +1300,13 @@ function SaveAndUpdateConfirm(flg) {
     else if (parseFloat($('#BaseTextTotal').text() || 0) <= 0) {
         warningshow('Total amount must be greater than 0', 'Product0');
     }
-    else if ((SpecialFeeFlag == 1) && ($('#SpecialFees').val() == 'YES') && (($('#SpecialFeeAmt').val() || 0) == 0))
-    {
+    else if ((SpecialFeeFlag == 1) && ($('#SpecialFees').val() == 'YES') && (($('#SpecialFeeAmt').val() || 0) == 0)) {
         SPFeePopup(0);
         warningshow('Please Enter Special Fees', 'SpecialFeeAmt');
     }
     else {
-        if (flg == 1)
-        {  Callconfirm('Do you want to Save?', 'SaveBill', 0);}
-        else if (flg == 2)
-        { Callconfirm('Do you want to Update?', 'UpdateBill', 0); }
+        if (flg == 1) { Callconfirm('Do you want to Save?', 'SaveBill', 0); }
+        else if (flg == 2) { Callconfirm('Do you want to Update?', 'UpdateBill', 0); }
     }
 }
 
@@ -1252,7 +1333,10 @@ function SaveAndUpdate(flg) {
                 'CurrencyId': 1,
                 'CurrencyRate': $("#Discount" + i).val(),      //Discount
                 'HLocation': $("#HLocation" + i).val() || 0,
-                'HDoctor': $("#HDoctor").val() || 0,
+                //'HDoctor': $("#HDoctor").val() || 0,
+                'HDoctor': doctorMode === 'dropdown'
+                    ? (parseInt($("#HDoctor").val()) || 0)
+                    : 0,
                 'Discount': parseFloat($("#Discount").val() || 0),
                 'Discountpercent': $("#Discountpercent").val(),
                 'TotalTaxable': $("#TotalTaxable").val(),
@@ -1276,7 +1360,7 @@ function SaveAndUpdate(flg) {
                 'Company': $("#Company" + i).val(),
                 'Expiry': $("#Expiry" + i).val(),
                 'Quantity': $("#Quantity" + i).val(),
-                'Free': $("#Free" + i).val()||0,
+                'Free': $("#Free" + i).val() || 0,
                 'Pack': 0,
                 'Loose': 0,
                 'SellPrice': $("#SellPrice" + i).val(),
@@ -1294,7 +1378,7 @@ function SaveAndUpdate(flg) {
                 'DeptId': ERPDeptId,
                 'Status': $.trim($('#HPatient').val()),
                 'Terms': $('#select_salesman').val(),
-                'LPO_No': ($('#HOpNo').val()||0),
+                'LPO_No': ($('#HOpNo').val() || 0),
                 /*anu*/
                 'JobNo': parseInt($('#UPISpecialFeeAmt').val() || 0),
                 /*anu*/
@@ -1336,7 +1420,7 @@ function SaveAndUpdate(flg) {
                 'BCGST_18': parseFloat(Number($("#splittax_18").val() || 0)).toFixed(Decimal),
                 'BCGST_28': parseFloat(Number($("#splittax_28").val() || 0)).toFixed(Decimal),
                 'BCess': parseFloat($("#TotalCess").val() || 0),
-                'RoundOff': $('#TotRoundOff').val()||0,
+                'RoundOff': $('#TotRoundOff').val() || 0,
                 'BDFlag': BDFlag,
                 'CessFlag': CessFlag,
                 'Remarks': $("#Remarks").val() + '##' + $("#custaddress1").val() + '##' + $('#Doctorname').val(),
@@ -1397,12 +1481,10 @@ function SaveAndUpdate(flg) {
                     $('#btnsubmit').prop('disabled', false);
                     if (result.oList.length > 0) {
                         $('#HBillNoSave').val(result.oList[0].HBillNo);
-                        if (result.oList[0].Status == 10)
-                        {
+                        if (result.oList[0].Status == 10) {
                             NotEnoughtQty(result.oList);
                         }
-                        else
-                        {
+                        else {
                             BillTime = $('#RevisitTime').text();
                             Billuser = $('#UserDetsss').text();
                             $('#HBillNo').val(result.oList[0].HBillNo)
@@ -1436,31 +1518,27 @@ function SaveAndUpdate(flg) {
     }
 }
 
-function NotEnoughtQty(result)
-{
+function NotEnoughtQty(result) {
     $('.NwRws').remove();
 
-    for (var j = 0; j < result.length;j++)
-    {
+    for (var j = 0; j < result.length; j++) {
         var TbRow = ' <tr class="NwRws">' +
-           '     <td>' + result[j].ProductDesc + '</td>' +
-           '     <td>' + result[j].Batch + '</td>' +
-           '     <td>' + result[j].HLocationName + '</td>' +
-           '     <td>' + result[j].Quantity + '</td>' +
-           ' </tr>';
+            '     <td>' + result[j].ProductDesc + '</td>' +
+            '     <td>' + result[j].Batch + '</td>' +
+            '     <td>' + result[j].HLocationName + '</td>' +
+            '     <td>' + result[j].Quantity + '</td>' +
+            ' </tr>';
 
         $('#QtyCheckTable').append(TbRow);
     }
-    
+
     $('#QtyModal').modal('show');
     $('#QtyModal').appendTo('body');
 
 }
 
-function SPFeePopup(flg)
-{
-    if (flg == 0)
-    {
+function SPFeePopup(flg) {
+    if (flg == 0) {
         //if (($('#SpecialFeeDiv').val() || 0) == 0) {
         //$('#TAmount,#SpecialFeeAmt,#GAmount,#BAmount').val('');
         //    $('#TAmount').val($('#BaseTextTotalProc').text());
@@ -1470,8 +1548,7 @@ function SPFeePopup(flg)
         $('#SpecialFeeDiv').modal('show');
         $('#SpecialFeeDiv').appendTo('body');
     }
-    else if (flg == 1)
-    {
+    else if (flg == 1) {
         $('#SpecialFeeDiv').modal('hide');
     }
 }
@@ -1479,7 +1556,7 @@ function SPFeePopup(flg)
 
 //--------------------------COPY
 function GetRows(flg) {
-  
+
     if (Editflag != 0) {
         warningshow('Please Update Edit Mode');
     }
@@ -1487,10 +1564,8 @@ function GetRows(flg) {
         if ($('.SlRow').length > 0) {
             $('#confirm').show();
             $('#confirmOk').focus();
-            if (flg == 0)
-            { $('#Confirmflag').val('copy'); }
-            else if (flg == 1)
-            { $('#Confirmflag').val('view'); }
+            if (flg == 0) { $('#Confirmflag').val('copy'); }
+            else if (flg == 1) { $('#Confirmflag').val('view'); }
             $('#ConfirmRowId').val(flg);
             $('#confirmmessage').text('Data will be lost.Do you want to Continue?');
         }
@@ -1536,28 +1611,28 @@ function CallViewList() {
             $('#tblViewList tr').remove();
 
             var ProdRow = "<thead><tr><th style='width:3%'></th><th style='width:3%'></th><th class='text-left' style='width:5%' >SalesInvoice</th><th style='width:5%' class='text-center'>Department</th><th style='width:5%' class='text-center'>Date</th><th style='width:15%'>Patient</th><th style='width:25%'>Address</th><th style='width:5%'>PayType</th><th style='width:10%'>User</th><th style='width:5%'>Location</th><th  style='width:5%'  class='text-right' >GrandTotal</th></tr>" +
-                          "<tr><th style='width:3%'></th><th style='width:3%'> </th><th class='text-left' style='width:5%'>SalesInvoice</th><th style='width:5%' class='text-center'> Department</th><th class='text-center' style='width:5%'>Date</th><th style='width:15%'>Patient</th><th style='width:25%'>Address</th><th style='width:5%'>PayType</th><th style='width:10%'>User</th><th style='width:5%'>Location</th><th  style='width:5%'  class='text-right'>GrandTotal</th></tr></thead><tbody>";
+                "<tr><th style='width:3%'></th><th style='width:3%'> </th><th class='text-left' style='width:5%'>SalesInvoice</th><th style='width:5%' class='text-center'> Department</th><th class='text-center' style='width:5%'>Date</th><th style='width:15%'>Patient</th><th style='width:25%'>Address</th><th style='width:5%'>PayType</th><th style='width:10%'>User</th><th style='width:5%'>Location</th><th  style='width:5%'  class='text-right'>GrandTotal</th></tr></thead><tbody>";
 
             if (result.length != 0) {
 
                 for (var n = 0; n < result.length; n++) {
 
                     ProdRow += "<tr class='jsgrid-row' ondblclick='SalesGetCall(" + result[n].BillSeriesId + "," + result[n].BillSlNo + "," + result[n].DeptId + ",1)'>" +
-                         "<td style='width:3%' class='text-center'>" +
+                        "<td style='width:3%' class='text-center'>" +
                         "<button class='btn white btn-round btn-xs' type='button' style='background-color:#FF9800;font-size:smaller;margin:0' onclick='SalesGetCall(" + result[n].BillSeriesId + "," + result[n].BillSlNo + "," + result[n].DeptId + ",1)' data-toggle='tooltip' data-placement='top' data-original-title=loadbill><i class='ft-printer'></i></button>" +
                         "</td>" +
                         "<td style='width:3%' class='text-center'>" +
                         "<button class='btn  white btn-round btn-xs' type='button' style='background-color:black;font-size:smaller;margin:0' onclick='SalesGetCall(" + result[n].BillSeriesId + "," + result[n].BillSlNo + "," + result[n].DeptId + ",1)' data-toggle='tooltip' data-placement='top' data-original-title=Preview> <i class=ft-eye></i></button>" +
                         "</td>" +
-                       "<td class='text-left'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
+                        "<td class='text-left'> " + result[n].BillDescription + " - " + result[n].BillSlNo + "</td>" +
                         "<td class='text-center'>" + result[n].DepartmentName + " </td>" +
-                       "<td class='text-center'>" + result[n].InvDate + "                                   </td>" +
-                       "<td  class='text-left'>" + result[n].CustName + "                                   </td>" +
-                       "<td  class='text-left'>" + result[n].CustAddress + "                                   </td>" +
-                       "<td class='text-left'>" + result[n].checkflag + "                                   </td>" +
-                       "<td class='text-left'>" + result[n].UserName + "                                   </td>" +
-                       "<td class='text-left'>" + result[n].Location + "                                   </td>" +
-                       "<td class='text-right'>" + parseFloat(result[n].FCGrandTotal || 0).toFixed(Decimal) + " </td>" +
+                        "<td class='text-center'>" + result[n].InvDate + "                                   </td>" +
+                        "<td  class='text-left'>" + result[n].CustName + "                                   </td>" +
+                        "<td  class='text-left'>" + result[n].CustAddress + "                                   </td>" +
+                        "<td class='text-left'>" + result[n].checkflag + "                                   </td>" +
+                        "<td class='text-left'>" + result[n].UserName + "                                   </td>" +
+                        "<td class='text-left'>" + result[n].Location + "                                   </td>" +
+                        "<td class='text-right'>" + parseFloat(result[n].FCGrandTotal || 0).toFixed(Decimal) + " </td>" +
                         "</tr>";
                 }
                 $('#tblViewList').html(ProdRow + '</tbody>');
@@ -1589,13 +1664,18 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
         Defaultfocus();
         $('#HLocation').prop('disabled', true);
     }
-    else  {
+    else {
+        doctorMode = 'dropdown';
+        $('#HDoctorManual').hide().val('');
+        $('#HDoctor').show();
+        $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
+        $('#Doctorname').val('');
+        //////
         $('#saleinv,.btn:not(.avdbtn),#btnedit,#btndelete').hide();
         $('.SlRow').remove();
         $('.PRCRow').remove();
         ProcedureGrandTotalCalc(1);
-        if (flg != 2)
-        {
+        if (flg != 2) {
             $('.form-control:not(.disb),#btnadd').prop('disabled', true);
             $('.form-control').css('background-color', '');
             $('.rdonl').removeClass('bgclrwhite');
@@ -1604,7 +1684,7 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
             $('#HBillNoCopy').val($('#HBillNo').val());
         }
         $('#Copysales,#btnnew,#btnview,#btnadd,#btnsubmitsgo,#confirmCancel,#confirmOk').show();
-        RowCount = 1; 
+        RowCount = 1;
         $('.SlRow').remove();
         $('.form-control:not(select,.dedisa)').val('');
         $('select:not(.Avoidfld)').each((i, item) => {
@@ -1625,8 +1705,7 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
         if (flg == 0)
             $('#HBillNoCopy').focus().select();
     }
-    if (flg != 3)
-    { $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec').hide(); }
+    if (flg != 3) { $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec').hide(); }
     CheckEOD();
 }
 
@@ -1651,9 +1730,8 @@ function SalesGetCall(BillSeriesId, BillSlNo, DeptId, flg) {
     });
 }
 var BillTime = ""
-var Billuser=""
-function SalesGetandGets(result)
-{
+var Billuser = ""
+function SalesGetandGets(result) {
     var data = {};                                       //dropdownbind
     data.PatientId = result[0].HPatient;
     data.DeptId = ERPDeptId;
@@ -1662,7 +1740,7 @@ function SalesGetandGets(result)
         url: "../Revisit/HMS_LAstRevisitGetsOP",
         data: data,
         success: function (result) {
-            if (result.oList.length > 0) {               
+            if (result.oList.length > 0) {
                 $('#HGender').val(result.oList[0].Gender);
                 $('#SendSMS').val(result.oList[0].SendSMS);
                 $('#SpecialFees').val(result.oList[0].SpecialFees);
@@ -1682,14 +1760,14 @@ function SalesGetandGets(result)
     console.log(uname)
 
     $('#HRegNowithseries').val(uname[3]);
-    
+
 
 
     $('#SalesMainId').val(result[0].SalesMainId);
     $('#HBillSeries').val(result[0].HBillSeries);
     $('#HBillNo').val(result[0].HBillNo);
     $('#HBillNoCopy').val(result[0].HBillNo).focus().select();
-    
+
     $('#HPatientId').val(result[0].HPatient);
     $('#PayType').val(result[0].PayType);
     $('#PRType').val(result[0].PRType);
@@ -1697,7 +1775,32 @@ function SalesGetandGets(result)
     $('#CurrencyId').val(result[0].CurrencyId);
     $('#CurrencyRate').val(result[0].CurrencyRate);
     $('#HLocation').val(result[0].HLocation);
-    $('#HDoctor').val(result[0].HDoctor);   
+    //$('#HDoctor').val(result[0].HDoctor);
+
+    //////
+
+    if (parseInt(result[0].HDoctor || 0) > 0) {
+        // Bill was saved with dropdown doctor
+        doctorMode = 'dropdown';
+        $('#HDoctorManual').hide().val('');
+        $('#HDoctor').show().val(result[0].HDoctor);
+        $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
+        drchange();
+    } else {
+        // Bill was saved with manual doctor — read from Remarks
+        var Qr = result[0].Remarks.split("##");
+        var manualDrName = Qr[2] || '';   // doctor name is 3rd part
+        if (manualDrName != '') {
+            doctorMode = 'manual';
+            $('#HDoctor').hide();
+            $('#HDoctorManual').show().val(manualDrName);
+            $('#iconDoctorMode').removeClass('fa-pencil').addClass('fa-list');
+            $('#Doctorname').val(manualDrName);
+        }
+    }
+
+    ///////
+
     $('#TotalTaxable').val(result[0].TotalTaxable);
     $('#TotlaTax').val(result[0].TotlaTax);
     $('#BaseTextTotal').text(result[0].BaseTextTotal);
@@ -1706,25 +1809,25 @@ function SalesGetandGets(result)
     $('#select_salesman').val(result[0].Terms);
 
 
-   
 
-    var Qr=result[0].Remarks.split("##");
+
+    var Qr = result[0].Remarks.split("##");
     $("#custaddress1").val(Qr[1] + '##' + Qr[2] + '##' + Qr[3] + '##' + Qr[4])
     $('#Remarks').val(Qr[0]);
     /*    anu */
-    
 
-/*    anu  */
+
+    /*    anu  */
     $('#HOpNo').val(result[0].LPO_No);
     $('#HRegNo').val(result[0].RegNo);
     $('#IPNumber').val(result[0].Variable1);
     $('#ProcAmount').val(parseFloat(result[0].Variable2).toFixed(Decimal));
 
-   
+
     var gnTot = parseFloat(result[0].BaseTextTotal);
     var ProcTot = parseFloat(result[0].Variable2);
-    var TotPAmt=gnTot+ProcTot;
-    $('#BaseTextTotalProc').text(parseFloat(TotPAmt).toFixed(Decimal));  
+    var TotPAmt = gnTot + ProcTot;
+    $('#BaseTextTotalProc').text(parseFloat(TotPAmt).toFixed(Decimal));
 
     if (result[0].BDFlag == 1) { $("#DiscFromGrandTotal").prop("checked", true); }
     else { $("#DiscFromGrandTotal").prop("checked", false); }
@@ -1735,74 +1838,72 @@ function SalesGetandGets(result)
     if (result[0].RoundOff != 0) { $("#roundoffstatus").prop("checked", true); }
     else { $("#roundoffstatus").prop("checked", false); }
 
-    for(var i=0;i<result.length;i++)
-    {
-        if(result[i].ProductId != 0)
-        {
-             if ($('.SlRow').length == 0) { RowCount = 1; }
+    for (var i = 0; i < result.length; i++) {
+        if (result[i].ProductId != 0) {
+            if ($('.SlRow').length == 0) { RowCount = 1; }
 
             var Id = parseInt(RowCount); var SlNo = parseInt($('.SlRow').length) + 1;
 
             var BICOM = (result[i].Company).split("##")
 
-        var ProdRow =
-             '<tr class="jsgrid-header-row SlRow" id="SlRows' + Id + '" onfocusout=UpdateRow(0,' + Id + ') >' +
-             '<td class="jsgrid-align-center crspnt" style="width:2%" onclick=DeleteRow(0,' + Id + ')><i class="icon-trash"></i></td>' +
-             '<td class="jsgrid-align-center" style="width:3%" id="tdSl' + Id + '">' + SlNo + '</td>' +
-             '<td class="jsgrid-align-left" style="width:13%"><input type="text" class="form-control smallTextbox brnone rdonl disb" id="Product' + Id + '" name="Product"  style="width:100%"  value="' + result[i].ProductDesc + '" onfocusout=UpdateRow(1,' + Id + ') readonly /></td>' +
+            var ProdRow =
+                '<tr class="jsgrid-header-row SlRow" id="SlRows' + Id + '" onfocusout=UpdateRow(0,' + Id + ') >' +
+                '<td class="jsgrid-align-center crspnt" style="width:2%" onclick=DeleteRow(0,' + Id + ')><i class="icon-trash"></i></td>' +
+                '<td class="jsgrid-align-center" style="width:3%" id="tdSl' + Id + '">' + SlNo + '</td>' +
+                '<td class="jsgrid-align-left" style="width:13%"><input type="text" class="form-control smallTextbox brnone rdonl disb" id="Product' + Id + '" name="Product"  style="width:100%"  value="' + result[i].ProductDesc + '" onfocusout=UpdateRow(1,' + Id + ') readonly /></td>' +
 
-            '<td class="jsgrid-align-left" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl disb" id="ProductDesc' + Id + '" name="ProductDesc"  style="width:100%"  value="' + result[i].Batch + '" onfocusout=UpdateRow(2,' + Id + ') readonly /></td>' +
+                '<td class="jsgrid-align-left" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl disb" id="ProductDesc' + Id + '" name="ProductDesc"  style="width:100%"  value="' + result[i].Batch + '" onfocusout=UpdateRow(2,' + Id + ') readonly /></td>' +
 
 
-            '<td class="jsgrid-align-center" style="width:5%"><input type="hidden"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Company' + Id + '"  style="width:100%"  value="' + BICOM[0] + '" readonly />' + BICOM[1] + '</td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="hidden"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Company' + Id + '"  style="width:100%"  value="' + BICOM[0] + '" readonly />' + BICOM[1] + '</td>' +
 
-            '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Expiry' + Id + '"  style="width:100%"  value="' + result[i].Expiry + '" readonly /></td>' +
-             '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Quantity" id="Quantity' + Id + '" onkeypress="isNumberInt(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"  style="width:100%"  value="' + result[i].Quantity + '" /></td>' +
-             '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Free" id="Free' + Id + '"     onkeypress="isNumberInt(event, this)" style="width:100%"  value="' + result[i].Free + '" /></td>' +
-             '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass rdonl disb" name="SellPrice" id="SellPrice' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"   style="width:100%"  value="' + parseFloat(result[i].SellPrice || 0).toFixed(Decimal) + '" readonly /></td>' +
-             '<td class="jsgrid-align-right" style="width:4%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="PurPrice' + Id + '"  style="width:100%"  value="' + parseFloat(result[i].PurPrice || 0).toFixed(Decimal) + '" readonly /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Expiry' + Id + '"  style="width:100%"  value="' + result[i].Expiry + '" readonly /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Quantity" id="Quantity' + Id + '" onkeypress="isNumberInt(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"  style="width:100%"  value="' + result[i].Quantity + '" /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Free" id="Free' + Id + '"     onkeypress="isNumberInt(event, this)" style="width:100%"  value="' + result[i].Free + '" /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass rdonl disb" name="SellPrice" id="SellPrice' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"   style="width:100%"  value="' + parseFloat(result[i].SellPrice || 0).toFixed(Decimal) + '" readonly /></td>' +
+                '<td class="jsgrid-align-right" style="width:4%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="PurPrice' + Id + '"  style="width:100%"  value="' + parseFloat(result[i].PurPrice || 0).toFixed(Decimal) + '" readonly /></td>' +
 
-            '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Amount' + Id + '"  style="width:100%"  value="' + parseFloat(result[i].Amount) + '" readonly /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Amount' + Id + '"  style="width:100%"  value="' + parseFloat(result[i].Amount) + '" readonly /></td>' +
 
-            '<td class="jsgrid-align-center" style="width:8%">' +
+                '<td class="jsgrid-align-center" style="width:8%">' +
 
-            
-            '<div class="input-group m-0">' +
-             '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="DiscountPerc' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',0)"   style="width:50%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;"  value="' + (0).toFixed(Decimal) + '" />' +
-             '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="Discount' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',1)"   style="width:50%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;"  value="' + (result[i].ProdDisc).toFixed(Decimal) + '" />' +
-             '</div>' +
-            '</td>' +
-             '<td class="jsgrid-align-center" style="width:6%"> <div class="input-group m-0"><select id="Tax' + Id + '" class="form-control smallTextbox Itemclass pl-0 IpTax" style="width:60%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;padding: 0;" onchange="TaxChange(' + Id + ')"> ' + TaxSelect + ' </select> <input type="text" id="TaxPercent' + Id + '" style="width:40%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;" class="form-control smallTextbox rdonl bgclrwhite Itemclass"  readonly> </div></td>' +
-             '<td class="jsgrid-align-right" style="width:5%"> <input type="text" id="TaxableAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="' + parseFloat(result[i].TaxableAmt || 0).toFixed(Decimal) + '"></td>' +
-             '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="TaxAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="' + parseFloat(result[i].TaxAmt || 0).toFixed(Decimal) + '"></td>' +
-             '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="CessAmount' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone" onkeypress="isNumberInt(event, this)" readonly value="' + parseFloat(result[i].CessAmount || 0).toFixed(Decimal) + '"></td>' +
-             '<td class="jsgrid-align-right" style="width:5%"><select id="DrugSchedule' + Id + '" class="form-control smallTextbox Itemclass brnone" name="DrugSchedule">' + DrugSchedule + '</select></td>' +
-             '<td class="jsgrid-align-center" style="width:5%;display:none">' +
-             '<input type="text" class="form-control" id="ProductId' + Id + '"  value="' + result[i].ProductId + '" />' +
-             '<input type="text" class="form-control" id="BatchSlNo' + Id + '"  value="' + result[i].BatchSlNo + '" />' +
-             '<input type="text" class="form-control" id="Cess' + Id + '"   value="' + result[i].Cess + '" />' +
-             '<input type="text" class="form-control" id="PHSNCode' + Id + '"   value="' + result[i].Variable3 + '" />' +
-             '<input type="text" class="form-control" id="HLocation' + Id + '"   value="' + result[i].HLocation + '" />' +
-             '</td>' +
-             '</tr>';
-        $('#TblSalesInvoice').append(ProdRow);
-        DiscPecentCalc(Id, 1);
-        $('#Tax' + Id).val(result[i].Tax);
-        TaxChange(Id);
-        $('#DrugSchedule' + Id).val(result[i].Drugschedule);
-        RowCount++;
-        $('.brnone').css('border', 'none');
-        $('.brnone').css('border-radius', '0px');
-        CalcGrandTotal(1);
-        roundoffcalcn(0);
-        LoadProduct(Id);
-        LoadBatch(Id);
-        ItemFocus();
-        $('.SlRow input,.SlRow select,.input-group select').prop('disabled', 'true');
-        $('.rdonl').removeClass('bgclrwhite');
+
+                '<div class="input-group m-0">' +
+                '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="DiscountPerc' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',0)"   style="width:50%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;"  value="' + (0).toFixed(Decimal) + '" />' +
+                '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="Discount' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',1)"   style="width:50%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;"  value="' + (result[i].ProdDisc).toFixed(Decimal) + '" />' +
+                '</div>' +
+                '</td>' +
+                '<td class="jsgrid-align-center" style="width:6%"> <div class="input-group m-0"><select id="Tax' + Id + '" class="form-control smallTextbox Itemclass pl-0 IpTax" style="width:60%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;padding: 0;" onchange="TaxChange(' + Id + ')"> ' + TaxSelect + ' </select> <input type="text" id="TaxPercent' + Id + '" style="width:40%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;" class="form-control smallTextbox rdonl bgclrwhite Itemclass"  readonly> </div></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"> <input type="text" id="TaxableAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="' + parseFloat(result[i].TaxableAmt || 0).toFixed(Decimal) + '"></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="TaxAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="' + parseFloat(result[i].TaxAmt || 0).toFixed(Decimal) + '"></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="CessAmount' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone" onkeypress="isNumberInt(event, this)" readonly value="' + parseFloat(result[i].CessAmount || 0).toFixed(Decimal) + '"></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"><select id="DrugSchedule' + Id + '" class="form-control smallTextbox Itemclass brnone" name="DrugSchedule">' + DrugSchedule + '</select></td>' +
+                '<td class="jsgrid-align-center" style="width:5%;display:none">' +
+                '<input type="text" class="form-control" id="ProductId' + Id + '"  value="' + result[i].ProductId + '" />' +
+                '<input type="text" class="form-control" id="BatchSlNo' + Id + '"  value="' + result[i].BatchSlNo + '" />' +
+                '<input type="text" class="form-control" id="Cess' + Id + '"   value="' + result[i].Cess + '" />' +
+                '<input type="text" class="form-control" id="PHSNCode' + Id + '"   value="' + result[i].Variable3 + '" />' +
+                '<input type="text" class="form-control" id="HLocation' + Id + '"   value="' + result[i].HLocation + '" />' +
+                '</td>' +
+                '</tr>';
+            $('#TblSalesInvoice').append(ProdRow);
+            DiscPecentCalc(Id, 1);
+            $('#Tax' + Id).val(result[i].Tax);
+            TaxChange(Id);
+            $('#DrugSchedule' + Id).val(result[i].Drugschedule);
+            RowCount++;
+            $('.brnone').css('border', 'none');
+            $('.brnone').css('border-radius', '0px');
+            CalcGrandTotal(1);
+            roundoffcalcn(0);
+            LoadProduct(Id);
+            LoadBatch(Id);
+            ItemFocus();
+            $('.SlRow input,.SlRow select,.input-group select').prop('disabled', 'true');
+            $('.rdonl').removeClass('bgclrwhite');
             $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec').show();
 
-         
+
             if (parseFloat(result[0].Variable2 || 0) == 0) {
                 $('#btnedit,#btndelete').show();
             }
@@ -1810,32 +1911,30 @@ function SalesGetandGets(result)
                 $('#btnedit,#btndelete').hide();
             }
         }
-       
+
     }
-   
-    for (var j = 0; j < result.length; j++)
-    {
-        if(result[j].ProductId == 0)
-        {
+
+    for (var j = 0; j < result.length; j++) {
+        if (result[j].ProductId == 0) {
             if ($('.PRCRow').length == 0) { ProcCount = 1; }
             var Slno = parseInt($('.PRCRow').length) + 1; var Id = parseInt(ProcCount);
             var ProcRow = '<tr id="PCRow' + Id + '" class="PRCRow" onfocusout=AddProcedureConfrm(' + Id + ')>' +
-                        '<td class="text-center" onclick=DeleteRow(2,' + Id + ') style="padding-top: .5rem;cursor:pointer"><i class="icon-trash"></i> </td>' +
-                        '<td class="text-center" id="PCslno' + Id + '" style="">' + Slno + '</td>' +
-                        '<td class="text-center " > <input type="text" id="Procedure' + Id + '" class="form-control proccls atcmpl smallTextbox " value="' + result[j].ProductDesc + '" onfocus="ProcedureSearch(' + Id + ')"></td>' +
-                        '<td class="text-center" >  <input type="text" id="ProcQty' + Id + '" class="form-control proccls smallTextbox " value="' + result[j].Quantity + '" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumberInt(event, this)"> </td>' +
-                        '<td class="text-center" ><input type="text" id="ProcFee' + Id + '" class="form-control proccls smallTextbox " value="' + parseFloat(result[j].SellPrice).toFixed(Decimal) + '" autocomplete="off" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumber(event,this)"></td>' +
-                        '<td class="text-center" >  <div class="input-group m-0">' +
-                         '<select  id="ProcTax' + Id + '" class="form-control col-md-7 IpTax proctx smallTextbox " style="padding: 0;border:none;border-right: 1px solid lightgrey!important;" onchange="ProcedTaxChange(' + Id + '),ProcedureAmountCalc(' + Id + ')">' + TaxSelect + '</select>' +
-                         '<input type="text" id="ProcTaxPerc' + Id + '" style="border-left: 1px solid lightgrey!important;border:none;" class="form-control dedisa proccls col-md-5 smallTextbox " name="Name" autocomplete="off" disabled>' +
-                         '</div></td>' +
-                        '<td class="text-center"><input type="text" id="ProcTot' + Id + '" class="form-control dedisa proccls smallTextbox " value="' + parseFloat(result[j].Amount).toFixed(Decimal) + '" autocomplete="off" disabled></td>' +
-                         '<td style="display:none">' +
-                         '<input type="text" id="ProcedureId' + Id + '" class="form-control proccls" value="' + result[j].BatchSlNo + '" autocomplete="off" disabled>' +
-                         '<input type="text" id="ProcTaxable' + Id + '" class="form-control proccls" value="' + parseFloat(result[j].TaxableAmt).toFixed(Decimal) + '" autocomplete="off" disabled>' +
-                         '<input type="text" id="ProcTaxamt' + Id + '" class="form-control proccls" value="' + parseFloat(result[j].TaxAmt).toFixed(Decimal) + '" autocomplete="off" disabled>' +
-                         '</td>' +
-                        '</tr>';
+                '<td class="text-center" onclick=DeleteRow(2,' + Id + ') style="padding-top: .5rem;cursor:pointer"><i class="icon-trash"></i> </td>' +
+                '<td class="text-center" id="PCslno' + Id + '" style="">' + Slno + '</td>' +
+                '<td class="text-center " > <input type="text" id="Procedure' + Id + '" class="form-control proccls atcmpl smallTextbox " value="' + result[j].ProductDesc + '" onfocus="ProcedureSearch(' + Id + ')"></td>' +
+                '<td class="text-center" >  <input type="text" id="ProcQty' + Id + '" class="form-control proccls smallTextbox " value="' + result[j].Quantity + '" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumberInt(event, this)"> </td>' +
+                '<td class="text-center" ><input type="text" id="ProcFee' + Id + '" class="form-control proccls smallTextbox " value="' + parseFloat(result[j].SellPrice).toFixed(Decimal) + '" autocomplete="off" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumber(event,this)"></td>' +
+                '<td class="text-center" >  <div class="input-group m-0">' +
+                '<select  id="ProcTax' + Id + '" class="form-control col-md-7 IpTax proctx smallTextbox " style="padding: 0;border:none;border-right: 1px solid lightgrey!important;" onchange="ProcedTaxChange(' + Id + '),ProcedureAmountCalc(' + Id + ')">' + TaxSelect + '</select>' +
+                '<input type="text" id="ProcTaxPerc' + Id + '" style="border-left: 1px solid lightgrey!important;border:none;" class="form-control dedisa proccls col-md-5 smallTextbox " name="Name" autocomplete="off" disabled>' +
+                '</div></td>' +
+                '<td class="text-center"><input type="text" id="ProcTot' + Id + '" class="form-control dedisa proccls smallTextbox " value="' + parseFloat(result[j].Amount).toFixed(Decimal) + '" autocomplete="off" disabled></td>' +
+                '<td style="display:none">' +
+                '<input type="text" id="ProcedureId' + Id + '" class="form-control proccls" value="' + result[j].BatchSlNo + '" autocomplete="off" disabled>' +
+                '<input type="text" id="ProcTaxable' + Id + '" class="form-control proccls" value="' + parseFloat(result[j].TaxableAmt).toFixed(Decimal) + '" autocomplete="off" disabled>' +
+                '<input type="text" id="ProcTaxamt' + Id + '" class="form-control proccls" value="' + parseFloat(result[j].TaxAmt).toFixed(Decimal) + '" autocomplete="off" disabled>' +
+                '</td>' +
+                '</tr>';
             $('#TblProcedure').append(ProcRow);
             $('#ProcTax' + Id).val(result[j].Tax).prop('disabled', true);
             $('.proccls').css('border', 'none').prop('disabled', true);
@@ -1939,8 +2038,7 @@ function DeleteBill(Flag) {      //Flag=0:Delete Contract
     });
 }
 
-function GetBillPrevousornext(Value)
-{
+function GetBillPrevousornext(Value) {
     var SlNo = parseInt($('#HBillNoCopy').val() || 0);
     SlNo = SlNo + Value;
     if ((SlNo <= 0) || (SlNo >= CurrentBillNo)) {
@@ -1958,8 +2056,7 @@ function GetBillPrevousornext(Value)
 //--------------------------End COPY
 
 //--------------------------Get Data Functions
-function GetProdDetails(ItemId,DeptId)
-{
+function GetProdDetails(ItemId, DeptId) {
     var data = {};
     data.ProductId = ItemId;
     data.CustId = 0;
@@ -1997,19 +2094,19 @@ function CustPrdctLoad(result) {
         var strr2 = strr1.replace(/#/gi, "&emsp;");
 
         var ProdRow = "<tr class='jsgrid-row' id='pdctrow'>" +
-           "<td style='border:none;font-weight:500;color:yellow' class='text-left'><b>" + result[n].ProductCode + "</b></td>" +
-           "<td class='white font-weight-bold' style='border:none;font-weight:500' class='text-left'>" +
-           "<table width='100%'>" +
-           "<tr>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>C : </b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</td>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>LP : </b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</td>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>" + custstat + " : </b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>Stock : </b>" + (result[n].Sumtotqty || 0) + "</td>" +
-           "<td style='border:none;font-weight:500'><button type='button' class='btn btn-primary btn-sm m-0' onclick='PopUpClose(1)'><i class='fa fa-close'></i></button></td>" +
-           "</tr>" +
-           "</table>" +
-           "</td>" +
-           "</tr>" +
+            "<td style='border:none;font-weight:500;color:yellow' class='text-left'><b>" + result[n].ProductCode + "</b></td>" +
+            "<td class='white font-weight-bold' style='border:none;font-weight:500' class='text-left'>" +
+            "<table width='100%'>" +
+            "<tr>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>C : </b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</td>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>LP : </b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</td>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>" + custstat + " : </b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>Stock : </b>" + (result[n].Sumtotqty || 0) + "</td>" +
+            "<td style='border:none;font-weight:500'><button type='button' class='btn btn-primary btn-sm m-0' onclick='PopUpClose(1)'><i class='fa fa-close'></i></button></td>" +
+            "</tr>" +
+            "</table>" +
+            "</td>" +
+            "</tr>" +
             "<tr class='jsgrid-row' id='pdctrow1'><td colspan=4 class='text-left' style='border:none'> " + strr2 + "</td ></tr>" +
             "<tr class='jsgrid-row'><td colspan=2 class='text-left' style='border:none;font-weight:500'><b> LOCATION  :" + result[n].Bin_A + "</b></td ><td colspan=2  id='expdayse'  class='text-left' style='border:none;font-weight:700;color:yellow'><b></b></td ></tr>";
 
@@ -2025,46 +2122,41 @@ function CustPrdctLoad(result) {
 
 
 //--------------------------Table Add
-function AddProductConfirm(flg)
-{
+function AddProductConfirm(flg) {
 
     var name = ($('#Product0').val()).substring(0, 2);
 
-    if($.trim($('#Product0').val())=='')
-    {
+    if ($.trim($('#Product0').val()) == '') {
         warningshow('Please Select Product', 'Product0');
     }
-    else if (($('#ProductId0').val()||0) == 0) {
+    else if (($('#ProductId0').val() || 0) == 0) {
         warningshow('Please Select a valid Product', 'Product0');
     }
-    else if ($.trim($('#ProductDesc0').val() ) =='') {
+    else if ($.trim($('#ProductDesc0').val()) == '') {
         warningshow('Please Select Batch', 'ProductDesc0');
     }
-    else if (($('#BatchSlNo0').val()||0) == 0) {
+    else if (($('#BatchSlNo0').val() || 0) == 0) {
         warningshow('Please Select a valid Batch', 'ProductDesc0');
     }
-    else if (($('#Quantity0').val()||0) == 0) {
+    else if (($('#Quantity0').val() || 0) == 0) {
         warningshow('Please Select Quantity', 'Quantity0');
     }
-    else if(DiscPecentCalc(0,0)==false)
-    {
+    else if (DiscPecentCalc(0, 0) == false) {
         return DiscPecentCalc(0, 0);
     }
     else if (($('#Tax0').val() || 0) == 0) {
         warningshow('Please Select Tax', 'Tax0');
     }
-    else if (($('#Amount0').val() || 0) == 0 && name!='S-') {
+    else if (($('#Amount0').val() || 0) == 0 && name != 'S-') {
         warningshow('Please Select Amount', 'Amount0');
     }
-    else
-    {
+    else {
         AddProduct();
     }
 }
 
-function AddProduct()
-{
-    if ($('.SlRow').length == 0) { RowCount = 1; $('#HLocation').prop('disabled',true) }
+function AddProduct() {
+    if ($('.SlRow').length == 0) { RowCount = 1; $('#HLocation').prop('disabled', true) }
 
     var Id = parseInt(RowCount); var SlNo = parseInt($('.SlRow').length) + 1;
 
@@ -2075,44 +2167,44 @@ function AddProduct()
 
 
     var ProdRow =
-         '<tr class="jsgrid-header-row SlRow" id="SlRows' + Id + '" onfocusout=UpdateRow(0,' + Id + ') >' +
-         '<td class="jsgrid-align-center crspnt" style="width:2%" onclick=DeleteRow(0,' + Id + ')><i class="icon-trash"></i></td>' +
-         '<td class="jsgrid-align-center" style="width:3%" id="tdSl' + Id + '">' + SlNo + '</td>' +
-         '<td class="jsgrid-align-left" style="width:13%"><input type="text" class="form-control smallTextbox brnone bgclrwhite" id="Product' + Id + '" name="Product"  style="width:100%"  value="' + $('#Product0').val() + '" onfocusout=UpdateRow(1,' + Id + ') disabled /></td>' +
-         '<td class="jsgrid-align-left" style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="ProductDesc' + Id + '" name="ProductDesc"  style="width:100%"  value="' + $('#ProductDesc0').val() + '" onfocusout=UpdateRow(2,' + Id + ') disabled /></td>' +
-         '<td class="jsgrid-align-center" style="width:5%"><input type="hidden"  class="form-control smallTextbox brnone bgclrwhite" id="Company' + Id + '"  style="width:100%"  value="' + CMD[0] + '" readonly />' + CMD[1]+'</td>' +
-         '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="Expiry' + Id + '"  style="width:100%"  value="' + $('#Expiry0').val() + '" readonly /></td>' +
-         '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Quantity" id="Quantity' + Id + '" onkeypress="isNumberInt(event, this)" onkeyup="SalesQtyCheck(' + Id + ',0)"  style="width:100%"  value="' + $('#Quantity0').val() + '" /></td>' +
-         '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Free" id="Free' + Id + '"     onkeypress="isNumberInt(event, this)" onkeyup="SalesQtyCheck(' + Id + ',1)" style="width:100%"  value="' + $('#Free0').val() + '" /></td>' +
-         '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass bgclrwhite" name="SellPrice" id="SellPrice' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"   style="width:100%"  value="' + parseFloat($('#SellPrice0').val() || 0).toFixed(Decimal) + '" disabled /></td>' +
-         '<td class="jsgrid-align-right" style="width:4%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="PurPrice' + Id + '"  style="width:100%"  value="' + parseFloat($('#PurPrice0').val() || 0).toFixed(Decimal) + '" readonly /></td>' +
-         '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="Amount' + Id + '"  style="width:100%"  value="' + parseFloat($('#Amount0').val()) + '" readonly /></td>' +    
-         '<td class="jsgrid-align-center" style="width:8%">' +
-         '<div class="input-group m-0">' +
-         '<input type="text"  class="form-control smallTextbox Itemclass" name="Discount" id="DiscountPerc' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',0)"   style="width:50%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;"  value="' + parseFloat($('#DiscountPerc0').val() || 0).toFixed(Decimal) + '" />' +
-         '<input type="text"  class="form-control smallTextbox Itemclass" name="Discount" id="Discount' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',1)"   style="width:50%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;"  value="' + parseFloat($('#Discount0').val() || 0).toFixed(Decimal) + '" />' +
-         '</div>' + 
-         '</td>' +
-         '<td class="jsgrid-align-center" style="width:6%"> <div class="input-group m-0"><select id="Tax' + Id + '" class="form-control smallTextbox Itemclass pl-0 IpTax" style="width:60%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;padding: 0;" onchange="TaxChange(' + Id + ')"> ' + TaxSelect + ' </select> <input type="text" id="TaxPercent' + Id + '" style="width:40%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;" class="form-control smallTextbox bgclrwhite Itemclass"  readonly> </div></td>' +
-         '<td class="jsgrid-align-right" style="width:5%"> <input type="text" id="TaxableAmt' + Id + '" class="form-control smallTextbox bgclrwhite Itemclass brnone"  readonly value="' + parseFloat($('#TaxableAmt0').val() || 0).toFixed(Decimal) + '"></td>' +
-         '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="TaxAmt' + Id + '" class="form-control smallTextbox bgclrwhite Itemclass brnone"  readonly value="' + parseFloat($('#TaxAmt0').val() || 0).toFixed(Decimal) + '"></td>' +
-         '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="CessAmount' + Id + '" class="form-control smallTextbox bgclrwhite Itemclass brnone" onkeypress="isNumberInt(event, this)" readonly value="' + parseFloat($('#CessAmount0').val() || 0).toFixed(Decimal) + '"></td>' +
-         '<td class="jsgrid-align-right" style="width:5%"><select id="DrugSchedule' + Id + '" class="form-control smallTextbox Itemclass brnone" name="DrugSchedule">' + DrugSchedule + '</select></td>' +
-         '<td class="jsgrid-align-center" style="width:5%;display:none">' +
-         '<input type="text" class="form-control" id="ProductId' + Id + '"  value="' + $('#ProductId0').val() + '" />' +
-         '<input type="text" class="form-control" id="BatchSlNo' + Id + '"  value="' + $('#BatchSlNo0').val() + '" />' +
-         '<input type="text" class="form-control" id="Cess' + Id + '"   value="' + $('#Cess0').val() + '" />' +
-         '<input type="text" class="form-control" id="PHSNCode' + Id + '"   value="' + $('#PHSNCode0').val() + '" />' +
-         '<input type="text" class="form-control" id="HLocation' + Id + '"   value="' + $('#HLocation').val() + '" />' +
-         '<input type="text" class="form-control" id="StockQty' + Id + '"   value="' + $('#StockQty0').val() + '" />' +
-         '</td>' +
-         '</tr>';
+        '<tr class="jsgrid-header-row SlRow" id="SlRows' + Id + '" onfocusout=UpdateRow(0,' + Id + ') >' +
+        '<td class="jsgrid-align-center crspnt" style="width:2%" onclick=DeleteRow(0,' + Id + ')><i class="icon-trash"></i></td>' +
+        '<td class="jsgrid-align-center" style="width:3%" id="tdSl' + Id + '">' + SlNo + '</td>' +
+        '<td class="jsgrid-align-left" style="width:13%"><input type="text" class="form-control smallTextbox brnone bgclrwhite" id="Product' + Id + '" name="Product"  style="width:100%"  value="' + $('#Product0').val() + '" onfocusout=UpdateRow(1,' + Id + ') disabled /></td>' +
+        '<td class="jsgrid-align-left" style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="ProductDesc' + Id + '" name="ProductDesc"  style="width:100%"  value="' + $('#ProductDesc0').val() + '" onfocusout=UpdateRow(2,' + Id + ') disabled /></td>' +
+        '<td class="jsgrid-align-center" style="width:5%"><input type="hidden"  class="form-control smallTextbox brnone bgclrwhite" id="Company' + Id + '"  style="width:100%"  value="' + CMD[0] + '" readonly />' + CMD[1] + '</td>' +
+        '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="Expiry' + Id + '"  style="width:100%"  value="' + $('#Expiry0').val() + '" readonly /></td>' +
+        '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Quantity" id="Quantity' + Id + '" onkeypress="isNumberInt(event, this)" onkeyup="SalesQtyCheck(' + Id + ',0)"  style="width:100%"  value="' + $('#Quantity0').val() + '" /></td>' +
+        '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Free" id="Free' + Id + '"     onkeypress="isNumberInt(event, this)" onkeyup="SalesQtyCheck(' + Id + ',1)" style="width:100%"  value="' + $('#Free0').val() + '" /></td>' +
+        '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass bgclrwhite" name="SellPrice" id="SellPrice' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"   style="width:100%"  value="' + parseFloat($('#SellPrice0').val() || 0).toFixed(Decimal) + '" disabled /></td>' +
+        '<td class="jsgrid-align-right" style="width:4%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="PurPrice' + Id + '"  style="width:100%"  value="' + parseFloat($('#PurPrice0').val() || 0).toFixed(Decimal) + '" readonly /></td>' +
+        '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="Amount' + Id + '"  style="width:100%"  value="' + parseFloat($('#Amount0').val()) + '" readonly /></td>' +
+        '<td class="jsgrid-align-center" style="width:8%">' +
+        '<div class="input-group m-0">' +
+        '<input type="text"  class="form-control smallTextbox Itemclass" name="Discount" id="DiscountPerc' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',0)"   style="width:50%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;"  value="' + parseFloat($('#DiscountPerc0').val() || 0).toFixed(Decimal) + '" />' +
+        '<input type="text"  class="form-control smallTextbox Itemclass" name="Discount" id="Discount' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',1)"   style="width:50%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;"  value="' + parseFloat($('#Discount0').val() || 0).toFixed(Decimal) + '" />' +
+        '</div>' +
+        '</td>' +
+        '<td class="jsgrid-align-center" style="width:6%"> <div class="input-group m-0"><select id="Tax' + Id + '" class="form-control smallTextbox Itemclass pl-0 IpTax" style="width:60%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;padding: 0;" onchange="TaxChange(' + Id + ')"> ' + TaxSelect + ' </select> <input type="text" id="TaxPercent' + Id + '" style="width:40%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;" class="form-control smallTextbox bgclrwhite Itemclass"  readonly> </div></td>' +
+        '<td class="jsgrid-align-right" style="width:5%"> <input type="text" id="TaxableAmt' + Id + '" class="form-control smallTextbox bgclrwhite Itemclass brnone"  readonly value="' + parseFloat($('#TaxableAmt0').val() || 0).toFixed(Decimal) + '"></td>' +
+        '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="TaxAmt' + Id + '" class="form-control smallTextbox bgclrwhite Itemclass brnone"  readonly value="' + parseFloat($('#TaxAmt0').val() || 0).toFixed(Decimal) + '"></td>' +
+        '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="CessAmount' + Id + '" class="form-control smallTextbox bgclrwhite Itemclass brnone" onkeypress="isNumberInt(event, this)" readonly value="' + parseFloat($('#CessAmount0').val() || 0).toFixed(Decimal) + '"></td>' +
+        '<td class="jsgrid-align-right" style="width:5%"><select id="DrugSchedule' + Id + '" class="form-control smallTextbox Itemclass brnone" name="DrugSchedule">' + DrugSchedule + '</select></td>' +
+        '<td class="jsgrid-align-center" style="width:5%;display:none">' +
+        '<input type="text" class="form-control" id="ProductId' + Id + '"  value="' + $('#ProductId0').val() + '" />' +
+        '<input type="text" class="form-control" id="BatchSlNo' + Id + '"  value="' + $('#BatchSlNo0').val() + '" />' +
+        '<input type="text" class="form-control" id="Cess' + Id + '"   value="' + $('#Cess0').val() + '" />' +
+        '<input type="text" class="form-control" id="PHSNCode' + Id + '"   value="' + $('#PHSNCode0').val() + '" />' +
+        '<input type="text" class="form-control" id="HLocation' + Id + '"   value="' + $('#HLocation').val() + '" />' +
+        '<input type="text" class="form-control" id="StockQty' + Id + '"   value="' + $('#StockQty0').val() + '" />' +
+        '</td>' +
+        '</tr>';
     $('#TblSalesInvoice').append(ProdRow);
     $('#Tax' + Id).val($('#Tax0').val());
     TaxChange(Id);
     $('#DrugSchedule' + Id).val($('#DrugSchedule0').val());
     RowCount++;
-    ClearFields(0,0);
+    ClearFields(0, 0);
     $('.brnone').css('border', 'none');
     $('.brnone').css('border-radius', '0px');
     CalcGrandTotal(1);
@@ -2141,7 +2233,7 @@ function mrpsellingratecalculation() {
         var subTotalMrp = parseFloat(Qt * Mrp);
 
         // Add the subtotal to the total variable directly
-        SelTotal+= subTotalSel;
+        SelTotal += subTotalSel;
         Mrptotal += subTotalMrp;
 
     }
@@ -2155,16 +2247,12 @@ function mrpsellingratecalculation() {
 
 }
 
-function SalesQtyCheck(Id,fl)
-{
-    if (($('#BatchSlNo' + Id).val() || 0) > 0)
-    {
+function SalesQtyCheck(Id, fl) {
+    if (($('#BatchSlNo' + Id).val() || 0) > 0) {
         var CurQty = parseInt($('#StockQty' + Id).val() || 0);
         var Qty = parseInt($('#Quantity' + Id).val() || 0); var Freq = parseInt($('#Free' + Id).val() || 0);
-        if ((Qty + Freq) > CurQty)
-        {
-            if (fl==0)
-            {
+        if ((Qty + Freq) > CurQty) {
+            if (fl == 0) {
                 $('#Quantity' + Id).val('');
                 warningshow('Not Enought stock! Current Stock is ' + CurQty, 'Quantity' + Id);
             }
@@ -2172,29 +2260,25 @@ function SalesQtyCheck(Id,fl)
                 $('#Free' + Id).val('');
                 warningshow('Not Enought stock! Current Stock is ' + CurQty, 'Free' + Id);
             }
-           
+
         }
     }
-    if (fl == 0)
-    {
+    if (fl == 0) {
         ClearFields(4, 0);
         AmountCalc(Id);
         mrpsellingratecalculation()
     }
 }
 
-function LocationChange(Id)
-{
-    if (($('#BatchSlNo' + Id).val() || 0) > 0)
-    {
+function LocationChange(Id) {
+    if (($('#BatchSlNo' + Id).val() || 0) > 0) {
         ClearFields(2, Id);
         $('#ProductDesc' + Id).focus();
     }
 }
 
 //Add or Update Conditions of Procedure
-function AddProcedureConfrm(Id)
-{
+function AddProcedureConfrm(Id) {
     $('#CurEditId').val(Id);
     if ($.trim($('#Procedure' + Id).val()) == '') {
         warningshow('Please Select Procedure', 'Procedure' + Id);
@@ -2216,9 +2300,8 @@ function AddProcedureConfrm(Id)
         warningshow('Amount Must be greater than 0', 'ProcFee' + Id);
         return false;
     }
-    else
-    {
-       
+    else {
+
         if (Id == 0)       //Add Procedure
         { AddProcedure(); }
         else       //Update Procedure
@@ -2227,101 +2310,95 @@ function AddProcedureConfrm(Id)
     }
 }
 
-function AddProcedure()
-{
-        if ($('.PRCRow').length == 0) { ProcCount = 1;}
-        var Slno = parseInt($('.PRCRow').length) + 1; var Id = parseInt(ProcCount);
-        var ProcRow = '<tr id="PCRow' + Id + '" class="PRCRow" onfocusout=AddProcedureConfrm(' + Id + ')>' +
-                    '<td class="text-center" onclick=DeleteRow(2,' + Id + ') style="padding-top: .5rem;cursor:pointer"><i class="icon-trash"></i> </td>' +
-                    '<td class="text-center" id="PCslno' + Id + '" style="padding-top: .5rem;">' + Slno + '</td>' +
-                    '<td class="text-center " > <input type="text" id="Procedure' + Id + '" class="form-control proccls atcmpl smallTextbox " value="' + $('#Procedure0').val() + '" onfocus="ProcedureSearch(' + Id + ')"></td>' +
-                    '<td class="text-center" >  <input type="text" id="ProcQty' + Id + '" class="form-control proccls smallTextbox " value="' + $('#ProcQty0').val() + '" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumberInt(event, this)"> </td>' +
-                    '<td class="text-center" ><input type="text" id="ProcFee' + Id + '" class="form-control proccls smallTextbox " value="' + $('#ProcFee0').val() + '" autocomplete="off" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumber(event,this)"></td>' +
-                    '<td class="text-center" >  <div class="input-group m-0">'+
-                     '<select  id="ProcTax' + Id + '" class="form-control col-md-7 IpTax proctx smallTextbox " style="padding: 0;border:none;border-right: 1px solid lightgrey!important;" onchange="ProcedTaxChange(' + Id + '),ProcedureAmountCalc(' + Id + ')">' + TaxSelect + '</select>' +
-                     '<input type="text" id="ProcTaxPerc' + Id + '" style="border-left: 1px solid lightgrey!important;border:none;" class="form-control dedisa bgclrwhite col-md-5 smallTextbox " name="Name" autocomplete="off" disabled>' +
-                     '</div></td>'+
-                    '<td class="text-center"><input type="text" id="ProcTot' + Id + '" class="form-control dedisa proccls bgclrwhite smallTextbox " value="' + $('#ProcTot0').val() + '" autocomplete="off" disabled></td>' +
-                     '<td style="display:none">' +
-                     '<input type="text" id="ProcedureId' + Id + '" class="form-control proccls" value="' + $('#ProcedureId0').val() + '" autocomplete="off" disabled>' +
-                     '<input type="text" id="ProcTaxable' + Id + '" class="form-control proccls" value="' + $('#ProcTaxable0').val() + '" autocomplete="off" disabled>' +
-                     '<input type="text" id="ProcTaxamt' + Id + '" class="form-control proccls" value="' + $('#ProcTaxamt0').val() + '" autocomplete="off" disabled>' +
-                     '</td>' +
-                    '</tr>';
-        $('#TblProcedure').append(ProcRow);
-        $('#ProcTax' + Id).val($('#ProcTax0').val());
-        $('.proccls').css('border','none');
-        ProcedTaxChange(Id);
-        ProcCount++;
-        ClearFields(5, 0);
-        ProcedureGrandTotalCalc(1);
-        roundoffcalcn(0);
+function AddProcedure() {
+    if ($('.PRCRow').length == 0) { ProcCount = 1; }
+    var Slno = parseInt($('.PRCRow').length) + 1; var Id = parseInt(ProcCount);
+    var ProcRow = '<tr id="PCRow' + Id + '" class="PRCRow" onfocusout=AddProcedureConfrm(' + Id + ')>' +
+        '<td class="text-center" onclick=DeleteRow(2,' + Id + ') style="padding-top: .5rem;cursor:pointer"><i class="icon-trash"></i> </td>' +
+        '<td class="text-center" id="PCslno' + Id + '" style="padding-top: .5rem;">' + Slno + '</td>' +
+        '<td class="text-center " > <input type="text" id="Procedure' + Id + '" class="form-control proccls atcmpl smallTextbox " value="' + $('#Procedure0').val() + '" onfocus="ProcedureSearch(' + Id + ')"></td>' +
+        '<td class="text-center" >  <input type="text" id="ProcQty' + Id + '" class="form-control proccls smallTextbox " value="' + $('#ProcQty0').val() + '" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumberInt(event, this)"> </td>' +
+        '<td class="text-center" ><input type="text" id="ProcFee' + Id + '" class="form-control proccls smallTextbox " value="' + $('#ProcFee0').val() + '" autocomplete="off" onkeyup="ProcedureAmountCalc(' + Id + ')" onkeypress="isNumber(event,this)"></td>' +
+        '<td class="text-center" >  <div class="input-group m-0">' +
+        '<select  id="ProcTax' + Id + '" class="form-control col-md-7 IpTax proctx smallTextbox " style="padding: 0;border:none;border-right: 1px solid lightgrey!important;" onchange="ProcedTaxChange(' + Id + '),ProcedureAmountCalc(' + Id + ')">' + TaxSelect + '</select>' +
+        '<input type="text" id="ProcTaxPerc' + Id + '" style="border-left: 1px solid lightgrey!important;border:none;" class="form-control dedisa bgclrwhite col-md-5 smallTextbox " name="Name" autocomplete="off" disabled>' +
+        '</div></td>' +
+        '<td class="text-center"><input type="text" id="ProcTot' + Id + '" class="form-control dedisa proccls bgclrwhite smallTextbox " value="' + $('#ProcTot0').val() + '" autocomplete="off" disabled></td>' +
+        '<td style="display:none">' +
+        '<input type="text" id="ProcedureId' + Id + '" class="form-control proccls" value="' + $('#ProcedureId0').val() + '" autocomplete="off" disabled>' +
+        '<input type="text" id="ProcTaxable' + Id + '" class="form-control proccls" value="' + $('#ProcTaxable0').val() + '" autocomplete="off" disabled>' +
+        '<input type="text" id="ProcTaxamt' + Id + '" class="form-control proccls" value="' + $('#ProcTaxamt0').val() + '" autocomplete="off" disabled>' +
+        '</td>' +
+        '</tr>';
+    $('#TblProcedure').append(ProcRow);
+    $('#ProcTax' + Id).val($('#ProcTax0').val());
+    $('.proccls').css('border', 'none');
+    ProcedTaxChange(Id);
+    ProcCount++;
+    ClearFields(5, 0);
+    ProcedureGrandTotalCalc(1);
+    roundoffcalcn(0);
 }
 //--------------------------End Table Add
 
 
 //--------------------------Edit Table 
-function UpdateRow(flg,Id)
-{
-    if(flg==1)                            //Check Item valid
+function UpdateRow(flg, Id) {
+    if (flg == 1)                            //Check Item valid
     {
-        if (($('#ProductId' + Id).val()||0) == 0)
-        {
-            warningshow('Please Select Item', 'Product'+ Id);
+        if (($('#ProductId' + Id).val() || 0) == 0) {
+            warningshow('Please Select Item', 'Product' + Id);
             return false;
         }
     }
     else if (flg == 2) {                 //Check Batch valid
         if (QtyFlg == 1) { warningshow('No Stock Available!', 'Product' + Id); return false; }
-        else
-        {
+        else {
             if (($('#BatchSlNo' + Id).val() || 0) == 0) {
                 warningshow('Please Select Batch', 'ProductDesc' + Id);
                 return false;
             }
         }
     }
-    else if(flg==0)                      //Update Row
+    else if (flg == 0)                      //Update Row
     {
         window.setTimeout(function () {
-            if (UpdateRow(1,Id)==false) {
-            return UpdateRow(1,Id);
-        }
-        else if (UpdateRow(2,Id) == false) {
-            return UpdateRow(2,Id);
-        }
-        else if (($('#Quantity' + Id).val() || 0) == 0) {
-            warningshow('Please Select Quantity', 'Quantity' + Id);
-            return false;
-        }
-        else if (($('#SellPrice' + Id).val() || 0) == 0) {
-            warningshow('Please Select Rate', 'SellPrice' + Id);
-            return false;
-        }
-        else if (DiscPecentCalc(Id, 0) == false) {
-            return DiscPecentCalc(Id, 0);
-        }
-        else if (($('#Tax' + Id).val() || 0) == 0) {
-            warningshow('Please Select Tax', 'Tax' + Id);
-        }
-        else if (($('#Amount' + Id).val() || 0) == 0) {
-            warningshow('Please Select Amount', 'Amount' + Id);
-        }
-        else {
-            ClearFields(4,0);
-            AmountCalc(Id);
-            CalcGrandTotal(1);
-            roundoffcalcn(0);
-            return true;
-        }
+            if (UpdateRow(1, Id) == false) {
+                return UpdateRow(1, Id);
+            }
+            else if (UpdateRow(2, Id) == false) {
+                return UpdateRow(2, Id);
+            }
+            else if (($('#Quantity' + Id).val() || 0) == 0) {
+                warningshow('Please Select Quantity', 'Quantity' + Id);
+                return false;
+            }
+            else if (($('#SellPrice' + Id).val() || 0) == 0) {
+                warningshow('Please Select Rate', 'SellPrice' + Id);
+                return false;
+            }
+            else if (DiscPecentCalc(Id, 0) == false) {
+                return DiscPecentCalc(Id, 0);
+            }
+            else if (($('#Tax' + Id).val() || 0) == 0) {
+                warningshow('Please Select Tax', 'Tax' + Id);
+            }
+            else if (($('#Amount' + Id).val() || 0) == 0) {
+                warningshow('Please Select Amount', 'Amount' + Id);
+            }
+            else {
+                ClearFields(4, 0);
+                AmountCalc(Id);
+                CalcGrandTotal(1);
+                roundoffcalcn(0);
+                return true;
+            }
         }, 80);
     }
 }
 
-function DeleteRow(flg,Id)
-{
-    if (Copyflag == 0)
-    {
+function DeleteRow(flg, Id) {
+    if (Copyflag == 0) {
         if (flg == 0) {
             Callconfirm('Data will be lost.Do you want to Continue?', 'DeleteRow', Id);
         }
@@ -2354,7 +2431,7 @@ function DeleteRow(flg,Id)
 
             $('#Procedure0').focus().select();
             ProcedureGrandTotalCalc(1);
-            
+
         }
     }
     mrpsellingratecalculation()
@@ -2363,8 +2440,7 @@ function DeleteRow(flg,Id)
 
 
 //--------------------------Focus
-function BtnFocusClr()
-{
+function BtnFocusClr() {
     $(".btn-outline-primary").focus(function (e) {
         var Id = $(this).attr('id');
         $('#' + Id).removeClass("btn-outline-primary");
@@ -2399,8 +2475,7 @@ function BtnFocusClr()
 
 function ManualFocus(Id, Dest, pKey, e) {
     var key = 13;
-    if (pKey != 0)
-    { key = pKey }
+    if (pKey != 0) { key = pKey }
     var code = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
     if (code == key) {
         if (Dest == 'btnadd') {
@@ -2420,26 +2495,24 @@ function ItemFocus() {
         var Id = $(this).attr('id').match(/\d+/)[0];
         var LeftId = ''; var RightId = '';
 
-        if (Id != 0)
-        {
+        if (Id != 0) {
             if (Name == 'Quantity') { LeftId = 'SellPrice'; RightId = 'Free'; }
             else if (Name == 'Free') { LeftId = 'Quantity'; RightId = 'SellPrice'; }
             else if (Name == 'SellPrice') { LeftId = 'Free'; RightId = 'Quantity'; }
         }
-        else if (Id == 0)
-        {
+        else if (Id == 0) {
             if (Name == 'Quantity') { LeftId = 'Product'; RightId = 'Free'; }
             else if (Name == 'Free') { LeftId = 'Quantity'; RightId = 'btnadd'; }
         }
 
-        
+
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
         if ((key == 13) || (key == 39)) {                                                //Enter
-                   
+
             $('#' + RightId + Id).focus().select();
         }
         else if (key == 37) {                                                   //Left
-            $('#' + LeftId + Id).focus().select(); 
+            $('#' + LeftId + Id).focus().select();
         }
         else if (key == 40) {                                                   //Down
             $('input[name="' + Name + '"]').each((i, item) => {
@@ -2461,27 +2534,24 @@ function ItemFocus() {
                 }
             });
         }
-    });  
+    });
 }
 //--------------------------End Focus
 
 
 //--------------------------Calculations
-function CalcGrandTotal(flg)
-{
-    if(flg==0)       //FormRefresh
+function CalcGrandTotal(flg) {
+    if (flg == 0)       //FormRefresh
     {
         $('#BaseTextTotal,#BaseTextTotalProc').text((0).toFixed(Decimal));
         $('.calccls').val((0).toFixed(Decimal))
     }
     else if (flg == 1)       //Calculation
     {
-        ClearFields(3,0);   //Clear Splittax fields
+        ClearFields(3, 0);   //Clear Splittax fields
         var TotalAmt = 0; var TaxableAmt = 0; var TaxAmt = 0; var CessAmount = 0;
-        for (var i = 1; i <= RowCount; i++)
-        {
-            if ($('#Amount' + i).length != 0)
-            {
+        for (var i = 1; i <= RowCount; i++) {
+            if ($('#Amount' + i).length != 0) {
                 var Amount = $('#Amount' + i).val() || 0; var Taxable = $('#TaxableAmt' + i).val() || 0; var Tax = $('#TaxAmt' + i).val() || 0; var Cess = 0;// $('#CessAmount' + i).val() || 0;
                 TotalAmt = parseFloat(TotalAmt) + parseFloat(Amount);
                 TaxableAmt = parseFloat(TaxableAmt) + parseFloat(Taxable);
@@ -2519,8 +2589,8 @@ function CalcGrandTotal(flg)
         $('#TotlaTax,#HiddenTax').val((TaxAmt).toFixed(Decimal));
         $('#TotalCess').val((CessAmount).toFixed(Decimal));
 
-        var gnTot = parseFloat($('#BaseTextTotal').text()||0);
-        var PrTot = parseFloat($('#ProcAmount').val()||0);
+        var gnTot = parseFloat($('#BaseTextTotal').text() || 0);
+        var PrTot = parseFloat($('#ProcAmount').val() || 0);
         var TotwithPRoc = gnTot + PrTot;
         $('#BaseTextTotalProc').text(parseFloat(TotwithPRoc).toFixed(Decimal))
 
@@ -2532,16 +2602,15 @@ function CalcGrandTotal(flg)
 }
 
 
-function AmountCalc(Id)
-{
-   
+function AmountCalc(Id) {
+
     var TaxableAmount = 0; var TaxAmount = 0; var CessAmount = 0; var TotAmount = 0;
     var CessPer = 0;
     if ($("#CessCheck").prop("checked") == true) {
         CessPer = parseFloat($("#Cess" + Id).val() || 0); CessPer = isNaN(CessPer) ? 0 : CessPer;
     }
     else {
-         CessPer = 0;
+        CessPer = 0;
     }
     var Qty = $('#Quantity' + Id).val() || 0; var Rate = $('#SellPrice' + Id).val() || 0; var TaxPerc = $('#TaxPercent' + Id).val() || 0;
     var Disc = $('#Discount' + Id).val() || 0;
@@ -2561,7 +2630,7 @@ function AmountCalc(Id)
         else
             CessAmount = 0;
 
-        var TotafterCess = parseFloat(TotAmount) - parseFloat(CessAmount||0);
+        var TotafterCess = parseFloat(TotAmount) - parseFloat(CessAmount || 0);
 
         if (TaxPerc != 0)
             TaxableAmount = parseFloat(TotafterCess) / ((parseFloat(TaxPerc) / 100) + 1);
@@ -2570,23 +2639,22 @@ function AmountCalc(Id)
 
         TaxAmount = parseFloat(TaxableAmount) * parseFloat(TaxPerc) / 100;
     }
-    
+
 
     $('#TaxableAmt' + Id).val(parseFloat(TaxableAmount).toFixed(Decimal));
     $('#TaxAmt' + Id).val(parseFloat(TaxAmount).toFixed(Decimal));
-    $('#CessAmount' + Id).val(parseFloat(CessAmount).toFixed(Decimal)); 
+    $('#CessAmount' + Id).val(parseFloat(CessAmount).toFixed(Decimal));
     $('#Amount' + Id).val(parseFloat(TotAmount).toFixed(Decimal));
 }
 
-function DiscPecentCalc(Id,flg)
-{
-    var DiscAmnt = parseFloat($('#Discount' + Id).val() || 0).toFixed(Decimal);     DiscAmnt = isNaN(DiscAmnt) ? 0 : DiscAmnt;
+function DiscPecentCalc(Id, flg) {
+    var DiscAmnt = parseFloat($('#Discount' + Id).val() || 0).toFixed(Decimal); DiscAmnt = isNaN(DiscAmnt) ? 0 : DiscAmnt;
     var DiscPerc = parseFloat($('#DiscountPerc' + Id).val() || 0).toFixed(Decimal); DiscPerc = isNaN(DiscPerc) ? 0 : DiscPerc;
 
     var Qty = $('#Quantity' + Id).val() || 0; var Rate = $('#SellPrice' + Id).val() || 0;
     Qty = isNaN(Qty) ? 0 : Qty; Rate = isNaN(Rate) ? 0 : Rate;
     var Taxable = (parseFloat(Qty) * parseFloat(Rate)); Taxable = isNaN(Taxable) ? 0 : Taxable;
-     
+
     if (Taxable > 0) {
         if (flg == 0) {                         //Amount calc
             $('#Discount' + Id).val((0).toFixed(Decimal));
@@ -2598,7 +2666,7 @@ function DiscPecentCalc(Id,flg)
         }
         else if (flg == 1) {                   //Percentage calc
             $('#DiscountPerc' + Id).val((0).toFixed(Decimal));
-            
+
             if (DiscAmnt > 0) {
                 DiscPerc = (DiscAmnt * 100) / Taxable;
                 DiscPerc = Number(DiscPerc).toFixed(Decimal);
@@ -2607,12 +2675,11 @@ function DiscPecentCalc(Id,flg)
         }
     }
 
-    if (parseFloat(DiscAmnt) >= parseFloat(Taxable))
-    {
+    if (parseFloat(DiscAmnt) >= parseFloat(Taxable)) {
         var name = ($('#Product0').val()).substring(0, 2);
         if (name == 'S-') {
 
-            
+
             AmountCalc(Id);
             return true;
         }
@@ -2623,22 +2690,20 @@ function DiscPecentCalc(Id,flg)
             return false;
         }
 
-        
+
     }
-    else
-    {
+    else {
         AmountCalc(Id);
         return true;
     }
-   
+
 }
 
 //Change Cess 
-function ChangeCess(flg)
-{
+function ChangeCess(flg) {
     if (flg == 0)                                        //Change Cess Checkbox
     {
-        ClearFields(4,0);
+        ClearFields(4, 0);
         for (var i = 1; i <= RowCount; i++) {
             if ($('#Product' + i).val() != undefined) {
                 AmountCalc(i);
@@ -2652,10 +2717,10 @@ function ChangeCess(flg)
 //Roundoff
 function roundoffcalcn(flg) {
 
-    var gamt = 0; var roundgndtotal = 0; var gntamt = 0 ;  
+    var gamt = 0; var roundgndtotal = 0; var gntamt = 0;
 
     gamt = parseFloat($('#BaseTextTotalProc').text() || 0);
-    gntamt = Math.round(gamt)||0;
+    gntamt = Math.round(gamt) || 0;
     roundgndtotal = parseFloat(gntamt - gamt).toFixed(Decimal);
 
     if ($('#roundoffstatus').is(':checked')) {
@@ -2665,13 +2730,11 @@ function roundoffcalcn(flg) {
     else {
         $('#TotRoundOff').val((0).toFixed(Decimal));
         CalcGrandTotal(1);
-        if (flg == 0)
-        { CalcDiscountSplitTax(); }
-        else if (flg == 1)
-        { CalcDiscountSplitTaxbyPrecentage(); }
+        if (flg == 0) { CalcDiscountSplitTax(); }
+        else if (flg == 1) { CalcDiscountSplitTaxbyPrecentage(); }
     }
     paymethodechange();
-   
+
 }
 
 //----Bill Discount 
@@ -2742,149 +2805,145 @@ function BillwiseDiscount(TotalAmt, Dispers) {
 
     var i = RowCount; var CessPer;
 
-  
+
     for (var k = 1; k <= i; k++) {
-       
-            if ($('#Amount' + k).length > 0)
-            {
-                if ($("#CessCheck").prop("checked") == true) {
-                    var CessPer = $("#Cess" + k).val();
-                }
-                else {
-                    var CessPer = 0;
-                }
-                var CalcAmt = 0;
-                if (Flag == 0)
-                {
-                    var Amount = $('#TaxableAmt' + k).val();
-                    var GSTPERS = parseFloat($("#Tax" + k).find("option:selected").attr("name") || 0);
 
-                    var disamt = parseFloat(Amount - ((Amount * Dispers) / 100));
-                    disamt = disamt.toFixed(Decimal);
-                    var TaxAmt = parseFloat(disamt * GSTPERS) / parseFloat(100);
-
-                    var GStAmount = TaxAmt.toFixed(Decimal);
-                    Amount = parseFloat(disamt) || 0;
-
-                    var CessAmt = disamt * (CessPer / 100);
-                    BaseCess = BaseCess + CessAmt;
-
-                    CalcAmt = Amount;
-                }
-                else
-                {
-                    var Amount = $('#Amount' + k).val();
-                    var GSTPERS = parseFloat($("#Tax" + k).find("option:selected").attr("name") || 0);
-
-                    var disamt = parseFloat(Amount - ((Amount * Dispers) / 100));
-                    disamt = disamt.toFixed(Decimal);
-                    var newamount = parseFloat(disamt);
-
-                    var ABC = 100 + Number(GSTPERS) + Number(CessPer);
-                    var newtaxable = Number((100 * newamount) / ABC).toFixed(Decimal);
-
-                    var TaxAmt = newtaxable * (GSTPERS / 100);
-
-                    var GStAmount = TaxAmt.toFixed(Decimal);
-                    Amount = parseFloat(disamt) || 0;
-
-                    var CessAmt = newtaxable * (CessPer / 100);
-                    BaseCess = BaseCess + CessAmt;
-
-                    CalcAmt = newtaxable;
-                }
-
-                if (GSTPERS == 0) {
-                    AMT0 = parseFloat(AMT0) + parseFloat(CalcAmt) || 0
-                    GST0 = parseFloat(GST0 + GStAmount) || 0
-                }
-                else if (GSTPERS == 5) {
-                    AMT5 = parseFloat(AMT5) + parseFloat(CalcAmt) || 0
-                    GST5 = parseFloat(GST5) + parseFloat(GStAmount) || 0
-                }
-                else if (GSTPERS == 12) {
-                    AMT12 = parseFloat(AMT12) + parseFloat(CalcAmt) || 0
-                    GST12 = parseFloat(GST12) + parseFloat(GStAmount) || 0
-                }
-                else if (GSTPERS == 18) {
-                    AMT18 = parseFloat(AMT18) + parseFloat(CalcAmt) || 0
-                    GST18 = parseFloat(GST18) + parseFloat(GStAmount) || 0
-                }
-                else {
-                    AMT28 = parseFloat(AMT28) + parseFloat(CalcAmt) || 0
-                    GST28 = parseFloat(GST28) + parseFloat(GStAmount) || 0
-                }
-            }
-
-            SGST_0 = Number(GST0.toFixed(Decimal)) / 2;
-            SGST_5 = Number(GST5.toFixed(Decimal)) / 2;
-            SGST_12 = Number(GST12.toFixed(Decimal)) / 2;
-            SGST_18 = Number(GST18.toFixed(Decimal)) / 2;
-            SGST_28 = Number(GST28.toFixed(Decimal)) / 2;
-
-            $('#splittaxable_0').val(AMT0.toFixed(Decimal));
-            $('#splittax_0').val(GST0.toFixed(Decimal));
-
-            $('#splittaxable_5').val(AMT5.toFixed(Decimal));
-            $('#splittax_5').val(GST5.toFixed(Decimal));
-
-            $('#splittaxable_12').val(AMT12.toFixed(Decimal));
-            $('#splittax_12').val(GST12.toFixed(Decimal));
-
-            $('#splittaxable_18').val(AMT18.toFixed(Decimal));
-            $('#splittax_18').val(GST18.toFixed(Decimal));
-
-            $('#splittaxable_28').val(AMT28.toFixed(Decimal));
-            $('#splittax_28').val(GST28.toFixed(Decimal));
-
-            if ($.trim($('#PRType :selected').text()) == 'Local') {
-                $("#SGST_0,#CGST_0").val(SGST_0.toFixed(Decimal));
-                $("#SGST_5,#CGST_5").val(SGST_5.toFixed(Decimal));
-                $("#SGST_12,#CGST_12").val(SGST_12.toFixed(Decimal));
-                $("#SGST_18,#CGST_18").val(SGST_18.toFixed(Decimal));
-                $("#SGST_28,#CGST_28").val(SGST_28.toFixed(Decimal));
-                $("#IGST_0,#IGST_5,#IGST_12,#IGST_18,#IGST_28").val(parseFloat(0).toFixed(Decimal));
+        if ($('#Amount' + k).length > 0) {
+            if ($("#CessCheck").prop("checked") == true) {
+                var CessPer = $("#Cess" + k).val();
             }
             else {
-                $("#IGST_0").val(GST0.toFixed(Decimal));
-                $("#IGST_5").val(GST5.toFixed(Decimal));
-                $("#IGST_12").val(GST12.toFixed(Decimal));
-                $("#IGST_18").val(GST18.toFixed(Decimal));
-                $("#IGST_28").val(GST28.toFixed(Decimal));
-                $("#SGST_0,#CGST_0,#SGST_5,#CGST_5,#SGST_12,#CGST_12,#SGST_18,#CGST_18,#SGST_28,#CGST_28").val(parseFloat(0).toFixed(Decimal));
+                var CessPer = 0;
             }
-
+            var CalcAmt = 0;
             if (Flag == 0) {
-                var GrandTotal = 0; var TotalTax = 0;
-                TotalTax = parseFloat(GST0 + GST5 + GST12 + GST18 + GST28).toFixed(Decimal);
-                GrandTotal = parseFloat(TotalAmt) + parseFloat(TotalTax) + parseFloat(BaseCess);
-                $('#TotalTaxable').val(parseFloat(TotalAmt).toFixed(Decimal));
-            }
-            else
-            {
-                var GrandTotal = parseFloat(TotalAmt); var TotalTax = 0; var TotalTaxable = 0;
-                TotalTax = parseFloat(GST0 + GST5 + GST12 + GST18 + GST28).toFixed(Decimal);
-                TotalTaxable = parseFloat(TotalAmt) - parseFloat(TotalTax) - parseFloat(BaseCess);
-                $('#TotalTaxable').val(parseFloat(TotalTaxable).toFixed(Decimal));
-            }
-           
-            $('#BaseTextTotal').text(GrandTotal.toFixed(Decimal));
-            $('#TotlaTax').val(parseFloat(TotalTax).toFixed(Decimal));
-            $('#TotalCess').val(BaseCess.toFixed(Decimal));
+                var Amount = $('#TaxableAmt' + k).val();
+                var GSTPERS = parseFloat($("#Tax" + k).find("option:selected").attr("name") || 0);
 
-            var gnTot = parseFloat($('#BaseTextTotal').text() || 0);
-            var PrTot = parseFloat($('#ProcAmount').val() || 0);
-            var TotwithPRoc = gnTot + PrTot;
-            $('#BaseTextTotalProc').text(parseFloat(TotwithPRoc).toFixed(Decimal))
+                var disamt = parseFloat(Amount - ((Amount * Dispers) / 100));
+                disamt = disamt.toFixed(Decimal);
+                var TaxAmt = parseFloat(disamt * GSTPERS) / parseFloat(100);
 
-            TaxSubAmountCalc(0);
-      }   
+                var GStAmount = TaxAmt.toFixed(Decimal);
+                Amount = parseFloat(disamt) || 0;
+
+                var CessAmt = disamt * (CessPer / 100);
+                BaseCess = BaseCess + CessAmt;
+
+                CalcAmt = Amount;
+            }
+            else {
+                var Amount = $('#Amount' + k).val();
+                var GSTPERS = parseFloat($("#Tax" + k).find("option:selected").attr("name") || 0);
+
+                var disamt = parseFloat(Amount - ((Amount * Dispers) / 100));
+                disamt = disamt.toFixed(Decimal);
+                var newamount = parseFloat(disamt);
+
+                var ABC = 100 + Number(GSTPERS) + Number(CessPer);
+                var newtaxable = Number((100 * newamount) / ABC).toFixed(Decimal);
+
+                var TaxAmt = newtaxable * (GSTPERS / 100);
+
+                var GStAmount = TaxAmt.toFixed(Decimal);
+                Amount = parseFloat(disamt) || 0;
+
+                var CessAmt = newtaxable * (CessPer / 100);
+                BaseCess = BaseCess + CessAmt;
+
+                CalcAmt = newtaxable;
+            }
+
+            if (GSTPERS == 0) {
+                AMT0 = parseFloat(AMT0) + parseFloat(CalcAmt) || 0
+                GST0 = parseFloat(GST0 + GStAmount) || 0
+            }
+            else if (GSTPERS == 5) {
+                AMT5 = parseFloat(AMT5) + parseFloat(CalcAmt) || 0
+                GST5 = parseFloat(GST5) + parseFloat(GStAmount) || 0
+            }
+            else if (GSTPERS == 12) {
+                AMT12 = parseFloat(AMT12) + parseFloat(CalcAmt) || 0
+                GST12 = parseFloat(GST12) + parseFloat(GStAmount) || 0
+            }
+            else if (GSTPERS == 18) {
+                AMT18 = parseFloat(AMT18) + parseFloat(CalcAmt) || 0
+                GST18 = parseFloat(GST18) + parseFloat(GStAmount) || 0
+            }
+            else {
+                AMT28 = parseFloat(AMT28) + parseFloat(CalcAmt) || 0
+                GST28 = parseFloat(GST28) + parseFloat(GStAmount) || 0
+            }
+        }
+
+        SGST_0 = Number(GST0.toFixed(Decimal)) / 2;
+        SGST_5 = Number(GST5.toFixed(Decimal)) / 2;
+        SGST_12 = Number(GST12.toFixed(Decimal)) / 2;
+        SGST_18 = Number(GST18.toFixed(Decimal)) / 2;
+        SGST_28 = Number(GST28.toFixed(Decimal)) / 2;
+
+        $('#splittaxable_0').val(AMT0.toFixed(Decimal));
+        $('#splittax_0').val(GST0.toFixed(Decimal));
+
+        $('#splittaxable_5').val(AMT5.toFixed(Decimal));
+        $('#splittax_5').val(GST5.toFixed(Decimal));
+
+        $('#splittaxable_12').val(AMT12.toFixed(Decimal));
+        $('#splittax_12').val(GST12.toFixed(Decimal));
+
+        $('#splittaxable_18').val(AMT18.toFixed(Decimal));
+        $('#splittax_18').val(GST18.toFixed(Decimal));
+
+        $('#splittaxable_28').val(AMT28.toFixed(Decimal));
+        $('#splittax_28').val(GST28.toFixed(Decimal));
+
+        if ($.trim($('#PRType :selected').text()) == 'Local') {
+            $("#SGST_0,#CGST_0").val(SGST_0.toFixed(Decimal));
+            $("#SGST_5,#CGST_5").val(SGST_5.toFixed(Decimal));
+            $("#SGST_12,#CGST_12").val(SGST_12.toFixed(Decimal));
+            $("#SGST_18,#CGST_18").val(SGST_18.toFixed(Decimal));
+            $("#SGST_28,#CGST_28").val(SGST_28.toFixed(Decimal));
+            $("#IGST_0,#IGST_5,#IGST_12,#IGST_18,#IGST_28").val(parseFloat(0).toFixed(Decimal));
+        }
+        else {
+            $("#IGST_0").val(GST0.toFixed(Decimal));
+            $("#IGST_5").val(GST5.toFixed(Decimal));
+            $("#IGST_12").val(GST12.toFixed(Decimal));
+            $("#IGST_18").val(GST18.toFixed(Decimal));
+            $("#IGST_28").val(GST28.toFixed(Decimal));
+            $("#SGST_0,#CGST_0,#SGST_5,#CGST_5,#SGST_12,#CGST_12,#SGST_18,#CGST_18,#SGST_28,#CGST_28").val(parseFloat(0).toFixed(Decimal));
+        }
+
+        if (Flag == 0) {
+            var GrandTotal = 0; var TotalTax = 0;
+            TotalTax = parseFloat(GST0 + GST5 + GST12 + GST18 + GST28).toFixed(Decimal);
+            GrandTotal = parseFloat(TotalAmt) + parseFloat(TotalTax) + parseFloat(BaseCess);
+            $('#TotalTaxable').val(parseFloat(TotalAmt).toFixed(Decimal));
+        }
+        else {
+            var GrandTotal = parseFloat(TotalAmt); var TotalTax = 0; var TotalTaxable = 0;
+            TotalTax = parseFloat(GST0 + GST5 + GST12 + GST18 + GST28).toFixed(Decimal);
+            TotalTaxable = parseFloat(TotalAmt) - parseFloat(TotalTax) - parseFloat(BaseCess);
+            $('#TotalTaxable').val(parseFloat(TotalTaxable).toFixed(Decimal));
+        }
+
+        $('#BaseTextTotal').text(GrandTotal.toFixed(Decimal));
+        $('#TotlaTax').val(parseFloat(TotalTax).toFixed(Decimal));
+        $('#TotalCess').val(BaseCess.toFixed(Decimal));
+
+        var gnTot = parseFloat($('#BaseTextTotal').text() || 0);
+        var PrTot = parseFloat($('#ProcAmount').val() || 0);
+        var TotwithPRoc = gnTot + PrTot;
+        $('#BaseTextTotalProc').text(parseFloat(TotwithPRoc).toFixed(Decimal))
+
+        TaxSubAmountCalc(0);
+    }
 }
 
 function ProcedureAmountCalc(Id) {
 
     var TaxableAmount = 0; var TaxAmount = 0; var CessAmount = 0; var TotAmount = 0;
-   
+
     var Qty = $('#ProcQty' + Id).val() || 0; var Rate = $('#ProcFee' + Id).val() || 0; var TaxPerc = $('#ProcTaxPerc' + Id).val() || 0;
 
     Qty = isNaN(Qty) ? 0 : Qty; Rate = isNaN(Rate) ? 0 : Rate; TaxPerc = isNaN(TaxPerc) ? 0 : TaxPerc;
@@ -2899,19 +2958,19 @@ function ProcedureAmountCalc(Id) {
 }
 
 function ProcedureGrandTotalCalc(flg) {
-        var TotalAmt = 0; 
-        for (var i = 1; i <= ProcCount; i++) {
-            if ($('#ProcTot' + i).length != 0) {
-                var Amount = $('#ProcTot' + i).val() || 0; 
-                TotalAmt = parseFloat(TotalAmt) + parseFloat(Amount);
-            }
+    var TotalAmt = 0;
+    for (var i = 1; i <= ProcCount; i++) {
+        if ($('#ProcTot' + i).length != 0) {
+            var Amount = $('#ProcTot' + i).val() || 0;
+            TotalAmt = parseFloat(TotalAmt) + parseFloat(Amount);
         }
-        $('#ProcTotalAmount').text((TotalAmt).toFixed(Decimal));
-        $('#ProcAmount').val((TotalAmt).toFixed(Decimal));
+    }
+    $('#ProcTotalAmount').text((TotalAmt).toFixed(Decimal));
+    $('#ProcAmount').val((TotalAmt).toFixed(Decimal));
 
-        var gnTot = parseFloat($('#BaseTextTotal').text());
-        var TotwithPRoc = gnTot + TotalAmt;
-        $('#BaseTextTotalProc').text(parseFloat(TotwithPRoc).toFixed(Decimal))
+    var gnTot = parseFloat($('#BaseTextTotal').text());
+    var TotwithPRoc = gnTot + TotalAmt;
+    $('#BaseTextTotalProc').text(parseFloat(TotwithPRoc).toFixed(Decimal))
 
 }
 //----End Bill Discount 
@@ -2920,19 +2979,17 @@ function GetPatientAge(Ag) {
     var age = AgeCalculation(Ag); var yearString = '';
     if (age.years > 1) yearString = age.years + " Years";
     else yearString = age.years + " Year";
-   
+
     $('#Hage').val(yearString);
 }
 
 //Tax SubTotal Calculation
-function TaxSubAmountCalc(flg)
-{
+function TaxSubAmountCalc(flg) {
     var SubTaxableamt = 0; var SubTaxamt = 0; var Cgstamt = 0; var Sgstamt = 0; var Igstamt = 0;
-    for (var k = 0;k<TaxRateArray.length;k++)
-    {
+    for (var k = 0; k < TaxRateArray.length; k++) {
         var m = TaxRateArray[k];
-        var SAmt1 = parseFloat($('#splittaxable_' + m).val());   var SAmt2 = parseFloat($('#splittax_' + m).val());
-        var SAmt3 = parseFloat($('#CGST_' + m).val());           var SAmt4 = parseFloat($('#SGST_' + m).val());  
+        var SAmt1 = parseFloat($('#splittaxable_' + m).val()); var SAmt2 = parseFloat($('#splittax_' + m).val());
+        var SAmt3 = parseFloat($('#CGST_' + m).val()); var SAmt4 = parseFloat($('#SGST_' + m).val());
         var SAmt5 = parseFloat($('#IGST_' + m).val());
 
         SubTaxableamt = parseFloat(SubTaxableamt) + SAmt1;
@@ -2950,21 +3007,18 @@ function TaxSubAmountCalc(flg)
 }
 
 //Check Itemwise Discount then bill disc=0
-function CheckDisc(evt, selectedvalue,fl)
-{
+function CheckDisc(evt, selectedvalue, fl) {
     var ItemDisc = 0;
-    for (var i = 1; i <= RowCount; i++)
-    {
+    for (var i = 1; i <= RowCount; i++) {
         var dis = $('#Discount' + i).val() || 0; dis = isNaN(dis) ? 0 : dis;
         ItemDisc = parseFloat(ItemDisc) + parseFloat(dis);
     }
-    if(ItemDisc>0)
-    {
+    if (ItemDisc > 0) {
         evt.preventDefault();
         $('#Discount').val('');
         $('#Discountpercent').val('');
         CalcDiscountSplitTax();
-        if(fl==0)
+        if (fl == 0)
             warningshow('Itemwise Discount Given', 'Discount');
         else if (fl == 1)
             warningshow('Itemwise Discount Given', 'Discountpercent');
@@ -2973,15 +3027,14 @@ function CheckDisc(evt, selectedvalue,fl)
     return true;
 }
 
-function SpceialAmountCalc()
-{
+function SpceialAmountCalc() {
     //var TotAmt = $('#TAmount').val() || 0;
     //var SpAmt = $('#SpecialFeeAmt').val() || 0;
 
     //if (Copyflag == 1) {
     //    $('#GAmount').val(parseFloat(parseFloat(TotAmt || 0) + parseFloat(SpAmt || 0)).toFixed(Decimal))
     //}
-   
+
     //var GvAmt = $('#GAmount').val() || 0;
 
     //var Balamt = 0;
@@ -3015,8 +3068,8 @@ function IPPAtiemtSelect1(flg)                                          //Set Ta
             ClearFields(4, 0);
             for (var i = 0; i <= RowCount; i++) {
                 if ($('#Product' + i).val() != undefined) {
-                   // TaxChange(i);
-                   // AmountCalc(i);
+                    // TaxChange(i);
+                    // AmountCalc(i);
                 }
             }
             CalcGrandTotal(1);
@@ -3025,15 +3078,14 @@ function IPPAtiemtSelect1(flg)                                          //Set Ta
         }
         else { $('.IpTax').prop('disabled', false).removeClass('bgclrwhite'); PopUpClose(4); }
     }
-    else if(flg==1)            //Item Selection
+    else if (flg == 1)            //Item Selection
     {
         if ((IPPatientFlag) == 1 && (($('#IPNumber').val() || 0) > 0)) { return true; }
         else { return false; }
     }
 }
 
-function PrintthisBillHospital(Type, Count, Flag)
-{
+function PrintthisBillHospital(Type, Count, Flag) {
     debugger;
     var PrintType = SalesBillType;                           // 'SALESNOTEPAD' : DotMatrix Print  , 'SALESLOCAL' : Normal Print
     if (PrintType == 'HMSSALESLOCAL')
@@ -3056,9 +3108,8 @@ function PrintthisBillHospital(Type, Count, Flag)
 //--------------------------End Other Functions
 
 //--------------------------Common
-function ClearFields(Flag,Id)
-{
-    if(Flag==0)         //Clear After ItemAdd
+function ClearFields(Flag, Id) {
+    if (Flag == 0)         //Clear After ItemAdd
     {
         $('.proddts,#Quantity0,#Amount0,#Free0,#TaxableAmt0,#TaxAmt0,#Discount0,#DiscountPerc0').val('');
         $('#Tax0').val($('#Tax0').find('option:first').val());
@@ -3070,7 +3121,7 @@ function ClearFields(Flag,Id)
     {
         $('#Quantity' + Id + ',#Amount' + Id + ',#Free' + Id + ',#Company' + Id + ',#Expiry' + Id + ',#SellPrice' + Id + ',#PurPrice' + Id + ',#ProductId' + Id + ',#ProductDesc' + Id + ',#BatchSlNo' + Id + ',#Discount' + Id + ',#StockQty' + Id + ',#DiscountPerc' + Id).val('');
         $('#Tax' + Id).val($('#Tax' + Id).find('option:first').val()); TaxChange(Id);
-        $('#DrugSchedule' + Id).val($('#DrugSchedule' + Id).find('option:first').val()); TaxChange(Id); 
+        $('#DrugSchedule' + Id).val($('#DrugSchedule' + Id).find('option:first').val()); TaxChange(Id);
         $('#TaxableAmt' + Id + ',#TaxAmt' + Id + ',#Cess' + Id + ',#CessAmount' + Id).val('');
     }
     else if (Flag == 2)         //Clear before Batch AutoComplete
@@ -3080,7 +3131,7 @@ function ClearFields(Flag,Id)
         $('#DrugSchedule' + Id).val($('#DrugSchedule' + Id).find('option:first').val()); TaxChange(Id);
         $('#TaxableAmt' + Id + ',#TaxAmt' + Id + ',#Cess' + Id + ',#CessAmount' + Id).val('');
     }
-    else if(Flag == 3)        //Clear Split Tax Fields
+    else if (Flag == 3)        //Clear Split Tax Fields
     {
         $(".distxtbox").val(parseFloat(0).toFixed(Decimal));
     }
@@ -3090,31 +3141,25 @@ function ClearFields(Flag,Id)
     }
     else if (Flag == 5)        //Clear Procedure Fields
     {
-        $('.proccls0').val('');      
+        $('.proccls0').val('');
         $('#ProcTax0').val($('#ProcTax0').find('option:first').val());
         ProcedTaxChange(0);
         IPPAtiemtSelect(0);
         $('#Procedure0').focus();
     }
-    
+
 }
 
 function PopUpClose(Flag) {
-    if (Flag == 1)
-    { $("#productpdiv").modal("hide"); }
-    else if (Flag == 2)
-    { $("#TaxSpliPopup").modal("hide"); }
-    else if (Flag == 3)
-    { $("#myModal").modal("hide"); }
-    else if (Flag == 4)
-    { $('#TaxmsgDiv').fadeOut(); }
-    else if (Flag == 5)
-    {
-        if (($('#CurEditId').val() || 0) != 0)
-        {
+    if (Flag == 1) { $("#productpdiv").modal("hide"); }
+    else if (Flag == 2) { $("#TaxSpliPopup").modal("hide"); }
+    else if (Flag == 3) { $("#myModal").modal("hide"); }
+    else if (Flag == 4) { $('#TaxmsgDiv').fadeOut(); }
+    else if (Flag == 5) {
+        if (($('#CurEditId').val() || 0) != 0) {
             AddProcedureConfrm($('#CurEditId').val());
         }
-        else {$('#ProcedurePopup').modal("hide"); }
+        else { $('#ProcedurePopup').modal("hide"); }
     }
 }
 
@@ -3143,14 +3188,12 @@ function DivHideShow(Flag) {
     }
 }
 
-function PopUpShow(Flag)
-{
-    if(Flag==1)
-    {
+function PopUpShow(Flag) {
+    if (Flag == 1) {
         $("#TaxSpliPopup").modal("show");
         $("#TaxSpliPopup").appendTo("body");
     }
-    else if (Flag ==2) {             //Tax 0 MMsgShow
+    else if (Flag == 2) {             //Tax 0 MMsgShow
         $("#TaxmsgDiv").show();
     }
     else if (Flag == 3) {             //Procedure Show
@@ -3162,11 +3205,10 @@ function PopUpShow(Flag)
 
 function Formrefreshconfirm(flg) {
 
-  //  $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
-    if (flg == 0)
-    {
+    //  $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+    if (flg == 0) {
         var len = $('#TblSalesInvoice tr').length;
-        if (len == 0) { formrefresh(0);}
+        if (len == 0) { formrefresh(0); }
         else { Callconfirm('Data will be lost.Do you want to Continue?', 'Refresh', 0); }
     }
 }
@@ -3191,13 +3233,26 @@ function formrefresh(flg) {
         $('.form-control:not(.disb,.dedisa),#btnadd').prop('disabled', false);
         $('#HBillSeries').prop('disabled', false).removeClass('bgclrwhite ');
 
-       // $('.form-control').css('background-color', '');
+        // $('.form-control').css('background-color', '');
         $('.rdonl').addClass('bgclrwhite');
         $('#saleinv,#btnnew,#btnview,#btnadd,#btnsubmit,#btnlist,#BtnClearproc').show();
         $('#Copysales,#btnsaveedit,#btnprint,#btnedit,#btndelete,#btnacctran,#btnprec,#btnprecold').hide();
         $('select:not(.disb)').prop('disabled', false);
 
-        ClearFields(3,0);
+
+        //////
+
+        doctorMode = 'dropdown';
+        $('#HDoctorManual').hide().val('');
+        $('#HDoctor').show();
+        $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
+        $('#btnDoctorMode').attr('title', 'Switch to manual entry');
+        $('#Doctorname').val('');
+        drchange();
+
+        /////
+
+        ClearFields(3, 0);
         BillLoad();
         LoadDate();
         Defaultfocus();
@@ -3224,11 +3279,11 @@ function formrefresh(flg) {
     }
 }
 
-function Callconfirm(msg,status,flg) {   
-  $('#confirm').show();
-  $('#confirmOk').focus();
-  $('#Confirmflag').val(status); $('#ConfirmRowId').val(flg); 
-  $('#confirmmessage').text(msg);
+function Callconfirm(msg, status, flg) {
+    $('#confirm').show();
+    $('#confirmOk').focus();
+    $('#Confirmflag').val(status); $('#ConfirmRowId').val(flg);
+    $('#confirmmessage').text(msg);
 }
 
 function ConfirmboxResult(Result, status, rowid) {
@@ -3237,7 +3292,7 @@ function ConfirmboxResult(Result, status, rowid) {
         formrefresh(rowid);
     }
     else if (Result == 'true' && status == 'DeleteRow') {
-        DeleteRow(1,rowid);
+        DeleteRow(1, rowid);
     }
     else if (Result == 'false') {
         Defaultfocus();
@@ -3265,28 +3320,25 @@ function Defaultfocus() {
 
     $('#Product0').focus();
     $('#HPatient').val('CASH CUSTOMER');
-  
-    if( Roundoff=='Yes')
-    {        
+
+    if (Roundoff == 'Yes') {
         $("#roundoffstatus").prop("checked", true);
     }
 
 
 }
 
-function AskPrintSales(msg)
-{
+function AskPrintSales(msg) {
     $('#SaveText').text('');
     $('#SaveText').text(msg);
     $("#SavedAlert").modal("show");
     $("#SavedAlert").appendTo("body");
     $('#SavedAlert').on('shown.bs.modal', function () {
-     $('#btnSavedOk').focus();
-    })   
+        $('#btnSavedOk').focus();
+    })
 }
 
-function SavePrintConfirm()
-{
+function SavePrintConfirm() {
     $("#SavedAlert").modal("hide");
     PrintthisBillHospital('SALES', RowCount, 'SAVE');
     formrefresh(0);
@@ -3330,7 +3382,7 @@ function Showalerts(Status, BillNo) {
         swal('File Removed', "", "error");
         $('.swal-button swal-button--confirm').focus();
     }
-    else  {
+    else {
         swal('Same Bill No Found Please Check', "", "error");
         $('.swal-button swal-button--confirm').focus();
     }
@@ -3357,7 +3409,7 @@ function datatableWithsearch(tablename, Type) {
             orderCellsTop: true,
             "autoWidth": false,
             "columnDefs": [
-                            { "width": "40%", "targets": 4 },
+                { "width": "40%", "targets": 4 },
             ],
             "order": [],
             "pageLength": -1,
@@ -3369,8 +3421,8 @@ function datatableWithsearch(tablename, Type) {
         table = $('#' + tablename).DataTable({
             dom: 'tipr',
             "columnDefs": [
-                            { "width": "10%", "targets": 0 },
-                            { "width": "15%", "targets": 2 },
+                { "width": "10%", "targets": 0 },
+                { "width": "15%", "targets": 2 },
             ],
             orderCellsTop: true,
             "order": [],
@@ -3383,13 +3435,13 @@ function datatableWithsearch(tablename, Type) {
         table = $('#' + tablename).DataTable({
             dom: 'tipr',
             "columnDefs": [
-                            { "width": "8%", "targets": 0 },
-                            { "width": "8%", "targets": 1 },
-                            { "width": "6%", "targets": 3 },
-                            { "width": "7%", "targets": 4 },
-                            { "width": "10%", "targets": 5 },
-                            { "width": "20%", "targets": 6 },
-                            { "width": "12%", "targets": 7 },
+                { "width": "8%", "targets": 0 },
+                { "width": "8%", "targets": 1 },
+                { "width": "6%", "targets": 3 },
+                { "width": "7%", "targets": 4 },
+                { "width": "10%", "targets": 5 },
+                { "width": "20%", "targets": 6 },
+                { "width": "12%", "targets": 7 },
             ],
             orderCellsTop: true,
             "order": [],
@@ -3503,7 +3555,7 @@ function GetTrans() {
 function DateChange(DateX, Diff) {
 
     var DateY = DateX.split('/');
-    var FormattedDate = DateY[2]+'-'+DateY[1]+'-'+DateY[0];
+    var FormattedDate = DateY[2] + '-' + DateY[1] + '-' + DateY[0];
 
     var d = new Date(FormattedDate);
     d.setDate(d.getDate() + Diff);
@@ -3511,7 +3563,7 @@ function DateChange(DateX, Diff) {
     var dd = d.getDate();
     var mm = d.getMonth() + 1;
     var yyyy = d.getFullYear();
-    if (dd < 10) {dd = '0' + dd;}
+    if (dd < 10) { dd = '0' + dd; }
     if (mm < 10) { mm = '0' + mm; }
 
     return (dd + '/' + mm + '/' + yyyy);
@@ -3535,7 +3587,7 @@ function Showoldprescription() {
         type: "POST",
         url: "../Hospital/HMS_SalesRevisitGets",
         data: data,
-        success: function (result) {           
+        success: function (result) {
             PreviousRevisitDetailsGets(result.oList);
             ShowPrescription()
         }
@@ -3544,8 +3596,7 @@ function Showoldprescription() {
 
 
 
-function GetRevisitMedicines(RegSer,RegNo,Flag)
-{
+function GetRevisitMedicines(RegSer, RegNo, Flag) {
 
     $('#btnprecold').hide();
     if (Flag == 0) {
@@ -3553,7 +3604,7 @@ function GetRevisitMedicines(RegSer,RegNo,Flag)
         $("#PrescToDate").val(CurDate);
         $("#PrescDate").prop("checked", true);
     }
-    
+
     if ($("#PrescDate").prop("checked") == true) {
         Flag = 0;
     }
@@ -3593,10 +3644,10 @@ function PreviousRevisitDetailsGets(result) {
     $("#tbl_Prescription tr").remove();
     $("#Presc_0").prop("checked", true);
     $('.btnpresc').show();
-    var slno=1
+    var slno = 1
     var responseText = "";
     for (var i = 1; i < result.length; i++) {
-        
+
 
         if (i == 1) {
             responseText += '<tr class="font-weight-normal">' +
@@ -3629,14 +3680,13 @@ function PreviousRevisitDetailsGets(result) {
     }
     $('#tbl_Prescription').html(responseText);
 
-    
+
     $("#PrescriptionInfoPopUp").fadeIn("slow");
     $('#btnprec').show();
 }
 
 function ChangePrescBox() {
-    if($("#Presc_0").prop("checked")==true)
-    {
+    if ($("#Presc_0").prop("checked") == true) {
         $(".PrescBox").prop("checked", true);
     }
     else {
@@ -3645,11 +3695,11 @@ function ChangePrescBox() {
 }
 
 function ShowPrescription() {
-   // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+    // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
     if (!($('#PrescriptionModal').is(':visible'))) {
         $("#PrescriptionModal").modal("show");
         $("#PrescriptionModal").appendTo("body");
-      
+
 
     }
 }
@@ -3661,7 +3711,7 @@ function ngOnPrescription() {
 
 
 function ViewPrescription() {
-  //  $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+    //  $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
     var RevisitData = '';
     var Count = $("#tbl_Prescription tr").length;
 
@@ -3739,53 +3789,53 @@ function PrescriptionLoad(result) {
     var NoStock = 0; Prod = '';
     for (var i = 0; i < result.length; i++) {
         if (parseInt(result[i].Flag || 0) == 0) {
-            if ($('.SlRow').length == 0) { RowCount = 1;}
+            if ($('.SlRow').length == 0) { RowCount = 1; }
             var Id = parseInt(RowCount); var SlNo = parseInt($('.SlRow').length) + 1;
 
             var COM = (result[i].Company).split("##");
             var ATool = "";
-            
+
             //if (COM[1].length > 1) {
             //   // ATool = '<a style=""   href="#" data-toggle="tooltip" data-placement="left" title="' + COM[1] + '" class="tool_tip"></a>';
             //}
 
             var ProdRow =
-                 '<tr class="jsgrid-header-row SlRow" id="SlRows' + Id + '" onfocusout=UpdateRow(0,' + Id + ') >' +
+                '<tr class="jsgrid-header-row SlRow" id="SlRows' + Id + '" onfocusout=UpdateRow(0,' + Id + ') >' +
                 '<td class="jsgrid-align-center crspnt" style="width:2%" onclick=DeleteRow(0,' + Id + ')>  <i class="icon-trash"></i></td>' +
                 '<td class="jsgrid-align-center" style="width:3%" id="tdSl' + Id + '">' + SlNo + '</td>' +
-                 '<td class="jsgrid-align-left" style="width:13%"><input type="text" class="form-control smallTextbox brnone bgclrwhite" id="Product' + Id + '" name="Product"  style="width:100%"  value="' + result[i].ProductDesc + '" onfocusout=UpdateRow(1,' + Id + ') disabled /></td>' +
+                '<td class="jsgrid-align-left" style="width:13%"><input type="text" class="form-control smallTextbox brnone bgclrwhite" id="Product' + Id + '" name="Product"  style="width:100%"  value="' + result[i].ProductDesc + '" onfocusout=UpdateRow(1,' + Id + ') disabled /></td>' +
                 '<td class="jsgrid-align-left" align=center style="width:5%"><input type="text"  class="form-control smallTextbox brnone bgclrwhite" id="ProductDesc' + Id + '" name="ProductDesc"  style="width:100%"  value="' + result[i].Batch + '" onfocusout=UpdateRow(2,' + Id + ') disabled /></td>' +
-                '<td class="jsgrid-align-center" align=center style="width:5%"> <input type="hidden"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Company' + Id + '"  style="width:100%"  value="' + COM[0] + '" readonly />' + COM[1]+'   </td>' +
-                 '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Expiry' + Id + '"  style="width:100%"  value="' + result[i].Expiry + '" readonly /></td>' +
+                '<td class="jsgrid-align-center" align=center style="width:5%"> <input type="hidden"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Company' + Id + '"  style="width:100%"  value="' + COM[0] + '" readonly />' + COM[1] + '   </td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Expiry' + Id + '"  style="width:100%"  value="' + result[i].Expiry + '" readonly /></td>' +
                 '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Quantity" id="Quantity' + Id + '" onkeypress="isNumberInt(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')"  style="width:100%"  value="' + result[i].Quantity + '" /></td>' +
-                 '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Free" id="Free' + Id + '"     onkeypress="isNumberInt(event, this)" style="width:100%"  value="' + result[i].Free + '" /></td>' +
-                 '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass bgclrwhite" name="SellPrice" id="SellPrice' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')" disabled  style="width:100%"  value="' + parseFloat(result[i].SellPrice || 0).toFixed(Decimal) + '" /></td>' +
-                 '<td class="jsgrid-align-right" style="width:4%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="PurPrice' + Id + '"  style="width:100%"  value="' + parseFloat(result[i].PurPrice || 0).toFixed(Decimal) + '" readonly /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass" name="Free" id="Free' + Id + '"     onkeypress="isNumberInt(event, this)" style="width:100%"  value="' + result[i].Free + '" /></td>' +
+                '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone Itemclass bgclrwhite" name="SellPrice" id="SellPrice' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),AmountCalc(' + Id + ')" disabled  style="width:100%"  value="' + parseFloat(result[i].SellPrice || 0).toFixed(Decimal) + '" /></td>' +
+                '<td class="jsgrid-align-right" style="width:4%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="PurPrice' + Id + '"  style="width:100%"  value="' + parseFloat(result[i].PurPrice || 0).toFixed(Decimal) + '" readonly /></td>' +
 
                 '<td class="jsgrid-align-center" style="width:5%"><input type="text"  class="form-control smallTextbox brnone rdonl bgclrwhite" id="Amount' + Id + '"  style="width:100%"  value="0" readonly /></td>' +
 
                 '<td class="jsgrid-align-center" style="width:8%">' +
 
-                
+
                 '<div class="input-group m-0">' +
-                 '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="DiscountPerc' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',0)"   style="width:50%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;"  value="' + (0).toFixed(Decimal) + '" />' +
-                 '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="Discount' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',1)"   style="width:50%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;"  value="' + (0).toFixed(Decimal) + '" />' +
-                 '</div>' +
-                 '</td>' +
-                 '<td class="jsgrid-align-center" style="width:6%"> <div class="input-group m-0"><select id="Tax' + Id + '" class="form-control smallTextbox Itemclass pl-0 IpTax" style="width:60%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;padding: 0;" onchange="TaxChange(' + Id + ')"> ' + TaxSelect + ' </select> <input type="text" id="TaxPercent' + Id + '" style="width:40%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;" class="form-control smallTextbox rdonl bgclrwhite Itemclass"  readonly> </div></td>' +
-                 '<td class="jsgrid-align-right" style="width:5%"> <input type="text" id="TaxableAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="0"></td>' +
-                 '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="TaxAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="0"></td>' +
-                 '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="CessAmount' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone" onkeypress="isNumberInt(event, this)" readonly value="0"></td>' +
-                 '<td class="jsgrid-align-right" style="width:5%"><select id="DrugSchedule' + Id + '" class="form-control smallTextbox Itemclass brnone" name="DrugSchedule">' + DrugSchedule + '</select></td>' +
-                 '<td class="jsgrid-align-center" style="width:5%;display:none">' +
-                 '<input type="text" class="form-control" id="ProductId' + Id + '"  value="' + result[i].ProductId + '" />' +
-                 '<input type="text" class="form-control" id="BatchSlNo' + Id + '"  value="' + result[i].BatchSlNo + '" />' +
-                 '<input type="text" class="form-control" id="Cess' + Id + '"   value="' + result[i].Cess + '" />' +
-                 '<input type="text" class="form-control" id="PHSNCode' + Id + '"   value="' + result[i].Variable3 + '" />' +
-                 '<input type="text" class="form-control" id="HLocation' + Id + '"   value="' + $('#HLocation').val() + '" />' +
-                 '<input type="text" class="form-control" id="StockQty' + Id + '"   value="0" />' +
-                 '</td>' +
-                 '</tr>';
+                '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="DiscountPerc' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',0)"   style="width:50%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;"  value="' + (0).toFixed(Decimal) + '" />' +
+                '<input type="text"  class="form-control smallTextbox  Itemclass" name="Discount" id="Discount' + Id + '" onkeypress="isNumber(event, this)" onkeyup="ClearFields(4,0),DiscPecentCalc(' + Id + ',1)"   style="width:50%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;"  value="' + (0).toFixed(Decimal) + '" />' +
+                '</div>' +
+                '</td>' +
+                '<td class="jsgrid-align-center" style="width:6%"> <div class="input-group m-0"><select id="Tax' + Id + '" class="form-control smallTextbox Itemclass pl-0 IpTax" style="width:60%;border-radius:0px;border:none;border-right: 1px solid lightgrey!important;padding: 0;" onchange="TaxChange(' + Id + ')"> ' + TaxSelect + ' </select> <input type="text" id="TaxPercent' + Id + '" style="width:40%;border-radius:0px;border:none;border-left: 1px solid lightgrey!important;" class="form-control smallTextbox rdonl bgclrwhite Itemclass"  readonly> </div></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"> <input type="text" id="TaxableAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="0"></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="TaxAmt' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone"  readonly value="0"></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"><input type="text" id="CessAmount' + Id + '" class="form-control smallTextbox rdonl bgclrwhite Itemclass brnone" onkeypress="isNumberInt(event, this)" readonly value="0"></td>' +
+                '<td class="jsgrid-align-right" style="width:5%"><select id="DrugSchedule' + Id + '" class="form-control smallTextbox Itemclass brnone" name="DrugSchedule">' + DrugSchedule + '</select></td>' +
+                '<td class="jsgrid-align-center" style="width:5%;display:none">' +
+                '<input type="text" class="form-control" id="ProductId' + Id + '"  value="' + result[i].ProductId + '" />' +
+                '<input type="text" class="form-control" id="BatchSlNo' + Id + '"  value="' + result[i].BatchSlNo + '" />' +
+                '<input type="text" class="form-control" id="Cess' + Id + '"   value="' + result[i].Cess + '" />' +
+                '<input type="text" class="form-control" id="PHSNCode' + Id + '"   value="' + result[i].Variable3 + '" />' +
+                '<input type="text" class="form-control" id="HLocation' + Id + '"   value="' + $('#HLocation').val() + '" />' +
+                '<input type="text" class="form-control" id="StockQty' + Id + '"   value="0" />' +
+                '</td>' +
+                '</tr>';
             $('#TblSalesInvoice').append(ProdRow);
             $('#Tax' + Id).val(result[i].Tax);
             TaxChange(Id);
@@ -3804,9 +3854,9 @@ function PrescriptionLoad(result) {
         else {
             NoStock = 1;
 
-            
 
-            Prod = Prod+
+
+            Prod = Prod +
                 "<tr>" +
                 "<td class='p-1'>" + result[i].ProductDesc + "</td>" +
                 "<td class='p-1' align=center>" + parseFloat(result[i].Batch || 0) + "</td>" +
@@ -3814,7 +3864,7 @@ function PrescriptionLoad(result) {
                 "<td class='p-1' align=center style='color:red;font-weight:bold;'>" + result[i].Quantity + "</td>" +
                 "<td class='p-1'>" + LocnName + "</td>" +
                 "</tr>";
-    
+
         }
 
     }
@@ -3823,35 +3873,35 @@ function PrescriptionLoad(result) {
 
     if (NoStock == 1) {
 
-       // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
+        // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('hide');
         $('#tblAlert tr').remove();
-       if (!($('#Alertpopup').is(':visible'))) {
+        if (!($('#Alertpopup').is(':visible'))) {
             $("#Alertpopup").modal("show");
             $("#Alertpopup").appendTo("body");
         }
 
-       var StockTr = "<thead>" +
-           "<tr>" +
-           "<th colspan=5 class='text-center'><h2 style='color:red;font-weight:bold;'>Not Enough Quantity!</h2></th>" +
-           "</tr>" +
-           "<tr>" +
-           "<th class='p-1' width='50%'>Description</th>" +
-           "<th class='p-1 text-center'  width='10%'>Quantity</th>" +
-           "<th class='p-1 text-center'  width='10%'>Stock</th>" +
-           "<th class='p-1 text-center'  width='10%'>Shortage</th>" +
-           "<th class='p-1'  width='20%'>Location</th>" +
-           "</tr>" +
-           "</thead><tbody>";
+        var StockTr = "<thead>" +
+            "<tr>" +
+            "<th colspan=5 class='text-center'><h2 style='color:red;font-weight:bold;'>Not Enough Quantity!</h2></th>" +
+            "</tr>" +
+            "<tr>" +
+            "<th class='p-1' width='50%'>Description</th>" +
+            "<th class='p-1 text-center'  width='10%'>Quantity</th>" +
+            "<th class='p-1 text-center'  width='10%'>Stock</th>" +
+            "<th class='p-1 text-center'  width='10%'>Shortage</th>" +
+            "<th class='p-1'  width='20%'>Location</th>" +
+            "</tr>" +
+            "</thead><tbody>";
 
-       $('#tblAlert').append(StockTr + Prod + '</tbody>');
+        $('#tblAlert').append(StockTr + Prod + '</tbody>');
 
         $("#btnokalert").focus();
     }
 
-   
+
 }
 
 function CloseAlert() {
     $("#Alertpopup").modal("hide");
-   // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
+    // $('.tool_tip').tooltip({ trigger: 'manual' }).tooltip('show');
 }
