@@ -368,10 +368,11 @@ function DoctorLoad(ID) {
                     $("#HDoctor").val(ID);
                     $('#Doctorname').val($("#HDoctor option:selected").text());
                 }
+                initDoctorAutocomplete(); // add this at the end of your doctor load function
             }
         }
     });
-
+   
 
 }
 
@@ -1179,7 +1180,7 @@ function LoadBatch(Id) {
             setTimeout(function () {
                 $(self).autocomplete('search', '');
             }, 100);
-        }); 
+        });
 }
 
 function SerachSalesBill() {
@@ -1274,7 +1275,7 @@ function SaveAndUpdateConfirm(flg) {
     }
     //else if (($('#HDoctor').val() || 0) == 0) {
     //    warningshow('Please Select Doctor', 'HDoctor');
-        //}
+    //}
     else if (doctorMode === 'dropdown' && ($('#HDoctor').val() || 0) == 0) {
         warningshow('Please Select Doctor', 'HDoctor');
     }
@@ -1333,10 +1334,8 @@ function SaveAndUpdate(flg) {
                 'CurrencyId': 1,
                 'CurrencyRate': $("#Discount" + i).val(),      //Discount
                 'HLocation': $("#HLocation" + i).val() || 0,
-                //'HDoctor': $("#HDoctor").val() || 0,
-                'HDoctor': doctorMode === 'dropdown'
-                    ? (parseInt($("#HDoctor").val()) || 0)
-                    : 0,
+                'HDoctor': $("#HDoctor").val() || 0,
+                
                 'Discount': parseFloat($("#Discount").val() || 0),
                 'Discountpercent': $("#Discountpercent").val(),
                 'TotalTaxable': $("#TotalTaxable").val(),
@@ -1665,12 +1664,6 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
         $('#HLocation').prop('disabled', true);
     }
     else {
-        doctorMode = 'dropdown';
-        $('#HDoctorManual').hide().val('');
-        $('#HDoctor').show();
-        $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
-        $('#Doctorname').val('');
-        //////
         $('#saleinv,.btn:not(.avdbtn),#btnedit,#btndelete').hide();
         $('.SlRow').remove();
         $('.PRCRow').remove();
@@ -1708,7 +1701,6 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
     if (flg != 3) { $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec').hide(); }
     CheckEOD();
 }
-
 function SalesGetCall(BillSeriesId, BillSlNo, DeptId, flg) {
     if (flg == 1) { PopUpClose(3); }
     var data = {};
@@ -1775,31 +1767,9 @@ function SalesGetandGets(result) {
     $('#CurrencyId').val(result[0].CurrencyId);
     $('#CurrencyRate').val(result[0].CurrencyRate);
     $('#HLocation').val(result[0].HLocation);
-    //$('#HDoctor').val(result[0].HDoctor);
+    $('#HDoctor').val(result[0].HDoctor);
 
-    //////
-
-    if (parseInt(result[0].HDoctor || 0) > 0) {
-        // Bill was saved with dropdown doctor
-        doctorMode = 'dropdown';
-        $('#HDoctorManual').hide().val('');
-        $('#HDoctor').show().val(result[0].HDoctor);
-        $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
-        drchange();
-    } else {
-        // Bill was saved with manual doctor — read from Remarks
-        var Qr = result[0].Remarks.split("##");
-        var manualDrName = Qr[2] || '';   // doctor name is 3rd part
-        if (manualDrName != '') {
-            doctorMode = 'manual';
-            $('#HDoctor').hide();
-            $('#HDoctorManual').show().val(manualDrName);
-            $('#iconDoctorMode').removeClass('fa-pencil').addClass('fa-list');
-            $('#Doctorname').val(manualDrName);
-        }
-    }
-
-    ///////
+    
 
     $('#TotalTaxable').val(result[0].TotalTaxable);
     $('#TotlaTax').val(result[0].TotlaTax);
@@ -3239,19 +3209,6 @@ function formrefresh(flg) {
         $('#Copysales,#btnsaveedit,#btnprint,#btnedit,#btndelete,#btnacctran,#btnprec,#btnprecold').hide();
         $('select:not(.disb)').prop('disabled', false);
 
-
-        //////
-
-        doctorMode = 'dropdown';
-        $('#HDoctorManual').hide().val('');
-        $('#HDoctor').show();
-        $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
-        $('#btnDoctorMode').attr('title', 'Switch to manual entry');
-        $('#Doctorname').val('');
-        drchange();
-
-        /////
-
         ClearFields(3, 0);
         BillLoad();
         LoadDate();
@@ -3278,7 +3235,6 @@ function formrefresh(flg) {
         drchange();
     }
 }
-
 function Callconfirm(msg, status, flg) {
     $('#confirm').show();
     $('#confirmOk').focus();

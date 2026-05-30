@@ -165,7 +165,10 @@ namespace EUMI_ERP.Models
             return oDPurchase.HMS_OpeningPurchaseInsert(dt, dbName);
         }
 
-
+        public DataSet HMS_LabPurchaseInsert(DataTable dt, string dbName)
+        {
+            return oDPurchase.HMS_LabPurchaseInsert(dt, dbName);
+        }
 
         public DataSet HMS_PurchaseInsert(DataTable dt, string dbName)
         {
@@ -183,7 +186,10 @@ namespace EUMI_ERP.Models
             return oDPurchase.HMS_PurchaseUpdateOpening(dt, dbName);
         }
 
-
+        public DataSet HMS_LabPurchaseUpdate(DataTable dt, string dbName)
+        {
+            return oDPurchase.HMS_LabPurchaseUpdate(dt, dbName);
+        }
         public DataSet HMS_PurchaseUpdate(DataTable dt, string dbName)
         {
             return oDPurchase.HMS_PurchaseUpdate(dt, dbName);
@@ -201,8 +207,12 @@ namespace EUMI_ERP.Models
             return oDPurchase.HMS_PurchaseDelete(oDPharmacy, dbName);
         }
 
-        
-            public DataSet HMS_PurchaseDeleteopening(PharmacyModel oDPharmacy, string dbName)
+        public DataSet HMS_LabPurchaseDelete(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_LabPurchaseDelete(oDPharmacy, dbName);
+        }
+
+        public DataSet HMS_PurchaseDeleteopening(PharmacyModel oDPharmacy, string dbName)
         {
             return oDPurchase.HMS_PurchaseDeleteopening(oDPharmacy, dbName);
         }

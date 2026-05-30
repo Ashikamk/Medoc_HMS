@@ -26,6 +26,11 @@ namespace EUMI_ERP.Controllers
         {
             return View();
         }
+
+        public ActionResult LabDashboard()
+        {
+            return View();
+        }
         public ActionResult LabWorksheet()
         {
             return View();

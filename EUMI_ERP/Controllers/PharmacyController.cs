@@ -551,7 +551,245 @@ namespace EUMI_ERP.Controllers
 
 
 
+        [HttpPost]
+        public JsonResult HMS_LabPurchaseInsert(List<PharmacyModel> PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            DataSet dsDataSet = new DataSet();
+            DataTable dt = new DataTable();
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                string[] tmpTable = new string[91];
 
+                tmpTable[0] = "PurMainId";
+                tmpTable[1] = "SlNo";
+                tmpTable[2] = "InvoNo";
+                tmpTable[3] = "SupplierId";
+                tmpTable[4] = "PayType";
+                tmpTable[5] = "PurchaseType";
+                tmpTable[6] = "InvoDate";
+                tmpTable[7] = "CurrencyId";
+                tmpTable[8] = "CurrencyRate";
+                tmpTable[9] = "FBillDiscount";
+
+                tmpTable[10] = "FDiscount";
+                tmpTable[11] = "FTaxable";
+                tmpTable[12] = "FTax";
+                tmpTable[13] = "FCTotal";
+                tmpTable[14] = "InvoiceTotal";
+                tmpTable[15] = "FCGST_0";
+                tmpTable[16] = "FCGST_5";
+                tmpTable[17] = "FCGST_12";
+                tmpTable[18] = "FCGST_18";
+                tmpTable[19] = "FCGST_28";
+
+                tmpTable[20] = "FCess";
+                tmpTable[21] = "BilDiscount";
+                tmpTable[22] = "TotalDiscount";
+                tmpTable[23] = "TotalTaxable";
+                tmpTable[24] = "TotalTax";
+                tmpTable[25] = "BaseTotal";
+                tmpTable[26] = "BaseInvoiceTotal";
+                tmpTable[27] = "BCGST_0";
+                tmpTable[28] = "BCGST_5";
+                tmpTable[29] = "BCGST_12";
+
+                tmpTable[30] = "BCGST_18";
+                tmpTable[31] = "BCGST_28";
+                tmpTable[32] = "BCess";
+                tmpTable[33] = "FCRoundOff";
+                tmpTable[34] = "RoundOff";
+                tmpTable[35] = "BDFlag";
+                tmpTable[36] = "CessFlag";
+                tmpTable[37] = "Remarks";
+                tmpTable[38] = "SubId";
+                tmpTable[39] = "ItemId";
+
+                tmpTable[40] = "ItemCode";
+                tmpTable[41] = "ItemDescription";
+                tmpTable[42] = "LocationId";
+                tmpTable[43] = "UnitId";
+                tmpTable[44] = "BatchSlNo";
+                tmpTable[45] = "Batch";
+                tmpTable[46] = "Expiry";
+                tmpTable[47] = "Pack";
+                tmpTable[48] = "Quantity";
+                tmpTable[49] = "Free";
+
+                tmpTable[50] = "Loose";
+                tmpTable[51] = "SellingRate";
+                tmpTable[52] = "MRP";
+                tmpTable[53] = "TQty";
+                tmpTable[54] = "TLQty";
+                tmpTable[55] = "TaxId";
+                tmpTable[56] = "TaxRate";
+                tmpTable[57] = "FCRate";
+                tmpTable[58] = "FCDiscount";
+                tmpTable[59] = "FCTaxable";
+
+                tmpTable[60] = "FCTax";
+                tmpTable[61] = "FCAmount";
+                tmpTable[62] = "FC_Cess";
+                tmpTable[63] = "Rate";
+                tmpTable[64] = "Discount";
+                tmpTable[65] = "TaxableAmount";
+                tmpTable[66] = "TaxAmount";
+                tmpTable[67] = "Amount";
+                tmpTable[68] = "B_Cess";
+                tmpTable[69] = "Margin";
+
+                tmpTable[70] = "P_OtherCost";
+                tmpTable[71] = "DelFlag";
+                tmpTable[72] = "UserId";
+                tmpTable[73] = "DeptId";
+                tmpTable[74] = "IMEINumber";
+                tmpTable[75] = "PO_No";
+                tmpTable[76] = "PO_SubTbl_Id";
+                tmpTable[77] = "MRV_No";
+                tmpTable[78] = "MRV_SubTbl_Id";
+                tmpTable[79] = "Performa_NO";
+
+                tmpTable[80] = "Performa_SubTbl_Id";
+                tmpTable[81] = "Variable1";
+                tmpTable[82] = "Variable2";
+                tmpTable[83] = "Status";
+                tmpTable[84] = "Terms";
+                tmpTable[85] = "DueDate";
+                tmpTable[86] = "LPO_No";
+                tmpTable[87] = "JobNo";
+                tmpTable[88] = "Area";
+                tmpTable[89] = "ShipDate";
+                tmpTable[90] = "Flag";
+
+                dt = Common.CreateTable(tmpTable);
+
+                foreach (var details in PharmacyModel)
+                {
+                    obj.PurMainId = details.PurMainId;
+                    obj.SlNo = details.SlNo;
+                    obj.InvoNo = details.InvoNo;
+                    obj.SupplierId = details.SupplierId;
+                    obj.PayType = details.PayType;
+                    obj.PurchaseType = details.PurchaseType;
+                    obj.InvoDate = details.InvoDate;
+                    obj.CurrencyId = details.CurrencyId;
+                    obj.CurrencyRate = details.CurrencyRate;
+                    obj.FBillDiscount = details.FBillDiscount;
+                    obj.FDiscount = details.FDiscount;
+                    obj.FTaxable = details.FTaxable;
+                    obj.FTax = details.FTax;
+                    obj.FCTotal = details.FCTotal;
+                    obj.InvoiceTotal = details.InvoiceTotal;
+                    obj.FCGST_0 = details.FCGST_0;
+                    obj.FCGST_5 = details.FCGST_5;
+                    obj.FCGST_12 = details.FCGST_12;
+                    obj.FCGST_18 = details.FCGST_18;
+                    obj.FCGST_28 = details.FCGST_28;
+                    obj.FCess = details.FCess;
+                    obj.BilDiscount = details.BilDiscount;
+                    obj.TotalDiscount = details.TotalDiscount;
+                    obj.TotalTaxable = details.TotalTaxable;
+                    obj.TotalTax = details.TotalTax;
+                    obj.BaseTotal = details.BaseTotal;
+                    obj.BaseInvoiceTotal = details.BaseInvoiceTotal;
+                    obj.BCGST_0 = details.BCGST_0;
+                    obj.BCGST_5 = details.BCGST_5;
+                    obj.BCGST_12 = details.BCGST_12;
+                    obj.BCGST_18 = details.BCGST_18;
+                    obj.BCGST_28 = details.BCGST_28;
+                    obj.BCess = details.BCess;
+                    obj.FCRoundOff = details.FCRoundOff;
+                    obj.RoundOff = details.RoundOff;
+                    obj.BDFlag = details.BDFlag;
+                    obj.CessFlag = details.CessFlag;
+                    obj.Remarks = details.Remarks;
+                    obj.SubId = details.SubId;
+                    obj.ItemId = details.ItemId;
+                    obj.ItemCode = details.ItemCode;
+                    obj.ItemDescription = details.ItemDescription;
+                    obj.LocationId = details.LocationId;
+                    obj.UnitId = details.UnitId;
+                    obj.BatchSlNo = details.BatchSlNo;
+                    obj.Batch = details.Batch;
+                    obj.Expiry = details.Expiry;
+                    obj.Pack = details.Pack;
+                    obj.Quantity = details.Quantity;
+                    obj.Free = details.Free;
+                    obj.Loose = details.Loose;
+                    obj.SellingRate = details.SellingRate;
+                    obj.MRP = details.MRP;
+                    obj.TQty = details.TQty;
+                    obj.TLQty = details.TLQty;
+                    obj.TaxId = details.TaxId;
+                    obj.TaxRate = details.TaxRate;
+                    obj.FCRate = details.FCRate;
+                    obj.FCDiscount = details.FCDiscount;
+                    obj.FCTaxable = details.FCTaxable;
+                    obj.FCTax = details.FCTax;
+                    obj.FCAmount = details.FCAmount;
+                    obj.FC_Cess = details.FC_Cess;
+                    obj.Rate = details.Rate;
+                    obj.Discount = details.Discount;
+                    obj.TaxableAmount = details.TaxableAmount;
+                    obj.TaxAmount = details.TaxAmount;
+                    obj.Amount = details.Amount;
+                    obj.B_Cess = details.B_Cess;
+                    obj.Margin = details.Margin;
+                    obj.P_OtherCost = details.P_OtherCost;
+                    obj.DelFlag = details.DelFlag;
+                    obj.UserId = details.UserId;
+                    obj.DeptId = details.DeptId;
+                    obj.IMEINumber = details.IMEINumber;
+                    obj.PO_No = details.PO_No;
+                    obj.PO_SubTbl_Id = details.PO_SubTbl_Id;
+                    obj.MRV_No = details.MRV_No;
+                    obj.MRV_SubTbl_Id = details.MRV_SubTbl_Id;
+                    obj.Performa_NO = details.Performa_NO;
+                    obj.Performa_SubTbl_Id = details.Performa_SubTbl_Id;
+                    obj.Variable1 = details.Variable1;
+                    obj.Variable2 = details.Variable2;
+                    obj.Status = details.Status;
+                    obj.Terms = details.Terms;
+                    obj.DueDate = details.DueDate;
+                    obj.LPO_No = details.LPO_No;
+                    obj.JobNo = details.JobNo;
+                    obj.Area = details.Area;
+                    obj.ShipDate = details.ShipDate;
+                    obj.Flag = details.Flag;
+
+                    dt.Rows.Add
+                    (
+                        obj.PurMainId, obj.SlNo, obj.InvoNo, obj.SupplierId, obj.PayType, obj.PurchaseType, obj.InvoDate, obj.CurrencyId,
+                    obj.CurrencyRate, obj.FBillDiscount, obj.FDiscount, obj.FTaxable, obj.FTax, obj.FCTotal, obj.InvoiceTotal, obj.FCGST_0,
+                    obj.FCGST_5, obj.FCGST_12, obj.FCGST_18, obj.FCGST_28, obj.FCess, obj.BilDiscount, obj.TotalDiscount, obj.TotalTaxable,
+                    obj.TotalTax, obj.BaseTotal, obj.BaseInvoiceTotal, obj.BCGST_0, obj.BCGST_5, obj.BCGST_12, obj.BCGST_18, obj.BCGST_28,
+                    obj.BCess, obj.FCRoundOff, obj.RoundOff, obj.BDFlag, obj.CessFlag, obj.Remarks, obj.SubId, obj.ItemId, obj.ItemCode,
+                    obj.ItemDescription, obj.LocationId, obj.UnitId, obj.BatchSlNo, obj.Batch, obj.Expiry, obj.Pack, obj.Quantity, obj.Free,
+                    obj.Loose, obj.SellingRate, obj.MRP, obj.TQty, obj.TLQty, obj.TaxId, obj.TaxRate, obj.FCRate, obj.FCDiscount, obj.FCTaxable,
+                    obj.FCTax, obj.FCAmount, obj.FC_Cess, obj.Rate, obj.Discount, obj.TaxableAmount, obj.TaxAmount, obj.Amount, obj.B_Cess,
+                    obj.Margin, obj.P_OtherCost, obj.DelFlag, obj.UserId, obj.DeptId, obj.IMEINumber, obj.PO_No, obj.PO_SubTbl_Id, obj.MRV_No,
+                    obj.MRV_SubTbl_Id, obj.Performa_NO, obj.Performa_SubTbl_Id, obj.Variable1, obj.Variable2, obj.Status, obj.Terms, obj.DueDate,
+                    obj.LPO_No, obj.JobNo, obj.Area, obj.ShipDate, obj.Flag
+                    );
+                }
+
+                dsDataSet = obj.HMS_LabPurchaseInsert(dt, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.Status = row["Status"].ToString();
+                    MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
 
 
 
@@ -1284,7 +1522,245 @@ namespace EUMI_ERP.Controllers
 
 
 
+        [HttpPost]
+        public JsonResult HMS_LabPurchaseUpdate(List<PharmacyModel> PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            DataSet dsDataSet = new DataSet();
+            DataTable dt = new DataTable();
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                string[] tmpTable = new string[91];
 
+                tmpTable[0] = "PurMainId";
+                tmpTable[1] = "SlNo";
+                tmpTable[2] = "InvoNo";
+                tmpTable[3] = "SupplierId";
+                tmpTable[4] = "PayType";
+                tmpTable[5] = "PurchaseType";
+                tmpTable[6] = "InvoDate";
+                tmpTable[7] = "CurrencyId";
+                tmpTable[8] = "CurrencyRate";
+                tmpTable[9] = "FBillDiscount";
+
+                tmpTable[10] = "FDiscount";
+                tmpTable[11] = "FTaxable";
+                tmpTable[12] = "FTax";
+                tmpTable[13] = "FCTotal";
+                tmpTable[14] = "InvoiceTotal";
+                tmpTable[15] = "FCGST_0";
+                tmpTable[16] = "FCGST_5";
+                tmpTable[17] = "FCGST_12";
+                tmpTable[18] = "FCGST_18";
+                tmpTable[19] = "FCGST_28";
+
+                tmpTable[20] = "FCess";
+                tmpTable[21] = "BilDiscount";
+                tmpTable[22] = "TotalDiscount";
+                tmpTable[23] = "TotalTaxable";
+                tmpTable[24] = "TotalTax";
+                tmpTable[25] = "BaseTotal";
+                tmpTable[26] = "BaseInvoiceTotal";
+                tmpTable[27] = "BCGST_0";
+                tmpTable[28] = "BCGST_5";
+                tmpTable[29] = "BCGST_12";
+
+                tmpTable[30] = "BCGST_18";
+                tmpTable[31] = "BCGST_28";
+                tmpTable[32] = "BCess";
+                tmpTable[33] = "FCRoundOff";
+                tmpTable[34] = "RoundOff";
+                tmpTable[35] = "BDFlag";
+                tmpTable[36] = "CessFlag";
+                tmpTable[37] = "Remarks";
+                tmpTable[38] = "SubId";
+                tmpTable[39] = "ItemId";
+
+                tmpTable[40] = "ItemCode";
+                tmpTable[41] = "ItemDescription";
+                tmpTable[42] = "LocationId";
+                tmpTable[43] = "UnitId";
+                tmpTable[44] = "BatchSlNo";
+                tmpTable[45] = "Batch";
+                tmpTable[46] = "Expiry";
+                tmpTable[47] = "Pack";
+                tmpTable[48] = "Quantity";
+                tmpTable[49] = "Free";
+
+                tmpTable[50] = "Loose";
+                tmpTable[51] = "SellingRate";
+                tmpTable[52] = "MRP";
+                tmpTable[53] = "TQty";
+                tmpTable[54] = "TLQty";
+                tmpTable[55] = "TaxId";
+                tmpTable[56] = "TaxRate";
+                tmpTable[57] = "FCRate";
+                tmpTable[58] = "FCDiscount";
+                tmpTable[59] = "FCTaxable";
+
+                tmpTable[60] = "FCTax";
+                tmpTable[61] = "FCAmount";
+                tmpTable[62] = "FC_Cess";
+                tmpTable[63] = "Rate";
+                tmpTable[64] = "Discount";
+                tmpTable[65] = "TaxableAmount";
+                tmpTable[66] = "TaxAmount";
+                tmpTable[67] = "Amount";
+                tmpTable[68] = "B_Cess";
+                tmpTable[69] = "Margin";
+
+                tmpTable[70] = "P_OtherCost";
+                tmpTable[71] = "DelFlag";
+                tmpTable[72] = "UserId";
+                tmpTable[73] = "DeptId";
+                tmpTable[74] = "IMEINumber";
+                tmpTable[75] = "PO_No";
+                tmpTable[76] = "PO_SubTbl_Id";
+                tmpTable[77] = "MRV_No";
+                tmpTable[78] = "MRV_SubTbl_Id";
+                tmpTable[79] = "Performa_NO";
+
+                tmpTable[80] = "Performa_SubTbl_Id";
+                tmpTable[81] = "Variable1";
+                tmpTable[82] = "Variable2";
+                tmpTable[83] = "Status";
+                tmpTable[84] = "Terms";
+                tmpTable[85] = "DueDate";
+                tmpTable[86] = "LPO_No";
+                tmpTable[87] = "JobNo";
+                tmpTable[88] = "Area";
+                tmpTable[89] = "ShipDate";
+                tmpTable[90] = "Flag";
+
+                dt = Common.CreateTable(tmpTable);
+
+                foreach (var details in PharmacyModel)
+                {
+                    obj.PurMainId = details.PurMainId;
+                    obj.SlNo = details.SlNo;
+                    obj.InvoNo = details.InvoNo;
+                    obj.SupplierId = details.SupplierId;
+                    obj.PayType = details.PayType;
+                    obj.PurchaseType = details.PurchaseType;
+                    obj.InvoDate = details.InvoDate;
+                    obj.CurrencyId = details.CurrencyId;
+                    obj.CurrencyRate = details.CurrencyRate;
+                    obj.FBillDiscount = details.FBillDiscount;
+                    obj.FDiscount = details.FDiscount;
+                    obj.FTaxable = details.FTaxable;
+                    obj.FTax = details.FTax;
+                    obj.FCTotal = details.FCTotal;
+                    obj.InvoiceTotal = details.InvoiceTotal;
+                    obj.FCGST_0 = details.FCGST_0;
+                    obj.FCGST_5 = details.FCGST_5;
+                    obj.FCGST_12 = details.FCGST_12;
+                    obj.FCGST_18 = details.FCGST_18;
+                    obj.FCGST_28 = details.FCGST_28;
+                    obj.FCess = details.FCess;
+                    obj.BilDiscount = details.BilDiscount;
+                    obj.TotalDiscount = details.TotalDiscount;
+                    obj.TotalTaxable = details.TotalTaxable;
+                    obj.TotalTax = details.TotalTax;
+                    obj.BaseTotal = details.BaseTotal;
+                    obj.BaseInvoiceTotal = details.BaseInvoiceTotal;
+                    obj.BCGST_0 = details.BCGST_0;
+                    obj.BCGST_5 = details.BCGST_5;
+                    obj.BCGST_12 = details.BCGST_12;
+                    obj.BCGST_18 = details.BCGST_18;
+                    obj.BCGST_28 = details.BCGST_28;
+                    obj.BCess = details.BCess;
+                    obj.FCRoundOff = details.FCRoundOff;
+                    obj.RoundOff = details.RoundOff;
+                    obj.BDFlag = details.BDFlag;
+                    obj.CessFlag = details.CessFlag;
+                    obj.Remarks = details.Remarks;
+                    obj.SubId = details.SubId;
+                    obj.ItemId = details.ItemId;
+                    obj.ItemCode = details.ItemCode;
+                    obj.ItemDescription = details.ItemDescription;
+                    obj.LocationId = details.LocationId;
+                    obj.UnitId = details.UnitId;
+                    obj.BatchSlNo = details.BatchSlNo;
+                    obj.Batch = details.Batch;
+                    obj.Expiry = details.Expiry;
+                    obj.Pack = details.Pack;
+                    obj.Quantity = details.Quantity;
+                    obj.Free = details.Free;
+                    obj.Loose = details.Loose;
+                    obj.SellingRate = details.SellingRate;
+                    obj.MRP = details.MRP;
+                    obj.TQty = details.TQty;
+                    obj.TLQty = details.TLQty;
+                    obj.TaxId = details.TaxId;
+                    obj.TaxRate = details.TaxRate;
+                    obj.FCRate = details.FCRate;
+                    obj.FCDiscount = details.FCDiscount;
+                    obj.FCTaxable = details.FCTaxable;
+                    obj.FCTax = details.FCTax;
+                    obj.FCAmount = details.FCAmount;
+                    obj.FC_Cess = details.FC_Cess;
+                    obj.Rate = details.Rate;
+                    obj.Discount = details.Discount;
+                    obj.TaxableAmount = details.TaxableAmount;
+                    obj.TaxAmount = details.TaxAmount;
+                    obj.Amount = details.Amount;
+                    obj.B_Cess = details.B_Cess;
+                    obj.Margin = details.Margin;
+                    obj.P_OtherCost = details.P_OtherCost;
+                    obj.DelFlag = details.DelFlag;
+                    obj.UserId = details.UserId;
+                    obj.DeptId = details.DeptId;
+                    obj.IMEINumber = details.IMEINumber;
+                    obj.PO_No = details.PO_No;
+                    obj.PO_SubTbl_Id = details.PO_SubTbl_Id;
+                    obj.MRV_No = details.MRV_No;
+                    obj.MRV_SubTbl_Id = details.MRV_SubTbl_Id;
+                    obj.Performa_NO = details.Performa_NO;
+                    obj.Performa_SubTbl_Id = details.Performa_SubTbl_Id;
+                    obj.Variable1 = details.Variable1;
+                    obj.Variable2 = details.Variable2;
+                    obj.Status = details.Status;
+                    obj.Terms = details.Terms;
+                    obj.DueDate = details.DueDate;
+                    obj.LPO_No = details.LPO_No;
+                    obj.JobNo = details.JobNo;
+                    obj.Area = details.Area;
+                    obj.ShipDate = details.ShipDate;
+                    obj.Flag = details.Flag;
+
+                    dt.Rows.Add
+                    (
+                        obj.PurMainId, obj.SlNo, obj.InvoNo, obj.SupplierId, obj.PayType, obj.PurchaseType, obj.InvoDate, obj.CurrencyId,
+                    obj.CurrencyRate, obj.FBillDiscount, obj.FDiscount, obj.FTaxable, obj.FTax, obj.FCTotal, obj.InvoiceTotal, obj.FCGST_0,
+                    obj.FCGST_5, obj.FCGST_12, obj.FCGST_18, obj.FCGST_28, obj.FCess, obj.BilDiscount, obj.TotalDiscount, obj.TotalTaxable,
+                    obj.TotalTax, obj.BaseTotal, obj.BaseInvoiceTotal, obj.BCGST_0, obj.BCGST_5, obj.BCGST_12, obj.BCGST_18, obj.BCGST_28,
+                    obj.BCess, obj.FCRoundOff, obj.RoundOff, obj.BDFlag, obj.CessFlag, obj.Remarks, obj.SubId, obj.ItemId, obj.ItemCode,
+                    obj.ItemDescription, obj.LocationId, obj.UnitId, obj.BatchSlNo, obj.Batch, obj.Expiry, obj.Pack, obj.Quantity, obj.Free,
+                    obj.Loose, obj.SellingRate, obj.MRP, obj.TQty, obj.TLQty, obj.TaxId, obj.TaxRate, obj.FCRate, obj.FCDiscount, obj.FCTaxable,
+                    obj.FCTax, obj.FCAmount, obj.FC_Cess, obj.Rate, obj.Discount, obj.TaxableAmount, obj.TaxAmount, obj.Amount, obj.B_Cess,
+                    obj.Margin, obj.P_OtherCost, obj.DelFlag, obj.UserId, obj.DeptId, obj.IMEINumber, obj.PO_No, obj.PO_SubTbl_Id, obj.MRV_No,
+                    obj.MRV_SubTbl_Id, obj.Performa_NO, obj.Performa_SubTbl_Id, obj.Variable1, obj.Variable2, obj.Status, obj.Terms, obj.DueDate,
+                    obj.LPO_No, obj.JobNo, obj.Area, obj.ShipDate, obj.Flag
+                    );
+                }
+
+                dsDataSet = obj.HMS_LabPurchaseUpdate(dt, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.Status = row["Status"].ToString();
+                    MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
 
 
 
@@ -2054,6 +2530,34 @@ namespace EUMI_ERP.Controllers
             {
                 DataSet dsDataSet = new DataSet();
                 dsDataSet = obj.HMS_PurchaseDelete(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.Status = row["Status"].ToString();
+                    MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
+
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpPost]
+        public ActionResult HMS_LabPurchaseDelete(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_LabPurchaseDelete(PharmacyModel, dbName);
                 foreach (DataRow row in dsDataSet.Tables[0].Rows)
                 {
                     PharmacyModel MModels = new PharmacyModel();

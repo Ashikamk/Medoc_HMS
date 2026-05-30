@@ -1309,6 +1309,49 @@ namespace EUMI_ERP.Controllers
         }
 
 
+        public ActionResult LabPurchaseInvoiceList(PurchaseInvoiceModel PurchaseInvoiceModel)
+        {
+            PurchaseInvoiceModel obj = new PurchaseInvoiceModel();
+
+            List<PurchaseInvoiceModel> oList = new List<PurchaseInvoiceModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.LabPurchaseInvoiceList(PurchaseInvoiceModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PurchaseInvoiceModel MModels = new PurchaseInvoiceModel();
+                    MModels.PurchaseInvoiceMainId = Convert.ToInt32(row["PurMainId"].ToString());
+                    MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
+                    MModels.InvoNo = row["InvoNo"].ToString();
+                    MModels.SupplierId = Convert.ToInt32(row["SupplierId"].ToString());
+                    MModels.PayType = row["PayType"].ToString();
+                    MModels.PurchaseType = row["PurchaseType"].ToString();
+                    MModels.SupplierName = row["CustName"].ToString();
+                    MModels.InvoDate = row["InvoDate"].ToString();
+                    MModels.CurrencyId = Convert.ToInt32(row["CurrencyId"].ToString());
+                    MModels.CurrencyRate = Convert.ToDecimal(row["CurrencyRate"].ToString());
+                    MModels.GrandTotal = Convert.ToDecimal(row["FCTotal"].ToString());
+                    MModels.Remarks = row["Remarks"].ToString();
+                    MModels.DepartmentId = Convert.ToInt32(row["DepartmentId"].ToString());
+                    MModels.Quantity = Convert.ToDecimal(row["Quantity"].ToString());
+                    MModels.AccName = row["Name"].ToString();
+                    MModels.LPO = row["LPO_No"].ToString();
+                    MModels.PONo = row["PO_No"].ToString();
+                    MModels.Variable1 = row["Performa_NO"].ToString();
+                    MModels.Variable2 = row["MRV_No"].ToString();
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
 
 
         public ActionResult PurchaseInvoiceList(PurchaseInvoiceModel PurchaseInvoiceModel)

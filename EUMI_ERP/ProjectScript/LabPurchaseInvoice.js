@@ -2282,7 +2282,7 @@ function OKSavePurchase() {
         var data = { 'PharmacyModel': oArray };
         $.ajax({
             type: "POST",
-            url: "../Pharmacy/HMS_PurchaseInsert",
+            url: "../Pharmacy/HMS_LabPurchaseInsert",
             data: data,
             success: function (result) {
 
@@ -2633,7 +2633,7 @@ function PurchaseGets(result) {
             var ProductRow = '<tr id="MTr_' + Id + '" onfocusout="UpdateRow(' + Id + ')">' +
                 '<td width="2%" align="center"><input class="jsgrid-button jsgrid-delete-button" type="button" onclick="DeleteRow(' + Id + ')" title="Delete" autocomplete="off"></td>' +
                 '<td width="2%" align="center" id="MTd_' + Id + '">' + Id + '</td>' +
-                '<td width="10%"><input id="Product_' + Id + '" value="' + result[i].ItemDescription + '" onkeyup="LoadProduct(' + Id + ')" class="form-control smallTextbox borderno" /></td>' +
+                '<td width="10%"><input id="Product_' + Id + '" value="' + (result[i].ItemDescription != '' ? result[i].ItemDescription : result[i].ItemCode) + '" onkeyup="LoadProduct(' + Id + ')" class="form-control smallTextbox borderno" /></td>' +
                 '<td width="3%"><input id="Batch_' + Id + '" value="' + result[i].Batch + '" class="form-control smallTextbox borderno" onkeydown="FocusNext(event, \'\', \'Batch_\', \'Expiry_\', ' + Id + ',\'MTr_\')" /></td>' +
                 '<td width="3%"><input id="Expiry_' + Id + '" value="' + result[i].Expiry + '" class="form-control text-center smallTextbox borderno"  onkeypress="isNumberDate(event, this)" onkeyup="ExpiryDate(\'Expiry_' + Id + '\')" onkeydown="FocusNext(event, \'Batch_\', \'Expiry_\', \'Pack_\', ' + Id + ',\'MTr_\')" /></td>' +
                 '<td width="3%"><input id="Pack_' + Id + '" value="' + result[i].Pack + '" class="form-control text-center smallTextbox borderno" onkeypress="isNumberInt(event, this)" onkeyup="CalcAmt(),ResetBillDiscount()" onkeydown="FocusNext(event, \'Expiry_\', \'Pack_\', \'Qty_\', ' + Id + ',\'MTr_\')" /></td>' +
@@ -2878,7 +2878,7 @@ function OKDeletePurchase() {
     data.UserId = ERPUserId;
     $.ajax({
         type: "POST",
-        url: "../Pharmacy/HMS_PurchaseDelete",
+        url: "../Pharmacy/HMS_LabPurchaseDelete",
         data: data,
         success: function (result) {
 
@@ -3181,7 +3181,7 @@ function OKUpdatePurchase() {
         var data = { 'PharmacyModel': oArray };
         $.ajax({
             type: "POST",
-            url: "../Pharmacy/HMS_PurchaseUpdate",
+            url: "../Pharmacy/HMS_LabPurchaseUpdate",
             data: data,
             success: function (result) {
 
@@ -3456,7 +3456,7 @@ function GetPurchaseList() {
     dataPI.UserId = ERPUserId;
     $.ajax({
         type: "POST",
-        url: "../Purchase/PurchaseInvoiceList",
+        url: "../Purchase/LabPurchaseInvoiceList",
         data: dataPI,
         success: function (result) {
             GetPIListView(result.oList);
@@ -3602,9 +3602,11 @@ function Showalerts(Status, no) {
     }
     else if (Status == 2) {
         formrefresh(0);
-        swal('Invoice No-' + no + ' ', "Updated Successfully", "success");
+        swal('Invoice No-' + no + ' ', "Updated Successfully", "success")
+            .then(function () {
+                GetPurchaseListDefault();
+            });
         $('.swal-button swal-button--confirm').focus();
-
     }
     else if (Status == 3) {
         formrefresh(0);

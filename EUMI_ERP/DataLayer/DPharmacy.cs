@@ -109,7 +109,21 @@ namespace EUMI_ERP.DataLayer
             }
         }
 
-
+        public DataSet HMS_LabPurchaseInsert(DataTable dt, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@HMS_LabPurchaseInsert", SqlDbType.Structured);
+                arlParms[0].Value = dt;
+                return SQLHelper.ExecuteDataset("HMS_LabPurchaseInsert", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
 
 
         public DataSet HMS_PurchaseInsert(DataTable dt, string dbName)
@@ -163,7 +177,21 @@ namespace EUMI_ERP.DataLayer
         }
 
 
-
+        public DataSet HMS_LabPurchaseUpdate(DataTable dt, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@HMS_LabPurchaseInsert", SqlDbType.Structured);
+                arlParms[0].Value = dt;
+                return SQLHelper.ExecuteDataset("HMS_LabPurchaseUpdate", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
 
         public DataSet HMS_PurchaseUpdate(DataTable dt, string dbName)
         {
@@ -244,6 +272,26 @@ namespace EUMI_ERP.DataLayer
                 arlParms[2] = new SqlParameter("@UserId", PharmacyModel.UserId);
 
                 return SQLHelper.ExecuteDataset("HMS_PurchaseDelete", dbName, arlParms);
+
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
+
+        public DataSet HMS_LabPurchaseDelete(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[3];
+                arlParms[0] = new SqlParameter("@SlNo", PharmacyModel.SlNo);
+                arlParms[1] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                arlParms[2] = new SqlParameter("@UserId", PharmacyModel.UserId);
+
+                return SQLHelper.ExecuteDataset("HMS_LabPurchaseDelete", dbName, arlParms);
 
             }
             catch (SqlException exMe)

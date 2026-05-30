@@ -154,34 +154,107 @@
     //}
 
 
-    var doctorMode = 'dropdown'; 
+    var doctorMode = 'dropdown';
 
     function drchange() {
         var Dname = $("#HDoctor option:selected").text();
-        $('#Doctorname').val(Dname === '--Select--' ? '' : Dname);
+        var val = Dname === '--Select--' ? '' : Dname;
+        $('#Doctorname').val(val);
+        $('#HDoctorManual').val(val); 
     }
 
-    function toggleDoctorMode() {
-        if (doctorMode === 'dropdown') {
-            // switch to manual
-            doctorMode = 'manual';
-            $('#HDoctor').hide();
-            $('#HDoctorManual').show().focus();
-            $('#iconDoctorMode').removeClass('fa-pencil').addClass('fa-list');
-            $('#btnDoctorMode').attr('title', 'Switch to dropdown');
-            $('#Doctorname').val(''); // clear hidden field
-        } else {
-            // switch back to dropdown
-            doctorMode = 'dropdown';
-            $('#HDoctorManual').hide().val('');
-            $('#HDoctor').show();
-            $('#iconDoctorMode').removeClass('fa-list').addClass('fa-pencil');
-            $('#btnDoctorMode').attr('title', 'Switch to manual entry');
-            // sync hidden field with current dropdown selection
-            drchange();
+    function toggleDoctorMode() { } 
+
+    function initDoctorAutocomplete() {
+        var doctorList = [];
+        $('#HDoctor option').each(function () {
+            if ($(this).val() != '0') {
+                doctorList.push({
+                    label: $(this).text(),
+                    value: $(this).text(),
+                    id: $(this).val()
+                });
+            }
+        });
+
+        if ($('#HDoctorManual').data('ui-autocomplete')) {
+            $('#HDoctorManual').autocomplete('destroy');
         }
-    }
 
+        $('#HDoctorManual').autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                var term = request.term.toLowerCase();
+                var filtered = doctorList.filter(function (d) {
+                    return d.label.toLowerCase().indexOf(term) >= 0;
+                });
+                response(filtered);
+            },
+            select: function (event, ui) {
+                $('#HDoctor').val(ui.item.id);
+                $('#Doctorname').val(ui.item.label);
+                $('#HDoctorManual').val(ui.item.label);
+                return false;
+            },
+            change: function (event, ui) {
+                if (!ui.item) {
+                    $('#HDoctor').val('0');
+                    $('#Doctorname').val($(this).val());
+                }
+            }
+        });
+        var inst = $('#HDoctorManual').autocomplete('instance');
+
+        inst._renderMenu = function (ul, items) {
+            var self = this;
+            ul.empty();
+            ul.css({
+                'max-height': '300px',
+                'overflow-y': 'auto',
+                'overflow-x': 'hidden',
+                'background': 'white',
+                'z-index': '99999',
+                'position': 'absolute',
+                'width': 'auto',
+                'min-width': '200px',
+                'padding': '0',
+                'margin': '0',
+                'list-style': 'none',
+                'border': 'none',
+                'box-shadow': 'none'
+            });
+            $.each(items, function (index, item) {
+                self._renderItemData(ul, item);
+            });
+        };
+
+        inst._renderItem = function (ul, item) {
+            return $('<li>').css({
+                'background': 'skyblue',
+                'list-style': 'none',
+                'padding': '0',
+                'margin': '0'
+            }).append(
+                $('<div>').text(item.label).css({
+                    'padding': '4px 8px',
+                    'font-size': '16px',
+                    'cursor': 'pointer',
+                    'color': 'black',
+                    'white-space': 'nowrap',
+                    'background': 'skyblue',
+                    'font-weight': 'normal'
+                }).hover(
+                    function () {
+                        $(this).css({ 'background': 'blue', 'color': 'white', 'font-weight': 'normal' });
+                    },
+                    function () {
+                        $(this).css({ 'background': 'skyblue', 'color': 'black', 'font-weight': 'normal' });
+                    }
+                )
+            ).appendTo(ul);
+        };
+    }
 
     if ("@Request.QueryString["flag"]" == "bill") {
         debugger;
@@ -783,24 +856,13 @@
 
                                                         <label class="label-control col-lg-1 text-lg-right">Doctor</label>
                                                         <div class="col-md-2">
-                                                            <div class="input-group m-0">
-                                                                <select id="HDoctor" onchange="drchange()" name="priority"
-                                                                        class="form-control smallTextbox topfocs">
-                                                                    <option value="0">--Select--</option>
-                                                                </select>
-                                                                <input type="text" id="HDoctorManual"
-                                                                       class="form-control smallTextbox"
-                                                                       placeholder="Type doctor name..."
-                                                                       style="display:none;"
-                                                                       oninput="$('#Doctorname').val($(this).val())" />
-                                                                <div class="input-group-append">
-                                                                    <button type="button" id="btnDoctorMode" title="Switch to manual entry"
-                                                                            class="btn btn-outline-primary smallTextbox avdbtn"
-                                                                            onclick="toggleDoctorMode()">
-                                                                        <i class="fa fa-pencil" id="iconDoctorMode"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                            <select id="HDoctor" style="display:none" onchange="drchange()">
+                                                                <option value="0">--Select--</option>
+                                                            </select>
+                                                            <input type="text" id="HDoctorManual"
+                                                                   class="form-control smallTextbox topfocs"
+                                                                   placeholder="Type or select doctor..."
+                                                                   autocomplete="off" />
                                                         </div>
                                                     </div>
                                                     <div class="row mb-1">

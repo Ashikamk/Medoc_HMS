@@ -1123,7 +1123,26 @@ namespace EUMI_ERP.DataLayer
         }
 
 
+        public DataSet HMS_OPLabDashboard(WorkSheet WorkSheet, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[6];
+                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate);
+                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);
+                arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
+                arlParms[3] = new SqlParameter("@PatientId", WorkSheet.PatientId);
+                arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
+                arlParms[5] = new SqlParameter("@UserId", WorkSheet.UserId);
 
+                return SQLHelper.ExecuteDataset("HMS_OPLabDashboard", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
 
         public DataSet HMS_OPWorkSheetStaffLAb(WorkSheet WorkSheet, string dbName)
         {
@@ -1907,6 +1926,28 @@ namespace EUMI_ERP.DataLayer
             arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
             arlParms[5] = new SqlParameter("@UserId", WorkSheet.UserId);
             return SQLHelper.ExecuteDataset("HMS_OPWorkSheetMedicineAdvice", dbName, arlParms);
+        }
+
+        public DataSet HMS_GetVerificationLists(string fromDate, string toDate, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[2];
+
+                // Pass as NVARCHAR string directly — SP handles CONVERT(DATE, @FromDate, 103)
+                arlParms[0] = new SqlParameter("@FromDate", SqlDbType.NVarChar, 20);
+                arlParms[0].Value = string.IsNullOrEmpty(fromDate) ? (object)DBNull.Value : fromDate.Trim();
+
+                arlParms[1] = new SqlParameter("@ToDate", SqlDbType.NVarChar, 20);
+                arlParms[1].Value = string.IsNullOrEmpty(toDate) ? (object)DBNull.Value : toDate.Trim();
+
+                return SQLHelper.ExecuteDataset("HMS_GetVerificationLists", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
         }
 
         public DataSet HMS_LAstRevisitGetsayurvetha(ReVisitModel ReVisitModel, string dbName)

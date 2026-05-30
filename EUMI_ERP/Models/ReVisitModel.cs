@@ -10,6 +10,11 @@ namespace EUMI_ERP.Models
     public class ReVisitModel
     {
 
+        // Add these properties to your existing ReVisitModel class (anywhere with other properties)
+        public long BillNo { get; set; }
+        public long RegNo { get; set; }
+        public string StatusType { get; set; }
+
         public int VitalsStatus { get; set; }
         public string VitalsText { get; set; }
         public string OPCaseSheet { get; set; }
@@ -146,7 +151,10 @@ namespace EUMI_ERP.Models
             return oDReVisit.HMS_TestAdviceGets(ReVisitModel, dbName);
         }
 
-
+        public DataSet HMS_GetVerificationLists(string fromDate, string toDate, string dbName)
+        {
+            return oDReVisit.HMS_GetVerificationLists(fromDate, toDate, dbName);
+        }
 
         // Add this class INSIDE your ReVisitModel class (after your existing properties)
         public class PatientTestModel
@@ -573,6 +581,10 @@ namespace EUMI_ERP.Models
         public string MedicineAdvice { get; set; }
         public int MedicineAdviceCount { get; set; }
 
+        public string TestNames { get; set; }
+
+        public string Departments { get; set; }
+
 
         DReVisit oDReVisit = new DReVisit();
 
@@ -603,7 +615,10 @@ namespace EUMI_ERP.Models
             return oDReVisit.HMS_GetVitalsRevisitIds(dbName);
         }
 
-
+        public DataSet HMS_OPLabDashboard(WorkSheet WorkSheet, string dbName)
+        {
+            return oDReVisit.HMS_OPLabDashboard(WorkSheet, dbName);
+        }
         public DataSet HMS_OPWorkSheetStaffLAb(WorkSheet WorkSheet, string dbName)
         {
             return oDReVisit.HMS_OPWorkSheetStaffLAb(WorkSheet, dbName);
@@ -806,6 +821,7 @@ namespace EUMI_ERP.Models
         {
             return oDReVisit.HMS_LabResultVerificationInsert(model, dbName);
         }
+
         public DataSet HMS_LabResultVerificationGet(
             LabWorksheetSave model, string dbName)
         {

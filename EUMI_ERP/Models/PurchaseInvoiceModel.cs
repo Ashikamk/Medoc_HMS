@@ -192,6 +192,10 @@ namespace EUMI_ERP.Models
             return oDMasters.PurchaseInvoiceListOpening(PurchaseInvoiceModel, dbName);
         }
 
+        public DataSet LabPurchaseInvoiceList(PurchaseInvoiceModel PurchaseInvoiceModel, string dbName)
+        {
+            return oDMasters.LabPurchaseInvoiceList(PurchaseInvoiceModel, dbName);
+        }
 
         public DataSet PurchaseInvoiceList(PurchaseInvoiceModel PurchaseInvoiceModel, string dbName)
         {

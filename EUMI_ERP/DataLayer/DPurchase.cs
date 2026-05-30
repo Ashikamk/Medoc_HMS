@@ -258,8 +258,26 @@ namespace EUMI_ERP.DataLayer
             }
 
         }
-        
 
+        public DataSet LabPurchaseInvoiceList(PurchaseInvoiceModel PurchaseInvoiceModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[5];
+                arlParms[0] = new SqlParameter("@FromDate", PurchaseInvoiceModel.FromDate);
+                arlParms[1] = new SqlParameter("@ToDate", PurchaseInvoiceModel.ToDate);
+                arlParms[2] = new SqlParameter("@PurchaseDeptId", PurchaseInvoiceModel.PurchaseDeptId);
+                arlParms[3] = new SqlParameter("@DeptId", PurchaseInvoiceModel.DepartmentId);
+                arlParms[4] = new SqlParameter("@UserId", PurchaseInvoiceModel.UserId);
+                return SQLHelper.ExecuteDataset("LabPurchaseInvoiceView", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
 
 
 

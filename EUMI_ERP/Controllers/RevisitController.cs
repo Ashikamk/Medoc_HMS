@@ -2623,7 +2623,52 @@ namespace EUMI_ERP.Controllers
             return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
         }
 
+        public ActionResult HMS_OPLabDashboard(WorkSheet WorkSheet)
+        {
+            WorkSheet obj = new WorkSheet();
+            List<WorkSheet> oList = new List<WorkSheet>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_OPLabDashboard(WorkSheet, dbName);
 
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    WorkSheet MModels = new WorkSheet();
+                    MModels.RevId = Convert.ToInt32(row["PId"].ToString());
+                    MModels.RevisitId = Convert.ToInt32(row["Revisit_Id"].ToString());
+                    MModels.PatientId = Convert.ToInt32(row["Patient_Id"].ToString());
+                    MModels.OPSerName = row["Prefix"].ToString();
+                    MModels.OPSerId = Convert.ToInt32(row["OP_Series"].ToString());
+                    MModels.OPNumber = row["OP_Number"].ToString();
+                    MModels.PatientName = row["PName"].ToString();
+                    MModels.DoctorName = row["Name"].ToString();
+                    MModels.DoctorId = Convert.ToInt32(row["Doctor_Id"].ToString());
+                    MModels.ShiftName = row["ShiftName"].ToString();
+                    MModels.TokenNumber = row["TokenNumber"].ToString();
+                    MModels.Gender = row["PGender"].ToString();
+                    MModels.DOB = row["PDOB"].ToString();
+                    MModels.Contact = row["MobileNo"].ToString();
+                    MModels.Flag = Convert.ToInt32(row["STYPE"].ToString());
+                    MModels.RevisitDate = row["VisitingDate"].ToString();
+                    MModels.Status = row["Status"].ToString();
+                    MModels.BloodGroup = row["BloodGroup"].ToString();
+                    MModels.IPNumber = Convert.ToInt32(row["IPNumber"].ToString());
+                    MModels.DelFlag = Convert.ToInt32(row["DFlag"].ToString());
+                    MModels.TestNames = row["TestNames"].ToString();
+                    MModels.Departments = row["Departments"].ToString();
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            // return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
+        }
 
         public ActionResult HMS_OPWorkSheetStaffLAb(WorkSheet WorkSheet)
         {
@@ -3955,7 +4000,7 @@ namespace EUMI_ERP.Controllers
             }
             return new JsonResult() { Data = oList, MaxJsonLength = 86753090 };
         }
-
+        
 
         [HttpPost]
         public ActionResult HMS_LabResultVerificationInsert(LabWorksheetSave model)
@@ -3981,6 +4026,7 @@ namespace EUMI_ERP.Controllers
             }
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public ActionResult HMS_LabResultVerificationGet(LabWorksheetSave model)
         {
@@ -4004,6 +4050,56 @@ namespace EUMI_ERP.Controllers
                 Console.WriteLine("Message :" + ex.Message + "+" + ex.StackTrace);
             }
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetVerificationLists(string fromDate, string toDate)
+        {
+            ReVisitModel obj = new ReVisitModel();
+            List<ReVisitModel> verifiedList = new List<ReVisitModel>();
+            List<ReVisitModel> nonVerifiedList = new List<ReVisitModel>();  // ADD THIS
+            List<ReVisitModel> approvedList = new List<ReVisitModel>();
+            List<ReVisitModel> nonApprovedList = new List<ReVisitModel>();
+
+            try
+            {
+                DataSet dsDataSet = obj.HMS_GetVerificationLists(fromDate, toDate, dbName);
+
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0
+                    && dsDataSet.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        string listType = row["ListType"].ToString();
+                        ReVisitModel model = new ReVisitModel();
+                        model.RevId = Convert.ToInt32(row["SL"]);
+                        model.BillNo = Convert.ToInt64(row["BillNo"]);
+                        model.RegNo = Convert.ToInt64(row["RegNo"]);
+                        model.PatientName = row["Patient"].ToString();
+                        model.DoctorName = row["Doctor"].ToString();
+                        model.RevisitDate = row["Date"].ToString();
+                        model.StatusType = row["StatusType"].ToString();
+
+                        if (listType == "VERIFIED") verifiedList.Add(model);
+                        else if (listType == "NON_VERIFIED") nonVerifiedList.Add(model); // ADD
+                        else if (listType == "APPROVED") approvedList.Add(model);
+                        else if (listType == "NON_APPROVED") nonApprovedList.Add(model);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message, success = false },
+                            JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new
+            {
+                verifiedList = verifiedList,
+                nonVerifiedList = nonVerifiedList,   // ADD
+                approvedList = approvedList,
+                nonApprovedList = nonApprovedList,
+                success = true
+            }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult HMS_LAstRevisitGetsayurvetha(ReVisitModel HMSSerialModel)
