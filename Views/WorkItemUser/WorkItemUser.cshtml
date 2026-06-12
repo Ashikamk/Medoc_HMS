@@ -1,0 +1,908 @@
+﻿
+@{
+    ViewBag.Title = "WorkItemUser";
+}
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script type="text/javascript" src="../Projectscript/WorkItemUser.js"></script>
+
+
+
+<style type="text/css">
+    .modal-slg{
+        max-width : 700px;
+    }
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+    
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+</style>
+@if (Model != null)
+{
+    <script>
+        window.ListPageParams = @Html.Raw(EUMI_ERP.Common.ToJson(Model));
+    </script>
+}
+else
+{
+    <script>
+        window.ListPageParams = { };
+    </script>
+}
+<div class="myData" data-x="M134" />
+<div class="card px-3" id="defaulttable">
+    <div class="row m-1 card-header">
+        <div class="col-md-6">
+            <h3 style="margin-left:-3%">Work Items</h3>
+        </div>
+        <div class="col-md-6 eumi-button-area text-right" id="divDownload" data-download-url="@Url.Action("ListWorkItemsDownload", "WorkItemUser")">
+            @*<button class="btn btn-primary" type="button" onclick="$('#Divsiondiv').show()">Add/Edit Division</button>*@
+            <button class="btn btn-primary" type="button" onclick="$('#TimeDiv').show();$('#Division2').focus();">Add Time Tags</button>
+            <button class="btn btn-primary" type="button" onclick="CreateNew()">Create New</button>
+            <div class="btn-group" role="group">
+                <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Columns
+                </button>
+                <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                </div>
+            </div>
+
+            <div class="btn-group" role="group">
+                <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Export
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                    <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                    <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                    <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                    <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary" data-eumi-clear="1" type="button">Clear Search</button>
+            
+           
+            <div class="clearfix"></div>
+        </div> 
+           
+    </div>
+    <hr style="margin-top:-1%">   
+    <table id="listitems" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+        <tfoot>
+            <tr class="eumi-search-row">
+                <th>No</th>
+                <th>Category</th>
+                <th>Date/Time</th>
+                <th>Assigned By</th>
+                <th>Assigned To</th>
+                <th>Location</th>
+                <th>Division</th>
+                <th>Status</th>
+                <th>Remarks</th>
+                <th>Edit</th>
+                <th style="display:none"></th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>
+</div>
+
+<div class="card px-3" id="toyoudiv" style="display:none">
+    <div class="row m-1 card-header">
+        <div class="col-md-6">
+            <h3 style="margin-left:-3%">Work Items</h3>
+        </div>
+        <div class="col-md-6 eumi-button-area text-right" id="div1Download" data-download-url="@Url.Action("ListWorkItemsDownloadTOYou", "WorkItemUser")">
+            @*<button class="btn btn-primary" type="button" onclick="$('#Divsiondiv').show()">Add/Edit Division</button>*@
+            <button class="btn btn-primary" type="button" onclick="$('#TimeDiv').show()">Add Time Tags</button>
+            <button class="btn btn-primary" type="button" onclick="CreateNew()">Create New</button>
+        </div>
+
+    </div>
+    <hr style="margin-top:-1%">
+    <table id="listitemstoyou" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+        <tfoot>
+            <tr class="eumi-search-row">
+                <th>No</th>
+                <th>Category</th>
+                <th>Date/Time</th>
+                <th>Assigned By</th>
+                <th>Assigned To</th>
+                <th>Location</th>
+                <th>Division</th>
+                <th>Status</th>
+                <th>Remarks</th>
+                <th>Edit</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>
+</div>
+
+<div class="card px-3" id="byyoudiv" style="display:none">
+    <div class="row m-1 card-header">
+        <div class="col-md-6">
+            <h3 style="margin-left:-3%">Work Items</h3>
+        </div>
+        <div class="col-md-6 eumi-button-area text-right" id="div2Download" data-download-url="@Url.Action("ListWorkItemsDownloadByYou", "WorkItemUser")">
+            @*<button class="btn btn-primary" type="button" onclick="$('#Divsiondiv').show()">Add/Edit Division</button>*@
+            <button class="btn btn-primary" type="button" onclick="$('#TimeDiv').show()">Add Time Tags</button>
+            <button class="btn btn-primary" type="button" onclick="CreateNew()">Create New</button>
+        </div>
+
+    </div>
+    <hr style="margin-top:-1%">
+    <table id="listitemsbyyou" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+        <tfoot>
+            <tr class="eumi-search-row">
+                <th>No</th>
+                <th>Category</th>
+                <th>Date/Time</th>
+                <th>Assigned By</th>
+                <th>Assigned To</th>
+                <th>Location</th>
+                <th>Division</th>
+                <th>Status</th>
+                <th>Remarks</th>
+                <th>Edit</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>
+</div>
+
+<div class="card px-3" id="todivdiv" style="display:none">
+    <div class="row m-1 card-header">
+        <div class="col-md-6">
+            <h3 style="margin-left:-3%">Work Items</h3>
+        </div>
+        <div class="col-md-6 eumi-button-area text-right" id="div3Download" data-download-url="@Url.Action("ListWorkItemsDownloadToDiv", "WorkItemUser")">
+            @*<button class="btn btn-primary" type="button" onclick="$('#Divsiondiv').show()">Add/Edit Division</button>*@
+            <button class="btn btn-primary" type="button" onclick="$('#TimeDiv').show()">Add Time Tags</button>
+            <button class="btn btn-primary" type="button" onclick="CreateNew()">Create New</button>
+        </div>
+
+    </div>
+    <hr style="margin-top:-1%">
+    <table id="listitemstodiv" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+        <tfoot>
+            <tr class="eumi-search-row">
+                <th>No</th>
+                <th>Category</th>
+                <th>Date/Time</th>
+                <th>Assigned By</th>
+                <th>Assigned To</th>
+                <th>Location</th>
+                <th>Division</th>
+                <th>Status</th>
+                <th>Remarks</th>
+                <th>Edit</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%">
+    <div class="modal-dialog modal-slg" role="document" style="top:4%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h5 class="modal-title" id="myheader">Create Work Item</h5>
+                <button type="button" class="close" onclick="CloseAssign()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <input type="hidden" id="WorkItemId" class="form-control" value="0">
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Department:</label>
+                        <div class="col-md-7">
+                            <select id="Department" class="form-control disa"></select>
+                        </div>
+
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-7">
+                            <select id="Division" class="form-control disa" onchange="WorkTaskTime()"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">User:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="User" class="form-control disa" autocomplete="off" onkeyup="checkuser()">
+                        </div>
+                        <input type="hidden" id="UserId" value="0" class="form-control" autocomplete="off">
+                        <input type="hidden" id="UserLength" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Title:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Title" class="form-control disa" autocomplete="off">
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;height:100px;">
+
+                        <label class="col-md-5" style="text-align:left">Description:</label>
+                        <div class="col-md-7">
+                            <textarea id="Description" class="form-control disa" style="resize: none;height:100%"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reference Type:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="RefType" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reference Id:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="RefId" class="form-control disa" autocomplete="off">
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Turn around Time:</label>
+                        <div class="col-md-7">
+                            <select class="form-control disa" id="Time"></select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Status</label>
+                        <div class="col-md-7">
+                            <select class="form-control disa" id="Status" onchange="checkhold()">
+                                <option value="Created">Created</option>
+                                <option value="Started">Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="On Hold">On Hold</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Canceled" hidden>Cancel</option>
+                                <option value="Reassign" hidden>Reassigned</option>
+                            </select>
+                        </div>
+
+                    </div>
+                            <div class="row" id="panel1" style="margin-top:2%;display:none">
+
+                                <label class="col-md-5" style="text-align:left" id="reasondisplay"></label>
+                                <div class="col-md-7">
+                                    <input type="text" id="Remarksdisplay" class="form-control disa" autocomplete="off">
+                                </div>
+                            </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:150px;display:none" id="btncancel"  class="btn btn-outline-danger">Cancel Work</button>
+                <button type="button" style="width:150px;display:none" id="btntransfer"  class="btn btn-outline-warning">Transfer</button>                
+                <button type="button" style="width:150px;display:none" id="btnassignme" onclick="AssignMe()" class="btn btn-outline-success">Assign Me</button>
+                <button type="button" style="width:100px" id="btnclose" onclick="CloseAssign()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btnassign"  class="btn btn-outline-primary">Create</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="Divsiondiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myheader">Add/Edit Division</h5>
+                <button type="button" class="close" onclick="$('#Divsiondiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-7">
+                            <select id="Division1" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">New Division Name:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="NewDivName" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="SaveandUpdateDivision(0)"  class="btn btn-outline-secondary">Delete</button>
+                <button type="button" style="width:100px" id="btndivsave" onclick="SaveandUpdateDivision(1)"  class="btn btn-outline-primary">Save</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="TimeDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myheader">Add Time Tags</h5>
+                <button type="button" class="close" onclick="$('#TimeDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-4" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-8">
+                            <select id="Division2" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-4" style="text-align:left">New Time Name:</label>
+                        <div class="col-md-8">
+                            <input type="text" id="NewTime" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+                        <label class="col-md-4" style="text-align:left">Time:</label>
+                        <div class="col-md-4">
+                            <input type="text" id="NewTimeHr" value="0" class="form-control" placeholder="Hr(s)" autocomplete="off" onkeypress="isNumberInt(event,this)">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="NewTimeMin">
+                                <option value="" hidden>Min(s)</option>
+                                <option value="0">0</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" style="width:100px;" id="btndivdelete" onclick="" class="btn btn-outline-secondary">Delete</button>*@
+                <button type="button" style="width:100px" id="btntimesave" onclick="SaveNewTime()" class="btn btn-outline-primary">Save</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="ReasonDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="myheader">Add Time Tags</h5>*@
+                <button type="button" class="close" onclick="$('#ReasonDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason"></label>
+                        <div class="col-md-7">
+                            <input type="text" id="Remarks" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#ReasonDiv').hide()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CancelWork()" class="btn btn-outline-danger">Cancel</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="TransferDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="myheader">Add Time Tags</h5>*@
+                <button type="button" class="close" onclick="$('#TransferDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reason For Transfer:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="rsntransfer" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Transfer To User:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="transuser" class="form-control disa" autocomplete="off" onkeyup="checktransuser()">
+                            <input type="hidden" id="transuserId" value="0" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="transuserLength" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btncncl" onclick="$('#TransferDiv').hide()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btntras" onclick="Reassign()" class="btn btn-outline-warning">Transfer</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+@section bottomscripts {
+    <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+}
+
+
+
+<script type="text/javascript">
+    var RemarkFlag=0;
+    $("#User").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data1 = {};
+            data1.UserName = $("#User").val();
+            data1.DepartmentId = $("#Department").val();
+            data1.DivisionId = $("#Division").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DeptUserGetandGets',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName:item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#UserId').val(ui.item.UserId);
+            $('#UserLength').val((ui.item.UserName).length);
+        },
+    });
+
+    $("#transuser").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data1 = {};
+            data1.UserName = $("#transuser").val();
+            data1.DepartmentId = $("#Department").val();
+            data1.DivisionId = $("#Division").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DeptUserGetandGets',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName:item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#transuserId').val(ui.item.UserId);
+            $('#transuserLength').val((ui.item.UserName).length);
+        },
+    });
+
+    $(document).ready(function () {
+       
+        GetDepartment();
+        GetDivision();
+        GetList();
+
+        $("#btnassign").click(function (e) {
+            SaveAndUpdate()
+        });
+        $("#btncancel").click(function (e) {
+            $('#TransferDiv').hide();
+            $('#Remarks').prop("disabled",false)
+            $('#ReasonDiv').show();
+            $('#reason').text('Reason For Cancel:')
+            $('#Remarks').focus();
+        });
+        $("#btntransfer").click(function (e) {
+            $('#ReasonDiv').hide();
+            $('#rsntransfer').prop("disabled",false);
+            $('#transuser').prop("disabled",false);
+            $('#TransferDiv').show();
+            $('#rsntransfer').focus();
+
+        });
+        Defaultfocus();
+
+        if ("@Request.QueryString["from"]" == "SalesInvoice") {
+            var srlsrs = sessionStorage.getItem("sales_srs");
+            var srlno = sessionStorage.getItem("sales_slno");
+            var dep = sessionStorage.getItem("sales_deptid");
+            sessionStorage.removeItem("sales_srs");
+            sessionStorage.removeItem("sales_slno");
+            sessionStorage.removeItem("sales_deptid");
+            var numId = parseInt(srlsrs);
+            var num = parseInt(srlno);
+            var deprtid=parseInt(dep)
+            if (!isNaN(numId) && !isNaN(num) && !isNaN(deprtid)) {
+                GetSalesInvoceWorkItem(numId,num,deprtid);
+            }
+        }
+        else if("@Request.QueryString["from"]" == "Layout"){
+            var sorttype = sessionStorage.getItem("sort_type");
+            sessionStorage.removeItem("sort_type");
+            var worksorttype = parseInt(sorttype);
+            if (!isNaN(worksorttype)) {
+                $('#defaulttable').hide();
+                GetSortedWorkitem(worksorttype);
+
+            }
+        }
+
+    });
+
+    function GetDepartment(){
+        var data = {};
+        data.DeptId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList);
+
+
+            }
+        });
+    }
+
+
+    function GetDivision(){
+
+        var data1 = {};
+        $.ajax({
+            type: "POST",
+            url: "../WorkItemUser/WorkDivisionGetandGets",
+            data: data1,
+            success: function (result) {
+                DivisionLoad(result.oList);
+
+
+            }
+        });
+    }
+
+    function GetList(){
+       
+        if (usermenu1.indexOf("M225") != -1) {
+            
+       // All WorkItem
+            var table = $("#listitems").EumiDataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "../WorkItemUser/ListWorkItemsJson",
+                    "type": "POST",
+                    "data": function (data) {
+                        data.addData = window.ListPageParams;
+                    }
+                },
+                "columnDefs": [              
+                    {
+                        "targets": 10,
+                        "visible": false
+                    },
+                ],
+                "columns": [
+                    { data: "slno", title: "No", searchable: false, sortable: false },
+                    { data: "Title", title: "Category" },
+                    { data: "AssignedOn", title:" Date/Time"},
+                    { data: "AssignedByUser", title: "Assigned By" },
+                    { data: "AssignedToUser", title: "Assigned To" },
+                    { data: "Dept", title: "Location" },
+                    { data: "Div", title: "Division"},
+                    { data: "Status", title: "Status"},
+                    { data: "Reason", title: "Remarks" },
+                    { data: "WorkItemId", title: "Edit", searchable: false, sortable: false },
+                    { data: "EXCEDDEDTIME", title: "EXCEDDEDTIME" },
+                ],
+                "createdRow": function (row, data, index) {
+                    row.getElementsByTagName("td")[9].innerHTML = '<a  onclick="GetItem(' + data.WorkItemId + ');">'+Editbutton+'</a>';
+
+
+                    if (data.EXCEDDEDTIME <= 0 && row.getElementsByTagName("td")[7].innerHTML != 'Completed' && row.getElementsByTagName("td")[7].innerHTML != 'Canceled' && row.getElementsByTagName("td")[7].innerHTML != 'Reassign') {
+
+                        $('td', row).css('background-color', '#FF8F00');
+                        $(row).addClass('white');
+                    }
+                    else
+
+                        if (row.getElementsByTagName("td")[7].innerHTML == 'On Hold' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('deep orange');
+                            //$(row).addClass('orange');
+                            // $('td', row).css('background-color', 'Orange');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Completed' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('green');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Canceled' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('danger');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Created' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('info');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Started' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('primary');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Reassign' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('brown');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'In Progress' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('blue');
+                        }
+
+                },
+                "order": [[9, 'desc' ]]
+            });
+        }
+        else{
+            var table = $("#listitems").EumiDataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "../WorkItemUser/ListWorkItemsJsonUserOnly",
+                    "type": "POST",
+                    "data": function (data, settings) {
+                        var addData = {}
+                        addData.AssignedToyou = ERPUserId;
+                        data.addData = addData;
+
+                    }
+                },
+                "columnDefs": [              
+                    {
+                        "targets": 10,
+                        "visible": false
+                    },
+                ],
+                "columns": [
+                    { data: "slno", title: "No", searchable: false, sortable: false },
+                    { data: "Title", title: "Category" },
+                    { data: "AssignedOn", title:" Date/Time"},
+                    { data: "AssignedByUser", title: "Assigned By" },
+                    { data: "AssignedToUser", title: "Assigned To" },
+                    { data: "Dept", title: "Location" },
+                    { data: "Div", title: "Division"},
+                    { data: "Status", title: "Status"},
+                    { data: "Reason", title: "Remarks" },
+                    { data: "WorkItemId", title: "Edit", searchable: false, sortable: false },
+                    { data: "EXCEDDEDTIME", title: "EXCEDDEDTIME" },
+                ],
+                "createdRow": function (row, data, index) {
+                    row.getElementsByTagName("td")[9].innerHTML = '<a  onclick="GetItem(' + data.WorkItemId + ');">'+Editbutton+'</a>';
+
+
+                    if (data.EXCEDDEDTIME <= 0 && row.getElementsByTagName("td")[7].innerHTML != 'Completed' && row.getElementsByTagName("td")[7].innerHTML != 'Canceled' && row.getElementsByTagName("td")[7].innerHTML != 'Reassign') {
+
+                        $('td', row).css('background-color', '#FF8F00');
+                        $(row).addClass('white');
+                    }
+                    else
+
+                        if (row.getElementsByTagName("td")[7].innerHTML == 'On Hold' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('deep orange');
+                            //$(row).addClass('orange');
+                            // $('td', row).css('background-color', 'Orange');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Completed' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('green');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Canceled' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('danger');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Created' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('info');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Started' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('primary');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'Reassign' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('brown');
+                        }
+                        else if ( row.getElementsByTagName("td")[7].innerHTML == 'In Progress' ) {
+                            $(row.getElementsByTagName("td")[7]).addClass('blue');
+                        }
+
+                },
+                "order": [[9, 'desc' ]]
+            });
+        }
+    }
+
+
+
+
+
+    function DepartmentLoad(result) {
+        $("#Department").empty();
+        for (var i = 0; i < result.length; i++) {
+            $("#Department").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+        $('#Department').val(ERPDeptId);
+    }
+
+    function DivisionLoad(result) {
+        $("#Division,#Division1,#Division2").empty();
+        $("#Division1,#Division2").append("<option value='0'>--Select Division--</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Division,#Division1,#Division2").append("<option value='" + result[i].DivisionId + "'>" + result[i].DivisionName + "</option>");
+        }
+        WorkTaskTime();
+    }
+
+    function WorkTaskTime() {
+        var data = {};
+        data.DivisionId = $('#Division').val();
+        $.ajax({
+            type: "POST",
+            url: "../WorkItemUser/WorkingTaskTimeGetandGets",
+            data: data,
+            success: function (result) {
+                WorkTimeGets(result.bList);
+
+
+            }
+        });
+    }
+
+    function WorkTimeGets(result){
+        $("#Time").empty();
+        for (var i = 0; i < result.length; i++) {
+            var Hr=0;   var Min=0;  var realmin=0;
+
+            if(result[i].TurnAroundTimes>=60){
+                Min = parseInt(result[i].TurnAroundTimes);
+                realmin = Min % 60;
+                Hr = Math.floor(Min / 60);
+                $("#Time").append("<option value='" + result[i].TurnAroundTimes + "'>" + result[i].TurnAroundTimesName +" - " + Hr + " HR(s) "+ realmin +" Min(s)</option>");
+            }
+            else{
+                Hr=0;
+                realmin=parseInt(result[i].TurnAroundTimes)
+                $("#Time").append("<option value='" + result[i].TurnAroundTimes + "'>" + result[i].TurnAroundTimesName +" - " + Hr + " HR(s) "+ realmin +" Min(s)</option>");
+            }
+
+        }
+    }
+
+
+
+
+
+</script>

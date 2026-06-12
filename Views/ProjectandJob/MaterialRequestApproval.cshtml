@@ -1,0 +1,486 @@
+﻿
+@{
+    ViewBag.Title = "MaterialRequestApproval";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .modal-xl{
+        max-width:60%;
+    }
+</style>
+
+<div class="myData" data-x="M290" />
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #bdbdbd;">
+                    <div class="col-md-12" style="background-color:#daeff1">
+                        <div class="row pt-2">
+                            <div class="col-md-3">
+                                <h4 class="card-title mb-0">MATERIAL/JOB APPROVAL</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="mr-1" style="font-weight:bold">From</label>
+                                    <div id="divFromDate" class="ml-1 mr-1">                                    
+                                        <input type="text" id="FromDate" class="form-control" style="width:150px" />
+                                    </div>
+                                    <label class="ml-1 mr-1" style="font-weight:bold">To</label>
+                                    <div id="divToDate" class="ml-1 mr-1">                                        
+                                        <input type="text" id="ToDate" class="form-control" style="width:150px" />
+                                    </div>
+                                    <div id="divpending" class="d-inline-block custom-control custom-radio ml-1 mr-1">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btnpending" value="Pending" checked>
+                                        <label class="custom-control-label" for="btnpending">Pending </label>
+                                    </div>
+                                    <div id="divapproved" class="d-inline-block custom-control custom-radio ml-1 mr-1">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btnapproved" value="Approved">
+                                        <label class="custom-control-label" for="btnapproved">Approved </label>
+                                    </div>
+                                    <div id="divsummary" class="d-inline-block custom-control custom-radio ml-1 mr-1">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btnrejected" value="Rejected">
+                                        <label class="custom-control-label" for="btnrejected">Rejected </label>
+                                    </div>
+                                    <div id="divsummary" class="d-inline-block custom-control custom-radio ml-1 mr-1">
+                                        <input type="radio" name="sd" class="custom-control-input" id="btnall" value="All">
+                                        <label class="custom-control-label" for="btnall">All </label>
+                                    </div>
+                                    <button type="button" id="" class="btn btn-primary ml-2 mr-1" onclick="GetList(1)">Apply</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="card-body mt-2 mb-2">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+
+                                        <div class="card-content collapse show" style="overflow:auto;">
+                                            <div class="card-body card-dashboard">
+                                                <table id="tbl_MaterialRequest" class="table table-striped table-bordered base-style dataTable" width="100%"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <input id="MRNo" value="0"/>
+    <input id="slno" value="0" />
+    <input id="Status" />
+</div>
+
+<div class="modal fade text-left show" id="MRDiv" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myModalLabel18">Request Material Details</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#MRDiv').hide()" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="overflow-auto" style="height:525px; ">
+                            <table id="tbl_MRList" width="100%" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        GetList(0);
+
+    });
+    $(function () {
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+
+    $(document).keydown(function (e) {
+        $('#Warningpopup').fadeOut();
+        $('#MRDiv').hide();
+
+    });
+
+    function GetList(Flag) {
+
+        var Status = '';
+
+        if ($("#btnpending").prop("checked") == true)
+            Status = 'Pending';
+        else if ($("#btnapproved").prop("checked") == true)
+            Status = 'Approved';
+        else if ($("#btnrejected").prop("checked") == true)
+            Status = 'Rejected';
+        else if ($("#btnall").prop("checked") == true)
+            Status = 'All';
+
+
+        var data = {};
+        data.Status = Status;
+        data.FromDate = $("#FromDate").val();
+        data.ToDate = $("#ToDate").val();
+        data.Flag = Flag;
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            url: '../MaterialRequest/MaterialRequetApprovalGets',
+            type: "POST",
+            data: data,
+            dataType: "json",
+            success: function (result) {
+                ApprovalGets(result.oList);
+            }
+        });
+    }
+
+    function ApprovalGets(result) {
+
+        disable_datatable('tbl_MaterialRequest');
+
+        if (result.length == 0) {
+            var responseText = "<thead><tr style='text-align:center;color:red'><th>NO MATERIAL REQUEST YET</th></tr></thead>";
+            $('#tbl_MaterialRequest').html(responseText);
+        }
+        else {
+
+            var responseText = "<thead>" +
+                "<tr><th>Sl#</th><th>MR#</th><th>Date</th><th>Job Code</th><th>Description</th><th>Requested By</th><th>Status</th><th>Approved By</th><th>Accept/Reject</th></tr>" +
+                "</thead><tbody>";
+            for (var l = 0; l < result.length; l++) {
+                var slno = parseInt(l + 1);
+
+                var Edit = '';
+
+                if (result[l].Status == 'Pending') {
+                    var rowclass = 'badge-danger';
+
+                    Edit = "<span class='row ml-1 mr-1' id='span_" + slno + "'>" +
+                        "<a class='col-md-6' onclick=MaterialRequetApproval('" + result[l].MRNo + "','" + slno + "','Approve')><h4 class='text-center'><i class='ft-check-square' style='color:green'></i></h4></a>" +
+                        "<a class='col-md-6' onclick=MaterialRequetApproval('" + result[l].MRNo + "','" + slno + "','Reject')><h4 class='text-center'><i class='fa fa-times' style='color:red'></i></h4></a>" +
+                        "</span>";
+
+
+
+                }
+                else if (result[l].Status == 'Approved') { var rowclass = 'badge-success'; }
+                else if (result[l].Status == 'Rejected') { var rowclass = 'badge-secondary'; }
+
+
+
+
+                responseText += '<tr ondblclick=GetItemDetails(\'' + result[l].MRNo + '\')>' +
+                    '<td align="center">' + slno + '</td>' +
+                    '<td align="center">' + result[l].MRNo + '</td>' +
+                    '<td>' + result[l].MRDate + '</td>' +
+                    '<td>' + result[l].JobCode + '</td>' +
+                    '<td>' + result[l].JobDescription + '</td>' +
+                    '<td>' + result[l].RequestedBy + '</td>' +
+                    '<td><div class="text-center" style="width:100%"><span style="width:100%" class="badge ' + rowclass + '" id="status_' + slno + '">' + result[l].Status + '</span></div></td>' +
+                    '<td>' + result[l].ApprovedByUser + '</td>' +
+                    '<td>' + Edit + '</td>' +
+                    '</tr>';
+            }
+            $('#tbl_MaterialRequest').html(responseText + '</tbody><tfoot><tr><th> </th><th>MR#</th><th>Date</th><th>Job Code</th><th>Description</th><th>Requested By</th><th>Status</th><th>Approved By</th><th> </th></tr></tfoot>');
+
+            var title = 'Material Request Approval'
+
+            datatableWithsearch('tbl_MaterialRequest', '1', true, title, 'buttonPlace');
+        }
+    }
+
+    function MaterialRequetApproval(MRNo,slno,Status) {
+
+
+        $("#MRNo").val(MRNo);
+        $("#slno").val(slno);
+        $("#Status").val(Status);
+
+
+        $('#confirm').show();
+        $('#confirmOk').focus();
+        $('#Confirmflag').val('Confirm'); $('#ConfirmRowId').val(0);
+        $('#confirmmessage').text('Do You Want To ' + Status + ' This Material Request?')
+
+    }
+    function OKMaterialRequetApproval() {
+
+        var data = {};
+        data.MRNo = $("#MRNo").val();
+        data.Status = $("#Status").val();
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            url: '../MaterialRequest/MaterialRequetApproval',
+            type: "POST",
+            data: data,
+            dataType: "json",
+            success: function (result) {
+                var status = result.oList[0].Status;
+                var no = result.oList[0].MRNo;
+
+                if (status == 1) {
+                    $("#span_" + $("#slno").val()).remove();
+                    $("#status_" + $("#slno").val()).removeClass();
+                    $("#status_" + $("#slno").val()).addClass('badge badge-success');
+                    $("#status_" + $("#slno").val()).text('Approved');
+                }
+                else if (status == 2) {
+                    $("#span_" + $("#slno").val()).remove();
+                    $("#status_" + $("#slno").val()).removeClass();
+                    $("#status_" + $("#slno").val()).addClass('badge badge-danger');
+                    $("#status_" + $("#slno").val()).text('Rejected');
+                }
+                Showalerts(status, no);
+                
+
+
+            }
+        });
+
+    }
+
+
+    function GetItemDetails(SlNo) {
+        var data = {};
+        data.MRNo = SlNo;
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../MaterialRequest/MaterialRequestGetandGets",
+            data: data,
+            success: function (result) {
+                formrefresh(1);
+                MRGets(result.oList);
+            }
+        });
+    }
+
+    function MRGets(result) {
+
+        disable_datatable('tbl_MRList');
+        $("#MRDiv").show();
+
+        var responseText = "<thead>" +
+            "<tr><th>Sl#</th><th>MR#</th><th>Item Code</th><th>Description</th><th>Unit</th><th>Quantity</th><th>Price</th><th>Amount</th></tr>" +
+            "</thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+            var slno = parseInt(l + 1);
+
+            responseText += '<tr>' +
+                '<td align="center">' + slno + '</td>' +
+                '<td>' + result[l].MRNo + '</td>' +
+                '<td>' + result[l].ItemCode + '</td>' +
+                '<td>' + result[l].ItemDescription + '</td>' +
+                '<td>' + result[l].Unit + '</td>' +
+                '<td align="center">' + result[l].Quantity + '</td>' +
+                '<td align="right">' + parseFloat(result[l].Price || 0).toFixed(Decimal) + '</td>' +
+                '<td align="right">' + parseFloat(result[l].Amount || 0).toFixed(Decimal) + '</td>' +
+                '</tr>';
+        }
+        $('#tbl_MRList').html(responseText + '</tbody><tfoot><tr><th> </th><th>MR#</th><th>Item Code</th><th>Description</th><th>Unit</th><th> </th><th> </th><th> </th></tr></tfoot>');
+        datatableWithsearch('tbl_MRList', '2');
+
+    }
+
+
+    function datatableWithsearch(tablename, Type,download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" class="form-control" style="width:100%"  placeholder="' + title + '"/>')
+        });
+
+        var table = null;
+
+        if (Type == '1') {
+            if (download) {
+                if (!title || !tableButtonContainerId) {
+                    //console.log("download table need title and button container");
+                }
+
+                // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+                table = $('#' + tablename).DataTable({
+                    dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                         "<'row'<'col-sm-12'tr>>" +
+                         "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                    buttons: [],
+                    "aaSorting": [],
+                    "columnDefs": [
+                                   { "width": "5%", "targets": 0 },
+                                   { "width": "7%", "targets": 1 },
+                                   { "width": "5%", "targets": 2 },
+                                   { "width": "10%", "targets": 3 },
+                                   { "width": "26%", "targets": 4 },
+                                   { "width": "15%", "targets": 5 },
+                                   { "width": "7%", "targets": 6 },
+                                   { "width": "15%", "targets": 7 },
+                                   { "width": "10%", "targets": 8 },
+                    ],
+
+                });
+                new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Export',
+                        className: 'excelexport',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'print',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            }
+                        ]
+                    },
+                    'colvis'
+                    ]
+                });
+                table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+                $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+            } else {
+                table = $('#' + tablename).DataTable();
+            }
+
+        }
+        else if (Type == '2') {
+
+            table = $('#' + tablename).DataTable({
+                dom: 'tipr',
+                orderCellsTop: true,
+                "columnDefs": [
+                                    { "width": "5%", "targets": 0 },
+                                    { "width": "10%", "targets": 1 },
+                                    { "width": "20%", "targets": 2 },
+                                    { "width": "25%", "targets": 3 },
+                                    { "width": "10%", "targets": 4 },
+                                    { "width": "10%", "targets": 5 },
+                                    { "width": "10%", "targets": 6 },
+                                    { "width": "10%", "targets": 7 },
+                ],
+            });
+
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+    function ConfirmboxResult(Result, status, rowid) {
+
+        if (Result == 'true' && status == 'Confirm') {
+            OKMaterialRequetApproval();
+        }       
+        $('#confirm').fadeOut();
+
+    }
+
+    function formrefresh() {
+        $("#MRNo").val(0);
+        $("#slno").val(0);
+        $("#Status").val('');
+    }
+    function Showalerts(Status, no) {
+        if (Status == 1) {
+            formrefresh(0);
+            swal('MR# : ' + no + ' ', "Approved", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        else if (Status == 2) {
+            formrefresh(0);
+            swal('MR# : ' + no + ' ', "Rejected", "error");
+            $('.swal-button swal-button--confirm').focus();
+
+        }       
+        else {
+            swal('No Action', "", "warning");
+            $('.swal-button swal-button--confirm').focus();
+
+
+        }
+
+    }
+</script>

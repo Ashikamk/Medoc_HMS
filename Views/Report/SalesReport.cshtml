@@ -1,0 +1,775 @@
+﻿
+@{
+    ViewBag.Title = "SalesReport";
+}
+
+
+<style type="text/css">
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+    /* .eumi-search-table tbody td { border:none; } */
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+
+    .form-control
+    {
+        font-weight:bold;
+    }
+     /*#btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+     #Close
+      {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+     #btnColVisibility
+      {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+     
+     #btnGroupDropDownload
+      {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+     #clear
+      {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }*/
+
+</style>
+<div class="myData" data-x="M208" />
+<div class="card">
+    <div class="row m-1">
+        <div class="col-md-6">
+            <h2>Sales Report</h2>
+        </div>
+        <div class="col-md-6 eumi-button-area" id="divReportOptions" data-download-url="@Url.Action("SalesReportDownload", "Report")">
+
+
+            <div class="btn-group" role="group">
+                <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Columns
+                </button>
+                <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                </div>
+            </div>
+
+            <button type="button" id="btnchgp" class="btn btn-primary" data-toggle="modal"  data-target="#paramModal" onclick="$('#customer').focus()">Change Parameters</button>
+
+            <div class="btn-group excelexport" role="group">
+                <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Export
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                    <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                    <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                    <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                    <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary"id="clear" data-eumi-clear="1" type="button">Clear Search</button>
+        </div>
+    </div>
+    <div id="popup" style="display:none;">
+        <div class="row m-1">
+            <div id="paramOfReport" class="row m-1"></div>
+        </div>
+
+        <div style="overflow:auto;">
+            <table id="salesreport" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:3000px; margin: 0 auto 0 0;">
+                <tfoot>
+                    <tr class="eumi-search-row">
+                        <th></th>
+                        @*<th>Bill Series</th>
+                        <th>Bill Number</th>*@
+                        <th>Bill#</th>
+                        <th>Date</th>
+                        <th>Account#</th>
+                        <th>Customer</th>
+                        <th>Salesman</th>
+                        <th>Area</th>
+                        <th>Location</th>
+                        <th>Terms</th>
+                        <th>Pay Type</th>
+                        <th>Job Code</th>
+                        <th>LPO#</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Currency</th>
+                        <th></th>
+                        <th></th>
+                        <th>Dep Code</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Grand Total</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th id="eumiTaxableAmount" class="text-right">Sales Value</th>
+                        <th id="eumiDiscount" class="text-right">Discount</th>
+                        <th id="eumiTaxableValue" class="text-right">Taxable Amount</th>
+                        <th id="eumiTaxAmount" class="text-right">Tax Amount</th>
+                        <th id="eumiRoundGrandTotal" class="text-right">Roundoff</th>
+                        <th id="eumiAmount" class="text-right">Sales Amount</th>
+                        <th></th>
+                        <th></th>
+                        <th id="eumiFCAmount" class="text-right">FCAmount</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="height:100px;clear: both">
+    &nbsp;
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#UserId').val(ERPUserId);
+        $('#btnchgp').click();
+        $('#customer').focus();
+            var decimal = (window.Decimal || 1);
+            window.EumiLastSelectedInSalesRpt = null;
+            var table = $('#salesreport').EumiDataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "../Report/SalesReportJson",
+                    "type": "POST",
+                    "data": function (data, settings) {
+                        var addData = (window.EumiLastSelectedInSalesRpt || {});
+                        addData.dateFrom = moment(addData.dateFrom || new Date()).format("YYYY-MM-DD");
+                        addData.dateTo = moment(addData.dateTo || new Date()).format("YYYY-MM-DD");
+                        addData.Area = (addData.Area || 0);
+                        addData.Paytype = (addData.Paytype || 0);
+                        addData.SalesamanId = (addData.SalesamanId || 0);
+                        addData.CustId = (addData.CustId || 0);
+                        addData.DepartmentId = (addData.DepartmentId || 0);
+                        addData.UserId = (addData.UserId || 0);
+                        addData.User = (addData.User || 0);
+                        if (!addData.title) {
+                            addData.title = "Parameters - " + "From: " + moment(new Date()).format("DD-MM-YYYY") + " To: " + moment(new Date()).format("DD-MM-YYYY")
+                            $("#paramOfReport").text(addData.title);
+                        }
+                        data.addData = addData;
+                        $("#eumiTaxableAmount").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiDiscount").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiTaxableValue").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiTaxAmount").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiAmount").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiRoundGrandTotal").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiFCAmount").text(parseFloat(0).toFixed(decimal));
+                    }
+                },
+                "columnDefs": [
+                     {
+                         "targets": 0,
+                         "className": "text-center",
+                     },
+                    {
+                        "targets": 2,
+                        "className": "text-center",
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center",
+                    },
+                    
+
+                     {
+                         "targets": 18,
+                         "className": "text-center",
+                     },
+                     
+                      {
+                          "targets": 19,
+                          "className": "text-right",
+                          "render": function (data) {
+                              return (data || 0).toFixed(decimal);
+                          }
+                      },
+                    
+                    {
+                    "targets": 5,
+                    "className": "text-left",
+                    "render": function (data) {
+                        if (data !== null) {
+                            return (data.substring(0, 10));
+                        }
+                        else
+                        {
+                            return (null);
+                        }
+                    }
+                },
+                {
+                    "targets": 12,
+                    "className": "text-right",
+                    "render": function (data) {
+                        return (data || 0).toFixed(decimal);
+                    }
+                },
+                    {
+                    "targets": 13,
+                    "className": "text-right",
+                    "render": function (data) {
+                        return (data || 0).toFixed(decimal);
+                    }
+                },
+                {
+                    "targets": 14,
+                    "className": "text-right",
+                    "render": function (data) {
+                        return (data || 0).toFixed(decimal);
+                    }
+                },
+                 {
+                     "targets": 15,
+                     "className": "text-right",
+                     "render": function (data) {
+                         return (data || 0).toFixed(decimal);
+                     }
+                 },
+                  {
+                      "targets": 16,
+                      "className": "text-right",
+                      "render": function (data) {
+                          return (data || 0).toFixed(decimal);
+                      }
+                  },
+                   {
+                       "targets": 17,
+                       "className": "text-right",
+                       "render": function (data) {
+                           return (data || 0).toFixed(decimal);
+                       }
+                   },
+                {
+                    "targets": 20,
+                    "className": "text-right",
+                    "render": function (data) {
+                        return (data || 0).toFixed(decimal);
+                    }
+                }],
+                "columns": [
+                    { data: "BillSlNo", data: "BillSeriesId", data: "DeptId", data: "slno", title: "Sl#", searchable: false, sortable: false },
+                    { data: "BillSeries", title: "Bill#", sortable: false,width:20 },
+                   // { data: "BillSlNo", title: "Bill Number", sortable: false, width: 20 },
+                     //{
+                     //    data: { BillSeries: "BillSeries", BillSlNo: "BillSlNo" },
+                     //    mRender: function (data, type, full) {
+                     //        return data.BillSeries + ' - ' + data.BillSlNo;
+                     //    }, title: "Bill#", sortable: false
+                     //},
+                    { data: "InvDate", title: "Date", sortable: false, width: 20 },
+                    { data: "AccCode", title: "Account#", sortable: false },
+
+                    { data: "Customer", title: "Customer", sortable: false, width: 50 },
+                      { data: "Salesman", title: "Salesman", sortable: false, width: 50 },
+                     { data: "Area", title: "Area", sortable: false, width: 30 },
+                    { data: "LocationName", title: "Location", sortable: false, width: 30 },
+                    { data: "TermDescription", title: "Terms", sortable: false, width: 20 },
+                    { data: "Payterms", title: "Pay Type", sortable: false, width: 20 },
+                      { data: "JobCode", title: "Job Code", sortable: false, width: 20 },
+                      { data: "LPO", title: "TRN#", sortable: false, width: 20 },
+                    { data: "TaxableAmount", title: "Sales Value", sortable: false, width: 20 },
+                     { data: "BillDiscount", title: "Disc.", sortable: false, width: 20 },
+                     { data: "TaxableValue", title: "Taxable Amount", sortable: false, width: 20 },
+                    { data: "TaxAmount", title: "Tax Amount", sortable: false, width: 20 },
+                     { data: "RoundGrandTotal", title: "Roundoff", sortable: false, width: 20 },
+                    { data: "Amount", title: "Sales Amount", sortable: false, width: 20 },
+                    { data: "CurrencyName", title: "Fx.", sortable: false, width: 20 },
+                    { data: "CurrencyRate", title: "Rate", sortable: false, width: 20 },
+                    { data: "FCAmount", title: "FC Amount", sortable: false, width: 20 },
+                    { data: "DepartmentName", title: "Dept.Code", sortable: false, width: 20 },
+                ],
+                "createdRow": function (row, data, index) {
+                    if (index == 0) {
+                        $("#eumiTaxableAmount").text(ReplaceNumberWithCommas(data._TaxableAmount.toFixed(decimal)));
+                        $("#eumiDiscount").text(ReplaceNumberWithCommas(data._BillDiscount.toFixed(decimal)));
+                        $("#eumiTaxableValue").text(ReplaceNumberWithCommas(data._TaxableValue.toFixed(decimal)));
+                        $("#eumiTaxAmount").text(ReplaceNumberWithCommas(data._taxamount.toFixed(decimal)));
+                        $("#eumiAmount").text(ReplaceNumberWithCommas(data._amount.toFixed(decimal)));
+                        $("#eumiRoundGrandTotal").text(ReplaceNumberWithCommas(data._RoundGrandTotal.toFixed(decimal)));
+                        $("#eumiFCAmount").text(ReplaceNumberWithCommas(data._fcamount.toFixed(decimal)));
+                        console.log(index);
+                    }
+                },
+            });
+            $('#salesreport tbody').on('dblclick', 'tr', function () {
+                var table = $("#salesreport").DataTable();
+                var data = table.row(this).data();
+                GetRows(data.BillSlNo, data.BillSeriesId, data.DeptId);
+            });
+
+            function GetRows(BillSlNo, BillSeriesId, DeptId) {
+                if ((usermenu1.indexOf("M54") != -1))
+                {
+                    window.open('../inventory/SalesInvoice?slno=' + BillSlNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+                }
+                else if((usermenu1.indexOf("M227") != -1))
+                {
+                    window.open('../inventory/SalesInvoiceNew?slno=' + BillSlNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+                }
+                else
+                {
+                    warningshow('Invalid User Rights');
+                    return false;
+                }
+            }
+
+            function warningshow(message, Id) {
+                $('#popupmessage').text(message);
+                $('#Warningpopup').show();
+                $('#' + Id).focus();
+                window.setTimeout(function () {
+                    $('#Warningpopup').hide();
+                }, 3000);
+            }
+            //$('#customer').keypress(function (e) {
+            //    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            //    if (key == 13) {
+            //        $('#Area').focus();
+            //        e.preventDefault();
+            //    }
+            //});
+        $('#Area').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#Paytype').focus();
+                e.preventDefault();
+            }
+        });
+
+        $('#Paytype').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#Salesman').focus();
+                e.preventDefault();
+            }
+        });
+
+            $('#Salesman').keypress(function (e) {
+                var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                if (key == 13) {
+                    $('#User').focus();
+                    e.preventDefault();
+                }
+            });
+
+            $('#User').keypress(function (e) {
+                    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                    if (key == 13) {
+                        $('#Dept').focus();
+                        e.preventDefault();
+                    }
+                });
+            
+               
+                $('#Dept').keypress(function (e) {
+                    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                    if (key == 13) {
+                        $('#btnsubmit').focus();
+                        e.preventDefault();
+                    }
+                });
+
+        });
+      
+</script>
+
+
+@section popups {
+
+    <div class="modal" id="paramModal">
+        <div class="modal-dialog " role="document" style="top:19%;max-width:35%">
+            <div class="modal-content" >
+                <!-- Modal Header -->
+                
+                    
+                        
+                            <div class="modal-header bg-primary white">
+                                <h4 class="modal-title">Sales Report</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                        <label class="col-md-2 text-right" style="font-weight:bold;">From</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="dateFrom" class="form-control" autocomplete="off">
+                                    </div>
+                                        <label class="col-md-2 text-right"  style="font-weight:bold;">To</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="dateTo" class="form-control" autocomplete="off">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+
+                               <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:2.5%;"></div>
+
+                                <div class="row" style="margin-top:2%;">
+                                    <div class="col-md-1"></div>
+                                    <label class="col-md-2 text-right" style="font-weight:bold;">Customer</label>
+                                    <div class="col-md-8" style="">
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="30%">
+                                                    <input type="text" id="customer"  class="form-control" onkeyup="$('#custnames').val('')" style="border-right:none;border-top-right-radius:0px;border-bottom-right-radius:0px;text-align:left">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="custnames"  class="form-control" onchange="" autocomplete="off" style="border-top-left-radius:0px;border-bottom-left-radius:0px;border-left:none;background-color:white"  disabled>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+
+                                <div class="row"  style="margin-top:2%;">
+                                    <div class="col-md-1"></div>
+                                    <label class="col-md-2 text-right" style="font-weight:bold;">Area </label>
+                                    <div class="col-md-3" >
+                                        <select id="Area" name="priority" class="form-control" style="font-weight:bold"><option value="0">- All -</option></select>
+                                    </div>
+                                    <label class="col-md-2 text-right" style="font-weight:bold;">Pay Type</label>
+                                    <div class="col-md-3" >
+                                        <select id="Paytype" class="form-control" name="priority" style="font-weight:bold">
+                                            <option value="0">-All-</option>
+                                            <option value="1">Cash</option>
+                                            <option value="2">Credit</option>
+                                            <option value="3">Card</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+
+
+                                <div class="row"  style="margin-top:2%;">
+                                    <div class="col-md-1"></div>
+                                    <label class="col-md-2 text-right" style="font-weight:bold;">Salesman</label>
+                                    <div class="col-md-3" >
+                                        <select id="Salesman" name="priority" class="form-control" style="font-weight:bold"><option value="0">- All -</option></select>
+                                    </div>
+                                    <label class="col-md-2 text-right" style="font-weight:bold;">User</label>
+                                        @*<input type="text" id="customer" class="form-control" style="font-weight:bold">*@
+                                        <div class="col-md-3" >
+                                            <input type="text" id="User" maxlength="100" class="form-control" style="font-weight:bold">
+                                        </div>                                 
+
+                                    <div class="col-md-1"></div>
+                                </div>
+
+                               
+                                <div class="row"  style="margin-top:2%;">
+                                    <div class="col-md-1"></div>
+                                    <label class="col-md-2 text-right" style="font-weight:bold;">Dept.</label>
+                                    <div class="col-md-3" >
+                                        <select id="Dept" name="priority" class="form-control" style="font-weight:bold"><option value="0">- All -</option></select>
+                                    </div>
+                                   
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <input type="text" class="form-control" id="UserId" style="display:none">                               
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                    <button type="button" id="btnsubmit" class="btn btn-primary" data-dismiss="modal" onclick="redrawTable();">Apply</button>
+                                    <button type="button" id="Close" class="btn btn-primary" data-dismiss="modal" style="margin-right:40%">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+        }
+
+        @section bottomscripts {
+            <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+            <script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+
+                    $("#User").autocomplete({
+                        delay: 0,
+                        minLength: 0,
+                        source: function (request, response) {
+                            var data = {};
+                            data.UserName = $("#User").val();
+                            $.ajax({
+                                url: '../Master/UserSearch',
+                                type: "POST",
+                                data: data,
+                                dataType: "json",
+                                success: function (data) {
+
+                                    response($.map(data, function (item) {
+                                        console.log(data)
+                                        return ({
+                                            ColCount: '1',
+                                            label: item.UserName,
+                                            value2: item.UserId,
+                                            UserName: item.UserName,
+                                            headers: ["User"]
+                                        })
+                                    }));
+                                }
+
+                            })
+
+                        },
+                        autoFocus: true,
+                        select: function (event, ui) {
+                            $('#User').data("eumi-val", ui.item.value2);
+                        },
+                    }).autocomplete("instance")._renderItem = function (ul, item) {
+                        var jqLi = $("<li>")
+                        var jqRow = getTableRow(item, ["label"], ["50%"], ["Name"]);
+                        return jqLi.append($('<table class="tblautocomplete">').css("width", "300px").append(jqRow)).appendTo(ul);
+                    };
+
+
+
+                    $("#customer").autocomplete({
+                        source: function (request, response) {
+                            var data = {};
+                            data.CustName = $("#customer").val();
+                            data.CustType = 'C';
+
+                            $.ajax({
+                                url: '../Master/CustomerOrSupplierSearch',
+                                type: "POST",
+                                data: data,
+                                dataType: "json",
+                                success: function (data) {
+
+                                    response($.map(data, function (item) {
+                                        return ({
+                                            ColCount: 'TWOEnq',
+                                            label: item.CustAccount,
+                                            label1: item.CustName,
+                                            value2: item.CustId,
+                                            CustName: item.CustName,
+                                        })
+                                    }));
+                                }
+
+                            })
+
+                        },
+                        autoFocus: true,
+                        select: function (event, ui) {
+                            $("#customer").data("eumi-val", ui.item.value2);
+                            $("#custnames").val(ui.item.CustName);
+                            $('#Area').focus();
+                            console.log(custnames)
+                        },
+
+                    }).autocomplete("instance")._renderItem = function (ul, item) {
+                        var jqLi = $("<li>")
+                        var jqRow = getTableRow(item, ["label", "label1"], ["50%", "50%"], ["Code", "Name"]);
+                        return jqLi.append($('<table class="tblautocomplete">').css("width", "300px").append(jqRow)).appendTo(ul);
+                    };
+
+                    $('#dateFrom, #dateTo').daterangepicker({
+                        minDate: minDate,
+                        maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                        singleDatePicker: true,
+                        showDropdowns: true,
+                        locale: {
+                            format: 'DD/MM/YYYY'
+                        }
+                    });
+
+
+                    GetDept(0);
+                    GetArea(0);
+                    GetSalesMan(0);
+                    $('#customer').focus();
+                });
+
+
+                function getTableRow(item, keyArray, widthArray, headersArray) {
+                    var jqRow = $("<tr>")
+                    for (var x = 0; x < keyArray.length; x++) {
+                        $("<td>").css({ "border": "1px solid #d6d9db", "width": widthArray[x] })
+                            .html(item[keyArray[x]])
+                            .attr("data-em-header", (headersArray[x] || ""))
+                            .appendTo(jqRow)
+                    }
+                    return jqRow;
+                }
+
+
+          
+
+                function GetDept(id) {
+                    var data = {};
+                    data.UserId = ERPUserId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/UserDepartmentGetandGets",
+                        data: data,
+                        success: function (result) {
+                            DepartmentLoad(result.oList, id);
+
+
+                        }
+                    });
+                }
+
+                function DepartmentLoad(result, a) {
+                    $("#Dept").empty();
+                    $("#Dept").append("<option value='0'>-All-</option>");
+                    for (var i = 0; i < result.length; i++) {
+                        $("#Dept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+                    }
+                }
+
+
+                function GetArea(id) {
+                    var data = {};
+                    data.Id = 0;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/AreaGetandGets",
+                        data: data,
+                        success: function (result) {
+                            $.each(result.oList, function (index, ele) {
+                                $("#Area").append($("<option>").attr("value", ele.AreaId).text(ele.AreaCode));
+                            });
+                        }
+                    });
+                }
+
+
+                function GetSalesMan(id) {
+                    var data = {};
+                    data.Id = 0;
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/SalesmanGetandGets",
+                        data: data,
+                        success: function (result) {
+                            SalesManLoad(result.oList, id);
+                        }
+                    });
+                }
+
+                function SalesManLoad(result, a) {
+                    $("#Salesman").empty();
+                    $("#Salesman").append("<option value='0'>-All-</option>")
+                    for (var i = 0; i < result.length; i++) {
+                        $("#Salesman").append("<option value='" + result[i].Id + "'>" + result[i].FirstName + "</option>");
+                    }
+                }
+
+                function redrawTable() {
+                    $('#popup').show();
+                    var data = {};
+                    data.dateFrom = moment($('#dateFrom').val(), "DD-MM-YYYY").toDate();
+                    data.dateTo = moment($('#dateTo').val(), "DD-MM-YYYY").toDate();
+                    data.Area = parseInt($('#Area').val() || 0);
+                    data.Paytype = parseInt($('#Paytype').val() || 0);
+                    data.SalesamanId = parseInt($('#Salesman').val() || 0);
+                    data.CustId = ($('#customer').val().match(/^\s*$/) ? 0 : parseInt($('#customer').data("eumi-val") || 0));
+                    data.DepartmentId = parseInt($('#Dept').val() || 0);
+                    data.UserId = ($('#User').val().match(/^\s*$/) ? 0 : parseInt($('#User').data("eumi-val") || 0));
+                    data.User = parseInt($('#UserId').val() || 0);
+                    data.title = "Parameters - "
+                        + "From: " + $('#dateFrom').val()
+                        + " To: " + $('#dateTo').val()
+                        + " Area: " + $('#Area').find("option:selected").text()
+                        + " Pay Type: " + $('#Paytype').find("option:selected").text()
+                        + " Salesman: " + $('#Salesman').find("option:selected").text()
+                       + " Customer: " + ($('#customer').val() || "(All)")
+                        + " Department: " + $('#Dept').find("option:selected").text()
+                     + " User: " + ($('#User').val() || "(All)");
+                    if ($.fn.DataTable.isDataTable('#salesreport')) {
+                        window.EumiLastSelectedInSalesRpt = data;
+                        $("#salesreport").DataTable().ajax.reload();
+                        $("#paramOfReport").text(data.title);
+                    }
+                }
+            </script>
+        }
+
+
+
+
+
+
+

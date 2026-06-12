@@ -1,0 +1,584 @@
+﻿@{
+    ViewBag.Title = "ItemAccessories";
+}
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+@*<script type="text/javascript" src="../Projectscript/ItemAccessoriesMapping.js"></script>*@
+
+<script>
+
+    var AccId = 2;
+    $(document).ready(function () {
+
+
+        Defaultfocus();
+
+        $("#btnsubmit").click(function (e) {
+            SaveAndUpdate(1)
+
+        });
+    });
+
+
+    function addaccessories() {
+
+        $('#Accessdiv').append("<div id=" + 'ROWWW' + AccId + "  class='form-group row'> <div class=col-md-2>  <select onchange=rowamoutcalcul(" + AccId + ")   id='accstaus" + AccId + "'  class=form-control ><option value=LAB>LAB TEST</option></select></div><div class='col-md-4'><input type='hidden' class='form-control' id='Accsessories_" + AccId + "_Id' value='0' /><input type='text' class='form-control' id='Accsessories_" + AccId + "' onkeypress=AccessoriesLoad('Accsessories_" + AccId + "') onkeyup=CheckID('Accsessories_" + AccId + "') /></div> <div class='col-md-2'><input type='text' class='form-control' value=1  onkeyup=rowamoutcalcul(" + AccId + ")  id='Accsessoriesqty_" + AccId + "'  onkeypress='isNumberFloatCommon123123(event,this)' /></div><div class=col-md-2><input type=text class=form-control id='Accrate" + AccId + "'  onkeyup=rowamoutcalcul(" + AccId + "),PACKAGERATECALUATION() onkeypress=isNumberFloatCommon123(event,this) /></div><div class=col-md-2><input type=text class=form-control  onkeyup=rowamoutcalcul(" + AccId + ")  id='Acctot" + AccId + "' disabled onkeypress=isNumberFloatCommon123(event,this) /></div></div>")
+        AccId++;
+        rowamoutcalcul(0);
+        PACKAGERATECALUATION()
+    }
+
+
+
+    function rowamoutcalcul(Id) {
+
+        debugger;
+        var IncQty = 0, incamount = 0, SrQty = 0, Sramount = 0, OrQty = 0; Oramount = 0;
+
+        var IQty = parseFloat($('#Accsessoriesqty_' + Id).val() || 0).toFixed(4);
+        var IRate = parseFloat($('#Accrate' + Id).val() || 0).toFixed(4);
+        var TOTIncamt = parseFloat(IQty * IRate).toFixed(4);
+
+
+        if ($('#accstaus' + Id).val() == 'OR') {
+            $("#Acctot" + Id).removeAttr("disabled");
+            var At = parseFloat($('#Acctot' + Id).val() || 0)
+            var Qt = parseFloat($('#Accsessoriesqty_' + Id).val() || 1)
+            $('#Accrate' + Id).val(At / Qt)
+
+        }
+        else {
+            $("#Acctot" + Id).attr("disabled", "disabled");
+            $('#Acctot' + Id).val(TOTIncamt);
+
+        }
+        //alert(AccId)
+        for (var i = 1; i <= AccId; i++) {
+            var flag = $('#accstaus' + i).val();
+            if (flag == 'INC') {
+                IncQty = (parseFloat(IncQty) + parseFloat($('#Accsessoriesqty_' + i).val() || 0)).toFixed(4);
+                incamount = (parseFloat(incamount) + parseFloat($('#Acctot' + i).val() || 0)).toFixed(4);
+                // console.log(incamount)
+                console.log(IncQty)
+            }
+            else if (flag == 'SR') {
+                SrQty = (parseFloat(SrQty) + parseFloat($('#Accsessoriesqty_' + i).val() || 0)).toFixed(4);
+                Sramount = (parseFloat(Sramount) + parseFloat($('#Acctot' + i).val() || 0)).toFixed(4);
+            }
+            else if (flag == 'OR') {
+                OrQty = (parseFloat(OrQty) + parseFloat($('#Accsessoriesqty_' + i).val() || 0)).toFixed(4);
+                Oramount = (parseFloat(Oramount) + parseFloat($('#Acctot' + i).val() || 0)).toFixed(4);
+            }
+        }
+        $('#inqty').val(IncQty);
+        $('#inamt').val(incamount)
+        $('#oamt').val(Oramount);
+        $('#oqty').val(OrQty);
+        $('#srqty').val(SrQty);
+        $('#sramt').val(Sramount)
+        setTimeout(function () {
+            amountcalcul();
+        }, 500);
+
+    }
+
+    function amountcalcul() {
+
+        var IA = parseFloat($('#inamt').val() || 0);
+        var SA = parseFloat($('#sramt').val() || 0);
+        var OA = parseFloat($('#oamt').val() || 0);
+        var SV = parseFloat($('#srvariance').val() || 0);
+        var QA = parseFloat(IA + SA + OA + SV).toFixed(2);
+        $('#gamt,#namt').val(QA)
+
+        var IQ = parseFloat($('#inqty').val() || 0);
+        var SQ = parseFloat($('#srqty').val() || 0);
+        var OQ = parseFloat($('#oqty').val() || 0);
+        var QQ = parseInt(IQ + SQ + OQ);
+        $('#gqty').val(QQ)
+        var PL = parseFloat($('#plose').val() || 0)
+        var QQ = parseInt((IQ + SQ + OQ) - PL);
+        $('#nqty').val(QQ)
+
+
+        $('#Lorate').val(parseFloat(QA / QQ).toFixed(2));
+
+    }
+
+
+    function PACKAGERATECALUATION() {
+        var AMT = 0;
+        for (var i = 1; i <= AccId; i++) {
+            var Amount = parseFloat($('#Acctot' + i).val() || 0)
+            AMT = AMT + Amount;
+        }
+        $('#totooool').text(AMT);
+    }
+
+
+
+
+    function AccessoriesLoad(Id) {
+        $("#" + Id).autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                var data = {};
+                data.TestName = $("#" + Id).val();
+                data.DeptId = ERPDeptId;
+
+                $.ajax({
+                    url: '../Revisit/HMS_TestSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: 'TWOLab',
+                                label: item.TestName,
+                                label1: item.MedDeptName,
+                                TestId: item.TestId,
+                                Rate: item.Rate,
+                                SpRate: item.SpRate,
+                                VSpRate: item.VSpRate,
+                                OutsideRate: item.OutsideRate,
+                                MedDept: item.MedDept,
+                                headers: ["Test", "DeptName"]
+
+                            })
+                        }));
+                    }
+
+                })
+
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+
+
+
+                $('#' + Id + '_Id').val(ui.item.TestId);
+                $('#Accsessoriesqty_' + (Id.substring(13, 20))).val(1);
+                $('#Accrate' + (Id.substring(13, 20))).val(ui.item.SpRate);
+                rowamoutcalcul(Id.substring(13, 20))
+                PACKAGERATECALUATION()
+                if (Id == 'ItemName') {
+                    $('#Accsessories_1').focus();
+                    var dataX = {};
+                    dataX.ItemId = ui.item.TestId;
+                    $.ajax({
+                        type: "POST",
+                        url: "../ProductMstElectroniccs/AccessoriesGetandGets",
+                        data: dataX,
+                        success: function (result) {
+                            AccId = 2;
+                            $('#Accsessories_1').val('');
+                            $('#Accsessories_1_Id').val(0);
+                            $('#Accessdiv').empty();
+                            Showaccessories(result.oList);
+                        }
+                    });
+                    $('#Accsessoriesqty_' + (Id.substring(13, 20))).focus();
+                    rowamoutcalcul(Id.substring(13, 20))
+                    PACKAGERATECALUATION()
+                }
+                else {
+
+                }
+            },
+        });
+    }
+
+    function CheckID(Id) {
+        if ($('#' + Id).val() == '') {
+            $('#' + Id + '_Id').val(0);
+        }
+    }
+
+
+    function SaveAndUpdate(Flag) {
+        if ($('#ItemName_Id').val() == 0) {
+            warningshow('Please Select Product', 'ItemName');
+        }
+        else {
+            var XArray = new Array();
+
+
+            for (var i = 1; i <= AccId; i++) {
+
+                var ItemId = $('#ItemName_Id').val();
+                var AccessQty = $('#Accrate' + i).val();
+                var AccFlag = $('#accstaus' + i).val();
+                var AccRate = parseFloat($('#Accrate' + i).val() || 0);
+                var Acceamount = parseFloat($('#Acctot' + i).val() || 0);
+                var AccessoriesId = $('#Accsessories_' + i + '_Id').val();
+
+                var SRVariance = parseFloat($('#srvariance').val() || 0);
+                var Productionloss = parseFloat($('#plose').val() || 0);
+                var NetQty = parseFloat($('#nqty').val() || 0);
+                var NetAmount = parseFloat($('#namt').val() || 0);
+
+
+
+                if (AccessoriesId != undefined && AccessoriesId != 0 && AccessoriesId != '') {
+                    XArray.push({ 'SRVariance': SRVariance, 'Productionloss': Productionloss, 'NetQty': NetQty, 'NetAmount': NetAmount, 'AccessoriesId': AccessoriesId, 'AccessQty': AccessQty, 'ItemId': ItemId, 'Status': AccFlag, 'UnitPrice': AccRate, 'MRP': Acceamount })
+                }
+            }
+
+            console.log(XArray)
+            if (XArray != "") {
+                var data = { 'ProductMstModel': XArray };
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "../ProductMstElectroniccs/AccessoriesUpdate",
+                        data: data,
+                        success: function (result) {
+                            var status = result.oList[0].Status;
+                            Showalerts(status);
+                        }
+                    });
+            }
+        }
+    }
+
+    function formrefresh() {
+        AccId = 2;
+        $('#Accsessories_1').val('');
+        $('#Accsessories_1_Id').val(0);
+        $('#ItemName_Id').val(0);
+        $('#ItemName').val('')
+        $('#Accessdiv').empty();
+        $('#accstaus1').val('LAB');
+        $('#Accsessoriesqty_1').val();
+        $('#Accrate1').val(0);
+        $('#Acctot1').val(0);
+        var IncQty = 0, incamount = 0, SrQty = 0, Sramount = 0, OrQty = 0; Oramount = 0;
+        $('#inqty').val(IncQty);
+        $('#inamt').val(incamount)
+        $('#oamt').val(Oramount);
+        $('#oqty').val(OrQty);
+        $('#srqty').val(SrQty);
+        $('#sramt').val(Sramount)
+        $('#srvariance').val(0)
+        $('#plose').val(0)
+        amountcalcul()
+
+        Defaultfocus();
+
+    }
+    function Defaultfocus() {
+        $('#ItemName').focus();
+    }
+
+
+    function Showaccessories(result) {
+
+        console.log(result)
+        if (result.length >= 1) {
+            $('#Accsessories_1').val(result[0].AccessoriesName);
+            $('#Accsessories_1_Id').val(result[0].AccessoriesId);
+            $('#Accsessoriesqty_1').val(1);
+
+            $('#accstaus1').val('LAB');
+            $('#Accrate1').val(result[0].AccessQty);
+            $('#Acctot1').val(result[0].AccessQty);
+
+
+            // $('#plose').val(result[0].Productionloss);
+            //$('#srvariance').val(result[0].SRVariance);
+
+
+
+
+
+        }
+        for (var i = 1; i < result.length; i++) {
+
+            $('#Accessdiv').append("<div class='form-group row'><div class=col-md-2>  <select onchange=rowamoutcalcul(" + AccId + ")  id='accstaus" + AccId + "'  class=form-control ><option value=LAB>LAB TEST </option></select></div><div class='col-md-4'><input type='hidden' class='form-control' id='Accsessories_" + AccId + "_Id' value='" + result[i].AccessoriesId + "' />                               <input type='text' class='form-control' id='Accsessories_" + AccId + "' onkeypress=AccessoriesLoad('Accsessories_" + AccId + "') onkeyup=CheckID('Accsessories_" + AccId + "') value='" + result[i].AccessoriesName + "' /></div> <div class='col-md-2'><input type='text' class='form-control'  id='Accsessoriesqty_" + AccId + "'  onkeyup=rowamoutcalcul(" + AccId + ")   onkeypress='isNumberFloatCommon123(event,this)' value='1' /></div> <div class=col-md-2><input type=text class=form-control  onkeyup=rowamoutcalcul(" + AccId + ")   id='Accrate" + AccId + "'   value='" + result[i].AccessQty + "' onkeypress=isNumberFloatCommon123(event,this) /></div><div class=col-md-2><input type=text class=form-control disabled  id='Acctot" + AccId + "' onkeyup=rowamoutcalcul(" + AccId + ")   value='" + result[i].AccessQty + "' onkeypress=isNumberFloatCommon123(event,this) /></div></div>")
+            $('#accstaus' + AccId).val('LAB');
+            AccId++;
+            //ddh
+
+        }
+        //console.log(AccId)
+        rowamoutcalcul(AccId)
+        //AccId = AccId + 1;
+    }
+
+
+    function isNumberFloatCommon123123(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+
+        return true;
+
+    }
+</script>
+
+<div class="myData" data-x="M326" />
+
+<table>
+    <tr>
+        <td width="65%">
+            <div id="Entry">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                                <h4 class="card-title mb-0" style="text-align:center;font-weight:bold">LAB PACKAGE-LAB TEST MAPPING</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="px-3">
+                                    <div class="card-content collapse show">
+                                        <div class="card-body">
+                                            <div style="height:15px;"></div>
+                                            <form action="#">
+                                                <div class="form-body" style="margin-left:2%;">
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label style="font-weight:bold">Package</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control" id="ItemName" onkeypress="AccessoriesLoad('ItemName')" onkeyup="CheckID('ItemName')" />
+                                                                <input type='hidden' class='form-control' id='ItemName_Id' value="0" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" id="btnaddacess" class="btn btn-outline-primary" onclick="addaccessories()">
+                                                                <i class="icon-plus4"></i>ADD
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div>
+                                                        <div class="form-group row">
+                                                            <div class="col-md-2">
+                                                                Type
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <b> Test </b>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <b> Quantity</b>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <b>Unit Rate</b>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <b>Amount</b>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+                                                    <div style="height:50px;overflow-y: scroll;overflow-x:hidden;">
+                                                        <div class="form-group row">
+                                                            <div class="col-md-2">
+                                                                <select onchange="rowamoutcalcul(1)" id="accstaus1" class="form-control">
+                                                                    <option value="LAB">LAB TEST</option>
+                                                                    @*<option value="SR">Sub Recipies</option>
+                                                                        <option value="OR">Other</option>*@
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control" id="Accsessories_1" onkeypress="AccessoriesLoad('Accsessories_1')" onkeyup="CheckID('Accsessories_1')" />
+                                                                <input type='hidden' class='form-control' id='Accsessories_1_Id' value="0" />
+                                                            </div>
+
+                                                            <div class="col-md-2">
+                                                                <input type="text" onkeyup="rowamoutcalcul(1)" class="form-control" id="Accsessoriesqty_1" onkeypress="isNumberFloatCommonn123(event,this)" />
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input type="text" onkeyup="rowamoutcalcul(1) ,PACKAGERATECALUATION()" class="form-control" id="Accrate1" onkeypress="isNumberFloatCommonn123(event,this)" />
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input type="text" disabled class="form-control" id="Acctot1" onchange="rowamoutcalcul(1)" onkeypress="isNumberFloatCommonn(event,this)" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div id="Accessdiv" style="height:350px;overflow-y: scroll;overflow-x:hidden;">
+                                                    </div>
+
+
+                                                    <div class="form-actions">
+                                                        <div class="text-center">
+                                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                            <button type="button" style="width:100px;display:none" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                                            <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                            <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                        </div>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td width="35%">
+            <div id="Entry">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"  style="border-bottom:1px solid #e6e6e6">
+
+                            </div>
+                            <div class="card-body">
+                                <div class="px-3">
+                                    <div class="card-content collapse show">
+                                        <div style="height:655px" class="card-body">
+
+
+                                            <div id="totooool" style="font-weight:bold">
+
+                                            </div>
+                                                <form style="display:none" action="#">
+                                                    <div class="form-body" style="margin-left:2%;">
+
+
+
+
+                                                        <div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <label>Ingredients TotQty</label>
+                                                                    <input type="text" id="inqty" disabled class="form-control" />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label> Amount</label>
+                                                                    <input type="text" id="inamt" disabled class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <label>Sub Recipies TotQty</label>
+                                                                    <input type="text" id="srqty" disabled class="form-control" />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>Amount</label>
+                                                                    <input type="text" id="sramt" disabled class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div style="margin-top:-5px">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <label>Others TotQty</label>
+                                                                    <input type="text" id="oqty" disabled class="form-control" />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>Amount</label>
+                                                                    <input type="text" id="oamt" disabled class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="margin-top:-5px">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6"></div>
+                                                                <div class="col-md-6">
+                                                                    <label>SR Variance</label>
+                                                                    <input type="text" onkeyup="amountcalcul()" onkeypress="isNumberFloatCommonn123(event, this)" id="srvariance" class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <di style="margin-top:-5px" v>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <label>Gross Qty</label>
+                                                                    <input type="text" disabled id="gqty" class="form-control" />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>Gross Amount</label>
+                                                                    <input type="text" disabled id="gamt" class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                    </div>
+
+                                                    <div style="margin-top:-5px">
+                                                        <div class="form-group row">
+                                                            <div class="col-md-6">
+                                                                <label>Production Lose</label>
+                                                                <input type="text" onkeypress="isNumberFloatCommonn(event,this)" onkeyup="amountcalcul()" id="plose" class="form-control" />
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Lose Rate</label>
+                                                                <input type="text" id="Lorate" disabled class="form-control" />
+
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6">
+                                                                    <label>Net Qty</label>
+                                                                    <input type="text" disabled id="nqty" class="form-control" />
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label>Net Amount</label>
+                                                                    <input type="text" disabled id="namt" class="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+
+    </tr>
+</table>
+
+
+<script>
+    function isNumberFloatCommonn(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+
+    }
+</script>

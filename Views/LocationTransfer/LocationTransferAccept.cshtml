@@ -1,0 +1,469 @@
+﻿
+@{
+    ViewBag.Title = "LocationTransferAccept";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script> 
+
+<div class="myData" data-x="M168" />
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">TRANSFER APPROVAL</h4>
+                    <div class="text-right" style="margin-top:-1%">
+                        <button type="button" style="width:150px" id="btnsubmit" onclick="AcceptAllTransactions()" class="btn btn-primary btn-min-width mr-1 mb-1">Accept All <i class="fa fa-check-square-o"></i></button>
+                        </div>
+                    </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div style="height:15px;"></div>
+                                                                           
+                                        <br />
+                                      
+                                        <div class="card-content collapse show" style="overflow:auto;">
+                                            <div class="card-body card-dashboard">
+                                                <table id="tblLocationTransferTransport" class="table table-striped table-bordered base-style dataTable"></table>
+                                                <br />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+   
+    $(document).ready(function () {
+       
+        
+        var data4 = {};
+        data4.LocationId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data4: data4,
+            success: function (result) {
+                LocationLoad(result.oList);
+            }
+        });
+
+    });
+
+    function transferload()
+    {
+        var data = {};
+        data.LocTransId = 0;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/LocationTransferGetandGets",
+            data: data,
+            success: function (result) {
+                disable_datatable('tblLocationTransferTransport');
+                ShowLocationTransferlist(result.oList);
+              
+            }
+        });
+    }
+    var LocationSelect = '';
+    function LocationLoad(result) {                     
+        for (var m= 0; m < result.length; m++) {
+            LocationSelect += "<option value='" + result[m].LocationId + "'>" + result[m].LocationName + "</option>";
+        }
+        transferload();
+    }
+
+    var tempEditbutton = '<h4><i class="ft-edit" style="color:#ff6f00"></i></h4>';
+    var tempUpdatebutton = '<h4><i class="ft-check-circle" style="color:#ff6f00"></i></h4>';
+    var Cancelbutton = '<h4><i class="ft-x" style="color:#ff6f00"></i></h4>';
+    
+    function ShowLocationTransferlist(result) {
+        console.log(LocationSelect+'loc')
+        disable_datatable('tblLocationTransferTransport');
+        var responseText = "";   
+        if (result.length == 0) {
+            var responseText = "<thead><tr style='text-align:center;color:#FF8D60'><th>NO TRANSFER REQUEST YET</th></tr></thead>";
+            $('#tblLocationTransferTransport').html(responseText);
+        }
+        else {
+            responseText += "<thead><tr><th width=15px>Slno</th><th>Date</th><th>Chasis Number</th><th>Description</th><th>Load From</th><th style='display:none'></th><th>Unload To</th><th style='display:none'></th><th>Key</th><th style='display:none'></th><th>User</th><th width=30px id='edithead' >Edit </th><th  width=30px style=display:none;'></th><th width=15px>Accept</th><th>Remove</th></tr></thead><tbody>";
+            for (var i = 0; i < result.length; i++) {
+               
+                var slno = parseInt(i + 1);               
+                //responseText += '<tr  id="editrow' + slno + '" style="display:none"><td>' + slno + '</td><td>' + result[i].TransferDate + '</td><td>' + result[i].ChasisNumber + '</td><td>' + result[i].Description + '</td><td><select   id="txttype1' + slno + '" class="form-control" style="width:160px;height:33px;"  disabled>' + LocationSelect + '</select><input type=text id="temptxttype1' + slno + '"  value=' + result[i].FromLoad + ' style="display:none;" /> </td><td> <select   id="txttype2' + slno + '" class="form-control" style="width:160px;height:33px;" disabled >"' + LocationSelect + '" <input type=text id="temptxttype2' + slno + '"  value=' + result[i].ToLoad + ' style="display:none;" /></select></td><td><select id= ' + 'txtkey' + slno + '  class="form-control" style="width:140px;height:33px;" disabled><option value="No">No</option><option value="Yes">Yes</option><input type=text  style="display:none;"  id="temptxtkey' + slno + '"  value=' + result[i].ItemKey + '></text> </td><td>' + result[i].UserName + '</td>' +
+                //    '<td   align=center id="txteditrow' + slno + '"  ><a   onclick="EditRows(' + slno + ')">' + tempEditbutton + '</a></td>' +
+                //  ' <td  align=left id="txtupdaterow' + slno + '" style="display:none;"> <a  style="float:left" onclick="UpdateRows(' + result[i].ItemId + ',' + slno + ',' + result[i].LocTransId + ')">' + tempUpdatebutton + '</a><a  style="float:right" onclick="CancelRows(' + slno + ')">' + Cancelbutton + '</a></td>' +
+                //    '<td align=center><a onclick="GetRows(' + result[i].ItemId + ',' + result[i].FromLoad + ',' + result[i].ToLoad + ',' + result[i].LocTransId + ',' + slno + ')">' + Acceptbutton + '</a></td><td align=center><a onclick="DeleteLocationTrnsfer(' + result[i].LocTransId + ')">' + DeleteButton + '</a></td></tr>';
+
+                responseText += '<tr id="listrow' + slno + '"><td>' + slno + '</td>' +
+                    '<td>' + result[i].TransferDate + '</td>' +
+                    '<td>' + result[i].ChasisNumber + '</td>' +
+                    '<td>' + result[i].Description + '</td>' +
+                    '<td class="tdhide">' + result[i].LoadFrom + '</td>' +
+                    '<td class="tdedit" style="display:none"><select   id="txttype1' + slno + '" class="form-control" style="width:160px;height:33px;"  disabled>' + LocationSelect + '</select><input type=text id="temptxttype1' + slno + '"  value=' + result[i].FromLoad + ' style="display:none;" /></td>' +
+                    '<td class="tdhide">' + result[i].LoadTo + ' </td>' +
+                    '<td class="tdedit"  style="display:none"><select   id="txttype2' + slno + '" class="form-control" style="width:160px;height:33px;" disabled >"' + LocationSelect + '" <input type=text id="temptxttype2' + slno + '"  value=' + result[i].ToLoad + ' style="display:none;" /></select></td>' +
+                    '<td class="tdhide">' + result[i].ItemKey + '</td>' +
+                    '<td class="tdedit"  style="display:none"><select id= ' + 'txtkey' + slno + '  class="form-control" style="width:140px;height:33px;" disabled><option value="No">No</option><option value="Yes">Yes</option><input type=text  style="display:none;"  id="temptxtkey' + slno + '"  value=' + result[i].ItemKey + '></text></td>' +
+                    '<td>' + result[i].UserName + '</td>' +
+                   '<td   align=center id="txteditrow' + slno + '"  ><a   onclick="EditRows(' + slno + ')">' + tempEditbutton + '</a></td>' +
+                 ' <td  align=left id="txtupdaterow' + slno + '" style="display:none;"> <a  style="float:left" onclick="UpdateRows(' + result[i].ItemId + ',' + slno + ',' + result[i].LocTransId + ')">' + tempUpdatebutton + '</a><a  style="float:right" onclick="CancelRows(' + slno + ')">' + Cancelbutton + '</a></td>' +
+                   '<td align=center><a onclick="GetRows(' + result[i].ItemId + ',' + result[i].FromLoad + ',' + result[i].ToLoad + ',' + result[i].LocTransId + ',' + slno + ')">' + Acceptbutton + '</a></td><td align=center><a onclick="DeleteLocationTrnsfer(' + result[i].LocTransId + ')">' + DeleteButton + '</a></td></tr>';
+                // var from = $('#temptxttype1' + slno).val();
+                var from = $('#temptxttype1' + slno).val();
+            }
+            $('#tblLocationTransferTransport').html(responseText + '</tbody><tfoot><tr><th></th><th></th><th>ChasisNumber</th><th>Description</th><th>LoadFrom</th><th style="display:none"></th><th>UnloadTo</th><th style="display:none"></th><th>key</th><th style="display:none"></th><th>User</th><th></th><th style=display:none;></th><th></th><th></th></tr></tfoot>');
+            for (var i = 0; i < result.length; i++) {
+                var slno = parseInt(i + 1);
+                console.log(result[i].FromLoad+'val')
+                console.log(slno + 'slno')
+                $('#txttype1' + slno).val(result[i].FromLoad);
+                $('#txttype2' + slno).val(result[i].ToLoad);
+                $('#txtkey' + slno).val(result[i].ItemKey);               
+            }
+            datatableWithsearch('tblLocationTransferTransport');
+          
+        }
+
+    }
+
+    function GetRows(ItemId, FromLoad, ToLoad, LocTransId,slno)
+    {
+
+    if (editflag==1)
+    {
+        warningshow('Please Update Edit Mode')
+    }
+    else if (FromLoad == ToLoad) {
+        warningshow('Load From and Load To Cannot Be Same')
+    }
+    else if (FromLoad == null || FromLoad == undefined || FromLoad == 0) {
+        warningshow('Select Load From', 'txttype1' + slno);
+    }
+    else if (ToLoad == null || ToLoad == undefined || ToLoad == 0) {
+        warningshow('Select Load To', 'txttype2' + slno);
+    }
+    else if ($('#txtkey' + slno).val() != 'Yes' && $('#txtkey' + slno).val() != 'No') {
+        warningshow('Select Key', 'txtkey' + slno);
+    }
+    else
+    {
+    var data = {};       
+    data.ItemId = ItemId;
+    data.FromLoad = FromLoad;
+    data.ToLoad = ToLoad;      
+    data.DeptId = ERPDeptId;
+    data.LocTransId = LocTransId;
+    data.UserId = ERPUserId;
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/TransferItem", 
+        data: data,
+        success: function (result) {
+            var status = result.oList[0].Status;
+            if (status == 1) {
+                Showalerts(status);
+                transferload();
+            }
+            else {
+                swal('Not Enough Stock To Transfer', "", "error");
+                $('.swal-button swal-button--confirm').focus();
+            }
+        }
+    });
+    }
+
+    }
+    var editflag = 0;
+    function EditRows(slno)
+    {
+        if (editflag == 1) {
+            warningshow('Please Update Edit Mode');
+        }
+        else {
+            editflag = 1;
+            //$('#editrow' + slno).show();
+            $('.tdhide').hide();
+            $('.tdedit').show();
+            $('#listrow' + slno).show();
+            $('#txtupdaterow' + slno).show();
+            $('#txteditrow' + slno).hide();
+            $('#txttype1' + slno).prop('disabled', false);
+            $('#txttype2' + slno).prop('disabled', false);
+            $('#txtkey' + slno).prop('disabled', false);
+            $('#edithead').text('UpDate');
+            $('#txttype1' + slno).focus();
+        }
+      
+    }
+
+
+
+    function UpdateRows(ItemId, slno, LocTransId) {
+
+
+        if ($('#txttype1' + slno).val() == $('#txttype2' + slno).val())
+        {
+           warningshow('Load From and Load To Cannot Be Same')
+        }
+        else if ($('#txttype1' + slno).val() == null || $('#txttype1' + slno).val() == undefined||$('#txttype1' + slno).val() == 0) {
+            warningshow('Select Load From', 'txttype1' + slno);
+        }
+        else if ($('#txttype2' + slno).val() == null || $('#txttype2' + slno).val() == undefined || $('#txttype2' + slno).val() == 0) {
+            warningshow('Select Load To', 'txttype2' + slno);
+        }
+        else if ($('#txtkey' + slno).val() != 'Yes' && $('#txtkey' + slno).val() !='No') {
+            warningshow('Select Key', 'txtkey' + slno);
+        }
+
+        else
+        {
+            console.log(ItemId, slno, LocTransId);
+            var from = $('#txttype1' + slno).val();
+            var to = $('#txttype2' + slno).val();
+            var key = $('#txtkey' + slno).val();
+            var data = {};
+            data.ItemId = ItemId;
+            data.FromLoad = from;
+            data.ToLoad = to;
+            data.DeptId = ERPDeptId;
+            data.LocTransId = LocTransId;
+            data.ItemKey = key;
+            data.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../LocationTransfer/EditItem",
+                data: data,
+                success: function (result) {
+                    var status = result.oList[0].Status;
+                    if (status == 2) {
+                        Showalerts(status);
+                        disablerow(slno);
+                        $('#editrow' + slno).hide();
+                        $('#listrow' + slno).show();
+                    }
+                    else if(status == 0)
+                    {
+                        warningshow('No Stock')
+                    }
+                }
+            });
+        }
+       
+    }
+
+    function CancelRows(slno)
+    {
+        $('#txttype1' + slno).val($('#temptxttype1' + slno).val());
+        $('#txttype2' + slno).val($('#temptxttype2' + slno).val());
+        $('#txtkey' + slno).val($('#temptxtkey' + slno).val());
+        //disablerow(slno);
+        $('.tdhide').show();
+        $('.tdedit').hide();
+        $('#txttype1' + slno).prop('disabled', true);
+        $('#txttype2' + slno).prop('disabled', true);
+        $('#txtkey' + slno).prop('disabled', true);
+        $('#edithead').text('Edit');
+        $('#txtupdaterow' + slno).hide();
+        $('#txteditrow' + slno).show();
+        editflag = 0;
+        $('#editrow' + slno).hide();
+        $('#listrow' + slno).show();
+    }
+    function disablerow(slno)
+    {
+        $('#txttype1' + slno).prop('disabled', true);
+        $('#txttype2' + slno).prop('disabled', true);
+        $('#txtkey' + slno).prop('disabled', true);
+        $('#edithead').text('Edit');
+        $('#txtupdaterow' + slno).hide();
+        $('#txteditrow' + slno).show();
+        
+        editflag = 0;
+        transferload();
+    }
+    function DeleteLocationTrnsfer(LocnTransferId) {
+        if (editflag == 1) {
+            warningshow('Please Update Edit Mode');
+        }
+        else {
+            $('#confirm').show();
+            $('#confirmOk').focus();
+            $('#Confirmflag').val('deletelocntransfer'); $('#ConfirmRowId').val(LocnTransferId);
+            $('#confirmmessage').text('Do you want Delete this record?');
+        }
+    }
+
+    function DeleteLocnTransfer(LocnTrnsId) {
+        var data = {};
+        data.LocTransId = LocnTrnsId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/DeleteLocnTransfer",
+            data: data,
+            success: function (result) {
+                var status = result.oList[0].Status;
+                Showalerts(status);
+                transferload();
+                
+            }
+        });
+    }
+
+    function ConfirmboxResult(Result, status, rowid) {
+
+
+        if (Result == 'true' && status == 'deletelocntransfer') {
+            DeleteLocnTransfer(rowid)
+        }
+        else if (Result == 'true' && status == 'transferall') {
+            OKAcceptAllTransactions()
+        } 
+        $('#confirm').fadeOut();
+
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title!='' && title != 'Accept' && title != 'Slno' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:175px" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                dom: 'Bfrtip',
+                buttons: []
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+           
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+    }
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+    function AcceptAllTransactions() {
+        if(editflag==1)
+        {
+            warningshow('Please Update Edit Mode');
+        }
+
+       else if($('#tblLocationTransferTransport tr').length>1){
+        $('#confirm').show();
+        $('#confirmOk').focus();
+        $('#Confirmflag').val('transferall'); $('#ConfirmRowId').val(0);
+        $('#confirmmessage').text('Do you want to Transfer All?');
+        }
+        else {
+            warningshow('No Request Found !!!')
+        }
+    }
+
+    function OKAcceptAllTransactions() {
+
+        $("#btnsubmit,#confirmOk").prop("disabled", true);
+
+        var data = {};
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/TransferALLItemUC",
+            data: data,
+            success: function (result) {
+                var status = result.oList[0].Status;
+                if (status == 1) {
+                    $("#btnsubmit,#confirmOk").prop("disabled", false);
+                    Showalerts(status);
+                    transferload();
+                }
+            }
+        });
+    }
+
+    function formrefresh() {
+
+    }
+    function Defaultfocus() {
+
+    }
+</script>

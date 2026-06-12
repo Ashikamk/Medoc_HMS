@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.Title = "WasteReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+ 
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+    #btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnback:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnprint:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="myData" data-x="M385" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td>
+                                    <div class="custom-control custom-radio display-inline-block black" style="float:right;font-weight:normal;font-size:x-large;">
+                                        <input type="radio" id="Paid" name="customRadioInline3" class="custom-control-input" onchange="Detailed(0)">
+                                        <label class="custom-control-label custsize" for="Paid">Paid</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="custom-control custom-radio display-inline-block black" style="float:right;font-weight:normal;font-size:x-large;">
+                                        <input type="radio" id="Unpaid" name="customRadioInline3" class="custom-control-input" checked="" onchange="Detailed(1)">
+                                        <label class="custom-control-label custsize" for="Unpaid">Unpaid</label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="custom-control custom-radio display-inline-block black" style="float:right;font-weight:normal;font-size:x-large;">
+                                        <input type="radio" id="All" name="customRadioInline3" class="custom-control-input" onchange="Detailed(2)">
+                                        <label class="custom-control-label custsize" for="All">All</label>
+                                    </div>
+                                </td>
+                                <td width="5%"></td>
+                                <td align="right" ;width="20%"><button type="button" style="width:100px" id="btnupdate" class="btn btn-outline-primary">Update</button></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#User').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+
+                                <td align="right">
+
+
+
+
+
+
+                                    <div align="right">
+                                        <div class="heading-elements">
+                                            <div class="btn-group" id="buttonPlace">
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                            </tr>
+                        </table>
+
+
+
+                        <div align="right">
+                            <div class="heading-elements">
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:.1%;width:100%" />
+
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="width:100%;margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Waste Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:11%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:4%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:3%;"></div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:6%" id="btnsubmit" class="btn btn-primary">Go</button>
+                    <input type="hidden" id="LabBillsLength" class="form-control" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkall() {
+        if ($('#check').val() == 'on') {
+            $('#btnupdate').val() == 'on'
+        }
+
+    }
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+    function Defaultfocus() {
+        $('#DateFrom').focus();
+    }
+
+    $(function () {
+
+        Defaultfocus();
+       
+
+        $('#Dept').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $('#DateFrom,#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }).val(CurDate);
+
+        $("#btnsubmit").click(function (e) {
+            if ($('#DateFrom').val() == '') {
+                warningshow('Please Select From Date', 'DateFrom');
+            }
+            else if ($('#DateTo').val() == '') {
+                warningshow('Please Select To Date', 'DateTo');
+            }
+            else {
+                $('#Loading').show(); var Type = '';
+                if ($('#Paid').prop('checked') == true) {
+                    Type = 'Paid';
+                }
+                else if ($('#Unpaid').prop('checked') == true) {
+                    Type = 'Unpaid';
+                }
+                else if ($('#All').prop('checked') == true) {
+                    Type = 'All';
+                }
+                var data = {};
+                data.FromDate = $('#DateFrom').val();
+                data.ToDate = $('#DateTo').val();
+                data.paiduser = 1;//paid user
+                data.wastedata = ""
+                data.payflg = Type;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/WasteReport",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showreport(result);
+                    }
+                });
+            }
+        });
+
+        function Showreport(result) {
+
+            if ($('#LabBillLengths tr').length == 0) {
+                Count = 1;
+            }
+
+            $('#LabBillLengths').val(result.length);
+            disable_datatable('Tblreport', 'buttonPlace');
+            var responseText = "<thead><tr><th align= center>Sl#</th><th>Date</th><th>Waste Type1</th><th>Waste Type2</th><th>Waste Type3</th><th>Waste Type4</th><th>Waste Type5</th><th class='jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable' style='width: 2%;'><input type='checkbox' style='zoom:1.5;align-self:center' id='select_status' onclick='Check()' checked='' /></th></tr></thead><tbody>";
+            for (var i = 0; i < result.length; i++) {
+                var id = parseInt(Count);
+                var slno = parseInt(i + 1);
+                {
+                    responseText += '<tr class="NwRow"><td align= center id= Col1_' + slno + '>' + slno + ' <input type="text" style="display:none"  id="twasteId' + slno + '" value=' + result[i].wasteId + ' /></td><td id= Col2_' + slno + '>' + result[i].CurrentDtTime + '</td><td id= Col2_' + slno + '>' + result[i].wastetype1 + '</td><td id= Col3_' + slno + '>' + result[i].wastetype2 + '</td><td id= Col4_' + slno + '>' + result[i].wastetype3 + '</td><td id= Col5_' + slno + '>' + result[i].wastetype4 + '</td><td id= Col6_' + slno + '>' + result[i].wastetype5 + '</td><td align="center" ;width="20%";id="update"><input type=checkbox id =checkstatus' + slno + ' checked /></td></tr>';
+                }
+            }
+            $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th align= center> </th><th>Date</th><th>Waste Type1</th><th>Waste Type2</th><th>Waste Type3</th><th>Waste Type4</th><th>Waste Type5</th><th > </th></tr> </tfoot>');
+            // $('#Tblreportprint').html(responseText + '</tbody>');
+            var title = "Waste Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+            datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+            $('#header').text(title);
+        }
+
+        $("#btnupdate").click(function (e) {
+            var SelNo = '';
+            for (var k = 1; k <= $('.NwRow').length; k++)
+            {
+                if($('#checkstatus'+k).prop('checked')==true)
+                {
+                    if (SelNo=='')
+                        SelNo += $('#twasteId' + k).val();
+                    else
+                        SelNo +=','+ $('#twasteId' + k).val();
+                }
+            }
+            if (SelNo == '')
+            {
+                warningshow('Please Select entries to update!');
+            }
+            else
+            {
+                $('#Loading').show();
+                var data = {};
+                data.FromDate = $('#DateFrom').val();
+                data.ToDate = $('#DateTo').val();
+                data.wastedata = SelNo;
+                data.payflg = 'PAID'
+                data.paiduser = 1;//paid user
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/HMS_PaymentUpdate",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showalerts(result.oList[0].Status);
+                        $("#btnsubmit").click();
+                    }
+                });
+            }
+        });
+    });
+
+    function formrefresh()
+    {
+
+    }
+
+    function Check() {
+        var st = $('#select_status').prop('checked');
+        $('input[type=checkbox]').prop('checked', st);
+    }
+     
+    function Detailed(Payflag) {
+        if (Payflag == 1)
+        { $('#btnupdate').show(); }
+        else
+        { $('#btnupdate').hide(); }
+        $("#btnsubmit").click();
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable({
+                //"columnDefs": [
+                //                        { "width": "1%", "targets": 0 },
+                //                        { "width": "2%", "targets": 1 },
+                //                        { "width": "2%", "targets": 2 },
+                //                        { "width": "2%", "targets": 3 },
+                //                        { "width": "10%", "targets": 4 },
+                //                        { "width": "1%", "targets": 5 },
+                //                        { "width": "2%", "targets": 6 },
+                //                        { "width": "4%", "targets": 7 },
+
+                //],
+            });
+        }
+
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+</script>
+<div><input type="text" id="twasteId" style="display:none"></div>
+
+
+
+
+
+
+
+
+
+
+
+

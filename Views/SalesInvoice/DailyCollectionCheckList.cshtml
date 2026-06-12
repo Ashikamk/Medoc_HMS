@@ -1,0 +1,364 @@
+﻿
+@{
+    ViewBag.Title = "DailyCollectionCheckList";
+}
+
+
+
+<style>
+
+</style>
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .ab {
+        margin-top: .5%;
+    }
+    .abc {
+        margin-bottom: 1%;
+    }
+
+    .jsgrid-header-row > .jsgrid-header-cell {
+        background: #009da0;
+        color: white;
+         text-align:center;
+    }
+    .custom-control-label::before{
+        margin-left:-50%;
+    }
+     .custom-control-label::after{
+          margin-left:-50%;  
+    }
+    .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: lightseagreen;
+}
+</style>
+
+<div class="myData" data-x="M257" />
+
+
+<div id="Entry" style="">
+   <section class="grid-row-label">
+       <div class="row">
+           <div class="col-md-2">
+
+           </div>
+           <div class="col-md-8">
+               <div class="card">
+                   <div class="card-header" style="border-bottom:1px solid #e6e6e6;height:70px">
+                       <h3 style="font-weight:bold;text-align:center;">Daily Collection CheckList</h3>
+                   </div>
+
+
+                   <form action="#">
+                       <div class="card-body ">
+
+                           <div class="px-3" style="background-color:#E0F3F4;">
+
+                               <div class="row">
+                                   <div class="col-md-9 ab">
+                                       <div class="row ab">
+
+                                           <div class="col-md-1">
+                                               <label class="label">From</label>
+                                           </div>
+                                           <div class="col-md-2">
+                                               <input type="text" id="DateFrom" class="form-control" autocomplete="off" onchange="DailyCollectionGets()">
+                                           </div>
+                                           <div class="col-md-1">
+                                               <label class="label">To</label>
+                                           </div>
+                                           <div class="col-md-2">
+                                               <input type="text" id="DateTo" class="form-control" autocomplete="off" onchange="DailyCollectionGets()">
+                                           </div>
+                                           <div class="col-md-2">
+                                               <label class="label">Department</label>
+                                           </div>
+                                           <div class="col-md-3">
+                                               <select id="Department" class="form-control" autocomplete="off" onchange="DailyCollectionGets()"></select>
+                                           </div>
+
+                                           <button type="button" id="BtnGo" class="btn btn-primary btn-min-width mr-1 mb-1" onclick="DailyCollectionGets()">Go <i class="ft-arrow-right"></i></button>
+                                       </div>
+                                       <div class="row ab abc">
+                                           <div class="col-md-1">
+                                               <label class="label">Remarks</label>
+                                           </div>
+                                           <div class="col-md-8">
+                                               <textarea id="Remarks" class="form-control" autocomplete="off" style="resize:none"></textarea>
+                                           </div>
+                                           <div class="col-md-1">
+                                               <label class="label">PDC</label>
+                                           </div>
+                                           <div class="col-md-2">
+                                               <input id="Pdc" class="form-control" autocomplete="off" >
+                                           </div>
+                                       </div>
+                                   </div>
+
+                                   <div class="col-md-3">
+                                       <div class="col-md-12 text-center">
+                                           <label class="label h4">TOTAL IN AED</label>
+                                       </div>
+
+                                       <div class="col-md-12 text-center">
+                                           <label class="label h2 red" style="font-weight:bold" id="AedTottext">0.00</label>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+
+
+                           <div style="width:95%;margin-left:2.5%;height:565px;overflow:auto;margin-top:.5%;border:1px solid #e9e9e9;">
+                               <div id="proddiv" class="" style="overflow: auto;height:auto; width: 100%;">
+                                   <table class="table table-bordered jsgrid-table" id="TblDailyCash" style="table-layout:fixed"></table>
+                               </div>
+                           </div>
+
+                           <div class="row" style="margin-top:1%">
+                               <div class="col-md-10">
+
+                               </div>
+                               <div class="col-md-2 text-right">
+                                   <button type="button" id="btnsubmit" class="btn btn-primary mr-1 mb-1" onclick="SaveAndUpdate()"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                   <button type="button" id="btnnew" onclick="formrefresh()" class="btn btn-primary mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                               </div>
+                           </div>
+                       </div>
+                   </form>
+
+
+
+
+               </div>
+           </div>
+           <div class="col-md-2">
+
+           </div>
+       </div>
+  </section>
+
+   
+
+</div>
+
+<div style="display:none">
+    <input type="text" class="form-control" id="DeptId" /> 
+</div>
+
+<script>
+
+    function SaveAndUpdate() {
+        if (parseInt($('#AedTottext').text()) > 0) {
+            $('#btnsubmit').prop('disabled', true);
+            var oArray = new Array();
+            for (var k = 1; k <= 22; k++) {
+                 
+                if (k == 22) var CurId = 5;            //No Currency For Coins
+                else if (k == 21) var CurId = 4;
+                else if (k <= 20 && k > 14) var CurId = 3;
+                else if (k <= 14 && k > 8) var CurId = 2;
+                else if (k <= 8) var CurId = 1;
+
+               
+                if ($('#select_status' + k).prop("checked"))
+                    var Status = 'True';
+                else
+                    var Status = 'False';
+
+                var DateFrom = $('#DateFrom').val();
+                var DateTo = $('#DateTo').val();
+                var UserId = ERPUserId;
+                var Remarks = $('#Remarks').val();
+                var DeptId = $('#Department').val();
+                var Denom = $('#Denom' + k).text();
+                var Qty = $('#Qty' + k).val();
+                var Total = $('#Total' + k).text();
+                var TotalAed = $('#AedTottext').text();
+                var Pdc =  $('#Pdc').val();
+
+                if (Denom != undefined) {
+                    oArray.push({
+                        'DateFrom': DateFrom,
+                        'DateTo': DateTo,
+                        'UserId': UserId,
+                        'Remarks': Remarks,
+                        'Status': Status,
+                        'DeptId': DeptId,
+                        'CurId': CurId,
+                        'Denom': Denom,
+                        'Qty': Qty,
+                        'Total': Total,
+                        'TotalAed': TotalAed,
+                        'Pdc': Pdc,
+                    })
+                }
+            }
+            console.log(oArray)
+            if (oArray != "") {
+                var data = { 'DailyClosing': oArray };
+                $.ajax(
+                {
+                    type: "POST",
+                    url: "../SalesInvoice/DailyCashCheckInsertandUpdate",
+                    data: data,
+                    success: function (result) {
+                        var status = result.oList[0].Status;
+                        Showalerts(status);
+                        $('#btnsubmit').prop('disabled', false);
+                    }
+                });
+            }
+        }
+        else {
+            warningshow("Total AED can not be Zero", 'Qty1');
+            $('#Qty1').select();
+        }
+
+    }
+
+    function GetDepartment() {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets", 
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList);
+            }
+        });
+    }
+
+    var DeptSelect = '';
+
+    function DepartmentLoad(result) {
+        $("#Department").empty();
+        for (var i = 0; i < result.length; i++) {          
+            DeptSelect = "<option value=0>All</option>";
+            for (var i = 0; i < result.length; i++) {
+                DeptSelect += "<option value='" + result[i].DepartmentId + "'name='" + result[i].DepartmentName + "'>" + result[i].DepartmentName + "</option>";
+            }
+            $("#Department").append(DeptSelect); 
+        }
+    }
+   
+    function formrefresh()
+    {
+        $('.form-control').val('');
+        $('#DateTo,#DateFrom').val(CurDate);
+        GetDepartment();
+        Defaultfocus();
+        DailyCollectionGets();
+       
+    }
+
+    function Defaultfocus() {
+        $('#Department').focus();
+    }
+  
+   
+    $(function () {
+        $('#DateTo,#DateFrom').daterangepicker({
+        minDate: minDate,
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    });
+    });
+
+    function DailyCollectionGets()
+    {
+        var data = {};
+        data.DateFrom = $('#DateFrom').val();
+        data.DateTo = $('#DateTo').val(); 
+        data.DeptId = $('#Department').val();
+        $.ajax({
+            type: "POST",
+            url: "../SalesInvoice/DailyCashCollectionGetandGets", 
+            data: data,
+            success: function (result) {
+                DailyCashCollectionGets(result.oList);
+            }
+        });
+    }
+
+  
+    function DailyCashCollectionGets(result)
+    {
+        $('#AedTottext').text('0.00');
+        $('#TblDailyCash tr').remove();
+        var responseText = "<tr class='jsgrid-header-row'><th class='jsgrid-header-cell' style='width:7%'>CURR.</th><th class='jsgrid-header-cell' style='width:15%'>DENOMINATION</th><th class='jsgrid-header-cell' style='width:5%'><div class='custom-control custom-checkbox' style='margin-left:60%'><input type='checkbox' onchange='selectall()' class='custom-control-input' id='select_status'><label class='custom-control-label mainc' for='select_status'></label></div></th><th class='jsgrid-header-cell' style='width:5%'>QTY.</th><th class='jsgrid-header-cell'  style='width:8%'>TOTAL</th><th style='width:8%' class='jsgrid-header-cell'></th><th style='width:15%' class='jsgrid-header-cell'></th></tr>";
+        console.log(result.length)
+        if (result.length >0)
+        {
+            $('#AedTottext').text(parseFloat(result[0].TotalAed).toFixed(Decimal));
+            var id = 0;
+            for (var i = 0; i < result.length; i++) {
+                id++;
+                var Currency = '';
+                if (result[i].CurId == 1)
+                {
+                    Currency = 'AED';
+                    if (result[i].Denom==1000)
+                        responseText += '<tr id="row' + id + '"><td align=center style="vertical-align:middle;font-weight:bold;font-size:larger;" rowspan=8 >' + Currency + '</td><td align=center id="Denom' + id + '">' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '"><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td rowspan=8 style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL AED</td><td rowspan=8 id="AEDTOT" style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + parseFloat(result[i].AEDTOTAL).toFixed(Decimal) + '</td></tr>';
+                    else
+                        responseText += '<tr id="row' + id + '"><td align=center id="Denom' + id + '">' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td></tr>';
+                }
+                else if (result[i].CurId == 2)
+                {
+                    Currency = 'OMR';
+                    if (result[i].Denom == 100)
+                        responseText += '<tr id="row' + id + '" style="border-top:3px solid #dee2e6"><td style="vertical-align:middle;font-weight:bold;font-size:larger;" align=center rowspan=6>' + Currency + '</td><td align=center id="Denom' + id + '">' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td rowspan=3 style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL OMR</td><td rowspan=3 id="OMRTOT" style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + parseFloat(result[i].OMRTOTAL).toFixed(Decimal) + '</td></tr>';
+                    else if (result[i].Denom == 10)
+                        responseText += '<tr id="row' + id + '"><td id="Denom' + id + '" align=center>' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td rowspan=3 style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL AED</td><td rowspan=3 id="OMRTOAEDTOT" style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + (9.5 * parseFloat(result[i].OMRTOTAL)).toFixed(Decimal) + '</td></tr>';
+                    else
+                        responseText += '<tr id="row' + id + '"><td id="Denom' + id + '" align=center>' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td></tr>';
+                }
+                else if (result[i].CurId == 3)
+                {
+                    Currency = 'USD';
+                    if (result[i].Denom == 100)
+                        responseText += '<tr id="row' + id + '" style="border-top:3px solid #dee2e6"><td style="vertical-align:middle;font-weight:bold;font-size:larger;" align=center rowspan=6>' + Currency + '</td><td id="Denom' + id + '" align=center>' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td rowspan=3 style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL USD</td><td rowspan=3 id="USDTOT" style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + parseFloat(result[i].USDTOTAL).toFixed(Decimal) + '</td></tr>';
+                    else if (result[i].Denom == 10)
+                        responseText += '<tr id="row' + id + '"><td align=center id="Denom' + id + '">' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td rowspan=3 style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL AED</td><td rowspan=3 id="USDTOAEDTOT" style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + (3.66 * parseFloat(result[i].USDTOTAL)).toFixed(Decimal) + '</td></tr>';
+                    else
+                        responseText += '<tr id="row' + id + '"><td align=center id="Denom' + id + '">' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td></tr>';
+                }
+                else if (result[i].CurId == 4)
+                {
+                    Currency = 'SAUDI';
+                    responseText += '<tr id="row' + id + '" style="border-top:3px solid #dee2e6"><td style="vertical-align:middle;font-weight:bold;font-size:larger;" align=center>' + Currency + '</td><td align=center id="Denom' + id + '">' + parseFloat(result[i].Denom) + '</td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL AED</td><td id="SAUDITOT" style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + (.9 * parseFloat(result[i].SAUDITOTAL)).toFixed(Decimal) + '</td></tr>';
+                }
+                else if (result[i].CurId == 5) {
+                    Currency = 'COINS';
+                    responseText += '<tr id="row' + id + '" style="border-top:3px solid #dee2e6"><td style="vertical-align:middle;font-weight:bold;font-size:larger;" align=center>' + Currency + '</td><td align=center id="Denom' + id + '"></td><td><div class="custom-control custom-checkbox" style="margin-left:60%"><input type="checkbox" name="checkb" class="custom-control-input" id="select_status' + id + '" ><label class="custom-control-label" for="select_status' + id + '"></label></div></td><td align=center id="Qty' + id + '">' + result[i].Qty + '</td><td align=center id="Total' + id + '">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td><td style="vertical-align : middle;text-align:center;font-weight:bold;font-size:larger">TOTAL AED</td><td style="vertical-align : middle;text-align:center;color:red;font-weight:bold;font-size:x-large">' + parseFloat(result[i].Total).toFixed(Decimal) + '</td></tr>';
+                }
+            }
+        }
+        else
+        {
+            responseText += '<tr><td colspan=7 align=center>No Data Available</td></tr>';
+           
+        }
+        $('#TblDailyCash').append(responseText);      
+        $('#Department').focus(); 
+    }
+
+    function selectall() {      
+        var flag = $("#select_status").is(":checked");
+        checkboxes = document.getElementsByName('checkb');
+        for (var j = 0, n = checkboxes.length; j < n; j++) {
+            checkboxes[j].checked = flag;
+        }      
+    }
+  
+    formrefresh();
+</script>
+
+
+

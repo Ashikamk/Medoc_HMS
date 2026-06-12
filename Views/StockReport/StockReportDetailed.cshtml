@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewBag.Title = "StockReportDetailed";
+}
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+
+
+
+
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">Stock Report-Locationwise</h4>
+
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-12 text-right">
+                                        <div class="heading-elements">
+                                            <div id="buttonPlace">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr />
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    
+    function Showreport(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var jqTable = $("#Tblreport");
+        jqTable.empty();
+        var columns = [];
+        var locEntry = []
+        columns.push('Slno');
+        columns.push('Item Code');
+        columns.push('Description');
+        for (var n = 0; n < result.locations.length; n++) {
+            columns.push(result.locations[n].locName);
+            locEntry.push(0);
+        }
+        columns.push("Total");
+        locEntry.push(0);
+        // console.log(columns);
+
+        var jqRow = $("<tr>");
+        for (var r = 0; r < columns.length; r++) {
+            $("<th>").text(columns[r]).appendTo(jqRow)
+        }
+        $("<thead>").append(jqRow).appendTo(jqTable);
+
+        var jqBody = $("<tbody>").appendTo(jqTable);
+
+        jqRow = $("<tr>");
+        for (var f = 0; f < columns.length; f++) {
+            $("<th>").text(columns[f]).appendTo(jqRow)
+        }
+        var jqFoot = $("<tfoot>").append(jqRow).appendTo(jqTable);
+
+        quantityrow = 0;
+        var i = 0;
+        for (i = 0; i < result.items.length; i++) {
+            var slno = i + 1;
+            var onerow = [];
+            onerow.push(slno)
+            onerow.push(result.items[i].itemCode);
+            onerow.push(result.items[i].itemDesc);
+            while (quantityrow < result.stocks.length && result.items[i].itemId > result.stocks[quantityrow].itemId) {
+                console.log(result.items[i].itemId + ":" + result.stocks[quantityrow].itemId);
+                quantityrow++;
+            }
+            var locData = {};
+            while (quantityrow < result.stocks.length && result.items[i].itemId == result.stocks[quantityrow].itemId) {
+                console.log("s" + result.stocks[quantityrow].itemId + " q" + result.stocks[quantityrow].quantity)
+                locData[result.stocks[quantityrow].locationId] = result.stocks[quantityrow].quantity;
+                quantityrow++;
+            }
+            // console.log(locData);
+            var total = 0
+            var n1 = 0;
+            for (n1 = 0; n1 < result.locations.length; n1++) {
+                var locQty = (locData[result.locations[n1].locationId] || 0)
+                onerow.push(locQty);
+                total = total + locQty;
+                locEntry[n1] = locEntry[n1] + locQty;
+            }
+            onerow.push(total);
+            locEntry[n1] = locEntry[n1] + total;
+            // console.log(onerow);
+            jqRow = $("<tr>");
+            for (var r1 = 0; r1 < onerow.length; r1++) {
+                $("<td>").text(onerow[r1]).appendTo(jqRow);
+            }
+            jqBody.append(jqRow);
+        }
+        jqRow = $("<tr>");
+        $("<td>").text(i + 1).appendTo(jqRow);
+        $("<td>").text('').appendTo(jqRow);
+        $("<td>").text('Grand Total').appendTo(jqRow);
+        var r2 = 0;
+        for (r2 = 0; r2 < locEntry.length; r2++) {
+            $("<td>").text(locEntry[r2]).appendTo(jqRow);
+        }
+        jqBody.append(jqRow);
+        datatableWithsearch('Tblreport', true, 'Stock Report Detailed', 'buttonPlace');
+    }
+
+
+    $(function () {
+
+        $('#Loading').show();
+
+        var data = {};
+        //data.FromDate = $('#DateFrom').val();
+        //data.ToDate = $('#DateTo').val();
+        //data.Location = parseInt($('#location').val() || 0);
+        data.dummy = 1;
+
+
+        $.ajax({
+            type: "POST",
+            url: "../StockReport/GetQuantityForSLReport",
+            data: data,
+            success: function (result) {
+                Showreport(result);
+                $('#Loading').hide();
+                $('#divreport').show();
+            }
+        });
+    });
+
+    
+</script>
+
+

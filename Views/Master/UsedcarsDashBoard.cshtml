@@ -1,0 +1,2050 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #Stocklist tr:hover{
+cursor:pointer;
+    }
+    #Detaillist tr:hover{
+        cursor:pointer;
+    }
+    #abs:hover{
+        cursor:pointer;
+    }
+    #LoadContDiv:hover{
+        cursor:pointer;
+    }
+    #PortContDiv:hover{
+        cursor:pointer;
+    }
+    #LocContDiv:hover{
+        cursor:pointer;
+    }
+</style>
+
+
+<style>
+   
+    .pip {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+    }
+
+    .slides:not(:first-child) {
+        /* Hide all images except the first */
+        display: none;
+    }
+
+    .prev, .next1 {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        padding: 16px;
+        margin-top: -32px;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        transition: 0.6s ease;
+        border-radius: 0 3px 3px 0;
+        user-select: none;
+    }
+
+    .navButton:hover {
+        opacity: 1;
+    }
+
+    .next1 {
+        right: 0;
+        border-radius: 3px 0 0 3px;
+    }
+
+        /* On hover, add a black background color with a little bit see-through */
+        .prev:hover, .next1:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+    input[type="file"] {
+        display: block;
+    }
+
+    .imageThumb {
+        max-height: 75px;
+        width: 137px;
+        max-height: 100px;
+        border: 2px solid;
+        padding: 1px;
+        cursor: pointer;
+    }
+
+
+
+    .remove {
+        display: block;
+        background: #444;
+        border: 1px solid black;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .remove:hover {
+            background: white;
+            color: black;
+        }
+
+    .slides {
+        position: relative;
+        height: 300px;
+        width: 500px;
+    }
+
+        .slides img {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: -2;
+        }
+
+            .slides img.top {
+                z-index: -1;
+            }
+
+        .slides .front {
+            position: absolute;
+            right: 10px;
+            top: 120px;
+            padding: 5px;
+            border-radius: 60px;
+            width: 38px;
+            height: 38px;
+            text-align: center;
+            color: silver;
+            background: white;
+            opacity: 0.4;
+            cursor: pointer;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .slides .back {
+            position: absolute;
+            left: 10px;
+            top: 120px;
+            padding: 5px;
+            border-radius: 60px;
+            width: 38px;
+            height: 38px;
+            text-align: center;
+            color: silver;
+            background: white;
+            opacity: 0.4;
+            cursor: pointer;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+    body {
+        /*overflow-y:auto;*/
+        overflow-x: hidden;
+    }
+</style>
+
+
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script src="~/Scripts/Chart/export-data.js"></script>
+<script src="~/Scripts/Chart/exporting.js"></script>
+
+
+
+<div class="myData" data-x="M164"/>
+
+<div class="content-wrapper">
+    <!--Statistics cards Starts-->
+    <div class="row">
+        <div class="col-xl-2 col-lg-6 col-md-6 col-12" >
+            <div class="card gradient-blackberry" id="abs" style="height:70px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0" style="height:60px">
+                        <div class="media" >
+                            <div class="media-body white text-left">
+                                <h3 id="tottax" class="font-large-1 mb-0">0</h3>
+                                <span>Pending Cars</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="icon-pie-chart font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-lg-6 col-md-6 col-12" >
+            <div class="card gradient-ibiza-sunset" id="LoadContDiv" style="height:70px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0" style="height:60px">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totcost" class="font-large-1 mb-0">0</h3>
+                                <span>Loaded Containers</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="icon-basket-loaded font-large-1"></i>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart1" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-lg-6 col-md-6 col-12">
+            <div class="card gradient-deep-orange-orange" id="LoadContDiv" style="height:70px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0" style="height:60px">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="loadedcars" class="font-large-1 mb-0">0</h3>
+                                <span>Loaded Cars</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="fa fa-truck font-large-1"></i>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div id="Widget-line-chart1" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-lg-6 col-md-6 col-12">
+            <div class="card gradient-green-tea" id="PortContDiv" style="height:70px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0" style="height:60px">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totsales" class="font-large-1 mb-0">0</h3>
+                                <span>Cars At Port</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="fa fa-car font-large-1"></i>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div id="Widget-line-chart2" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-2 col-lg-6 col-md-6 col-12">
+            <div class="card gradient-indigo-blue" id="PortContDiv" style="height:70px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0" style="height:60px">
+                       
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="containeratport" class="font-large-1 mb-0">0</h3>
+                                <span>Containers At Port</span>
+                            </div>
+                            <div class="media-right white text-right">
+
+                                <i class="fa fa-stack-overflow font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart2" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-lg-6 col-md-6 col-12">
+            <div class="card gradient-pomegranate" id="LocContDiv" style="height:70px">
+                <div class="card-body">
+                    <div class="card-block pt-2 pb-0" style="height:60px">
+                        <div class="media">
+                            <div class="media-body white text-left">
+                                <h3 id="totalearn" class="font-large-1 mb-0">0</h3>
+                                <span>Cars At Location</span>
+                            </div>
+                            <div class="media-right white text-right">
+                                <i class="fa fa-cab font-large-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Widget-line-chart3" class="height-75 WidgetlineChart WidgetlineChartshadow mb-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Statistics cards Ends-->
+    <!--Line with Area Chart 1 Starts-->
+    <div class="row">
+        <div class="col-sm-9">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-block">
+                        <div id="line-area" class="height-350 lineArea">
+                            <div id="Sales" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+                            <div class="input-group" style="margin-top:-20px;">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline1" checked="" name="customRadioInline1" class="custom-control-input" onclick="DepartmentWiseSalesDashboard('column')">
+                                    <label class="custom-control-label" for="customRadioInline1">Bar</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" onclick="DepartmentWiseSalesDashboard('line')">
+                                    <label class="custom-control-label" for="customRadioInline2">Line</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input" onclick="DepartmentWiseSalesDashboard('area')">
+                                    <label class="custom-control-label" for="customRadioInline3">Area</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div id="container" style="min-width: 310px; height: 380px; max-width: 600px; margin: 0 auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Line with Area Chart 1 Ends-->
+
+    <div class="row">
+
+       
+            
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom: 1px solid lightgrey;">
+                    <div class="row">
+                        <h4 class="card-title col-md-6">Stock Query</h4>
+                        <h4 class="card-title col-md-2 text-right">Search</h4>
+                        <div class="col-md-4"><input type="text" id="txtbox" style="font-weight:bold" onkeyup="load(event)" class="form-control" /></div>
+                    </div>
+                </div>
+                <div class="card-body" style="height: 650px;overflow:auto;min-width: 310px;border-bottom-color:#dee2e6 ">
+                        <div class="heading-elements" >
+                           
+                            <div id="divreport" style="display:none; overflow:auto;padding-top:5px">
+                                <table id="productlist" class="table table-striped table-bordered dataTable"></table><br />
+                            </div>
+                            <div style="display:none">
+                                <table id="Tblreportprint"></table>
+                            </div>
+
+                            <div id="popupdiv2" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:none; display:none;position:absolute;z-index:100;margin-top:9%;">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content" style="height:410px; width:601px">
+
+                                        <div>
+                                            <button type="button" class="close" onclick="formrefresh2()" data-dismiss="modal" aria-label="Close" autocomplete="off">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                           
+                                            <div id="DDh2" style="height:800px; width:601px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br /><br />
+                        </div>  
+                </div>
+            </div>
+        </div>
+    
+    </div>
+
+
+
+    <div class="row match-height">
+        <div class="col-xl-6 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Arriving Containers<span id="arrdate"></span></h4>
+                </div>
+                <div class="card-body" style="height:500px;overflow:auto">
+
+                    <table class="table table-responsive-sm text-center" id="ArrivingContainers"> 
+                        <thead><tr><th style="text-align:center">Loaded Date</th><th style="text-align:left">Container No</th><th style="text-align:left">Port</th><th style="text-align:left">Lines</th></tr></thead>                      
+                    </table>
+                   
+                </div>
+            </div>
+        </div>
+        @*<div class="col-xl-4 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">User List</h4>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="msguser" />
+                    <div id="userlist" style="height:300px; overflow:auto;" class="card-block">
+
+
+                    </div>
+                    <hr />
+
+
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-6 col-md-6 col-12">
+                                <textarea style="height:80px;width:100%"></textarea>
+                            </div>
+                            <div class="col text-center">
+                                <button type="button" id="sendmsg" class="btn btn-raised btn-primary" onclick="sendmessage()">
+                                    <i class="fa fa-paper-plane-o hidden-lg-up"></i> Send
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <div class="col-xl-6 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Pending Containers at Port</h4>
+                </div>
+                <div class="card-body" style="min-width: 310px; height:665px;overflow:auto">
+                    <div id="SalesA">
+                        <table class="table table-responsive-sm text-center" id="PendingContainers">
+                            <thead><tr><th style="text-align:center">Arrived Date</th><th style="text-align:left">Container No</th><th style="text-align:left">Port</th><th style="text-align:left">Lines</th></tr></thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-8 col-lg-12" style="display:none">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Top selling Cars</h4>
+                </div>
+                <div class="card-body" style="height:500px;overflow:auto">
+                    
+
+                    <table class="table table-responsive-sm text-center" id="TopSellingCars">
+                        <thead><tr><th style="text-align:center">Image</th><th style="text-align:left">Item Code</th><th style="text-align:left">ItemName</th><th style="text-align:right">Selling Price</th><th style="text-align:right">Profit Percentage</th></tr></thead>
+                    </table>
+                    <div id="popupdiv1" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:none; display:none;position:absolute;z-index:100">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" style="height:410px; width:601px">
+
+                                <div>
+                                    <button type="button" class="close" onclick="formrefresh1()" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true" style="color:white">×</span>
+                                    </button>
+                                    <div id="DDh1" style="height:800px; width:601px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="container1" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+
+<div class="modal fade text-left show" id="iconForm" tabindex="-1" role="dialog" aria-labelledby="headiddetialls" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);height:1800px;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:180%; margin-left:-270px;margin-top:15%">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="headiddetialls"></h4>
+                <div class="col-md-1" style="margin-left:15%;display:none" id="LocationLabel"><h5><label>Location</label></h5></div>
+                <div class="col-md-2" style="margin-left:1%;display:none" id="Locationselect" onchange="loadingCarsatloc()">
+                   <select id="Location" class="form-control">SELECT</select>
+                </div>
+
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#iconForm').hide();" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="View">
+                <div class="modal-body">
+
+                    <div id="div1" style="height:500px;overflow:auto;">
+                        <table id="Stocklist" class="table table-striped table-bordered zero-configuration dataTable display compact nowrap"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="RowGet" />
+                    <input type="button" id="btn1" class="btn btn-outline-secondary btn-lg" style="height:45px;width:75px;display:none" onclick="$('#iconForm').hide();" value="close">
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade text-left show" id="detailForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" style="padding-right: 17px; display: none;background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:120%; margin-left:0px;">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myModalLabel17">Container Details</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="$('#detailForm').hide();" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="Add">
+                <div class="modal-body">
+
+                    <div id="div1" style="height:250px;overflow:auto;">
+                        <table id="Detaillist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="RowGet" />
+                    <input type="button" id="btn1" class="btn btn-outline-secondary btn-lg" style="height:45px;width:75px" onclick="$('#detailForm').hide();" value="close">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+
+    function datatableWithsearchs(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tr:eq(1) th'
+
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                if (title == 'Date' || title == 'Currency' || title == 'OrderNo' || title == 'Sl#' || title == 'InvoiceNo') {
+                    $(this).html('<input type="text"  style="width:120px"  placeholder="' + title + '"/>')
+                }
+                else if (title == 'Year' || title == 'Color' || title == 'City')
+                    $(this).html('<input type="text" style="width:100%"   placeholder="' + title + '"/>')
+                else {
+                    $(this).html('<input type="text"   placeholder="' + title + '"/>')
+                }
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                orderCellsTop: true,
+                buttons: [],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    //   className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+
+        }
+        table.columns().every(function (index) {
+            $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                table.column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            });
+        });
+
+        //if (ExcelExport == 0) {
+        //    $('.excelexport').hide();
+        //}
+    }
+
+    
+    $(function () {
+
+     
+
+        var data = {};
+        data.Type = 0;
+        data.Condition = $('#txtbox').val();
+        $.ajax({
+            type: "POST",
+            url: "../StockReport/StockQueryGet",
+            data: data,
+            success: function (result) {
+                Showreport(result);
+                $('#Loading').hide();
+                $('#divreport').show();
+            }
+        });
+
+        $('#txtbox').focus();
+
+    });
+
+    function load(e) {
+
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+
+        var flg = 1;
+        if ($('#txtbox').val() == '')
+            flg = 0;
+        if ((flg == 1 && key == 32) || (flg == 0)) {
+            var data = {};
+            data.Type = flg;
+            data.Condition = $('#txtbox').val();
+            $.ajax({
+                type: "POST",
+                url: "../StockReport/StockQueryGet",
+                data: data,
+                success: function (result) {
+                    Showreport(result);
+
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                }
+            });
+        }
+    }
+
+    function GetItem(ItemId, GroupId, CategoryId) {
+        window.open('../Master/UsedCarsItemMaster?itemid=' + ItemId + '&grpid=' + GroupId + '&cati=' + CategoryId);
+    }
+
+    var EditFlag = 0;
+
+    var Img = '<i class="btn white btn-round btn-secondary btn-xs" style="font-size:smaller;margin:0">Image</i>';
+
+    function Showreport(result) {
+        disable_datatable('productlist');
+        var responseText = "<thead><tr><th style=text-align:center>Sl#</th><th id='VCC'>VCC</th><th>Image</th><th>Item Code</th><th>Item Description</th><th>Lot Number</th><th>Year</th><th>Color</th><th>Stock</th><th style=text-align:right>Price</th><th>Buyer Name</th><th>Group</th><th>Sub Group</th><th>Container Number</th><th>Auction</th><th>City</th><th style=text-align:right>Cost</th><th>View</th><th style='display:none'></th><th style='display:none'></th></tr>" +
+           "<tr><th> </th><th> </th><th> </th><th>Item Code</th><th>Item Description</th><th>Lot Number</th><th>Year</th><th>Color</th><th> </th><th> </th><th>Buyer Name</th><th>Group</th><th>Sub Group</th><th>Container Number</th><th>Auction</th><th>City</th><th> </th><th> </th><th style='display:none'></th><th style='display:none'></th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            if ((usermenu1.indexOf("M209") != -1)) {
+                if (result[i].VCCStatus == 'YES') {
+                    responseText += '<tr  ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+                        '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+                        '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+                        '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+                        '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+                        '<td align=center>' +
+                        '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td>' +
+                        '<td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+                }
+                else if (result[i].VCCStatus == 'NO') {
+                    responseText += '<tr  ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+                        '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+                        '<a  style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+                        '<a id="Update' + result[i].ItemId + '"  style="display:none" onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+                        '<a id="Cancel' + result[i].ItemId + '"  onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+                        '<td align=center>' +
+                        '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+                }
+                else {
+                    responseText += '<tr  ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+                    '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+                    '<a  id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+                    '<a id="Update' + result[i].ItemId + '"  style="display:none" onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+                    '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+                    '<td align=center>' +
+                    '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+                }
+
+            }
+
+            else {
+                if (result[i].VCCStatus == 'YES') {
+                    responseText += '<tr  ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+                        '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+                        '<a  style="display:none" id="Edit' + result[i].ItemId + '"  >' + tempEditbutton + '</a>' +
+                        '<a  id="Update' + result[i].ItemId + '" >' + tempUpdatebutton + '</a>' +
+                        '<a id="Cancel' + result[i].ItemId + '"  style="display:none">' + Cancelbutton + '</a></td>' +
+                        '<td align=center>' +
+                        '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+                }
+                else if (result[i].VCCStatus == 'NO') {
+                    responseText += '<tr  ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+                        '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+                        '<a  style="display:none" id="Edit' + result[i].ItemId + '"  >' + tempEditbutton + '</a>' +
+                        '<a  id="Update' + result[i].ItemId + '"  style="display:none">' + tempUpdatebutton + '</a>' +
+                        '<a id="Cancel' + result[i].ItemId + '" >' + Cancelbutton + '</a></td>' +
+                        '<td align=center>' +
+                        '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+                }
+                else {
+                    responseText += '<tr  ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+                    '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+                    '<a  id="Edit' + result[i].ItemId + '"  >' + tempEditbutton + '</a>' +
+                    '<a id="Update' + result[i].ItemId + '"  style="display:none">' + tempUpdatebutton + '</a>' +
+                    '<a id="Cancel' + result[i].ItemId + '"  style="display:none" >' + Cancelbutton + '</a></td>' +
+                    '<td align=center>' +
+                    '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td><td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+                }
+
+            }
+        }
+        //var responseText = "<thead><tr><th style=text-align:center>Sl#</th><th>VCC</th><th>Image </th><th>Item Code</th><th>Item Description</th><th>Lot Number</th><th>Year</th><th>Color</th><th>Stock</th><th style=text-align:right>Price</th><th>Buyer Name</th><th>Group</th><th>Sub Group</th><th>Container Number</th><th>Auction</th><th>City</th><th style=text-align:right>Cost</th><th>View</th><th style='display:none'></th><th style='display:none'></th></tr>" +
+        //    "<tr><th> </th><th> </th><th> </th><th>Item Code</th><th>Item Description</th><th>Lot Number</th><th>Year</th><th>Color</th><th> </th><th> </th><th>Buyer Name</th><th>Group</th><th>Sub Group</th><th>Container Number</th><th>Auction</th><th>City</th><th> </th><th> </th><th style='display:none'></th><th style='display:none'></th></tr></thead><tbody>";
+        //for (var i = 0; i < result.length; i++) {
+        //    var slno = parseInt(i + 1);
+        //    if ((usermenu1.indexOf("M209") != -1)) {
+        //        if (result[i].VCCStatus == 'YES') {
+        //            responseText += '<tr   ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+        //                 '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+        //                '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+        //                '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+        //                '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+        //                '<td align=center>' +
+        //                '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td>'+
+        //                '<td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td>' +
+        //                '<td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+        //        }
+        //        else if (result[i].VCCStatus == 'NO') {
+        //            responseText += '<tr   ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +                       
+        //                 '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+        //                '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+        //                '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+        //                '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+        //                '<td align=center>' +
+        //                '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td>' +
+        //                '<td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+        //        }
+        //        else {
+        //            responseText += '<tr   ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +                   
+        //                 '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+        //                '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+        //                '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+        //                '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+        //                '<td align=center>' +
+        //                '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td>' +
+        //                '<td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+        //        }
+
+        //    }
+
+        //    else {
+        //        if (result[i].VCCStatus == 'YES') {
+        //            responseText += '<tr   ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+        //                 '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+        //                '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+        //                '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+        //                '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+        //                '<td align=center>' +
+        //                '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td>' +
+        //                '<td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+        //        }
+        //        else if (result[i].VCCStatus == 'NO') {
+        //            responseText += '<tr   ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+        //                 '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+        //                '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+        //                '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+        //                '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+        //                '<td align=center>' +
+        //                '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td>' +
+        //                '<td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+
+        //        }
+        //        else {
+        //            responseText += '<tr   ondblclick=GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')><td style=text-align:center>' + slno + '</td>' +
+        //                 '<td><span  style="display:none">' + result[i].VCCStatus + '</span>' +
+        //                '<a style="display:none" id="Edit' + result[i].ItemId + '"  onclick="EditRows(' + result[i].ItemId + ');">' + tempEditbutton + '</a>' +
+        //                '<a id="Update' + result[i].ItemId + '"  onclick="Update(' + result[i].ItemId + ');">' + tempUpdatebutton + '</a>' +
+        //                '<a id="Cancel' + result[i].ItemId + '"  style="display:none" onclick="Cancel(' + result[i].ItemId + ');">' + Cancelbutton + '</a></td>' +
+        //                '<td align=center>' +
+        //                '<a onclick="imageslider1(' + result[i].ItemId + ')">' + Img + '</a></td>' +
+        //                '<td id=' + "Icode" + result[i].ItemId + '>' + result[i].ItemCode + '</td><td id=' + "IDesc" + result[i].ItemId + '>' + result[i].ItemDesc + '</td><td>' + result[i].Model2 + '</td><td>' + result[i].Year + '</td><td>' + result[i].Model3 + '</td><td>' + result[i].StockQty + '</td><td  style=text-align:right>' + parseFloat(result[i].Price).toFixed(Decimal) + '</td><td>' + result[i].BuyerNo + '</td><td>' + result[i].Group + '</td><td>' + result[i].SubGroup + '</td><td>' + result[i].Model1 + '</td><td>' + result[i].Category + '</td><td>' + result[i].SubCategory + '</td><td  style=text-align:right id=' + "Cost" + result[i].ItemId + '>' + parseFloat(result[i].AvgCost).toFixed(Decimal) + '</td><td><a onclick="GetItem(' + result[i].ItemId + ',' + result[i].GroupId + ',' + result[i].CategoryId + ')">' + Eyebutton + '</a></td><td style="display:none" id=' + "OpenQty" + result[i].ItemId + '>' + parseInt(result[i].OpenQty || 0) + '</td><td style="display:none" id=' + "OpeningCost" + result[i].ItemId + '>' + parseFloat(result[i].OpenCost).toFixed(Decimal) + '</td></tr>';
+        //        }
+
+        //    }
+        //}
+        $('#productlist').html(responseText + '</tbody>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Stock Query";
+        datatableWithsearchs('productlist', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+
+    function EditRows(ItemId) {
+        $('#Edit' + ItemId).hide();
+        $('#Update' + ItemId).show();
+        $('#Cancel' + ItemId).show();
+        EditFlag = 1;
+        console.log(EditFlag)
+    }
+    function Update(ItemId) {
+
+        if (EditFlag == 0) {
+            $('#Cancel' + ItemId).hide();
+            $('#Update' + ItemId).hide();
+            $('#Edit' + ItemId).show();
+        }
+        else {
+            updatevcc(1, ItemId);
+            EditFlag = 0;
+            $('#Edit' + ItemId).hide();
+            $('#Cancel' + ItemId).hide();
+            $('#Update' + ItemId).show();
+        }
+
+    }
+    function Cancel(ItemId) {
+
+        if (EditFlag == 0) {
+            $('#Update' + ItemId).hide();
+            $('#Cancel' + ItemId).hide();
+            $('#Edit' + ItemId).show();
+        } else {
+            updatevcc(0, ItemId);
+            EditFlag = 0;
+            $('#Edit' + ItemId).hide();
+            $('#Update' + ItemId).hide();
+            $('#Cancel' + ItemId).show();
+        }
+
+    }
+
+    function updatevcc(flag, ItemId) {
+
+        var data = {};
+        data.ItemId = ItemId;
+        data.VCCFlag = flag;
+        $.ajax({
+            type: "POST",
+            url: "../Report/VCCPaidUpdate",
+            data: data,
+            success: function (result) {
+
+            }
+        });
+    }
+
+
+    function GetLocation(id) {
+        var data = {};
+        data.LocationId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                LocationLoad(result.oList, id);
+
+
+            }
+        });
+
+    }
+
+    function LocationLoad(result, a) {
+        $("#Location").empty();
+        LocationSelect = "<option value='0'>-All-</option>";
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].LocationId != 1 && result[i].LocationId != 2) {
+                LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
+
+            }
+        }
+        $("#Location").append(LocationSelect);
+        if (a == 0) {
+            $('#Location').val(0);
+        }
+        else {
+            $('#Location').val(a);
+        }
+    }
+
+
+
+
+
+    //Highcharts.chart('container1', {
+    //    chart: {
+    //        type: 'column'
+    //    },
+    //    title: {
+    //        text: 'Monthly Average Rainfall'
+    //    },
+    //    subtitle: {
+    //        text: 'Source: WorldClimate.com'
+    //    },
+    //    xAxis: {
+    //        categories: [
+    //            'Jan',
+    //            'Feb',
+    //            'Mar',
+    //            'Apr',
+    //            'May',
+    //            'Jun',
+    //            'Jul',
+    //            'Aug',
+    //            'Sep',
+    //            'Oct',
+    //            'Nov',
+    //            'Dec'
+    //        ],
+    //        crosshair: true
+    //    },
+    //    yAxis: {
+    //        min: 0,
+    //        title: {
+    //            text: 'Rainfall (mm)'
+    //        }
+    //    },
+    //    tooltip: {
+    //        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+    //        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+    //            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+    //        footerFormat: '</table>',
+    //        shared: true,
+    //        useHTML: true
+    //    },
+    //    plotOptions: {
+    //        column: {
+    //            pointPadding: 0.2,
+    //            borderWidth: 0
+    //        }
+    //    },
+    //    series: [{
+    //        name: 'Tokyo',
+    //        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+    //    }, {
+    //        name: 'New York',
+    //        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+    //    }, {
+    //        name: 'London',
+    //        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+    //    }, {
+    //        name: 'Berlin',
+    //        data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+    //    }]
+    //});
+
+
+
+
+    //line chart
+
+
+
+
+    // Build the PI chart
+
+
+
+GetLocation(3);
+GetUsers();
+function GetUsers() {
+    var data = {};
+    data.UserId = 0;
+    $.ajax({
+        type: "POST",
+        url: "../Master/UsersGetandGets",
+        data: data,
+        success: function (result) {
+            ShowUserslist(result.oList);
+        }
+    });
+}
+
+
+
+var d = new Date();
+var month = d.getMonth() + 1;
+var day = d.getDate();
+var CurDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + d.getFullYear();
+
+
+GetFastMovingItems()
+function GetFastMovingItems()
+{
+
+    var Condition = 'CONVERT(datetime,InvDate,103) >= CONVERT(datetime,' + "'" + CurDate + "'" + ',103) and CONVERT(datetime,InvDate,103) <= CONVERT(datetime,' + "'" + CurDate + "'" + ',103) group by ProductCode,ProductDescr,GrpCode,SbgrpName,CategoryCode,SubCategoryName,Inv_SalesSub.DeptId,avgcost order by Quantity desc'
+    var data = {};
+    data.Number = 5;
+    data.Condition = Condition;
+
+
+
+    $.ajax({
+        type: "POST",
+        url: "../Purchaseandsalesreports/PurchaseOrderReminder",
+        data: data,
+        success: function (result) {
+            ShowTopSalesreport(result);
+        }
+    });
+}
+
+
+DepartmentWiseSalesDashboard('column')
+
+function DepartmentWiseSalesDashboard(GrType) {
+
+    var data = {};
+    data.Fromdate = CurDate;
+    data.Todate = CurDate;
+    data.DeptId = 0;
+
+    $.ajax({
+        type: "POST",
+        url: "../Purchaseandsalesreports/DepartmentWiseSalesDashboard",
+        data: data,
+        success: function (result) {
+            DepartmentwiseSalesGraph(result, GrType);
+        }
+    });
+
+    var data = {};
+    data.Fromdate = CurDate;
+    data.Todate = CurDate;
+    data.DeptId = 0;
+
+    $.ajax({
+        type: "POST",
+        url: "../Purchaseandsalesreports/SalesmanwiseSalesDashboard",
+        data: data,
+        success: function (result) {
+            SalesmanwiseSalesGraph(result, GrType);
+        }
+    });
+
+
+    var data1 = {};
+    data1.Fromdate = CurDate;
+    data1.Todate = CurDate;
+    data1.DeptId = ERPDeptId;
+
+
+    //$.ajax({
+    //    type: "POST",
+    //    url: "../Purchaseandsalesreports/DashboardGetandGets",
+    //    data: data1,
+    //    success: function (result) {
+    //        $('#totsales').text(parseFloat(result[0].TotalAmount).toFixed(Decimal));
+    //        $('#tottax').text(parseFloat(result[0].totalTax).toFixed(Decimal));
+    //        $('#totcost').text(parseFloat(result[0].Cost).toFixed(Decimal));
+    //        $('#totalearn').text(parseFloat(result[0].Earning).toFixed(Decimal));
+    //    }
+    //});
+
+}
+
+//for SalesmanwiseSales
+function SalesmanwiseSalesGraph(result, GrType) {
+    var Amount   = [];
+    var SalesMan = [];
+    var GrData   = [];
+
+    for (var i = 0; i < result.length; i++) {
+        Amount.push(parseFloat(result[i].Amount || 0));
+        SalesMan.push(result[i].SalesMan);
+        GrData.push({ name: result[i].SalesMan, y: parseFloat(result[i].Amount || 0) })
+    }
+
+
+    Highcharts.chart('Sales', {
+        chart: { type: GrType },
+        title: {
+            text: 'Sales Man Wise Sales'
+        },
+        subtitle: {
+            text: 'Source: eumierp.com'
+        },
+        xAxis: {
+            categories:SalesMan
+        },
+        yAxis: {
+            title: {
+                text: 'Sales()'
+            }
+        },
+        colors: [
+                     '#FF4758',
+                     '#08B46B',
+                     '#19B6D4',
+                      '#FF8558',
+                     '#ec407a',
+                     '#9c27b0',
+                      '#1a237e',
+                      '#3e2723'
+        ],
+        plotOptions: {
+            column: {
+                colorByPoint: true,
+            },
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+        series: [
+        {
+            name: 'Sales',
+            data: Amount
+        },
+        ]
+    });
+
+
+}
+
+
+//for DepartmentwiseSales
+function DepartmentwiseSalesGraph(result, GrType) {
+    var Amount = [];
+    var GrData = [];
+    var Department = [];
+
+    for (var i = 0; i < result.length; i++) {
+        Amount.push(parseFloat(result[i].Amount || 0));
+        Department.push(result[i].Department);
+        GrData.push({ name: result[i].Department, y: parseFloat(result[i].Amount || 0) })
+    }
+    //PI CHAT
+    Highcharts.chart('container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Department wise Sales'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>(${point.y}) {point.percentage:.1f}%</b>'
+        },
+        colors: [
+                  '#FF4758',
+                  '#08B46B',
+                  '#19B6D4',
+                   '#FF8558',
+                  '#ec407a',
+                  '#9c27b0',
+                   '#1a237e',
+                   '#3e2723'
+        ],
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+            name: 'Sales',
+            colorByPoint: true,
+            data: GrData
+        }]
+    });
+}
+
+
+
+function ShowUserslist(result) {
+    for (var i = 0; i < result.length; i++) {
+           var Data = '<div class="media mb-1"><a><img alt="96x96" class="media-object d-flex mr-3 bg-primary height-50 rounded-circle" src="../app-assets/img/portrait/small/avatar-s-12.png"></a><div class="media-body"><h4 class="font-medium-1 mt-1 mb-0">' + result[i].Name + '</h4><p class="text-muted font-small-3">User</p></div><div class="mt-1"><div class="custom-control custom-checkbox mb-2 mr-sm-2 mb-sm-0"><input type="checkbox" class="custom-control-input" checked id=""><label class="custom-control-label" for="customcheckbox1"></label></div></div></div>'
+            $('#userlist').append(Data)
+        }
+}
+
+
+function ShowTopSalesreport(result) {
+    var responseText = "<thead><tr ><th>Image</th><th>Product</th><th>Quantity</th><th>Status</th><th>Amount</th><th></th></tr></thead>  <tbody>";
+    for (var i = 0; i < result.length; i++)
+    {
+
+        if (result[i].ItemDesc != 'Grand Total')
+        responseText += '<tr><td><img class="media-object round-media height-50" src="../app-assets/img/elements/01.png" alt="" /></td><td>' + result[i].ItemCode + ' - ' + result[i].ItemDesc + '</td><td>' + result[i].Qty + '</td><td><a class="btn white btn-round btn-primary">Active</a></td><td>' + result[i].Amount + '</td><td><a class="danger" data-original-title="" title=""></a></td></tr>';
+    }
+   $('#topnsales').html(responseText + '</tbody>');
+}
+
+
+
+$(document).ready(function () {
+
+    var data = {};
+    data.Type = 'ARRIVAL';         
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/ArrivingContainersGets",
+        data: data,
+        success: function (result) {
+            getcontainerarrival(result.oList);
+        }
+    });
+
+    var data1 = {};
+    data1.Type = 'PENDING'; 
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/ArrivingContainersGets",
+        data: data1,
+        success: function (result) { 
+            getcontainerpending(result.oList);
+        }
+    });
+
+    var data2 = {};
+    data2.Type = 'NONMOVING'; 
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/ArrivingContainersGets",
+        data: data2,
+        success: function (result) {
+            getcontainernonmoving(result.oList); 
+        }
+    });
+
+    var data3 = {};
+    data3.Type = 'TOPSELLING'; 
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/TopSelling",
+        data: data3,
+        success: function (result) {
+            getcontainertopselling(result.oList); 
+        }
+    });
+
+
+
+
+
+
+var data={};
+data.Type = 'ONPORT';
+data.DeptId = ERPDeptId;
+$.ajax({
+    type:"POST",
+    url: "../LocationTransfer/OnPortItemGetandGets",
+    data:data,
+    success: function (result) {
+        console.log(result)
+        getonportitemcount(result.oList);
+    }
+})
+var data = {};
+data.Type = 'ONLOC';
+data.DeptId = ERPDeptId;
+$.ajax({
+    type: "POST",
+    url: "../LocationTransfer/OnPortItemGetandGets",
+    data: data,
+    success: function (result) {
+        getonlocitemcount(result.oList);
+    }
+})
+var data={};
+data.Type='PendCont';
+data.DeptId = ERPDeptId;
+$.ajax({
+    type:"POST",
+    url: "../LocationTransfer/OnPortItemGetandGets",
+    data:data,
+    success: function (result) {
+        getpendingcontainers(result.oList);
+    }
+})
+var data = {};
+data.Type = 'LoadCont';
+data.DeptId = ERPDeptId;
+$.ajax({
+    type: "POST",
+    url: "../LocationTransfer/OnPortItemGetandGets",
+    data: data,
+    success: function (result) {
+        getloadcontainers(result.oList);
+    }
+});
+
+var data = {};
+data.Type = 'LoadedCars';
+data.DeptId = ERPDeptId;
+$.ajax({
+    type: "POST",
+    url: "../LocationTransfer/OnPortItemGetandGets",
+    data: data,
+    success: function (result) {
+        getloadcars(result.oList);
+    }
+});
+
+var data = {};
+data.Type = 'ConAtPort';
+data.DeptId = ERPDeptId;
+$.ajax({
+    type: "POST",
+    url: "../LocationTransfer/OnPortItemGetandGets",
+    data: data,
+    success: function (result) {
+        getcontaineratport(result.oList);
+    }
+});
+
+
+
+
+
+$("#abs").click(function (e) {
+    pendingContainersList();
+})
+$("#LoadContDiv").click(function (e) {
+    loadingContainersList();
+})
+$("#PortContDiv").click(function (e) {
+    loadingCarsatport();
+})
+$("#LocContDiv").click(function (e) {
+    loadingCarsatloc();
+})
+});
+
+function pendingContainersList()
+{
+    $('#Loading').show();
+    var data = {};
+    data.Type = 'PendingCont';
+    data.DeptId = ERPDeptId;
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/ContainersListGets",
+        data: data,
+        success: function (result) {
+            getPendingcontainers(result);
+            $('#RowGet').val = '';
+            $('#iconForm').show();
+            $('#Locationselect').hide();
+            $('#LocationLabel').hide();
+            $('#headiddetialls').text('Pending Cars');
+           // disable_datatable('Stocklist');
+        }
+    })
+}
+function getPendingcontainers(result)
+{    
+    disable_datatable('Stocklist');
+    var responseText = "";
+    if (result.length != 0) {
+        var responseText = "<thead><tr><th>SlNo</th>" +
+            '<th>Pur.Date</th>' +
+            '<th>VIN Number</th>'+
+            "<th>Description</th>" +
+            "<th>Cost</th>" +
+            "<th>Buyer Name</th>" +
+            "<th>Model</th>" +
+            "<th>Auction</th>"+
+            "<th>City</th>"+           
+            "<th>Point Of Loading</th>"+
+            "<th>Lot No</th>"+           
+            "<th>Type</th>" +           
+           "<tr><th >slno</th><th>Pur.Date</th><th>VIN Number</th><th>Description</th><th> </th><th>Buyer Name</th><th>Model</th><th>Auction</th><th>City</th><th>Point Of Loading</th><th>Lot No</th><th>Type</th></tr>" +
+
+            "</thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+            var slno = parseInt(l + 1);
+            if (result[l].InvoDate == 'Total') {
+                responseText += '<tr style=background-color:#cfd8dc;font-weight:bold> <td>' + slno + '</td>' +
+                    '<td>' + result[l].InvoDate + '</td>' +
+                    '<td>' + result[l].Port + '</td>' +
+                    '<td>' + result[l].LoadDate + '</td>' +
+                    '<td align=right>' + parseFloat(result[l].AvgCost).toFixed(Decimal) + '</td>' +
+                    '<td>' + result[l].BuyerNo + '</td>' +
+                    '<td>' + result[l].BookingNumber + '</td>' +
+                    '<td>' + result[l].Lines + '</td>' +
+                    '<td>' + result[l].Size + '</td>' +
+                    '<td>' + result[l].PointOfLoading + '</td>' +
+                    '<td >' + result[l].ExpectArrivalDate + '</td>' +
+                    '<td>' + result[l].ContArrivalDate + '</td></tr>';
+            }
+            else
+            {
+                responseText += '<tr> <td>' + slno + '</td>' +
+                                  '<td>' + result[l].InvoDate + '</td>' +
+                                  '<td>' + result[l].Port + '</td>' +
+                                  '<td>' + result[l].LoadDate + '</td>' +
+                                  '<td align=right>' + parseFloat(result[l].AvgCost).toFixed(Decimal) + '</td>' +
+                                  '<td>' + result[l].BuyerNo + '</td>' +
+                                  '<td>' + result[l].BookingNumber + '</td>' +
+                                  '<td>' + result[l].Lines + '</td>' +
+                                  '<td>' + result[l].Size + '</td>' +
+                                  '<td>' + result[l].PointOfLoading + '</td>' +
+                                  '<td >' + result[l].ExpectArrivalDate + '</td>' +
+                                  '<td>' + result[l].ContArrivalDate + '</td></tr>';
+            }
+        }
+        $('#RowGet').val(result.length);
+    }
+    else {
+        var responseText = '<tr><td style="width:1000px;text-align:center"><b>No Datas Found</b><td><tr>';
+    }   
+    $('#Stocklist').html(responseText + '</tbody>');
+    datatablesearch('Stocklist', 'Multiple');
+    $('#div1').animate({ scrollTop: 0 });
+    $('#Loading').hide();
+}
+function getcontainers(result) {
+    disable_datatable('Stocklist');
+    var responseText = "";
+    if (result.length != 0) {
+        var responseText = "<thead><tr><th>SlNo</th>"+
+            "<th>Container Number</th>" +
+            "<th>Booking Number</th>" +
+            //"<th>Pur.Date</th>" +
+            "<th>Lines</th>" +
+            "<th>Size</th>" +
+            "<th>Point Of Loading</th>" +
+            "<th>Port</th>" +
+            //"<th>Cost</th>" +
+            //"<th>Buyer Name</th>" +
+            "<th>ExpectArrival Date</th>" +
+            "<th>Release Date</th>" +
+            "<th>Arrival Date</th></tr>" +
+
+           "<tr><th >slno</th>"+
+           '<th>Container Number</th>'+
+           '<th>Booking Number</th>' +
+           //'<th>Pur.Date</th>' +
+           '<th>Lines</th>'+
+           '<th>Size</th>'+
+           '<th>Point Of Loading</th>'+
+           '<th>Port</th>' +
+           //'<th> </th>' +
+           //'<th>Buyer Name</th>' +
+           '<th>ExpectArrival Date</th>'+
+           '<th>Release Date </th>'+
+           '<th>Arrival Date</th>'+
+           "</tr>" +
+
+            "</thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+            var slno = parseInt(l + 1);
+            if (result[l].InvoDate == 'Total') {
+                responseText += '<tr style=background-color:#cfd8dc;font-weight:bold onclick="showdetailcontList( ' + "'" + result[l].ContainerNumber + "'" + ')" > <td>' + slno + '</td><td  id=' + 'item' + slno + '>' + result[l].ContainerNumber + '</td>' +
+                                '<td>' + result[l].BookingNumber + '</td>' +
+                                //'<td>' + result[l].InvoDate + '</td>' +
+                                '<td>' + result[l].Lines + '</td>' +
+                                '<td>' + result[l].Size + '</td>' +
+                                '<td>' + result[l].PointOfLoading + '</td>' +
+                                '<td>' + result[l].Port + '</td>' +
+                                //'<td align=right>' + parseFloat(result[l].AvgCost).toFixed(Decimal) + '</td>' +
+                                //'<td>' + result[l].BuyerNo + '</td>' +
+                                '<td >' + result[l].ExpectArrivalDate + '</td>' +
+                                '<td>' + result[l].ReleaseDate + '</td>' +
+                                '<td>' + result[l].ContArrivalDate + '</td></tr>';
+            }
+            else
+            {
+                responseText += '<tr onclick="showdetailcontList( ' + "'" + result[l].ContainerNumber + "'" + ')" > <td>' + slno + '</td><td  id=' + 'item' + slno + '>' + result[l].ContainerNumber + '</td>' +
+                               '<td>' + result[l].BookingNumber + '</td>' +
+                               //'<td>' + result[l].InvoDate + '</td>' +
+                               '<td>' + result[l].Lines + '</td>' +
+                               '<td>' + result[l].Size + '</td>' +
+                               '<td>' + result[l].PointOfLoading + '</td>' +
+                               '<td>' + result[l].Port + '</td>' +
+                               //'<td align=right>' + parseFloat(result[l].AvgCost).toFixed(Decimal) + '</td>' +
+                               //'<td>' + result[l].BuyerNo + '</td>' +
+                               '<td >' + result[l].ExpectArrivalDate + '</td>' +
+                               '<td>' + result[l].ReleaseDate + '</td>' +
+                               '<td>' + result[l].ContArrivalDate + '</td></tr>';
+            }
+        }
+        $('#RowGet').val(result.length);
+    }
+    else {
+        var responseText = '<tr><td style="width:1000px;text-align:center"><b>No Datas Found</b><td><tr>';
+    }
+    $('#Stocklist').html(responseText + '</tbody>');
+    datatablesearch('Stocklist', 'Multiple');
+    $('#div1').animate({ scrollTop: 0 });
+    $('#Loading').hide();
+}
+function showdetailcontList(ContNumber)
+{
+    var data = {};
+    data.ContainerNumber = ContNumber;
+    data.DeptId = ERPDeptId;
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/ContainerDeatailsGets",
+        data: data,
+        success: function (result) {
+            getcontainersDetails(result);           
+            $('#detailForm').show();           
+        }
+    })
+
+}
+
+function loadingContainersList() {
+    $('#Loading').show();
+    var data = {};
+    data.Type = 'LoadingCont';
+    data.DeptId = ERPDeptId;
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/ContainersListGets",
+        data: data,
+        success: function (result) {
+            getcontainers(result);
+            $('#RowGet').val = '';
+            $('#iconForm').show();
+            $('#Locationselect').hide();
+            $('#LocationLabel').hide();
+            // disable_datatable('Stocklist');
+            $('#headiddetialls').text('Loaded Containers')
+        }
+    })
+}
+
+function getcontainersDetails(result) {
+   
+    var responseText = "";
+    if (result.length != 0) {
+        var responseText = "<thead><tr><th>Chassis Number</th>" +
+            "<th>Description</th>" +
+            "<th>Container Number</th>" +           
+            "</tr></thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+            var slno = parseInt(l + 1);
+            responseText += '<tr><td  id=' + 'item' + slno + '>' + result[l].ItemCode + '</td>' +
+                '<td>' + result[l].ItemName + '</td>' +
+                '<td>' + result[l].ContainerNumber + '</td></tr>';
+
+        }       
+    }
+    else {
+        var responseText = '<tr><td style="width:1000px;text-align:center"><b>No Datas Found</b><td><tr>';
+    }
+    $('#Detaillist').html(responseText + '</tbody>');
+    $('#div2').animate({ scrollTop: 0 });
+    $('#Loading').hide();
+}
+
+
+
+
+function loadingCarsatloc() {
+    $('#Loading').show();
+    var data = {};
+    data.Type = 'CarsLoc';
+    data.DeptId = ERPDeptId;
+    data.Location = $('#Location').val();
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/LoadingCarsGet",
+        data: data,
+        success: function (result) {
+            getloadingcarscontainers(result);
+            $('#RowGet').val = '';
+            $('#iconForm').show();
+            $('#Locationselect').show();
+            $('#LocationLabel').show();
+            disable_datatable('Stocklist');
+            $('#headiddetialls').text('Cars At Locations');
+        }
+    })
+}
+function loadingCarsatport() {
+    $('#Loading').show();
+    var data = {};
+    data.Type = 'LoadCars';
+    data.DeptId = ERPDeptId;
+    data.Location = $('#Location').val();
+    $.ajax({
+        type: "POST",
+        url: "../LocationTransfer/LoadingCarsGet",
+        data: data,
+        success: function (result) {
+            getloadingcarscontainers(result);
+            $('#RowGet').val = '';
+            $('#iconForm').show();
+            $('#Locationselect').hide();
+            $('#LocationLabel').hide();
+            disable_datatable('Stocklist');
+            $('#headiddetialls').text('Cars At Port');
+        }
+    })
+}
+
+function getloadingcarscontainers(result) {
+    disable_datatable('Stocklist');
+    var responseText = "";
+    if (result.length != 0) {
+        var responseText = "<thead><tr><th>SlNo</th>" +
+             "<th>Pur.Date</th>" +
+            "<th>Item Code</th>" +
+            "<th>Item Name</th>" +
+            "<th>Container Number</th>" +
+            "<th>Quantity</th>" +
+            "<th>Cost</th>" +
+            "<th>Buyer Name</th>" +
+            "<th>Port</th>" +
+            "<th>Arrival Date</th>" +
+            "<th>Location</th>" +            
+           "<tr ><th >slno</th><th>Pur.Date</th><th>Chassis Number</th><th>Description</th><th>Container Number</th><th>Quantity</th><th> </th><th>Buyer Name</th><th>Port</th><th>Arrival Date</th><th>Location</th></tr>" +
+
+            "</thead><tbody>";
+        for (var l = 0; l < result.length; l++) {
+            var slno = parseInt(l + 1);
+
+            if (result[l].ItemCode == 'Total') {
+                responseText += '<tr style=background-color:#cfd8dc;font-weight:bold> <td>' + slno + '</td>' +
+                    '<td>' + result[l].InvoDate + '</td>' +
+                    '<td  id=' + 'item' + slno + '>' + result[l].ItemCode + '</td>' +
+                    '<td>' + result[l].ItemName + '</td>' +
+                    '<td>' + result[l].ContainerNumber + '</td>' +
+                    '<td>' + result[l].Quantity + '</td>' +
+                    '<td align=right>' + parseFloat(result[l].AvgCost).toFixed(Decimal) + '</td>' +
+                    '<td>' + result[l].BuyerNo + '</td>' +
+                    '<td>' + result[l].Port + '</td>' +
+                    '<td>' + result[l].ContArrivalDate + '</td>' +
+                    '<td>' + result[l].Location + '</td> </tr>';
+            }
+     
+            else if (result[l].ItemCode != '' && result[l].ItemName == '' && result[l].ItemName != 'Total') {
+                responseText += '<tr style=background-color:#cfd8dc;font-weight:bold> <td>' + slno + '</td>' +
+                    '<td>' + result[l].InvoDate + '</td>' +
+                    '<td  id=' + 'item' + slno + '>' + result[l].ItemCode + '</td>' +
+                    '<td>' + result[l].ItemName + '</td>' +
+                    '<td>' + result[l].ContainerNumber + '</td>' +
+                     '<td>' + result[l].Quantity + '</td>' +
+                    '<td align=right></td>' +
+                    '<td>' + result[l].BuyerNo + '</td>' +
+                    '<td>' + result[l].Port + '</td>' +
+                    '<td>' + result[l].ContArrivalDate + '</td>' +
+                    '<td>' + result[l].Location + '</td> </tr>';
+            }
+            else
+            {
+                responseText += '<tr> <td>' + slno + '</td>' +
+                      '<td>' + result[l].InvoDate + '</td>' +
+                      '<td  id=' + 'item' + slno + '>' + result[l].ItemCode + '</td>' +
+                      '<td>' + result[l].ItemName + '</td>' +
+                      '<td>' + result[l].ContainerNumber + '</td>' +
+                      '<td>' + result[l].Quantity + '</td>' +
+                      '<td align=right>' + parseFloat(result[l].AvgCost).toFixed(Decimal) + '</td>' +
+                      '<td>' + result[l].BuyerNo + '</td>' +
+                      '<td>' + result[l].Port + '</td>' +
+                      '<td>' + result[l].ContArrivalDate + '</td>' +
+                      '<td>' + result[l].Location + '</td> </tr>';
+            }
+        }
+        $('#RowGet').val(result.length);
+    }
+    else {
+        var responseText = '<tr><td style="width:1000px;text-align:center"><b>No Datas Found</b><td><tr>';
+       // $('#Loading').hide();
+    }
+    $('#Stocklist').html(responseText + '</tbody>');
+    datatablesearch('Stocklist', 'Multiple');
+    $('#div1').animate({ scrollTop: 0 });
+    $('#Loading').hide();
+}
+function getcontainerarrival(result) {
+    $('#arrdate').text(' - '+CurDate);
+    for (var j = 0; j < result.length; j++) {
+        var resp = "";
+        if (result.length == 0) {
+            resp = "<tbody>" +
+                   "<tr><td colspan=4><b></br></br></br></br></br></br>No Arriving Containers</b></td></tr>" +
+                   "</tbody>";
+        }
+        else {
+            resp = "<tbody>" +
+                           "<tr><td style='text-align:center'>" + result[j].LoadDate + "</td><td style='text-align:left'>" + result[j].ContainerNumber + "</td><td style='text-align:left'>" + result[j].Port + "</td><td style='text-align:left'>" + result[j].Lines + "</td></tr>" +
+                           "</tbody>";
+        }
+        $('#ArrivingContainers').append(resp);
+    }
+}
+
+  
+
+function getcontainerpending(result) { 
+    for (var j = 0; j < result.length; j++) {
+        var resp = "";
+
+        if (result.length == 0)
+        {
+        resp = "<tbody>" +
+               "<tr><td colspan=4><b></br></br></br>No Pending Containers</b></td></tr>" +
+               "</tbody>";
+        }
+        else
+        {
+            resp = "<tbody>" +
+                   "<tr><td style='text-align:center'>" + result[j].ContArrivalDate + "</td><td style='text-align:left'>" + result[j].ContainerNumber + "</td><td style='text-align:left'>" + result[j].Port + "</td><td style='text-align:left'>" + result[j].Lines + "</td></tr>" +
+                   "</tbody>"; 
+        }
+       
+        $('#PendingContainers').append(resp); 
+    }
+}
+function getcontainernonmoving(result)
+ {
+    for (var j = 0; j < result.length; j++) {
+        var resp = "";
+
+        if (result.length == 0) {
+            resp = "<tbody>" +
+                   "<tr><td colspan=3><b></br></br></br>No Non-Moving Cars</b></td></tr>" +
+                   "</tbody>";
+        }
+        else {
+            resp = "<tbody>" +
+                   "<tr><td><img class='media-object round-media height-50' src='../app-assets/img/elements/02.jpg' alt='' style='text-align:center'></td><td style='text-align:left'>" + result[j].ItemName + "</td><td style='text-align:left'>" + result[j].ItemCode + "</td></tr>" +
+                   "</tbody>";
+        }
+
+        $('#NonMovingCars').append(resp);
+    }
+}
+
+function getcontainertopselling(result) {
+    for (var j = 0; j < result.length; j++) {
+        var resp = "";
+
+        if (result.length == 0) {
+            resp = "<tbody>" +
+                   "<tr><td colspan=3><b></br></br></br>No Top-Selling Cars</b></td></tr>" +
+                   "</tbody>";
+        }
+        else {
+            resp = "<tbody>" +
+                    "<tr><td style='text-align:center'><a onclick='imageslider(" + result[j].ItemId + ")'><img src='../ProjectImages/Products/" + result[j].ItemId + "/" + result[j].ItemId + "-0.png' alt='' style='height:40px;width:40px; align:center' id='im0'></a></td><td style='text-align:left'>" + result[j].ItemCode + "</td><td style='text-align:left'>" + result[j].ItemName + "</td><td style='text-align:right'>" + parseFloat(result[j].Price).toFixed(Decimal) + "</td><td style='text-align:right'>" + parseFloat(result[j].ProfitPer).toFixed(Decimal) + '%' + "</td></tr>"
+            "</tbody>";
+        }
+
+        $('#TopSellingCars').append(resp);
+    }
+}
+
+function formrefresh1() {
+    $('#popupdiv1').hide();
+    $('#DDh1').empty();
+}
+function formrefresh2() {
+    $('#popupdiv2').hide();
+    $('#DDh2').empty(); 
+}
+
+function imageslider(ItemId) {
+    imagesliderload(ItemId);
+    $('#popupdiv1').show();
+    $('#DDh1').show()
+}
+
+function imageslider1(ItemId) {
+    imagesliderload1(ItemId);
+    $('#popupdiv2').show();
+    $('#DDh2').show() 
+}
+
+var imgcnt = 0;
+
+
+function imagesliderload(ProdId) {
+
+
+    $('.pip').remove();
+    $.ajax({
+        url: "../ProjectImages/Products/" + ProdId + ".png",
+        type: 'HEAD',
+        error: function () {
+            $('#myImg').attr('src', "../app-assets/img/elements/04.png");
+        },
+        success: function () {
+            $('#myImg').attr('src', "../ProjectImages/Products/" + ProdId + ".png");
+        }
+    });
+    var formData = new FormData();
+    var ImageId = ProdId;
+    formData.append("UniqueId", ImageId);
+
+    $.ajax({
+        type: "POST",
+        url: '/Master/CheckFolderLengthProduct',
+        data: formData,
+        dataType: "html",
+        contentType: false,
+        processData: false,
+        success: function (result1) {
+
+
+            var ProdId = ImageId;
+            TotalImage = result1;
+
+            var SlideData = '';
+
+            for (i = 0; i < TotalImage; i++) {
+
+                var nextImage = 0; var prevImame = 0;
+              
+                if (i == (0)) {
+                    SlideData += '<div id=slimg-' + i + '><input type="radio"  visibility: hidden name="radio-btn" id=img-' + i + ' checked  /><li style="list-style:none;"><div  style="height:800px;width:500px ;text-align: left" class=""> <img src="../ProjectImages/Products/' + ProdId + '/' + ProdId + '-' + i + '.png" style="height:410px;width:600px; align:center; margin-top:0;" id="im' + i + '"/><label for="img-' + prevImame + '" class="prev"  id="previous' + i + '" onclick=previmg(' + i + ')>&#10094; </label>&nbsp&nbsp <label for="img-' + nextImage + '" class="next1" id="next"  onclick=nextimg(' + i + ')>&#10095;</label></div></li></div>';
+
+                    imgcnt = i;
+                }
+                else
+                    SlideData += '<div style="display:none" id=slimg-' + i + '><input type="radio" visibility: hidden name="radio-btn" id=img-' + i + ' checked /><li style="list-style:none;"><div style="height:800px; width:500px ; text-align: left" class=""> <img src="../ProjectImages/Products/' + ProdId + '/' + ProdId + '-' + i + '.png" style="height:410px;width:600px; align:center" id="im' + i + '"/><label for="img-' + prevImame + '" class="prev" style="border-bottom:0" id="previous' + i + '" onclick=previmg(' + i + ')>&#10094;</label>&nbsp&nbsp <label for="img-' + nextImage + '" class="next1" style="border-bottom:0" id="next' + i + '" onclick=nextimg(' + i + ')>&#10095;</label></div></li></div>';
+
+
+            }
+
+            $('#DDh1').append(SlideData);
+            $(".remove").click(function () {
+                $(this).parent(".pip").remove();
+            });
+        }
+    });
+}
+
+function imagesliderload1(ProdId) {
+
+
+    $('.pip').remove();
+   
+    var formData = new FormData();
+    var ImageId = ProdId;
+    formData.append("UniqueId", ImageId);
+
+    $.ajax({
+        type: "POST",
+        url: '/Master/CheckFolderLengthProduct',
+        data: formData,
+        dataType: "html",
+        contentType: false,
+        processData: false,
+        success: function (result1) {
+
+
+            var ProdId = ImageId;
+            TotalImage = result1;
+
+            var SlideData = '';
+           
+            if (TotalImage == 0) {
+                SlideData = '<img src="../app-assets/img/NoImage.png" style="height:410px;width:600px;">';
+            }
+            else 
+            {
+                for (i = 0; i < TotalImage; i++) {
+
+                    var nextImage = 0; var prevImame = 0;
+
+                    if (i == (0)) {
+                        SlideData += '<div id=slimg-' + i + '><input type="radio"  visibility: hidden name="radio-btn" id=img-' + i + ' checked  /><li style="list-style:none;"><div  style="height:800px;width:500px ;text-align: left" class=""> <img src="../ProjectImages/Products/' + ProdId + '/' + ProdId + '-' + i + '.png" style="height:410px;width:600px; align:center; margin-top:0;" id="im' + i + '"/><label for="img-' + prevImame + '" class="prev"  id="previous' + i + '" onclick=previmg(' + i + ')>&#10094; </label>&nbsp&nbsp <label for="img-' + nextImage + '" class="next1" id="next"  onclick=nextimg(' + i + ')>&#10095;</label></div></li></div>';
+
+                        imgcnt = i;
+                    }
+                    else
+                        SlideData += '<div style="display:none" id=slimg-' + i + '><input type="radio" visibility: hidden name="radio-btn" id=img-' + i + ' checked /><li style="list-style:none;"><div style="height:800px; width:500px ; text-align: left" class=""> <img src="../ProjectImages/Products/' + ProdId + '/' + ProdId + '-' + i + '.png" style="height:410px;width:600px; align:center" id="im' + i + '"/><label for="img-' + prevImame + '" class="prev" style="border-bottom:0" id="previous' + i + '" onclick=previmg(' + i + ')>&#10094;</label>&nbsp&nbsp <label for="img-' + nextImage + '" class="next1" style="border-bottom:0" id="next' + i + '" onclick=nextimg(' + i + ')>&#10095;</label></div></li></div>';
+                }
+            }
+            
+
+            $('#DDh2').append(SlideData);
+            $(".remove").click(function () {
+                $(this).parent(".pip").remove();
+            });
+        }
+    });
+}
+
+
+function previmg(i) {
+    var j = i - 1;
+    if ($('#slimg-' + j).length) {
+        $('#slimg-' + i).hide();
+        $('#slimg-' + j).show();
+    }
+}
+
+function nextimg(i) {
+    var j = i + 1;
+    if ($('#slimg-' + j).length) {
+        $('#slimg-' + i).hide();
+        $('#slimg-' + j).show();
+    }
+}
+
+
+
+
+function getonportitemcount(result) {
+    $('#totsales').text((result[0].Count).toLocaleString('en'))
+}
+function getonlocitemcount(result)
+{
+    $('#totalearn').text((result[0].Count).toLocaleString('en'))
+
+}
+function getpendingcontainers(result)
+{
+    $('#tottax').text((result[0].Count).toLocaleString('en'))
+}
+function getloadcontainers(result) {
+    $('#totcost').text((result[0].Count).toLocaleString('en'))
+}
+function getloadcars(result) {
+    $('#loadedcars').text((result[0].Count).toLocaleString('en'))
+}
+function getcontaineratport(result) {
+    $('#containeratport').text((result[0].Count).toLocaleString('en'))
+}
+
+
+function datatablesearch(tablename, Type) {
+
+    console.log(tablename)
+    var a = '#' + tablename + ' tr:eq(1) th'
+
+    $(a).each(function () {
+        var title = $(this).text();
+        if (title != ' ')
+            if (title == 'Booking Number' || title == 'Lines' || title == 'Size' || title == 'Point Of Loading' || title == 'Port' || title == 'ExpectArrival Date' || title == 'Release Date') {
+                $(this).html('<input type="text" class="form-control"  style="width:120px"  placeholder="' + title + '"/>')
+            }      
+        else {
+            $(this).html('<input type="text" class="form-control" style="font-weight:100"   placeholder="' + title + '"/>')
+        }
+    });
+    var table = null;
+
+    if (Type == 'Single') {
+
+        table = $('#' + tablename).DataTable({
+            responsive: true,
+            dom: 'tipr',
+            orderCellsTop: true,
+            //"order": false,
+        });
+    }
+    else if (Type == 'Multiple') {
+
+        table = $('#' + tablename).DataTable({
+            responsive: true,
+            dom: 'tir',
+            orderCellsTop: true,
+            //"order": false,
+            "pageLength": -1
+        });
+    }
+    table.columns().every(function (index) {
+        $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+            table.column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+        });
+    });
+}
+
+function disable_datatable(tablename) {
+    $('#Warningpopup').fadeOut();
+    if ($.fn.DataTable.isDataTable('#' + tablename)) {
+        var table = $('#' + tablename).DataTable();
+        table.destroy();
+        return;
+    }
+}
+   
+
+
+$(document).keydown(function (e) {
+    if (e.keyCode == 27) {                           //esc  
+        if ($('#detailForm').is(":visible"))           
+        {
+            $('#detailForm').hide();
+        }
+        else
+        {
+            $('#iconForm').hide();
+        }
+        formrefresh2();
+    }
+});
+
+</script>
+
+
+
+

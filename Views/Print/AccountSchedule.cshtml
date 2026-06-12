@@ -1,0 +1,46 @@
+﻿@model List<EUMI_ERP.Models.ABAccountSchedule>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Print :: Account Schedule Tree :: EUMI ERP</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+    <script>
+    window.onload = function (e) { window.print(); };
+    </script>
+</head>
+<body>
+    <div>
+        @GetSheduleUL(0)
+    </div>
+</body>
+</html>
+
+@helper GetSheduleUL(decimal parentId)
+{
+
+var arrMainSch = Model.Where(x => x.parentId == parentId);
+if (arrMainSch.FirstOrDefault() != null)
+{
+        <ul>
+            @foreach (var item in arrMainSch)
+            {
+                <li>
+                    <span>
+                        @item.description
+                    </span>
+                    @GetSheduleUL(item.accountId)
+                </li>
+            }
+        </ul>
+}
+}

@@ -1,0 +1,380 @@
+﻿
+@{
+    ViewBag.Title = "AreawiseSales";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<style type="text/css">
+  
+    .form-control {
+        font-weight: bold;
+    }
+</style>
+
+<script>
+
+
+
+    function PrintthisItemwiseReport(A,Rowlen) {
+        var myWindow = window.open("", "", "width=1500,height=1500");
+
+        Rowlen = Rowlen1
+        var Bno = 0;
+
+        
+
+        myWindow.document.write('<style type="text/css"> </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen">  tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');    //tfoot { display: table-footer-group;}
+
+        myWindow.document.write('<style type="text/css"> .brtd1 {border-right:1px solid gray;} .brtr{border:1px solid black;font-weight:bold}  </style>');
+        // myWindow.document.write('<style type="text/css"> .brtd1 {border-right:1px solid black;} .brtr{border:1px solid black;font-weight:bold}  </style>');
+        myWindow.document.write('<table style="font-size:85%;" width=100%><tr><td rowsspan=2>' + (ComapnydivToPrint.outerHTML) + '</td></td></tr> ');
+        //myWindow.document.write('<tr align=center><td colspan=6>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr align=center><td colspan=6>' + window.CompanySettingsArray.Address + '</td></tr><tr align=center><td colspan=6> ' + window.CompanySettingsArray.Fax + '</td></tr><tr align=center><td colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr align=center><td colspan=6>' + window.CompanySettingsArray.PhoneNo + '</td></tr>');
+        myWindow.document.write('<table frame="box" style="font-size:85%;margin-top:10px" height=50px width=100%><tr align=center><td colspan=11>' + $('#header').text() + '</td></tr>');
+        myWindow.document.write('<style type="text/css"> .brtd {border-right:1px solid gray;border-top:1px solid gray;}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen">  tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');    //tfoot { display: table-footer-group;}
+
+
+        myWindow.document.write('<table width=100%>');
+        myWindow.document.write('<tr><td style="border-left:1px solid gray"; class=brtd1 align=center>Sl</td><td class=brtd1  align=center>Bill No</td><td class=brtd1 align=center>Date</td><td class=brtd1 align=left>Doctor</td><td class=brtd1 align=left>Patient</td><td class=brtd1 align=left style="padding-left:5px">Medicine</td><td class=brtd1 align=left style="padding-left:5px">Qty</td><td class=brtd1 align=left style="padding-left:5px">MFR</td><td class=brtd1 align=center>Batch</td><td class=brtd1 align=right>Exp</td><td class=brtd1 align=right>Sign</td></tr>');
+
+
+        for (var i = 1; i <= Rowlen; i++) {
+            if (Bno != $('#A' + i).text()) {
+                myWindow.document.write('<tr><td style="border-left:1px solid gray"; class=brtd align=center>' + i + '</td><td class=brtd  align=center>' + $('#A' + i).text() + '</td><td class=brtd align=center>' + $('#B' + i).text() + '</td><td class=brtd align=left>' + $('#C' + i).text() + '</td><td class=brtd align=left>' + $('#D' + i).text() + '</td><td class=brtd align=left style="padding-left:5px">' + $('#E' + i).text() + '</td><td class=brtd align=left style="padding-left:5px">' + $('#F' + i).text() + '</td><td class=brtd align=left style="padding-left:5px">' + $('#G' + i).text() + '</td><td class=brtd align=center>' + $('#H' + i).text() + '</td><td class=brtd align=right>' + $('#I' + i).text() + '</td><td style="border-right:1px solid gray"; class=brtd align=center>&#160;&#160;&#160;&#160;</td></tr>');
+
+            }
+            else {
+                myWindow.document.write('<tr><td style="border-left:1px solid gray"; class=brtd1 align=center>' + i + '</td><td class=brtd1  align=center></td><td class=brtd1 align=center></td><td class=brtd1 align=left></td><td class=brtd1 align=left></td><td class=brtd1 align=left style="padding-left:5px">' + $('#E' + i).text() + '</td><td class=brtd1 align=left style="padding-left:5px">' + $('#F' + i).text() + '</td><td class=brtd1 align=left style="padding-left:5px">' + $('#G' + i).text() + '</td><td class=brtd1 align=center>' + $('#H' + i).text() + '</td><td class=brtd1 align=right>' + $('#I' + i).text() + '</td><td style="border-right:1px solid gray"; class=brtd>&#160;&#160;&#160;&#160;&#160;&#160;</td></tr>');
+
+            }
+           
+            Bno = $('#A' + i).text()
+         }
+          
+        myWindow.document.write('<tr><td colspan=11 style="border-top:1px solid gray";>&#160;</td></tr>')
+        myWindow.document.write('<tr><td align=center colspan=11 style="border-bottom:1px solid gray";>END REPORT</td></tr>')
+
+        myWindow.print();
+    }
+
+
+
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+    var Rowlen1=0
+    function ShowReport(result)
+    {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var ResponseEntity = "<thead><tr><th>Sl#</th><th>Bill#</th><th>Date</th><th>Doctor</th><th>Patient</th><th>Medicine</th><th>Qty</th><th>MFR</th><th>Batch</th><th>Exp</th><th>Sign</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            ResponseEntity += '<tr><td>' + slno + '</td><td id="A' + slno + '" >' + result[i].BillSeriesID + '</td><td id="B' + slno + '" >' + result[i].BillSeries + '</td><td id="C' + slno + '">' + result[i].BillSlNo + '</td><td id="D' + slno + '">' + result[i].CustName + '</td><td id="E' + slno + '">' + result[i].CustAddress + '</td><td id="F' + slno + '" style=text-align:right>' + result[i].InvDate + '</td><td id="G' + slno + '" style=text-align:right>' + result[i].AreaName + '</td><td id="H' + slno + '" style=text-align:right>' + result[i].TaxableAmount + '</td><td id="I' + slno +'" style=text-align:right>' + result[i].TaxAmount + '</td><td style=text-align:right></td></tr>';
+           
+        }
+
+        $('#Tblreport').html(ResponseEntity + '</tbody>');
+        Rowlen1 = slno;
+
+        var Drug = $("#cmbArea option:selected").text();
+
+        var title = "Prescription Register (Schedule  " + Drug +   " Drugs) - from " + $("#dpDateFrom").val() + " to " + $("#dpDateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'O Balance' && title != ' ') {
+                $(this).html('<input type="text" placeholder=" ' + title + '" style="width=100%" />');
+            }
+            if (title == 'Date') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100px" />');
+            }
+            if (title == 'Bill#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Bill Series') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Dept.Code') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:150px" />');
+            }
+            if (title == 'Customer') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:500px" />');
+            }
+            if (title == 'Customer Details') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:500px" />');
+            }
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'Blfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                iDisplayLength: -1,
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: '',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: '',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: '',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+    function gotoInvoNo(InvoNo, BillSeriesId, DeptId) {
+        if ((usermenu1.indexOf("M54") != -1)) {
+            window.open('../inventory/SalesInvoice?slno=' + InvoNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+        }
+        else if ((usermenu1.indexOf("M227") != -1)) {
+            window.open('../inventory/SalesInvoiceNew?slno=' + InvoNo + '&billseries=' + BillSeriesId + '&dept=' + DeptId);
+
+        }
+        else {
+            warningshow('Invalid User Rights');
+            return false;
+        }
+    }
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    $(function () {
+       
+        $("#cmbArea").focus();
+        $('#dpDateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+        $('#dpDateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('#cmbArea').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnGo').focus();
+                e.preventDefault();
+            }
+        });
+
+        $("#btnGo").click(function (e) {
+            $('#Loading').show();
+
+            var data = {};
+            data.InvDate = $('#dpDateFrom').val();
+            data.DueDate = $('#dpDateTo').val();
+            data.AreaId = $('#cmbArea').val();
+            data.UserId = ERPUserId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/AreawiseSalesGet",
+                data: data,
+                success: function (result) {
+                    ShowReport(result);
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                    $('#popupdiv').hide();
+                }
+            });
+        });
+    });
+
+
+    SubCategoryGets()
+    function SubCategoryGets() {
+        var data = {};
+        data.SubCategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/SubCategoryGetandGets",
+            data: data,
+            success: function (result) {
+                SubCategoryLoad(result.oList);
+            }
+        });
+    }
+
+    function SubCategoryLoad(result) {
+        $("#cmbArea").empty();
+        $("#cmbArea").append("<option value='0'>-ALL-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#cmbArea").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+        }
+    }
+
+
+   
+
+</script>
+@*<div class="myData" data-x="M62" />*@
+<div id="Main">
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="30%"></td>
+                                <td align="right">
+
+                                    <button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintthisItemwiseReport('ITEMWISEREPORT', $('#ResultLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button>
+
+                                    <button type="button" style="width:100px" onclick="$('#popupdiv').show(),$('#cmbArea').focus()" id="btnback" class="btn btn-outline-primary">Back</button>
+                                </td>
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+                            <div class="heading-elements">
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:-1px;" />
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Prescription Register</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+              
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:10%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dpDateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:5%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dpDateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:4%;"></div>
+                    <div  class="row" style="margin-top:2%;display:nonee">
+                        <label style="margin-top:2%;font-weight:bold;margin-left:11%">Drug</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="cmbArea" class="form-control" name="priority"></select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:40%" id="btnGo" class="btn btn-primary">Go</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+

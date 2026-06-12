@@ -1,0 +1,545 @@
+﻿
+@{
+    ViewBag.Title = "RptOpeningStock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="myData" data-x="M382" />
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+</style>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<div style="" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header pl-2 pr-2 pb-1 pt-2">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Opening Stock Report</h4></td>
+
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <button type="button" onclick="Filter()" class="btn btn-outline-primary" id="Filter"><i class="fa fa-search"></i> Back</button>
+
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show" style="">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table id="tbl_StockReport" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-primary white">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-11">
+                            <h4 class="modal-title font-weight-bold">Opening Stock Report</h4>
+                        </div>
+
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy()">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <div class="row mb-1">
+                        <label class="label-control col-md-2">Medicine</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="Item" />
+                        </div>
+                        <label class="label-control col-md-2">Report</label>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="ReportType">
+                                <option value="2">Item wise</option>
+                                <option value="3">Location wise</option>
+                                <option value="0">Item wise with Batch</option>
+                                <option value="1">Location wise with Batch</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <label class="label-control col-md-2">Location</label>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Location"></select>
+                        </div>
+                        <label class="label-control col-md-2">Company</label>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Company"></select>
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-1">
+                        <label class="label-control col-md-2">Type</label>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Type"></select>
+                        </div>
+                        <label class="label-control col-md-2">Schedule</label>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Schedule"></select>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1" style="display:none">
+
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" value="0" id="ItemId" />
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="Search()">Search <i class="fa fa-search"></i></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        GetLocation();
+        GroupPageLoad();
+        CategoryPageLoad();
+        SubCategoryGets();
+
+        $("#myModal").modal("show");
+        $("#myModal").appendTo("body");
+    });
+
+    $("#Item").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $("#ItemId").val(0);
+
+            var data = {};
+            data.ItemCode = $("#Item").val();
+            data.SlNumber = 0;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+
+            $.ajax({
+                url: '../Pharmacy/HMS_PurchaseProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4Pur',
+                            label: item.Description,
+                            label1: item.ItemCode,
+                            label2: item.Group,
+                            label3: item.Category,
+
+                            ItemId: item.ItemId,
+
+                            headers: ["Name", "Code", "Company", "Type"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+
+            $("#ItemId").val(ui.item.ItemId);
+        },
+    });
+
+
+    function Search() {
+        $("#LoadingSmall").show();
+        var data = {};
+        data.Param2 = $('#ReportType').val();
+        data.Param3 = $('#Location').val();
+        data.Param4 = $('#ItemId').val();
+        data.Param5 = $('#Company').val();
+        data.Param6 = $('#Type').val();
+        data.Param7 = $('#Schedule').val();
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_Rpt_OpeningStock",
+            data: data,
+            success: function (result) {
+                LoadReport(result,$('#ReportType').val());
+            }
+        });
+    }
+
+    function LoadReport(result, Type) {
+
+        if (Type == 0 || Type == 1) {
+            disable_datatable('tbl_StockReport');
+            Text = '<thead><tr>' +
+                '<th>SlNo</th>' +
+                '<th>Item Code</th>' +
+                '<th>Name</th>' +
+                '<th>Batch</th>' +          
+                '<th>Company</th>' +
+                '<th>Type</th>' +
+                '<th>Schedule</th>' +
+                '<th>OPStock</th>' +
+                '<th>Stock</th>' +
+                '</tr><thead><tbody>';
+            for (var i = 0; i < result.length; i++) {
+
+                var slno = i + 1;
+
+                var Style = "";
+                if (result[i].Flag == '1') { Style = 'background-color:#CFD8DC;font-weight:bold;'; }
+                else if (result[i].Flag == '2') { Style = 'font-weight:bold;'; }
+                else if (result[i].Flag == '3') { Style = 'background-color:#B0BEC5;font-weight:bold;'; }
+
+                var Stock = Number(result[i].LooseQuantity || 0);
+                if (Stock == 0) { Stock = ''; }
+
+                var OPStock = Number(result[i].OPLooseQuantity || 0);
+                if (OPStock == 0) { OPStock = ''; }
+
+                var Text = Text + '<tr style="' + Style + '">' +
+                    '<td align="center">' + slno + '</td>' +
+                    '<td>' + result[i].ItemCode + '</td>' +
+                    '<td>' + result[i].ItemDesc + '</td>' +
+                    '<td>' + result[i].Batch + '</td>' +                    
+                    '<td>' + result[i].Company + '</td>' +
+                    '<td>' + result[i].MedType + '</td>' +
+                    '<td>' + result[i].MedSchedule + '</td>' +
+                    '<td align="center">' + OPStock + '</td>' +
+                    '<td align="center">' + Stock + '</td>' +
+                    '</tr>';
+            }
+            Text = Text + '</tbody><tfoot><tr>' +
+                '<th></th>' +
+                '<th>Item Code</th>' +
+                '<th>Name</th>' +
+                '<th>Batch</th>' +               
+                '<th>Company</th>' +
+                '<th>Type</th>' +
+                '<th>Schedule</th>' +
+                '<th></th>' +
+                '<th></th>' +
+                '</tr></tfoot>';
+            $("#tbl_StockReport").html(Text);
+
+            var title = 'Opening Batch Wise Stock Report';
+            datatableWithsearch('tbl_StockReport', true, title, 'itemListButtonPlace', Type);
+        }
+        else if (Type == 2 || Type == 3) {
+            disable_datatable('tbl_StockReport');
+            Text = '<thead><tr>' +
+                '<th>SlNo</th>' +
+                '<th>Item Code</th>' +
+                '<th>Name</th>' +                
+                '<th>Company</th>' +
+                '<th>Type</th>' +
+                '<th>Schedule</th>' +
+                '<th>OPStock</th>' +
+                '<th>Stock</th>' +
+                '</tr><thead><tbody>';
+            for (var i = 0; i < result.length; i++) {
+
+                var slno = i + 1;
+
+                var Style = "";
+                if (result[i].Flag == '1') { Style = 'background-color:#CFD8DC;font-weight:bold;'; }
+                else if (result[i].Flag == '2') { Style = 'font-weight:bold;'; }
+                else if (result[i].Flag == '3') { Style = 'background-color:#B0BEC5;font-weight:bold;'; }
+
+                var Stock = Number(result[i].LooseQuantity || 0);
+                if (Stock == 0) { Stock = ''; }
+
+                var OPStock = Number(result[i].OPLooseQuantity || 0);
+                if (OPStock == 0) { OPStock = ''; }
+
+                var Text = Text + '<tr style="' + Style + '">' +
+                    '<td align="center">' + slno + '</td>' +
+                    '<td>' + result[i].ItemCode + '</td>' +
+                    '<td>' + result[i].ItemDesc + '</td>' +
+                    '<td>' + result[i].Company + '</td>' +
+                    '<td>' + result[i].MedType + '</td>' +
+                    '<td>' + result[i].MedSchedule + '</td>' +
+                    '<td align="center">' + OPStock + '</td>' +
+                    '<td align="center">' + Stock + '</td>' +
+                    '</tr>';
+            }
+            Text = Text + '</tbody><tfoot><tr>' +
+                '<th></th>' +
+                '<th>Item Code</th>' +
+                '<th>Name</th>' +
+                '<th>Company</th>' +
+                '<th>Type</th>' +
+                '<th>Schedule</th>' +
+                '<th></th>' +
+                '<th></th>' +
+                '</tr></tfoot>';
+            $("#tbl_StockReport").html(Text);
+
+            var title = 'Opening Stock Report';
+            datatableWithsearch('tbl_StockReport', true, title, 'itemListButtonPlace', Type);
+        }
+
+        $("#LoadingSmall").hide();
+        ngOnDestroy();
+    }
+
+    function ngOnDestroy() {
+        $("#myModal").modal('hide');
+    }
+
+    function Filter() {
+        if (!($('#myModal').is(':visible'))) {
+            $("#myModal").modal("show");
+            $("#myModal").appendTo("body");
+        }
+    }
+
+
+
+
+    function disable_datatable(tablename) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            return;
+        }
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != '')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                //"columnDefs": [
+                //                       { "width": "1%", "targets": 0 },
+                //                       { "width": "2%", "targets": 1 },
+                //                       { "width": "2%", "targets": 2 },
+                //                       { "width": "2%", "targets": 3 },
+                //                       { "width": "15%", "targets": 4 },
+                //                       { "width": "1%", "targets": 5 },
+                //                       { "width": "2%", "targets": 6 },
+                //                       { "width": "4%", "targets": 7 },
+                //                       { "width": "5%", "targets": 8 },
+                //                       { "width": "2%", "targets": 9 },
+                //],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        }
+
+        else {
+            table = $('#' + tablename).DataTable({
+
+
+            });
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus().select();
+        window.setTimeout(function () {
+            $('#Warningpopup').fadeOut();
+        }, 3000);
+    }
+
+    function GetLocation() {
+        var data = {};
+        data.LocationId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                LocationLoad(result.oList);
+
+
+            }
+        });
+
+    }
+
+    function LocationLoad(result) {
+        $("#Location").empty();
+        LocationSelect = "<option value='0'>-Select-</option>";
+        for (var i = 0; i < result.length; i++) {
+            LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
+
+        }
+        $("#Location").append(LocationSelect);
+    }
+
+    function GroupPageLoad() {
+        var data1 = {};
+        data1.GrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/GroupGetandGets",
+            data: data1,
+            success: function (result) {
+                GroupLoad(result.oList);
+            }
+        });
+    }
+
+    function GroupLoad(result) {
+        $("#Company").empty();
+        $("#Company").append("<option value='0'>-Select-</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#Company").append("<option value='" + result[i].GrpId + "'>" + result[i].GrpName + "</option>");
+        }
+
+    }
+
+
+    function CategoryPageLoad() {
+        var data2 = {};
+        data2.CategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CategoryGetandGets",
+            data: data2,
+            success: function (result) {
+                CategoryLoad(result.oList);
+            }
+        });
+    }
+
+    function CategoryLoad(result) {
+        $("#Type").empty();
+        $("#Type").append("<option value='0'>-Select-</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#Type").append("<option value='" + result[i].CategoryId + "'>" + result[i].CategoryName + "</option>");
+        }
+    }
+
+    function SubCategoryGets() {
+        var data = {};
+        data.SubCategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/SubCategoryGetandGets",
+            data: data,
+            success: function (result) {
+                SubCategoryLoad(result.oList);
+            }
+        });
+    }
+
+    function SubCategoryLoad(result) {
+        $("#Schedule").empty();
+        $("#Schedule").append("<option value='0'>-Select-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Schedule").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+        }
+    }
+</script>
+

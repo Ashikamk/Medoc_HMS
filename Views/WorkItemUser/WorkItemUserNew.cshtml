@@ -1,0 +1,782 @@
+﻿
+@{
+    ViewBag.Title = "WorkItemUserNew";
+}
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script type="text/javascript" src="../Projectscript/WorkItemNew.js"></script>
+<style>
+    .modal-slg {
+        max-width: 700px;
+    }
+</style>
+<script>
+    var RemarkFlag = 0;
+
+    $(document).ready(function () {
+
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        GetDepartment();
+        GetDivision();
+
+
+
+        $("#btnassign").click(function (e) {
+            SaveAndUpdate()
+        });
+        $("#btncancel").click(function (e) {
+            $('#TransferDiv').hide();
+            $('#Remarks').prop("disabled", false)
+            $('#ReasonDiv').show();
+            $('#reason').text('Reason For Cancel:')
+            $('#Remarks').focus();
+        });
+        $("#btntransfer").click(function (e) {
+            $('#ReasonDiv').hide();
+            $('#rsntransfer').prop("disabled", false);
+            $('#transuser').prop("disabled", false);
+            $('#TransferDiv').show();
+            $('#rsntransfer').focus();
+
+        });
+        Defaultfocus();
+       
+        if ("@Request.QueryString["from"]" == "SalesInvoice") {
+            var srlsrs = sessionStorage.getItem("sales_srs");
+            var srlno = sessionStorage.getItem("sales_slno");
+            var dep = sessionStorage.getItem("sales_deptid");
+            var salesbillno = sessionStorage.getItem("sales_bill");
+            var salesdesc = sessionStorage.getItem("sales_desc");
+            sessionStorage.removeItem("sales_srs");
+            sessionStorage.removeItem("sales_slno");
+            sessionStorage.removeItem("sales_deptid");
+            sessionStorage.removeItem("sales_desc");
+            var numId = parseInt(srlsrs);
+            var num = parseInt(srlno);
+            var deprtid = parseInt(dep)
+            if (!isNaN(numId) && !isNaN(num) && !isNaN(deprtid)) {
+                GetSalesInvoceWorkItem(numId, num, deprtid,salesbillno, salesdesc);
+                $('#popupdiv').show();
+                $("#Department").focus();
+                GetList(0);
+                $("#Type").val(0);
+                WorkItemNotifyVar = 0;
+            }
+            else {
+                $('#popupdiv').show();
+                $("#Department").focus();
+                GetList(0);
+                $("#Type").val(0);
+                WorkItemNotifyVar = 0;
+            }
+        }            // FROM SALES INVOICE FOR CREATE NEW WORK ITEM
+        
+        else if ("@Request.QueryString["from"]" == "Layout") {
+            var sorttype = sessionStorage.getItem("sort_type");
+            sessionStorage.removeItem("sort_type");
+            var worksorttype = parseInt(sorttype);
+            if (!isNaN(worksorttype)) {
+                $('#popupdiv').hide();
+                GetList(worksorttype);
+                $("#Type").val(worksorttype);
+                WorkItemNotifyVar = 0;
+            }
+            else {
+                $('#popupdiv').show();
+                $("#Department").focus();
+                GetList(0);
+                $("#Type").val(0);
+                WorkItemNotifyVar = 0;
+            }
+        }           // FROM LAYOUT TO CHECK BY TYPE
+        else {
+            $('#popupdiv').show();
+            $("#Department").focus();
+            GetList(0);
+            $("#Type").val(0);
+            WorkItemNotifyVar = 0;
+        }
+
+    });
+</script>
+<div class="myData" data-x="M134" />
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;display:none;">
+    <div class="modal-dialog modal-slg" role="document" style="">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h5 class="modal-title" id="myheader">Create Work Item</h5>
+                <button type="button" class="close" onclick="CloseAssign()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <input type="hidden" id="WorkItemId" class="form-control" value="0">
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Department:</label>
+                        <div class="col-md-7">
+                            <select id="Department" class="form-control disa"></select>
+                        </div>
+
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-7">
+                            <select id="Division" class="form-control disa" onchange="WorkTaskTime()"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Assigned To:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="User" class="form-control disa" autocomplete="off" onkeyup="checkuser()">
+                        </div>
+                        <input type="hidden" id="UserId" value="0" class="form-control" autocomplete="off">
+                        <input type="hidden" id="UserLength" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="row followuphide followuphidedef" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Title:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Title" class="form-control disa" autocomplete="off">
+                        </div>
+
+                    </div>
+                    <div class="row followupshow" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left">Title:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Customer" class="form-control disa" autocomplete="off">
+                        </div>
+                        <input type="hidden" id="CustId" />
+                    </div>
+                    <div class="row" style="margin-top:2%;height:90px;">
+
+                        <label class="col-md-5" style="text-align:left">Description:</label>
+                        <div class="col-md-7">
+                            <textarea id="Description" class="form-control disa" style="resize: none;height:100%"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reference Type:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="RefType" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reference Id:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="RefId" class="form-control disa" autocomplete="off">
+                        </div>
+
+                    </div>
+                    <div class="row followuphide followuphidedef" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Turn around Time:</label>
+                        <div class="col-md-7">
+                            <select class="form-control disa" id="Time"></select>
+                        </div>
+                    </div>
+                    <div class="row followupshow" style="margin-top:2%;display:none;">
+
+                        <label class="col-md-5" style="text-align:left">Due Date:</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control disa" id="DueDate"/>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Status</label>
+                        <div class="col-md-7">
+                            <select class="form-control disa" id="Status" onchange="checkhold(0)">
+                                <option value="Created">Created</option>
+                                <option value="Started">Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="On Hold">On Hold</option>
+                                <option value="Ready To Deliver">Ready To Deliver</option>
+                                <option value="On The Way">On The Way</option>
+                                <option value="Delivered With Pending">Delivered With Pending</option>
+                                <option value="Completed">Completed</option>                                
+                                <option value="Canceled" hidden>Cancel</option>
+                                <option value="Reassign" hidden>Reassigned</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row followuphide followuphidedef" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Store Keeper:</label>
+                        <div class="col-md-7">
+                           <input type="text" id="StoreKeeper" class="form-control disa" />
+                            <input type="hidden" id="StoreKeeperId" value="0"/>
+                        </div>
+                    </div>
+                    <div class="row" id="panel1" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left" id="reasondisplay"></label>
+                        <div class="col-md-7">
+                            <input type="text" id="Remarksdisplay" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row followuphide" id="panel2" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left" id="">Driver</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Driver" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="DriverId" class="form-control disa" value="0">
+                        </div>
+                    </div>
+                    <div class="row followuphide" id="panel3" style="margin-top:2%;display:none">
+
+                        <label class="col-md-5" style="text-align:left" id="">User</label>
+                        <div class="col-md-7">
+                            <input type="text" id="IPUser" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="IPUserId" class="form-control disa" value="0">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;height:70px;">
+
+                        <label class="col-md-5" style="text-align:left">Remarks:</label>
+                        <div class="col-md-7">
+                            <textarea id="NewRemarks" class="form-control disa" style="resize: none;height:100%"></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:150px;display:none" id="btncancel" class="btn btn-outline-danger">Cancel Work</button>
+                <button type="button" style="width:150px;display:none" id="btntransfer" class="btn btn-outline-warning">Transfer</button>
+                <button type="button" style="width:150px;display:none" id="btnassignme" onclick="AssignMe()" class="btn btn-outline-success">Assign Me</button>
+                <button type="button" style="width:100px" id="btnclose" onclick="CloseAssign()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btnassign" class="btn btn-info">Create</button>
+                <button type="button" style="width:100px;display:none" id="CNWR" onclick="ReAssignAsNew()" class="btn btn-info">Re Assign</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="Divsiondiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myheader">Add/Edit Division</h5>
+                <button type="button" class="close" onclick="$('#Divsiondiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-7">
+                            <select id="Division1" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">New Division Name:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="NewDivName" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="SaveandUpdateDivision(0)" class="btn btn-outline-secondary">Delete</button>
+                <button type="button" style="width:100px" id="btndivsave" onclick="SaveandUpdateDivision(1)" class="btn btn-outline-primary">Save</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="TimeDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:2%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myheader">Add Time Tags</h5>
+                <button type="button" class="close" onclick="$('#TimeDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-4" style="margin-top:5px;text-align:left">Division:</label>
+                        <div class="col-md-8">
+                            <select id="Division2" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+
+                        <label class="col-md-4" style="text-align:left">New Time Name:</label>
+                        <div class="col-md-8">
+                            <input type="text" id="NewTime" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%;">
+                        <label class="col-md-4" style="text-align:left">Time:</label>
+                        <div class="col-md-4">
+                            <input type="text" id="NewTimeHr" value="0" class="form-control" placeholder="Hr(s)" autocomplete="off" onkeypress="isNumberInt(event,this)">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="NewTimeMin">
+                                <option value="" hidden>Min(s)</option>
+                                <option value="0">0</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" style="width:100px;" id="btndivdelete" onclick="" class="btn btn-outline-secondary">Delete</button>*@
+                <button type="button" style="width:100px" id="btntimesave" onclick="SaveNewTime()" class="btn btn-outline-primary">Save</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="ReasonDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="myheader">Add Time Tags</h5>*@
+                <button type="button" class="close" onclick="$('#ReasonDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason"></label>
+                        <div class="col-md-7">
+                            <input type="text" id="Remarks" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#ReasonDiv').hide()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CancelWork()" class="btn btn-outline-danger">Cancel</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="TransferDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="myheader">Add Time Tags</h5>*@
+                <button type="button" class="close" onclick="$('#TransferDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Reason For Transfer:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="rsntransfer" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left">Transfer To User:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="transuser" class="form-control disa" autocomplete="off" onkeyup="checktransuser()">
+                            <input type="hidden" id="transuserId" value="0" class="form-control disa" autocomplete="off">
+                            <input type="hidden" id="transuserLength" class="form-control disa" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btncncl" onclick="$('#TransferDiv').hide()" class="btn btn-outline-secondary">Close</button>
+                <button type="button" style="width:100px" id="btntras" onclick="Reassign()" class="btn btn-outline-warning">Transfer</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<div style="display:none;">
+    <input id="Type" type="text" />
+    <input id="BillSerId" type="text" value="0" />
+    <input id="BillNo" type="text" value="0" />
+    <input id="ReferenceNo" type="text" value="0" />
+</div>
+
+<div class="card px-4" id="defaulttable" >
+    <div class="row m-1 card-header">
+        <div class="col-md-2">
+            <h3 style="">Work Items</h3>
+        </div>
+
+        <div class="col-md-1">
+            <input type="text" id="DateFrom" style="width:120%" class="form-control" autocomplete="off">
+        </div>
+
+        <div class="col-md-1">
+            <input type="text" id="DateTo" style="width:120%" class="form-control" autocomplete="off">
+        </div>
+
+        <div class="col-md-1">
+            <select class="form-control" id="chkstatus">
+                <option value="All">All</option>
+                <option value="Created">Created</option>
+                <option value="Started">Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Ready To Deliver">Ready To Deliver</option>
+                <option value="On The Way">On The Way</option>
+                <option value="Delivered With Pending">Delivered With Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="Canceled">Cancel</option>
+                <option value="Reassign">Reassigned</option>
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <button class="btn btn-primary" type="button" onclick="GetList(6)">Go</button>
+        </div>
+
+        <div class="col-md-6 text-right" id="divDownload">
+            @*<button class="btn btn-primary" type="button" onclick="$('#Divsiondiv').show()">Add/Edit Division</button>*@
+            <button class="btn btn-primary" type="button" onclick="$('#TimeDiv').show();$('#Division2').focus();">Add Time Tags</button>
+            <button class="btn btn-primary" type="button" onclick="CreateNew()">Create New</button>
+            <div class="btn-group" id="buttonPlace">
+                <div align="right">
+                    <div class="heading-elements">
+                        <div class="btn-group" id="buttonPlace">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <hr style="margin-top:-1%">
+    <div style="overflow-x:scroll">
+        <table id="listitems" class="table table-condensed table-striped table-bordered" style="width:149%; margin: 0 auto 0 0;"></table>
+    </div>
+    <div style="height:100px;clear: both">
+        &nbsp;
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+    $("#User").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $('#UserId').val(0);
+
+            var data1 = {};
+            data1.UserName = $("#User").val();
+            data1.DepartmentId = $("#Department").val();
+            data1.DivisionId = $("#Division").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DeptUserGetandGets',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName: item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#UserId').val(ui.item.UserId);
+            $('#UserLength').val((ui.item.UserName).length);
+        },
+    });
+
+    $("#transuser").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $('#transuserId').val(0);
+
+            var data1 = {};
+            data1.UserName = $("#transuser").val();
+            data1.DepartmentId = $("#Department").val();
+            data1.DivisionId = $("#Division").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DeptUserGetandGets',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName: item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#transuserId').val(ui.item.UserId);
+            $('#transuserLength').val((ui.item.UserName).length);
+        },
+    });
+
+
+    $("#Driver").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $('#DriverId').val(0);
+
+            var data1 = {};
+            data1.DriverName = $("#Driver").val();
+            data1.DepartmentId = $("#Department").val();
+
+            $.ajax({
+                url: '../WorkItemUser/DriverAutoComplete',
+                type: "POST",
+                data: data1,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.DriverName,
+                            DriverId: item.Driver,
+                            Driver: item.DriverName,
+                            headers: ["Driver"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#DriverId').val(ui.item.DriverId);
+        },
+    });
+
+    $("#IPUser").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $('#IPUserId').val(0);
+
+            var data = {};
+            data.UserName = $("#IPUser").val();
+            $.ajax({
+                url: '../Master/UserSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        console.log(data)
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName: item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#IPUserId').val(ui.item.UserId);
+        },
+    });
+
+    $("#StoreKeeper").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $('#StoreKeeperId').val(0);
+
+            var data = {};
+            data.UserName = $("#StoreKeeper").val();
+            $.ajax({
+                url: '../Master/UserSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+
+                    response($.map(data, function (item) {
+                        console.log(data)
+                        return ({
+                            ColCount: 'ONE',
+                            label: item.UserName,
+                            UserId: item.UserId,
+                            UserName: item.UserName,
+                            headers: ["User"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#StoreKeeperId').val(ui.item.UserId);
+        },
+    });
+
+
+    $("#Customer").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $('#CustId').val(0);
+
+            var data = {};
+            data.CustName = $("#Customer").val();
+            data.CustType = 'C';
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '1',
+                            label: item.CustName,
+                            label1: item.CustAccount,
+                            label2: item.PhoneNumber,
+                            CustName: item.CustName,
+                            Address: item.CustStreet1 + ',' + item.CustCity1 + ',' + item.CustState1,
+                            Street: item.CustStreet1,
+                            City: item.CustCity1,
+                            State: item.CustState1,
+                            TRNNumber: item.TRNNumber,
+                            CustId: item.CustId,
+                            SalesmanId: item.SalesmanId,
+                            CurncyId: item.CurrencyId,
+                            CustTermsId: item.CustTermsId,
+                            AreaId: item.AreaId,
+                            PriceGroupId: item.PriceGroupId,
+                            PhoneNumber: item.PhoneNumber,
+                            CreditLimit: item.CreditLimit,
+                            CustAccount: item.CustAccount,
+                            headers: ["Customer Name", "Account Code", "Phone No"]
+                        })
+                    }));
+                }
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#CustId').val(ui.item.CustId);         
+
+        },
+
+    });
+
+
+
+
+
+</script>

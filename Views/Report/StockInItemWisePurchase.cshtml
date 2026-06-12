@@ -1,0 +1,721 @@
+﻿
+@{
+    ViewBag.Title = "StockInItemWisePurchase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+    .label-control {
+        font-weight: bold;
+    }
+</style>
+
+<div class="myData" data-x="M427" />
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+
+                    <div>
+                        <table width="100%" style="table-layout:fixed">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+
+                                <td align="right">
+
+                                    <button type="button" style="width:100px" onclick="ShowPopUp()" id="btnback" class="btn btn-outline-primary">Back</button>
+                                    <button type="button" style="width:100px;" id="btnprint" class="btn btn-primary">Print <i class="ft-printer"></i></button>
+
+
+                                    <div class="btn-group" id="buttonPlace">
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right">
+                            <div class="heading-elements">
+                                <hr />
+                                <div id="divreport" style="overflow:auto;">
+                                    <table id="Tblreport" width="170%" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-7">
+                            <h4 class="modal-title white">Purchase StockIn Item wise Report</h4>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="modal-title font-weight-bold" style="float:right;color:blue;" id="PatientNameMo"></h6>
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy()">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <label class="label-control col-md-2">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control enterflow" autocomplete="off">
+                        </div>
+
+
+                        <label class="label-control col-md-2 text-right" style="font-weight:bold;">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control enterflow" autocomplete="off">
+                        </div>
+                    </div>
+                    <hr class="mb-1 mt-1" />
+                    <div class="row mb-1">
+                        <label class="label-control col-md-2">Supplier</label>
+                        <div class="col-md-10">
+                            <table width="100%">
+                                <tr>
+                                    <td width="31%">
+                                        <input type="text" id="suppliercode" class="form-control enterflow" style="border-right:none;border-top-right-radius:0px;border-bottom-right-radius:0px;text-align:left" autocomplete="off" />
+                                        <input type="hidden" id="supplierId" class="form-control" value="0" />
+
+
+                                    </td>
+                                    <td>
+                                        <input type="text" id="suppliername" class="form-control" autocomplete="off" style="border-top-left-radius:0px;border-bottom-left-radius:0px;border-left:none;background-color:white" disabled>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+
+
+                        <div class="col-md-2">
+                            <label class="label-control">Pay Type</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Paytype" class="form-control enterflow" autocomplete="off">
+                                <option value="0">-All-</option>
+                                <option value="1">Cash</option>
+                                <option value="2">Credit</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="label-control">Pur. Type</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="PurchaseType" class="form-control enterflow" autocomplete="off">
+                                <option value="0">-All-</option>
+                                <option value="Local">Local</option>
+                                <option value="Import">Import</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+
+
+                        <div class="col-md-2">
+                            <label class="label-control">Dept.</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Dept" class="form-control enterflow" autocomplete="off"></select>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="label-control">Location</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="LocationId" class="form-control enterflow" autocomplete="off"></select>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-2">
+                            <label class="label-control">Item</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="Item" class="form-control enterflow" autocomplete="off">
+                            <input type="hidden" id="ItemId" class="form-control" autocomplete="off" value="0">
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="label-control">Company</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Group" class="form-control enterflow" autocomplete="off"></select>
+                        </div>
+
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-2">
+                            <label class="label-control">Type</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Category" class="form-control enterflow" autocomplete="off"></select>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label class="label-control">Schedule</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="SubCategory" class="form-control enterflow" autocomplete="off"></select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnsubmit" class="btn btn-primary btn-default">Go</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        ShowPopUp();
+        GetDepartment();
+        GetLocation();
+        GroupPageLoad();
+        CategoryPageLoad();
+        SubCategoryGets();
+
+        $('#DateFrom,#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('#DateFrom,#DateTo').val(CurDate);
+
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#suppliercode').focus().select();
+        });
+        $("#btnsubmit").click(function (e) {
+            GetReport()
+        });
+
+        $('.enterflow').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                var inputs = $(this).closest('.modal-content').find(':input:enabled:visible');
+                inputs.eq(inputs.index(this) + 1).focus();
+                inputs.eq(inputs.index(this) + 1).select();
+            }
+
+        });
+    });
+
+    $("#suppliercode").autocomplete({
+        source: function (request, response) {
+
+            $('#supplierId').val(0);
+            $('#suppliername').val('');
+
+            var data = {};
+            data.CustName = $("#suppliercode").val();
+            data.CustType = 'S';
+
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.CustAccount,
+                            label1: item.CustName,
+                            CustId: item.CustId,
+                            CustName: item.CustName,
+                            CustAccount: item.CustAccount,
+                            headers: ["Supplier Code", "Supplier Name"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#supplierId').val(ui.item.CustId);
+            $('#suppliername').val(ui.item.CustName);
+            $('#suppliercode').val(ui.item.CustAccount);
+            $('#placeofsupply').focus();
+        },
+
+    });
+
+    $("#Item").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            $("#ItemId").val(0);
+
+            var data = {};
+            data.ItemCode = $("#Item").val();
+            data.SlNumber = 0;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+
+            $.ajax({
+                url: '../Pharmacy/HMS_PurchaseProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2ph',
+                            label: item.Description,
+                            label1: item.ItemCode,
+                            label2: item.Group,
+                            label3: item.Category,
+
+                            ItemId: item.ItemId,
+                            ItemCode: item.ItemCode,
+                            Description: item.Description,
+                            Tax: item.VatId,
+                            Taxper: item.VatPer,
+                            Rate: (item.AvgCost).toFixed(Decimal),
+                            SellingPrice: (item.SellingPrice).toFixed(Decimal),
+                            MRP: (item.MRP).toFixed(Decimal),
+                            LPCost: (item.LPCost).toFixed(Decimal),
+                            Cess: item.Model1,
+                            headers: ["Name", "Code", "Company", "Type"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $("#ItemId").val(ui.item.ItemId);
+        },
+    });
+
+    function ngOnDestroy() {
+        $("#myModal").modal("hide");
+    }
+    function ShowPopUp() {
+        if (!($('#myModal').is(':visible'))) {
+            $("#myModal").modal("show");
+            $("#myModal").appendTo("body");
+        }
+    }
+
+    function GetReport() {
+        ngOnDestroy();
+        $('#Loading').show();
+
+        var Condition = " AND CONVERT(DATETIME,M.InvoDate,103)<=CONVERT(DATETIME,'" + $("#DateTo").val() + "',103) " +
+            "AND CONVERT(DATETIME,M.InvoDate,103)>=CONVERT(DATETIME,'" + $("#DateFrom").val() + "',103)";
+
+        if ($("#supplierId").val() != 0 && $("#supplierId").val() != null)
+            Condition = Condition + " AND M.SupplierId=" + $("#supplierId").val();
+
+        if ($("#Paytype").val() != 0 && $("#Paytype").val() != null)
+            Condition = Condition + " AND M.PayType=" + $("#Paytype").val();
+
+        if ($("#PurchaseType").val() != 0 && $("#PurchaseType").val() != null)
+            Condition = Condition + " AND M.PurchaseType='" + $("#PurchaseType").val() + "'";
+
+        if ($("#Dept").val() != 0 && $("#Dept").val() != null)
+            Condition = Condition + " AND M.DepartmentId=" + $("#Dept").val();
+
+        if ($("#LocationId").val() != 0 && $("#LocationId").val() != null)
+            Condition = Condition + " AND S.LocationId=" + $("#LocationId").val();
+
+        if ($("#Group").val() != 0 && $("#Group").val() != null)
+            Condition = Condition + " AND I.GroupId=" + $("#Group").val();
+
+        if ($("#Category").val() != 0 && $("#Category").val() != null)
+            Condition = Condition + " AND I.CategoryId=" + $("#Category").val();
+
+        if ($("#SubCategory").val() != 0 && $("#SubCategory").val() != null)
+            Condition = Condition + " AND I.SubCategoryId=" + $("#SubCategory").val();
+
+        if ($("#ItemId").val() != 0 && $("#ItemId").val() != null)
+            Condition = Condition + " AND S.ItemId=" + $("#ItemId").val();
+
+
+
+        var data = {};
+        data.Condition = Condition;
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Report/Rpt_StockInItemWisePurchase",
+            data: data,
+            success: function (result) {
+                Showreport(result);
+            }
+        });
+
+    }
+
+    function Showreport(result) {
+        $('#Loading').hide();
+
+
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr>" +
+            "<th>Sl#</th>" +
+            "<th>Pur.Sl#</th>" +
+            "<th>Date</th>" +
+            "<th>InvNo#</th>" +
+            "<th>Supplier</th>" +
+            "<th>Item Name</th>" +
+            "<th>Batch</th>" +
+            "<th>PACK</th>" +
+            "<th>Qty.</th>" +
+            "<th>LQty.</th>" +
+            "<th>Rate</th>" +
+            "<th>PayType</th>" +
+            "<th>MRP</th>" +
+            "<th>Taxable</th>" +
+            "<th>Tax</th>" +
+            "<th>Cess</th>" +
+            "<th>Disc.</th>" +
+            "<th>Amount</th>" +
+            "<th>Company</th>" +
+            "<th>Type</th>" +
+            "<th>Stock</th>" +
+            "<th>Dept.Code</th>" +
+            "<th>Location</th>" +
+            "</tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+            var slno = i + 1;
+
+            var Style = "";
+            if (parseInt(result[i].Flag || 0) == 1) { Style = "background-color:#cfd8dc;font-weight:bold;"; }
+
+            responseText = responseText + "<tr style='" + Style + "'>" +
+                "<td align='center'>" + slno + "</td>" +
+                "<td>" + result[i].SlNo + "</td>" +
+                "<td>" + result[i].InvoDate + "</td>" +
+                "<td align='center'>" + result[i].InvoNo + "</td>" +
+                "<td>" + result[i].CustName + "</td>" +
+                "<td>" + result[i].ItemDescription + "</td>" +
+                "<td>" + result[i].Batch + "</td>" +
+                "<td  align='center'>" + parseFloat(result[i].Pack || 0)+ "</td>" +
+                "<td align='center'>" + parseFloat(result[i].TQty || 0) + "</td>" +
+                "<td  align='center'>" + parseFloat(result[i].TLQty || 0) + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].Rate || 0).toFixed(Decimal) + "</td>" +
+                "<td>" + result[i].PType + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].P_MRP || 0).toFixed(Decimal) + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].TaxableAmount || 0).toFixed(Decimal) + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].TaxAmount || 0).toFixed(Decimal) + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].B_Cess || 0).toFixed(Decimal) + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].Discount || 0).toFixed(Decimal) + "</td>" +
+                "<td align='right'>" + parseFloat(result[i].Amount || 0).toFixed(Decimal) + "</td>" +
+                "<td>" + result[i].GrpName + "</td>" +
+                "<td>" + result[i].CategoryName + "</td>" +
+                "<td  align='center'>" + parseFloat(result[i].SubCategoryName || 0).toFixed(0)  + "</td>" +
+                "<td>" + result[i].DepartmentName + "</td>" +
+                "<td>" + result[i].LocationName + "</td>" +
+                "</tr>";
+        }
+
+        $('#Tblreportprint').html(responseText+"</tbody>");
+
+        responseText = responseText + "</tbody><tfoot><tr>" +
+            "<th></th>" +
+            "<th>Pur.Sl#</th>" +
+            "<th>Date</th>" +
+            "<th>Account</th>" +
+            "<th>Supplier</th>" +
+            "<th>Item Name</th>" +
+            "<th>Batch</th>" +
+            "<th></th>" +
+            "<th></th>" +
+            "<th>PayType</th>" +
+            "<th>Pur.Type</th>" +
+            "<th></th>" +
+            "<th></th>" +
+            "<th></th>" +
+            "<th></th>" +
+            "<th></th>" +
+            "<th>Company</th>" +
+            "<th>Type</th>" +
+            "<th>Schedule</th>" +
+            "<th>Dept.Code</th>" +
+            "<th>Location</th>" +
+            "</tr></tfoot>";
+
+        $('#Tblreport').html(responseText);
+
+
+        var title = "StockIn Item wise Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+
+        $('#header').text(title);
+        $('#ResultLength').val(result.length);
+
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != '') {
+                $(this).html('<input type="text" placeholder=" ' + title + '" style="width:100%" />');
+            }
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'Blfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                "columnDefs": [
+                     { "width": "2%", "targets": 0 },
+                     { "width": "4%", "targets": 1 },
+                     { "width": "3%", "targets": 2 },
+                     { "width": "3%", "targets": 3 },
+                     { "width": "4%", "targets": 6 },
+                     { "width": "4%", "targets": 9 },
+                     { "width": "4%", "targets": 10 },
+                     { "width": "4%", "targets": 16 },
+                     { "width": "4%", "targets": 17 },
+                     { "width": "4%", "targets": 18 },
+                     { "width": "4%", "targets": 19 },
+                     { "width": "4%", "targets": 20 },
+
+                ],
+                "autowidth":false,
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+    function GetDepartment() {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UserDepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result) {
+        $("#Dept").empty();
+        $("#Dept").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Dept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+    }
+    function GroupPageLoad() {
+        var data1 = {};
+        data1.GrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/GroupGetandGets",
+            data: data1,
+            success: function (result) {
+                GroupLoad(result.oList);
+            }
+        });
+    }
+
+    function GroupLoad(result) {
+        $("#Group").empty();
+        $("#Group").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#Group").append("<option value='" + result[i].GrpId + "'>" + result[i].GrpName + "</option>");
+        }
+    }
+
+    function CategoryPageLoad() {
+        var data2 = {};
+        data2.CategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CategoryGetandGets",
+            data: data2,
+            success: function (result) {
+                CategoryLoad(result.oList);
+            }
+        });
+    }
+
+
+    function CategoryLoad(result) {
+        $("#Category").empty();
+        $("#Category").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Category").append("<option value='" + result[i].CategoryId + "'>" + result[i].CategoryName + "</option>");
+        }
+
+    }
+
+    function SubCategoryGets() {
+
+        var data = {};
+        data.CategoryId = 0;
+        data.SubCategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/SubCategoryGetandGets",
+            data: data,
+            success: function (result) {
+                SubCategoryLoad(result.oList);
+
+            }
+        });
+    }
+
+    function SubCategoryLoad(result) {
+        $("#SubCategory").empty();
+        $("#SubCategory").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#SubCategory").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+        }
+    }
+
+    function GetLocation() {
+        var data = {};
+        data.LocationId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                LocationLoad(result.oList);
+
+
+            }
+        });
+
+    }
+
+    function LocationLoad(result) {
+        $("#LocationId").empty();
+        LocationSelect = "<option value='0'>-Select-</option>";
+        for (var i = 0; i < result.length; i++) {
+            LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
+
+        }
+        $("#LocationId").append(LocationSelect);
+    }
+</script>
+

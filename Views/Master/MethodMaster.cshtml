@@ -1,0 +1,344 @@
+﻿
+@{
+    ViewBag.Title = "MethodMaster";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="Entry" style="width:60%;margin-left:20%;height:100%;">
+    <div class="row">
+        <div class="col-md-12" style="margin-top:10%;">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0" style="text-align:center;font-weight:bold;">Method Master</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body">
+
+                                        
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label style="font-weight:bold;">Name<span class="danger">*</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" id="txtname" class="form-control" autocomplete="off" />
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label style="font-weight:bold;">Remarks<span class="danger">*</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input type="text" id="txtremark" class="form-control" autocomplete="off" />
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+
+                                  
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label style="font-weight:bold;">Description<span class="danger">*</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <textarea id="txtdesc" style="height:100px;" class="form-control" autocomplete="off" rows="5"></textarea>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-actions center" style="margin-left:2%;">
+                                        <button type="button" style="width:100px" id="btnsubmit"
+                                                class="btn btn-primary btn-min-width mr-1 mb-1">
+                                            <u>S</u>ave <i class="fa fa-check-square-o"></i>
+                                        </button>
+                                        <button type="button" style="width:100px" id="btnlist"
+                                                onclick="GetRows(0)"
+                                                class="btn btn-primary btn-min-width mr-1 mb-1">
+                                            List <i class="ft-align-justify"></i>
+                                        </button>
+                                        <button type="button" style="width:100px" id="btnnew"
+                                                onclick="formrefresh()"
+                                                class="btn btn-primary btn-min-width mr-1 mb-1">
+                                            New <i class="ft-refresh-cw position-right"></i>
+                                        </button>
+                                        <button style="display:none" type="button" id="btndelete"
+                                                class="btn btn-primary btn-min-width mr-1 mb-1">
+                                            Delete <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- List -->
+<div style="margin-top:0%;margin-left:5%;display:none;width:90%;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:15px;">
+
+                                        <h4 class="card-title mb-0" style="font-weight:bold;">
+                                            Master List
+                                        </h4>
+
+                                        
+
+                                    </div>
+                                </td>
+
+                                <td align="right">
+                                    <button type="button" onclick="closelist()"
+                                            class="btn btn-outline-primary btn-sm">
+                                        <i class="ft-edit"></i> Add New
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto;">
+                            <table id="tblMstData"
+                                   class="table table-striped table-bordered base-style dataTable"
+                                   style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Sl#</th>
+                                        <th>Name</th>
+                                        <th>Remarks</th>
+                                        <th>Description</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th><input type="text" placeholder="Search Nmae" class="form-control" /></th>
+                                        <th><input type="text" placeholder="Search Remarks" class="form-control" /></th>
+                                        <th><input type="text" placeholder="Search Description" class="form-control" /></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <br />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none"><input type="text" value="0" id="MstId" /></div>
+
+<script type="text/javascript">
+    var Editbutton = '<i class="ft-edit"></i>';
+    var mstTable = null;
+
+    $(document).ready(function () {
+        $('#txtname').focus();
+        $('.form-control').attr('autocomplete', 'off');
+        $('#btnsubmit').click(function () { SaveAndUpdate(1); });
+        $('#btndelete').click(function () { SaveAndUpdate(0); });
+    });
+
+    function SaveAndUpdate(Flag) {
+        if ($.trim($('#txtname').val()) === '') {
+            warningshow('Please Enter Name', 'txtname');
+            return;
+        }
+        if ($.trim($('#txtremark').val()) === '') {
+            warningshow('Please Enter Remarks', 'txtremark');
+            return;
+        }
+        if ($.trim($('#txtdesc').val()) === '') {
+            warningshow('Please Enter Description', 'txtdesc');
+            return;
+        }
+
+        $('#btnsubmit').prop('disabled', true);
+
+        var data = {
+            MethodId: $('#MstId').val(),      
+            MethodName: $.trim($('#txtname').val()),   
+            Remarks: $('#txtremark').val(),
+            MDescription: $.trim($('#txtdesc').val()),
+            DelFlag: Flag                              
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '../Master/MethodMasterInsertandUpdate',
+            data: data,
+            success: function (result) {
+                $('#btnsubmit').prop('disabled', false);
+
+                if (result && result.oList && result.oList.length > 0) {
+                    var status = result.oList[0].Status;
+
+                    if (status == 1) {
+                        swal("Data Saved Successfully!", "", "success");
+                        setTimeout(function () { formrefresh(); }, 1500);
+
+                    } else if (status == 2) {
+                        swal("Data Updated Successfully!", "", "success");
+                        setTimeout(function () { formrefresh(); }, 1500);
+
+                    } else if (status == 3) {
+                        swal("Deleted Successfully!", "", "warning");
+                        setTimeout(function () { GetRows(0); }, 1500);
+
+                    } else if (status == 0) {
+                        warningshow('Data already exists!');
+                    } else {
+                        warningshow('Operation failed!');
+                    }
+                } else {
+                    warningshow('Unexpected response from server');
+                }
+            },
+            error: function () {
+                $('#btnsubmit').prop('disabled', false);
+                warningshow('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    function GetRows(MstId) {
+        $('#MstId').val(MstId);
+        $.ajax({
+            type: 'POST',
+            url: '../Master/MethodMasterGetandGets',
+            data: { MethodId: MstId },
+            success: function (result) {
+                if (MstId == 0) ShowEmrList(result);
+                else ShowEmrGet(result);
+            },
+            error: function () { warningshow('Error loading data'); }
+        });
+    }
+
+    function ShowEmrList(result) {
+        $('#Entry').hide();
+        $('#listing').show();
+
+        if ($.fn.DataTable.isDataTable('#tblMstData')) {
+            $('#tblMstData').DataTable().clear().destroy();
+        }
+
+        var tbody = $('#tblMstData tbody');
+        tbody.empty();
+
+        for (var i = 0; i < result.length; i++) {
+            tbody.append(
+                '<tr>' +
+                '<td align="center">' + (i + 1) + '</td>' +
+                '<td>' + result[i].MethodName + '</td>' +  
+                '<td>' + result[i].Remarks + '</td>' +
+                '<td>' + result[i].MDescription + '</td>' +  
+                '<td style="background-color:#00ffff ; text-align:center; vertical-align:middle; width:80px;">' +
+                '<a onclick="GetRows(' + result[i].MethodId + ')" style="color:black; font-size:16px; cursor:pointer;">' + Editbutton + '</a>' +
+                '</td>' +
+                '</tr>'
+            );
+        }
+
+        mstTable = $('#tblMstData').DataTable({
+            dom: '<"top d-flex justify-content-between align-items-center"l f>rtip',
+            paging: true,
+            searching: true,
+            ordering: true,
+            pageLength: 10,
+            orderCellsTop: true,
+            columnDefs: [
+                { orderable: false, targets: 0 },
+                { orderable: false, targets: 4 }
+            ]
+        });
+
+        $('#tblMstData tfoot th').each(function (i) {
+            var input = $(this).find('input');
+            if (input.length) {
+                input.on('keyup change', function () {
+                    mstTable.column(i).search(this.value).draw();
+                });
+            }
+        });
+
+
+        
+    }
+  
+
+    function ShowEmrGet(result) {
+        if (result.length > 0) {
+            var r = result[0];
+            $('#MstId').val(r.MethodId);      
+            $('#txtname').val(r.MethodName); 
+            $('#txtremark').val(r.Remarks);
+            $('#txtdesc').val(r.MDescription); 
+        }
+        $('#Entry').show();
+        $('#listing').hide();
+        $('#btndelete').show();
+        $('#txtname').focus();
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').stop(true, true).show();
+        if (Id) { $('#' + Id).focus().select(); }
+        clearTimeout(window._warningTimer);
+        window._warningTimer = setTimeout(function () {
+            $('#Warningpopup').fadeOut();
+        }, 3000);
+    }
+
+    function formrefresh() {
+        $('#MstId').val(0);
+        $('#txtname').val('');
+        $('#txtremark').val('');
+        $('#txtdesc').val('');
+        $('#btndelete').hide();
+        $('#txtname').focus();
+        $('#Warningpopup').stop(true, true).hide();
+    }
+
+    function closelist() {
+        $('#Entry').show();
+        $('#listing').hide();
+        formrefresh();
+    }
+</script>
+
+

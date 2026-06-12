@@ -1,0 +1,1304 @@
+﻿
+@{
+    ViewBag.Title = "VoucherEntryModify";
+}
+
+
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<script type="text/javascript" src="~/ProjectScript/DosPrint.js"></script>
+<style>
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+</style>
+
+<script>
+   function deletethisvouche()
+   {
+       if ($('#VoucherNo').val()=='') {
+           warningshow('Please Select Voucher Number', "VoucherNo");
+       }
+       else if ($('#VoucherType').val() == 0) {
+           warningshow('Please Select Voucher Type', "VoucherType");
+       }
+       else {
+           $("#confirmOk").prop('disabled', false);
+           $('#Confirmflag').val('deletevoucher'), $('#ConfirmRowId').val(1)
+           $('#confirmmessage').text('Do You Want Delete This Voucher ?')
+           $('#confirm').show();
+           $('#confirmOk').focus();
+
+       }
+   }
+
+
+
+</script>
+
+
+
+<div class="myData" data-x="M177" />
+<div id="Entry" style="margin-top:-20px">
+
+    <section class="grid-row-label" id="grid-row-label">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                        <h3 class="card-title mb-0" style="float:left;font-weight:bold">Voucher Edits</h3>
+
+
+                        <div class="text-right">
+
+                            <h6 style="float:left;margin-left:-45px;" class="col-md-8"><b>Account Balance:</b></h6>
+                            <input class="col-md-2" value="0.0" id="Acbal" readonly="readonly" style="font-size:18px;color:crimson;font-weight:700;margin-right:10px;border:none">
+
+
+
+
+                        </div>
+                        <div class="text-right">
+
+                            <h6 style="float:left;margin-left:-35px;" class="col-md-9"><b>Difference:</b></h6>
+                            <input class="col-md-2" id="Differencetxt" readonly="readonly" style="font-size:18px;color:crimson;font-weight:700;margin-right:10px;border:none">
+
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="card-content collapse show">
+                        <div class="card-body" style="margin-top:-100px">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr style="margin-top:75px" />
+                                    <div class="row" style="background-color:#F0F6F6;margin-left:3px;width:1777px;margin-top:-20px;height:120px;">
+                                        <div class="col-md-12" style="margin-top:-5px;">
+                                            <br />
+                                            <div class="form-group">
+                                                <div class="row" style="margin-left:1px;">
+                                                    <label class="text-lg-left col-md-1" style="font-weight:bold">Voucher Type<span class="danger">*</span></label>
+                                                    <div class="col-md-2">
+                                                        <input type="hidden" id="txtacctype" />
+                                                        <select id="VoucherType" class="form-control" onchange="serialnoload()"></select>
+                                                    </div>
+                                                    <label class="text-lg-right col-md-1" style="font-weight:bold">Voucher Date</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" id="VoucherDate" class="form-control">
+                                                    </div>
+                                                    <h6 class="text-lg-right col-md-2" style="font-weight:bold"><b>Cr.</b></h6>
+                                                    <div class="col-md-1">
+                                                        <input type="text" id="Credittxt" class="form-control" style="color:darkturquoise;background-color:#f0f6f6;border:none;margin-top:-8px" readonly="readonly">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-left:1px;margin-top:8px">
+                                                    <label class="text-lg-left col-md-1" style="font-weight:bold">Voucher No</label>
+                                                    <div class="col-md-2">
+                                                        @*<input type="text" class="form-control" id="VoucherNo" readonly="readonly">*@
+                                                        <input type="text" class="form-control" id="VoucherNo">
+                                                        @*<select id="VoucherNo" class="form-control" onchange="datatableload()"></select>*@
+                                                    </div>
+                                                    <label class="text-lg-right col-md-1" style="font-weight:bold" id="Transfernolabel">Copy#</label>
+                                                    <div class="col-md-2">
+                                                        <fieldset>
+                                                            <div class="form-group">
+                                                                <input type="text" disabled id="TransferVoucherNo" class="form-control" placeholder="Copy">
+                                                                @*<div class="input-group-append" id="Transfer">
+                                                                    <button class="btn btn-outline-primary" type="button">⇆</button>
+                                                                </div>*@
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                    <h6 class="text-lg-right col-md-2" style="font-weight:bold"><b>Dr.</b></h6>
+                                                    <div class="col-md-1">
+                                                        <input type="text" id="Debittxt" class="form-control" style="color:darkturquoise;background-color:#f0f6f6;border:none;margin-top:-8px" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top:5px;" />
+                                    <div class="row col-md-12" style="margin-top:-10px;">
+                                        <div class="col-md-12">
+                                            <div class="row" style="height:26px;">
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <label>Type</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Account Name</label><span class="danger">*</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Description</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label>Amount</label><span class="danger">*</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <label>Tax No</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <label>Reference No</label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <select id="VType" class="form-control">
+                                                            <option value="Debit">Dr</option>
+                                                            <option value="Credit">Cr</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2 input-group">
+                                                    <input type="text" id="AccountName" class="form-control" style="height:66%;" onkeydown="Focusnextgrid(event,'AN',0)" onkeyup="CustEmpty()">
+                                                    <input type="text" style="display:none" id="supplierId0" />
+                                                    <input type="text" style="display:none" id="AccCode" />
+                                                    <div class="input-group-append" id="addVisa">
+                                                        <button class="btn btn-outline-primary" id="AccountNamebtn" type="button" style="height:66%" onclick="window.open('../master/AccountHead')">+</button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <input type="text" id="VoucherEntryDescription" onkeydown="Focusnextgrid(event,'AD',0)" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <input type="text" id="Amount" onkeypress="isNumber(event, this)"  onkeydown="Focusnextgrid(event,'A',0)" onkeyup="CalcFCAmount()" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <input type="text" id="TaxNo" onkeydown="Focusnextgrid(event,'T',0)" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-1">
+                                                    <div class="form-group">
+                                                        <input type="text" id="ReferenceNo" onkeydown="Focusnextgrid(event,'R',0)" onkeypress="isNumberInt(event, this)" value="0" class="form-control" disabled>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <button type="button" onkeydown="Focusnextgrid(event,'B',0)" id="btnadd" class="btn btn-primary">+</button>
+                                                </div>
+                                                <div class="form-group" style="margin-left:15px;">
+                                                    <button type="button" id="JobandFC" class="btn btn-primary" onclick="Addpopupwindow(2)">Job&FC</button>
+                                                </div>
+                                                <div class="form-group" style="margin-left:15px;">
+                                                    <button type="button" id="InvoiceSettlement" class="btn btn-outline-primary" onclick="GetList(0)">Pending Invoice</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div id="customView" class="jsgrid dataTables_scrollBody" style="overflow:auto;height: 310px; width: 99%; margin-left:9px;margin-top:-15px;">
+
+                                        <table class="jsgrid-table" id="tblvoucherentry">
+                                            <tr class="jsgrid-header-row">
+                                                <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:50px;border-bottom:1px solid #CCD6E6" id="Del"><i class="icon-trash"></i></th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;border-bottom:1px solid #CCD6E6">No</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;display:none">BillSNo</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:150px;border-bottom:1px solid #CCD6E6">Type</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:300px;border-bottom:1px solid #CCD6E6">Account Name</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:400px;border-bottom:1px solid #CCD6E6">Description</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:200px;border-bottom:1px solid #CCD6E6">InvDate</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:200px;border-bottom:1px solid #CCD6E6">Amount</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:300px;border-bottom:1px solid #CCD6E6">Tax No</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:300px;border-bottom:1px solid #CCD6E6">Reference No</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thJobCode">Job Code</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thCostCode">Cost Code</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thFC">FC</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thBank">Rate</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thFCAmount">FC Amount</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="typetrx">TRX Type</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thBank">Bank</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thBank">ChequeNo</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thBank">Cheque Date</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-center" style="width:150px;border-bottom:1px solid #CCD6E6" id="thPDCAc">PDC Ac</th>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div class="form-actions">
+                                        <div class="text-right">
+                                            <input type="text" id="slnotxt" class="form-control" value="1" style="display:none;border:none">
+                                            <input type="hidden" id="hiddenrow" />
+                                            @*<input type="text" id="VoNo" class="form-control">*@
+                                            <button type="button" style="width:100px;display:none" id="btnprint" onclick="PrintthisBill()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+
+
+                                            <button type="button" style="width:100px;display:none" id="btnDelete" onclick="deletethisvouche()" class="btn btn-primary btn-min-width mr-1 mb-1"><u>D</u>elete <i class="fa fa-check-square-o"></i></button>
+
+
+                                            <button type="button" id="VEViewFiles" class="btn btn-info btn-min-width mr-1 mb-1 white" style="width:120px;display:none" onclick="ViewSavedFiles()">Documents <i class="fa fa-file-archive-o"></i></button>
+                                            <button type="button" style="width:100px" id="btncopy" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                            @*<button type="button" style="width:100px" id="btnlist" onclick="window.open('../ABDataTable/AccountReports')" class="btn btn-primary btn-min-width mr-1 mb-1">Report <i class="ft-align-justify"></i></button>*@
+                                            <button type="button" style="width:100px" id="btnnew" onclick="Clear()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                            <input type="hidden" id="desc" />
+                                         </div>
+                                    </div>
+                                    <br />
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<div style="margin-bottom:3%" class="row col-md-12 white">
+    <h6 class="col-md-2" style="font-size:medium;text-align:left;font-weight:500"> Description Edit : Up Arrow</h6>
+</div>
+
+<div id="alertpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:25%">
+        <div class="modal-content" style="width:600px">
+            <form id="alertdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="placeholder"></div>
+                        <div class="col-md-12" style="overflow:scroll;height:auto;width:100%;overflow:auto;">
+                            <div class="swal2-icon swal2-success animate" style="display: block;"><span class="line tip animate-success-tip"></span> <span class="line long animate-success-long"></span><div class="placeholder"></div> <div class="fix"></div></div>
+                            <br />
+                            <h2 id="savealert" class="text-center"></h2>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <input type="button" class="btn btn-primary" value="Print" id="btnokVEM">
+                        <input type="button" class="btn btn-outline-primary" value="Cancel" id="btncnclalrtVEM">
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <table id="DosPrintVEM" class="dataTableVEM"></table>
+</div>
+
+
+
+<div style="display:none"><input type="text" value="0" id="VoucherEntryId" /></div>
+
+
+<div class="modal fade text-left show" id="Popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" style="padding-right: 17px;display: none;background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content" style="width:200%; margin-left:-200px">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="MyHeader"></h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="($('#Popup').hide())" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+
+            <form id="PendingInv" style="display:none">
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="overflow-auto" style="height:400px; ">
+                            <table id="PendingInvoicelist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+                    </div>
+                    <input type="hidden" id="RowGet" />
+                </div>
+                <div class="modal-footer">
+                    <input type="text" id="BaseAmount" style="display:none" />
+                    <input type="text" id="Sum" style="display:none" />
+                    <input type="button" id="btnaddtogridInv" class="btn btn-outline-secondary" onclick="AddtoGrid()" value="Add">
+                    <input type="button" id="btnclosegrid" class="btn btn-outline-secondary " onclick="($('#Popup').hide())" value="Close">
+                </div>
+            </form>
+
+            <form id="JobAndFC" style="display:none">
+                <div class="modal-body">
+                    <div class="row" style="margin-left:2px;">
+                        <label class="text-md-right" id="JobCodelb">Job Code</label>
+                        <div class="col-md-3">
+                            <select id="JobCode" class="form-control"></select>
+                        </div>
+                        <label class="text-md-right" id="CostCodelb">Cost Code</label>
+                        <div class="col-md-3">
+                            <select id="CostCenterName" class="form-control"></select>
+                        </div>
+
+                        <label id="PDClb">PDCAc From</label>
+                        <div class="col-md-3">
+                            <input type="text" id="PDCAccount" class="form-control" style="margin-left:-7px">
+                            <input type="text" id="PDCAccountId" style="display:none">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:2px;margin-top:10px;">
+                        <label class="text-md-right" id="FClb">Currency</label>
+                        <div class="col-md-3">
+                            <select id="Currency" onchange="CurrencyChange(this.id)" class="form-control" style="margin-left:2px;"></select>
+                        </div>
+                        <label class="col-md-1 text-md-right" id="Ratelb">Rate</label>
+                        <div class="col-md-3">
+                            <input type="text" style="margin-left:-2px;" onkeyup="CalculateFCAmount()" onkeypress="isNumber(event,this)" id="Rate" class="form-control">
+                        </div>
+                        <label id="FCAmountlb">FC Amount</label>
+                        <div class="col-md-3">
+                            <input type="text" onkeypress="isNumber(event,this)" onkeyup="CalAmount()" id="FCAmount" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left:2px;margin-top:10px;">
+                        <label class="text-lg-right" for="Type" id="trxtypelb">TRX Type</label>
+                        <div class="col-md-3 ">
+                            <select id="trxtype" class="form-control">
+                                <option value=0>-Select-</option>
+                                <option value=1>CHQ</option>
+                                <option value=2>NEFT</option>
+                                <option value=3>RTGS</option>
+                                <option value=4>IMPS</option>
+                                <option value=5>ATM</option>
+                                <option value=6>Others</option>
+
+
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <label class="col-md-1 text-md-right" id="Banklb">Bank</label>
+                        <div class="col-md-3">
+                            <select id="Bank" name="priority" class="form-control"></select>
+                        </div>
+                        <label class="text-md-right" id="ChequeNolb">Trx/Chq No</label>
+                        <div class="col-md-3">
+                            <input type="text" id="ChequeNo" class="form-control" style="margin-left:-3px;">
+                        </div>
+                        <label id="ChequeDatelb">ChequeDt</label>
+                        <div class="col-md-3">
+                            <input type="text" id="ChequeDate" class="form-control" style="margin-left:5px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="text" id="AmountFC" style="display:none">
+                    <input type="text" id="AmountCon" style="display:none">
+
+
+
+                    <input type="button" id="btnaddtogrid" class="btn btn-outline-secondary " onclick="GetJob()" value="Add">
+                    <input type="button" id="btnclosegrid" class="btn btn-outline-secondary " onclick="($('#Popup').hide())" value="Close">
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+@*//USEDCARS*@
+<input style="display:none" id="vouchersaveno" />
+
+<input type="text" id="VEfileUploadValue" style="display:none" />
+<input type="text" id="VEfileInsertOnebyone" style="display:none" />
+<input type="text" id="VEVoucherType" style="display:none" />
+<input type="text" id="VEVoucherTypeDesc" style="display:none" />
+
+<div id="OTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="txtotp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btnotpcancel" onclick="$('#OTPDiv').hide(), $('#txtotp,#otpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btnotpsave" onclick="CheckEditInvoce()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="CancelOTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#CancelOTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="cancelotp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#CancelOTPDiv').hide(), $('#cancelotp').val('')" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CheckCancelInvoce()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <input type="text" id="VoucherNoPrint" value="0" />
+</div>
+<div id="VEDocument" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background: rgba(0, 0, 0, 0.5); display: block;display:none">
+    <div class="modal-dialog modal-lg" role="document" style="top:10%;height:1000px;width:1000px">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white" style="">
+                <h4 class="modal-title" id="myheader" style="text-align:center">Documents</h4>
+                <button type="button" class="close" onclick="$('#VEDocument').hide()" data-dismiss="modal" aria-label="Close" autocomplete="off">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="px-3 card-body card-dashboard overflow-auto" style="height:500px;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="file" multiple name="VEfile[]" id="VEfileUpload" class="btn btn-info btn-min-width mr-1 mb-1 btn-sm white" />
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" style="width:90px" id="btnuploadVEfiles" onclick="UploadVEFiles()" class="btn btn-outline-info btn-min-width mr-1 mb-1">Upload</button>
+                                </div>
+                            </div>
+
+
+
+                            <table id="tbl_documentlist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;height:200%;width:110%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%">
+        <div class="modal-content" style="width:80%">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader" style="height:25px">Description</h3>
+                <button type="button" class="close" onclick="$('#popupdiv').hide(), $('#Description').val('')" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <textarea type="text" id="Description" onkeypress="desc()" class="form-control" style="height:100px" autocomplete="off"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+<script type="text/javascript" src="../Projectscript/VoucherEntryModify.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        @*if ("@Request.QueryString["from"]" == "AccountStatement") {
+        var type = sessionStorage.getItem("acc_type");
+        var vno = sessionStorage.getItem("v_no");
+        sessionStorage.removeItem("acc_type");
+        sessionStorage.removeItem("v_no");
+
+        ReportGetCopy( vno ,type);
+
+     }*@
+        var data1 = {};
+        data1.VoucherTypeId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/VoucherTypeGetandGets",
+            data: data1,
+            success: function (result) {
+                VoucherTypeLoad(result.oList);
+            }
+        });
+
+        if ("@Request.QueryString["from"]" == "AccountStatement") {
+            var typeId = sessionStorage.getItem("acc_type");
+            var vno = sessionStorage.getItem("v_no");
+            sessionStorage.removeItem("acc_type");
+            sessionStorage.removeItem("v_no");
+            var numId = parseInt(typeId);
+            var num = parseInt(vno);
+            if (!isNaN(num) && !isNaN(numId)) {
+                ReportGetCopy(num,numId);
+            }
+        }
+    });
+
+    function ReportGetCopy(VNum, VTypeId) {
+        var data = {};
+        data.DeptId = VNum;
+        data.VType = VTypeId;
+        $.ajax({
+            type: "POST",
+            url: "../AccountsErp/VoucherEntryGetandGetss",
+            data: data,
+            success: function (result) {
+                VoucherNoGets(result.oList);
+                $('#TransferVoucherNo').val(VNum);
+                $('#VoucherType').val(VTypeId); 
+                $('#btnsubmit').focus();
+                $('#btnsubmit').prop('disabled', true);
+                $('#btncopy').prop('disabled', true);
+                $('.form-control').prop('disabled', true);
+                $('.jsgrid-button').prop('disabled', true);
+            }
+        });
+
+    }
+
+    function PrintthisBill() {
+        if (VoucherBillType == 'LOCAL') {
+            PrintthisBillWindows('VoucherEntry', $('#tblvoucherentry tr').length, 'COPY')
+        }
+        else if (VoucherBillType == 'DEFAULT') {
+            PrintthisBillWindows('VoucherEntry', $('#tblvoucherentry tr').length, 'DEFAULTCOPY')
+        }
+            //USEDCARS
+        else if (VoucherBillType == 'USEDCARS-LAZOR') {
+                PrintthisBillWindows('VoucherEntry', $('#tblvoucherentry tr').length, 'LAZORCOPY')
+        }
+        else {
+            PrintthisVoucherEntryModify($('#tblvoucherentry tr').length)
+        }
+    }
+</script>
+
+<script>
+
+      $("#VoucherNo").autocomplete({
+          source: function (request, response) {
+              Vouchertp = $("#VoucherType").val();
+              if (Vouchertp == 0)
+              {
+                  warningshow('Please Select Voucher Type', "VoucherType");
+                  return false;
+              }
+            var data = {};
+            data.VoucherNo = $("#VoucherNo").val();
+            data.VoucherTypeId = $("#VoucherType").val();
+
+            $.ajax({
+                url: '../AccountsErp/VoucherNosearchModified',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                            return ({
+                                ColCount: '2',
+                                label: item.VoucherNo,
+                                label1: item.VoucherTypePrefix,
+
+                                headers: ["Voucher Number","Voucher Type"]
+                            })
+                    }));
+                }
+            })
+        },
+ autoFocus: true,
+          select: function (event, ui) {
+              if (ui.item.label1!='PI')
+            $('#VoucherNo').val(ui.item.label)
+            $('#VEVoucherType').val(ui.item.label1)
+            $('#VoucherType').prop('disabled', true);
+            $('#OTPDiv').show();
+            $('#txtotp,#otpremarks').prop('disabled', false);
+            $('#txtotp').focus();
+            if ((usermenu1.indexOf("M305") != -1)) {
+                $('#VEViewFiles').show();
+            }
+
+        },
+    });
+
+
+      function UploadVEFiles() {
+          if (document.getElementById('VEfileUpload').files.length > 0) {
+
+              $('#Confirmflag').val('VEFiles'), $('#ConfirmRowId').val(0)
+              $('#confirmmessage').text('Do You Want To Upload These Files?')
+              $('#confirm').show();
+              $('#confirmOk').prop("disabled", false);
+              $('#confirmOk').focus();
+          }
+          else {
+              warningshow('No Files Selected', 'RVfileUpload');
+              return false;
+          }
+      }
+
+      function OKUploadVEFiles() {
+          swal('Documents Uploaded Successfully', "", "success");
+          $('.swal-button swal-button--confirm').focus();
+          $("#VEDocument").hide();
+          CreateFolder();
+      }
+
+      function CreateFolder() {
+          var data = {};
+          data.DeptId = ERPDeptId;
+          data.VoucherNo = $("#VoucherNo").val();
+          if ($('#VEVoucherType').val() == 'JV') {
+              var VEVoucherTypeDesc = 'JournelVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/JVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+
+          else if ($('#VEVoucherType').val() == 'RV') {
+              var VEVoucherTypeDesc = 'ReceiptVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/RVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'PV') {
+              var VEVoucherTypeDesc = 'PaymentVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/PVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'PC') {
+              var VEVoucherTypeDesc = 'PettyCashVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/PCFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'CV') {
+              var VEVoucherTypeDesc = 'ContraVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/CVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'AV') {
+              var VEVoucherTypeDesc = 'AdjustmentVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/AVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'TV') {
+              var VEVoucherTypeDesc = 'TransferVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/TVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'CN') {
+              var VEVoucherTypeDesc = 'CreditNoteVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/CNFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'DN') {
+              var VEVoucherTypeDesc = 'DebitNoteVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/DNFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'BPV') {
+              var VEVoucherTypeDesc = 'BPVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/BPVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+          else if ($('#VEVoucherType').val() == 'BRV') {
+              var VEVoucherTypeDesc = 'BRVoucher';
+              $('#VEVoucherTypeDesc').val(VEVoucherTypeDesc);
+              $.ajax({
+                  type: "POST",
+                  url: "../AccountsErp/BRVFolderCreate",
+                  data: data,
+                  success: function (result) {
+                      FileUploadDB(0);
+
+                  }
+              });
+          }
+      }
+
+      function FileUploadDB(Flag) {
+          // Database Save>copy
+
+          var data = {};
+          data.VoucherNo = $('#VoucherNo').val();
+          data.FileName = $("#VEfileUpload").get(0).files[Flag].name;
+          data.Extension = $("#VEfileUpload").get(0).files[Flag].name.split('.').pop();
+          data.Flag = Flag;
+          data.DeptId = ERPDeptId;
+          data.UserId = ERPUserId;
+          data.VoucherType = $('#VEVoucherType').val();
+          data.VoucherEntryDescription = $('#VEVoucherTypeDesc').val();
+          $.ajax({
+              type: "POST",
+              url: "../AccountsErp/RVFileInsert",
+              data: data,
+              success: function (result) {
+                  var DBFlag = result.dList[0].Flag;
+                  var status = result.dList[0].Status;
+                  var VoucherNoNew = result.dList[0].VoucherNo;
+                  var VoucherTypeNew = result.dList[0].VoucherType;
+               
+                  if (status == 1) {
+                      FileUploadFolder(Flag, DBFlag, status);
+                  }
+
+              }
+          });
+
+
+
+
+      }
+      function FileUploadFolder(Flag, DBFlag, status) {
+          // Folder Save
+          //alert($('#VEfileInsertOnebyone').val())
+          var formData = new FormData();
+          var imageName = DBFlag
+          var browsedFile = document.getElementById("VEfileUpload").files[Flag];
+          var Extension = $("#VEfileUpload").get(0).files[Flag].name.split('.').pop();
+          var SlNo = $('#VoucherNo').val();
+          var DeptId = ERPDeptId;
+          var FileVocType = $('#VEVoucherTypeDesc').val();
+
+          formData.append("FileUpload", browsedFile);
+          formData.append("FileName", imageName);
+          formData.append("SlNo", SlNo);
+          formData.append("DeptId", DeptId);
+          formData.append("Extension", Extension);
+          formData.append("VoucherType", FileVocType);
+
+          $.ajax({
+              type: "POST",
+              url: '/AccountsErp/VEFileUpload',
+              data: formData,
+              dataType: "html",
+              contentType: false,
+              processData: false,
+              success: function (result) {
+                  if (Flag < document.getElementById('VEfileUpload').files.length - 1) {
+                      Flag++;
+                      FileUploadDB(Flag);
+                  }
+                  else {
+                      $("#LoadingSmall").hide();
+                      $("#VEfileUpload").val('');
+                      $('#VEfileUploadValue').val('');
+                      $('#VEfileInsertOnebyone').val('');                      
+                      //Showalerts(1);
+                      //ViewSavedFiles();
+                  }
+              }
+          });
+
+
+      }
+
+      function ViewSavedFiles() {
+          var data = {};
+          data.VoucherNo = $("#VoucherNo").val();
+          data.DeptId = ERPDeptId;
+          data.VoucherType = $('#VEVoucherType').val();
+          $.ajax({
+              type: "POST",
+              url: "../AccountsErp/RVFileGets",
+              data: data,
+              success: function (result) {
+                  ShowSavedFiles(result.oList);
+
+              }
+          });
+      }
+      function ShowSavedFiles(result) {
+
+          disable_datatable('tbl_documentlist');
+          $("#VEDocument").show();
+
+          var responseText = "<tbody>";
+
+          if (result.length > 0) {
+              for (var l = 0; l < result.length; l++) {
+                  var slno = parseInt(l + 1);
+
+                  var Icon = '<img src="../app-assets/Project_Icons/DOC_ICON.png" style="width:50px;height:40px" />';
+
+                  var Extension = (result[l].Extension).toLowerCase();
+
+                  if (Extension == 'pdf') {
+                      Icon = '<img src="../app-assets/Project_Icons/PDF_ICON.jpg" style="width:50px;height:40px" />';
+                  }
+                  else if (Extension == 'jpeg' || Extension == 'jpg' || Extension == 'png' || Extension == 'gif' || Extension == 'tif') {
+                      Icon = '<img src="../app-assets/Project_Icons/IMG_ICON.jpg" style="width:50px;height:40px" />';
+                  }
+                  else if (Extension == 'xlsx' || Extension == 'xls' || Extension == 'xlsm' || Extension == 'xlm' || Extension == 'xltx' || Extension == 'xltm' || Extension == 'xlt') {
+                      Icon = '<img src="../app-assets/Project_Icons/EXCEL_ICON.png" style="width:50px;height:40px" />';
+                  }
+
+
+                  responseText += "<tr id='doctr_" + result[l].FileId + "'>" +
+                      "<td align='center'>" + Icon + "</td>" +
+                      "<td>" + result[l].FileName + "</td>" +
+
+                      "<td  align='center'>" +
+                      "<a onclick=\"ViewDocuments(\'" + result[l].VoucherEntryDescription + "'\,\'" + result[l].Flag + "'\,\'" + result[l].Extension + "'\)\"><i class='fa fa-download' style='color:darkorange'></i><a>" +
+                      "</td>" +
+
+                      "<td align='center' class='hideedit'>" +
+                      "<a onclick=\"DeleteDocument(\'" + result[l].FileId + "'\,\'" + slno + "'\)\">" + DeleteButton + "</a>" +
+                      "</td>" +
+
+                      "</tr>";
+
+
+              }
+          }
+          else {
+              responseText = "<tr><td style='text-align:center;color:red;font-weight:500'>NO DOCUMENTS</td></tr>"
+          }
+
+          $('#tbl_documentlist').html(responseText + '</tbody>');
+
+          if (PurchaseEditFlag != 1) {
+              $('.hideedit').hide();
+          }
+
+      }
+      function ViewDocuments(VoucherFolder, DocumentId, Extension) {
+          var flname = '../ProjectImages/' + VoucherFolder + '/' + ERPDeptId + '/' + $("#VoucherNo").val() + '/' + DocumentId + '.' + Extension;
+          window.open(flname);
+      }
+
+      function DeleteDocument(FileId, slno) {
+
+          $('#Confirmflag').val('Filedelete'), $('#ConfirmRowId').val(FileId)
+          $('#confirmmessage').text('Do You Want To Delete This File?')
+          $('#confirm').show();
+          $('#confirmOk').prop("disabled", false);
+          $('#confirmOk').focus();
+      }
+      function OKDeleteDocument(FileId) {
+          var data = {};
+          data.FileId = FileId;
+          data.DeptId = ERPDeptId;
+          data.UserId = ERPUserId;
+        
+          $.ajax({
+              type: "POST",
+              url: "../AccountsErp/RVFileDelete",
+              data: data,
+              success: function (result) {
+                  $("#doctr_" + FileId).remove();
+                  swal('Documents Deleted Successfully', "", "error");
+                  $('.swal-button swal-button--confirm').focus();
+
+              }
+          });
+      }
+    $("#AccountName").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.AccCode = $("#AccountName").val();
+            $.ajax({
+                url: '../AccountsErp/AccSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-2',
+                                label: item.AccDescription,
+                                label1: item.AccCode,
+                                AccountName: item.AccDescription,
+                                AccCode: item.AccCode,
+                                AccountId: item.AccId,
+                                //CurrencyId: item.CurrencyId,
+                                headers: ["Account Name", "Account Code"]
+                            })
+                    }));
+
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#AccountName').val(ui.item.label)
+            $('#AccCode').val(ui.item.label1)
+            $('#supplierId0').val(ui.item.AccountId)
+            //$('#Currency').val(ui.item.CurrencyId)
+            //$("#Rate").val($("#Currency").find("option:selected").attr("name"));
+            $('#AccountType').focus();
+            balload();
+
+
+        },
+
+    });
+
+
+    $("#TransferVoucherNo").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.VoucherNo = $("#TransferVoucherNo").val();
+            data.VoucherTypePrefix = "";
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../AccountsErp/VoucherNoSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                   // console.log(data.VoucherTypePrefix)
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.VoucherNo,
+                            label1: item.VoucherTypePrefix,
+                            label2: item.VoucherTypeId,
+                            TransferVoucherNo: item.VoucherNo,
+                            VoucherTypePrefix: item.VoucherTypePrefix,
+                             VoucherTypeId: item.VoucherTypeId,
+                             headers: ["Voucher Number","VoucherType Prefix"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#TransferVoucherNo').val(ui.item.TransferVoucherNo);
+            $("#VoucherType").val(ui.item.VoucherTypeId);
+            $('#VEVoucherType').val(ui.item.VoucherTypePrefix)
+            $("#btnprint").show();
+            $("#btnsubmit").hide();
+            $("#btncopy").hide();
+            $('#VoucherType').prop('disabled', true);
+            $('#VoucherDate').prop('disabled', true);
+            var VoucherNo = $('#TransferVoucherNo').val();
+            var VoucherTypeId = $("#VoucherType").val();
+            $('#VoucherNo').val(VoucherNo);
+            var srlno = {};
+            srlno.DeptId = ui.item.TransferVoucherNo;
+            srlno.VType = ui.item.VoucherTypeId;
+            $.ajax({
+                type: "POST",
+                url: "../AccountsErp/VoucherEntryGetandGetss",
+                data: srlno,
+                success: function (result) {
+                    VoucherNoGets(result.oList);
+                    $('#btnsubmit').focus();
+                    $('#VoucherNo').prop('disabled', true);
+                    if ((usermenu1.indexOf("M305") != -1)) {
+                        $('#VEViewFiles').show();
+                        
+                    }
+                    $('#VEfileUpload').hide();
+                    $('#btnuploadVEfiles').hide();
+                }
+            });
+        },
+    });
+
+    $("#PDCAccount").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.AccCode = $("#PDCAccount").val();
+            $.ajax({
+                url: '../AccountsErp/AccSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2',
+                            label: item.AccCode,
+                            label1: item.AccDescription,
+                            Acc_Id: item.AccId,
+                            headers: ["Account Code", "Account Name"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $('#PDCAccountId').val(ui.item.Acc_Id);
+            $('#btnaddtogrid').focus();
+        },
+
+    });
+
+
+    function PDCAccountAutoComplete(RowId) {
+
+
+        $("#PDCAccount" + RowId).autocomplete({
+            source: function (request, response) {
+                var data = {};
+                data.AccCode = $("#PDCAccount" + RowId).val();
+                $.ajax({
+                    url: '../AccountsErp/AccSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-TWO',
+                                label: item.AccCode,
+                                label1: item.AccDescription,
+                                Acc_Id: item.AccId,
+                                headers: ["Account Code", "Account Name"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+
+            select: function (event, ui) {
+            },
+
+        });
+
+    }
+
+
+    function AccountAutoCompleteGrid(RowId) {
+
+
+        $("#AccountId" + RowId).autocomplete({
+            source: function (request, response) {
+                var data = {};
+                data.AccCode = $("#AccountId" + RowId).val();
+                $.ajax({
+                    url: '../AccountsErp/AccSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-2',
+                                label: item.AccDescription,
+                                label1: item.AccCode,
+                                Acc_Id: item.AccId,
+                                headers: ["Account Code", "Account Name"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+
+            select: function (event, ui) {
+
+                $('#AccCode' + RowId).val(ui.item.label1)
+                $('#supplierId' + RowId).val(ui.item.Acc_Id)
+            },
+
+        });
+
+    }
+
+    $('#tblvoucherentry').jqGrid({
+        shrinkToFit: false
+    });
+
+    function ConfirmboxResult(Result, status, rowid) {
+
+
+        if (Result == 'true' && status == 'deletevoucher') {
+            deletevoucher()
+        }
+        else  if (Result == 'true' && status == 'save') {
+            VESave();
+        }
+        else if (Result == 'true' && status == 'VEFiles') {
+            OKUploadVEFiles();
+        }
+        else if (Result == 'true' && status == 'Filedelete') {
+            OKDeleteDocument(rowid);
+        }
+        $('#confirm').fadeOut();
+
+    }
+
+    function deletevoucher() {
+        if ($('#VoucherNo').val()=='') {
+            warningshow('Please Select Voucher Number', "VoucherNo");
+        }
+        else if ($('#VoucherType').val() == 0) {
+            warningshow('Please Select Voucher Type', "VoucherType");
+        }
+        else {
+            var VDetails = {};
+            VDetails.DeptId = ERPDeptId;
+            VDetails.VoucherNo = $('#VoucherNo').val();
+            VDetails.VoucherTypeId = $('#VoucherType').val();
+            VDetails.UserId = ERPUserId;
+
+            $.ajax({
+                type: "POST",
+                url: "../AccountsErp/VoucherDelete",
+                data: VDetails,
+                success: function (result) {
+                    Showalerts(3);
+                }
+            });
+        }
+    }
+</script>
+
+
