@@ -1,0 +1,348 @@
+﻿
+@{
+    ViewBag.Title = "ContainerManagement";
+}
+
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+
+@*<script type="text/javascript" src="../Projectscript/Common.js"></script>*@
+@*<script type="text/javascript" src="../Projectscript/ItemCheckList.js"></script>
+    <script src="~/Scripts/Autocomplete/jquery-ui.js"></script>*@
+
+
+<div class="myData" data-x="M166" />
+
+
+<table style="display:none" id="Tblreportprint"></table>
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="40%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintthisReportWindows('ContainerReport', $('#ResultLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+                            <div class="heading-elements">
+                                <br /><hr style="margin-top:-1px;" />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="tblContainerList" class="table table-striped table-bordered base-style dataTable" style="width:100%"></table><br />
+                                    <div>
+                                    <table id="tblContainerReportList" class="table table-striped table-bordered base-style dataTable" style="display:none"></table>
+                                </div>
+                                <br /><br />
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Container Management</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="DateFrom">From Date</label>
+                        <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="DateTo">To Date</label>
+                        <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group floating-label-form-group">
+                        <div class="custom-control custom-checkbox" style="margin-right:300px">
+                            <input type="checkbox" class="custom-control-input"  name="customCheck" id="all">
+                            <label class="custom-control-label" for="all">All</label>
+                        </div>
+                    </div>
+                    <button type="button" style="width:100px" id="btnGo" class="btn btn-outline-primary">Go</button>
+                    <input type="hidden" id="ResultLength" class="form-control" />
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+    $(document).ready(function () {
+
+     
+
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+2, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+2, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale:
+            {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#btnGo").click(function (e) {
+            $('#Loading').show();
+            $('#popupdiv').hide();
+
+            var status = 0;
+            if ($('#all').prop("checked"))
+                status = 1;
+
+            var data = {};
+            data.FromDate = $('#DateFrom').val();
+            data.Todate = $('#DateTo').val();
+            data.Status = status;
+            $.ajax({
+                type: "POST",
+                url: "../LocationTransfer/ContainerList",
+                data: data,
+                success: function (result) {
+                    ShowContainerlist(result);
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                    $('#popupdiv').hide();
+                    
+                }
+            });
+            container();
+        });
+    });
+
+
+    function container()
+    {
+        var status = 0;
+        if ($('#all').prop("checked"))
+            status = 1;
+        var data1 = {};
+        data1.FromDate = $('#DateFrom').val();
+        data1.Todate = $('#DateTo').val();
+        data1.Status = status;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/ContainerReport",
+            data: data1,
+            success: function (result) {
+                $('#all').prop("checked", false);
+                ShowContainerReportlist(result);
+            }
+        });
+    }
+    function ShowContainerlist(result) { 
+        //disable_datatable('tblContainerList');
+        disable_datatable('tblContainerList', 'buttonPlace');
+        var responseText = "<thead><tr><th>Sl#</th><th>Container Number</th><th>Booking Number</th><th>Item Code</th><th>Item Name</th><th>Lines</th><th>Size</th><th>Point of Loading</th><th>Port</th><th>Load Date</th><th>Expected Arrival Date</th><th>Release Date</th><th>Container Arrival Date</th><th>Invoice</th><th>Invoice Amount</th><th>Paid Amount</th><th>Item Sold</th><th>Supplier</th></tr></thead><tbody>";
+            for (var i = 0; i < result.length; i++) {
+                var slno = parseInt(i + 1);
+              
+                var ChasisNo = result[i].ItemCode;
+                ChasisNo = ChasisNo.substr(ChasisNo.length - 6);
+               
+                responseText += '<tr><td>' + slno + '</td><td>' + result[i].ContainerNumber + '</td><td>' + result[i].BookingNumber + '</td><td>' + ChasisNo + '</td><td>' + result[i].ItemName + '</td><td>' + result[i].Lines + '</td><td>' + result[i].Size + '</td><td align=center>' + result[i].PointOfLoading + '</td><td align=center>' + result[i].Port + '</td><td align=center>' + result[i].LoadDate + '</td><td align=center>' + result[i].ExpectArrivalDate + '</td><td align=center>' + result[i].ReleaseDate + '</td><td align=center>' + result[i].ContArrivalDate + '</td><td align=center>' + result[i].Invoice + '</td><td align=center>' + result[i].InvoiceAmount + '</td><td align=center>' + result[i].PaidAmount + '</td><td align=center>' + result[i].ItemSold + '</td><td align=left>' + result[i].Supplier + '</td></tr>';
+            }
+            $('#tblContainerList').html(responseText + '</tbody><tfoot><tr><th> </th><th>Container Number</th><th>Booking Number</th><th>Item Code</th><th>Item Name</th><th>Lines</th><th>Size</th><th>Point Of Loading</th><th>Port</th><th>Load Date</th><th>Expected Arrival Date</th><th>Release Date</th><th>Container Arrival Date</th><th>Invoice</th><th>Invoice Amount</th><th>Paid Amount</th><th>Item Sold</th><th>Supplier</th></tr></tfoot>');
+            var title = "Container List - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+            //datatableWithsearch('tblContainerList');
+            datatableWithsearch('tblContainerList', true, title, 'buttonPlace');
+            $('#header').text(title);
+    }
+
+
+
+
+    function ShowContainerReportlist(result) {
+        var seralnohead = 1;
+         disable_datatable('tblContainerReportList', 'buttonPlace');
+        var responseText = "<thead><tr><th width=15px></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+
+            var slno = parseInt(i) + 1;
+
+            if (result[i].ChasisNo == 'Container No: ') {
+                responseText += '<tr class="export"><td>' + seralnohead + '</td><td   id="Col1_' + slno + '" >' + result[i].ChasisNo + '</td><td   id="Col2_' + slno + '" >' + result[i].Make + '</td><td   id="Col3_' + slno + '" >' + result[i].Made + '</td><td   id="Col4_' + slno + '" >' + result[i].Model + '</td><td   id="Col5_' + slno + '" >' + result[i].Colour + '</td><td   id="Col6_' + slno + '" >' + result[i].LotNumber + '</td></tr>';
+                seralnohead = seralnohead + 1;
+            }
+            else
+                responseText += '<tr class="export"><td></td><td   id="Col1_' + slno + '" >' + result[i].ChasisNo + '</td><td   id="Col2_' + slno + '" >' + result[i].Make + '</td><td   id="Col3_' + slno + '" >' + result[i].Made + '</td><td   id="Col4_' + slno + '" >' + result[i].Model + '</td><td   id="Col5_' + slno + '" >' + result[i].Colour + '</td><td   id="Col6_' + slno + '" >' + result[i].LotNumber + '</td></tr>';
+                         
+        }
+        $('#tblContainerReportList').html(responseText + '</tbody><tfoot><tr><th width=15px></th><th></th><th></th><th></th><th></th><th></th><th></th></tr></tfoot>');
+        $('#Tblreportprint').html(responseText);
+        var title = "Container List - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch('tblContainerReportList', true, title, 'buttonPlace');
+
+
+        $('#ResultLength').val(result.length);
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width=100%" />');
+         
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+
+            if (tablename == 'tblContainerList') {
+                table = $('#' + tablename).DataTable({
+                    dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                   "<'row'<'col-sm-12'tr>>" +
+                   "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                    buttons: [],
+                    "columnDefs": [
+                  { "width": "1%", "targets": 0 },
+                  { "width": "3%", "targets": 1 },
+                  { "width": "2%", "targets": 6 },
+                    ],
+                });
+            }
+            else {
+                table = $('#' + tablename).DataTable({
+                    dom: 'tr',
+                    orderCellsTop: true,
+                    "pageLength": -1,
+                    order:[],
+                    buttons: []
+                });
+            }
+            if (tablename == 'tblContainerList') {
+                new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                    'colvis'
+                    ]
+                });
+            }
+            else {
+                new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Export',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                //exportOptions: { columns: ".visible" }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                //exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'print',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                //exportOptions: { columns: ":visible" }
+                            }
+                        ]
+                    },
+                    ]
+                });
+            }
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+    }
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+</script>

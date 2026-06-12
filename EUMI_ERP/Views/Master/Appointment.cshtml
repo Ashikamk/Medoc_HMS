@@ -1,0 +1,1192 @@
+﻿@{
+    ViewBag.Title = "Appointment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/Appoinmentscripts/sweet.js"></script>
+<link rel="stylesheet" href="/Scripts/Autocomplete/autocomplete.css" />
+<script src="/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<style>
+    #Tblreport thead tr th {
+        font-size: 16px !important; 
+        font-weight: 800 !important;
+        color: #000 !important;
+        padding: 5px 10px !important; 
+        white-space: nowrap;
+        background-color: #f9f9f9;
+    }
+
+    #Tblreport tbody tr td {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #333 !important;
+        padding: 3px 10px !important; 
+        white-space: nowrap;
+    }
+
+    #Tblreport tfoot tr th {
+        padding: 2px 6px !important;
+    }
+
+    #badge-total, #badge-booked, #badge-cancelled,
+    #badge-rescheduled, #badge-notanswered, #badge-others, #badge-completed {
+        font-size: 16px !important;
+        padding: 3px 8px !important;
+    }
+    #Tblreport th:nth-child(9),
+    #Tblreport td:nth-child(9) {
+        width: 70px !important;
+        min-width: 70px !important;
+        max-width: 70px !important;
+    }
+    #Tblreport th:nth-child(4),
+    #Tblreport td:nth-child(4) {
+        width: 70px !important;
+        min-width: 70px !important;
+        max-width: 70px !important;
+    }
+        #Tblreport tfoot tr th input {
+            font-size: 12px !important;
+            padding: 3px 5px !important;
+            width: 100% !important;
+            border: 1px solid #ccc !important;
+            border-radius: 3px !important;
+        }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        overflow: auto;
+        font-family: 'Segoe UI', sans-serif;
+        background: #f3f4f6;
+    }
+
+        body.modal-open {
+            overflow: hidden !important;
+        }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    nav#topdiv {
+        flex-shrink: 0;
+    }
+
+    .main-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+        margin-left: -55px;
+    }
+
+    main {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        padding: 10px;
+        overflow: hidden;
+        min-height: 0;
+    }
+
+    footer.footer {
+        flex-shrink: 0;
+    }
+
+    #calendar-view {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        width: 100%;
+        padding: 15px;
+        overflow-y: auto;
+    }
+
+    section {
+        margin-bottom: 12px;
+        position: relative;
+    }
+
+    h2 {
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 12px;
+        letter-spacing: -0.2px;
+    }
+
+    .slot-heading {
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 16px 0 12px;
+        text-transform: capitalize;
+    }
+
+    .doctor-wrapper {
+        position: relative;
+    }
+
+    .scroll-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        cursor: pointer;
+        z-index: 10;
+        opacity: 0.9;
+    }
+
+        .scroll-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+    #doctorSelection {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding: 10px 45px;
+        scroll-behavior: smooth;
+    }
+
+        #doctorSelection::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        #doctorSelection::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 10px;
+        }
+
+    .doctor-card {
+        min-width: 130px;
+        padding: 15px;
+        border-radius: 14px;
+        background: #fff;
+        text-align: center;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+        .doctor-card::before {
+            content: "DR";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin: 0 auto 8px;
+        }
+
+        .doctor-card p {
+            margin: 2px 0;
+            font-size: 13px;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .doctor-card.selected {
+            border: 2px solid #14b8a6;
+        }
+
+    #scrollLeftBtnDoctor {
+        left: 5px;
+    }
+
+    #scrollRightBtnDoctor {
+        right: 5px;
+    }
+
+
+    .date-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+        .date-header h3 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+    .nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #fff;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        cursor: pointer;
+        z-index: 10;
+    }
+
+        .nav-btn:hover {
+            background: #fff;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+    #scrollLeftBtn,
+    #scrollRightBtn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+    }
+
+    #scrollLeftBtn {
+        left: 5px;
+    }
+
+    #scrollRightBtn {
+        right: 5px;
+    }
+
+    .day-wrapper {
+        overflow: hidden;
+        position: relative;
+        padding: 0 40px;
+    }
+
+    #dayPicker {
+        display: flex;
+        gap: 10px;
+        padding: 10px 0;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+    }
+
+        #dayPicker::-webkit-scrollbar {
+            display: none;
+        }
+
+    .day-slot {
+        min-width: 65px;
+        height: 75px;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .day-slot:hover {
+            border-color: #14b8a6;
+        }
+
+    .day-name {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .day-number {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .day-slot.selected-day {
+        background: #14b8a6;
+        color: white;
+        border: 2px solid white;
+        box-shadow: 0 6px 15px rgba(20,184,166,0.3);
+    }
+
+    .day-slot:focus,
+    .day-slot:active {
+        outline: none;
+    }
+
+
+    .time-dropdown {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+        margin-bottom: 12px;
+        color: #111827;
+        pointer-events: none;
+    }
+
+    .small-dropdown {
+        width: 120px !important;
+        padding: 4px 8px;
+        font-size: 13px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+
+    #timeSlotsContainer {
+        margin-top: 10px;
+    }
+
+        #timeSlotsContainer button {
+            width: 100%;
+            min-width: unset;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            color: #111827;
+            transition: all 0.2s ease;
+        }
+
+            #timeSlotsContainer button:hover:not(:disabled) {
+                border-color: #14b8a6;
+                transform: translateY(-1px);
+            }
+
+            #timeSlotsContainer button.active-slot {
+                background: #14b8a6;
+                color: #fff;
+            }
+
+            #timeSlotsContainer button:disabled {
+                background: #f3f4f6;
+                color: #9ca3af;
+                cursor: not-allowed;
+            }
+
+
+
+    .modal-header-custom h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    #appointment-summary-text {
+        font-size: 12px;
+        text-transform: uppercase;
+        opacity: 0.9;
+    }
+
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 15px;
+    }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2D2073;
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+    .required {
+        color: red;
+    }
+
+
+    .hidden {
+        display: none !important;
+    }
+
+
+
+    #existingOP-row,
+    #firstname-row {
+        grid-column: auto;
+    }
+
+    .readonly-input {
+        background-color: #f3f4f6;
+    }
+
+    .triple-input {
+        display: flex;
+        gap: 5px;
+        flex-grow: 1;
+    }
+
+        .triple-input input {
+            width: 33.33%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+
+    .modal-footer-custom {
+        grid-column: span 2;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+
+    .btn-cancel, .btn-clear, .btn-save {
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn-cancel {
+        background: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .btn-clear {
+        background: #ffc107;
+        color: #000;
+    }
+
+    .btn-save {
+        background: #3c2a8c;
+        color: #fff;
+        padding: 10px 30px;
+        text-transform: capitalize;
+        transition: background 0.2s;
+    }
+
+        .btn-save:hover {
+            background: #2d2073;
+        }
+
+    footer {
+        height: 45px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: #374151;
+        border-top: 1px solid #e5e7eb;
+        flex-shrink: 0;
+    }
+
+    #patient-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.5);
+        z-index: 99999;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    #patient-modal-content {
+        width: 95%;
+        max-width: 1100px;
+        max-height: 85vh;
+        height: auto;
+        background: #f0f1f6;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+    }
+
+        #patient-modal-content .form-group label {
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        #patient-modal-content .form-group .form-control {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+        }
+
+        #patient-modal-content .appointment-grid-form {
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 15px;
+        }
+
+        #patient-modal-content .modal-body {
+            padding: 20px 15px;
+        }
+
+        #patient-modal-content .form-card {
+            padding: 15px 10px;
+        }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto !important;
+        padding: 20px;
+        overflow-x: hidden;
+        background: #f5f6fa;
+    }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+
+    .modal-footer-fixed {
+        flex-shrink: 0;
+        padding: 8px 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        border-top: 1px solid #e5e7eb;
+        background: #f0f1f6;
+    }
+
+    .modal-header-custom {
+        background: #3c2a8c;
+        color: white;
+        padding: 14px 20px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        flex-shrink: 0;
+    }
+
+    @@keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes modalSlideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    body.modal-open {
+        overflow: hidden !important;
+    }
+
+    #morningSlots,
+    #afternoonSlots,
+    #eveningSlots {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .scroll-btn:focus,
+    .scroll-btn:active,
+    .nav-btn:focus,
+    .nav-btn:active {
+        outline: none;
+        box-shadow: none;
+    }
+
+    button:focus,
+    button:active {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .form-card {
+        background: white;
+        padding: 10px;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .form-divider {
+        height: 1px;
+        background: #e5e7eb;
+        margin: 15px 0;
+        grid-column: span 2;
+    }
+
+    .ui-autocomplete {
+        z-index: 11000 !important;
+    }
+    /*    //new 26/03*/
+    .edit-btn {
+        padding: 5px 14px;
+        background: #3c2a8c;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+        .edit-btn:hover {
+            background: #2d2073;
+        }
+
+
+
+    .datepicker-wrapper {
+        position: relative;
+        flex: 1;
+    }
+
+        .datepicker-wrapper input {
+            width: 100%;
+            padding-right: 36px;
+            box-sizing: border-box;
+        }
+
+        .datepicker-wrapper .cal-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #3c2a8c;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        cursor: pointer;
+        color: #3c2a8c;
+    }
+</style>
+<main>
+
+
+    <div id="calendar-view">
+
+        <section class="doctor-wrapper">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <h2 style="margin:0;">Select a Specialist</h2>
+                <div style="display:flex;gap:10px;">
+                    <button onclick="showCalendarView()" style="padding:8px 20px;background:#3c2a8c;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">Back to Calendar</button>
+                    <button onclick="showListView()" style="padding:8px 20px;background:#14b8a6;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;">List</button>
+                </div>
+            </div>
+
+            <button id="scrollLeftBtnDoctor" class="scroll-btn">&#8249;</button>
+            <button id="scrollRightBtnDoctor" class="scroll-btn">&#8250;</button>
+
+            <div id="doctorSelection"></div>
+
+        </section>
+
+        <section class="doctor-wrapper" style="margin-top:20px;">
+            <h2>Choose Date</h2>
+
+            <div class="date-header">
+                <h3 id="currentMonthDisplay"></h3>
+            </div>
+
+            <div class="day-wrapper">
+                <button id="scrollLeftBtn" class="nav-btn">&#8249;</button>
+
+                <div id="dayPicker"></div>
+
+                <button id="scrollRightBtn" class="nav-btn">&#8250;</button>
+            </div>
+        </section>
+
+        <section style="margin-top:20px;">
+            <h2>Available Times</h2>
+
+            <select id="slotDurationSmall" class="time-dropdown small-dropdown" disabled>
+                <option value="15">15 Minutes</option>
+            </select>
+            <div id="timeSlotsContainer">
+
+
+
+                <p class="time-note">
+                    Please select a date to view available time slots.
+                </p>
+
+            </div>
+        </section>
+
+    </div>
+
+
+</main>
+@*//new 26/03*@
+<div id="list-view" style="display:none;padding:15px;height:100%;overflow-y:auto;position:fixed;inset:0;background:#f3f4f6;z-index:100;">
+    <div style="background:#fff;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,0.08);padding:20px;">
+        <!--<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">-->
+        @*<h2 style="margin:0;">Booked Appointments</h2>*@
+        <!--<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <h2 style="margin:0;">Booked Appointments</h2>
+                <span id="badge-total" style="background:#e0f2fe;color:#0369a1;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">All: 0</span>
+                <span id="badge-booked" style="background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Booked: 0</span>
+                <span id="badge-cancelled" style="background:#fee2e2;color:#991b1b;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Cancelled: 0</span>
+                <span id="badge-rescheduled" style="background:#fef9c3;color:#854d0e;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Rescheduled: 0</span>
+                <span id="badge-notanswered" style="background:#f3f4f6;color:#374151;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Not Answered: 0</span>
+                <span id="badge-others" style="background:#ede9fe;color:#5b21b6;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Others: 0</span>
+                <span id="badge-completed" style="background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Completed: 0</span>
+            </div>
+
+            <div style="display:flex;gap:10px;">
+                <button onclick="showCalendarView()" style="padding:8px 20px;background:#3c2a8c;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Back to Calendar</button>
+                <button onclick="showCalendarView()" style="padding:8px 20px;background:#14b8a6;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">New Booking</button>
+                <button onclick="openSearchModal()" style="padding:8px 20px;background:#7c3aed;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Searching</button>
+            </div>
+        </div>-->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+            <h2 style="margin:0;">Booked Appointments</h2>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span id="badge-total" style="background:#e0f2fe;color:#0369a1;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">All: 0</span>
+                <span id="badge-booked" style="background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Booked: 0</span>
+                <span id="badge-cancelled" style="background:#fee2e2;color:#991b1b;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Cancelled: 0</span>
+                <span id="badge-rescheduled" style="background:#fef9c3;color:#854d0e;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Rescheduled: 0</span>
+                <span id="badge-notanswered" style="background:#f3f4f6;color:#374151;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Not Answered: 0</span>
+                <span id="badge-others" style="background:#ede9fe;color:#5b21b6;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Others: 0</span>
+                <span id="badge-completed" style="background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;">&#9654; Completed: 0</span>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button onclick="showCalendarView()" style="padding:8px 20px;background:#3c2a8c;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Back to Calendar</button>
+                <button onclick="showCalendarView()" style="padding:8px 20px;background:#14b8a6;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">New Booking</button>
+                <button onclick="openSearchModal()" style="padding:8px 20px;background:#7c3aed;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Searching</button>
+            </div>
+        </div>
+
+        <!--<div style="overflow-x:auto;">
+        <table id="appointment-table" style="width:100%;border-collapse:collapse;font-size:14px;">
+            <thead>
+                <tr style="background:#f3f4f6;">
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Sl#</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">RegId</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Name</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">OP</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Doctor</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Date</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Time</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Mobile No</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Token No</th>-->
+        @*<th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Edit</th>*@
+        <!--<th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Status</th>
+                        <th style="padding:10px 12px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e5e7eb;">Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="appointment-tbody">
+                    <tr><td colspan="11" style="text-align:center;padding:20px;color:#6b7280;">Loading...</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th>RegId</th>
+                        <th>Name</th>
+                        <th>OP</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Mobile No</th>
+                        <th>Token No</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>-->
+        <div id="buttonPlace"></div>
+
+        <div id="divreport" style="overflow:auto">
+            <table id="Tblreport" class="table table-striped table-bordered dataTable" style="width:100%;margin: 0 auto 0 0;">
+                <thead>
+                    <tr>
+                        <th>Sl#</th>
+                        <th>RegId</th>
+                        <th>Name</th>
+                        <th>OP</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Mobile No</th>
+                        <th>Token No</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="appointment-tbody">
+                    <tr><td colspan="11" style="text-align:center;padding:20px;color:#6b7280;">Loading...</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th> </th>
+                        <th>RegId</th>
+                        <th>Name</th>
+                        <th>OP</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Mobile No</th>
+                        <th>Token No</th>
+                        <th> </th>
+                        <th> </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+            <button id="showAllBtn" onclick="showAllAppointments()" style="display: none; padding: 9px 22px; background: #14b8a6; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px;">&#8635; Show All Appointments</button>
+        </div>
+    </div>
+</div>
+<div id="search-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10001;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#f0f1f6;border-radius:16px;width:90%;max-width:none;box-shadow:0 10px 40px rgba(0,0,0,0.2);overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:#3c2a8c;color:white;padding:14px 20px;flex-shrink:0;">
+            <h3 style="margin:0;font-size:18px;">Search Options</h3>
+        </div>
+        <div style="padding:20px;background:#f5f6fa;">
+            <div style="background:white;padding:30px 20px;border-radius:16px;border:1px solid #e5e7eb;min-height:200px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 15px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Doctor</label>
+                        <select id="search-doctor" class="form-control" style="flex:1;">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">From Date</label>
+                        <input type="text" id="search-from" class="form-control frsdwn" style="flex:1;" autocomplete="off" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                    </div>
+                    @*<div></div>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">To Date</label>
+                            <input type="date" id="search-to" class="form-control" style="flex:1;" />
+                        </div>*@
+
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Status</label>
+                        <select id="search-status" class="form-control" style="flex:1;">
+                            <option value="">All</option>
+                            <option value="Booked">Booked</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Rescheduled">Rescheduled</option>
+                            <option value="NotAnswered">Not Answered</option>
+                            <option value="Others">Others</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">To Date</label>
+                        <input type="text" id="search-to" class="form-control frsdwn" style="flex:1;" autocomplete="off" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div style="padding:12px 20px;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #e5e7eb;background:#f0f1f6;flex-shrink:0;">
+            <button onclick="closeSearchModal()" style="padding:10px 25px;background:#fff;border:1px solid #ddd;border-radius:8px;font-weight:600;cursor:pointer;">Cancel</button>
+            <button onclick="applySearch()" style="padding:10px 30px;background:#3c2a8c;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Go</button>
+        </div>
+    </div>
+</div>
+<div id="edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:10001;align-items:center;justify-content:center;padding:20px;">
+    <div style="background: #f0f1f6; border-radius: 16px; width: 90%; height: auto; max-width: none; box-shadow: 0 10px 40px rgba(0,0,0,0.2); max-height: none; overflow: hidden; display: flex; flex-direction: column;">
+        <div style="background:#3c2a8c;color:white;padding:14px 20px;flex-shrink:0;">
+            <h3 style="margin:0;font-size:18px;">Appointment Details</h3>
+            <span style="font-size:12px;opacity:0.9;" id="edit-modal-subtitle">Edit Appointment</span>
+        </div>
+        <div style="padding:20px;background:#f5f6fa;overflow-y:auto;flex:1;">
+            <div style="background:white;padding:15px;border-radius:16px;border:1px solid #e5e7eb;">
+                <input type="hidden" id="edit-AppointmentId" value="0" />
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 15px;">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">First Name <span style="color:red;">*</span></label>
+                        <input type="text" id="edit-AppFirst" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Existing OP</label>
+                        <input type="text" id="edit-ExistingOP" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Gender</label>
+                        <select id="edit-PGender" class="form-control" style="flex:1;">
+                            <option value="0">Select</option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                            <option value="3">Others</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Contact No <span style="color:red;">*</span></label>
+                        <input type="text" id="edit-MobileNo" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Age</label>
+                        <div style="display:flex;gap:5px;flex:1;">
+                            <input type="text" id="edit-Age" placeholder="YR" style="width:33%;padding:8px;border:1px solid #ced4da;border-radius:4px;text-align:center;" />
+                            <input type="text" id="edit-AgeMonths" placeholder="MO" style="width:33%;padding:8px;border:1px solid #ced4da;border-radius:4px;text-align:center;" />
+                            <input type="text" id="edit-AgeDays" placeholder="DA" style="width:33%;padding:8px;border:1px solid #ced4da;border-radius:4px;text-align:center;" />
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Email</label>
+                        <input type="email" id="edit-PEmail" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">DOB</label>
+                        <input type="text" id="edit-PDOB" class="form-control" placeholder="dd/mm/yyyy" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Nationality</label>
+                        <select id="edit-PNationality" class="form-control" style="flex:1;">
+                            <option value="0">India</option>
+                            <option value="1">USA</option>
+                            <option value="3">UK</option>
+                            <option value="4">Other</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Department</label>
+                        <select id="edit-PDept" class="form-control" style="flex:1;">
+                            <option value="0">General</option>
+                            <option value="1">Cardiology</option>
+                            <option value="2">Neurology</option>
+                            <option value="3">Paediatrics</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Token No</label>
+                        <input type="text" id="edit-PToken" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Doctor <span style="color:red;">*</span></label>
+                        <select id="edit-Doctor" class="form-control" style="flex:1;">
+                            <option value="0">Select Doctor</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Appt Date</label>
+                        <input type="date" id="edit-PDATE" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size:12px;font-weight:700;color:#2D2073;width:100px;flex-shrink:0;">Appt Time</label>
+                        <input type="text" id="edit-PTime" class="form-control" style="flex:1;" />
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <label style="font-size: 12px; font-weight: 700; color: #2D2073; width: 100px; flex-shrink: 0;">Status</label>
+                        <select id="edit-Status" class="form-control" onchange="handleEditStatusChange()" style="flex:1;">
+                            <option value="Booked">Booked</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="Rescheduled">Rescheduled</option>
+                            <option value="NotAnswered">Not Answered</option>
+                            <option value="Others">Others</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:12px 20px;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #e5e7eb;background:#f0f1f6;flex-shrink:0;">
+            <button onclick="closeEditModal()" style="padding:10px 25px;background:#fff;border:1px solid #ddd;border-radius:8px;font-weight:600;cursor:pointer;">Cancel</button>
+            <button onclick="submitEditDetails()" style="padding:10px 30px;background:#3c2a8c;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Update</button>
+        </div>
+    </div>
+</div>
+<div id="patient-modal">
+    <div id="patient-modal-content">
+        <div class="modal-header-custom">
+            <div class="header-left">
+                <h3>Appointment Details</h3>
+                <span id="appointment-summary-text"></span>
+            </div>
+            <div style="display:flex;gap:0;margin-top:10px;background:rgba(255,255,255,0.15);border-radius:8px;padding:4px;width:fit-content;">
+                <button id="tab-new" onclick="switchTab('new')" style="padding:6px 20px;border:none;border-radius:6px;background:white;color:#3c2a8c;font-weight:700;cursor:pointer;font-size:13px;">New Appointment</button>
+                <button id="tab-revisit" onclick="switchTab('revisit')" style="padding:6px 20px;border:none;border-radius:6px;background:transparent;color:rgba(255,255,255,0.8);font-weight:600;cursor:pointer;font-size:13px;">Revisit</button>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="form-card">
+                <form id="patient-form" class="appointment-grid-form">
+
+                    <input id="AppointmentId" type="hidden" value="0" />
+
+                    <div class="form-group" id="existingOP-row" style="display:none;">
+                        <label>Existing OP</label>
+                        <input type="text" id="ExistingOP" class="form-control" />
+                    </div>
+
+                    <div class="form-group" id="firstname-row">
+                        <label>First Name <span class="required">*</span></label>
+                        <input type="text" id="AppFirst" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender <span class="required">*</span></label>
+                        <select id="PGender" class="form-control">
+                            <option value="0">Select</option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                            <option value="3">Others</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact No <span class="required">*</span></label>
+                        <input type="text" id="MobileNo" class="form-control" />
+                    </div>
+
+                    <div class="form-group row-triple">
+                        <label>Age</label>
+                        <div class="triple-input">
+                            <input type="text" id="Age" placeholder="YR" />
+                            <input type="text" id="AgeMonths" placeholder="MO" />
+                            <input type="text" id="AgeDays" placeholder="DA" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="PEmail" class="form-control" />
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <div class="form-group">
+                        <label>DOB</label>
+                        <div class="datepicker-wrapper">
+                            <input type="date" id="PDOB" class="form-control"
+                                   onchange="calculateAgeFromDOB()"
+                                   style="border-radius:10px;border:1px solid #e5e7eb;background:#f9fafb;height:34px;flex:1;width:100%;" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nationality <span class="required">*</span></label>
+                        <select id="PNationality" class="form-control">
+                            <option value="0">India</option>
+                            <option value="1">USA</option>
+                            <option value="3">UK</option>
+                            <option value="4">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="PDept" class="form-control readonly-input" disabled>
+                            <option value="0">General</option>
+                            <option value="1">Cardiology</option>
+                            <option value="2">Neurology</option>
+                            <option value="3">Paediatrics</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Token No <span class="required">*</span></label>
+                        <input type="text" id="PToken" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Doctor <span class="required">*</span></label>
+                        <select id="Doctor" class="form-control readonly-input" disabled>
+                            <option value="0">Select Doctor</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Appt Date</label>
+                        <input type="text" id="PDATE" class="form-control readonly-input" readonly />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Appt Time</label>
+                        <input type="text" id="PTime" class="form-control readonly-input" readonly />
+                    </div>
+
+                    <select id="search-status" class="form-control" style="flex:1;">
+                        <option value="">All</option>
+                        <option value="Booked" selected>Booked</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Rescheduled">Rescheduled</option>
+                        <option value="NotAnswered">Not Answered</option>
+                        <option value="Others">Others</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer-fixed">
+            <button type="button" class="btn-cancel" onclick="closePatientModal()">Cancel</button>
+            <button type="button" class="btn-clear" onclick="clearPatientForm()">Clear</button>
+            <button type="button" id="saveBtn" class="btn-save" onclick="submitPatientDetails(0)">Save Booking</button>
+        </div>
+    </div>
+</div>
+
+<script src="~/ProjectScript/Appointment.js"></script>

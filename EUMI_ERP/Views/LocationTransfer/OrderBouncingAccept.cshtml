@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewBag.Title = "OrderBouncingAccept";
+}
+
+
+        <script type="text/javascript" src="../Projectscript/Common.js"></script>
+<div class="myData" data-x="M198" />
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">Order Bouncing Approval</h4>
+                    <div class="text-right" style="margin-top:-1%">
+                        <button type="button" style="width:150px" id="btnsubmit" onclick="AcceptAllTransactions()" class="btn btn-primary btn-min-width mr-1 mb-1">Accept All <i class="fa fa-check-square-o"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div style="height:15px;"></div>
+
+                                        <br />
+                                        <div class="card-content collapse show" style="overflow:auto;">
+                                            <div class="card-body card-dashboard">
+                                                <table id="tblOrderBouncing" class="table table-striped table-bordered base-style dataTable"></table>                                              
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                </form>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <input id="OrderBoProductId" value="0" />
+    <input id="OrderBoActionType" value="0" />
+    <input id="OrderBoBillSerId" value="0" />
+</div>
+
+<script>
+    $(document).ready(function () {
+        transferload();
+    });
+
+    function transferload() {
+        var data = {};
+        data.LocId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/OrderBouncingGetandGets",
+            data: data,
+            success: function (result) {
+               // disable_datatable('tblOrderBouncing');
+                ShowOrderBouncinglist(result.oList);
+            }
+        });
+    }
+
+    function ShowOrderBouncinglist(result) {
+        disable_datatable('tblOrderBouncing');
+        var responseText = "";
+
+        if (result.length == 0) {
+            var responseText = "<thead><tr style='text-align:center;color:red'><th>NO TRANSFER REQUEST YET</th></tr></thead>";
+            $('#tblOrderBouncing').html(responseText);
+        }
+        else {
+            responseText += "<thead><tr><th style='width:5px;'>Slno</th><th>Date</th><th>User</th><th>Customer</th><th>Item Code</th><th>Description</th><th>Remarks</th><th>Quantity</th><th>Approve/Remove</th></tr></thead><tbody>";
+            for (var i = 0; i < result.length; i++) {
+                var slno = i + 1;
+                responseText += '<tr>' +
+                    '<td style="width:5px">' + slno + '</td>' +
+                    '<td>' + result[i].CurrentDate + '</td>' +
+                    '<td>' + result[i].UserName + '</td>' +
+                    '<td>' + result[i].CustName + '</td>' +
+                    '<td>' + result[i].ProductCode + '</td>' +
+                    '<td>' + result[i].ProductDescr + '</td>' +
+                    '<td>' + result[i].Remarks + '</td>' +
+                    '<td>' + result[i].ProdQty + '</td>' +
+                    '<td id=' + 'Approved' + slno + '  class= "jsgrid-cell jsgrid-control-field jsgrid-align-left"  style="width:3.0%;">&nbsp; ' +
+                    '<button onclick="ConfirmApproved(' + result[i].ProductId + ',' + 1 + ',' + result[i].BillSeriesId + ')" type="button" title=Approve class="badge badge-default round  btn-success" id="accept" style="font-weight:normal;color:white;border:none;" >Approve</button>&nbsp;' +
+                    '<button onclick="ConfirmApproved(' + result[i].ProductId + ',' + 2 + ',' + result[i].BillSeriesId + ')" type="button" title= Reject  class="badge badge-default round  btn-warning" id="delete" style="font-weight:normal;color:white;border:none;"  >Remove</button>' +
+                    '</td>' +
+                    '</tr>';
+
+            }
+            $('#tblOrderBouncing').html(responseText + '</tbody><tfoot><tr><th> </th><th> </th><th>User</th><th>Customer</th><th>Item Code</th><th>Description</th><th>Remarks</th><th> </th><th></th></tr></tfoot>');
+            datatableWithsearch('tblOrderBouncing');
+        }
+    }
+
+
+
+    function ConfirmApproved(ItemId, Flag, BillSeriesId) {
+
+        $("#OrderBoProductId").val(ItemId);
+        $("#OrderBoActionType").val(Flag);
+        $("#OrderBoBillSerId").val(BillSeriesId);
+
+        $('#Confirmflag').val('OrderBownsing'), $('#ConfirmRowId').val(Flag)
+
+        if (Flag == 1)
+            $('#confirmmessage').text('Do You Want To Approve This Order Bouncing ?');
+        else if (Flag == 2)
+            $('#confirmmessage').text('Do You Want To Reject This Order Bouncing ?')
+
+        $('#confirm').show();
+        $('#confirmOk').prop("disabled", false);
+        $('#confirmOk').focus();
+
+
+    }
+  
+    function approved(ItemId,Flag,BillSeriesId)
+    {
+        var data={};
+        data.ProductId = $("#OrderBoProductId").val();
+        data.DelFlag = $("#OrderBoActionType").val();
+        data.BillSeriesId = $("#OrderBoBillSerId").val();
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/ApproveOrderBouncing",
+            data: data,
+            success: function (result) {
+                var status = result.oList[0].Status;
+                Showalerts(status);
+
+                $("#OrderBoProductId").val(0);
+                $("#OrderBoActionType").val(0);
+                $("#OrderBoBillSerId").val(0);
+            }
+            })
+
+    }
+
+    function Showalerts(Status) {
+        if (Status == 1) {
+            //formrefresh();
+            swal('Data Accepted Successfully', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+            transferload();
+        }
+        else if (Status == 2) {
+           // formrefresh();
+            swal('Data Rejected Successfully', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+            transferload();
+        }
+        
+        }
+
+    function AcceptAllTransactions() {
+        if ($('#tblOrderBouncing tr').length > 1) {
+            $('#confirm').show();
+            $('#confirmOk').focus();
+            $('#Confirmflag').val('transferall'); $('#ConfirmRowId').val(0);
+            $('#confirmmessage').text('Do you want to Transfer All?');
+        }
+        else {
+            warningshow('No Request Found !!!')
+        }
+    }
+    function ConfirmboxResult(Result, status, rowid) {
+
+        if (Result == 'true' && status == 'OrderBownsing') {
+            approved(0, rowid, 0);
+        }
+       else if (Result == 'true' && status == 'transferall') {
+            OKAcceptAllTransactions()
+        }
+        $('#confirm').fadeOut();
+
+    }
+
+    function OKAcceptAllTransactions() {
+        var data = {};        
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/AcceptAllOrderBouncing",
+            data: data,
+            success: function (result) {
+                var status = result.oList[0].Status;
+                if (status == 1) {
+                    Showalerts(status);
+                }
+            }
+        });
+    }
+</script>

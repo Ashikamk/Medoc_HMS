@@ -1,0 +1,434 @@
+﻿@{
+    ViewBag.Title = "Inventory Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    #Entry {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 100px;
+    }
+
+        #Entry > .row {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        #Entry .row.mb-2 {
+            margin-bottom: 18px !important;
+        }
+
+        #Entry .row.mt-1 {
+            margin-top: 14px !important;
+        }
+
+    #tblItem td, #tblItem th {
+        padding: 4px 8px !important;
+        line-height: 1.2 !important;
+    }
+
+    .swal2-border-radius {
+        border-radius: 4px !important;
+    }
+</style>
+
+<!-- ══ ENTRY FORM ══ -->
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6;">
+                    <h4 class="card-title mb-0" style="font-weight:bold;">Stock Item</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="col-md-12">
+                                            <div class="row">
+
+                                                <!-- Column 1 -->
+                                                <div class="col-md-4 col-divider-right">
+                                                    <div class="field-row">
+                                                        <label class="label-control">Name <span class="danger">*</span></label>
+                                                        <div class="field-input">
+                                                            <input type="text" id="ItemName" class="form-control denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-row">
+                                                        <label class="label-control">Category</label>
+                                                        <div class="field-input">
+                                                            <select class="form-control enterflow dezero" id="Category">
+                                                                <option value="">-Select-</option>
+                                                                <option value="Consumable">Consumable</option>
+                                                                <option value="Equipment">Equipment</option>
+                                                                <option value="Medicine">Medicine</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-row">
+                                                        <label class="label-control">Sub Type</label>
+                                                        <div class="field-input">
+                                                            <input type="text" id="SubType" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Column 2 -->
+                                                <div class="col-md-4 col-divider-right col-divider-left">
+                                                    <div class="field-row">
+                                                        <label class="label-control">Material Code</label>
+                                                        <div class="field-input">
+                                                            <input type="text" id="MaterialCode" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-row">
+                                                        <label class="label-control">Consumption Unit</label>
+                                                        <div class="field-input">
+                                                            <input type="text" id="ConsumptionUnit" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-row">
+                                                        <label class="label-control">Purchase Unit</label>
+                                                        <div class="field-input">
+                                                            <input type="text" id="PurchaseUnit" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Column 3 -->
+                                                <div class="col-md-4 col-divider-left">
+                                                    <div class="field-row">
+                                                        <label class="label-control">Unit Qty</label>
+                                                        <div class="input-group m-0">
+                                                            <select class="form-control enterflow dezero" id="UnitQuantity"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-row">
+                                                        <label class="label-control">Alert Level</label>
+                                                        <div class="field-input">
+                                                            <input type="text" id="AlertLevel" class="form-control enterflow denull" autocomplete="off">
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-row">
+                                                        <label class="label-control">Tax</label>
+                                                        <div class="field-input">
+                                                            <select class="form-control enterflow deone" id="TaxId"></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Buttons -->
+                                        <div class="form-actions">
+                                            <div class="text-right">
+                                                <button type="button" id="btnsubmit" style="width:100px" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                <button type="button" style="width:100px" id="btnlist" class="btn btn-primary btn-min-width mr-1 mb-1" onclick="LoadItemList()">List <i class="ft-align-justify"></i></button>
+                                                <button type="button" style="width:100px" id="btnnew" class="btn btn-primary btn-min-width mr-1 mb-1" onclick="ClearForm()">Clear <i class="ft-refresh-cw"></i></button>
+                                                <button type="button" style="width:100px;display:none;" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1" onclick="SaveAndUpdate(0)">Delete <i class="fa fa-times"></i></button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ LIST SECTION ══ -->
+<div style="display:none; width:100%;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Stock Item List</h4></td>
+                                <td align="right">
+                                    <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed">
+                                        <i class="ft-edit"></i> Add New
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="border-bottom:1px solid #c5cdd3;margin-top:5px;width:100%"></div>
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto;">
+                            <table id="tblItem" class="table table-condensed table-striped table-bordered eumi-search-table" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Sub Type</th>
+                                        <th>Material Code</th>
+                                        <th>Unit</th>
+                                        <th>Tax %</th>
+                                        <th style="text-align:center;">Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th><input type="text" placeholder="Name"></th>
+                                        <th><input type="text" placeholder="Category"></th>
+                                        <th><input type="text" placeholder="Sub Type"></th>
+                                        <th><input type="text" placeholder="Material"></th>
+                                        <th><input type="text" placeholder="Unit"></th>
+                                        <th><input type="text" placeholder="Tax"></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <br /><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Hidden -->
+<div style="display:none;">
+    <input type="text" id="ItemId" value="0" class="dezero" />
+</div>
+
+<script>
+    var unitList = [];
+    var taxList = [];
+
+    $(document).ready(function () {
+        LoadUnits();
+        LoadTax();
+        $('#ItemName').focus();
+        $('#btnsubmit').on('click', function () { SaveAndUpdate(1); });
+    });
+
+    /* ── show/hide ── */
+    function LoadItemList() { $('#Entry').hide(); $('#listing').show(); FetchItemList(); }
+    function closelist() { $('#listing').hide(); $('#Entry').show(); ClearForm(); }
+
+    /* ── dropdowns ── */
+    function LoadUnits() {
+        $.ajax({
+            type: 'POST', url: '/StockItem/HMS_UnitGets', data: { UnitId: 0 },
+            success: function (r) {
+                unitList = r;
+                var s = $('#UnitQuantity').empty().append('<option value="0">-Select-</option>');
+                $.each(r, function (i, u) { s.append('<option value="' + u.UnitId + '">' + u.UnitName + '</option>'); });
+            }
+        });
+    }
+
+    function LoadTax() {
+        $.ajax({
+            type: 'POST', url: '/Master/TaxGetandGets', data: { TaxId: 0 },
+            success: function (r) {
+                taxList = r.oList;
+                var s = $('#TaxId').empty().append('<option value="0">TAX 0%</option>');
+                $.each(r.oList, function (i, t) {
+                    s.append('<option value="' + t.TaxId + '">' + t.TaxName + ' (' + t.TaxRate + '%)</option>');
+                });
+            }
+        });
+    }
+
+    /* ── save / update / delete (Flag: 1=save/update, 0=delete) ── */
+    function SaveAndUpdate(Flag) {
+        if (Flag === 1) {
+            if ($.trim($('#ItemName').val()) === '') {
+                warningshow('Please Enter Name', 'ItemName');
+                return;
+            }
+        }
+
+        $('#btnsubmit').prop('disabled', true);
+
+        var data = {
+            ItemId: $('#ItemId').val(),
+            ItemCode: $.trim($('#ItemName').val()),
+            Model1: $('#Category').val(),
+            Model2: $('#SubType').val(),
+            Model3: $('#MaterialCode').val(),
+            Bin_A: $('#ConsumptionUnit').val(),
+            Bin_B: $('#PurchaseUnit').val(),
+            Bin_C: '',
+            AlertLevel: $('#AlertLevel').val(),
+            Unit: $('#UnitQuantity').val(),
+            VatCode: $('#TaxId').val(),
+            Delflg: Flag,
+            UserId: ERPUserId,
+            DeptId: ERPDeptId
+        };
+
+        $.ajax({
+            type: 'POST', url: '/StockItem/StockItemSave', data: data,
+            dataType: 'json',
+            success: function (result) {
+                $('#btnsubmit').prop('disabled', false);
+
+                if (result && result.oList && result.oList.length > 0) {
+                    var st = parseInt(result.oList[0].Status);
+
+                    if (st === 1) {
+                        swal('Data Saved Successfully!', '', 'success');
+                        setTimeout(function () { ClearForm(); }, 1500);
+
+                    } else if (st === 2) {
+                        swal('Data Updated Successfully!', '', 'success');
+                        setTimeout(function () { ClearForm(); }, 1500);
+
+                    } else if (st === 3) {
+                        swal('Deleted Successfully!', '', 'warning');
+                        setTimeout(function () { LoadItemList(); }, 1500);
+
+                    } else if (st === 0) {
+                        warningshow('Item already exists!');
+                    } else {
+                        warningshow('Operation failed!');
+                    }
+                } else {
+                    warningshow('Unexpected response from server.');
+                }
+            },
+            error: function () {
+                $('#btnsubmit').prop('disabled', false);
+                warningshow('An error occurred. Please try again.');
+            }
+        });
+    }
+
+    /* ── edit: fetch by id ── */
+    function GetItemById(ItemId) {
+        $('#ItemId').val(ItemId);
+        $.ajax({
+            type: 'POST', url: '/StockItem/ItemGetById', data: { ItemId: ItemId },
+            success: function (item) {
+                if (!item) { warningshow('Item not found'); return; }
+                $('#ItemId').val(item.itemId || item.ItemId || 0);
+                $('#ItemName').val(item.itemCode || item.ItemCode || '');
+                $('#Category').val(item.category || item.Category || '');
+                $('#SubType').val(item.subType || item.SubType || '');
+                $('#MaterialCode').val(item.materialCode || item.MaterialCode || '');
+                $('#ConsumptionUnit').val(item.binA || item.BinA || '');
+                $('#PurchaseUnit').val(item.binB || item.BinB || '');
+                $('#AlertLevel').val(item.alertLevel ? parseFloat(item.alertLevel) : '');
+                $('#UnitQuantity').val(item.unit || item.Unit || '0');
+                $('#TaxId').val(item.tax || item.Tax || '0');
+                $('#listing').hide();
+                $('#Entry').show();
+                $('#btndelete').show();
+                $('#ItemName').focus();
+            },
+            error: function () { warningshow('Error loading item'); }
+        });
+    }
+
+    /* ── clear / new ── */
+    function ClearForm() {
+        $('#ItemId').val('0');
+        $('#ItemName, #SubType, #MaterialCode, #ConsumptionUnit, #PurchaseUnit, #AlertLevel').val('');
+        $('#Category').val('');
+        $('#UnitQuantity').val('0');
+        $('#TaxId').val('0');
+        $('#btndelete').hide();
+        $('#ItemName').focus();
+        if (typeof $('#Warningpopup') !== 'undefined') $('#Warningpopup').stop(true, true).hide();
+    }
+
+    /* ── helpers ── */
+    function getUnitName(id) {
+        var o = unitList.find(function (x) { return x.UnitId == id; });
+        return o ? o.UnitName : '';
+    }
+    function getTaxLabel(id) {
+        var o = taxList.find(function (x) { return x.TaxId == id; });
+        return o ? o.TaxName + ' (' + o.TaxRate + '%)' : '';
+    }
+
+    /* ── list ── */
+    function FetchItemList() {
+        if ($.fn.DataTable && $.fn.DataTable.isDataTable('#tblItem')) {
+            $('#tblItem').DataTable().clear().destroy();
+        }
+        $('#tblItem tbody').empty();
+
+        $.ajax({
+            type: 'POST', url: '/StockItem/ItemGetAll',
+            success: function (r) {
+                var tbody = $('#tblItem tbody');
+                if (!r || r.Status !== undefined) { warningshow('Error loading list'); return; }
+
+                if (r.length > 0) {
+                    $.each(r, function (i, item) {
+                        tbody.append(
+                            '<tr>' +
+                            '<td>' + (i + 1) + '</td>' +
+                            '<td>' + (item.ItemCode || '&#8212;') + '</td>' +
+                            '<td>' + (item.Category || '&#8212;') + '</td>' +
+                            '<td>' + (item.SubType || '&#8212;') + '</td>' +
+                            '<td>' + (item.MaterialCode || '&#8212;') + '</td>' +
+                            '<td>' + getUnitName(item.UnitVal) + '</td>' +
+                            '<td>' + getTaxLabel(item.TaxVal) + '</td>' +
+                            '<td style="background-color:#00ffff; text-align:center; vertical-align:middle; width:80px;">' +
+                            '<a onclick="GetItemById(' + (item.ItemId || item.itemId) + ');" style="color:black; font-size:16px; cursor:pointer;"><i class="ft-edit"></i></a>' +
+                            '</td>' +
+                            '</tr>'
+                        );
+                    });
+                } else {
+                    tbody.append('<tr><td colspan="8" style="text-align:center;color:#999;padding:16px;">No Data Found</td></tr>');
+                }
+
+                if ($.fn.DataTable) {
+                    var dt = $('#tblItem').DataTable({
+                        paging: true, searching: true, ordering: true,
+                        pageLength: 10, destroy: true,
+                        dom: '<"row"<"col-sm-6"l><"col-sm-6"f>>rtip',
+                        columnDefs: [{ orderable: false, targets: [0, 7] }]
+                    });
+                    $('#tblItem tfoot th').each(function (i) {
+                        var inp = $(this).find('input');
+                        if (inp.length) {
+                            inp.on('keyup change', function () {
+                                dt.column(i).search(this.value).draw();
+                            });
+                        }
+                    });
+                }
+            },
+            error: function (xhr) { warningshow('Error loading data: ' + xhr.status); }
+        });
+    }
+
+    /* ── shared warning popup (same as EmrData) ── */
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').stop(true, true).show();
+        if (Id) { $('#' + Id).focus().select(); }
+        clearTimeout(window._warningTimer);
+        window._warningTimer = setTimeout(function () {
+            $('#Warningpopup').fadeOut();
+        }, 3000);
+    }
+</script>
+    

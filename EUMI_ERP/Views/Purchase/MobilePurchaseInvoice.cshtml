@@ -1,0 +1,1776 @@
+﻿
+@{
+    ViewBag.Title = "MobilePurchaseInvoice";
+}
+
+
+<script type="text/javascript" src="../Projectscript/MobilePurchaseInvoice.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+
+
+
+<style>
+    #fixed {
+        width: 100%;
+        position: fixed;
+        top: 0px;
+    }
+
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+
+    #OtherCostView {
+        border: 1px solid #CCD6E6;
+    }
+
+    #Cell1 {
+        width: 80%;
+    }
+
+    #Cell2 {
+        width: 20%;
+        text-align: right;
+    }
+
+    #panel1 {
+        display: none;
+    }
+
+    .modal-xl {
+        max-width: 90%;
+        margin-left: 7%;
+        margin-right: 3%;
+    }
+
+    .modal-llg {
+        max-width: 80%;
+        margin-left: 13%;
+        margin-right: 7%;
+    }
+
+    .footertable tr {
+        border: 1px solid #BABFC7;
+        height: 45px;
+    }
+
+    .headertable tr {
+        border: 1px solid #BABFC7;
+        height: 40px;
+    }
+
+</style>
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ("@Request.QueryString["from"]" == "PurchaseReport") {
+            var id = sessionStorage.getItem("purchase_slno");
+            var dep = sessionStorage.getItem("pur_deptid");
+            sessionStorage.removeItem("purchase_slno");
+            sessionStorage.removeItem("pur_deptid");
+            var numId = parseInt(id);
+            var deprtid=parseInt(dep)
+            if (!isNaN(numId) && !isNaN(deprtid)) {
+                ReportGetCopy(numId, deprtid);
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        if ("@Request.QueryString["from"]" == "PriceManager") {
+            var Id = sessionStorage.getItem("purchase_invono");
+            var dept = sessionStorage.getItem("pur_Deptid");
+            sessionStorage.removeItem("purchase_invono");
+            sessionStorage.removeItem("pur_Deptid");
+            var numId = parseInt(Id);
+            var deprtid=parseInt(dept)
+            if (!isNaN(numId) && !isNaN(deprtid)) {
+                ReportGetCopy(numId, deprtid);
+            }
+        }
+    });
+</script>
+
+<div class="myData" data-x="M159" />
+
+<div id="Entry" style="margin-top:-20px;">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0" style="float:left">Purchase Invoice-M</h4>
+
+                    <h2 class="text-right" id="gndtotal" style="float:right;color:red;font-weight:500">0.00</h2>
+                    <h2 class="col-md-2" id="fc" style="float:right;opacity:0;color:red;font-weight:500">fc </h2>
+
+                </div>
+                <div class="card-body" style="margin-top:-30px">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr style="margin-top:0px" />
+                                    <div class="row" style="background-color:#E0F3F4;margin-left:3px;width:100%;margin-top:-20px;height:190px">
+
+                                        <div class="col-md-12">
+                                            <br />
+                                            <div class="form-group">
+
+                                                <div class="hopscotch-bubble animated tour-demo-tour" id="tour1" style="position: absolute; top: 65px; left:18%;display:none">
+
+                                                    <div class="hopscotch-bubble-container" style="width: 280px; padding: 10px;">
+                                                        <div class="hopscotch-bubble-content">
+                                                            <h3 class="hopscotch-title">Search Invoice Number Here.</h3>
+                                                            <div class="hopscotch-content"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hopscotch-bubble-arrow-container hopscotch-arrow up">
+                                                        <div class="hopscotch-bubble-arrow-border"></div>
+                                                        <div class="hopscotch-bubble-arrow"></div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row" style="margin-top:-8px">
+                                                    <label class="col-lg-1">Invoice No<span class="danger">*</span></label>
+                                                    <div class="col-lg-11">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <input type="text" class="form-control" id="purchaseinvoiceno" disabled>
+                                                            </div>
+                                                            @*=====div for page load======*@
+                                                            <div class="col-md-2" id="purchaseinv">
+                                                                <input type="text" class="form-control editds" id="purchaseinvoiceno1" onkeyup="SearchSupplierInvoice()">
+                                                            </div>
+                                                            @*============================*@
+
+                                                            @*===div for copy===*@
+                                                            <div class="col-md-2 input-group" id="copypurchase" style="display:none;position:inherit;">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-btn" title="Previous">
+                                                                        <button type="button" disabled="" id="btnprvs" onclick="GetBillPrevousornext(-1)" class="btn btn-outline-primary"><i class="ft-chevron-left"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                                <input type="text" class="form-control" style="height:38px;" id="copypurchaseinvo" placeholder="Search Invoice">
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-btn" title="Next">
+                                                                        <button type="button" id="btnnxt" disabled="" onclick="GetBillPrevousornext(1)" class="btn btn-outline-primary"> <i class="ft-chevron-right"></i></button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            @*=================*@
+                                                            <select id="paytype" name="priority" class="form-control" style="display:none">
+
+                                                                <option value="1">Credit</option>
+                                                                <option value="2">Cash</option>
+                                                                <option value="3">Card</option>
+
+                                                            </select>
+
+
+                                                            <label class="col-lg-1 text-lg-right">Date<span class="danger">*</span></label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="purchaseinvdate" onchange="ChangeInvDate()" class="form-control editds">
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right">Terms<span class="danger">*</span></label>
+                                                            <div class="col-md-2 input-group">
+                                                                <select id="terms" name="priority" class="form-control editds" style="height:100%"></select>
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary butndis" onclick="Addpopupwindow(1)" id="btnterms" type="button" style="height:100%">+</button>
+                                                                </div>
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right">Due Date<span class="danger">*</span></label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="duedate" class="form-control editds">
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" id="lpo" class="form-control" disabled>
+                                                        <input type="hidden" id="PONo" class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="margin-top:5px">
+                                                    <label class="col-lg-1">Supplier<span class="danger">*</span></label>
+                                                    <div class="col-lg-11">
+                                                        <div class="row">
+                                                            <div class="col-md-3 input-group">
+                                                                <input type="text" id="suppliername" class="form-control editds" style="height:90%">
+                                                                <div class="input-group-append" id="addsupplier">
+                                                                    <button class="btn btn-outline-primary butndis" id="addbtnsupplier" type="button" style="height:90%" onclick="window.open('../Master/Supplier')">+</button>
+                                                                </div>
+                                                            </div>
+                                                            <input type="hidden" id="supplierId" class="form-control" value="0" />
+                                                            <label class="col-lg-1 text-lg-right">Purchase Type</label>
+                                                            <div class="col-md-2">
+                                                                <select id="purchasetype" class="form-control editds" onchange="CheckPurchaseType()">
+
+                                                                    <option value="Local">Local Purchase</option>
+                                                                    <option value="Import">Import Purchase</option>
+
+                                                                </select>
+                                                                <input type="hidden" id="ImpTax" />
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right">Location<span class="danger">*</span></label>
+                                                            <div class="col-md-2 input-group">
+                                                                <select id="location" style="height:90%" class="form-control editds"></select>
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary butndis" onclick="Addpopupwindow(2)" id="btnlocn" style="height:90%" type="button">+</button>
+                                                                </div>
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right">Invoice Total<span class="danger">*</span></label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="SupInvoTotal" value="0.00" onclick="$('#SupInvoTotal').select()" class="form-control editds" onkeypress="isNumber(event, this)" onkeyup="CalcInvoice()">
+                                                                <input type="hidden" id="BaseInvoiceamount" class="form-control" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-top:0px">
+                                                    <label class="col-lg-1">Currency<span class="danger">*</span></label>
+                                                    <div class="col-lg-11">
+                                                        <div class="row">
+                                                            <div class="col-md-3 input-group">
+                                                                <select id="currency" style="height:105%" class="form-control editds"></select>
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary butndis" onclick="Addpopupwindow(4)" id="btncurrency" style="height:105%" type="button">+</button>
+                                                                </div>
+                                                            </div>
+                                                            <label class="col-lg-1 text-lg-right">Rate</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="rate" class="form-control editds" onkeypress="isNumber(event, this)" onkeyup="ChangeRate()">
+                                                            </div>
+
+                                                            <label class="col-lg-1 text-lg-right">Supply To<span class="danger">*</span></label>
+                                                            <div class="col-md-2 input-group">
+                                                                <select id="placeofsupply" style="height:105%" class="form-control editds"></select>
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary butndis" onclick="Addpopupwindow(3)" id="btnarea" style="height:105%" type="button">+</button>
+                                                                </div>
+                                                            </div>
+
+                                                            <input type="hidden" id="shipdate" class="form-control editds">
+                                                            <input type="hidden" id="jobcode" class="form-control editds">
+
+                                                            <input type="hidden" id="jobid" class="form-control">
+                                                            <input type="hidden" id="fcamount" class="form-control">
+                                                            <input type="hidden" id="fctaxable" class="form-control">
+                                                            <input type="hidden" id="fctax" class="form-control">
+                                                            <input type="hidden" id="fcdiscount" class="form-control">
+                                                            <label class="col-lg-1 text-lg-right">Invoice Diff.</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" id="invdiff"  value="0.00" class="form-control" disabled>
+                                                                <input type="hidden" id="baseinvdiff" class="form-control" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top:3px" />
+                                    <div class="px-2">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="row" style="height:26px;">
+
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label>Product<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Location<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Unit<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Quantity<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Rate<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Discount</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Tax Group<span class="danger">*</span></label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Tax Percentage</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Amount</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <label>Type</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div id="prodappdiv" class="col-md-2 input-group">
+
+                                                        <input type="text" id="product_0" class="form-control editds" style="height:65%;margin-left:1px" onkeypress="LoadProduct()" onkeyup="checkproduct()">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-primary butndis" id="addproductbtn" type="button" style="height:65%" onclick="window.open('../Master/ItemMaster')">+</button>
+                                                        </div>
+
+                                                    </div>
+                                                    <input type="hidden" id="productId_0" class="form-control" />
+                                                    <input type="hidden" id="ProductLength" class="form-control" />
+                                                    <input type="hidden" id="productdesc_0" class="form-control" />
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <select id="locn_0" class="form-control editds"></select>
+                                                            <input type="hidden" id="txtlocn" class="form-control" />
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <select id="unit_0" class="form-control editds"></select>
+                                                            <input type="hidden" id="txtunit_0" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="quantity_0" class="form-control editds" onclick="$('#quantity_0').select()" onkeyup="CalcAmount(0)" onkeypress="isNumberInt(event, this)">
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="txtrate_0" class="form-control editds" onclick="$('#txtrate_0').select()" onkeyup="CalcAmount(0)" onkeypress="isNumber(event, this)">
+                                                            <input type="hidden" id="txtsubtotal" class="form-control" />
+                                                            <input type="hidden" id="baserate_0" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <input type="text" id="discount_0" class="form-control editds" onclick="$('#discount_0').select()" onkeypress="isNumber(event, this)" onkeyup="CalcAmount(0)">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <select id="tax_0" class="form-control editds" onchange="ChangeTax(0,this)"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="taxpercentage_0" class="form-control" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+
+                                                            <input type="text" id="amount_0" class="form-control" disabled>
+                                                            <input type="hidden" id="txttaxable_0" class="form-control" />
+                                                            <input type="hidden" id="txttax_0" class="form-control" />
+                                                            <input type="hidden" id="txtsubtotal_0" class="form-control" />
+                                                            <input type="hidden" id="baseamount_0" class="form-control" />
+                                                            <input type="hidden" id="basetaxableamount_0" class="form-control" />
+                                                            <input type="hidden" id="basetaxamount_0" class="form-control" />
+                                                            <input type="hidden" id="basediscount_0" class="form-control" />
+                                                            <input type="hidden" id="otrcost" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <select id="imeitype" class="form-control editds">
+                                                                <option value="0">IMIE</option>
+                                                                <option value="1">NO IMIE</option>
+                                                            </select>
+                                                            <input type="hidden" id="jobcode_0" class="form-control editds" onkeydown="$('#jobcodeid_0').val(0)">
+                                                            <input type="hidden" id="jobcodeid_0">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <button type="button" id="btnadd" onclick="Productadd()" class="btn btn-outline-primary" style="width:100%">&nbsp;&nbsp;+Add&nbsp;&nbsp;</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                <div class="px-2">
+                                    <div id="customView" class="jsgrid" style="position: relative; height: 300px; width: 100%; margin-top:-25px;overflow-x: auto;overflow-y: hidden; ">
+                                        <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:2270px;">
+                                            <table class="jsgrid-table">
+                                                <tr class="jsgrid-header-row">
+                                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:60px"></th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px">No</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:300px">Product Code</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:350px">Description</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:250px">IMEI Number</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:120px">Unit</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:120px">Quantity</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:120px">Rate</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:120px">Discount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:120px">Taxable</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:140px">Tax Group</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:120px">Tax Amt</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:140px">Amount</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:120px">Location</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:250px;display:none">Job Code</th>
+                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:120px;" id="othercosthead">Other Cost-<span id="baseicon"></span></th>
+
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                        <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 246px; width: 2270px;">
+                                            <table class="jsgrid-table" id="tblpurchaseinvoice"></table>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    @*<table style="width:100%">
+                                            <tr>
+                                                <td id="Cell1">
+                                                    <div class="row text-md-center" style="margin-top:-10px;">
+
+                                                        <div class="form-group row col-md-12 text-md-center">
+                                                            <div class="col-md-1">
+                                                                <button type="button" id="btnothercost" onclick="Addpopupwindow(6)" class="btn btn-outline-primary btn-min-width mr-1 mb-1" style="margin-top:8px">Other Cost</button>
+                                                            </div>
+
+                                                           <label class="col-md-2" style="margin-top:8px"><a id="flip1" >+ Remarks</a></label>
+                                                            <label class="col-md-1" style="margin-top:8px">Discount</label>
+                                                            <div class="col-md-1">
+                                                                <input type="text" id="disc" value="0.00" class="form-control editds" style="width:130px;font-weight:bold;margin-top:8px" onclick="$('#disc').select()" onkeypress="isNumber(event, this)" onkeyup="CalcDiscountSplitTax();">
+
+                                                            </div>
+                                                            <input type="hidden" id="basedisc" />
+                                                            <label class="col-md-2 text-right" style="margin-top:8px;margin-left:-20px">Total Discount</label>
+                                                            <div class="col-md-1">
+
+                                                                <input type="text" id="totdisc" value="0.00" class="form-control" style="background-color:white;width:130px;border:none;font-weight:bold" disabled>
+                                                            </div>
+                                                            <label class="col-md-1" style="margin-top:8px">Total Taxable</label>
+                                                            <div class="col-md-1">
+                                                                <input type="hidden" id="HiddenTotal" value="0.00" />
+                                                                <input type="text" id="tottaxable" value="0.00" class="form-control" style="background-color:white;width:130px;border:none;font-weight:bold" disabled>
+                                                            </div>
+                                                            <label class="col-md-1" style="margin-top:8px">Total Tax</label>
+                                                            <div class="col-md-1">
+                                                                <input type="text" id="tottax" value="0.00" class="form-control" style="background-color:white;width:130px;border:none;font-weight:bold" disabled>
+                                                            </div>
+
+
+                                                            <input type="hidden" id="GrandTotal" class="form-control" style="background-color:white;width:100px;border:none;font-weight:bold" disabled>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+                                                <td valign="top" id="Cell2">
+                                                    <div class="text-right">
+                                                        <button type="button" style="width:30%" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                        <button type="button" style="width:30%" id="btnlist" onclick="GetRows()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                                        <button style="display:none" type="button" id="btnprint" onclick="PrintthisBillWindows('PUR',i)" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                                        <button type="button" style="width:30%" id="btnnew" onclick="createnew()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                                        <button style="display:none" type="button" id="btnsaveedit" onclick="UpdatePurchase()" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                                        <button style="display:none" type="button" id="btnedit" onclick="EditInvoice()" class="btn btn-secondary btn-min-width mr-1 mb-1">Edit<i class="fa ft-edit"></i></button>
+                                                        <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div id="panel1">
+                                            <div class="form-group">
+                                                <textarea id="txtnotes" rows="3" class="form-control editds" name="notes"></textarea>
+                                            </div>
+                                        </div>*@
+                                </div>
+                                <div class="px-2" style="border-top:1px solid #BABFC7;border-bottom:1px solid #BABFC7;height:143px;background-color:#E0F3F4;overflow:hidden">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td width="25%">
+                                                <div id="TaxSplit">
+                                                    <div id="transsplitdiv" class="jsgrid" style="overflow:auto;height:140px;width:100%;margin-top:-60px;">
+                                                        <table class="headertable" id="tbltaxsplit" style="border:1px solid #BABFC7;background-color:white;">
+                                                            <tr>
+                                                                <th class="text-center" style="font-weight:500;width:30%;border:1px solid #BABFC7;height:50px"><b>Tax Group</b></th>
+                                                                <th class="text-center" style="font-weight:500;width:40%;border:1px solid #BABFC7;height:50px"><b>Taxable Amount</b></th>
+                                                                <th class="text-center" style="font-weight:500;width:40%;border:1px solid #BABFC7;height:50px"><b>Tax Amount</b></th>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td width="50%">
+                                                <div id="" class="jsgrid text-lg-right" style="left:100px;height:200px; overflow: auto;width:85%;overflow:hidden;">
+                                                    <table class="footertable" id="" style="overflow:hidden;border:1px solid #BABFC7;background-color:white;">
+                                                        <tr>
+                                                            <td class="" style="width:auto;text-align:center;font-weight:500"><b>Discount</b></td>
+                                                            <td class="" style="width:auto;text-align:center;font-weight:500"><b>Discount%</b></td>
+                                                            <td class="" style="width:auto;text-align:center;font-weight:500"><b>Tot. Discount</b></td>
+                                                            <td class="" style="width:auto;text-align:center;font-weight:500"><b>Total Taxable</b></td>
+                                                            <td class="" style="width:auto;text-align:center;font-weight:500;border-right:1px solid #BABFC7"><b>Total Tax</b></td>
+
+                                                        </tr>
+                                                        <tr style="background-color:#E0F3F4 ;">
+                                                            <td>
+                                                                <input type="text" id="disc" value="0.00" class="form-control editds" style="width:130px;font-weight:bold;text-align:center" onclick="$('#disc').select()" onkeypress="isNumber(event, this)" onkeyup="CalcDiscountSplitTax1();">
+                                                                <input type="hidden" id="basedisc" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" id="Discountpercent" value="0.00" style="font-weight:bold;text-align:center;width:130px;" class="form-control" disabled onclick="$('#Discountpercent').select()" onkeypress="isNumber(event, this)" onkeyup="CalcDiscountSplitTaxbyPrecentage();">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" id="totdisc" value="0.00" class="form-control" style="width:130px;border:none;font-weight:bold;text-align:center" disabled>
+                                                            </td>
+                                                            <td>
+                                                                <input type="hidden" id="HiddenTotal" value="0.00" />
+                                                                <input type="text" id="tottaxable" value="0.00" class="form-control" style="width:130px;border:none;font-weight:bold;text-align:center" disabled>
+                                                            </td>
+
+                                                            <td style="border-right:1px solid #BABFC7">
+                                                                <input type="text" id="tottax" value="0.00" class="form-control" style="width:130px;border:none;font-weight:bold;text-align:center" disabled>
+
+
+                                                                <input type="hidden" id="GrandTotal" class="form-control" style="background-color:white;border:none" disabled>
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="6">
+                                                                <div class="form-group">
+                                                                    <textarea id="txtnotes" style="height:50px;border:none;resize:none;margin-bottom:-30px" rows="3" class="form-control editds" placeholder="Remarks"></textarea>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                            <td width="25%">
+                                                <div class="text-right" style="height:200px;top:-5px">
+                                                    <br />
+                                                    <button type="button" id="btnothercost" onclick="Addpopupwindow(6)" class="btn btn-outline-primary btn-min-width mr-1 mb-1">Other Cost</button>
+                                                    <button type="button" id="btnsubmit" onclick="SavePurchaseInvoice()" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                    <button type="button" id="btnlist" onclick="GetRows()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                                    <button style="display:none" type="button" id="btnprint" onclick="PrintthisBillWindows('PUR', i, 'COPY')" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                                    <button type="button" id="btnnew" onclick="createnew()" class="btn btn-primary btn-min-width mr-1 mb-1">New <i class="ft-refresh-cw position-right"></i></button>
+                                                    <button style="display:none" type="button" id="btnsaveedit" onclick="UpdatePurchaseInvoice()" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                                    <button style="display:none" type="button" id="btnedit" onclick="EditInvoice()" class="btn btn-secondary btn-min-width mr-1 mb-1">Edit<i class="fa ft-edit"></i></button>
+                                                    <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmff" class="overlay" style="display:none;">
+    <div class="modal fade text-left show" id="keyboardff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display:none;padding-right: 17px; top:28%;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body" style="text-align:center">
+                    <h3 style="color:red"><B>ADD INVOICE NUMBER !!!</B></h3>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader"></h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="currencydiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="txt_code">Code<span class="danger">*</span></label>
+                        <input type="text" id="txt_code" onkeyup="changetoupper(this.id),$('#txt_cname').val($('#txt_code').val())" class="form-control editds">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitdesc">Name</label>
+                        <input type="text" id="txt_cname" maxlength="100" class="form-control editds">
+                    </fieldset>
+                    <br />
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitname">Rate<span class="danger">*</span></label>
+                        <input type="text" id="txt_rate" maxlength="8" onkeypress="isNumber(event,this)" class="form-control editds">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitname">Remarks</label>
+                        <input type="text" id="txt_remark" class="form-control editds">
+                    </fieldset>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="Close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btncrnsave" onclick="SaveCurrency(1)">
+                </div>
+            </form>
+            <form id="areadiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupcode">Area Code<span class="danger">*</span></label>
+                        <input type="text" onkeyup="changetoupper(this.id),$('#txtname').val($('#txtcode').val())" id="txtcode" class="form-control editds" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupname">Area Name<span class="danger">*</span></label>
+                        <input type="text" id="txtname" class="form-control editds" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Group</label>
+                        <select id="select_areagroup" class="form-control editds"></select>
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Description</label>
+                        <input type="text" id="txtdescription" class="form-control editds" autocomplete="off">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="Close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnareasave" onclick="SavePlace(1)">
+                </div>
+            </form>
+            <form id="locationdiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="grp">Code<span class="danger">*</span></label>
+                        <input type="text" onkeyup="changetoupper(this.id),$('#LocationName').val($('#LocationCode').val())" id="LocationCode" class="form-control editds" name="Code">
+
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbgroupname">Name<span class="danger">*</span></label>
+                        <input type="text" id="LocationName" class="form-control editds" name="Name">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbgroupdesc">Description</label>
+                        <input type="text" id="LocationDescription" class="form-control editds" name="Description">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="Close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnlocnsave" onclick="SaveLocation(1)">
+                </div>
+            </form>
+            <form id="termsdiv" style="display:none">
+                <div class="modal-body">
+
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbcatname">Terms<span class="danger">*</span></label>
+                        <input type="text" id="txtdesc" class="form-control editds" autocomplete="off" onkeyup="changetoupper(this.id)">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="sbcatdesc">Days<span class="danger">*</span></label>
+                        <input type="text" id="txtterms" class="form-control editds" autocomplete="off" onkeypress="isNumberInt(event,this)">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="Close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btntermssave" onclick="SaveTerms(1)">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="jobpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="top:25%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="jobheader"></h3>
+                <button type="button" class="close" onclick="jobpopuprefresh(0)" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="Jobdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row" style="height:26px;">
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Job Details</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Unit</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Quantity</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Rate</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Discount</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Tax Group</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Tax Percentage</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Amount</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+
+                                    <input type="text" id="productjob" class="form-control editds" style="margin-left:1px">
+
+                                </div>
+
+                                <select id="locn_job" class="form-control" disabled style="background-color:white;display:none"></select>
+                                <input type="hidden" id="txtlocn_job" class="form-control" />
+
+
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+
+                                        <select id="unit_job" class="form-control editds"></select>
+                                        <input type="hidden" id="txtunit_job" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+
+                                        <input type="text" id="quantity_job" class="form-control editds" onkeyup="CalcJobAmount()" onkeypress="isNumberInt(event, this)">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-1">
+                                    <div class="form-group">
+
+                                        <input type="text" id="txtrate_job" class="form-control editds" onkeyup="CalcJobAmount()" onkeypress="isNumber(event, this)">
+                                        <input type="hidden" id="txtsubtotal_job" class="form-control" />
+                                        <input type="hidden" id="baserate_job" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <input type="text" id="discount_job" class="form-control editds" onkeypress="isNumber(event, this)" onkeyup="CalcJobAmount()">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+
+                                        <select id="tax_job" class="form-control editds"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+
+                                        <input type="text" id="taxpercentage_job" class="form-control" disabled style="background-color:white">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+
+                                        <input type="text" id="amount_job" class="form-control" disabled style="background-color:white">
+                                        <input type="hidden" id="txttaxable_job" class="form-control" />
+                                        <input type="hidden" id="txttax_job" class="form-control" />
+                                        <input type="hidden" id="txtsubtotal_job" class="form-control" />
+                                        <input type="hidden" id="baseamount_job" class="form-control" />
+                                        <input type="hidden" id="basetaxableamount_job" class="form-control" />
+                                        <input type="hidden" id="basetaxamount_job" class="form-control" />
+                                        <input type="hidden" id="basediscount_job" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="button" class="btn btn-outline-primary" value="Add" id="btnjobsave" onclick="JobAdd()">
+                                    <input type="button" class="btn btn-outline-secondary" onclick="jobpopuprefresh(0)" data-dismiss="modal" value="Clear">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div id="Othercostpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="OtherCostheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="top:10%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="OtherCostheader"></h4>
+                <button type="button" class="close" onclick="CloseOtherCost()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="OtherCostdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row" style="height:26px;">
+
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Account Type<span class="danger">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Account<span class="danger">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Currency<span class="danger">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Currency Rate<span class="danger">*</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>Amount<span class="danger">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <select id="acctype" class="form-control editds">
+                                        <option value="C">Credit</option>
+                                        <option value="D">Debit</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="accid" />
+                                <div class="col-md-3 form-group input-group">
+
+                                    <input type="text" id="account" style="height:75%" class="form-control editds" />
+                                    <div class="input-group-append" id="">
+                                        <button class="btn btn-outline-primary butndis" id="addbtnacc" type="button" style="height:75%" onclick="window.open('../Master/AccountHead')">+</button>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="text" id="accountdescription" class="form-control editds">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select id="CostCurrency" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <input type="text" id="CostCurrRate" class="form-control" onkeypress="isNumber(event, this)" onkeyup="CalcFCCost();">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <input type="text" id="costamount" class="form-control editds" value="0.00" onkeypress="isNumber(event, this)" onkeyup="CalcFCCost();">
+                                    </div>
+                                </div>
+                                <input type="hidden" id="creditamount" class="form-control" onkeypress="isNumber(event, this)">
+                                <input type="hidden" id="debitamount" class="form-control" onkeypress="isNumber(event, this)">
+
+                                <input type="hidden" id="BaseCost" value="0.00" class="form-control" onkeypress="isNumber(event, this)">
+                                <input type="hidden" id="BaseCredit" class="form-control" onkeypress="isNumber(event, this)">
+                                <input type="hidden" id="BaseDebit" class="form-control" onkeypress="isNumber(event, this)">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <input type="button" class="btn btn-outline-primary" value="+Add" id="btnaddcost" onclick="OtherCostAdd()">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="OtherCostView" class="jsgrid" style="position:relative;height:280px; width:100%;margin-top:-25px;">
+                        <div class="jsgrid-grid-header jsgrid-header-scrollbar">
+                            <table class="jsgrid-table">
+                                <tr class="jsgrid-header-row">
+                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px">Sl No</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:200px">Account</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:200px">Description</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px">Currency</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px">Currency Rate</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px">Credit/Debit</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px">Credit Amount</th>
+                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px">Debit Amount</th>
+                                    <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:50px"></th>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div id="OthreCostdiv" class="jsgrid dataTables_scrollBody" style="position: relative; overflow-y: scroll; height: 250px; width: 100%;">
+                            <table class="jsgrid-table" id="tblOtherCost"></table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <label class="col-md-1" style="margin-top:8px">Credit</label>
+                    <div class="col-md-1">
+                        <input type="text" id="totcredit" class="form-control" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                        <input type="hidden" id="totbasecredit" class="form-control" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                    </div>
+                    <label class="col-md-1" style="margin-top:8px">Debit</label>
+                    <div class="col-md-1">
+                        <input type="text" id="totdebit" class="form-control" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                        <input type="hidden" id="totbasedebit" class="form-control" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                    </div>
+                    <label class="col-md-1" style="margin-top:8px">Difference</label>
+                    <div class="col-md-1">
+                        <input type="text" id="costdiff" class="form-control" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                        <input type="hidden" id="costbasediff" class="form-control" style="background-color:white;width:120px;border:none;font-weight:bold" disabled>
+                    </div>
+                    <input type="button" class="btn btn-outline-secondary" onclick="ClearOtherCost()" id="btncrncyclear" data-dismiss="modal" value="Clear">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btncrncysave" onclick="SaveOtherCost()">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div id="PurchaseTransactionPopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="PurchaseTransactionheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="top:5%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title col-md-10" id="PurchaseTransactionheader"></h4>
+
+
+                <div id="alltranscheckboxdiv" class="custom-control custom-checkbox col-md-1" style="display:none">
+                    <input type="checkbox" class="custom-control-input" id="select_status" onchange="LastPurchaseTransactions()">
+                    <label class="custom-control-label" for="select_status">All</label>
+                </div>
+                <div id="alltranscheckboxdivsales" class="custom-control custom-checkbox col-md-1" style="display:none">
+                    <input type="checkbox" class="custom-control-input" id="select_status_sales" onchange="LastSalesTransactions()">
+                    <label class="custom-control-label" for="select_status_sales">All</label>
+                </div>
+                <div id="alltranscheckboxdivPREV" class="custom-control custom-checkbox col-md-1" style="display:none">
+                    <input type="checkbox" class="custom-control-input" id="select_status_PREV" onchange="lastalltrans()">
+                    <label class="custom-control-label" for="select_status_PREV">Previous</label>
+                </div>
+                <button type="button" class="close" onclick="ClosePurTransPopup()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <section id="purchasetrans" style="display:none">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                <div id="purchasetransdiv" class="" style="position: relative;overflow-y:scroll;width:100%;height:530px">
+                                    <input type="hidden" id="transid" style="font-size:medium" />
+                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblpurchasetrans" style="width:100%;overflow-x:scroll;overflow-y:scroll;font-size:small"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="salestrans" style="display:none">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="card-body">
+                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                <div id="" class="" style="position: relative;overflow-y:scroll;overflow-x:auto;width:100%;height:530px;">
+                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblsalestrans" style="width:100%;overflow-y:scroll;font-size:small"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section id="alltrans" style="display:none">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <div class="card-block" style="overflow:scroll;width:100%;overflow:auto">
+                                <div id="alltransdiv" class="jsgrid" style="position:relative;overflow-y:scroll;overflow-x:auto;width:100%;height:530px">
+                                    <input type="hidden" id="alltransid" />
+                                    <table class="table table-responsive-md-md jsgrid-table compact table-bordered table-striped" id="tblalltrans" style="width:100%;font-size:small"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<div id="productpdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="display:none;height:30%;">
+    <div id="productpopupdiv" class="modal-dialog modal-llg" role="document" style="top:13%">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#E0F3F4;height:50px">
+                <h5 class="modal-title" id="prodheader"></h5>
+                <button type="button" class="close" onclick="ProductPopuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <section id="productdiv" style="display:none;height:25%;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <input type="hidden" id="LPCost" value="0" />
+                            <input type="hidden" id="AvgCost" value="0" />
+                            <input type="hidden" id="Sumtotqty" value="0" />
+                            <input type="hidden" id="LastSellingPrice" value="0" />
+                            <div class="card-block" style="overflow:scroll;height:99px;width:100%;overflow:auto;">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="modal fade text-left show" id="iconForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel17" style="padding-right: 17px; display: none;display: none;background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-llg" role="document" style="top:0%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myModalLabel17">Purchase Orders</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="HidePO()" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="View">
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="col-md-12">
+                            <div class="row" style="background-color:#E0F3F4;">
+
+                                <div class="col-md-1" style="margin-top:17px;text-align:left;">
+                                    <label for="InvoiceFromDate">From Date</label>
+                                </div>
+                                <div class="col-md-2" style="margin-top:17px;">
+
+                                    <input type="text" id="InvoiceFromDate" class="form-control" placeholder="From Date" style="height:35px;font-weight:200;">
+
+                                </div>
+                                <div class="col-md-1" style="margin-top:17px;text-align:right;">
+                                    <label for="InvoiceToDate">To Date</label>
+                                </div>
+                                <div class="col-md-2" style="margin-top:17px;">
+                                    <div class="form-group">
+                                        <input type="text" id="InvoiceToDate" class="form-control" placeholder="To Date" style="height:35px;font-weight:200;">
+                                    </div>
+                                </div>
+                                <div class="col-md-1" style="margin-top:16px;">
+                                    <div class="form-group">
+                                        <button type="button" id="in1" onclick="SearchInvoiceSup(1)" class="btn btn-primary btn-min-width mr-1 mb-1 " style="position:absolute;width:100px;font-weight:400;">Search <i class="fa fa-search position-right"></i>  </button>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-1" style="margin-top:16px;">
+                                    <div class="form-group">
+                                        <button type="button" id="in2" onclick="SearchInvoiceSup(0)" class="btn btn-primary btn-min-width mr-1 mb-1" style="width:100px;font-weight:400;">Clear <i class="ft-refresh-cw position-right"> </i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-auto" style="height:525px; ">
+                            <table id="tbl_POList" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+
+                    </div>
+                    <input type="hidden" id="RowGet" />
+                </div>
+
+                <div class="modal-footer">
+
+                    <input type="button" class="btn btn-outline-secondary" onclick="HidePO()" value="Close">
+                    <input type="button" class="btn btn-outline-primary" onclick="" value="View" id="btnview">
+                </div>
+            </div>
+            <div id="add">
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="col-md-12">
+                            <div class="row" style="background-color:#E0F3F4;">
+
+                                <div class="col-md-1" style="margin-top:17px;text-align:center;">
+                                    <label for="ProductPopUp3">Product</label>
+                                </div>
+                                <div class="col-md-3" style="margin-top:17px;">
+                                    <div class="form-group">
+                                        <input type="text" id="ProductPopUp1" class="form-control" style="height:35px;font-weight:200;" onkeypress="ProductLoad('ProductPopUp1')" onkeydown="$('#ProductPopUp1Id').val(0)">
+                                        <input type="hidden" id="ProductPopUp1Id" class="form-control" value="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-1" style="margin-top:16px;">
+                                    <div class="form-group">
+                                        <button type="button" id="bb3" onclick="SearchInvoiceSub(1)" class="btn btn-primary btn-min-width mr-1 mb-1 " style="position:absolute;width:100px;font-weight:400;">Search <i class="fa fa-search position-right"></i>  </button>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-1" style="margin-top:16px;">
+                                    <div class="form-group">
+                                        <button type="button" id="bc3" onclick="SearchInvoiceSub(0)" class="btn btn-primary btn-min-width mr-1 mb-1" style="width:100px;font-weight:400;">Clear <i class="ft-refresh-cw position-right"> </i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-auto" style="height:525px; ">
+                            <table id="tbl_PO_ListItem" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                        </div>
+                    </div>
+                    <input type="hidden" id="RowGet1" />
+                </div>
+                <div class="modal-footer">
+
+                    <input type="button" class="btn btn-outline-secondary" onclick="BackInvoice()" value="Back">
+                    <input type="button" id="btnaddtogrid" class="btn btn-outline-primary" value="Add">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="OTPDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otp" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btndivdelete" onclick="$('#OTPDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btncnclsave" onclick="CheckEditInvoce()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="IMEIDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#IMEIDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-7" style="text-align:left" id="">Enter the IMEI Number</label>
+                        <label class="col-md-4" style="text-align:right;font-weight:500" id="IMEIGridQTY"></label>
+
+                    </div>
+                    <div class="row col-md-12">
+                        <textarea id="imeinumber" style="height:200px;" class="form-control editds"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="" onclick="$('#IMEIDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="" onclick="IMEIProductAdd()" class="btn btn-outline-primary">Save - (F2)</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <input type="text" value="0" id="PurchaseInvoiceMainId" />
+    <input type="text" value="0" id="PurchaseInvoiceSubId" />
+</div>
+
+
+<div style="margin-bottom:3%">
+    <div class="row col-md-12">
+        <h6 class="col-sm-1" style="font-size:medium;color:white;text-align:left;font-weight:500">Save : Alt+S</h6>
+        <h6 class="col-sm-1" style="font-size:medium;color:white;text-align:left;font-weight:500">Copy : Alt+C</h6>
+        <h6 class="col-sm-1" style="font-size:medium;color:white;text-align:left;font-weight:500">New  : Alt+N</h6>
+        <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500">Close Popups  : Esc</h6>
+        <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;margin-left:-4%">Product Add with IMEI : F2</h6>
+        <h6 class="col-md-2" style="font-size:medium;color:white;text-align:left;font-weight:500;">Last Sales Transactions : F7</h6>
+        <h6 class="col-md-3" style="font-size:medium;color:white;text-align:left;font-weight:500;">Last Purchase Transactions : F8</h6>
+
+    </div>
+    <div class="row col-md-12" style="margin-top:1%">
+        <h6 class="col-md-2" style="font-size:medium;color:#009DA0;text-align:left;font-weight:500;">All Transactions : F9</h6>
+
+    </div>
+</div>
+
+
+
+<script>
+
+    $("#btnadd").focus(function (e) {
+        $("#btnadd").removeClass("btn btn-outline-primary");
+        $("#btnadd").addClass("btn btn-primary");
+    });
+
+    $("#btnadd").focusout(function (e) {
+        $("#btnadd").removeClass("btn btn-outline-primary");
+        $("#btnadd").addClass("btn btn-outline-primary");
+    });
+
+    $("#btncnclsave").focus(function (e) {
+        $("#btncnclsave").removeClass("btn btn-outline-warning");
+        $("#btncnclsave").addClass("btn btn-warning");
+    });
+
+    $("#btncnclsave").focusout(function (e) {
+        $("#btncnclsave").removeClass("btn btn-warning");
+        $("#btncnclsave").addClass("btn btn-outline-warning");
+    });
+
+    //Job AutoComplete
+
+
+    $('#baseicon').append(BaseCurrency)
+
+    function Fnaddjobautocomplete(ID) {
+        $("#jobcode_" + ID).autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                var data = {};
+                data.JobCode = $("#jobcode_" + ID).val();
+
+                $.ajax({
+                    url: '../SalesInvoice/JobSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '2',
+                                label: item.JobCode,
+                                label1: item.Description,
+                                JobCode: item.JobCode,
+                                ProjectJobId: item.ProjectJobId,
+                                headers: ["Job Code", "Description"]
+                            })
+                        }));
+                    }
+
+
+
+                })
+            },
+            autoFocus: true,
+
+            select: function (event, ui) {
+                $('#jobcode_' + ID).val(ui.item.JobCode)
+                $('#jobcodeid_' + ID).val(ui.item.ProjectJobId)
+            },
+
+        });
+        $("#jobcode_" + ID).keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                $('#jobcodeid_' + ID).val(0);
+
+
+        });
+    }
+
+
+    $("#jobcode").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.JobCode = $("#jobcode").val();
+
+            $.ajax({
+                url: '../SalesInvoice/JobSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.JobCode,
+                            label1: item.Description,
+                            ProjectJobId: item.ProjectJobId,
+                            JobCode: item.JobCode,
+                            headers: ["Job Code", "Description"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $('#jobcode').val(ui.item.JobCode)
+            $('#jobid').val(ui.item.ProjectJobId)
+            $('#jobcode_0').val(ui.item.JobCode)
+            $('#jobcodeid_0').val(ui.item.ProjectJobId)
+            $('#product_0').focus();
+        },
+
+    });
+
+    $("#jobcode_0").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.JobCode = $("#jobcode_0").val();
+
+            $.ajax({
+                url: '../SalesInvoice/JobSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.JobCode,
+                            label1: item.Description,
+                            ProjectJobId: item.ProjectJobId,
+                            headers: ["Job Code", "Description"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $('#jobcode_0').val(ui.item.JobCode)
+            $('#jobcodeid_0').val(ui.item.ProjectJobId)
+            $('#btnadd').focus();
+        },
+
+    });
+
+    //Supplier AutoComplete
+
+    $("#suppliername").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.CustName = $("#suppliername").val();
+            data.CustType ='S';
+
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2ph',
+                            label: item.CustName,
+                            label1: item.CustAccount,
+                            label2: item.PhoneNumber,
+                            CustId: item.CustId,
+                            CurncyId: item.CurrencyId,
+                            CustTermsId: item.CustTermsId,
+                            AreaId: item.AreaId,
+                            headers: ["Supplier Name", "Account Code","Phone Number"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#supplierId').val(ui.item.CustId)
+            SearchSupplierInvoice();
+            GetCurrency(ui.item.CurncyId)
+            $('#terms').val(ui.item.CustTermsId);
+            if (ui.item.AreaId != 0) {
+                $('#placeofsupply').val(ui.item.AreaId);
+            } else {
+                $('#placeofsupply').val(DefaultArea);
+            }
+            $('#location').focus();
+            var terms = $($('#terms')).find("option:selected").attr("name");
+            getdate(terms);
+
+        },
+
+    });
+
+    //Product AutoComplete
+
+    function LoadProduct() {
+
+        $("#product_0").autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                var data = {};
+                data.ItemCode = $("#product_0").val();
+
+                $.ajax({
+                    url: '../Purchase/ProductSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '4',
+                                label: item.ItemCode,
+                                label1: item.Description,
+                                label2: item.UnitName,
+                                label3: item.SellingPrice.toFixed(Decimal),
+                                label4: '0',
+                                label5: '0',
+                                ItemId: item.ItemId,
+                                ItemCode: item.ItemCode,
+                                Description: item.Description,
+                                Unit: item.UnitId,
+                                UnitName: item.UnitName,
+                                Tax: item.VatId,
+                                Taxper: item.VatPer,
+                                Rate: (item.SellingPrice).toFixed(Decimal),
+                                headers: ["Item Code", "Description", "Unit Name", "Average Cost"]
+                            })
+                        }));
+                    }
+
+                })
+
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#productId_0').val(ui.item.ItemId);
+                $('#ProductLength').val((ui.item.ItemCode).length);
+                $('#productdesc_0').val(ui.item.Description);
+                $('#unit_0').val(ui.item.Unit);
+                $('#txtunit_0').val(ui.item.UnitName);
+                if ($('#purchasetype').val() != 'Import') {
+                    $('#tax_0').val(ui.item.Tax);
+                    $('#taxpercentage_0').val(ui.item.Taxper);
+                }
+                $('#txtrate_0').val(ui.item.Rate);
+                $('#quantity_0').val(1);
+                $('#quantity_0').focus();
+                $('#quantity_0').select();
+                CalcAmount(0);
+
+
+
+                var data = {};
+                data.ProductId = ui.item.ItemId;
+                data.CustId = 0;
+                data.DeptId = DepId;
+                $.ajax({
+                    type: "POST",
+                    url: '../SalesInvoice/CustomerProductDetailsSearch',
+                    data: data,
+                    success: function (result) {
+                        ProductPopuprefresh();
+                        CustPrdctLoad(result.oList);
+                    }
+                })
+            },
+        });
+    }
+
+    function ProductLoad(Id) {
+        $("#" + Id).autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: function (request, response) {
+                var data = {};
+                data.ItemCode = $("#" + Id).val();
+
+                $.ajax({
+                    url: '../Purchase/ProductSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: 'TWO',
+                                label: item.ItemCode,
+                                label1: item.Description,
+                                ItemId: item.ItemId,
+                                headers: ["Item Code", "Description"]
+                            })
+                        }));
+                    }
+
+                })
+
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#' + Id + 'Id').val(ui.item.ItemId);
+                $('#bb3').focus();
+
+            },
+        });
+    }
+
+    //Copy or Purchase Invoice Autocomplete
+
+    $("#copypurchaseinvo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.InvoNo = $("#copypurchaseinvo").val();
+            data.LocnId = ULocId;
+            data.DepartmentId = ERPDeptId;
+            $.ajax({
+                url: '../Purchase/SerialNoSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4',
+                            label: item.SlNo,
+                            label1: item.InvoNo,
+                            label2: item.InvoDate,
+                            label3: item.SupplierName,
+                            SlNo: item.SlNo,
+                            DepartmentId:item.DepartmentId,
+                            headers: ["Serial No", "Invoice No", "Date", "Supplier"]
+
+
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            var data = {};
+            data.SlNo = ui.item.SlNo;
+            data.DepartmentId = ui.item.DepartmentId;
+            $.ajax({
+                type: "POST",
+                url: "../Purchase/PurchaseInvoiceGetandGets",
+                data: data,
+                success: function (result) {
+                    formrefresh(1);
+                    PurchaseGets(result.oList);
+                    $('#btnnew').focus();
+                    $('.form-control').prop('disabled', true);
+                    $('#copypurchaseinvo').prop("disabled", false);
+                    $('.jsgrid-button').prop('disabled', true);
+                    $('#btnsubmit').prop("disabled", true);
+                    $('#btnlist').prop("disabled", true);
+                    $('#btnadd').prop("disabled", true);
+                    $('#btncrncysave,#btncrncyclear').prop("disabled", true);
+                    $('#btnaddcost').prop("disabled", true);
+                    //$('#btnedit').show();
+                }
+            });
+        },
+
+    });
+
+
+    //Account AutoComplete
+
+    $("#account").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.AccountDescription = $("#account").val();
+            $.ajax({
+                url: '../Inventory/AccountNumberSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '1',
+                            label: item.DebitAccount+"-"+item.AccountDescription,
+                            label1: item.AccountDescription,
+                            DebitAccount: item.DebitAccount,
+                            AccountDescription: item.AccountDescription,
+                            AccountId: item.AccountId,
+                            headers: ["Account Code - Description"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#accid').val(ui.item.AccountId)
+            $('#account').val(ui.item.DebitAccount + "-" + ui.item.AccountDescription);
+            //$('#accountdescription').val(ui.item.AccountDescription);
+
+        },
+    });
+
+    $(function () {
+
+
+        $('#shipdate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+
+        });
+
+        $('#purchaseinvdate,#InvoiceFromDate,#InvoiceToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+
+        });
+
+        $('#duedate').daterangepicker({
+        minDate: minDate,
+        maxDate: new Date(new Date().getFullYear(), new Date().getMonth()+2, new Date().getDate()),
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+        });
+
+    });
+
+
+
+</script>

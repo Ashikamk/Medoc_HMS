@@ -1,0 +1,496 @@
+﻿
+@{
+    ViewBag.Title = "LocationTransfer";
+}
+
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+
+
+<table style="display:none" id="Tblreportprint"></table>
+
+<div class="myData" data-x="M185" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+
+                                <td width="30%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#fromlocation').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintthisReportWindows('LocationTransferUsedCars', $('#ResultLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+
+
+
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+
+
+                                <br /><hr />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                    <table id="TblreportUsedCars" class="table table-striped table-bordered base-style dataTable" style="display:none"></table><br />
+                                </div>
+
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Location Transfer Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row" style="margin-top:20px;">
+                        <label style="margin-top:5px;margin-left:50px">From Date </label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="margin-top:5px;margin-left:70px">To Date </label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+                        <label style="margin-top:5px;margin-left:20px">From Location </label>
+                        <div class="col-md-4">
+                            <select id="fromlocation" name="priority" class="form-control"></select>
+                        </div>
+                        <label style="margin-top:5px;margin-left:45px">To Location </label>
+                        <div class="col-md-4">
+                            <select id="tolocation" name="priority" class="form-control"></select>
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top:20px;">
+
+                        <label style="margin-top:5px;margin-left:67px">Product </label>
+                        <div class="col-md-4">
+                            <input type="text" id="productname" class="form-control">
+                            <input type="hidden" id="productId" class="form-control" />
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-outline-primary">Go</button>
+                    <input type="hidden" id="ResultLength" class="form-control" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#productname").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#productname").val();
+
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            ItemId: item.ItemId,
+                            headers: ["Product Code", "Product Name"]
+
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#productId').val(ui.item.ItemId)
+        },
+    });
+
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+    function Showreport(result) {
+
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th>Slno</th><th>LocTransfer#</th><th>Date</th><th>Item Code</th><th>Item Name</th><th>Item Key</th><th>From Location</th><th>To Location</th><th>Container</th></tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            responseText += '<tr><td>' + slno + '</td><td>' + result[i].LocTransferId + '</td><td>' + result[i].InvDate + '</td><td>' + result[i].ItemCode + '</td><td>' + result[i].ItemName + '</td><td>' + result[i].ItemKey + '</td><td>' + result[i].FromLocation + '</td><td>' + result[i].ToLocation + '</td><td>' + result[i].Container + '</td></tr>';
+
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th> </th><th>LocTransfer#</th><th>Date</th><th>Item Code</th><th>Item Name</th><th>Item Key</th><th>From Location</th><th>To Location</th><th>Container</th></tr></tfoot>');
+        //$('#Tblreportprint').html(responseText )
+        var title = "Location Transfer Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+
+
+
+    function GetLocation(id) {
+        var data = {};
+        data.LocationId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                LocationLoad(result.oList, id);
+
+
+            }
+        });
+
+    }
+
+    function LocationLoad(result, a) {
+        $("#fromlocation,#tolocation").empty();
+        LocationSelect = "<option value='0'>-All-</option>";
+        for (var i = 0; i < result.length; i++) {
+            LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
+
+        }
+        $("#fromlocation,#tolocation").append(LocationSelect);
+    }
+
+    function UsedCarsPrint() {
+
+        var Condition = '', FromLocation = '', ToLocation = '', Product = ''
+        var FromDate = $('#DateFrom').val();
+        var ToDate = $('#DateTo').val();
+
+        var FromLocation = $('#fromlocation').val();
+        var ToLocation = $('#tolocation').val();
+
+
+        if ($('#productname').val() == '') {
+            $('#productId').val(0);
+        }
+
+        var Product = parseInt($('#productId').val() || 0);
+
+        Condition = 'CONVERT(datetime,TransferDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,TransferDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+        if (FromLocation != 0) { Condition += ' and LoadFrom = ' + FromLocation; }
+
+        if (ToLocation != 0) { Condition += ' and LoadTo = ' + ToLocation; }
+
+        if (Product != 0) { Condition += ' and LT.ItemId=' + Product; }
+
+
+        var data1 = {};
+        data1.Condition = Condition;
+        $.ajax({
+            type: "POST",
+            url: "../Purchaseandsalesreports/LocationTransferUsedCars",
+            data: data1,
+            success: function (result) {
+                $('#Loading').hide();
+                $('#divreport').show();
+                $('#popupdiv').hide();
+                ShowreportUsedCars(result);
+            }
+        });
+
+    }
+
+    function ShowreportUsedCars(result) {
+        //  disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th>Slno</th><th>Chasis No</th><th>Description</th><th>Make</th><th>Made</th><th>Model</th><th>Colour</th><th>From Location</th><th>To Location</th><th>Year</th><th>Lot Number</th><th>Key</th></tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            responseText += '<tr><td>' + slno + '</td><td  id="Col1_' + slno + '">' + result[i].ChasisNo + '</td><td  id="Col2_' + slno + '">' + result[i].Description + '</td><td  id="Col3_' + slno + '">' + result[i].Make + '</td><td  id="Col4_' + slno + '">' + result[i].Made + '</td><td  id="Col5_' + slno + '">' + result[i].Model + '</td><td  id="Col6_' + slno + '">' + result[i].Color + '</td><td  id="Col7_' + slno + '">' + result[i].FromLocation + '</td><td  id="Col8_' + slno + '">' + result[i].ToLocation + '</td><td  id="Col9_' + slno + '">' + result[i].Year + '</td><td  id="Col10_' + slno + '">' + result[i].LotNumber + '</td><td  id="Col11_' + slno + '">' + result[i].Key + '</td></tr>';
+
+        }
+        $('#TblreportUsedCars').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>Chasis No</th><th>Description</th><th>Make</th><th>Made</th><th>Model</th><th>Colour</th><th>From Location</th><th>To Location</th><th>Year</th><th>Lot Number</th><th>Key</th></tr></tfoot>');
+        $('#Tblreportprint').html(responseText)
+        var title = "Location Transfer Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        //  datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+        $('#ResultLength').val(result.length);
+    }
+
+
+
+    $(function () {
+        $('#fromlocation').focus();
+        GetLocation(0);
+
+
+        $('#fromlocation').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#tolocation').focus();
+                e.preventDefault();
+            }
+        });
+
+        $('#tolocation').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#productname').focus();
+                e.preventDefault();
+            }
+        });
+        $('#productname').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+
+
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+
+        $("#btnsubmit").click(function (e) {
+
+
+            var Condition = '', FromLocation = '', ToLocation = '', Product = ''
+            var FromDate = $('#DateFrom').val();
+            var ToDate = $('#DateTo').val();
+
+            var FromLocation = $('#fromlocation').val();
+            var ToLocation = $('#tolocation').val();
+
+
+            if ($('#productname').val() == '') {
+                $('#productId').val(0);
+            }
+
+            var Product = parseInt($('#productId').val() || 0);
+
+            Condition = 'CONVERT(datetime,TransferDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,TransferDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+            if (FromLocation != 0) { Condition += ' and LoadFrom = ' + FromLocation; }
+
+            if (ToLocation != 0) { Condition += ' and LoadTo = ' + ToLocation; }
+
+            if (Product != 0) { Condition += ' and LT.ItemId=' + Product; }
+
+
+            var data = {};
+
+            data.Condition = Condition;
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/LocationTransfer",
+                data: data,
+                success: function (result) {
+
+                    $('#Loading').hide();
+                    $('#divreport').show();
+                    $('#popupdiv').hide();
+                    Showreport(result);
+                }
+            });
+
+            UsedCarsPrint();
+
+
+        });
+
+    });
+
+
+
+
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                "columnDefs": [
+                        { "width": "2%", "targets": 0 },
+                        { "width": "6%", "targets": 1 },
+                        { "width": "7%", "targets": 2 },
+                        { "width": "15%", "targets": 3 },
+                        { "width": "27%", "targets": 4 },
+                        { "width": "7%", "targets": 5 },
+                        { "width": "12%", "targets": 6 },
+                        { "width": "12%", "targets": 7 },
+                        { "width": "12%", "targets": 8 },
+                ],
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+</script>
+
+
+
+
+
+
+

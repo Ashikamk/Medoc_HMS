@@ -1,0 +1,532 @@
+﻿
+@{
+    ViewBag.Title = "Utilities";
+}
+
+<div class="myData" data-x="M127" />
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<div id="Entry">
+  
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">Utilities</h4>
+                </div>
+                <div class="card-body" style="">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="col-md-12">
+                                            <div class="form-group row text-left">
+                                                @*<div class="col-md-2">
+                                                    <button type="button" style="width:70%" id="stkrefresh" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">Stock Refresh</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" style="width:70%" id="avgcostrefresh" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">AvgCost Refresh</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" style="width:80%" id="avgcostrefreshitem" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">AvgCost Refresh(Item)</button>
+                                                </div>*@
+                                                <div class="col-md-2">
+                                                    <button type="button" style="width:70%" id="takebackup" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">BACKUP</button>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" style="width:70%" id="btnAcntMerge" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">Account Merge</button>
+                                                </div>
+                                                <div style="display:none" class="col-md-2" id="VoucherDiff">
+                                                    <button type="button" style="width:70%" id="VoucherDiffreport" onclick="window.open('../Report/VoucherDifferenceReport')" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">Voucher Difference</button>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group row text-left">
+                                                      
+                                                        <div style="display:none" class="col-md-2" id="eumirights">
+                                                            <button type="button" style="width:70%" id="menufrom" onclick="UpdateEumiUserRights()" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">Eumi Rights</button>
+
+                                                        </div>
+                                                        <div style="display:none" class="col-md-2" id="MenuaddForm">
+                                                            <button type="button" style="width:70%" id="menufrom" onclick="window.open('../Home/MenuAdd')" class="btn btn-raised btn-outline-primary round btn-min-width mr-1 mb-1">Menus</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="AvgCostDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#AvgCostDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <label class="col-md-5" style="text-align:left" id="reason">Select Item:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="Item" class="form-control" autocomplete="off">
+                            <input type="hidden" id="ItemId" value="0">
+                        </div>
+                    </div>
+                 
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" onclick="$('#AvgCostDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px"  onclick="AvgCostItemRefresh()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div id="AccMergeDiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6><b>Account Merge</b></h6>
+                <button type="button" class="close" onclick="$('#AccMergeDiv').hide()" data-dismiss="modal" aria-label="Close">                   
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Convert Account:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="AccountFrom" class="form-control" autocomplete="off">
+                            <input type="hidden" id="AccIdFrom" value="0">
+                            <input type="hidden" id="CustIdFrom" value="0">
+                            <input type="hidden" id="CustTypeFrom">
+                        </div>                    
+                    </div>                   
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">To Account:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="AccountTo" class="form-control" autocomplete="off">
+                            <input type="hidden" id="AccIdTo" value="0">
+                            <input type="hidden" id="CustIdTo" value="0">
+                            <input type="hidden" id="CustTypeTo">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Reason:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="ReasonAcntMerge" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="AcntMergeOTP" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" onclick="$('#AccMergeDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" onclick="AccountMergeConfirm()" class="btn btn-outline-warning">Continue</button>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script>
+    if (usermenu1.indexOf("M207") != -1) {
+        $('#VoucherDiff').show();
+    }
+    var DepId = ERPDeptId; var UId = ERPUserId; var ULocId = UserLocationId;
+    if (UId == 1) {
+        $('#MenuaddForm,#eumirights').show();
+    }
+    else {
+        $('#MenuaddForm,#eumirights').hide();
+    }
+    
+    $("#stkrefresh").click(function (e) {
+        StockRefresh()
+    });
+    $("#avgcostrefresh").click(function (e) {
+        AvgCostRefresh()
+    });
+    $("#avgcostrefreshitem").click(function (e) {
+        ShowAvgCostPopup()
+    });
+    $("#btnAcntMerge").click(function (e) {
+        ShowAccountMerge()
+    });
+
+    $("#takebackup").click(function (e) {
+        $('#Loading').show();
+        var data = {};   //arra
+        data.Query = "";
+        $.ajax({
+            type: "POST",
+            url: "../Utilities/BackupDatabase",
+            data: data,
+            success: function (result) {              
+                var status = result.oList[0].Status;
+                $('#Loading').hide();
+                Showalerts(3,status);
+            }
+        });
+    });
+
+    $("#Item").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#Item").val();
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            ItemId: item.ItemId,
+                            headers: ["Item Code", "Description"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#ItemId').val(ui.item.ItemId);
+
+
+        },
+    });
+
+    $("#AccountFrom").autocomplete({
+        source: function (request, response) {
+
+            $('#AccIdFrom').val(0);
+            $('#CustIdFrom').val(0);
+            $("#CustTypeFrom").val('');
+
+            var data = {};
+            data.AccCode = $("#AccountFrom").val();
+            $.ajax({
+                url: '../AccountsErp/AccSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2',
+                            label: item.AccDescription,
+                            label1: item.AccCode,
+
+                            AccountName: item.AccDescription,
+                            AccCode: item.AccCode,
+                            AccountId: item.AccId,
+                            CustSuppId: item.CustSuppId,
+                            CustType:item.CustType,
+                            headers: ["Account Name", "Account Code"]
+                        })
+                    }));
+
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+
+            $('#AccountFrom').val(ui.item.label);
+            $('#AccIdFrom').val(ui.item.AccountId);
+            $('#CustIdFrom').val(parseInt(ui.item.CustSuppId || 0));
+            $("#CustTypeFrom").val(ui.item.CustType);
+
+        },
+
+    });
+
+    $("#AccountTo").autocomplete({
+        source: function (request, response) {
+
+            $('#CustIdTo').val(0);
+            $('#AccIdTo').val(0);
+            $("#CustTypeTo").val('');
+
+            var data = {};
+            data.AccCode = $("#AccountTo").val();
+            $.ajax({
+                url: '../AccountsErp/AccSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2',
+                            label: item.AccDescription,
+                            label1: item.AccCode,
+
+                            AccountName: item.AccDescription,
+                            AccCode: item.AccCode,
+                            AccountId: item.AccId,
+                            CustSuppId: item.CustSuppId,
+                            CustType:item.CustType,
+                            headers: ["Account Name", "Account Code"]
+                        })
+                    }));
+
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+
+            $('#AccountTo').val(ui.item.label);
+            $('#AccIdTo').val(ui.item.AccountId);
+            $('#CustIdTo').val(parseInt(ui.item.CustSuppId || 0));
+            $("#CustTypeTo").val(ui.item.CustType);
+        },
+
+    });
+
+    function StockRefresh() {
+        $('#Loading').show();
+            $.ajax({
+                type: "POST",
+                url: "../Utilities/StockRefresh",
+                success: function (result) {
+                    for (var i = 0; i < result.oList.length; i++) {
+                        var status = result.oList[i].Status;
+                        $('#Loading').hide();
+                        Showalerts(status,'');
+                    }
+                }
+            });
+    }
+
+    function AvgCostRefresh() {
+        $('#Loading').show();
+        $.ajax({
+            type: "POST",
+            url: "../Utilities/AverageCostRefresh",
+            success: function (result) {
+                for (var i = 0; i < result.oList.length; i++) {
+                    var status = result.oList[i].Status;
+                    $('#Loading').hide();
+                    Showalerts(status,'');
+                }
+            }
+        });
+    }
+
+    function Showalerts(Status,msg) {
+        if (Status == 1) {
+            swal('Stock Refresh Completed', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        else if (Status == 2) {
+            swal('Average Cost Refresh Completed', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+
+        }
+        else if (Status == 3) {
+            swal('Backup completed', msg, "success");
+            $('.swal-button swal-button--confirm').focus();
+
+        }
+        else if (Status == 4) {
+            swal('Eumi User Rights Updated',"", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        else if (Status == 5) {
+            swal('Invalid OTP', "", "warning");
+            $('.swal-button swal-button--confirm').focus();
+        }
+        else if (Status == 6) {
+            swal('Account Mergred', "", "success");
+            $('.swal-button swal-button--confirm').focus();
+        }
+    }
+    function UpdateEumiUserRights() {
+        $('#Loading').show();
+        $.ajax({
+            type: "POST",
+            url: "../Home/UpdateEumiUserRights",
+            success: function (result) {
+                var status = result.oList[0].Status;
+                $('#Loading').hide();
+                Showalerts(status);
+            }
+        });
+    }
+    //Show Warnig Popup right top
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').fadeOut();
+        }, 3000);
+    }
+    function ShowAvgCostPopup() {
+        $("#Item").prop("disabled", false);
+        $("#Item").val('');
+        $("#ItemId").val(0);
+        $("#AvgCostDiv").show();
+        $("#Item").focus();
+    }
+
+    function AvgCostItemRefresh() {
+        if (parseInt($("#ItemId").val() || 0) == 0) {
+            warningshow("Select Product",'Item');
+        }
+        else {
+            var data = {};
+            data.ItemId = $("#ItemId").val();
+            
+            $.ajax({
+                type: "POST",
+                url: "../Utilities/AverageCostItemRefresh",
+                data:data,
+                success: function (result) {
+                    $("#AvgCostDiv").hide();
+                        var status = result.oList[0].Status;
+                        $('#Loading').hide();                        
+                        Showalerts(status, '');                  
+                }
+            });
+        }
+    }
+
+    function ShowAccountMerge() {
+        $("#AccountFrom,#AccountTo,#ReasonAcntMerge,#AcntMergeOTP").prop("disabled", false);
+        $("#AccountFrom,#AccountTo,#ReasonAcntMerge,#AcntMergeOTP,#CustTypeFrom,#CustTypeTo").val('');
+        $("#AccIdFrom,#AccIdTo,#CustIdFrom,#CustIdTo").val(0);
+        $("#AccMergeDiv").show();
+        $("#AccountFrom").focus();
+    }
+
+    function AccountMergeConfirm() {
+        var CustAcc = 0;
+        if (parseInt($("#CustIdFrom").val() || 0) != 0 || parseInt($("#CustIdTo").val() || 0) != 0) {
+
+            if ($("#CustTypeFrom").val() == 'C' || $("#CustTypeTo").val() == 'C') {
+                CustAcc = 1;
+            }
+            else if ($("#CustTypeFrom").val() == 'S' || $("#CustTypeTo").val() == 'C') {
+                CustAcc = 2;
+            }
+            else {
+                CustAcc = 3;
+            }
+        }
+
+        //console.log($("#AccIdFrom").val()); console.log($("#AccIdTo").val()); console.log($("#CustIdFrom").val());
+        //console.log($("#CustIdTo").val()); console.log($("#CustTypeFrom").val()); console.log($("#CustTypeTo").val());
+        //console.log(CustAcc);
+
+        if (parseInt($("#AccIdFrom").val() || 0) == 0) {
+            warningshow("Select Account", 'AccountFrom');
+        }
+        else if (parseInt($("#AccIdTo").val() || 0) == 0) {
+            warningshow("Select Account", 'AccountTo');
+        }
+        else if ($.trim($("#ReasonAcntMerge").val()) == '') {
+            warningshow("Enter Reason For Account Merge", 'ReasonAcntMerge');
+        }
+        else if ($.trim($("#AcntMergeOTP").val()) == '') {
+            warningshow("Enter OTP", 'AcntMergeOTP');
+        }
+        else if (parseInt($("#CustIdFrom").val() || 0) != 0 && parseInt($("#CustIdTo").val() || 0) == 0) {
+            warningshow("Cannot Convert From Customer/Supplier To Normal Account", 'AccountTo');
+        }
+        else if (parseInt($("#CustIdFrom").val() || 0) == 0 && parseInt($("#CustIdTo").val() || 0) != 0) {
+            warningshow("Cannot Convert Normal Account To Customer/Supplier Account", 'AccountFrom');
+        }
+        else if (CustAcc == 1 && $("#CustTypeFrom").val() != $("#CustTypeTo").val()) {
+            warningshow("Cannot Convert Customer Account To Supplier Account", 'AccountTo');
+        }
+        else if (CustAcc == 2 && $("#CustTypeFrom").val() != $("#CustTypeTo").val()) {
+            warningshow("Cannot Convert Supplier Account To Customer Account", 'AccountTo');
+        }
+        else {
+            $('#confirm').show();
+            $('#confirmOk').prop("disabled", false);
+            $('#confirmOk').focus();
+            $('#Confirmflag').val('AccountMerge'); $('#ConfirmRowId').val(0);
+            $('#confirmmessage').text('Account Merging Cannot Undo!.. Do you want to Continue?');
+        }
+    }
+
+    function AccountMerge() {
+      
+            $('#Loading').show();
+            var data = {};
+            data.AccIdFrom = $("#AccIdFrom").val();
+            data.AccIdTo = $("#AccIdTo").val();
+            data.Reason = $("#ReasonAcntMerge").val();
+            data.OTP = $("#AcntMergeOTP").val();
+            data.CustIdFrom=$("#CustIdFrom").val();
+            data.CustIdTo = $("#CustIdTo").val();
+            data.CustTypeFrom = $("#CustTypeFrom").val();
+            data.CustTypeTo = $("#CustTypeTo").val();
+            data.UserId = ERPUserId;
+            data.DepartmentId = ERPDeptId;
+
+            $.ajax({
+                type: "POST",
+                url: "../Utilities/AccountMerge",
+                data: data,
+                success: function (result) {
+                    $('#Loading').fadeOut();
+                    var status = result.oList[0].Status;
+                    if (status == 6) {
+                        $("#AccMergeDiv").hide();                        
+                       
+                    }
+                    //else if (status == 5) {
+                    //    warningshow("Invalid OTP", 'AcntMergeOTP');
+                    //}
+                        Showalerts(status, '');
+                }
+            });
+        
+    }
+
+
+    function ConfirmboxResult(Result, status, rowid) {
+
+        if (Result == 'true' && status == 'AccountMerge') {
+            AccountMerge()
+        }
+        $('#confirm').fadeOut();
+
+    }
+</script>
+

@@ -1,0 +1,877 @@
+﻿
+@{
+    ViewBag.Title = "IPStatement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+@*<script type="text/javascript" src="~/ProjectScript/IPStatement.js"></script>*@
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1 !important;
+    }
+
+    img {
+        max-height: 200px;
+        max-width: 200px;
+    }
+
+    #customView, #customView_1 {
+        border: 1px solid #CCD6E6;
+    }
+
+    .GridBRow {
+        border: 1px solid #9faec3;
+    }
+
+    .TotalBill > .GridBRow {
+        background: #009da0;
+        color: white;
+        font-weight: bold;
+    }
+
+    .Total > .GridBRow {
+        background: #cfd8dc;
+        color: black;
+        font-weight: bold;
+    }
+
+    .Header > .GridBRow {
+        background: #80ced0;
+        color: black;
+        font-weight: bold;
+    }
+
+    .GridTextBox {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: white !important;
+    }
+
+    .GridTextBoxTotal {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: #cfd8dc !important;
+        color: black;
+        font-weight: bold;
+    }
+
+    .GridTextBoxTotalBill {
+        border: none;
+        height: 30px;
+        text-align: right;
+        background-color: #009da0 !important;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="myData" data-x="M394" />
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<section id="vertical-tabs">
+
+
+    <div class="row match-height">
+
+        <div class="col-xl-4 col-lg-12">
+            <div class="card" style="height: 252px;">
+                <div class="card-header pb-0" style="border-bottom:1px solid #e6e6e6;">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h4 class="card-title" style="font-weight:bold;">IP Statement</h4>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-primary" id="btnprint"><i class="fa fa-print"></i></button>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="pl-4 pr-2">
+                            <div class="row mb-1 mt-2">
+
+                                <label class="col-md-4 label-control pl-1">Reg#/IP#</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="RegNo" class="form-control denull" placeholder="Search Patient" />
+                                    <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" id="SIP_Number" class="form-control denull" disabled style="background-color:white;" />
+                                    <input type="hidden" id="IP_Number" class="form-control denull" />
+                                    <input type="hidden" id="IP_Year" class="form-control denull" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+
+                                <label class="col-md-4 label-control pl-1">Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="PName" class="form-control denull" disabled style="background-color:white;" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-1" style="display:none;">
+
+                                <label class="col-md-4 label-control pl-1">OPVisit#</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="OPVisitId" class="form-control denull" disabled style="background-color:white;" />
+
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+
+                                <label class="col-md-4 label-control pl-1">Admitted Date</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="AdmittedDate" class="form-control denull" disabled style="background-color:white;" />
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 col-lg-12">
+            <div class="card" style="height: 252px;">
+
+                <div class="card-content">
+                    <div class="card-body pt-3">
+                        <div class="row">
+                            <div class="col-md-7" style="">
+
+                                <div class="px-3">
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">DOB/Age</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatDOB" class="label-control detextnull"></label>
+
+                                            <label id="PatAge" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Gender/Blood Group</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatGender" class="label-control detextnull"></label>
+
+                                            <label id="PatBloodGrp" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Contat</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatNumber" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Aadhar No</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatAadhar" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label class="col-md-4 label-control">Address</label>
+                                        <label class="col-md-1 label-control">:</label>
+                                        <div class="col-md-7">
+                                            <label id="PatAdd1" class="label-control detextnull"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label class="col-md-5 "></label>
+                                        <div class="col-md-7">
+                                            <label id="PatAdd2" class="label-control detextnull"></label>
+                                            <label id="PatAdd3" class="label-control detextnull m-0"></label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-5 p-0">
+                                <div class="row mb-2">
+                                    <div class="m-0 col-md-12">
+                                        <div class="text-center p-0" style="">
+                                            <img id="myImg" src="/app-assets/img/portrait/medium/avatar-m-100.jpg" alt="Gini" class="img-thumbnail  gray" onerror="this.onerror = null; this.src = '../app-assets/img/portrait/medium/avatar-m-100.jpg';">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script>
+
+
+    
+
+
+
+</script>
+
+<div id="listing">
+    <section>
+        <div class="card m-0">
+            <div class="card-header">
+
+
+                <div  class="row">
+                    <label class="label-control">Bill Details</label>
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative;width: 100%;">
+                               
+                                <div id="proddiv" class="" style="position: relative;height: auto; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGridauto" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div style="display:none" class="row">
+
+                    <table width="80%"><tr><td>&#160;</td></tr><tr><td>    <label class="label-control">Bill Details(Date wise)</label></td><td align="right"> <button class="btn btn-primary" onclick="printdetilsbill()" id=""><i class="fa fa-print"></i></button></td></tr></table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative; height: auto; width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:245px;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Qty</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddiv" class="" style="position: relative; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGriddetails" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+                <div style="display:none" class="row">
+
+                    <table width="80%"><tr><td>&#160;</td></tr><tr><td>    <label class="label-control">Lab Details(Test/Bill wise)</label></td><td align="right"> <button class="btn btn-primary" onclick="printdetilslabbill()" id=""><i class="fa fa-print"></i></button></td></tr></table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative; width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:45px;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:245px;">Test Name</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddivtest" class="" style="position: relative; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGriddetailstest" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                <div style="display:none" class="row">
+
+                    <table width="80%"><tr><td>&#160;</td></tr><tr><td>    <label class="label-control">Pharmacy Details(Product/Bill wise)</label></td><td align="right"> <button class="btn btn-primary" onclick="printdetilspharmabill()" id=""><i class="fa fa-print"></i></button></td></tr></table>
+
+
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <div id="customView" class="jsgrid" style="position: relative;width: 100%;">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px;">Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:45px;">BillNo</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:200px;">Medicine Name</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Batch</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Exp</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Qty</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Rate</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:45px;">Amount</th>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div id="proddivtest" class="" style="position: relative; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGriddetailsmedicine" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+
+                        <div class="row">
+                            <label class="label-control">Room Details</label>
+                            <div id="customView_1" class="jsgrid" style="position: relative; height: 210px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                                <div class="jsgrid-grid-header" style="width:100%;">
+                                    <table class="jsgrid-table">
+                                        <tr class="jsgrid-header-row">
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">SL#</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%;">Room</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px;">Rent</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:100px;">From Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:100px;">To Date</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px;">Days/Hrs</th>
+                                            <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:100px;">Total Rent</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="proddiv_1" class="" style="position: relative; overflow-x: hidden;overflow-y:scroll; height: 170px; width:100%;">
+                                    <table class="jsgrid-table" id="tbl_IPGrid_Room" style="table-layout:fixed;"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none">
+    <input id="GridLength" value="0" />
+    <input id="GridLengthRoom" value="0" />
+
+</div>
+<script>
+
+    Defaultfocus();
+    function Defaultfocus() {
+        $("#RegNo").focus()
+    }
+
+    function GetPatient(Id) {
+        var data = {};                                       //dropdownbind
+        data.PatientId = Id;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_PatientSearchGet",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    GetPatientData(result.oList, 1);
+                }
+            }
+        });
+    }
+
+    function GetPatientData(result, Flag) {
+
+        if (result.length > 0) {
+
+            var age = AgeCalculation(result[0].DOB);
+
+            var CurrentAge = '';
+            if (age.years < 10) {
+                if (age.years > 1) yearString = " Years";
+                else yearString = " Year";
+                if (age.months > 1) monthString = " Months";
+                else monthString = " Month";
+                if (age.days > 1) dayString = " Days";
+                else dayString = " Day";
+
+                if (age.years > 0) { CurrentAge = CurrentAge + age.years + yearString; } if (CurrentAge != '' && (age.months > 0 || age.days > 0)) { CurrentAge = CurrentAge + ', ' }
+                if (age.months > 0) { CurrentAge = CurrentAge + age.months + monthString; } if (CurrentAge != '' && age.months > 0 && age.days > 0) { CurrentAge = CurrentAge + ', ' }
+                if (age.days > 0) { CurrentAge = CurrentAge + age.days + dayString; }
+
+            }
+            else {
+                CurrentAge = age.years + ' Years';
+            }
+            $("#PatAge").text(', ' + CurrentAge);
+            $("#PatGender").text(result[0].Gender);
+            $("#PatDOB").text(result[0].DOB);
+            $("#PatBloodGrp").text(', ' + result[0].BloodGroup);
+            $("#PatOccuPation").text(result[0].Occupation);
+            $("#PatLastVisit").text(result[0].LastVisit);
+            $("#PatDOR").text(result[0].RegDate);
+            $("#PatHealthCard").text(result[0].HealthCard);
+            $("#PatAadhar").text(result[0].AadharNo);
+            $("#PatAdd1").text(result[0].Add1);
+            $("#PatAdd2").text(result[0].Add2);
+            $("#PatAdd3").text(', ' + result[0].Add3);
+            $("#PatNumber").text(result[0].Contact);
+
+
+
+            var Ext = (result[0].Status).split('.').pop();
+            CheckImgValid('myImg', result[0].PatientId, Ext);
+        }
+    }
+
+    function CheckImgValid(Id, RegId, Ext) {
+        var d = new Date();
+        $.ajax({
+            url: "../ProjectImages/PatientImage/" + RegId + "." + Ext + "",
+            type: 'HEAD',
+            error: function () {
+                $('#' + Id).attr('src', "/app-assets/img/portrait/medium/avatar-m-100.jpg");
+            },
+            success: function () {
+                $('#' + Id).attr('src', "../ProjectImages/PatientImage/" + RegId + "." + Ext + "?" + d.getSeconds());
+            }
+        });
+    }
+
+
+    function formrefresh(Flag) {
+        $("#PatientId,#IP_Number,#IP_Year").val(0);
+        $("#PName,#SIP_Number,#OPVisitId,#AdmittedDate").val('');
+        $('.detextnull').text('');
+        $('#myImg').attr('src', "/app-assets/img/portrait/medium/avatar-m-100.jpg");
+        $('#tbl_IPGrid tr,#tbl_IPGrid_Room tr').remove();
+    }
+
+
+
+    function GetIPDetailsRoom(IPNo, IPYear) {
+        var data = {};
+        data.IPNumber = IPNo;
+        data.IPYear = IPYear;
+        data.DeptId = ERPDeptId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_IPStatementRoom",
+            data: data,
+            success: function (result) {
+                LoadIPStatementRoom(result.oList)
+            }
+        });
+    }
+
+    function LoadIPStatementRoom(result) {
+        $('#tbl_IPGrid_Room tr').remove();
+        $("#GridLengthRoom").val(0);
+
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+
+
+            var id = slno;
+
+            if (result[i].Flag == 1) {
+                var ProdEditRow = "<tr class='jsgrid-row Billtr TotalBill' id='RBrow_" + id + "'>" +
+                    "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center' >" + id +
+                    "<input type='hidden' id='RType_" + id + "' value='" + result[i].Flag + "' />" +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='Room_" + id + "'  style= 'width:15%;' >" + result[i].Date +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='RentTR_" + id + "' style= 'width:100px;' >" +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='FromDate_" + id + "'  style= 'width:100px;' align=center>" +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='ToDate_" + id + "'  style= 'width:100px;' align=right >" +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='Days_" + id + "'  style= 'width:100px;' align=right >" +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:100px;' align=right >" +
+                    "<input type='text' id='TotalRent__" + id + "' class='form-control GridTextBoxTotalBill' disabled value='" + parseFloat(result[i].Amount || 0).toFixed(Decimal) + "' />" +
+                    "</td>" +
+
+                    "</tr>";
+            }
+
+            else {
+
+                var ProdEditRow = "<tr class='jsgrid-row Billtr' id='Brow_" + id + "'>" +
+                    "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center' >" + id +
+                    "<input type='hidden' id='RType_" + id + "' value='" + result[i].Flag + "' />" +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='Room_" + id + "'  style= 'width:15%;' >" + result[i].Remarks +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='RentTR_" + id + "' style= 'width:100px;' >" +
+                    "<input type='text' id='Rent_" + id + "' class='form-control GridTextBox' disabled value='" + parseFloat(result[i].Rate || 0).toFixed(Decimal) + "' />" +
+
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='FromDate_" + id + "'  style= 'width:100px;' align=center>" + result[i].Date +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='ToDate_" + id + "'  style= 'width:100px;' align=right >" + result[i].Status +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='Days_" + id + "'  style= 'width:100px;' align=right >" + result[i].Days + ' Days, ' + result[i].RegSerId + 'Hours' +
+                    "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:100px;' align=right >" +
+                    "<input type='text' id='TotalRent__" + id + "' class='form-control GridTextBox' onkeypress='isNumber(event,this)' onkeyup='CalcAmountRent(" + id + ")' value='" + parseFloat(result[i].Amount || 0).toFixed(Decimal) + "' />" +
+
+                    "</td>" +
+                    "</tr>";
+            }
+            $('#tbl_IPGrid_Room').append(ProdEditRow);
+
+
+        }
+        $("#GridLengthRoom").val(id);
+        $('#proddiv_1').animate({ scrollTop: 5000 }, 900);
+    }
+
+
+
+
+    function GetIPDetails(IPNo, IPYear) {
+        var data = {};
+        data.IPNumber = IPNo;
+        data.IPYear = IPYear;
+        data.DeptId = ERPDeptId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_IPStatement",
+            data: data,
+            success: function (result) {
+                LoadIPStatement(result.oList)
+            }
+        });
+    }
+
+
+    function GetIPDetailsauto(IPNo, IPYear,Pname,Pid) {
+    var data = {};
+    data.IPNumber = IPNo;
+    data.IPYear = IPYear;
+    data.PatientId = Pid
+    data.DeptId = ERPDeptId;
+
+    $.ajax({
+        type: "POST",
+        url: "../Revisit/HMS_IPStatementautoFee",
+        data: data,
+        success: function (result) {
+            LoadIPStatement(result.oList)
+        }
+    });
+}
+
+
+var Ipbilldetailsview = ""; var RW = 0
+var Rno = 1; var PRno = 1; var LabTotal = 0; var Pharmatotal = 0;
+function LoadIPStatement(result) {
+    $('#tbl_IPGridauto tr').remove();
+    debugger;
+    var Snnn0 = 1; var proslno = 0;
+
+
+ 
+
+    var ProdEditRow = "<tr class='jsgrid-row Billtr' style='border-top:2px solid black;font-weight: bold;'>" +
+        "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center;background-color:#66ccff;' >Sl No</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;background-color:#66ccff;' >Date</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;background-color:#66ccff;' >Type</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='BillNo_" + id + "' style= 'width:15%;background-color:#66ccff;' >Bill No#</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='CashType_" + id + "'  style= 'width:50px;background-color:#66ccff;' align=center>PayType</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "'  style= 'width:90px;background-color:#66ccff;' align=right >Bill Amount</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;background-color:#66ccff;' align=right >Recev Amount</td>" +
+        "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;background-color:#66ccff;' align=right >Balance</td>" +
+        "</tr>";
+    $('#tbl_IPGridauto').append(ProdEditRow)
+
+
+    var Cbal = 0;
+
+    for (var i = 0; i < result.length; i++) {
+        var slno = parseInt(i + 1);
+
+        var CashType = '';
+        if (result[i].Paytype == 'CASH') CashType = '<span class="badge badge-success">&#160;CASH&#160;</span>';
+        else if (result[i].Paytype == 'CREDIT') CashType = '<span class="badge badge-danger">CREDIT</span>';
+        else {
+            CashType = '<span class="badge badge-success">UPI/BANK</span>';
+        }
+
+        var BillNo = 0;
+        var id = slno;
+
+        if (result[i].Date == 'TOTAL') {
+            var ProdEditRow = "<tr class='jsgrid-row Billtr' style='border:2px solid black;font-weight: bold;'>" +
+                "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow' colspan=5  style= 'width:30px;text-align:right;background-color:#00b8e6;cursor:pointer' >TOTAL</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "' title='Total bill amount associated with this IP.'  style= 'width:90px;background-color:#00b8e6;cursor:pointer' align=right >" + result[i].billAmount + "</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "' title='Total amount received with this IP, including advance' style= 'width:90px;background-color:#00b8e6;cursor:pointer' align=right >" + result[i].RecAmount + "</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "' title='Non Paid amount.' style= 'width:90px;background-color:#00b8e6;cursor:pointer' align=right >" + result[i].balance + "</td>" +
+                "</tr>";
+            $('#tbl_IPGridauto').append(ProdEditRow)
+           // var ProdEditRow = "<tr class='jsgrid-row Billtr' style='border:2px solid black;font-weight: bold;'><td height=10px colspan=8></td></tr>";
+           // $('#tbl_IPGridauto').append(ProdEditRow)
+        }
+
+        else if (result[i].Date == 'BALANCE') {
+            var heading = "";
+
+            if (result[i].balance < 0) {
+                heading = "To Get From Patients";               
+            }
+            else {
+                heading = "To Give Patients";
+            }
+            var ProdEditRow = "<tr class='jsgrid-row Billtr' style='border-bottom:2px solid black;border-right:2px solid black;border-left:2px solid black;font-weight: bold;'>" +
+                "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow' colspan=5   style= 'width:30px;text-align:right;background-color: #ff99ff;' >BALANCE (" + heading+")</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "'  style= 'width:90px;background-color: #ff99ff;' align=right ></td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;background-color: #ff99ff;' align=right ></td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "' title='Remaining balance amount.'  style='width:90px;background-color: #ff99ff;cursor:pointer;text-align:right' >" + result[i].balance + "</td>" +
+                "</tr>";
+            $('#tbl_IPGridauto').append(ProdEditRow)
+        }
+
+        else if (result[i].Date == 'CLOSING BALANCE') {
+            var ProdEditRow = "<tr class='jsgrid-row Billtr' style='border:2px solid black;font-weight: bold;'>" +
+                "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow' colspan=5  style= 'width:30px;text-align:right;background-color:#bb99ff;' >CLOSING BALANCE</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "'  style= 'width:90px;background-color:#bb99ff;' align=right >" + result[i].billAmount + "</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;background-color:#bb99ff;' align=right >" + result[i].RecAmount + "</td>" +
+                "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;background-color:#bb99ff;' align=right >" + result[i].balance + "</td>" +
+                "</tr>";
+            $('#tbl_IPGridauto').append(ProdEditRow)
+            Cbal = result[i].balance
+        }
+
+        else {
+
+            if (result[i].BillType == 'AF') {
+                proslno += 1;
+                var ProdEditRow = "<tr class='jsgrid-row Billtr' id='Brow_" + id + "'>" +
+                    "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center' >" + proslno + "</td>" +
+                   /* "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' >" + result[i].Date + "</td>" +*/
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' >" + result[i].BillType + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillNo_" + id + "' colspan=3 style= 'width:15%;' >" + result[i].Paytype + "</td>" +
+                 
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "'  style= 'width:90px;' align=right >" + result[i].billAmount + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;' align=right >" + result[i].RecAmount + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;' align=right >" + result[i].balance + "</td>" +
+                    "</tr>";
+
+            }
+            else if (result[i].BillType == 'ADV') {
+                var ProdEditRow = "<tr class='jsgrid-row Billtr' id='Brow_" + id + "'>" +
+                    "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center' >" + id + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' >" + result[i].Date + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' >" + result[i].BillType + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillNo_" + id + "' style= 'width:15%;' >" + result[i].BillNo + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='CashType_" + id + "'  style= 'width:50px;' align=center></td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "'  style= 'width:90px;' align=right ></td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;' align=right ><b>" + result[i].RecAmount + "</b></td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;' align=right ></td>" +
+                    "</tr>";
+            }
+            else {
+                var ProdEditRow = "<tr class='jsgrid-row Billtr' id='Brow_" + id + "'>" +
+                    "<td id='td_" + id + "' class='jsgrid-cell p-1 GridBRow'  style= 'width:30px;text-align:center' >" + id + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' >" + result[i].Date + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillDate_" + id + "'  style= 'width:50px;' >" + result[i].BillType + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='BillNo_" + id + "' style= 'width:15%;' >" + result[i].BillNo + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='CashType_" + id + "'  style= 'width:50px;' align=center>" + CashType + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountCTr_" + id + "'  style= 'width:90px;' align=right >" + result[i].billAmount + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;' align=right >" + result[i].RecAmount + "</td>" +
+                    "<td class='jsgrid-cell p-1 GridBRow' id='AmountTr_" + id + "'  style= 'width:90px;' align=right >" + result[i].balance + "</td>" +
+                    "</tr>";
+            }
+            $('#tbl_IPGridauto').append(ProdEditRow)
+        }
+    }
+
+    if (Cbal > 0 && Cbal < 100) {
+        swal('Closing Balnce:' + Cbal +'*', "inform Customer to pay Bill/Advance","warning");
+    }
+    else if (Cbal < 0 ) {
+        swal('Closing Balnce:' + Cbal+ '*', "inform Customer to pay Bill/Advance","error");
+    }
+
+}
+
+
+
+
+
+    $("#RegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+
+            formrefresh(0);
+            var data = {};
+            data.PatientName = $("#RegNo").val();
+            data.Flag = 0;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../Revisit/HMS_IPPatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'GR3',
+                            label: item.OPSerName + ' - ' + item.OPNumber,
+                            label1: item.PatientName,
+                            label2: item.AadharNo,            //IP NUMBER
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            IpNo: item.AadharNo,
+                            IPYear: item.Status,
+                            AdmitDate: item.FromDate,
+                            AdmitTime: item.ToDate,
+                            headers: ["RegNo", "Patient", "IP No"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            $("#PatientId").val(ui.item.PatientId);
+            $("#IP_Year").val(ui.item.IPYear);
+            $("#IP_Number").val(ui.item.IpNo);
+            $("#PName").val(ui.item.PatientName);
+            $("#AdmittedDate").val(ui.item.AdmitDate + ' - ' + ui.item.AdmitTime);
+            $("#SIP_Number").val(ui.item.IPYear + '/' + ui.item.IpNo);
+            $("#OPVisitId").val(ui.item.OPNumber);
+
+           GetPatient(ui.item.PatientId);
+           GetIPDetailsauto(ui.item.IpNo, ui.item.IPYear, ui.item.PatientName, ui.item.PatientId);
+           GetIPDetailsRoom(ui.item.IpNo, ui.item.IPYear, ui.item.PatientName);
+        },
+    });
+
+
+    if ("@Request.QueryString["from"]" == "SOPWorkSheet") {
+
+
+        var PatientId=sessionStorage.getItem("SOP_PI");
+        var IPNumber=sessionStorage.getItem("SOP_IP");
+        var IPYear=sessionStorage.getItem("SOP_IPY");
+        var PatientName=sessionStorage.getItem("SOP_PN");
+        var AdmittedDate=sessionStorage.getItem("SOP_AD");
+        var AdmittedTime=sessionStorage.getItem("SOP_AT");
+        var OPVisitId=sessionStorage.getItem("SOP_OV");
+        var OPSerName=sessionStorage.getItem("SOP_RS");
+        var OPNumber=sessionStorage.getItem("SOP_RN");
+
+
+        sessionStorage.removeItem("SOP_PI");
+        sessionStorage.removeItem("SOP_IP");
+        sessionStorage.removeItem("SOP_IPY");
+        sessionStorage.removeItem("SOP_PN");
+
+        sessionStorage.removeItem("SOP_AD");
+        sessionStorage.removeItem("SOP_AT");
+        sessionStorage.removeItem("SOP_OV");
+        sessionStorage.removeItem("SOP_RS");
+        sessionStorage.removeItem("SOP_RN");
+
+        if (PatientId != null) {
+
+            $("#RegNo").val(OPSerName + ' - ' + OPNumber);
+            $("#PatientId").val(PatientId);
+            $("#IP_Year").val(IPYear);
+            $("#IP_Number").val(IPNumber);
+            $("#PName").val(PatientName);
+            $("#AdmittedDate").val(AdmittedDate + ' - ' + AdmittedTime);
+            $("#SIP_Number").val(IPYear + '/' + IPNumber);
+            $("#OPVisitId").val(OPVisitId);
+
+            GetPatient(PatientId);
+            GetIPDetails(IPNumber, IPYear, PatientName);
+            GetIPDetailsRoom(IPNumber, IPYear, PatientName);
+        }
+
+    }
+
+    Defaultfocus();
+
+</script>

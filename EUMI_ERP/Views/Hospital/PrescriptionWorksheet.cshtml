@@ -1,0 +1,848 @@
+﻿@{
+    ViewBag.Title = "PrescriptionWorksheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1;
+    }
+
+    #divContainerNew {
+        border: solid 1px black;
+        min-width: 200px;
+        min-height: 40px;
+        width: auto;
+        height: auto;
+        background-color: white;
+        cursor: pointer !important;
+        font-weight: bold;
+    }
+
+    .divpop {
+        position: absolute;
+        text-align: left;
+        display: none;
+        color: black;
+        border-radius: 3px;
+    }
+
+    .pointer:hover {
+        background-color: #acd6f5;
+        text-decoration: underline;
+    }
+
+
+    #SimpleLabModal p:first-child {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.3px;
+    }
+
+    .btn-close-custom {
+        padding: 8px 20px;
+        border: 1px solid #cbd5e0;
+        background: #fff;
+        border-radius: 6px;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
+
+
+        .btn-close-custom:hover {
+            background: #0F6E56;
+            color: #fff;
+            border-color: #0F6E56;
+        }
+
+    .label-control.custom-label {
+        margin: 0;
+        color: var(--text-dark);
+        font-size: 20px !important;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        font-family: "Montserrat", "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    #T0 {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        min-width: unset;
+        width: auto;
+        white-space: nowrap;
+        font-weight: 600;
+        background: #E6F1FB;
+        color: #185FA5;
+        border: 1px solid #B5D4F4;
+    }
+
+    #T1 {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: unset;
+        width: auto;
+        white-space: nowrap;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #EAF3DE;
+        color: #3B6D11;
+        border: 1px solid #C0DD97;
+    }
+
+    #T2 {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: unset;
+        width: auto;
+        white-space: nowrap;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        background: #FAEEDA;
+        color: #854F0B;
+        border: 1px solid #FAC775;
+    }
+
+    .badge-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .badge-icon::before {
+            content: "➤";
+            font-size: 18px;
+            opacity: 0.8;
+            animation: bounceArrow 1.2s infinite ease-in-out;
+        }
+
+    @@keyframes bounceArrow {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(4px);
+        }
+    }
+</style>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<div class="myData" data-x="M361" />
+
+<div class="modal fade" id="SimpleLabModal">
+    <div class="modal-dialog" style="max-width:720px;">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden; border:none; font-family:'Segoe UI',sans-serif;">
+
+
+            <div style="background:#0F6E56; padding:18px 24px; display:flex; justify-content:space-between; align-items:center;">
+
+                <div style="display:flex; align-items:center; gap:12px;">
+
+                    <div>
+                        <p style="margin:0; font-size:20px; font-weight:700; color:#fff;">LAB ADVICE DETAILS</p>
+
+                    </div>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            style="color:#fff; font-size:22px; background:rgba(255,255,255,0.2); border-radius:50%; width:28px; height:28px; border:none;">
+                        &times;
+                    </button>
+                </div>
+            </div>
+
+
+            <div style="padding:20px 24px; background:#E1F5EE; border-bottom:0.5px solid #9FE1CB;">
+
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Name</p>
+                        <p id="M_Patient" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Age / Sex</p>
+                        <p id="M_AgeSex" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Phone</p>
+                        <p id="M_Phone" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Reg#</p>
+                        <p id="M_RegNo" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px;">
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Date</p>
+                        <p id="M_Date" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Time</p>
+                        <p id="M_Time" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">OP#</p>
+                        <p id="M_OPNo" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+
+                    <div style="background:#fff; border:1px solid #9FE1CB; border-radius:8px; padding:12px;">
+                        <p style="margin:0; font-size:13px; color:#085041;">Doctor</p>
+                        <p id="M_Doctor" style="margin:5px 0 0; font-size:15px; font-weight:700;"></p>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div style="padding:20px 24px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+                    <p style="margin:0; font-size:18px; font-weight:700;">Lab Tests Advised</p>
+                </div>
+
+                <ul id="M_LabAdviceList" style="list-style:none; padding:0; margin:0;"></ul>
+            </div>
+
+
+            <div style="padding:14px 24px; border-top:1px solid #9FE1CB; background:#E1F5EE; display:flex; justify-content:flex-end; align-items:center;">
+
+                <button type="button" data-dismiss="modal" class="btn-close-custom">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%" style="table-layout:fixed;" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <h4 class="card-title pt-2 pb-2" style="font-weight:bold;"> Worksheet (Lab Advice)</h4>
+                                </td>
+
+                                <td>
+                                    <table width="80%">
+                                        <tr>
+                                            <td><span id="T0" class="label-control custom-label">case(s):</span></td>
+                                            <td>
+                                                <span id="T1" class="label-control custom-label badge-icon">
+                                                    Done:
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span id="T2" class="label-control custom-label badge-icon">
+                                                    Pending:
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                        <table width="100%" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <label class="label-control">Date :</label>
+                                </td>
+                                <td width="150px;">
+                                    <input type="text" id="FromDate" class="form-control dedate" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-2 pr-1">-</label>
+                                </td>
+                                <td width="150px;">
+                                    <input type="text" id="ToDate" class="form-control dedate" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-1">Doctor :</label>
+                                </td>
+                                <td>
+                                    <input type="text" id="Doctor" class="form-control denull" />
+                                    <input type="hidden" id="DoctorId" class="form-control dezro" value="0" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-1">Reg# :</label>
+                                </td>
+                                <td width="10%">
+                                    <input type="text" id="RegNo" class="form-control denull" />
+                                    <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                </td>
+                                <td align="left">
+                                    <button type="button" id="btnsearch" class="btn btn-outline-primary mt-2 ml-1">
+                                        Search <i class="fa fa-search"></i>
+                                    </button>
+
+                                    <button id="btnrefresh" type="button" class="btn btn-outline-info mt-2">
+                                        <i class="ft-refresh-cw"></i>
+                                    </button>
+                                </td>
+                                <td align="right">
+                                    <button type="button" class="btn btn-outline-success mt-2" onclick="GoPage('Revisit/LabBill');">New Lab Bill</button>
+
+                                    <button type="button" class="btn btn-outline-warning mt-2">New Procedure Bill</button>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show" oncontextmenu="return false">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="divContainerNew" class="row divpop" onmouseleave="$('#divContainerNew').slideUp()" oncontextmenu="return false">
+
+    <div class="pointer pl-1 pt-1" id="Context_1" onclick="RedirectTo('1')">Lab Bill</div>
+    <div class="pointer pl-1 pt-1" id="Context_2" onclick="RedirectTo('2')">Test Result</div>
+    <div class="pointer pl-1 pt-1" id="Context_3" onclick="RedirectTo('3')">Procedure Bill</div>
+    <div class="pointer pl-1 pt-1" id="Context_4" onclick="RedirectTo('4')">Reg Bill Copy</div>
+
+    <div style="display:none">
+        <input type="text" id="CurrentselectedId" class="form-control dezro" value="0" />
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+    var colorArray = ['#33ccff', '#ff66cc', '#ff9966', '#FFFF99', '#00B3E6',
+        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D'];
+    $(function () {
+        $("#SimpleLabModal").appendTo("body");
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('.dedate').val(CurDate);
+
+        GetList(CurDate, CurDate, 0, 0);
+
+        $("#btnsearch").click(function (e) {
+            GetList($('#FromDate').val(), $('#ToDate').val(), $("#DoctorId").val(), $("#PatientId").val());
+        });
+        $("#btnrefresh").click(function (e) {
+            $('.dedate').val(CurDate);
+            $('.denull').val('');
+            $('.dezero').val(0);
+
+            GetList(CurDate, CurDate, 0, 0);
+        });
+
+        $("#tbl_WorkSheet").on('touchstart mousedown', function (e) {
+            if (e.button == 2) {
+                var o = {
+                    left: e.pageX,
+                    top: e.pageY
+                };
+                $("#divContainerNew").offset(o);
+            }
+        });
+    });
+
+
+    $("#Doctor").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val(0);
+            var data = {};
+            data.DoctorName = $("#Doctor").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_WorkSheetDoctorSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DoctorName,
+                            label1: item.Status,
+                            DoctorId: item.DoctorId,
+                            headers: ["Doctor", "Department"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#DoctorId").val(ui.item.DoctorId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    $("#btnsearch").focus(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-primary");
+    });
+
+    $("#btnsearch").focusout(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-outline-primary");
+    });
+
+    function GetList(FromDate, ToDate, Doctor, Patient) {
+        $('#LoadingSmall').show()
+        var data = {};
+        data.FromDate = FromDate;
+        data.ToDate = ToDate;
+        data.DoctorId = Doctor;
+        data.PatientId = Patient;
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_OPWorkSheetLabAdvice",
+            data: data,
+            success: function (result) {
+
+                LoadList(result);
+            }
+        });
+    }
+    var globalWorkSheetData = [];
+    function LoadList(result) {
+        globalWorkSheetData = result;
+        disable_datatable('tbl_WorkSheet');
+
+        var totalCases = result.length;
+        var doneCases = 0;
+        var pendingCases = 0;
+
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].IPNumber == 0) {
+               
+                if (result[i].Status == 'PENDING') {
+                    pendingCases++;
+                } else {
+                    doneCases++;     
+                }
+            } else {
+               
+                doneCases++;
+            }
+        }
+
+        $("#T0").html('case(s): <strong>' + totalCases + '</strong>');
+        $("#T1").html('Done: <strong>' + doneCases + '</strong>');
+        $("#T2").html('Pending: <strong>' + pendingCases + '</strong>');
+
+
+        var responseText = "<thead><tr>" +
+            "<th style='align=center'>Sl#</th>" +
+            "<th>Reg#</th>" +
+            "<th>OP#</th>" +
+            "<th>Date</th>" +
+            "<th>Time</th>" +
+            "<th>Patient</th>" +
+            "<th>Age/Sex</th>" +
+            "<th>Contact</th>" +
+            "<th>Doctor</th>" +
+            "<th>Action</th>" +
+            "<th>Bill</th>" +
+            "<th>Status</th>" +
+            "</tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+
+            if (result[i].Status == 'PENDING')
+                var Status = '<span class="badge badge-danger white">NOT BILLED</span>';
+            else
+                var Status = '<span class="badge badge-success">BILLED</span>';
+
+            if (result[i].IPNumber == 0) var Status = Status;
+            else if (result[i].DelFlag == 0) var Status = '<span class="badge badge-danger">Admitted</span>';
+            else var Status = '<span class="badge badge-info">Discharged</span>';
+
+            var Style = '';
+            if ((result[i].BloodGroup).split("##")[1] != 0) {
+                Style = 'background-color:green;color:white;';
+            }
+
+            var slno = parseInt(i + 1);
+
+            responseText += '<tr onmousedown="WhichButton(event,' + slno + ')" oncontextmenu="return false" style="' + Style + '" ondblclick="OpenLabResult(' + slno + ')">' +
+                '<td align=center>' + slno +
+                '<input type="hidden" id="OPVisitId_' + slno + '" value="' + result[i].RevisitId + '" />' +
+                '<input type="hidden" id="OPSerName_' + slno + '" value="' + result[i].OPSerName + '" />' +
+                '<input type="hidden" id="OPNumber_' + slno + '" value="' + result[i].OPNumber + '" />' +
+                '<input type="hidden" id="PatientId_' + slno + '" value="' + result[i].PatientId + '" />' +
+                '<input type="hidden" id="DOB_' + slno + '" value="' + result[i].DOB + '" />' +
+                '<input type="hidden" id="BloodGroup_' + slno + '" value="' + result[i].BloodGroup + '" />' +
+                '<input type="hidden" id="PatientName_' + slno + '" value="' + result[i].PatientName + '" />' +
+                '<input type="hidden" id="Gender_' + slno + '" value="' + result[i].Gender + '" />' +
+                '<input type="hidden" id="IPNumber_' + slno + '" value="' + result[i].IPNumber + '" />' +
+                '<input type="hidden" id="TokenNo_' + slno + '" value="' + result[i].TokenNumber + '" />' +
+                '<input type="hidden" id="RowStatus_' + slno + '" value="' + result[i].Status + '" />' +
+                '</td>' +
+                '<td>' + result[i].OPSerName + '-' + result[i].OPNumber + '</td>' +
+                '<td>' + result[i].RevisitId + '</td>' +
+                '<td id="RevisitDate_' + slno + '" >' + result[i].RevisitDate + '</td>' +
+                '<td>' + result[i].DOB + '</td>' +
+                '<td>' + result[i].PatientName + '</td>' +
+                '<td>' + (result[i].BloodGroup).split("##")[0] + '/' + (result[i].Gender).substring(0, 1) + '</td>' +
+                '<td>' + result[i].Contact + '</td>' +
+                '<td id="ddname' + slno + '" >' + result[i].DoctorName + '</td>' +
+                '<td align=center>' +
+                '<button type="button" class="btn btn-sm btn-primary" onclick="HandleAction(' + i + ')">' +
+                '<i class="fa fa-eye"></i> View' +
+                '</button>' +
+                '</td>' +
+                '<td align=center>' +
+                '<button type="button" class="btn btn-sm btn-info" onclick="GoToBill(' + i + ')">' +
+                '<i class="fa fa-file-text"></i> Go to Bill' +
+                '</button>' +
+                '</td>' +
+                '<td align=center>' + Status + '</td>' +
+                '</tr>';
+        }
+
+        $('#tbl_WorkSheet').html(responseText + "</tbody><tfoot><tr>" +
+            "<th> </th>" +
+            "<th>Reg#</th>" +
+            "<th>OP#</th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "<th>Patient</th>" +
+            "<th> </th>" +
+            "<th>Contact</th>" +
+            "<th>Doctor</th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "</tr></tfoot>");
+
+        var title = 'OP WorkSheet From ' + $("#FromDate").val() + ' To ' + $("#ToDate").val();
+        datatableWithsearch('tbl_WorkSheet', true, title, 'itemListButtonPlace');
+        $('#LoadingSmall').hide();
+    }
+
+    function WhichButton(e, slno) {
+
+    }
+    function HandleAction(index) {
+        var data = globalWorkSheetData[index];
+
+        var name = data.PatientName || '';
+        var initials = name.split(' ')
+            .map(function (w) { return w[0]; })
+            .join('')
+            .substring(0, 2)
+            .toUpperCase();
+
+        $("#M_Avatar").text(initials);
+
+        $("#M_Patient").text(data.PatientName || '-');
+
+        $("#M_AgeSex").text(
+            (data.BloodGroup ? data.BloodGroup.split("##")[0] : '-') +
+            ' Yrs / ' +
+            (data.Gender || '-')
+        );
+
+        $("#M_Phone").text(data.Contact || '-');
+
+        $("#M_RegNo").text(
+            (data.OPSerName || '-') + '-' + (data.OPNumber || '-')
+        );
+
+        $("#M_OPNo").text(data.RevisitId || '-');
+        $("#M_Date").text(data.RevisitDate || '-');
+        $("#M_Time").text(data.DOB || '-');
+
+        $("#M_Doctor").text(data.DoctorName || '-');
+
+        if (data.Status === 'DONE') {
+            $("#M_StatusBadge")
+                .text('DONE')
+                .css({
+                    background: 'rgba(22,163,74,0.2)',
+                    color: '#16a34a'
+                });
+        } else {
+            $("#M_StatusBadge")
+                .text('PENDING')
+                .css({
+                    background: 'rgba(217,119,6,0.2)',
+                    color: '#d97706'
+                });
+        }
+
+        var listHtml = '';
+        var tests = data.LabAdvice ? data.LabAdvice.split(',') : [];
+
+        tests.forEach(function (test) {
+            listHtml += `
+    <li style="padding:12px;
+        border:1px solid #9FE1CB;
+        border-radius:8px;
+        background:#fff;
+        margin-bottom:8px;">
+
+        <span style="font-size:15px; font-weight:600;">
+            ${test.trim()}
+        </span>
+
+    </li>`;
+        });
+
+        $("#M_LabAdviceList").html(
+            listHtml || '<li style="color:#718096; font-size:14px; padding:10px;">No tests advised.</li>'
+        );
+
+        $("#M_LabCount").text(
+            tests.length + (tests.length === 1 ? ' test' : ' tests')
+        );
+
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+
+        $("#SimpleLabModal").modal("show");
+    }
+
+   
+
+    function GoToBill(index) {
+        var data = globalWorkSheetData[index];
+
+        var token = 'lb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+        sessionStorage.clear();
+
+        sessionStorage.setItem("LB_Token", token);
+        sessionStorage.setItem("LB_FromWorksheet", "1");
+        sessionStorage.setItem("LB_PatientId", data.PatientId);
+        sessionStorage.setItem("LB_OPNumber", data.OPNumber);
+        sessionStorage.setItem("LB_OPSeries", data.OPSerName);
+        sessionStorage.setItem("LB_Gender", data.Gender);
+        sessionStorage.setItem("LB_Age", (data.BloodGroup || '').split("##")[0]);
+        sessionStorage.setItem("LB_Contact", data.Contact);
+        sessionStorage.setItem("LB_Doctor", $('#ddname' + (index + 1)).text());
+        sessionStorage.setItem("LB_RevisitId", data.RevisitId);
+        sessionStorage.setItem("LB_CorrectOpNo", data.RevisitId);
+
+        var reqData = {};
+        reqData.OpNo = data.RevisitId;
+        reqData.RegNo = data.OPNumber;
+        reqData.RegSeries = data.OPSerName;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_LabAdvicegets",
+            data: reqData,
+            success: function (result) {
+                sessionStorage.setItem("LB_Tests", JSON.stringify(result.oList));
+                window.open("/Revisit/LabBill?token=" + token, "_blank");
+            }
+        });
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) {  }
+
+
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                "columnDefs": [
+                    { "width": "1%", "targets": 0 },
+                    { "width": "2%", "targets": 1 },
+                    { "width": "2%", "targets": 2 },
+                    { "width": "2%", "targets": 3 },
+                    { "width": "1%", "targets": 4 },
+                    { "width": "13%", "targets": 5 },
+                    { "width": "1%", "targets": 6 },
+                    { "width": "4%", "targets": 7 },
+                    { "width": "10%", "targets": 8 },
+                    { "width": "8%", "targets": 9 },
+                    { "width": "8%", "targets": 10 },
+                    { "width": "5%", "targets": 11 },
+                ],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Export',
+                        className: 'excelexport',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'print',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            }
+                        ]
+                    },
+                    'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        }
+        else {
+            table = $('#' + tablename).DataTable({
+            });
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+
+
+
+</script>
+
+
+<script>
+    var inputs = document.querySelectorAll("input,select");
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("keypress", function (e) {
+            if (e.which == 13) {
+                e.preventDefault();
+                e.preventDefault();
+                var nextInput = document.querySelectorAll('[tabIndex="' + (this.tabIndex + 1) + '"]');
+                if (nextInput.length === 0) {
+                    nextInput = document.querySelectorAll('[tabIndex="1"]');
+                }
+                nextInput[0].focus();
+            }
+
+        })
+    }
+
+
+
+</script>

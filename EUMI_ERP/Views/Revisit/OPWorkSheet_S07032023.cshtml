@@ -1,0 +1,1272 @@
+﻿
+@{
+    ViewBag.Title = "OPWorkSheet_S";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1;
+    }
+
+    #divContainerNew {
+        border: solid 1px black;
+        min-width: 200px;
+        min-height: 40px;
+        width: auto;
+        height: auto;
+        background-color: white;
+        cursor: pointer !important;
+        font-weight: bold;
+    }
+
+    .divpop {
+        position: absolute;
+        text-align: left;
+        display: none;
+        color: black;
+        border-radius: 3px;
+    }
+
+    .pointer:hover {
+        background-color: #acd6f5;
+        text-decoration: underline;
+    }
+</style>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<div class="myData" data-x="M361" />
+
+<div id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%" style="table-layout:fixed;" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <h4 class="card-title pt-2 pb-2" style="font-weight:bold;">OutPatient Worksheet</h4>
+                                </td>
+
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                        <table width="100%" class="bgcolor">
+                            <tr>
+                                <td>
+                                    <label class="label-control">Date :</label>
+                                </td>
+                                <td width="150px;">
+                                    <input type="text" id="FromDate" class="form-control dedate" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-2 pr-1">-</label>
+                                </td>
+                                <td width="150px;">
+                                    <input type="text" id="ToDate" class="form-control dedate" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-1">Doctor :</label>
+                                </td>
+                                <td>
+                                    <input type="text" id="Doctor" class="form-control denull" />
+                                    <input type="hidden" id="DoctorId" class="form-control dezro" value="0" />
+                                </td>
+                                <td>
+                                    <label class="label-control pl-1">Reg# :</label>
+                                </td>
+                                <td width="10%">
+                                    <input type="text" id="RegNo" class="form-control denull" />
+                                    <input type="hidden" id="PatientId" class="form-control dezro" value="0" />
+                                </td>
+                                <td align="left">
+                                    <button type="button" id="btnsearch" class="btn btn-outline-primary mt-2 ml-1">
+                                        Search <i class="fa fa-search"></i>
+                                    </button>
+
+                                    <button id="btnrefresh" type="button" class="btn btn-outline-info mt-2">
+                                        <i class="ft-refresh-cw"></i>
+                                    </button>
+                                </td>
+                                <td align="right">
+                                    <button type="button" class="btn btn-outline-success mt-2" onclick="GoPage('Revisit/LabBill');">New Lab Bill</button>
+
+                                    <button type="button" class="btn btn-outline-warning mt-2">New Procedure Bill</button>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show" oncontextmenu="return false">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="divContainerNew" class="row divpop" onmouseleave="$('#divContainerNew').slideUp()" oncontextmenu="return false">
+
+    <div class="pointer pl-1 pt-1" id="Context_1" onclick="RedirectTo('1')">Lab Bill</div>
+    <div class="pointer pl-1 pt-1" id="Context_2" onclick="RedirectTo('2')">Test Result</div>
+    <div class="pointer pl-1 pt-1" id="Context_3" onclick="RedirectTo('3')">Procedure Bill</div>
+    <div class="pointer pl-1 pt-1" id="Context_4" onclick="RedirectTo('4')">Reg Bill Copy</div>
+
+    <div style="display:none">
+        <input type="text" id="CurrentselectedId" class="form-control dezro" value="0" />
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="modal fade" id="DetailsModal" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #daeff1;">
+                    <h4 class="modal-title font-weight-bold">Health Details</h4>                    
+                    <input type="text" id="GOPNumberdis" readonly style="border: none; margin-left: 50px; margin-top: 10px; font-weight: bold; font-size: 16px; width: 20%; background-color: #daeff1; " class="bgcolrwht">
+
+                    <input type="hidden" id="GOPNumber" style="border: none; margin-left: 250px; margin-top: 10px; font-weight: normal; font-size: 16px; width: 20%; background-color: #daeff1; " class="bgcolrwht">
+
+                    <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row" name="patientdata" style="border-bottom:1px solid black">
+                        <div class="col-md-6">
+                            <div class="row" style="margin-left:2px;">
+                                <input type="text" id="GPatientName" readonly style="border: none; font-weight: bold; font-size: 16px; margin-top: -1px; width: 70%;" class="bgcolrwht">
+                                <input type="hidden" id="GPatientNamedis">
+                                <input type="hidden" id="GPatientId">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row" style="margin-left: 100px;">
+                                <input type="text" id="GDoctorName" readonly style="border: none; font-weight: bold; font-size: 16px; margin-top: -1px; width: 70%;" class="bgcolrwht">
+                                <input type="hidden" id="GDoctorId">
+                                <input type="hidden" id="GDoctorNamedis">
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="GRevisitId">  
+                        <input type="hidden" id="OPSerName">
+                        <input type="hidden" id="RevisitDate">
+                        <input type="hidden" id="Gender">
+                    </div>
+                    <div class="mx-auto">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    BP
+                                </label>
+                                <input type="text" id="PatBP" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Temperature
+                                </label>
+                                <input type="text" id="PatTemperature" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Sugar
+                                </label>
+                                <input type="text" id="PatSugar" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+                        </div>
+
+                        <div class="row mt-1"></div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Height
+                                </label>
+                                <input type="text" id="PatHeight" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Weight
+                                </label>
+                                <input type="text" id="PatWeight" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    BMI
+                                </label>
+                                <input type="text" id="PatBmi" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="row mt-1"></div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Chest Circumference
+                                </label>
+                                <input type="text" id="PatChest" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Head Circumference
+                                </label>
+                                <input type="text" id="PatHead" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="label-control mb-0">
+                                    Abdominal
+                                </label>
+                                <input type="text" id="PatAbdominal" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                            </div>
+
+                        </div>
+
+                        <div class="row mt-1"></div>
+
+                        <div class="row mt-1">
+                            <div class="col-md-12">
+                                <label class="label-control mb-0">
+                                    known Allergies
+                                </label>                                
+                                <textarea  id="PatAllergy" class="form-control form-control-sm Patadddet" autocomplete="off" style="height:100px;"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-1"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnsubmit" onclick="printcasesheet()">Print Case Sheet</button>
+
+
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnsubmit" onclick="Savepopup()">Save</button>
+                    <button type="button" class="btn btn-outline-warning btn-sm" id="btncancel" onclick="CancelPop()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+          
+               
+                <div style="display:none" >
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active font-weight-bold" id="baseIcon-tab1" data-toggle="tab" aria-controls="tabIcon1" href="#tabIcon1" aria-expanded="true"><i class="fa fa-stethoscope"></i>  PROGRESS NOTES</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bold" id="baseIcon-tab2" data-toggle="tab" aria-controls="tabIcon2" href="#tabIcon2" aria-expanded="false"><i class="fa fa-user"></i>   HISTORY</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bold" id="baseIcon-tab3" data-toggle="tab" aria-controls="tabIcon3" href="#tabIcon3" aria-expanded="false"><i class="fa fa-medkit"></i>  MEDICINE DETAILS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bold" id="baseIcon-tab4" data-toggle="tab" aria-controls="tabIcon4" href="#tabIcon4" aria-expanded="false"><i class="fa fa-shield"></i>  TEST DETAILS</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content px-1 pt-1 pb-0">
+                        <div role="tabpanel" class="tab-pane active" id="tabIcon1" aria-expanded="true" aria-labelledby="baseIcon-tab1">
+                            <div class="col-md-12">
+                                <div class="row">
+
+                                    <div class="col-md-3">
+                                        <label class="label-control">Progress Notes</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PPatComplaint"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="label-control">Examination</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PDiagnosis"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="label-control">Treatment</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PAdvice"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="label-control">Diagnosis</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PMedAdvice"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabIcon2" aria-labelledby="baseIcon-tab2">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="label-control">H/O Other Medical Illness</label>
+
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PDetails"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="label-control">Own Medicine</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PNotes"></textarea>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="label-control">H/O Allergy</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PAllergies"></textarea>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="label-control">Advice</label>
+                                        <textarea class="form-control Pnull" style="resize:none;height:214px" disabled id="PRemarks"></textarea>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabIcon3" aria-labelledby="baseIcon-tab3">
+                            <div class="text-right">
+                                <button type="button" class="btn btn-secondary btn-sm mx-1 mb-1" onclick="POPUPMedicinePrint()">Print <i class="fa fa-print"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm mx-1 mb-1" onclick="PevMedicineUpdate()">Save <i class="fa fa-save"></i></button>
+                            </div>
+                            <input id="GridPopUp1" type="text" style="display:none" value="1" />
+                            <div class="jsgrid" style="position: relative; height: 209px; width: 100%; border:solid 1px;border-color:#e9e9e9;overflow-x: auto;overflow-y: hidden;">
+                                <div class="jsgrid-grid-header" style="width: 100%;">
+                                    <table class="jsgrid-table table-primary">
+                                        <tbody>
+                                            <tr class="jsgrid-header-row">
+                                                <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width:2%;"><i class="icon-trash"></i></th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 3%;">SL#</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 17%;">Medicine</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 9%;">Bill Qty</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 6%;">Qty</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 4%;">Dosage</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 4%;">Days</th>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:167px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                    <table class="jsgrid-table table-bordered" id="TblMedicinePrev">
+                                        <tbody>
+                                            <tr class="jsgrid-header-row" id="PMdRow_1">
+                                                <td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 3%;"></td>
+                                                <td class="jsgrid-align-center" style="width: 5%;" id="PMslno_1">1</td>
+                                                <td class="" style="width: 30%;">
+                                                    <input type="text" class="form-control brdles Pnull" id="PMedicine_1" onfocus="LoadMedicinePrev(1)" onfocusout="UpdatePrevMedicineRow(1, 0)" autocomplete="off">
+                                                    <input type="text" style="display:none" value="0" class="form-control" id="PMedicineId_1">
+                                                </td>
+                                                <td class="" style="width: 15%;"><input type="text" class="form-control mdclass brdles Pnull" onfocusout="UpdatePrevMedicineRow(1, 1)" id="pmednote1" onkeydown="FocusNext(event, '', 'PDaily_', 'PDosage_', '1','PMdRow_')"></td>
+
+
+                                                <td class="" style="width: 15%;"><input type="text" class="form-control mdclass brdles Pnull" onfocusout="UpdatePrevMedicineRow(1, 1)" id="PDaily_1" onkeydown="FocusNext(event, '', 'PDaily_', 'PDosage_', '1','PMdRow_')"></td>
+                                                <td class="" style="width: 10%;"><input type="text" class="form-control mdclass brdles Pnull" onfocusout="UpdatePrevMedicineRow(1, 2)" id="PDosage_1" onkeydown="FocusNext(event, 'PDaily_', 'PDosage_', 'PDays_', '1','PMdRow_')"></td>
+                                                <td class="" style="width: 10%;"><input type="text" class="form-control mdclass brdles Pnull" onfocusout="UpdatePrevMedicineRow(1, 3)" id="PDays_1" onkeydown="AddPrevMedicineRowConfirm(event, 1)" autocomplete="off"></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane" id="tabIcon4" aria-labelledby="baseIcon-tab4">
+                            <div class="row mb-1" style="height:31px;">
+                                <div class="col-md-6">
+
+                                    <div class="custom-control custom-radio display-inline-block mx-1">
+                                        <input type="radio" class="custom-control-input mx-1" id="OPVisitR" name="Immuneradio" value="OPVisitR" checked="" onchange="GetPrevGetImmunizationDetails()">
+                                        <label class="custom-control-label mx-1" for="OPVisitR">OPVisit</label>
+                                    </div>
+                                    <div class="custom-control custom-radio display-inline-block mx-1">
+                                        <input type="radio" class="custom-control-input mx-1" id="AllR" name="Immuneradio" value="All" onchange="GetPrevGetImmunizationDetails()">
+                                        <label class="custom-control-label mx-1" for="AllR">All</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-right">
+                                        <button type="button" class="btn btn-primary btn-sm mx-1 mb-0" id="btnimmunesave" onclick="PrevImmunizationUpdate()">Save <i class="fa fa-save"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input id="PrevIMMGridLength" value="1" type="hidden" />
+                            <div class="jsgrid" style="position: relative; height: 209px; width: 100%; border:solid 1px;border-color:#e9e9e9;overflow-x: auto;overflow-y: hidden;">
+                                <div class="jsgrid-grid-header" style="width: 100%;">
+                                    <table class="jsgrid-table table-primary">
+                                        <tbody>
+                                            <tr class="jsgrid-header-row">
+                                                <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 6%;"><i class="icon-trash"></i></th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 8%;">SL#</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 39%;">Test</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 19%;">Department</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 12%;">Test Date</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 12%;">Result Date</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 9%;">Status</th>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:167px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                    <table class="jsgrid-table table-bordered" id="Prev_TblImmunization">
+                                        <tbody>
+                                            <tr class="jsgrid-header-row" id="PIMTr_1">
+                                                <td class="jsgrid-control-field jsgrid-align-center" style="width: 5%;"></td>
+                                                <td class="jsgrid-align-center" style="width: 8%;">1</td>
+                                                <td class="" style="width: 38%;">
+                                                    <input type="text" class="form-control brdles Pnull PIMisa" id="PVaccine_1" onfocus="LoadVaccine('PVaccine_1', 'PVaccineId_1', 'PVaccStatus_1')" />
+                                                    <input type="hidden" value="0" id="PVaccineId_1" />
+                                                </td>
+                                                <td class="" style="width: 18%;">
+                                                    <select type="text" class="form-control brdles Pzero PIMisa" id="PVaccCompany_1" onkeydown="FocusNext(event, '', 'PVaccCompany_', 'PVaccDate_', '1', 'PIMTr_',1)"></select>
+                                                </td>
+                                                <td class="" style="width: 12%;">
+                                                    <input type="text" class="form-control brdles dedate Pnull PIMisa" id="PVaccDate_1" onkeydown="FocusNext(event, 'PVaccCompany_', 'PVaccDate_', 'PVacNextDate_', '1', 'PIMTr_',1)" />
+                                                </td>
+                                                <td class="" style="width: 12%;">
+                                                    <input type="text" class="form-control brdles dedate Pnull PIMisa" id="PVacNextDate_1" onkeydown="FocusNext(event, 'PVaccDate_', 'PVacNextDate_', 'PVaccStatus_', '1', 'PIMTr_',1)" />
+                                                </td>
+                                                <td class="" style="width: 7%;">
+                                                    <select type="text" class="form-control brdles Pzero PIMisa" id="PVaccStatus_1" onkeypress="PrevAddIMRow(event, 1)">
+                                                        <option value="0">ADD</option>
+
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+
+
+                <div id="CaseSheetPopUpMsg" style="display:none;">
+                    <div class="toast-container toast-top-center">
+                        <div class="toast-deep-orange" aria-live="assertive" style="opacity:1">
+                            <div class="toast-message row" style="font-weight:400;font-size:large;">
+                                <div id="PopUpMsg" class="col-md-10 p-0" onclick="PopUpMsg()">
+                                    No Case Sheet Found
+                                </div>
+                                <div class="col-md-2 p-0" onclick="$('#CaseSheetPopUpMsg').fadeOut('slow')">
+                                    <i class="fa fa-close"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                           
+
+<script>
+
+
+
+    function printcasesheet() {
+
+        var data = {};
+        data.RevisitId = $("#GRevisitId").val();
+        data.PRegNo = $("#GOPNumber").val();
+        data.PatientId = $("#GPatientId").val();
+
+        $.ajax({
+            type: "POST",
+            url: "../Hospital/HMS_CaseSheetGetandGetsprint",
+            data: data,
+            success: function (result) {
+
+                PrevVisitDetails(result);
+       
+            }
+        });
+    }
+
+
+
+    function PrevVisitDetails(result, Flag) {
+
+        if (result.length > 0) {
+
+            var Medicine = result[0].Medicine
+
+            var Medicine = Medicine.split("#%@@#").join("\n");
+
+            /* $('#PMedicine_1').val(result[0].Medicine);*/
+
+            $('#PPatComplaint').val(result[0].Complaint);
+            $('#PDiagnosis').val(result[0].Diagnosis);
+            $('#PAdvice').val(result[0].Advice);
+            $('#PAllergies').val(result[0].Allergies);
+            $('#PDetails').val(result[0].Details);
+            $('#PNotes').val(result[0].Notes);
+
+            var index = (result[0].ICD).indexOf("$$");
+            var Diagnosis = (result[0].ICD).substring(0, index)
+            var Remarks = (result[0].ICD).substring(index + 2, 1000)
+
+            $('#PMedAdvice').val(Diagnosis);
+
+            $('#PRemarks').val(result[0].ICDDetails);
+
+
+
+            var Head = '<span class="mx-2">Patient : </span>';
+            Head = Head + '<span class="danger mx-2">' + result[0].PName + '</span>';
+            Head = Head + '<span class="mx-2">, OP# : </span>';
+            Head = Head + '<span class="danger mx-2" id="PrevPatientOP">' + result[0].RevisitId + '</span>';
+            Head = Head + '<span class="mx-2">,Date : </span>';
+            Head = Head + '<span class="danger mx-2" id="PrevCaseDate">' + result[0].CaseDate + '</span>';
+            Head = Head + '<span class="mx-2">,Review: </span>';
+            Head = Head + '<span class="danger mx-2" id="Nextreviewdt">' + result[0].Reviewdate + '</span>';
+            Head = Head + '<span class="mx-1">Doctor : </span>';
+            Head = Head + '<span class="danger mx-2" id="consdoctor">' + result[0].Address3 + '</span>';
+            Head = Head + '<span style="display:none" class="danger mx-2" id="PrevCaseSheetNo">' + result[0].CaseSheetNo + '</span>';
+
+            $("#VisitHead").html(Head)
+
+            /*GetMedicine(result[0].RevisitId, 1);*/
+
+            GetMedicine(result[0].RevisitId, 1)
+        }
+        else {
+
+            $("#DetailsModal").modal("hide");
+            $('#CaseSheetPopUpMsg').show();
+        }
+   
+    }
+
+
+    function GetMedicine(RevisitId, Flag) {
+        var data = {};
+        data.RegSeries = 1;
+        data.PRegNo = $('#GOPNumber').val();
+        data.RevisitId = RevisitId;
+        data.DelFlag = 1;
+        data.Status = 'OP';
+        $.ajax({
+            type: "POST",
+            url: "../Hospital/HMS_CaseSheetMedicineGets",
+            data: data,
+            success: function (result) {
+                if (Flag != 1) {
+                    AddMedicineList(result.oList)
+                    
+                }
+                else {
+
+                    AddMedicineListPrev(result.oList)
+
+                }
+            }
+        });
+    }
+    
+    function AddMedicineListPrev(result)      //flg-0 : Add Medicine during List
+    {
+        $(".PrevMRow").remove();
+        for (var i = 0; i < result.length; i++) {
+            if (i == 0) {
+                $('#PMedicineId_1').val(result[0].MedicineId);
+                $('#PMedicine_1').val(result[0].Medicine);
+                $('#PDaily_1').val(result[0].Daily);
+                $('#PDosage_1').val(result[0].Dosage);
+                $('#pmednote1').val(result[0].Mednotes);
+                $('#PDays_1').val(result[0].Days);
+
+            }
+            else {
+                var Id = i + 1;
+                var MedRow =
+                    '<tr  class="jsgrid-header-row PrevMRow" id="PMdRow_' + Id + '">' +
+                    '<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 3%;"><input class="jsgrid-button jsgrid-delete-button" type="button"  onclick="DeletePrevMedicine(' + Id + ')" title="Delete" autocomplete="off"></td>' +
+                    '<td class="jsgrid-align-center" style="width: 5%;" id="PMslno_' + Id + '">' + Id + '</td>' +
+                    '<td class="" style="width: 30%;">' +
+                    '<input type="text" class="form-control mdclass brdles" name="medname" id="PMedicine_' + Id + '"  value="' + result[i].Medicine + '" onfocus="LoadMedicinePrev(' + Id + ')" onfocusout=UpdatePrevMedicineRow(' + Id + ',0)  />' +
+                    '<input type="text" style="display:none" class="form-control" id="PMedicineId_' + Id + '"  value=' + result[i].MedicineId + ' />' +
+                    '</td>' +
+                    '<td class="" style="width: 20%;"><input type="text" class="form-control mdclass brdles" value="' + result[i].Mednotes + '"  id="pmednote' + Id + '"  onkeydown="FocusNext(event, \'\', \'PDaily_\', \'PDosage_\', ' + Id + ',\'PMdRow_\')" /></td>' +
+                    '<td class="" style="width: 10%;"><input type="text" class="form-control mdclass brdles" value="' + result[i].Daily + '" onfocusout=UpdatePrevMedicineRow(' + Id + ',1) id="PDaily_' + Id + '"  onkeydown="FocusNext(event, \'\', \'PDaily_\', \'PDosage_\', ' + Id + ',\'PMdRow_\')" /></td>' +
+                    '<td class="" style="width: 10%;"><input type="text" class="form-control mdclass brdles" value="' + result[i].Dosage + '" onfocusout=UpdatePrevMedicineRow(' + Id + ',2) id="PDosage_' + Id + '"  onkeydown="FocusNext(event, \'PDaily_\', \'PDosage_\', \'PDays_\', ' + Id + ',\'PMdRow_\')"  /></td>' +
+                    '<td class="" style="width: 10%;"><input type="text" class="form-control mdclass brdles" value="' + result[i].Days + '" onfocusout=UpdatePrevMedicineRow(' + Id + ',3) id="PDays_' + Id + '" onkeydown="AddPrevMedicineRowConfirm(event,' + Id + ')"  /></td>' +
+                    '</tr>';
+                $('#TblMedicinePrev').append(MedRow);
+
+                $('#PMedicine_' + Id).focus();
+                $('.brdles').css('border', 'none');
+                $("#GridPopUp1").val(result.length);
+            }
+        }
+        POPUPMedicinePrint();
+    }
+
+
+    function POPUPMedicinePrint() {
+
+        var SignPrint = document.getElementById("signimg");
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 80); $(ComapnydivToPrintLab).css('width', 300);
+        myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('</table>');
+
+        var text = document.getElementById('PDiagnosis');
+        var val = text.value;
+        var arr = val.split("\n");
+
+        arr = arr.slice(0, arr.length - 1);
+
+        var newText = arr.join("<br>");
+
+        myWindow.document.write('<table width=100%><tr><td style="font-family:tahoma; font-size:13px;font-weight: normal;" align=center>PATIENT SUMMARY</td></tr></table>');
+
+        myWindow.document.write('<div style="border:1px solid black;border-top:1px solid black;border-radius:10px"><table  style="" width=90%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: normal;">' +
+            '<tr><td>MR-No#</td><td> : </td><td>' + $("#GOPNumber").val() + '</td></tr>' +
+            '<tr><td>Name</td><td> : </td><td>' + $("#GPatientNamedis").val() + '</td></tr>' +
+            '<tr><td>Doctor</td><td> : </td><td>' + $("#GDoctorNamedis").val() + '</td></tr></table></td>');
+
+        myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: normal;">' +
+            '<tr><td>OP-No#</td><td> : </td><td>' + $("#GRevisitId").val() + '</td></tr>' +
+        /*'<tr><td>Age & Sex</td><td> : </td><td>' + ($("#PatientAge").text()).substring(0, 5) + ', ' + $("#PatientGender").text() + '</td></tr>' +*/
+            '<tr><td>Sex</td><td> : </td><td>' +  $("#Gender").val() + '</td></tr>' +
+            '<tr><td>Date</td><td> : </td><td>' + $("#RevisitDate").val() + '</td></tr></table></td></tr></table></div>');
+
+
+
+
+
+        var row = '<table style="font-family: tahoma; font-size:13px;font-weight: normal;" width=100% >';
+        if ($('#PPatComplaint').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Patient complaints </b></td></tr><tr ><td>' + $('#PPatComplaint').val() + '</td></tr>'
+        }
+        if ($('#PDiagnosis').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Past medical history</b></td></tr><tr ><td>' + $('#PDiagnosis').val() + '</td></tr>'
+        }
+        //if ($('#PAdvice').val() != '') {
+        //    row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Provisional Diagnosis</b></td></tr><tr ><td>' + $('#PAdvice').val() + '</td></tr>'
+        //}
+        if ($('#PMedAdvice').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medical Investigation</b></td></tr><tr ><td>' + $('#PMedAdvice').val() + '</td></tr>'
+        }
+        if ($('#PDetails').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Vital</b></td></tr><tr ><td>' + $('#PDetails').val() + '</td></tr>'
+        }
+        if ($('#PNotes').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Examinations</b></td></tr><tr ><td>' + $('#PNotes').val() + '</td></tr>'
+        }
+        if ($('#PAllergies').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Allergy</b></td></tr><tr ><td>' + $('#PAllergies').val() + '</td></tr>'
+        }
+        if ($('#PRemarks').val() != '') {
+            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Clinical Impression</b></td></tr><tr ><td>' + $('#PRemarks').val() + '</td></tr>'
+        }
+
+        row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Details</b></td></tr>'
+
+        myWindow.document.write(row);
+
+        for (var i = 0; i <= 15; i++) {
+            var Id = parseInt(i + 1);
+            if ($('#PMedicine_' + Id).length && $.trim($('#PMedicine_' + Id).val()) != '') {
+                var s = ""
+                var medname = Id + ".  " + $('#PMedicine_' + Id).val();
+                var Dosage = $('#PDosage_' + Id).val();
+                // var Daily = $('#PrintDaily_' + Id).val();
+                var Days = $('#PDays_' + Id).val();
+                //var Notes = $('#mednote' + Id).val();
+                if (Days == 1) {
+                    s = Days + ' day'
+                }
+                else {
+                    s = Days + ' days'
+                }
+
+                myWindow.document.write('<tr><td>' + medname + '  ' + Dosage + '  ' + s + '</td></tr>');
+            }
+
+        }
+
+
+        myWindow.document.write('</table>')
+        myWindow.document.write('</tr>')
+/*        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=20px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center></td></tr><tr><td height=20px colspan=3 align=center>&#160;</td></tr><tr><td valign=bottom style="font-family:tahoma;font-size: 12px;" align=left><br> </td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center></td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;' + (SignPrint.outerHTML) + ' </td></tr><tr><td align=left></td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center>&#160;' + $('#UserDetsss').text() + '</td></tr></table>');*/
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=20px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center></td></tr><tr><td height=20px colspan=3 align=center>&#160;</td></tr><tr><td valign=bottom style="font-family:tahoma;font-size: 12px;" align=left><br> </td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center></td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;' + (SignPrint.outerHTML) + ' </td></tr><tr><td align=left></td><td width=400px align=center></td></tr></table>');
+
+        myWindow.print();
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var colorArray = ['#33ccff', '#ff66cc', '#ff9966', '#FFFF99', '#00B3E6',
+        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D'];
+    $(function () {
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('.dedate').val(CurDate);
+
+        GetList(CurDate, CurDate, 0, 0);
+
+        $("#btnsearch").click(function (e) {
+            GetList($('#FromDate').val(), $('#ToDate').val(), $("#DoctorId").val(), $("#PatientId").val());
+        });
+        $("#btnrefresh").click(function (e) {
+            $('.dedate').val(CurDate);
+            $('.denull').val('');
+            $('.dezero').val(0);
+
+            GetList(CurDate, CurDate, 0, 0);
+        });
+
+        $("#tbl_WorkSheet").on('touchstart mousedown', function (e) {
+
+            if (e.button == 2) {
+                var o = {
+                    left: e.pageX,
+                    top: e.pageY
+                };
+                $("#divContainerNew").offset(o);
+            }
+        });
+    });
+
+    $("#RegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#PatientId").val(0);
+            var data = {};
+            data.PatientName = $("#RegNo").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#PatientId").val(ui.item.PatientId);
+            $("#btnsearch").focus();
+        },
+
+    });
+    $("#Doctor").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val(0);
+            var data = {};
+            data.DoctorName = $("#Doctor").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_WorkSheetDoctorSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DoctorName,
+                            label1: item.Status,
+                            DoctorId: item.DoctorId,
+                            headers: ["Doctor", "Department"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#DoctorId").val(ui.item.DoctorId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    $("#btnsearch").focus(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-primary");
+    });
+
+    $("#btnsearch").focusout(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-outline-primary");
+    });
+
+    function GetList(FromDate, ToDate, Doctor, Patient) {
+        var data = {};
+        data.FromDate = FromDate;
+        data.ToDate = ToDate;
+        data.DoctorId = Doctor;
+        data.PatientId = Patient;
+        data.DeptId = ERPDeptId;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_OPWorkSheetStaff",
+            data: data,
+            success: function (result) {
+
+                LoadList(result);
+            }
+        });
+    }
+
+    function LoadList(result) {
+
+        disable_datatable('tbl_WorkSheet');
+        var responseText = "<thead><tr>" +
+            "<th style='align=center'>Sl#</th>" +
+            "<th>Reg#</th>" +
+            "<th>OP#</th>" +
+            "<th>Date</th>" +
+            "<th>Time</th>" +
+            "<th>Patient</th>" +
+            "<th>Gender</th>" +
+
+            "<th>Contact</th>" +
+            "<th>Doctor</th>" +
+            "<th>Shift</th>" +
+            "<th>Token</th>" +
+            "<th>Status</th>" +
+            "</tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+
+            if (result[i].Status == 'New') var Status = '<span class="badge badge-warning white">New-Reg</span>';
+            else var Status = '<span class="badge badge-success">Re-Visit</span>';
+
+            if (result[i].IPNumber == 0) var Status = Status;
+            else if (result[i].DelFlag == 0) var Status = '<span class="badge badge-danger">Admitted</span>';
+            else var Status = '<span class="badge badge-info">Discharged</span>';
+
+            var slno = parseInt(i + 1);
+            responseText += '<tr  onmousedown="WhichButton(event,' + slno + ')" oncontextmenu="return false"  onclick="HealthPop(' + slno + ')">' +
+                '<td align=center>' + slno +
+                '<input type="hidden" id="OPVisitId_' + slno + '" value="' + result[i].RevisitId + '" />' +
+                '<input type="hidden" id="OPSerName_' + slno + '" value="' + result[i].OPSerName + '" />' +
+                '<input type="hidden" id="OPNumber_' + slno + '" value="' + result[i].OPNumber + '" />' +
+                '<input type="hidden" id="PatientId_' + slno + '" value="' + result[i].PatientId + '" />' +
+                '<input type="hidden" id="DOB_' + slno + '" value="' + result[i].DOB + '" />' +
+                '<input type="hidden" id="BloodGroup_' + slno + '" value="' + result[i].BloodGroup + '" />' +
+                '<input type="hidden" id="PatientName_' + slno + '" value="' + result[i].PatientName + '" />' +
+                '<input type="hidden" id="Gender_' + slno + '" value="' + result[i].Gender + '" />' +
+                '<input type="hidden" id="IPNumber_' + slno + '" value="' + result[i].IPNumber + '" />' +
+                '</td>' +
+                '<td>' + result[i].OPSerName + '-' + result[i].OPNumber + '</td>' +
+                '<td>' + result[i].RevisitId + '</td>' +
+                '<td  id="RevisitDate_' + slno + '" >' + result[i].RevisitDate + '</td>' +
+                '<td>' + result[i].DOB + '</td>' +
+                '<td>' + result[i].PatientName + '</td>' +
+                '<td>' + result[i].Gender + '</td>' +
+
+                '<td>' + result[i].Contact + '</td>' +
+                '<td  id="ddname' + slno + '" >' + result[i].DoctorName + '</td>' +
+                '<td style="background-color:' + colorArray[result[i].Flag] + '">' + (result[i].ShiftName).substring(0, 4) + '</td>' +
+                '<td align=center style="color:red;font-weight:bold">' + result[i].TokenNumber + '</td>' +
+                '<td align=center>' + Status + '</td>' +
+                '</tr>';
+        }
+
+        $('#tbl_WorkSheet').html(responseText + "</tbody><tfoot><tr>" +
+            "<th> </th>" +
+            "<th>Reg#</th>" +
+            "<th>OP#</th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "<th>Patient</th>" +
+            "<th> </th>" +
+
+            "<th>Contact</th>" +
+            "<th>Doctor</th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "<th> </th>" +
+            "</tr></tfoot>");
+        var title = 'OP WorkSheet From ' + $("#FromDate").val() + ' To ' + $("#ToDate").val();
+        datatableWithsearch('tbl_WorkSheet', true, title, 'itemListButtonPlace');
+
+    }
+
+
+
+    function WhichButton(e, Id) {
+        if (e.button == 2)  //Right Click
+        {
+            $("#divContainerNew").slideDown(500);
+            $("#CurrentselectedId").val(Id);
+        }
+    }
+
+    function RedirectTo(Flag) {
+        if ($("#CurrentselectedId").val() != 0) {
+            var Id = $("#CurrentselectedId").val();
+
+            // alert($("#PatientId_" + Id).val())
+
+            if (Flag == 1) //Lab Bill
+            {
+                sessionStorage.setItem("BSOP_PI", $("#PatientId_" + Id).val());
+                sessionStorage.setItem("BSOP_IP", $("#IPNumber_" + Id).val());
+
+                window.open('../Revisit/LabBill?from=SOPWorkSheet', '_blank');
+            }
+            else if (Flag == 2)    //Lab Result
+            {
+                sessionStorage.setItem("SOP_OV", $("#OPVisitId_" + Id).val());
+                sessionStorage.setItem("SOP_RS", $("#OPSerName_" + Id).val());
+                sessionStorage.setItem("SOP_RN", $("#OPNumber_" + Id).val());
+                sessionStorage.setItem("SOP_PI", $("#PatientId_" + Id).val());
+                sessionStorage.setItem("SOP_DO", $("#DOB_" + Id).val());
+                sessionStorage.setItem("SOP_BG", $("#BloodGroup_" + Id).val());
+                sessionStorage.setItem("SOP_PN", $("#PatientName_" + Id).val());
+                sessionStorage.setItem("SOP_GE", $("#Gender_" + Id).val());
+                sessionStorage.setItem("SOP_IP", $("#IPNumber_" + Id).val());
+
+
+                window.open('../Revisit/LabResult?from=SOPWorkSheet', '_blank');
+            }
+            else if (Flag == 3) {   //Procedure Bill
+
+            }
+            else if (Flag == 4) {   //Reg Bill Copy
+
+            }
+        }
+    }
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                "columnDefs": [
+                    { "width": "1%", "targets": 0 },
+                    { "width": "2%", "targets": 1 },
+                    { "width": "2%", "targets": 2 },
+                    { "width": "2%", "targets": 3 },
+                    { "width": "1%", "targets": 4 },
+                    { "width": "10%", "targets": 5 },
+                    { "width": "2%", "targets": 6 },
+                    { "width": "4%", "targets": 7 },
+                    { "width": "10%", "targets": 8 },
+                    { "width": "2%", "targets": 9 },
+                    { "width": "2%", "targets": 10 },
+                    { "width": "2%", "targets": 11 },
+                ],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Export',
+                        className: 'excelexport',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                title: title,
+                                messageTop: 'EUMI ERP',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: title,
+                                messageTop: 'EUMI ERP',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'print',
+                                title: title,
+                                messageTop: 'EUMI ERP',
+                                exportOptions: { columns: ":visible" }
+                            }
+                        ]
+                    },
+                    'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        }
+        else {
+            table = $('#' + tablename).DataTable({
+            });
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+    function HealthPop(slno) {
+
+        formrefresh();   
+
+        $("#GRevisitId").val($('#OPVisitId_' + slno).val());
+        $("#GPatientName").val('Patient : ' + $('#PatientName_' + slno).val());
+        $("#GPatientNamedis").val($('#PatientName_' + slno).val());
+        $("#GOPNumberdis").val('MR#-'+$('#OPNumber_' + slno).val());
+        $("#GOPNumber").val($('#OPNumber_' + slno).val());
+        $("#GDoctorName").val('Dr : ' + $("#ddname" + slno).text());
+        $("#GDoctorNamedis").val($("#ddname" + slno).text());
+        $("#GPatientId").val($('#PatientId_' + slno).val());
+        $("#RevisitDate").val($('#RevisitDate_' + slno).text());
+        $("#OPSerName").val($('#OPSerName_' + slno).val());
+        $("#Gender").val($('#Gender_' + slno).val());
+
+        GetPop($('#OPVisitId_' + slno).val(), $('#PatientId_' + slno).val())
+
+        $("#DetailsModal").modal("show");
+        $("#DetailsModal").appendTo("body");
+
+
+
+    }
+
+    function Savepopup() {
+
+        var data = {};
+
+        data.RevisitId = $("#GRevisitId").val();
+        data.OPNumber = $("#GOPNumber").val();
+        data.PatientId = $("#GPatientId").val();
+        data.DoctorName = $("#GDoctorName").val();
+        data.RevisitDate = $("#RevisitDate").val();
+        data.Weight = $("#PatWeight").val();
+        data.Height = $("#PatHeight").val();
+        data.DelFlag = 1;
+        data.BP = $("#PatBP").val();
+        data.Temperature = $("#PatTemperature").val();
+        data.Sugar = $("#PatSugar").val();
+        data.BMI = $("#PatBmi").val();
+        data.ChestCircumference = $("#PatChest").val();
+        data.HeadCircumference = $("#PatHead").val();
+        data.Abdominal = $("#PatAbdominal").val();
+        data.Allergy = $("#PatAllergy").val();
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/RevisitPatientHealthDetailsInsertandUpdate",
+            data: data,
+            success: function (result) {
+
+                var status = result.oList[0].Status;
+                var revisitid = result.oList[0].RevisitId;
+                Showalerts(status, revisitid);
+                formrefresh();
+            }
+        });
+    }
+
+
+
+    function CancelPop() {
+        formrefresh();
+    }
+
+
+    function formrefresh() {
+        $("#GOPNumberdis").val('');
+        $("#GPatientName").val('');
+        $("#GDoctorName").val('');
+        $("#PatWeight").val('');
+        $("#PatHeight").val('');
+        $("#PatBP").val('');
+        $("#PatTemperature").val('');
+        $("#PatSugar").val('');
+        $("#PatBmi").val('');
+        $("#PatChest").val('');
+        $("#PatHead").val('');
+        $("#PatAbdominal").val('');
+        $("#PatAllergy").val('');
+    }
+    function GetPop(RevisitId, PatientId) {
+
+        var data = {};
+        data.RevisitId = RevisitId;
+        data.PatientId = PatientId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/RevisitPatientHealthDetailsGetandGets",
+            data: data,
+            success: function (result) {
+
+                    ShowhealthdetailsGet(result);
+
+            }
+        });
+    }
+
+    function ShowhealthdetailsGet(result) {
+
+            $('#PatWeight').val(result[0].Weight);
+            $('#PatHeight').val(result[0].Height);
+            $('#PatBP').val(result[0].BP);
+            $('#PatTemperature').val(result[0].Temperature);
+            $('#PatSugar').val(result[0].Sugar);
+            $('#PatBmi').val(result[0].BMI);
+            $('#PatChest').val(result[0].ChestCircumference);
+            $('#PatHead').val(result[0].HeadCircumference);
+            $('#PatAbdominal').val(result[0].Abdominal);
+            $('#PatAllergy').val(result[0].Allergy);
+
+    }
+
+    function Showalerts(Status, RevisitId) {
+        if (Status == 1) {
+
+            formrefresh();
+            swal('Visit ID: ' + RevisitId  +  "   Health Details saved successffully.", "success");
+
+        }
+
+    }
+
+
+</script>
+
+
