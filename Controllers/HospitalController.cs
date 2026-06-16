@@ -171,49 +171,7 @@ namespace EUMI_ERP.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult GetNearExpiryMedicines()
-        {
-            NearExpiryMedicine obj = new NearExpiryMedicine();
-            List<NearExpiryMedicine> oList = new List<NearExpiryMedicine>();
-            List<NearExpiryMedicine> alertList = new List<NearExpiryMedicine>();
-            try
-            {
-                DataSet dsDataSet = obj.GetNearExpiryMedicines(dbName);
-
-                // Table[0] — Near Expiry (existing)
-                foreach (DataRow row in dsDataSet.Tables[0].Rows)
-                {
-                    NearExpiryMedicine m = new NearExpiryMedicine();
-                    m.Medicine = row["Medicine"].ToString();
-                    m.BatchNo = row["BatchNo"].ToString();
-                    m.ExpiryDate = row["ExpiryDate"].ToString();
-                    m.DaysLeft = Convert.ToInt32(row["DaysLeft"].ToString());
-                    m.Stock = row["Stock"].ToString();
-                    oList.Add(m);
-                }
-
-                // Table[1] — Inventory Alerts
-                if (dsDataSet.Tables.Count > 1)
-                {
-                    foreach (DataRow row in dsDataSet.Tables[1].Rows)
-                    {
-                        NearExpiryMedicine m = new NearExpiryMedicine();
-                        m.Medicine = row["Medicine"].ToString();
-                        m.Category = row["Category"].ToString();
-                        m.CurrentStock = Convert.ToInt32(row["CurrentStock"]);
-                        m.ReorderLevel = Convert.ToInt32(row["ReorderLevel"]);
-                        m.StockStatus = row["StockStatus"].ToString();
-                        alertList.Add(m);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Message :" + ex.Message + "+" + ex.StackTrace);
-            }
-            return Json(new { oList, alertList, success = true }, JsonRequestBehavior.AllowGet);
-        }
+       
         [HttpPost]
         public ActionResult HMS_PatientTestDetailsGet(LabBill LabBill) 
         {

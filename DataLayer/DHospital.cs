@@ -14,19 +14,7 @@ namespace EUMI_ERP.DataLayer
     {
         private SqlParameter[] arlParms;
 
-        public DataSet GetNearExpiryMedicines(string dbName)
-        {
-            try
-            {
-                return SQLHelper.ExecuteDataset("GetNearExpiryMedicines", dbName, null);
-            }
-            catch (SqlException exMe)
-            {
-                Console.WriteLine(exMe.Message);
-                return null;
-            }
-        }
-
+    
         public DataSet HMS_PatientTestDetailsGet(LabBill LabBill, string dbName) 
         {
             try
@@ -1298,7 +1286,7 @@ public DataSet HMS_SalesInvoiceDeletestockout(SaleInvoiceHospital SaleInvoiceHos
                 return null;
             }
         }
-        // Add this method to DHospital class
+       
 
         public DataSet GetPharmacyDashboardData(string dbName)
         {

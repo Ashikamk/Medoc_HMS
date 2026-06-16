@@ -369,26 +369,7 @@ namespace EUMI_ERP.Models
         }
     }
 
-    public class NearExpiryMedicine
-    {
-        public string Medicine { get; set; }
-        public string BatchNo { get; set; }
-        public string ExpiryDate { get; set; }
-        public int DaysLeft { get; set; }
-        public string Stock { get; set; }
-
-        public string Category { get; set; }
-        public int CurrentStock { get; set; }
-        public int ReorderLevel { get; set; }
-        public string StockStatus { get; set; }
-
-        DHospital oDHospital = new DHospital();
-
-        public DataSet GetNearExpiryMedicines(string dbName)
-        {
-            return oDHospital.GetNearExpiryMedicines(dbName);
-        }
-    }
+   
     public class LabResult
     {
         public string BillDate { get; set; }
@@ -630,6 +611,8 @@ namespace EUMI_ERP.Models
         }
 
         public string MedicineName { get; set; }
+        public string SampleTime { get; set; }
+        public string ResultTime { get; set; }
         public string Form { get; set; }
         public int Count { get; set; }
         public string TestName { get; set; }
@@ -989,7 +972,6 @@ namespace EUMI_ERP.Models
 // Pharmacy Dashboard Model - Following your existing pattern
 public class PharmacyDashboard
 {
-    // Properties
     public int TotalSalesInvoices { get; set; }
     public int TotalPurchaseInvoices { get; set; }
     public int TotalMedicines { get; set; }
@@ -998,25 +980,17 @@ public class PharmacyDashboard
     public int OutOfStockCount { get; set; }
     public int FastMovingCount { get; set; }
     public int NonMovingCount { get; set; }
-
-    // Sales Trend
     public string SalesTrendDates { get; set; }
     public string SalesTrendCounts { get; set; }
     public string SalesTrendAmounts { get; set; }
-
-    // Purchase Trend
     public string PurchaseTrendDates { get; set; }
     public string PurchaseTrendCounts { get; set; }
     public string PurchaseTrendAmounts { get; set; }
-
-    // Medicines Status
     public int InStock { get; set; }
     public int ShortStock { get; set; }
     public int OutOfStock { get; set; }
     public int ExpiringIn30 { get; set; }
     public int GoodStock { get; set; }
-
-    // List Data (pipe separated strings)
     public string SalesInvoicesData { get; set; }
     public string PurchaseInvoicesData { get; set; }
     public string ShortStockData { get; set; }
@@ -1025,10 +999,10 @@ public class PharmacyDashboard
     public string ExpiryData { get; set; }
     public string OutOfStockData { get; set; }
 
-    // DataLayer instance (like your pattern)
+   
     DHospital oDHospital = new DHospital();
 
-    // Methods (like your pattern)
+    
     public DataSet GetPharmacyDashboardData(string dbName)
     {
         return oDHospital.GetPharmacyDashboardData(dbName);

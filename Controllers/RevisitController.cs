@@ -1365,8 +1365,8 @@ namespace EUMI_ERP.Controllers
 
 
 
-      
-
+        // ── Add this action to your RevisitController ────────────────────────────────
+        // File: Controllers/RevisitController.cs
         [HttpPost]
         public ActionResult HMS_DoctorDashboardAdvice(WorkSheet WorkSheet)
         {
@@ -1429,6 +1429,7 @@ namespace EUMI_ERP.Controllers
                         PatientName = row["PatientName"].ToString(),
                         TestName = row["TestName"].ToString(),
                         ResultDate = row["ResultDate"].ToString(),
+                        ResultTime = row["ResultTime"].ToString(),   
                         ResultStatus = row["ResultStatus"].ToString(),
                         IsReady = Convert.ToInt32(row["IsReady"].ToString() == "" ? "0" : row["IsReady"].ToString()),
                         SubResultId = Convert.ToInt64(row["SubResultId"].ToString() == "" ? "0" : row["SubResultId"].ToString()),
@@ -1450,6 +1451,7 @@ namespace EUMI_ERP.Controllers
                         PatientName = row["PatientName"].ToString(),
                         TestName = row["TestName"].ToString(),
                         SampleDate = row["SampleDate"].ToString(),
+                        SampleTime = row["SampleTime"].ToString(),
                         ResultStatus = row["ResultStatus"].ToString(),
                         IsReady = Convert.ToInt32(row["IsReady"].ToString() == "" ? "0" : row["IsReady"].ToString()),
                         SubResultId = Convert.ToInt64(row["SubResultId"].ToString() == "" ? "0" : row["SubResultId"].ToString()),
