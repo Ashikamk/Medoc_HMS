@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "ContainerTransfer";
+}
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<script type="text/javascript" src="../Projectscript/ContainerTransfer.js"></script>
+@*<script type="text/javascript" src="../Projectscript/Common.js"></script>*@
+
+<script src="/Scripts/Autocomplete/jquery-ui.js"></script>
+<div class="myData" data-x="M197" />
+
+<div id="Entry" style="margin-top:-15px;">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="margin-top:3px;">
+                    <h4 class="card-title mb-0">Container Transfer</h4>
+                </div>
+                <div class="card-body" style="margin-top:12px">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <hr style="margin-top:-1px;margin-left:-17px;margin-right:-15px;" />
+                                    <div class="form-body" style="margin-left:-19px;margin-right:-26px;margin-top:-18px;">
+                                        <div class="row" style="background-color:#E0F3F4;margin-left:-7px;width:100%;height:170px;margin-top:-50px;margin-bottom:-30px;">
+                                            <div class="col-md-12">
+                                                <div class="form-group" style="margin-left:9px;">
+                                                    <br />
+                                                </div>
+                                                <div class="form-body">
+                                                    <div class="row" style="margin-left:2px;">
+                                                        <div class="col-md-12">
+                                                            <br />
+
+                                                            <div class="row">
+                                                                @*<div class="col-md-1">
+                                                                        <div class="form-group">
+                                                                            <label>No#<span class="danger">*</span></label>
+                                                                        </div>
+                                                                    </div>*@
+                                                                
+                                                                    <div class="form-group">
+                                                                        <label>From Location<span class="danger">*</span></label>
+                                                                    </div>
+                                                                
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                        <select id="FromLocation" disabled class="form-control"></select>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                    <div class="form-group">
+                                                                        <label>To Location<span class="danger">*</span></label>
+                                                                    </div>
+                                                                
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                        <select id="ToLocation" onchange="LocationChange()" class="form-control"></select>
+                                                                    </div>
+                                                                </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>Transfer Date<span class="danger">*</span></label>
+                                                                    </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="txtdate" class="form-control">
+                                                                    </div>
+                                                                </div>
+
+                                                                    <div class="form-group">
+                                                                        <label>Container<span class="danger">*</span></label>
+                                                                    </div>
+
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group">
+                                                                        <input type="text" id="txtproduct" class="form-control" >
+                                                                        <input type="hidden" id="ProductId0" />
+                                                                    </div>
+                                                                </div>
+                                                               
+                                                                @*<div class="col-md-2">
+                                                                    <div class="form-group">
+                                                                        <button type="button" id="transfer" onclick="AcceptAllTransactions()" class="btn btn-primary btn-min-width mr-1 mb-1 ">Transfer All </button>
+                                                                    </div>
+                                                                </div>*@
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top:5px;margin-left:-19px;margin-right:-19px;" />
+                                    <div class="card-content collapse show" style="overflow:auto;">
+                                        <div class="card-body card-dashboard">
+                                            <table id="tblContainerTransfer" class="table table-striped table-bordered base-style dataTable"></table>
+                                            <br />
+
+                                        </div>
+                                        <input type="hidden" id="rowget"/>
+                                    </div>
+                                    <input type="hidden" id="hiddenrow" />
+                                    <div class="form-actions">
+                                            <div class="text-right">
+                                                <button type="button" id="transfer" onclick="AcceptAllTransactions()" class="btn btn-primary btn-min-width mr-1 mb-1 ">Transfer All </button>
+                                               
+                                            </div>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#txtproduct").autocomplete({       
+        source: function (request, response) {
+            if ($('#ToLocation').val() == 0) {
+                warningshow('Please Select To Location')
+                $("#txtproduct").val('');
+            }
+            else
+            {
+                var data = {};
+                data.ContainerNumber = $("#txtproduct").val();
+                console.log(data.ItemCode)
+                $.ajax({
+                    url: '../../LocationTransfer/TranferContainerSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '1',
+                                label: item.ItemCode,                               
+                                ItemCode: item.ItemCode,
+                                headers: ["Container"]
+                            })
+                        }));
+                    }
+                })
+            }
+            
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#txtproduct').val(ui.item.ItemCode);
+            var data = {};
+            data.ChasisNumber = $("#txtproduct").val();
+            $.ajax({
+                type: "POST",
+                url: "../../LocationTransfer/ChassisNumberSearch",
+                data: data,
+                success: function (result) {
+                    GetItem(result.oList);
+
+                }
+            });
+        },
+    });
+</script>

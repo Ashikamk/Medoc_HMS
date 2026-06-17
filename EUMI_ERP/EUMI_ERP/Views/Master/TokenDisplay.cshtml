@@ -1,0 +1,198 @@
+﻿
+@{
+    ViewBag.Title = "TokenDisplay";
+    Layout = null;
+}
+
+<title>Medoo</title>
+
+<link rel="shortcut icon" type="image/x-icon" href="../app-assets/img/ico/favicon.png">
+<link rel="shortcut icon" type="image/png" href="../app-assets/img/ico/favicon.png">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+<div id="Entry" style="width: 60%; margin-left: 20%; height: 100%; display: none;">
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top:10%;">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0" style="text-align:center;font-weight:bold;">Token</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body">
+
+
+                                        <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label style="font-weight:bold;">Token</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtname" class="form-control" autocomplete="off" onkeyup="changetoupper(this.id)">
+                                            </div>
+                                            <div class="col-md-2"></div>
+                                        </div>
+
+
+
+
+
+                                        <div class="form-actions">
+                                            <div class="text-right">
+
+                                                <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table id="" class="table table-bordered table-hover"><thead><tr><th width=10%;align =center>Sl#</th><th width=50%>Doctor</th><th width=20% class='text-left'>Current Token</th><th width=20%>Next Token</th></tr></thead></table>
+
+<div class="table-responsive">
+    <table id="tblAppointment" class="table table-bordered table-hover"></table>
+</div>
+
+<button onclick="openFullscreen();">Full Screen</button>
+<a id="MainDashboardref">Go Home</a>
+
+<script>
+
+    $('#MainDashboardref').attr("href", '../' + localStorage.getItem('defaultdashboard'));
+    var elem = document.getElementById("table-responsive");
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
+    }
+</script>
+
+<div style="display:none">
+
+    <input type="text" id="TokNo" class="form-control" />
+
+</div>
+
+<style>
+    .table-responsive {
+        height: 800px;
+        overflow-y: auto;
+        overflow-y: hidden; /* Hide vertical scrollbar */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+
+        border: 1px solid #e2e2e2;
+        font-family: 'helvetica';
+    }
+
+        .table-responsive:hover {
+            border-color: #FEDD31;
+        }
+
+    table {
+        width: 100%;
+    }
+
+    th {
+        height: 100px;
+        background: #FEDD31;
+        font-size: 30pt;
+        font-family: 'helvetica';
+    }
+
+    td {
+        padding: 25px;
+        background: #6100ff;
+        color: #fff;
+        font-weight: bold;
+        font-size: 30pt;
+    }
+</style>
+
+
+
+
+
+
+
+<script>
+
+
+    var $el = $(".table-responsive");
+    function anim() {
+        var st = $el.scrollTop();
+        var sb = $el.prop("scrollHeight") - $el.innerHeight();
+        $el.animate({ scrollTop: st < sb / 2 ? sb : 0 }, 5000, anim);
+    }
+    function stop() {
+        $el.stop();
+    }
+    anim();
+    $el.hover(stop, anim);
+
+</script>
+
+
+<script>
+
+    setInterval(function () {
+        GetRows(0)
+    }, 2000);
+
+
+    function GetRows(TokNo) {
+        $('#TokNo').val(TokNo)
+        var data = {};
+        data.TokNo = TokNo;
+        $.ajax({
+            type: "POST",
+            url: "../Master/Token123GetandGets",
+            data: data,
+            success: function (result) {
+                if (TokNo == 0)
+                    ShowTermlist(result.oList);
+            }
+        });
+    }
+
+    function ShowTermlist(result) {
+
+        var responseText = "<tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td width=10% align=center>' + slno + '</td><td width=50% >' + result[i].Name + '</td><td width=20% >' + result[i].currenttoken + '</td><td width=20% >' + result[i].NextToken + '</td></tr>';
+        }
+        $('#tblAppointment').html(responseText + '</tbody>');
+
+    }
+
+    function closelist() {
+        $('#Entry').show();
+        $('#listing').hide();
+        formrefresher();
+    }
+</script>
+
+
+
+

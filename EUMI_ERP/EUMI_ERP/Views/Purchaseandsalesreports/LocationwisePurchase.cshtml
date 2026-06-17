@@ -1,0 +1,416 @@
+﻿
+@{
+    ViewBag.Title = "LocationwisePurchase";
+}
+
+
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+    #btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnback:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnprint:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="myData" data-x="M41" />
+
+<div id="Entry">
+  
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                   
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="35%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#location').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+
+
+
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+
+
+
+
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:.1%;" />
+
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Locationwise Purchase Report</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+               
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:13%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:-1%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:4%;"></div>
+                    <div class="row" style="margin-top:2%">
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:7%">Location</label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="location" name="priority" class="form-control"></select>
+                        </div>
+                    </div>
+
+                </div>
+            
+                <div class="modal-footer ">
+
+                    <button type="button" style="margin-right:45%;" id="btnsubmit" class="btn btn-primary">Go</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+    function Showreport(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th>Sl#</th><th Style=width:10px>Inv.#</th><th Style=width:20px>Sup.Inv.#</th><th Style=width:10px>Date</th><th Style=width:1000px>Supplier</th><th Style=width:20px;text-align:right>Taxable Amount</th><th Style=width:20px;text-align:right>Tax Amount</th><th Style=width:20px;text-align:right>Amount</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+
+            if (result[i].PurchaseSlNo == '') {
+                responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td>' + result[i].PurchaseSlNo + '</td><td>' + result[i].InvoNo + '</td><td><b>' + result[i].InvoDate + '</b></td><td>' + result[i].Supplier + '</td><td style=text-align:right><b>' + result[i].TotalTaxable + '</b></td><td style=text-align:right><b>' + result[i].TotalTax + '</b></td><td style=text-align:right><b>' + result[i].Amount + '</b></td></tr>';
+            }
+            
+            else {
+                responseText += '<tr ondblclick=gotoInvoNo(' + result[i].PurchaseSlNo + "," + result[i].DeptId + ')><td>' + slno + '</td><td>' + result[i].PurchaseSlNo + '</td><td>' + result[i].InvoNo + '</td><td>' + result[i].InvoDate + '</td><td>' + result[i].Supplier + '</td><td style=text-align:right>' + parseFloat(result[i].TotalTaxable || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].TotalTax || 0).toFixed(Decimal) + '</td><td style=text-align:right>' + parseFloat(result[i].Amount || 0).toFixed(Decimal) + ' <input type="hidden" id="Dept_' + i + '" value=' + result[i].DeptId + '></td></tr>';
+            }
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Inv.#</th><th>Sup.Inv.#</th><th>Date</th><th>Supplier</th><th> </th><th> </th><th> </th></tr> </tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Locationwise Purchase Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch1('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+  
+    function gotoInvoNo(PurchaseSlNo, DeptId) {
+        if ((usermenu1.indexOf("M31") != -1)) {
+            window.open('../inventory/PurchaseInvoice?slno=' + PurchaseSlNo + '&dept=' + DeptId);
+        }
+        else if ((usermenu1.indexOf("M233") != -1)) {
+            window.open('../Purchase/PurchaseInvoiceNew?slno=' + PurchaseSlNo + '&dept=' + DeptId);
+
+        }
+        else {
+            warningshow('Invalid User Rights');
+            return false;
+        }
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+
+    function GetLocation(id) {
+        var data = {};
+        data.LocationId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                LocationLoad(result.oList, id);
+
+
+            }
+        });
+
+    }
+
+    function LocationLoad(result, a) {
+        $("#location,#locn_0,#locn_job").empty();
+        LocationSelect = "<option value='0'>-All-</option>";
+        for (var i = 0; i < result.length; i++) {
+            LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
+
+        }
+        $("#location,#locn_0,#locn_job").append(LocationSelect);
+        if (a == 0) {
+            $('#location').val(0);
+        }
+        else {
+            $('#location').val(a);
+        }
+    }
+
+
+
+
+    $(function () {
+
+        GetLocation(0);
+        $('#location').focus();
+        $('#location').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+
+
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+
+        $("#btnsubmit").click(function (e) {
+
+
+
+
+            if ($('#DateFrom').val() == '') {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+
+            else {
+                $('#Loading').show();
+
+
+
+            var data = {};
+
+            data.DateFrom = $('#DateFrom').val();
+            data.DateTo = $('#DateTo').val();
+            data.LocnId = parseInt($('#location').val() || 0);
+            data.Userid = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/LocationReportGet",
+                    data: data,
+                    success: function (result) {
+                        Showreport(result);
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                    }
+                });
+            }
+
+
+        });
+
+    });
+
+
+
+    function datatableWithsearch1(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' ) {
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width=100%" />');
+            }
+            if (title == 'Supplier') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+
+            if (title == 'Date') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+
+            if (title == 'Inv.#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+
+
+            if (title == 'Sup.Inv.#') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            
+        });
+        var table = null;
+        table = $('#' + tablename).DataTable({
+            //dom: 'Blfrtip',
+            dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                     "<'row'<'col-sm-12'tr>>" +
+                     "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+            buttons: [],
+          
+        });
+
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                className: 'excelexport',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: ":visible" }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: ":visible" }
+                    },
+                    {
+                        extend: 'print',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: ":visible" }
+                    }
+                ]
+            },
+            'colvis'
+            ]
+        });
+        table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+        $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+</script>
+
+
+

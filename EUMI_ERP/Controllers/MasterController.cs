@@ -7072,8 +7072,7 @@ namespace EUMI_ERP.Controllers
         [HttpPost]
         public ActionResult AppointmentGetandGets(Appointment Appointment)
         {
-            // ✅ Add this debug line temporarily
-            System.Diagnostics.Debug.WriteLine("Status1 received: " + Appointment.Status1);
+           
 
             Appointment obj = new Appointment();
             List<Appointment> oList = new List<Appointment>();

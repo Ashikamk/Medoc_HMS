@@ -368,6 +368,8 @@ namespace EUMI_ERP.Models
             return oDHospital.HMS_DischargeSummaryTestsGetandGets(HMSTest, dbName);
         }
     }
+
+   
     public class LabResult
     {
         public string BillDate { get; set; }
@@ -608,6 +610,28 @@ namespace EUMI_ERP.Models
             return oDReVisit.HMS_OPWorkSheetScan(WorkSheet, dbName);
         }
 
+        public string MedicineName { get; set; }
+        public string SampleTime { get; set; }
+        public string ResultTime { get; set; }
+        public string Form { get; set; }
+        public int Count { get; set; }
+        public string TestName { get; set; }
+        public string Priority { get; set; }
+        public string ResultDate { get; set; }
+        public string SampleDate { get; set; }
+        public string ResultStatus { get; set; }
+        public int IsReady { get; set; }
+        public long SubResultId { get; set; }
+
+        public int Age { get; set; }
+        public int BillYear { get; set; }
+
+        // ── Add the new combined method alongside the existing ones ──────────────────
+        public DataSet HMS_DoctorDashboardAdvice(WorkSheet WorkSheet, string dbName)
+        {
+            return oDReVisit.HMS_DoctorDashboardAdvice(WorkSheet, dbName);
+        }
+
 
         // NEW - in ReVisitModel.cs
         public DataSet HMS_GetVitalsRevisitIds(string dbName)
@@ -811,6 +835,7 @@ namespace EUMI_ERP.Models
         public long VerifiedUser { get; set; }
         public long ApprovedUser { get; set; }
         public long userid { get; set; }
+        public string Mode { get; set; }
         public int Flag { get; set; }
         public string Status { get; set; }
         public long RecId { get; set; }
@@ -945,7 +970,45 @@ namespace EUMI_ERP.Models
 
 }
 
+// Pharmacy Dashboard Model - Following your existing pattern
+public class PharmacyDashboard
+{
+    public int TotalSalesInvoices { get; set; }
+    public int TotalPurchaseInvoices { get; set; }
+    public int TotalMedicines { get; set; }
+    public int ShortStockCount { get; set; }
+    public int ExpiryCount { get; set; }
+    public int OutOfStockCount { get; set; }
+    public int FastMovingCount { get; set; }
+    public int NonMovingCount { get; set; }
+    public string SalesTrendDates { get; set; }
+    public string SalesTrendCounts { get; set; }
+    public string SalesTrendAmounts { get; set; }
+    public string PurchaseTrendDates { get; set; }
+    public string PurchaseTrendCounts { get; set; }
+    public string PurchaseTrendAmounts { get; set; }
+    public int InStock { get; set; }
+    public int ShortStock { get; set; }
+    public int OutOfStock { get; set; }
+    public int ExpiringIn30 { get; set; }
+    public int GoodStock { get; set; }
+    public string SalesInvoicesData { get; set; }
+    public string PurchaseInvoicesData { get; set; }
+    public string ShortStockData { get; set; }
+    public string FastMovingData { get; set; }
+    public string NonMovingData { get; set; }
+    public string ExpiryData { get; set; }
+    public string OutOfStockData { get; set; }
 
+   
+    DHospital oDHospital = new DHospital();
+
+    
+    public DataSet GetPharmacyDashboardData(string dbName)
+    {
+        return oDHospital.GetPharmacyDashboardData(dbName);
+    }
+}
 
 
 public class VaccineModal

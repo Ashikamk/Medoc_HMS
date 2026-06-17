@@ -1,0 +1,427 @@
+﻿
+@{
+    ViewBag.Title = "Mastershortcut";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<style>
+    .hhover:hover {
+        box-shadow: 13px 15px 88px rgba(0, 0, 0, 0.5);
+        -webkit-transition: box-shadow 0.5s;
+        transform: scale(1.1);
+        transition: transform 0.5s;
+        cursor: pointer;
+        background: #77deee;
+        color: black;
+        border: 0px solid white;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    function GotomenuPage(URL) {
+        var win = window.open('../' + URL, '_blank');
+        win.focus();
+    }
+
+
+</script>
+<script>
+    var MenuLength = 0;
+
+    $(document).ready(function () {
+        getallmenus();
+    });
+
+    function getallmenus() {
+
+        var data = {};
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Home/MasterUserMenus",
+            data: data,
+            success: function (result) {
+                showMenulist(result.oList)
+
+            }
+        });
+
+    }
+
+
+
+    function showMenulist(result) {
+        MenuLength = result.length;
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            var url = result[i].URL;
+            if(url!='')
+                var row = '<li id="row' + slno + '" class="list-group-item hhover" onclick="GotomenuPage(' + "'" + url + "'" + ')" target="_blank"><div style="float:left"><a class="menu-item" target="_blank"><i class="fa fa-paper-plane-o mr-1"></i><b>  ' + result[i].MenuName + '</b></a></div> <input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+            else
+                var row = '<li id="row' + slno + '" class="list-group-item" onclick="" target="_blank"><div style="float:left"><a class="menu-item" target="_blank"><b>  ' + result[i].MenuName + '</b></a></div> <input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+
+            if (result[i].MasterId == 1) {
+                $('#ddd').append(row);
+                $('#MsttDiv1').show();
+            }
+            else if (result[i].MasterId == 2) {
+                $('#mstacc').append(row);
+                $('#MsttDiv2').show();
+            }
+            else if (result[i].MasterId == 3) {
+                $('#mstpay').append(row);
+                $('#MsttDiv3').show();
+            }
+            if ($('#head' + slno).val() == 'MM') {
+                $('#row' + slno).css('background-color', '#009DA0')
+                $("#row" + slno).css("color", "white");
+
+            }
+        }
+    }
+
+
+
+</script>
+
+
+                <div class="row">
+                    <div class="color-group col-sm-3 mb-4" style="display:none" id="MsttDiv1">
+                        <div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul id="ddd" class="list-group"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-group col-sm-3 mb-4" style="display:none" id="MsttDiv2">
+                        <div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul id="mstacc" class="list-group"></ul>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-group col-sm-3 mb-4" style="display:none" id="MsttDiv3">
+                        <div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul id="mstpay" class="list-group"></ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                @*<div class="row app-color overflow-hidden">
+                    <div class="color-group col-sm-3 mb-4">
+                        <div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul class="list-group">
+
+                                        <li class="list-group-item" style="background:#009DA0;color:white">
+                                            <h5><b>INVENTORY</b></h5>
+                                        </li>
+
+                                        <li class="list-group-item"onclick="GotomenuPage('master/itemmaster')">
+                                            <a class="menu-item" href="../master/itemmaster" target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i> Product
+                                            </a>
+                                        </li>
+
+                                        <li class="list-group-item"onclick="GotomenuPage('master/groupmaster')">
+                                            <a class="menu-item" href="../master/groupmaster"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>  Product Group
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/subgroupmaster')">
+
+                                            <a class="menu-item" href="../master/subgroupmaster"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Product Sub Group
+                                            </a>
+
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/Category')">
+                                            <a class="menu-item" href="../master/Category"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Product Category
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/subcategory')">
+                                            <a class="menu-item" href="../master/subcategory"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Product Sub Category
+                                            </a>
+
+                                        </li>
+
+                                        <li class="list-group-item"onclick="GotomenuPage('master/Unit')">
+                                            <a class="menu-item" href="../master/Unit"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Unit
+                                            </a>
+
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/location')">
+                                            <a class="menu-item" href="../master/location"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Location
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/Tax')">
+                                            <a class="menu-item" href="../master/Tax"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i> Tax
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/multiprice')">
+                                            <a class="menu-item" href="../master/multiprice"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Multi Price
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/Terms')">
+                                            <a class="menu-item" href="../master/Terms"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Terms
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="color-group col-sm-3 mb-4">
+                        <div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                            <h5><b>ACCOUNTS</b></h5>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/AccountHead')">
+                                            <a class="menu-item" href="../master/AccountHead"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Account Head
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/bank')">
+                                            <a class="menu-item" href="../master/bank"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Bank
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/vouchertype')">
+                                            <a class="menu-item" href="../master/vouchertype"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Voucher Type
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/CustomerMaster')">
+                                            <a class="menu-item" href="../master/CustomerMaster"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Customer
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/Supplier')">
+                                            <a class="menu-item" href="../master/Supplier"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Supplier
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/salesman')">
+                                            <a class="menu-item" href="../master/salesman" target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Salesman
+                                            </a>
+                                        </li>
+
+
+                                        <li class="list-group-item"onclick="GotomenuPage('master/area')">
+                                            <a class="menu-item" href="../master/area"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Area
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/areagroup')">
+                                            <a class="menu-item" href="../master/areagroup"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Area Group
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/branch')">
+                                            <a class="menu-item" href="../master/branch"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Branch
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-group col-sm-3 mb-4">
+                        <div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                            <h5><b>PAYROLL</b></h5>
+
+                                        <li class="list-group-item"onclick="GotomenuPage('master/designation')">
+                                            <a class="menu-item" href="../master/designation"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Designation
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/employee')">
+                                            <a class="menu-item" href="../master/employee"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Employee
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/passport')">
+                                            <a class="menu-item" href="../master/passport"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Document
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/Vehicle')">
+                                            <a class="menu-item" href="../master/Vehicle"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Vehicle
+                                            </a>
+                                        </li>
+
+                                        <li class="list-group-item"onclick="GotomenuPage('master/department')">
+                                            <a class="menu-item" href="../master/department"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Department
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/employeedivision')">
+                                            <a class="menu-item" href="../master/employeedivision"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Employee Division
+                                            </a>
+                                        </li>
+                                        <li class="list-group-item"onclick="GotomenuPage('master/InsuranceCompany')">
+                                            <a class="menu-item" href="../master/InsuranceCompany"target="_blank">
+                                                <i class="fa fa-paper-plane-o mr-1"></i>Insurance Company
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        @*<div id="chatapp" class="col-12">
+                            <div class="card-body">
+                                <div class="card-block">
+                                    <ul class="list-group">*@
+
+
+                @*</ul>
+                            </div>
+                        </div>
+                    </div>*@
+
+                @*<div class="color-group col-sm-3 mb-4">
+                            <div id="chatapp" class="col-12">
+                                <div class="card-body">
+                                    <div class="card-block">
+                                        <ul class="list-group">
+                                            <li class="list-group-item" style="background:#009DA0;color:white">
+
+                                                <h5><b>OTHERS</b></h5>
+
+                                            <li class="list-group-item"onclick="GotomenuPage('home/chat')">
+                                                <a class="menu-item" href="../home/chat" target="_blank">
+                                                    <i class="fa fa-paper-plane-o mr-1"></i>Chat
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item"onclick="GotomenuPage('home/myprofile')">
+                                                <a class="menu-item" href="../home/myprofile" target="_blank">
+                                                    <i class="fa fa-paper-plane-o mr-1"></i>My Profile
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item"onclick="GotomenuPage('master/reminder')">
+                                                <a class="menu-item" href="../master/reminder" target="_blank">
+                                                    <i class="fa fa-paper-plane-o mr-1"></i>Reminder
+                                                </a>
+                                            </li>
+                                            <li class="list-group-item"onclick="GotomenuPage('master/task')">
+                                                <a class="menu-item" href="../master/task" target="_blank">
+                                                    <i class="fa fa-paper-plane-o mr-1"></i>Task
+                                                </a>
+                                            </li>
+
+                                            <li class="list-group-item"onclick="GotomenuPage('master/users')">
+                                                <a class="menu-item" href="../master/users" target="_blank">
+                                                    <i class="fa fa-paper-plane-o mr-1"></i>Users
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>*@
+
+
+                @*<div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                                        <div>
+                                            <table width="100%">
+                                                <tr>
+                                                    <td><h4 id="header"></h4></td>
+                                                    <td width="30%"></td>
+                                                    <td align="right"><button type="button" style="width:100px" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+
+                                                    <td align="right">
+
+                                                        <div class="btn-group" id="buttonPlace">
+
+
+
+
+                                                            <div align="right">
+                                                                <div class="heading-elements">
+                                                                    <div class="btn-group" id="buttonPlace">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+
+
+                                            <div align="right">
+
+                                                <div class="heading-elements">
+
+
+
+
+                                                    <div id="divreport"overflow:auto">
+                                                        <hr />
+
+                                                        <table id="Tblreport" class="table table-striped table-bordered dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@

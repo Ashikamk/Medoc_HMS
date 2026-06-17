@@ -323,7 +323,7 @@ function renderTimeSlots(bookedTimes) {
             btn.style.textDecoration = "line-through";
             btn.style.position = "relative";
 
-            // Find patient name from appointment list
+            
             var patientName = '';
             var patientContact = '';
             var patientOP = '';
@@ -343,7 +343,7 @@ function renderTimeSlots(bookedTimes) {
                             String(appt.DoctorId) === String(selectedDoctor)) {
                             patientName = appt.FirstName || '';
                             patientContact = appt.Contact || '';
-                            patientOP = appt.LastName || '';   // OP number stored in LastName
+                            patientOP = appt.LastName || '';   
                         }
                     }
                 });
@@ -360,7 +360,6 @@ function renderTimeSlots(bookedTimes) {
 
             btn.title = tooltipText;
 
-            // Custom styled tooltip
             btn.setAttribute('data-tooltip', tooltipText);
             btn.addEventListener('mouseenter', function () {
                 var tip = document.createElement('div');
@@ -689,7 +688,7 @@ function showCalendarView() {
     document.getElementById('list-view').style.display = 'none';
     document.getElementById('calendar-view').style.display = 'block';
 
-    // Always refresh appointment list when going to calendar
+   
     $.ajax({
         type: "POST",
         url: "../Master/AppointmentGets",
@@ -697,7 +696,7 @@ function showCalendarView() {
         success: function (result) {
             window._appointmentList = result.oList || [];
             console.log("Calendar view - appointments loaded:", window._appointmentList.length);
-            // Re-render slots if a date is already selected
+            
             if (selectedDay && selectedDoctor) {
                 GetBookedSession(selectedDoctor, selectedDay);
             }
@@ -874,7 +873,7 @@ function applySearch() {
     var docId = document.getElementById('search-doctor').value;
     var fromISO = document.getElementById('search-from').value;
     var toISO = document.getElementById('search-to').value;
-    var status = document.getElementById('search-status').value; // ✅ add this
+    var status = document.getElementById('search-status').value; 
 
     function isoToDDMMYYYY(iso) {
         if (!iso || iso.length !== 10) return '';
@@ -891,7 +890,7 @@ function applySearch() {
 
     closeSearchModal();
     document.getElementById('showAllBtn').style.display = 'block';
-    loadAppointmentList(docId, fromDDMMYYYY, toDDMMYYYY, status); // ✅ pass status
+    loadAppointmentList(docId, fromDDMMYYYY, toDDMMYYYY, status); 
 }
 function openEditModal(index) {
     var item = window._appointmentList[index];
@@ -1027,7 +1026,7 @@ function showAllAppointments() {
     lastSearchFrom = '';
     lastSearchTo = '';
     document.getElementById('showAllBtn').style.display = 'none';
-    loadAppointmentList(0, '', '', ''); // ✅ empty status = all
+    loadAppointmentList(0, '', '', ''); 
 }
 function handleEditStatusChange() {
     var status = document.getElementById("edit-Status").value;
@@ -1057,7 +1056,7 @@ function switchTab(tab) {
 
 function Defaultfocus() {
     try {
-        // ✅ Focus the actual first field in your form
+        // ✅ Focus the actual first field in your formform
         var el = document.getElementById('AppFirst')
             || document.getElementById('txtFirstName');
         if (el) el.focus();

@@ -1056,7 +1056,12 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnsubmit" onclick="princasheetnew()" autocomplete="off">Print Case Sheet</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm avdbtn"
+                            id="btnPrintCaseSheet"
+                            onclick="princasheetnew()"
+                            autocomplete="off">
+                        Print Case Sheet
+                    </button>
                     <button type="button" class="btn btn-default avdbtn" onclick=closeprpopup()>Close</button>
                 </div>
             </div>
@@ -2188,36 +2193,34 @@
 
         var myWindow = window.open("", "", "width=900,height=1100");
 
-        // ✅ Correct IDs from SaleInvoiceHospital page
-        var patName = $("#HPatient").val();
-        var patOP = $("#HOpNo").val();
-        var patAge = $("#Hage").val();
-        var patGender = $("#HGender").val();
-        var caseDate = $("#HSalesDate").val();
-        var mrNo = $("#HRegNowithseries").val();
-        var doctor = $("#HDoctor option:selected").text();
-        var regNo = "";
-        var speciality = "";
-        var complaint = "";
-        var diagnosis = "";
+        var patName = $("#HPatient").val() || '';
+        var patOP = $("#HOpNo").val() || '';
+        var patAge = $("#Hage").val() || '';
+        var patGender = $("#HGender").val() || '';
+        var caseDate = $("#HSalesDate").val() || '';
+        var mrNo = $("#HRegNowithseries").val() || '';
+        var doctor = $("#HDoctor option:selected").text() || '';
 
+        var headerHtml = '';
         var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-        $(ComapnydivToPrintLab).css('height', 100);
-        $(ComapnydivToPrintLab).css('width', 700);
-        var headerHtml = '<table width="100%"><tr><td width="100%" align="center" style="color:#008000;font-weight:bold;">'
-            + ComapnydivToPrintLab.outerHTML
-            + '</td></tr></table>';
+        if (ComapnydivToPrintLab) {
+            $(ComapnydivToPrintLab).css('height', 100);
+            $(ComapnydivToPrintLab).css('width', 700);
+            headerHtml = '<table width="100%"><tr><td width="100%" align="center" style="color:#008000;font-weight:bold;">'
+                + ComapnydivToPrintLab.outerHTML
+                + '</td></tr></table>';
+        }
 
         var patientSummaryHtml =
-            '<table width="100%"><tr><td style="font-family:tahoma;font-size:13px;font-weight:normal;" align="center">PATIENT SUMMARY</td></tr></table>' +
-            '<div style="border:1px solid black;border-top:1px solid black;border-radius:10px">' +
-            '<table style="" width="90%"><tr>' +
-            '<td width="60%"><table style="font-family:tahoma;font-size:13px;font-weight:normal;">' +
+            '<table width="100%"><tr><td style="font-family:tahoma;font-size:13px;" align="center"><b>PATIENT SUMMARY</b></td></tr></table>' +
+            '<div style="border:1px solid black;border-radius:10px;padding:5px">' +
+            '<table width="90%"><tr>' +
+            '<td width="60%"><table style="font-family:tahoma;font-size:13px;">' +
             '<tr><td>MR-No#</td><td> : </td><td>' + mrNo + '</td></tr>' +
             '<tr><td>Name</td><td> : </td><td>' + patName + '</td></tr>' +
             '<tr><td>Doctor</td><td> : </td><td>' + doctor + '</td></tr>' +
             '</table></td>' +
-            '<td width="40%" align="right"><table style="font-family:tahoma;font-size:13px;font-weight:normal;">' +
+            '<td width="40%" align="right"><table style="font-family:tahoma;font-size:13px;">' +
             '<tr><td>OP-No#</td><td> : </td><td>' + patOP + '</td></tr>' +
             '<tr><td>Age &amp; Sex</td><td> : </td><td>' + patAge + ', ' + patGender + '</td></tr>' +
             '<tr><td>Date</td><td> : </td><td>' + caseDate + '</td></tr>' +
@@ -2232,34 +2235,29 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; font-size: 12px; background: #fff; color: #000; }
         .page { width: 850px; min-height: 1050px; margin: 0 auto; padding: 24px 36px 100px 36px; position: relative; }
-        .divider-mid { border: none; border-top: 1px solid #000; margin: 4px 0 8px 0; }
-        .section { margin-top: 10px; margin-bottom: 4px; }
-        .section-title { font-weight: bold; font-size: 13.5px; margin-bottom: 3px; }
-        .section-content { font-size: 12.5px; margin-left: 6px; }
-        .rx { font-family: 'Times New Roman', Times, serif; font-size: 42px; font-style: italic; margin: 14px 0 6px 0; line-height: 1; }
-        .med-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 4px; }
+        .med-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 10px; }
         .med-table th { background-color: #cfcfcf; font-weight: bold; padding: 8px 10px; text-align: left; }
         .med-table td { padding: 8px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
         .med-table tr:last-child td { border-bottom: none; }
         .med-brand { font-weight: bold; }
         .no-med { font-style: italic; color: #666; }
-        .footer { position: absolute; bottom: 200px; right: 36px; text-align: right; line-height: 1.7; font-size: 16px; }
-        .footer-doctor { font-weight: bold; font-size: 20px; }
+        .footer { position: absolute; bottom: 60px; right: 36px; text-align: right; line-height: 1.7; font-size: 14px; }
+        .footer-doctor { font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
 <div class="page">
     ${headerHtml}
     ${patientSummaryHtml}
-    <hr class="divider-mid" style="margin-top:10px;margin-bottom:10px;">
-    
+    <hr style="margin-top:10px;margin-bottom:10px;">
     <table class="med-table">
         <thead>
-            <tr style="font-size:16px;font-family:'Times New Roman',Times,serif;">
-                <th style="width:50%">Medicine Name</th>
+            <tr>
+                <th style="width:5%">#</th>
+                <th style="width:40%">Medicine Name</th>
                 <th style="width:15%">Duration</th>
-                <th style="width:15%">Dosages</th>
-                <th style="width:20%">Instruction</th>
+                <th style="width:15%">Dosage</th>
+                <th style="width:25%">Instruction</th>
             </tr>
         </thead>
         <tbody id="med-body"></tbody>
@@ -2267,15 +2265,12 @@
     <div class="footer">
         <div>Electronically Signed by:</div>
         <div class="footer-doctor">${doctor}</div>
-        ${regNo ? `<div>(Reg No.: ${regNo})</div>` : ''}
-        ${speciality ? `<div>${speciality}</div>` : ''}
     </div>
 </div>
 </body>
 </html>`);
         myWindow.document.close();
 
-        // ✅ FIXED: Read medicines from TblMedicineadv using PMedicine_N IDs
         var hasMedicine = false;
         var rows = '';
 
@@ -2288,6 +2283,7 @@
             if (medName !== '') {
                 hasMedicine = true;
                 rows += `<tr>
+                <td>${i}</td>
                 <td><div class="med-brand">${medName}</div></td>
                 <td>${days} day(s)</td>
                 <td>${dosage}</td>
@@ -2297,12 +2293,27 @@
         }
 
         if (!hasMedicine) {
-            rows = `<tr><td colspan="4" class="no-med">No medicines prescribed</td></tr>`;
+            rows = `<tr><td colspan="5" class="no-med" style="text-align:center;padding:20px;">
+                    No medicines prescribed
+                </td></tr>`;
         }
 
-        myWindow.document.getElementById('med-body').innerHTML = rows;
+        myWindow.onload = function () {
+            var medBody = myWindow.document.getElementById('med-body');
+            if (medBody) {
+                medBody.innerHTML = rows;
+            }
+            setTimeout(function () { myWindow.print(); }, 500);
+        };
 
-        myWindow.focus();
-        setTimeout(function () { myWindow.print(); }, 700);
+        setTimeout(function () {
+            try {
+                var medBody = myWindow.document.getElementById('med-body');
+                if (medBody && medBody.innerHTML === '') {
+                    medBody.innerHTML = rows;
+                }
+                myWindow.print();
+            } catch (e) { }
+        }, 800);
     }
 </script>

@@ -937,7 +937,8 @@ function GetPatientAge()
   
     if(dateString==CurDate)
     {
-        $('#Age2').val('0 Day');
+        //$('#Age2').val('0 Day');
+        $('#Age2').val('');
     }      
 }
 

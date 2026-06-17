@@ -1,0 +1,409 @@
+﻿
+@{
+    ViewBag.Title = "VoucherwiseAccountsReport";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+
+<div class="myData" data-x="M91" />
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="35%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#VoucherType').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+
+
+
+
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+
+
+                                <br /><hr />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                               
+
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%;width:580px;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Voucherwise Account Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dateFrom">From Date:</label>
+                                <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dateTo">
+                                <label for="email">To Date:</label>
+                                <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="dateFrom">Voucher Type:</label>
+                                <select id="VoucherType" name="priority" class="form-control" >
+                                    <option value="0">-All-</option>
+                                    <option value="1" >JV-Journal Voucher</option>
+                                    <option value="2">RV-Reciept Voucher </option>
+                                    <option value="3">PV-Payment Voucher </option>
+                                    <option value="4">SI-Sales Invoice </option>
+                                    <option value="5">PI-Purchase Invoice </option>
+                                    <option value="6">DB-PDC </option>
+                                    <option value="7">PC-Petty Cash Voucher </option>
+                                    <option value="8">CV-Contra Voucher </option>
+                                    <option value="9">AV-Adjustment Voucher </option>
+                                    <option value="10">TV-Transfer Voucher </option>
+                                    <option value="11">CN-Credit Note Voucher </option>
+                                    <option value="12">DN-Debit Note Voucher </option>
+                                    <option value="13">BPV-Bank Payment Voucher </option>
+                                    <option value="14">BRV-Bank Receipt Voucher </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dateTo">
+                                <label for="email">Department:</label>
+                                <select id="department" name="priority" class="form-control" ></select>                            
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-outline-primary">Go</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+    
+
+
+
+
+    
+
+
+    function GetDepartment(id) {
+        var data = {};
+        data.DeptId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result, a) {
+        $("#department").empty();
+        $("#department").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#department").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+        if (a == 0) {
+            $('#department').val(0);
+        }
+        else {
+            $('#department').val(a);
+        }
+    }
+
+
+
+    //function VoucherTypeLoad(result) {
+    //    $("#VoucherType").empty();
+    //    VoucherType = "<option value='0'>Select</option>";
+    //    for (var i = 0; i < result.length; i++) {
+    //        VoucherType += "<option value='" + result[i].VoucherTypeId + "'name=" + result[i].Description + ">" + result[i].Description + "</option>";
+    //    }
+    //    $("#VoucherType").append(VoucherType);
+    //}
+
+    $(function () {
+
+
+        GetDepartment(0);
+        $('#VoucherType').focus()
+        //var data1 = {};
+        //data1.VoucherTypeId = 0;
+        //$.ajax({
+        //    type: "POST",
+        //    url: "../Master/VoucherTypeGetandGets",
+        //    data: data1,
+        //    success: function (result) {
+        //        VoucherTypeLoad(result.oList);
+        //    }
+        //});
+
+        $('#VoucherType').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#department').focus();
+                e.preventDefault();
+            }
+        });
+        $('#department').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $('#DateFrom').val(FinanceStartDate)
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+20, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+
+
+        $("#btnsubmit").click(function (e) {
+            var Condition = '';
+            var FromDate = $('#DateFrom').val();
+            var ToDate = $('#DateTo').val();
+            var VoucherType = parseInt($('#VoucherType').val() || 0);
+            console.log(VoucherType)
+            var Department = 0//parseInt($('#department').val() || 0);
+            if ($('#DateFrom').val() == '')
+            {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+            else {
+
+                debugger;
+                $('#Loading').show();
+                if (VoucherType == 0 && Department == 0) {
+                    Condition = 'CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType ==1 && Department == 0 ) {
+                    Condition = 'VTypeId=1 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 2 && Department == 0) {
+                    Condition = 'VTypeId=2 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 3 && Department == 0) {
+                    Condition = 'VTypeId=3 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 4 && Department == 0) {
+                    Condition = 'VTypeId=4 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 5 && Department == 0) {
+                    Condition = 'VTypeId=5 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 6 && Department == 0) {
+                    Condition = 'VTypeId=6 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 7 && Department == 0) {
+                    Condition = 'VTypeId=7 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 8 && Department == 0) {
+                    Condition = 'VTypeId=8 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 9 && Department == 0) {
+                    Condition = 'VTypeId=9 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 10 && Department == 0) {
+                    Condition = 'VTypeId=10 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 11 && Department == 0) {
+                    Condition = 'VTypeId=11 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 12 && Department == 0) {
+                    Condition = 'VTypeId=12 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 13 && Department == 0) {
+                    Condition = 'VTypeId=13 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 14 && Department == 0) {
+                    Condition = 'VTypeId=14 and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+
+
+
+                else if (VoucherType == 0 && Department != 0) {
+                    Condition = 'Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType ==1  && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'JV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 2 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'RV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 3 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'PV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 4 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'SI' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 5 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'PI' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 6 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'DB' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 7 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'PC' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 8 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'CV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 9 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'AV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 10 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'TV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 11 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'CN' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 12 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'DN' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 13 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'BPV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                else if (VoucherType == 14 && Department != 0) {
+                    Condition = 'VTypePrefix=' + "'" + 'BRV' + "'" + 'and Acc_AccountTransaction.DeptId=' + Department + ' and  CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+                }
+                console.log(Condition)
+                var data = {};
+
+                data.Condition = Condition;
+                $.ajax({
+                    type: "POST",
+                    url: "../AccountsErp/VoucherwiseAccountGetandGets",
+                    data: data,
+                    success: function (result) {
+
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showreport(result.oList);
+                    }
+                });
+            }
+        });
+        function Showreport(result) {
+            disable_datatable('Tblreport', 'buttonPlace');
+            var responseText = "<thead><tr><th>SlNo</th><th>VoucherNo</th><th>Date</th><th>Voucher Type</th><th>Type</th><th>Reference</th><th>Account</th><th>Account Name</th><th>Amount</th><th>Description</th><th>Department</th><th>Cheque Number</th><th>Cheque Date</th></tr></thead><tbody>";
+            for (var i = 0; i < result.length; i++) {
+                var slno = parseInt(i + 1);               
+                if (result[i].VTypePrefix == '') {
+                    responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td>' + result[i].VoucherNo + '</td><td>' + result[i].VDate + '</td><td>' + result[i].VTypePrefix + '</td><td>' + result[i].VType + '</td><td>' + result[i].ReferenceNo + '</td><td>' + result[i].AccCode + '</td><td>' + result[i].Acc_Description + '</td><td style=text-align:right>' + parseFloat(result[i].BaseAmount || 0).toFixed(Decimal) + '</td><td>' + result[i].VDescription + ' </td><td>' + result[i].DepartmentName + '</td><td>' + result[i].ChequeNo + '</td><td>' + result[i].ChequeDate + '</tr>';
+
+                }
+                else if (result[i].VTypePrefix != '') {
+                    responseText += '<tr><td>' + slno + '</td><td>' + result[i].VoucherNo + '</td><td>' + result[i].VDate + '</td><td>' + result[i].VTypePrefix + '</td><td>' + result[i].VType + '</td><td>' + result[i].ReferenceNo + '</td><td>' + result[i].AccCode + '</td><td>' + result[i].Acc_Description + '</td><td style=text-align:right>' + parseFloat(result[i].BaseAmount || 0).toFixed(Decimal) + '</td><td>' + result[i].VDescription + ' </td><td>' + result[i].DepartmentName + '</td><td>' + result[i].ChequeNo + '</td><td>' + result[i].ChequeDate + '</tr>';
+                }
+               
+
+            }
+            $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>VoucherNo</th><th>Date</th><th>Voucher Type</th><th>Type</th><th>Reference</th><th>Account</th><th>Account Name</th><th> </th><th>Description</th><th>Department</th><th>Cheque Number</th><th>Cheque Date</th></tr></tfoot>');
+
+            var title = "Voucherwise Account Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+            datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+            $('#header').text(title);
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>

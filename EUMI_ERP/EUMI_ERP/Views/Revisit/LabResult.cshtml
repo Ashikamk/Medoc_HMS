@@ -1,0 +1,1363 @@
+﻿
+@{
+    ViewBag.Title = "LabResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="~/ProjectScript/LabResult.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+<script type="text/javascript" src="~/ProjectScript/HMSPrint.js"></script>
+<script type="text/javascript" src="~/app-assets/FromStack/dist/QRCODE.js"></script>
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    #customView, #customView1 {
+        border: 1px solid #CCD6E6;
+    }
+
+    .GridText {
+        height: 30px;
+        border: none !important;
+        font-weight: bold;
+    }
+
+    .GridBRow {
+        border: 1px solid #9faec3;
+    }
+
+    .GridBRowTop {
+        border-top: 1px solid #9faec3;
+    }
+
+    .GridBRowBottom {
+        border-bottom: 1px solid black;
+    }
+
+    .GridBRowTB {
+        border-top: 1px solid #9faec3 !important;
+        border-bottom: 1px solid #9faec3;
+    }
+
+    .jsgrid-sub-header-row > .jsgrid-header-cell {
+        background: #80ced0;
+        color: darkblue;
+        font-weight: bold;
+    }
+
+    .SelectedRow > .jsgrid-cell {
+        background-color: #0CC27E;
+    }
+    /*.Resulted>.jsgrid-cell {
+        background-color:#868e96;
+    }*/
+    .BillTable tr {
+        cursor: pointer;
+    }
+</style>
+
+<div class="myData" data-x="M360" />
+<div id="content" style="display:none">
+    <h1>The title goes here</h1>
+    <p>The pararaph goes here</p>
+</div>
+
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header p-2" style="border-bottom:1px solid #e6e6e6;background-color:#009da0;">
+                    <div class="row">
+                        <h4 class="card-title mb-0 text-left col-md-12" style="font-weight:bold;color:white;">Lab Result</h4>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="col-md-12">
+                                            <div class="row mb-1 mt-1">
+                                                <div class="col-md-6">
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Reg#<span class="danger">*</span></label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="RegNumber" class="form-control denull" autocomplete="off" placeholder="Search Patient" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">OP Visit#<span class="danger">*</span></label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="OPNumber" class="form-control denull enterflow" placeholder="Search OPVisit#" autocomplete="off" />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Patient</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="PatientName" class="form-control denull enterflow" autocomplete="off" placeholder="Search Patient" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">DOB</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="DOB" class="form-control denull enterflow" disabled style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Age</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="Age" class="form-control denull enterflow" style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">B-Group</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="BloodGroup" class="form-control denull enterflow" style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Gender</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="Gender" class="form-control denull enterflow" style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">Doctor<span class="danger">*</span></label>
+                                                        <div class="col-md-4">
+                                                            <select type="text" id="Doctor" class="form-control dezero" autocomplete="off"></select>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div id="customView1" class="jsgrid" style="position: relative; height: 180px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                                                        <div class="jsgrid-grid-header" style="width:100%;">
+                                                            <table class="jsgrid-table">
+                                                                <tr class="jsgrid-header-row">
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:10%">SL#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Bill#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:20%">Date</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:40%;">Name</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Status</th>
+                                                                </tr>
+
+                                                            </table>
+                                                        </div>
+                                                        <div id="proddiv1" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 135px; width:100%;">
+                                                            <table class="jsgrid-table BillTable" id="tbl_BillList"></table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row mb-1 mt-1">
+                                                <div class="px-2">
+                                                    <div id="customView" class="jsgrid" style="position: relative; height: 340px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                                                        <div class="jsgrid-grid-header" style="width:100%;">
+                                                            <table class="jsgrid-table">
+                                                                <tr class="jsgrid-header-row">
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:72px">SL#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px"><input id="allselect" onchange=printdeptallselect() type="checkbox" checked></th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:384px;">Test Name</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:384px;">Result</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:284px;">Normal Value</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:14%;display:none;">Standard Unit</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:28%">Notes</th>
+                                                                </tr>
+
+                                                            </table>
+                                                        </div>
+                                                        <div id="proddiv" class="" style="position: relative; overflow-x: hidden;overflow-y:scroll; height: 296px; width:100%;">
+                                                            <table class="jsgrid-table" id="tbl_TestResult" style="table-layout:fixed;"></table>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-actions m-0">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <textarea id="Remarkss" placeholder="Remarks" class="form-control denull enterflow" style="height:50px;" autocomplete="off"></textarea>
+                                                        <textarea id="Remarks" placeholder="Remarks" class="form-control denull enterflow" style="height:50px;display:none" autocomplete="off"></textarea>
+                                                        <input type="text" id="Remarksphone" class="form-control denull enterflow" style="border:none;font-weight:bold;display:none" />
+
+
+
+
+                                                        <table class="jsgrid-table BillTable" id="deptselt"></table>
+
+                                                    </div>
+                                                    <div class="col-md-1">
+
+                                                        <div style="display:none" class="p-1 text-center" id="QRCodebill"></div>
+                                                        <input type="checkbox" id="headprint" value="Bike">
+                                                        <label style="margin-top:-50px">with Header</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-12">
+                                                            <div class="text-right">
+                                                                <button type="button" style="width:120px;" id="btnsubmit" class="btn btn-primary btn-sm mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                                <button type="button" style="width:120px;" id="btnlist" class="btn btn-primary btn-sm mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                                                <button type="button" style="width:120px;" id="btnnew" class="btn btn-outline-primary btn-sm mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="text-right">
+                                                                <button style="display:none;width:120px;" type="button" id="btnmail" class="btn btn-danger btn-sm mr-1 mb-1">PDF PRINT <i class="fa fa-upload"></i></button>
+                                                                <button style="display:none;width:120px;" onclick="sentmeassgewap()" type="button" id="btnwapp" class="btn btn-danger btn-sm mr-1 mb-1">Whatsup <i class="fa fa-upload"></i></button>
+
+                                                                <button style="display:none;width:120px;" type="button" id="btndelete" class="btn btn-danger btn-sm mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                                <button style="display:none;width:120px;" type="button" id="btnprint" class="btn btn-primary btn-sm mr-1 mb-1">Print <i class="fa fa-print"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="display:none">
+    <div>
+        LabResultId
+        <input type="text" id="LabResultId" value="0" class="dezero" />
+        GrigLength
+        <input type="text" id="GridLength" value="0" class="dezero" />
+        BillGridLength
+        <input type="text" id="BillGridLength" value="0" class="dezero" />
+        PatientId
+        <input type="text" id="PatientId" value="0" class="dezero" />
+        BillNo
+        <input type="text" id="BillNo" value="0" class="dezero" />
+    </div>
+    <div>
+        BillYear
+        <input type="text" id="BillYear" value="0" class="dezero" />
+        <input type="text" id="BillDate" class="denull" />
+        PType
+        <input type="text" id="PType" class="denull" />
+        IPNumber
+        <input type="text" id="IPNumber" value="0" class="dezero" />
+        Date
+        <input type="text" id="ResultDate" class="denull" />
+        <input type="text" id="ResultTime" class="denull" />
+    </div>
+</div>
+
+<div style="display:none;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Result Info</h4></td>
+
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <button type="button" onclick="Filter()" class="btn btn-outline-primary" id="Filter"><i class="fa fa-search"></i> Search</button>
+
+                                            <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table id="tbl_LabResult" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;height:200%;width:115%">
+    <div class="modal-dialog modal-lg" role="document" style="top:8%">
+        <div class="modal-content" style="width:66%">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Search Options</h3>
+
+                <button type="button" class="close" onclick="$('#popupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+
+                <div class="modal-body">
+                    <div class="row">
+
+                        <label class="col-md-2" style="font-weight:bold;text-align:right;">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="FromDate" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label class="col-md-2" style="font-weight:bold;text-align:right;">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="ToDate" class="form-control" autocomplete="off">
+                        </div>
+
+                    </div>
+
+                    <div class="row p-1" style="border-bottom:1px solid #cfd8dc;"></div>
+                    <div class="row pt-2">
+                        <label class="col-md-2" style="font-weight:bold;">Doctor </label>
+                        <div class="col-md-4" style="">
+                            <select id="DoctorSearchId" class="form-control dezero" autocomplete="off"></select>
+                        </div>
+
+
+                        <label class="col-md-2" style="font-weight:bold;">Reg No</label>
+                        <div class="col-md-4" style="">
+                            <input type="text" id="SearchRegNo" class="form-control ui-autocomplete-input" autocomplete="off">
+                            <input type="hidden" id="PatientSearchId" class="form-control dezero" autocomplete="off">
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="GetRows(0)" style="width:100px;margin-right:40%" id="btnsearch" class="btn btn-primary">Go <i class="fa fa-search"></i></button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold" id="HeaderModal">Normal Value</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(0)">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+                    <textarea id="NormalValue_0" class="form-control" style="min-height:150px;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="CrntNormalId" value="0" class="dezero" />
+                    <input type="hidden" id="CrntNormalPos" value="" class="denull" />
+
+                    <button type="button" class="btn btn-default" onclick="ngOnDestroy(1)">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="Resconfirm" class="overlay">
+    <div class="modal fade text-left show" id="Reskeyboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display: block; top:23%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="swal-icon swal-icon--success">
+                        <span class="swal-icon--success__line swal-icon--success__line--long"></span>
+                        <span class="swal-icon--success__line swal-icon--success__line--tip"></span>
+
+                        <div class="swal-icon--success__ring"></div>
+                        <div class="swal-icon--success__hide-corners"></div>
+                    </div>
+                    <div id="Resconfirmmessage" class="swal-title"></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="ResConfirmflag" />
+                    <input type="hidden" id="ResConfirmRowId" />
+                    <button type="button" onclick="ResConfirmboxResult('false', $('#ResConfirmflag').val(), $('#ResConfirmRowId').val())" id="ResconfirmCancel" class="btn grey btn-outline-secondary btn-sizebig" data-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="ResConfirmboxResult('true', $('#ResConfirmflag').val(), $('#ResConfirmRowId').val())" id="ResconfirmOk" class="btn btn-outline-primary btn-sizebig" autofocus>Print <i class="fa fa-print"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function printdeptallselect() {
+        if ($("#allselect").prop('checked') == true) {
+            $('.efgh').prop('checked', true);
+            $('.erty').prop('checked', true);
+        }
+        else {
+            $('.efgh').prop('checked', false);
+            $('.erty').prop('checked', false);
+        }
+
+        $('.erty').prop('checked', false);
+
+    }
+
+
+    function printdeptselecttest(TestId, LineId) {
+        if ($("#selprint_" + LineId).prop('checked') == true) {
+            $('.' + TestId).prop('checked', true);
+        }
+        else {
+            $('.' + TestId).prop('checked', false);
+
+        }
+
+    }
+
+
+
+    function printdeptselect(ID) {
+        $('#allselect').prop('checked', false);
+        $('.efgh').prop('checked', false);
+        $('.erty').prop('checked', false);
+
+        for (var i = 1; i <= $("#GridLength").val(); i++) {
+            if ($('#MedDeptId_' + i).val() == ID) {
+                $('#selprint_'+i).prop('checked', true);
+            }
+        }
+        $('#ertyy' + ID).prop('checked', true);
+    }
+
+    $('#ResconfirmOk').focus(function (e) {
+        $('#ResconfirmOk').removeClass('btn-outline-primary');
+        $('#ResconfirmOk').addClass('btn-primary');
+    });
+    $('#ResconfirmCancel').focus(function (e) {
+        $('#ResconfirmCancel').removeClass('btn-outline-secondary');
+        $('#ResconfirmCancel').addClass('btn-secondary');
+    });
+    $('#ResconfirmOk').focusout(function (e) {
+        $('#ResconfirmOk').removeClass('btn-primary');
+        $('#ResconfirmOk').addClass('btn-outline-primary');
+    });
+    $('#ResconfirmCancel').focusout(function (e) {
+        $('#ResconfirmCancel').removeClass('btn-secondary');
+        $('#ResconfirmCancel').addClass('btn-outline-secondary');
+    });
+    $(function () {
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+    $("#RegNumber").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.PatientName = $("#RegNumber").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            BloodGroup:item.BloodGroup,
+                            Gender: item.Gender,
+                            RegDate: item.RegDate,
+                            email: item.Add3,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            $("#RegNumber").val(ui.item.label);
+            $("#PatientName").val(ui.item.PatientName);
+            $("#DOB").val(ui.item.DOB);
+            CalcAge();
+            $("#BloodGroup").val(ui.item.BloodGroup);
+            $("#Gender").val(ui.item.Gender);
+            $("#PatientId").val(ui.item.PatientId);
+            $("#RegDate").val(ui.item.RegDate);
+            $("#Remarksphone").val(ui.item.Contact + '##' + ui.item.email);
+            $("#Doctor").focus();
+            GetLabBill(1);
+
+        },
+
+    });
+    $("#PatientName1").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.PatientName = $("#PatientName").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.PatientName,
+                            label1: item.OPSerName + '-' + item.OPNumber,
+
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            BloodGroup: item.BloodGroup,
+                            Gender: item.Gender,
+                            RegDate: item.RegDate,
+                            headers: ["Patient", "RegNo"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#RegNumber").val(ui.item.label1);
+            $("#PatientName").val(ui.item.PatientName);
+            $("#DOB").val(ui.item.DOB);
+            CalcAge();
+            $("#BloodGroup").val(ui.item.BloodGroup);
+            $("#Gender").val(ui.item.Gender);
+            $("#PatientId").val(ui.item.PatientId);
+            $("#RegDate").val(ui.item.RegDate);
+            $("#Doctor").focus();
+            GetLabBill(1);
+        },
+
+    });
+    $("#OPNumber").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.Status = $("#OPNumber").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_RevisitIdSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.RevisitId,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            BloodGroup: item.BloodGroup,
+                            Gender: item.Gender,
+                            RegNo: item.OPSerName + '-' + item.OPNumber,
+                            headers: ["OPVisitId", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#OPNumber").val(ui.item.label);
+            $("#RegNumber").val(ui.item.RegNo);
+            $("#PatientName").val(ui.item.PatientName);
+            $("#DOB").val(ui.item.DOB);
+            CalcAge();
+            $("#BloodGroup").val(ui.item.BloodGroup);
+            $("#Gender").val(ui.item.Gender);
+            $("#PatientId").val(ui.item.PatientId);
+            GetLabBill(0)
+            $("#Doctor").focus();
+        },
+
+    });
+    $("#SearchRegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#PatientSearchId").val(0);
+            var data = {};
+            data.PatientName = $("#SearchRegNo").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#PatientSearchId").val(ui.item.PatientId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    if ("@Request.QueryString["from"]" == "SOPWorkSheet") {
+
+        var OPVisitId = sessionStorage.getItem("SOP_OV");
+        var OPSerName = sessionStorage.getItem("SOP_RS");
+        var OPNumber = sessionStorage.getItem("SOP_RN");
+        var PatientId = sessionStorage.getItem("SOP_PI");
+        var DOB = sessionStorage.getItem("SOP_DO");
+        var BloodGroup = sessionStorage.getItem("SOP_BG");
+        var PatientName = sessionStorage.getItem("SOP_PN");
+        var Gender = sessionStorage.getItem("SOP_GE");
+        var IPNumber = sessionStorage.getItem("SOP_IP");
+
+        sessionStorage.removeItem("SOP_OV");
+        sessionStorage.removeItem("SOP_RS");
+        sessionStorage.removeItem("SOP_RN");
+        sessionStorage.removeItem("SOP_PI");
+
+        sessionStorage.removeItem("SOP_DO");
+        sessionStorage.removeItem("SOP_BG");
+        sessionStorage.removeItem("SOP_PN");
+        sessionStorage.removeItem("SOP_GE");
+        sessionStorage.removeItem("SOP_IP");
+
+        if (OPVisitId != null) {
+
+            $("#OPNumber").val(OPVisitId);
+            $("#RegNumber").val(OPSerName + '-' + OPNumber);
+            $("#PatientName").val(PatientName);
+            $("#DOB").val(DOB);
+            CalcAge();
+            $("#BloodGroup").val(BloodGroup);
+            $("#Gender").val(Gender);
+            $("#PatientId").val(PatientId);
+            GetLabBill(1);
+        }
+
+    }
+</script>
+<div style="display:none">
+    <button class="btn btn-primary" onclick="createPDF()">html to PDF </button>
+    <div id="element-to-print">
+
+    </div>
+</div>
+
+
+
+@*<script src="https://cdn.bootcss.com/html2pdf.js/0.9.1/html2pdf.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.1/html2pdf.bundle.min.js"></script>*@
+
+
+
+
+<script>
+    createQRCode();
+    function createQRCode() {
+
+        // var data = printurl;
+        var data = $('#RegNumber').val() + '##' + $('#OPNumber').val();
+
+        $('#QRCodebill').empty();
+        $('#QRCodebill').qrcode(data, 100, 80);
+
+
+        var can = document.getElementById('regqrimg');
+        var ctx = can.getContext('2d');
+
+        //ctx.fillRect(50, 50, 50, 50);
+
+        var img = new Image();
+        img.src = can.toDataURL();
+        img.id = "printqrr";
+
+        document.body.appendChild(img);
+
+        // $('#printqrr').hide();
+        $('#printqrr').show();
+
+    };
+
+
+    function sentmeassgewap() {
+        var senderMObile = ($('#Remarksphone').val()).substring(0, ($('#Remarksphone').val()).indexOf("##"));
+
+        if (senderMObile.length != 10) {
+            warningshow('INVALID MOBILE NO PLEASE CHECK');
+        }
+        else {
+            //sentmailpdf(100);
+            //createPDF();
+            var Msg = "Hai " + $('#PatientName').val() + "  Please Check Your Lab Result -" + CompanySettingsArray.CompanyName
+            var whatsapp_url = "https://api.whatsapp.com/send/?phone=91" + senderMObile + "&text=" + Msg + "&app_absent=0"
+            window.open(whatsapp_url, '_blank');
+        }
+
+    }
+
+    function createPDF() {
+        const d = new Date();
+        let ms = d.getMilliseconds();
+        debugger;
+        filenm = "Report-" + $('#PatientName').val() + '-' + ms + '.pdf'
+        var element = document.getElementById('element-to-print');
+        html2pdf(element, {
+            margin: 1,
+            padding: 0,
+            filename: filenm,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2, logging: true },
+            jsPDF: { unit: 'in', format: 'A4', orientation: 'P' },
+            class: createPDF
+        });
+    };
+    // function exportHTML(){
+    //     var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+    //             "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+    //             "xmlns='http://www.w3.org/TR/REC-html40'>"+
+    //             "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+    //     var footer = "</body></html>";
+    //     var sourceHTML = header+document.getElementById("element-to-print").innerHTML+footer;
+
+    //     var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+    //     var fileDownload = document.createElement("a");
+    //     document.body.appendChild(fileDownload);
+    //     fileDownload.href = source;
+    //     fileDownload.download = 'document.doc';
+    //     fileDownload.click();
+    //     document.body.removeChild(fileDownload);
+    // }
+
+
+    var filenm = "";
+
+    function fnsentmail() {
+
+        var email = ($('#Remarksphone').val()).substring(($('#Remarksphone').val()).indexOf("##") + 2, 200);
+
+        if (/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            $('#Loading').show();
+            var delayInMilliseconds = 3000; //1
+            setTimeout(function () {
+                var d = {};
+                d.BillType = email;
+                d.BillDescription = filenm;
+                d.Prefix = "Hai " + $('#PatientName').val() + "  Please Check Your Lab Result -" + CompanySettingsArray.CompanyName + '';
+                $.ajax({
+                    type: "POST",
+                    url: "../Company/Companysentmail",
+                    data: d,
+                    success: function (result) {
+                        console.log(result.oList[0].BillDescription)
+                        warningshow(result.oList[0].BillDescription);
+                        $('#Loading').hide();
+
+                    }
+                });
+
+            }, delayInMilliseconds);
+        }
+        else {
+            warningshow('INVALID EMAIL ID PLEASE CHECK');
+        }
+    }
+
+
+
+    $(document).ready(function () {
+
+
+        $("#btnmail").click(function () {
+
+            debugger;
+            // var email = ($('#Remarksphone').val()).substring(($('#Remarksphone').val()).indexOf("##") + 2, 200);
+
+            // if (/^\w+([\.-]?\w+)*@@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            //    sentmailpdf(100);
+            //    createPDF()
+            //   fnsentmail()
+            // }
+            //else {
+            //   warningshow('INVALID EMAIL ID PLEASE CHECK');
+            // }
+
+
+            PrintTestResultPDF($("#GridLength").val());
+
+
+        });
+    });
+
+
+
+
+    function PrintTestResultPDF(Rowlen) {
+
+        // alert('PDF');
+
+        var SignPrint = document.getElementById("signimg");
+        var SignPrintincharge = document.getElementById("signimg1");
+
+
+        var myWindow = window.open("", "", "width=1500,height=1500");
+        if ($('#headprint').is(':checked')) {
+            var LB = 2;
+        }
+        else {
+            var LB = LabHead
+
+        }
+        var LB = 2;
+        var powerdby = document.getElementById("ComapnyImage1");
+        var powerdby1 = document.getElementById("printqrr");
+
+        $(powerdby).css('height', 30); $(powerdby).css('width', 280);
+        // myWindow.document.write('<span style="font-family: tahoma; font-size:10px;font-weight: bold;position:fixed;bottom:0"><table cellpadding=0 cellspacing=0><tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">Powered by</td></tr> <tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">' + (powerdby.outerHTML) + '</td></tr> </table></span>')
+
+        //myWindow.document.write('<span style="font-family: tahoma; font-size:10px;font-weight: bold;position:fixed;bottom:0"><table cellpadding=0 cellspacing=0><tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;"></td></tr> <tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">' + (powerdby.outerHTML) + '</td></tr> </table></span>')
+
+
+        // myWindow.document.write('<span style="font-family: tahoma; font-size:10px;font-weight: bold;position:fixed;bottom:0"><table cellpadding=0 cellspacing=0><tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">' + (powerdby.outerHTML) + '</td></tr> <tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">Scan this for more details</td></tr>  </table></span>')
+
+
+        //myWindow.document.write('<table style="position:fixed;bottom:0;border:1px solid black" width=98% ><tr><td style="font-family: tahoma;text-align: center; font-size:12px;font-weight: bold;">Scan this for more details</td></tr>  </table>')
+
+
+
+        if (LB == 1) {
+            //myWindow.document.write('<table width=100%><tr>' +
+            //    '<td width=50%><table>' +
+            //    '<tr><td style="font-size:22;font-weight:bold;" colspan=3>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+            //    '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Address + '</td></tr>' +
+            //    //'<tr><td>Fax</td><td> : </td><td>' + window.CompanySettingsArray.Fax + '</td></tr>' +
+            //    '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Email + '</td></tr>' +
+            //    '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
+            //    '</table></td>' +
+            //    '<td width=50% align=right></td>' +
+            //    '</tr>' +
+            //    '<tr><td colspan=2 style="' + BorderX + '"></td></tr>' +
+            //    '</table>');
+            LROW = 90;
+            myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
+
+        }
+        else if (LB == 2) {
+            var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+
+            $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+            myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+            myWindow.document.write('</table>');
+        }
+
+        else {
+
+            //blank header row from layout
+            myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
+        }
+
+
+
+        // myWindow.document.write('<table  style="" width=100%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: bold;">' +
+        // '<tr><td>MR-No#</td><td> : </td><td>' + $("#RegNumber").val() + '</td></tr>' +
+        // '<tr><td>Name</td><td> : </td><td>' + $("#PatientName").val() + '</td></tr>' +
+        // '<tr><td>Doctor</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+        //// '<tr><td>Spec_Collected</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr></table></td>');
+        //  '<tr><td></td><td>  </td><td></td></tr></table></td>');
+
+
+        //myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
+        //'<tr><td>Rpt-No#</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+        //'<tr><td>Age & Sex</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+        //    '<tr><td>Spec_Rcvd</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+        //'<tr><td>Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr></table></td></tr></table>');
+
+
+        myWindow.document.write('<table  style="" width=100%>' +
+            '<tr>' +
+            '<td width=45%><table style="font-family: tahoma; font-size:13px;">' +
+            '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+            '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+            '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+            '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+            '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+            '</table></td>');
+
+
+        myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
+            '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+            '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+            '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+            '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+            /*     '<tr><td>' + (barcode2.outerHTML) + '</td></tr>' +*/
+            '</table></td>');
+
+        // myWindow.document.write('<td  width=15% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
+        // '<tr><td style="border:2px solid black">' + (powerdby1.outerHTML) + '</td></tr>' +
+        // '</table></td></tr></table>');
+
+        var Maxvalue = 0;
+        var Minvalue = 0;
+        var Res = ''; var printresult = '';
+
+
+        myWindow.document.write(Div);
+        myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:13px;"><tr>' +
+            '<td class="p-0" style="width:38%;font-weight:bold;' + BorderX + '">Test</td>' +
+            '<td class="p-0" style="width:14%;font-weight:bold;' + BorderX + '">Result</td>' +
+            '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+            '<td class="p-0" style="width:33%;font-weight:bold;' + BorderX + '">Reference Range</td><tr>');
+        myWindow.document.write('<tr><td colspan=3 class="p-0" height="10" ></td><tr>');
+
+        var CurrentDept = 0, CurrentMainTest = 0; var finalnotes = "";
+        var linecount = 0; var V = 0; var DDh = 0;
+        for (var i = 1; i <= Rowlen; i++) {
+
+            Maxvalue = 0;
+            Minvalue = 0;
+            Res = 0;
+            printresult = '';
+            if ($("#selprint_" + i).is(":checked")) {
+
+                var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
+
+                console.log('DE--' + Dept)
+
+                if ($("#Notes_" + i).val() != '') {
+
+                    if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
+                        finalnotes = finalnotes + $("#Notes_" + i).val();
+                    }
+                }
+
+
+
+                if (Dept != CurrentDept) {
+                    CurrentDept = Dept;
+                    myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
+                    linecount += 1;
+                }
+
+
+                if (($("#TestName_" + i).text()).includes("@@")) {
+                    myWindow.document.write('<tr>' +
+                        '<td  align=left colspan=4 style="padding:5px;  border:0px solid black;font-family:tahoma; font-size: 13px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+                        '<tr>');
+
+                }
+
+
+
+                if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+                    CurrentMainTest = $("#TestId_" + i).val();
+                    myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
+                    linecount += 1;
+                }
+                else if ($.trim($("#Result_" + i).val()) != '') {
+                    Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+                    Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+                    Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
+
+                    if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
+
+                    debugger;
+                    if (Res > Maxvalue) {
+                        printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+                    }
+                    else if (Res < Minvalue) {
+                        printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+                    }
+                    else {
+                        printresult = '' + $("#Result_" + i).val() + '';
+                    }
+                    Res = $("#Result_" + i).val();
+                    if ((Res.toLowerCase()).indexOf("rech") != -1) {
+                        printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+                    }
+
+
+
+                    if (($("#TestName_" + i).text()).includes("##")) {
+                        myWindow.document.write('<tr>' +
+                            '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 13px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+                            '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 13px;"  class="p-0"  >' + printresult + '</td>' +
+                            '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 13px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                            '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 13px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                            '<tr>');
+                    }
+                    else {
+                        myWindow.document.write('<tr>' +
+                            '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 13px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+                            '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 13px;"  class="p-0"  >' + printresult + '</td>' +
+                            '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 13px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                            '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 13px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                            '<tr>');
+                    }
+
+
+
+                    DDh = 0;
+                    if (($("#NormalValue_" + i).val() != undefined)) {
+                        DDh = ($("#NormalValue_" + i).val()).split("##").length - 1;
+
+                        for (V = 1; V <= DDh; V++) {
+                            linecount += 1;
+                        }
+                        console.log($("#NormalValue_" + i).val())
+                        console.log('c' + DDh)
+                    }
+                    if (DDh == 0) {
+                        linecount += 1;
+                    }
+                }
+
+
+                console.log($("#TestName_" + i).text());
+                console.log('LC' + linecount)
+
+                if (linecount == 28000000 || linecount == 2900000 || linecount == 2700000)//from layout
+                {
+                    var LROW1 = 100;
+                    myWindow.document.write('<table width=100%><tr><td height=' + LROW1 + 'px></td></tr></table>');
+                    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+
+                    $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+                    if (LB == 1) {
+                        //                    myWindow.document.write('<table width=100%><tr>' +
+                        //                        '<td width=50%><table>' +
+                        //                        '<tr><td style="font-size:22;font-weight:bold;" colspan=3>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+                        //                        '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Address + '</td></tr>' +
+                        //                        //'<tr><td>Fax</td><td> : </td><td>' + window.CompanySettingsArray.Fax + '</td></tr>' +
+                        //                        '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Email + '</td></tr>' +
+                        //                        '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
+                        //                        '</table></td>' +
+                        //                        '<td width=50% align=right></td>' +
+                        //                        '</tr>' +
+                        //                        '<tr><td colspan=2 style="' + BorderX + '"></td></tr>' +
+                        //                        '</table>');
+                        var LROW1 = 120
+                        myWindow.document.write('<table width=100%><tr><td height=' + LROW1 + 'px></td></tr></table>');
+                    }
+                    else if (LB == 2) {
+                        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+
+                        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+                        myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+                        myWindow.document.write('</table>');
+                    }
+
+                    else {
+
+                        //blank header row from layout
+                        myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
+                    }
+
+
+                    //                myWindow.document.write('<table  style="" width=100%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: bold;">' +
+                    //                    '<tr><td>MR-No#</td><td> : </td><td>' + $("#RegNumber").val() + '</td></tr>' +
+                    //                    '<tr><td>Name</td><td> : </td><td>' + $("#PatientName").val() + '</td></tr>' +
+                    //                    '<tr><td>Spec_Collected</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+                    //                    '<tr><td>Doctor</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr></table></td>');
+
+                    //                myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
+                    //                    '<tr><td>Rpt-No#</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+                    //                    '<tr><td>Age & Sex</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+                    //                    '<tr><td>Spec_Rcvd</td><td> : </td><td>' + $("#ResultDate").val() + '</td></tr>' +
+                    //                    '<tr><td>Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr></table></td></tr></table>');
+
+
+
+                    myWindow.document.write('<table  style="" width=100%>' +
+                        '<tr>' +
+                        '<td width=45%><table style="font-family: tahoma; font-size:13px;">' +
+                        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+                        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+                        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+                        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+                        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+                        '</table></td>');
+
+
+                    myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
+                        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+                        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+                        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+                        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+                        /*     '<tr><td>' + (barcode2.outerHTML) + '</td></tr>' +*/
+                        '</table></td>');
+
+
+
+
+                    myWindow.document.write(Div);
+                    myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:13px;"><tr>' +
+                        '<td class="p-0" style="width:38%;font-weight:bold;' + BorderX + '">Test</td>' +
+                        '<td class="p-0" style="width:14%;font-weight:bold;' + BorderX + '">Result</td>' +
+                        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+                        '<td class="p-0" style="width:33%;font-weight:bold;' + BorderX + '">Reference Range</td><tr>');
+                    myWindow.document.write('<tr><td colspan=3 class="p-0" height="15" ></td><tr>');
+
+                    var CurrentDept = 0, CurrentMainTest = 0; var finalnotes = "";
+
+
+                    linecount = 0;
+                }
+
+
+            }
+        }
+
+        myWindow.document.write('</table>');
+
+        $(SignPrintincharge).css('height', 25); $(SignPrintincharge).css('width', 55);
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br>' + (finalnotes).replace("undefined", "") + '</td></tr></table>');
+
+
+        //myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=20px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr><tr><td height=20px colspan=3 align=center>&#160;</td></tr><tr><td valign=bottom style="font-family:tahoma;font-size: 12px;" align=left><br>LAB TECHNICIAN </td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center>&#160;Approved By</td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;' + (SignPrint.outerHTML) + ' </td></tr><tr><td align=left></td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center>&#160;' + $('#UserDetsss').text()+'<br>LAB INCHARGE</td></tr></table>');
+
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=10px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr> </table>');
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%>  <tr><td width=150px align=center>&#160; </td><td></td><td width=150px align=center>&#160;' + (SignPrintincharge.outerHTML) + '<br>PREETHA RATHISH </td></tr>                      <tr><td  width=150px align=center>LAB TECHNICIAN</td><td align=center>VERIFIED BY</td><td  width=150px align=center>LAB INCHARGE</td></tr></table>');
+
+
+        myWindow.print();
+
+        setTimeout(function () {
+            // myWindow.close();
+        }, 10000);
+        myWindow.focus();
+    }
+
+
+
+
+
+    //$.ajax({
+    //    url: "../Company/Companysentmail",
+    //    type: "POST",
+    //    data: d,
+    //    processData: false,
+    //    dataType: 'text',
+    //    contentType: 'application/x-www-form-urlencoded',
+    //    success: function (response) {
+    //        console.log('resp: ', response);
+    //    },
+    //    error: function (jqXHR, textStatus, errorMessage) {
+    //        console.log("error:", errorMessage);
+    //    }
+    //});
+
+
+    //var doc = new jsPDF();
+
+    //function saveDiv(divId, title) {
+    //    sentmailpdf(100)
+    //    doc.fromHTML(`<html><head><title>${title}</title></head><body>` + document.getElementById(divId).innerHTML + `</body></html>`);
+    //    doc.save('div.pdf');
+    //}
+
+    //function printDiv(divId, title) {
+
+    //    let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
+
+    //    mywindow.document.write(`<html><head><title>${title}</title>`);
+    //    mywindow.document.write('</head><body >');
+    //    mywindow.document.write(document.getElementById(divId).innerHTML);
+    //    mywindow.document.write('</body></html>');
+
+    //    mywindow.document.close(); // necessary for IE >= 10
+    //    mywindow.focus(); // necessary for IE >= 10*/
+
+    //    mywindow.print();
+    //    mywindow.close();
+
+    //    return true;
+    //}
+
+
+
+    var mailcontent = ""
+    function sentmailpdf(Rowlen) {
+        var txt = "<div>";
+
+        var SignPrint = document.getElementById("signimg");
+
+        var LB = 2;
+
+        if (LB == 1) {
+            txt += '<table style="font-family: tahoma;" width=100%><tr>' +
+                '<tr><td style="font-size:22;font-weight:bold;" align=center>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+                '<tr><td style="font-size:18;font-weight: bold;" align=center>' + window.CompanySettingsArray.Address + '</td></tr>' +
+                '<tr><td style="font-size:18;font-weight: bold;" align=center >' + window.CompanySettingsArray.Email + '</td></tr>' +
+                '<tr><td style="font-size:18;font-weight: bold;" align=center>' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
+                '</table>';
+        }
+        else {
+            var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+
+            $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
+            txt += '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
+        }
+
+        txt += '<table  style="" width=100%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: bold;">' +
+            '<tr><td>MR-No#</td><td> : </td><td>' + $("#RegNumber").val() + '</td></tr>' +
+            '<tr><td>Name</td><td> : </td><td>' + $("#PatientName").val() + '</td></tr>' +
+            '<tr><td>Spec_Collected</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+            '<tr><td>Doctor</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr></table></td>';
+
+        txt += '<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
+            '<tr><td>Rpt-No#</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+            '<tr><td>Age & Sex</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+            '<tr><td>Spec_Rcvd</td><td> : </td><td>' + $("#ResultDate").val() + '</td></tr>' +
+            '<tr><td>Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr></table></td></tr></table>';
+
+        //myWindow.document.write(Div);
+        txt += '<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:13px;"><tr>' +
+            '<td class="p-0" style="width:45%;font-weight:bold;' + BorderX + '">Test</td>' +
+            '<td class="p-0" style="width:25%;font-weight:bold;' + BorderX + '">Observed Value</td>' +
+            '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td><tr>';
+        txt += '<tr><td colspan=3 class="p-0" height="15" ></td><tr>';
+
+        var CurrentDept = 0, CurrentMainTest = 0;
+        var linecount = 0;
+        for (var i = 1; i <= Rowlen; i++) {
+
+            var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
+
+            if (Dept != CurrentDept) {
+                if ($("#MedDept_" + i).val() != undefined) {
+                    CurrentDept = Dept;
+                    txt += '<tr><td align=left colspan=3 class="p-0" style=" border:1px solid black;" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>';
+                }
+            }
+            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+                CurrentMainTest = $("#TestId_" + i).val();
+                txt += '<tr><td colspan=3 class="p-0" height="20" style=" border:1px solid black;">' + $("#TestName_" + i).text() + '</td><tr>';
+            }
+            else if ($.trim($("#Result_" + i).val()) != '') {
+                txt += '<tr>' +
+                    '<td style="padding:5px;  border:1px solid black;font-family:tahoma; font-size: 13px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+                    '<td style="padding:5px;font-family:tahoma; border:1px solid black; font-size: 13px;"  class="p-0"  ><b>' + $("#Result_" + i).val() + ' ' + $("#StdUnit_" + i).text() + '</b></td>' +
+                    '<td style="padding:5px;font-family:tahoma; border:1px solid black; font-size: 13px;"  class="p-0"  >' + $("#NormalValue_" + i).val() + '</td>' +
+                    '<tr>';
+            }
+            linecount += 1;
+
+
+
+
+        }
+
+        txt += '</table>';
+
+
+        txt += '<table style="font-family:tahoma;"  width=100%><tr><td height=20px></td></tr><tr><td colspan=3 align=center>*****  END OF REPORT  *****</td></tr><tr><td height=20px colspan=3 align=center>&#160;</td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;Approved By</td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;' + (SignPrint.outerHTML) + ' </td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;' + $('#UserDetsss').text() + '<br>LAB TECHNICIAN </td></tr></table></div>';
+        mailcontent = txt;
+        $('#element-to-print').html('')
+        $('#element-to-print').append(txt)
+
+
+
+    }
+
+
+
+
+</script>
+

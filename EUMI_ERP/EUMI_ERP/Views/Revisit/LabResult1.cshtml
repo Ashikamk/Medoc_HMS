@@ -1,0 +1,667 @@
+﻿
+@{
+    ViewBag.Title = "LabResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="~/ProjectScript/LabResult.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+<script type="text/javascript" src="~/ProjectScript/HMSPrint.js"></script>
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    #customView, #customView1 {
+        border: 1px solid #CCD6E6;
+    }
+
+    .GridText {
+        height: 30px;
+        border:none !important;
+        font-weight:bold;
+    }
+    .GridBRow{
+        border:1px solid #9faec3;
+    }
+    .GridBRowTop{
+        border-top:1px solid #9faec3;
+    }
+    .GridBRowBottom{
+        border-bottom:1px solid black;
+    }
+    .GridBRowTB{
+        border-top:1px solid #9faec3 !important;
+        border-bottom:1px solid #9faec3;
+    }
+    .jsgrid-sub-header-row>.jsgrid-header-cell {
+    background: #80ced0;
+    color: darkblue;
+    font-weight:bold;
+}
+    .SelectedRow>.jsgrid-cell {
+    background-color:#0CC27E;
+}
+    /*.Resulted>.jsgrid-cell {
+    background-color:#868e96;
+}*/
+    .BillTable tr {
+    cursor: pointer;
+}
+</style>
+
+<div class="myData" data-x="M360" />
+<div id="content" style="display:none"> 
+     <h1>The title goes here</h1> 
+    <p>The pararaph goes here</p> 
+</div>
+
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header p-2" style="border-bottom:1px solid #e6e6e6;background-color:#009da0;">
+                    <div class="row">
+                        <h4 class="card-title mb-0 text-left col-md-12" style="font-weight:bold;color:white;">Lab Result</h4>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="col-md-12">
+                                            <div class="row mb-1 mt-1">
+                                                <div class="col-md-6">
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Reg#<span class="danger">*</span></label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="RegNumber" class="form-control denull" autocomplete="off" placeholder="Search Patient" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">OP Visit#<span class="danger">*</span></label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="OPNumber" class="form-control denull enterflow" placeholder="Search OPVisit#" autocomplete="off" />
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Patient</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="PatientName" class="form-control denull enterflow" autocomplete="off"  placeholder="Search Patient" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">DOB</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="DOB" class="form-control denull enterflow" disabled style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Age</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="Age" class="form-control denull enterflow"  style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">B-Group</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="BloodGroup" class="form-control denull enterflow"  style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-1 mt-1">
+                                                        <label class="col-md-2 label-control">Gender</label>
+                                                        <div class="col-md-4">
+                                                            <input type="text" id="Gender" class="form-control denull enterflow"  style="background-color:white;" autocomplete="off" />
+                                                        </div>
+                                                        <label class="col-md-2 label-control">Doctor<span class="danger">*</span></label>
+                                                        <div class="col-md-4">
+                                                            <select type="text" id="Doctor" class="form-control dezero" autocomplete="off"></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div id="customView1" class="jsgrid" style="position: relative; height: 180px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                                                        <div class="jsgrid-grid-header" style="width:100%;">
+                                                            <table class="jsgrid-table">
+                                                                <tr class="jsgrid-header-row">
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:10%">SL#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Bill#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Date</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:45%;">Doctor</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:15%">Status</th>
+                                                                </tr>
+
+                                                            </table>
+                                                        </div>
+                                                        <div id="proddiv1" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 135px; width:100%;">
+                                                            <table class="jsgrid-table BillTable" id="tbl_BillList"></table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row mb-1 mt-1">
+                                                <div class="px-2">
+                                                    <div id="customView" class="jsgrid" style="position: relative; height: 340px; width: 100%;overflow-x: auto;overflow-y: hidden; ">
+                                                        <div class="jsgrid-grid-header" style="width:100%;">
+                                                            <table class="jsgrid-table">
+                                                                <tr class="jsgrid-header-row">
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:72px">SL#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:384px;">Test Name</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:384px;">Result</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:284px;">Normal Value</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:14%;display:none;">Standard Unit</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center jsgrid-header-sortable" style="width:28%">Notes</th>
+                                                                </tr>
+
+                                                            </table>
+                                                        </div>
+                                                        <div id="proddiv" class="" style="position: relative; overflow-x: hidden;overflow-y:scroll; height: 296px; width:100%;">
+                                                            <table class="jsgrid-table" id="tbl_TestResult" style="table-layout:fixed;"></table>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-actions m-0">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <textarea id="Remarks" placeholder="Remarks" class="form-control denull enterflow" style="height:50px;" autocomplete="off"></textarea>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="col-md-12">
+                                                            <div class="text-right">
+                                                                <button type="button" style="width:120px;" id="btnsubmit" class="btn btn-primary btn-sm mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                                <button type="button" style="width:120px;" id="btnlist" class="btn btn-primary btn-sm mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                                                <button type="button" style="width:120px;" id="btnnew" class="btn btn-outline-primary btn-sm mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="text-right">
+                                                                <button style="display:none1;width:120px;" type="button" id="btnmail" class="btn btn-danger btn-sm mr-1 mb-1">Sent Mail <i class="fa fa-times"></i></button>
+
+                                                                <button style="display:none;width:120px;" type="button" id="btndelete" class="btn btn-danger btn-sm mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                                <button style="display:none;width:120px;" type="button" id="btnprint" class="btn btn-primary btn-sm mr-1 mb-1">Print <i class="fa fa-print"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <div>
+        LabResultId
+        <input type="text" id="LabResultId" value="0" class="dezero" />
+        GrigLength
+        <input type="text" id="GridLength" value="0" class="dezero" />
+        BillGridLength
+        <input type="text" id="BillGridLength" value="0" class="dezero" />
+        PatientId
+        <input type="text" id="PatientId" value="0" class="dezero" />
+        BillNo
+        <input type="text" id="BillNo" value="0" class="dezero" />
+    </div>
+    <div>
+        BillYear
+        <input type="text" id="BillYear" value="0" class="dezero" />
+        <input type="text" id="BillDate" class="denull" />
+        PType
+        <input type="text" id="PType" class="denull" />
+        IPNumber
+        <input type="text" id="IPNumber" value="0" class="dezero" />
+        Date
+        <input type="text" id="ResultDate"  class="denull" />
+        <input type="text" id="ResultTime" class="denull" />
+    </div>
+</div>
+
+<div style="display:none;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Result Info</h4></td>
+
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <button type="button" onclick="Filter()" class="btn btn-outline-primary" id="Filter"><i class="fa fa-search"></i> Search</button>
+
+                                            <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table id="tbl_LabResult" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;height:200%;width:115%">
+    <div class="modal-dialog modal-lg" role="document" style="top:8%">
+        <div class="modal-content" style="width:66%">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Search Options</h3>
+
+                <button type="button" class="close" onclick="$('#popupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+
+                <div class="modal-body">
+                    <div class="row">
+
+                        <label class="col-md-2" style="font-weight:bold;text-align:right;">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="FromDate" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label class="col-md-2" style="font-weight:bold;text-align:right;">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="ToDate" class="form-control" autocomplete="off">
+                        </div>
+
+                    </div>
+
+                    <div class="row p-1" style="border-bottom:1px solid #cfd8dc;"></div>
+                    <div class="row pt-2">
+                        <label class="col-md-2" style="font-weight:bold;">Doctor </label>
+                        <div class="col-md-4" style="">
+                            <select id="DoctorSearchId" class="form-control dezero" autocomplete="off"></select>
+                        </div>
+
+
+                        <label class="col-md-2" style="font-weight:bold;">Reg No</label>
+                        <div class="col-md-4" style="">
+                            <input type="text" id="SearchRegNo" class="form-control ui-autocomplete-input" autocomplete="off">
+                            <input type="hidden" id="PatientSearchId" class="form-control dezero" autocomplete="off">
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="GetRows(0)" style="width:100px;margin-right:40%" id="btnsearch" class="btn btn-primary">Go <i class="fa fa-search"></i></button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold" id="HeaderModal">Normal Value</h4>
+                        </div>
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy(0)">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+                    <textarea id="NormalValue_0" class="form-control" style="min-height:150px;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="CrntNormalId" value="0" class="dezero" />
+                    <input type="hidden" id="CrntNormalPos" value="" class="denull" />
+
+                    <button type="button" class="btn btn-default" onclick="ngOnDestroy(1)">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="Resconfirm" class="overlay">
+    <div class="modal fade text-left show" id="Reskeyboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display: block; top:23%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="swal-icon swal-icon--success">
+                        <span class="swal-icon--success__line swal-icon--success__line--long"></span>
+                        <span class="swal-icon--success__line swal-icon--success__line--tip"></span>
+
+                        <div class="swal-icon--success__ring"></div>
+                        <div class="swal-icon--success__hide-corners"></div>
+                    </div>
+                    <div id="Resconfirmmessage" class="swal-title"></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="ResConfirmflag" />
+                    <input type="hidden" id="ResConfirmRowId" />
+                    <button type="button" onclick="ResConfirmboxResult('false', $('#ResConfirmflag').val(), $('#ResConfirmRowId').val())" id="ResconfirmCancel" class="btn grey btn-outline-secondary btn-sizebig" data-dismiss="modal">Cancel</button>
+                    <button type="button" onclick="ResConfirmboxResult('true', $('#ResConfirmflag').val(), $('#ResConfirmRowId').val())" id="ResconfirmOk" class="btn btn-outline-primary btn-sizebig" autofocus>Print <i class="fa fa-print"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#ResconfirmOk').focus(function (e) {
+        $('#ResconfirmOk').removeClass('btn-outline-primary');
+        $('#ResconfirmOk').addClass('btn-primary');
+    });
+    $('#ResconfirmCancel').focus(function (e) {
+        $('#ResconfirmCancel').removeClass('btn-outline-secondary');
+        $('#ResconfirmCancel').addClass('btn-secondary');
+    });
+    $('#ResconfirmOk').focusout(function (e) {
+        $('#ResconfirmOk').removeClass('btn-primary');
+        $('#ResconfirmOk').addClass('btn-outline-primary');
+    });
+    $('#ResconfirmCancel').focusout(function (e) {
+        $('#ResconfirmCancel').removeClass('btn-secondary');
+        $('#ResconfirmCancel').addClass('btn-outline-secondary');
+    });
+    $(function () {
+        $('#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+    $("#RegNumber").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.PatientName = $("#RegNumber").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            BloodGroup:item.BloodGroup,
+                            Gender: item.Gender,
+                            RegDate:item.RegDate,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            $("#RegNumber").val(ui.item.label);
+            $("#PatientName").val(ui.item.PatientName);
+            $("#DOB").val(ui.item.DOB);
+            CalcAge();
+            $("#BloodGroup").val(ui.item.BloodGroup);
+            $("#Gender").val(ui.item.Gender);
+            $("#PatientId").val(ui.item.PatientId);
+            $("#RegDate").val(ui.item.RegDate);
+            $("#Doctor").focus();
+            GetLabBill(1);
+
+        },
+
+    });
+    $("#PatientName1").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.PatientName = $("#PatientName").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.PatientName,
+                            label1: item.OPSerName + '-' + item.OPNumber,
+
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            BloodGroup: item.BloodGroup,
+                            Gender: item.Gender,
+                            RegDate: item.RegDate,
+                            headers: ["Patient", "RegNo"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#RegNumber").val(ui.item.label1);
+            $("#PatientName").val(ui.item.PatientName);
+            $("#DOB").val(ui.item.DOB);
+            CalcAge();
+            $("#BloodGroup").val(ui.item.BloodGroup);
+            $("#Gender").val(ui.item.Gender);
+            $("#PatientId").val(ui.item.PatientId);
+            $("#RegDate").val(ui.item.RegDate);
+            $("#Doctor").focus();
+            GetLabBill(1);
+        },
+
+    });
+    $("#OPNumber").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.Status = $("#OPNumber").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_RevisitIdSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.RevisitId,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            BloodGroup: item.BloodGroup,
+                            Gender: item.Gender,
+                            RegNo: item.OPSerName + '-' + item.OPNumber,
+                            headers: ["OPVisitId", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#OPNumber").val(ui.item.label);
+            $("#RegNumber").val(ui.item.RegNo);
+            $("#PatientName").val(ui.item.PatientName);
+            $("#DOB").val(ui.item.DOB);
+            CalcAge();
+            $("#BloodGroup").val(ui.item.BloodGroup);
+            $("#Gender").val(ui.item.Gender);
+            $("#PatientId").val(ui.item.PatientId);
+            GetLabBill(0)
+            $("#Doctor").focus();
+        },
+
+    });
+    $("#SearchRegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#PatientSearchId").val(0);
+            var data = {};
+            data.PatientName = $("#SearchRegNo").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#PatientSearchId").val(ui.item.PatientId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    if ("@Request.QueryString["from"]" == "SOPWorkSheet") {
+
+        var OPVisitId = sessionStorage.getItem("SOP_OV");
+        var OPSerName = sessionStorage.getItem("SOP_RS");
+        var OPNumber = sessionStorage.getItem("SOP_RN");
+        var PatientId = sessionStorage.getItem("SOP_PI");
+        var DOB = sessionStorage.getItem("SOP_DO");
+        var BloodGroup = sessionStorage.getItem("SOP_BG");
+        var PatientName = sessionStorage.getItem("SOP_PN");
+        var Gender = sessionStorage.getItem("SOP_GE");
+        var IPNumber = sessionStorage.getItem("SOP_IP");
+
+        sessionStorage.removeItem("SOP_OV");
+        sessionStorage.removeItem("SOP_RS");
+        sessionStorage.removeItem("SOP_RN");
+        sessionStorage.removeItem("SOP_PI");
+
+        sessionStorage.removeItem("SOP_DO");
+        sessionStorage.removeItem("SOP_BG");
+        sessionStorage.removeItem("SOP_PN");
+        sessionStorage.removeItem("SOP_GE");
+        sessionStorage.removeItem("SOP_IP");
+
+        if (OPVisitId != null) {
+
+            $("#OPNumber").val(OPVisitId);
+            $("#RegNumber").val(OPSerName + '-' + OPNumber);
+            $("#PatientName").val(PatientName);
+            $("#DOB").val(DOB);
+            CalcAge();
+            $("#BloodGroup").val(BloodGroup);
+            $("#Gender").val(Gender);
+            $("#PatientId").val(PatientId);
+            GetLabBill(1);
+        }
+
+    }
+</script>
+

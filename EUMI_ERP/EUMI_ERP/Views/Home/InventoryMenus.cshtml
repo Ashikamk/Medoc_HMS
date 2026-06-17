@@ -1,0 +1,354 @@
+﻿
+@{
+    ViewBag.Title = "InventoryMenus";
+}
+
+<style>
+     .hhover:hover {
+        box-shadow: 13px 15px 88px rgba(0, 0, 0, 0.5);
+        -webkit-transition: box-shadow 0.5s;
+        transform: scale(1.1);
+        transition: transform 0.5s;
+        cursor: pointer;
+        background: #77deee;
+        color: black;
+        border: 0px solid white;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    function GotomenuPage(URL) {
+        var win = window.open('../' + URL, '_blank');
+        win.focus();       
+    }
+
+
+
+
+</script>
+
+<script>
+    var MenuLength = 0;
+
+    $(document).ready(function () {
+        getallmenus();
+    });
+
+    function getallmenus() {
+
+        var data = {};
+        data.UserId = ERPUserId;
+
+        $.ajax({
+            type: "POST",
+            url: "../Home/InventoryUserMenus",
+            data: data,
+            success: function (result) {
+                showMenulist(result.oList)
+
+            }
+        });
+
+    }
+
+
+
+    function showMenulist(result) {
+        MenuLength = result.length;
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            var url = result[i].URL;
+            if(url!='')
+                var row = '<li id="row' + slno + '" class="list-group-item hhover" onclick="GotomenuPage(' + "'" + url + "'" + ')" target="_blank"><div style="float:left"><a class="menu-item" target="_blank"><i class="fa fa-paper-plane-o mr-1"></i><b>  ' + result[i].MenuName + '</b></a></div> <input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+            else
+                var row = '<li id="row' + slno + '" class="list-group-item" onclick="" target="_blank"><div style="float:left"><a class="menu-item" target="_blank"><b>  ' + result[i].MenuName + '</b></a></div> <input style=display:none type=text value=' + result[i].HFlag + ' id="head' + slno + '" /><input style=display:none type=text value=' + result[i].MasterId + ' id="Masterid' + slno + '" /><input style=display:none type=text  value=' + result[i].MenuCode + ' id="Menucodeid' + slno + '" /></div></fieldset></div></li>';
+
+            if (result[i].MasterId == 4) {
+                $('#ddd').append(row);
+                $('#InvDiv1').show();
+            }
+            else if (result[i].MasterId == 6) {
+                $('#salesmenu').append(row);
+                $('#InvDiv2').show();
+            }
+            else if (result[i].MasterId == 8) {
+                $('#accmenu').append(row);
+                $('#InvDiv3').show();
+            }
+            else if (result[i].MasterId == 12) {
+                $('#stockmenu').append(row);
+                $('#InvDiv4').show();
+            }
+            if ($('#head' + slno).val() == 'MM') {
+                $('#row' + slno).css('background-color', '#009DA0')
+                $("#row" + slno).css("color", "white");
+
+            }
+        }
+    }
+
+
+
+</script>
+
+
+<div class="row">
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="InvDiv1">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="ddd" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="InvDiv2">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="salesmenu" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="InvDiv3">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="accmenu" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4" style="display:none" id="InvDiv4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul id="stockmenu" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*<div class="row app-color overflow-hidden">
+    <div class="color-group col-sm-3 mb-4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul class="list-group">
+
+                        <li class="list-group-item" style="background:#009DA0;color:white">
+                            <h5><b>PURCHASE</b></h5>
+                        </li>
+
+                        <li class="list-group-item" onclick="GotomenuPage('inventory/PurchaseEnquiry')">
+                            <a class="menu-item" href="../inventory/PurchaseEnquiry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i> Purchase Enquiry
+                            </a>
+                        </li>
+
+                        <li class="list-group-item" onclick="GotomenuPage('inventory/PurchaseOrder')">
+                            <a class="menu-item" href="../inventory/PurchaseOrder" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>  Purchase Order
+                            </a>
+                        </li>
+                        <li class="list-group-item" onclick="GotomenuPage('inventory/Purchaseinvoice')">
+
+                            <a class="menu-item" href="../inventory/Purchaseinvoice" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Purchase Entry
+                            </a>
+
+                        </li>
+                        <li class="list-group-item" onclick="GotomenuPage('Purchase/PurchaseReturn')">
+                            <a class="menu-item" href="../Purchase/PurchaseReturn" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Purchase Return
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('MRVPurchase/MRV')">
+                            <a class="menu-item" href="../MRVPurchase/MRV" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>MRV
+                            </a>
+
+                        </li>
+
+                        <li class="list-group-item" onclick="GotomenuPage('MRVPurchase/PInvoiceMRV')">
+                            <a class="menu-item" href="../MRVPurchase/PInvoiceMRV" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i> MRV-Purchase Entry
+                            </a>
+
+                        </li>
+                        <li class="list-group-item" onclick="GotomenuPage('PurchaseImport/PurchaseImport')">
+                            <a class="menu-item" href="../PurchaseImport/PurchaseImport" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Purchase Import
+                            </a>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul class="list-group">
+                        <li class="list-group-item" style="background:#009DA0;color:white">
+
+                            <h5><b>SALES</b></h5>
+                        <li class="list-group-item"onclick="GotomenuPage('SalesInvoice/CustomerEnquiry')">
+                            <a class="menu-item" href="../SalesInvoice/CustomerEnquiry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Customer Enquiry
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('SalesInvoice/QuotationEntry')">
+                            <a class="menu-item" href="../SalesInvoice/QuotationEntry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Quotation Entry
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('SalesInvoice/SalesOrder')">
+                            <a class="menu-item" href="../SalesInvoice/SalesOrder" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Sales Order
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/SalesInvoice')">
+                            <a class="menu-item" href="../inventory/SalesInvoice" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Sales Bill
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('SalesInvoice/DeliveryOrder')">
+                            <a class="menu-item" href="../SalesInvoice/DeliveryOrder" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Deliver Order
+                            </a>
+                        </li>
+
+                        <li class="list-group-item"onclick="GotomenuPage('SalesInvoice/SalesReturn')">
+                            <a class="menu-item" href="../SalesInvoice/SalesReturn" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Sales Return
+                            </a>                        
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="color-group col-sm-3 mb-4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul class="list-group">
+                        <li class="list-group-item" style="background:#009DA0;color:white">
+
+                            <h5><b>ACCOUNTS</b></h5>
+
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/ReceiptVoucher')">
+                            <a class="menu-item" href="../AccountsErp/ReceiptVoucher" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Receipt Voucher
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/PaymentVoucher')">
+                            <a class="menu-item" href="../AccountsErp/PaymentVoucher" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Payment Voucher
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/VoucherEntry')">
+                            <a class="menu-item" href="../AccountsErp/VoucherEntry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Voucher Entry
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/RecurringEntry')">
+                            <a class="menu-item" href="../AccountsErp/RecurringEntry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Recurring Entry
+                            </a>
+                        </li>
+
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/PDCReceived')">
+                            <a class="menu-item" href="../AccountsErp/PDCReceived" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>PDC Received
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/PDCIssued')">
+                            <a class="menu-item" href="../AccountsErp/PDCIssued" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>PDC Issued
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('AccountsErp/PettyCashVoucher')">
+                            <a class="menu-item" href="../AccountsErp/PettyCashVoucher" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Petty Cash Voucher
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+     
+    </div>
+    <div class="color-group col-sm-3 mb-4">
+        <div id="chatapp" class="col-12">
+            <div class="card-body">
+                <div class="card-block">
+                    <ul class="list-group">
+                        <li class="list-group-item" style="background:#009DA0;color:white">
+
+                            <h5><b>STOCK</b></h5>
+
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/StockTransferOut')">
+                            <a class="menu-item" href="../inventory/StockTransferOut" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Stock Transfer Out
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/StockTransferIn')">
+                            <a class="menu-item" href="../inventory/StockTransferIn" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Stock Transfer In
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/ProductionEntry')">
+                            <a class="menu-item" href="../inventory/ProductionEntry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Production Entry
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/StockAdjustment')">
+                            <a class="menu-item" href="../inventory/StockAdjustment" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Stock Adjustment
+                            </a>
+                        </li>
+
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/PhysicalVariationTransfer')">
+                            <a class="menu-item" href="../inventory/PhysicalVariationTransfer" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Physical Variation Transfer
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/PriceManager')">
+                            <a class="menu-item" href="../inventory/PriceManager" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Price Manager
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/OpeningStockEntry')">
+                            <a class="menu-item" href="../inventory/OpeningStockEntry" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Opening Stock Entry 
+                            </a>
+                        </li>
+                        <li class="list-group-item"onclick="GotomenuPage('inventory/LocationTransfer')">
+                            <a class="menu-item" href="../inventory/LocationTransfer" target="_blank">
+                                <i class="fa fa-paper-plane-o mr-1"></i>Location Transfer
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+     
+    </div>
+</div>*@
+

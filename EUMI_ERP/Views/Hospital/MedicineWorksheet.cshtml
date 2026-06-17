@@ -245,7 +245,8 @@
                     <p style="margin:0; font-size:18px; font-weight:700;">Medicines Advised</p>
                     <span id="MM_MedCount" style="font-size:13px; color:#6b7280;"></span>
                 </div>
-                <ul id="MM_MedicineList" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;"></ul>
+                @*<ul id="MM_MedicineList" style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;"></ul>*@
+                <div id="MM_MedicineList"></div>
             </div>
 
 
@@ -615,21 +616,52 @@
         $("#MM_Time").text(data.DOB || '-');
         $("#MM_Doctor").text(data.DoctorName || '-');
 
-
         var medicines = data.MedicineAdvice ? data.MedicineAdvice.split(',') : [];
-        var listHtml = '';
 
-        medicines.forEach(function (med) {
+        var listHtml =
+            '<table style="width:100%; border-collapse:collapse; font-family:Segoe UI,sans-serif;">' +
+            '<thead>' +
+            '<tr style="background:#EDE9FF; color:#3A2D9A; font-size:14px;">' +
+            '<th style="padding:10px 14px; text-align:left; border-bottom:2px solid #C4B8F8;">Medicine</th>' +
+            '<th style="padding:10px 14px; text-align:center; border-bottom:2px solid #C4B8F8;">No. of Days</th>' +
+            '<th style="padding:10px 14px; text-align:center; border-bottom:2px solid #C4B8F8;">Frequency </th>' +
+            '<th style="padding:10px 14px; text-align:center; border-bottom:2px solid #C4B8F8;">Total Tablets </th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody>';
+
+        medicines.forEach(function (med, idx) {
+            var parts = med.trim().split(' | ');
+            var medName = parts[0] || med.trim();
+            var medDetail = parts[1] || '';
+
+            var tabs = '-', freq = '-', days = '-';
+            if (medDetail) {
+                var detailParts = medDetail.split(' - ');
+                tabs = detailParts[0] ? detailParts[0].replace('Tab(s)', '').trim() : '-';
+                if (detailParts[1]) {
+                    var freqDays = detailParts[1].split(' x ');
+                    freq = freqDays[0] ? freqDays[0].trim() : '-';
+                    days = freqDays[1] ? freqDays[1].replace('Day(s)', '').trim() : '-';
+                }
+            }
+
+            var rowBg = idx % 2 === 0 ? '#F0EEFF' : '#fff';
+
             listHtml +=
-                '<li style="display:flex; align-items:center; gap:12px; padding:12px; ' +
-                'border:1px solid #C4B8F8; border-radius:8px; background:#fff;">' +
-                '<span style="flex:1; font-size:15px; font-weight:600;">' + med.trim() + '</span>' +
-                '</li>';
+                '<tr style="background:' + rowBg + '; font-size:16px;">' +
+                '<td style="padding:12px 14px; font-weight:700; color:#3A2D9A;">' + medName + '</td>' +
+                '<td style="padding:12px 14px; text-align:center; font-weight:600; color:#854F0B;">' + days + '</td>' +
+                '<td style="padding:12px 14px; text-align:center; font-weight:600; color:#3B6D11;">' + freq + '</td>' +
+                '<td style="padding:12px 14px; text-align:center; font-weight:600; color:#185FA5;">' + tabs + '</td>' +
+                '</tr>';
         });
 
+        listHtml += '</tbody></table>';
+
         $("#MM_MedicineList").html(
-            listHtml ||
-            '<li style="color:#718096; font-size:14px; padding:10px;">No medicines advised.</li>'
+            medicines.length > 0 ? listHtml :
+                '<p style="color:#718096; font-size:14px; padding:10px;">No medicines advised.</p>'
         );
 
         $("#MM_MedCount").text('');

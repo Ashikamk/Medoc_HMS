@@ -1,0 +1,1180 @@
+﻿
+@{
+    ViewBag.Title = "LocationwiseStockReport";
+}
+
+
+<style type="text/css">
+
+</style>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+    
+    
+</style>
+<div class="myData" data-x="M111" />
+<div class="card">
+    <br />
+    <div class="row m-1">
+
+        <div class="col-md-6">
+            <h3 id="header"></h3>
+            <h6><span id="paramOfReport"></span></h6>
+            <h6><span id="Loc"></span>&nbsp;<span id="Groupparam"></span>&nbsp;<span id="SubGroupparam"></span>&nbsp;<span id="Catparam"></span>&nbsp;<span id="SubCatparam"></span></h6>
+        </div>
+        <div class="col-md-6 text-right" id="">
+            <button type="button" id="btnchgp" class="btn btn-primary" data-toggle="modal" data-target="#paramModal">Change Parameters</button>
+            <button type="button" style="width:100px;margin-left:20px" id="btnprint" onclick="PrintthisReportWindows('STOCKDETAILEDREPORT', $('#ResultLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button>
+            <span id="itemListButtonPlace">
+            </span>
+
+        </div>
+
+    </div>
+
+    <hr style="margin-top:-0.7%;" />
+
+    <div id="popup" style="display:none;overflow:auto;margin-top:-1%">
+
+        <br />
+        <table id="Locationwisetbl" class="table table-condensed table-light table-striped table-bordered eumi-search-table"></table>
+       
+        <div style="display:none">
+            <table id="Tblreportprint"></table>
+        </div>
+        <br />
+    </div>
+   
+</div>
+
+<div style="display:none">
+    <input type="text" id="ResultLength" />
+</div>
+
+<div style="height:100px;clear: both">
+    &nbsp;
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnchgp').click();
+
+
+
+
+        $('#Location').focus();
+        var decimal = (window.Decimal || 1);
+
+        $('#Location').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#StockType').focus();
+                e.preventDefault();
+            }
+        });
+
+        $('#StockType').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#Group').focus();
+                e.preventDefault();
+            }
+        });
+        $('#Group').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#SubGroup').focus();
+                e.preventDefault();
+            }
+        });
+        $('#SubGroup').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#Category').focus();
+                e.preventDefault();
+            }
+        });
+        $('#Category').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#SubCategory').focus();
+                e.preventDefault();
+            }
+        });
+        $('#SubCategory').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $('#ToDate').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+
+
+
+    });
+</script>
+
+@section popups {
+    <div class="modal" id="paramModal" style="margin-top:10%">
+        <div class="modal-dialog modal-lg" style="max-width:35%">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header  bg-primary white">
+                    <h4 class="modal-title">Stock Report</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold">Location</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Location">
+                                <option vale="0">-All-</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2"> 
+                        <label style="font-weight:bold">Type</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="StockType">
+                                <option vale="0"> All Stock </option>
+                                <option vale="1"> Negative Stock </option>
+                                <option vale="2"> Zero Stock </option>
+                                <option vale="3"> In Stock </option>
+                                <option vale="4"> Non-Zero </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row"  style="margin-top:2%">
+                        <div class="col-md-2">
+                            <label style="font-weight:bold">Group</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Group" onchange="SubGroupGetsforGroup()">
+                                <option vale="0">-All-</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-2">
+                            <label style="font-weight:bold">SubGroup</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="SubGroup">
+                                <option vale="0">-All-</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%">
+                        <div class="col-md-2">
+                            <label style="font-weight:bold;">Category</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="Category" onchange="SubCategoryGetsforCategory()">
+                                <option vale="0">-All-</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label style="font-weight:bold;">SubCat.</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select type="text" class="form-control" id="SubCategory">
+                                <option vale="0">-All-</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row" style="margin-top:2%">
+                        <div class="col-md-2">
+                            <label style="font-weight:bold;">As On</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="ToDate" />
+                        </div>
+                        <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="customCheck" id="detailed">
+                                    <label class="custom-control-label" for="detailed">Detailed Report</label>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <fieldset class="form-group floating-label-form-group" style="margin-right:22%">
+                        <div class="row">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="customCheck" id="hidecost">
+                                <label class="custom-control-label" for="hidecost">Hide Cost</label>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group" style="margin-right:70px">
+                        <div class="row">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="customCheck" id="hidestock">
+                                <label class="custom-control-label" for="hidestock">Hide Stock Value</label>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                    <button type="button" id="btnsubmit" class="btn btn-primary" data-dismiss="modal">Apply</button>
+                    <button type="button" id="btnclose" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script src="~/ProjectScript/Common.js"></script>
+<script src="~/ProjectScript/ReportPrint.js"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+
+
+            GetLocation(0);
+            GroupPageLoad();
+            CategoryPageLoad();
+            SubCategoryPageLoad();
+            SubGroupPageLoad();
+            $('#btnsubmit').on('click', function (e) {
+                GetLocationwiseStock();
+            });
+            $('#ToDate').daterangepicker({
+                minDate: minDate,
+                maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                singleDatePicker: true,
+                showDropdowns: true,
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
+
+            });
+
+        });
+
+        function GetLocation(id) {
+            var data = {};
+            data.LocationId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/LocationGetandGets",
+                data: data,
+                success: function (result) {
+                    LocationLoad(result.oList);
+                }
+            });
+
+        }
+        function GroupPageLoad() {
+            var data1 = {};
+            data1.GrpId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/GroupGetandGets",
+                data: data1,
+                success: function (result) {
+                    GroupLoad(result.oList);
+                }
+            });
+        }
+
+
+
+        function CategoryPageLoad() {
+            var data2 = {};
+            data2.CategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/CategoryGetandGets",
+                data: data2,
+                success: function (result) {
+                    CategoryLoad(result.oList);
+                }
+            });
+        }
+
+        function SubCategoryPageLoad() {
+            var data = {};
+            data.SubCategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubCategoryGetandGets",
+                data: data,
+                success: function (result) {
+                        SubCategoryLoad(result.oList);
+                }
+            });
+
+        }
+        function SubGroupPageLoad() {
+            var data = {};
+            data.SubCategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubGroupGetandGets",
+                data: data,
+                success: function (result) {
+                    SubGroupLoad(result.oList);
+                }
+            });
+
+        }
+        function SubCategoryGetsforCategory() {
+            if ($("#Category").val() != 0) {
+                var data = {};
+                data.CategoryId = $("#Category").val();
+                data.SubCategoryId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/SubCategoryGetforCategory",
+                    data: data,
+                    success: function (result) {
+                        SubCategoryLoad(result.oList);
+                    }
+                });
+            }
+            else {
+                SubCategoryPageLoad();
+            }
+        }
+
+
+
+        function SubGroupGetsforGroup() {
+            if ($("#Group").val() != 0) {
+                var data = {};
+                data.GroupId = $("#Group").val();
+                data.SubGroupId = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/SubGroupGetforGroup",
+                    data: data,
+                    success: function (result) {
+                        SubGroupLoad(result.oList);
+                    }
+                });
+            }
+            else {
+                SubGroupPageLoad(0);
+            }
+        }
+
+
+
+        function LocationLoad(result) {
+            $("#Location").empty();
+            LocationSelect = "<option value='0'>-All-</option>";
+            for (var i = 0; i < result.length; i++) {
+                LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
+
+            }
+            $("#Location").append(LocationSelect);
+            $('#Location').val(0);
+        }
+
+        function GroupLoad(result) {
+            $("#Group").empty();
+            $("#Group").append("<option value='0'>-All-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#Group").append("<option value='" + result[i].GrpId + "'>" + result[i].GrpName + "</option>");
+            }
+        }
+
+
+
+        function CategoryLoad(result) {
+            $("#Category").empty();
+            $("#Category").append("<option value='0'>-All-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#Category").append("<option value='" + result[i].CategoryId + "'>" + result[i].CategoryName + "</option>");
+            }
+        }
+
+        function SubCategoryLoad(result) {
+            $("#SubCategory").empty();
+            $("#SubCategory").append("<option value='0'>-All-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#SubCategory").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+            }
+        }
+        function SubGroupLoad(result) {
+            $("#SubGroup").empty();
+            $("#SubGroup").append("<option value='0'>-All-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#SubGroup").append("<option value='" + result[i].SbgrpId + "'>" + result[i].SbgrpName + "</option>");
+            }
+        }
+
+        function Parameter()
+        {
+
+            //Location
+            if ($('#Location').val() != 0) {
+                $('#Loc').append('Location: <b>' + $('#Location option:selected').html() + '</b>');
+            }
+
+            //Grp 
+            if ($('#Group').val() != 0 && ($('#Location').val() != 0)) {
+                $('#Groupparam').append(' ; Group: <b>' + $('#Group option:selected').html() + '</b>');
+            }
+            if (($('#Group').val() != 0) && ($('#Location').val() == 0)) {
+                $('#Groupparam').append('Group: <b>' + $('#Group option:selected').html() + '</b>');
+            }
+
+
+            //SubGrp 
+            if ($('#SubGroup').val() != 0 && ($('#Group').val() == 0) && ($('#Location').val() == 0)) {
+                $('#SubGroupparam').append('SubGroup: <b>' + $('#SubGroup option:selected').html() + '</b>');
+            }
+            if ($('#SubGroup').val() != 0 && ($('#Group').val() != 0)) {
+                $('#SubGroupparam').append(' ; SubGroup: <b>' + $('#SubGroup option:selected').html() + '</b>');
+            }
+            if ($('#SubGroup').val() != 0 && ($('#Group').val() == 0) && ($('#Location').val() != 0)) {
+                $('#SubGroupparam').append(' ; SubGroup: <b>' + $('#SubGroup option:selected').html() + '</b>');
+            }
+
+
+            //Cat 
+            if ($('#Category').val() != 0 && $('#Group').val() != 0) {
+                $('#Catparam').append(' ; Category: <b>' + $('#Category option:selected').html() + '</b>');
+            }
+            if ($('#Category').val() != 0 && $('#Group').val() == 0 && ($('#Location').val() == 0) && $('#SubGroup').val() == 0) {
+                $('#Catparam').append(' Category: <b>' + $('#Category option:selected').html() + '</b>');
+            }
+            if ($('#Category').val() != 0 && $('#Group').val() == 0 && ($('#Location').val() == 0) && $('#SubGroup').val() != 0) {
+                $('#Catparam').append(' ; Category: <b>' + $('#Category option:selected').html() + '</b>');
+            }
+            if (($('#Category').val() != 0) && $('#Group').val() == 0 && ($('#Location').val() != 0)) {
+                $('#Catparam').append(' ; Category: <b>' + $('#Category option:selected').html() + '</b>');
+            }
+
+
+            //SubCat 
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() == 0 && ($('#Category').val() == 0) && ($('#Group').val() == 0) && ($('#Location').val() == 0)) {
+                $('#SubCatparam').append('SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() == 0 && ($('#Category').val() != 0) && ($('#Group').val() == 0) && ($('#Location').val() == 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() == 0 && ($('#Category').val() != 0) && ($('#Group').val() == 0) && ($('#Location').val() != 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() == 0 && ($('#Category').val() != 0) && ($('#Group').val() != 0) && ($('#Location').val() == 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() == 0 && ($('#Category').val() != 0) && ($('#Group').val() != 0) && ($('#Location').val() != 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() != 0 && ($('#Category').val() != 0) && ($('#Group').val() != 0) && ($('#Location').val() == 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() != 0 && ($('#Category').val() != 0) && ($('#Group').val() != 0) && ($('#Location').val() != 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && $('#SubGroup').val() != 0 && ($('#Category').val() == 0) && ($('#Group').val() == 0) && ($('#Location').val() == 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && ($('#Category').val() == 0) && ($('#Location').val() != 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+            if ($('#SubCategory').val() != 0 && ($('#Category').val() == 0) && ($('#Group').val() != 0) && ($('#Location').val() == 0)) {
+                $('#SubCatparam').append(' ; SubCategory: <b>' + $('#SubCategory option:selected').html() + '</b>');
+            }
+        }
+        function GetLocationwiseStock() {
+            $('#Loading').show();
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+            $('#Locationwisetbl thead').remove();
+            $('#Locationwisetbl tbody').remove();
+            $('#Locationwisetbl tfoot').remove();
+
+
+
+            var Condition = "1=1"
+            var Condition1 = "1=1"
+            var Type = 0;
+            
+           
+            if ($("#Location").val() != 0) {
+                Type = 1;
+                Condition = Condition + " AND Stock_Location=" + $('#Location').val();
+
+                if ($('#StockType').val() == 'In Stock') {
+                    
+                    Condition = Condition + " AND isnull(StockQty,0) > 0"
+                }
+                if ($('#StockType').val() == 'Zero Stock') {
+                    
+                    Condition = Condition + "  AND isnull(StockQty,0) = 0"
+                }
+                if ($('#StockType').val() == 'Negative Stock') {
+                   
+                    Condition = Condition + "  AND isnull(StockQty,0) < 0"
+                }
+                if ($('#StockType').val() == 'Non-Zero') {
+                   
+                    Condition = Condition + " AND isnull(StockQty,0) != 0"
+                }
+
+                if ($('#Group').val() != 0) {
+                    
+                    Condition = Condition + " and GroupId=" + $('#Group').val();
+                }
+                if ($('#SubGroup').val() != 0) {
+                    
+                    Condition = Condition + " and SubGroupId=" + $('#SubGroup').val();
+                }
+                if ($('#Category').val() != 0) {
+                    
+                    Condition = Condition + " and CategoryId=" + $('#Category').val();
+                }
+                if ($('#SubCategory').val() != 0) {
+                    
+                    Condition = Condition + " and SubCategoryId=" + $('#SubCategory').val();
+                }
+            }
+            else{
+                Type = 0;
+
+
+                if ($('#StockType').val() == 'In Stock') {
+
+                    Condition1 = Condition1 + " AND isnull(StockQty,0) > 0"
+                }
+                if ($('#StockType').val() == 'Zero Stock') {
+
+                    Condition1 = Condition1 + " AND isnull(StockQty,0) = 0"
+                }
+                if ($('#StockType').val() == 'Negative Stock') {
+
+                    Condition1 = Condition1 + " AND isnull(StockQty,0) < 0"
+                }
+                if ($('#StockType').val() == 'Non-Zero') {
+
+                    Condition1 = Condition1 + " AND isnull(StockQty,0) != 0 "
+                }
+
+                if ($('#Group').val() != 0) {
+
+                    Condition1 = Condition1 + " and GroupId=" + $('#Group').val();
+                }
+                if ($('#SubGroup').val() != 0) {
+
+                    Condition1 = Condition1 + " and SubGroupId=" + $('#SubGroup').val();
+                }
+                if ($('#Category').val() != 0) {
+
+                    Condition1 = Condition1 + " and CategoryId=" + $('#Category').val();
+                }
+                if ($('#SubCategory').val() != 0) {
+
+                    Condition1 = Condition1 + " and SubCategoryId=" + $('#SubCategory').val();
+                }
+
+
+            }
+            
+
+         
+
+            var data = {};
+            data.Condition = Condition;
+            data.Condition1 = Condition1;
+            data.ToDate = $('#ToDate').val();
+            data.Type = Type;
+           
+            $.ajax({
+                type: "POST",
+                url: "../Report/DetailedStock",
+                data: data,
+                success: function (result) {
+                    $('#Loading').hide();
+                    if (($('#hidecost').prop("checked")) && ($('#hidestock').prop("checked")) && ($('#detailed').prop("checked"))) {
+                        LoadDetailsAllhideDetails(result);
+                    }
+                    else if (($('#hidecost').prop("checked")) && ($('#detailed').prop("checked"))) {
+                        LoadDetailsAllhidecost(result);
+                    }
+                    else if (($('#hidestock').prop("checked")) && ($('#detailed').prop("checked"))) {
+                        LoadDetailsAllhidestock(result);
+                    }
+
+                    else if ($('#detailed').prop("checked")) {
+                        LoadDetailsAll(result);
+                    }
+
+                    else if (($('#hidecost').prop("checked")) && ($('#hidestock').prop("checked"))) {
+                        LoadDetailshidedeatils(result);
+                    }
+
+                    else if ($('#hidecost').prop("checked")) {
+                        LoadDetailshidecost(result);
+                    }
+                    else if ($('#hidestock').prop("checked")) {
+                        LoadDetailshidestockvalue(result);
+                    }
+                    else {
+                        LoadDetails(result);
+                    }
+                }
+            });
+
+        }
+
+        function LoadDetails(result)
+        {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th width=500px>Item Code</th><th width=1450px>Item Name</th><th width=10px>Qty.</th><th class='text-right' width=10px>Cost</th><th class='text-right' width=130px>Stock Value</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total')
+                {
+
+                    responseText += "<tr class='jsgrid-row' >" +
+             "<td class='text-left'> " + (i + 1) + " </td>" +
+             "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+             "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+             "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+             "<td id='Col4_" + i + "' class='text-right'>" + parseFloat(result[i].AvgCost || 0).toFixed(Decimal) + "</td>" +
+             "<td id='Col5_" + i + "' class='text-right'>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</td>" +
+             "</tr>";
+                }
+
+                else
+                {
+                    responseText += "<tr  style=background-color:#cfd8dc  class='jsgrid-row' >" +
+                    "<td class='text-left'> " + (i + 1) + " </td>" +
+                    "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+                    "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+                    "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+                    "<td id='Col4_" + i + "' class='text-right'>" + result[i].AvgCost + "</td>" +
+                    "<td id='Col5_" + i + "' class='text-right'><b>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</b></td>" +
+         "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Item Code</th><th>Item Name</th><th> </th><th> </th><th> </th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val()+'</b>')
+            Parameter();
+
+        }
+
+
+        function LoadDetailsAll(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=400px>Item Code</th><th  width=1000px>Item Name</th><th  width=15px>Unit</th><th  width=15px>Qty.</th><th class='text-right'  width=15px>Cost</th><th class='text-right'  width=250px>Stock Value</th><th  width=100px>Group</th><th  width=300px>Sub Group</th><th  width=200px>Category</th><th  width=200px>Sub Category</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+                    responseText += "<tr  class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+            "<td id='Col6_" + i + "' class='text-left'> " + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+            "<td id='Col4_" + i + "' class='text-right'>" + parseFloat(result[i].AvgCost || 0).toFixed(Decimal) + "</td>" +
+            "<td id='Col5_" + i + "' class='text-right'>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</td>" +
+             "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+          "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+           "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+           "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+                }
+
+                else {
+                    responseText += "<tr style=background-color:#cfd8dc class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+            "<td id='Col6_" + i + "' class='text-left'>" + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+            "<td id='Col4_" + i + "' class='text-right'>" + result[i].AvgCost + "</td>" +
+            "<td id='Col5_" + i + "' class='text-right'><b>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</b></td>" +
+            "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+            "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+             "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+             "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th>Unit</th><th> </th><th> </th><th> </th><th>Group</th><th>Sub Group</th><th>Category</th><th>Sub Category</th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+
+            Parameter();
+        }
+
+        function LoadDetailshidecost(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=300px>Item Code</th><th  width=1000px>Item Name</th><th  width=15px>Qty.</th><th class='text-right'  width=100px>Stock Value</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+
+                    responseText += "<tr class='jsgrid-row' >" +
+             "<td class='text-left'> " + (i + 1) + " </td>" +
+             "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+             "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+             "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+             "<td id='Col5_" + i + "' class='text-right'>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</td>" +
+             "</tr>";
+                }
+
+                else {
+                    responseText += "<tr  style=background-color:#cfd8dc  class='jsgrid-row' >" +
+                    "<td class='text-left'> " + (i + 1) + " </td>" +
+                    "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+                    "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+                    "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+                    "<td id='Col5_" + i + "' class='text-right'><b>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</b></td>" +
+         "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th> </th><th> </th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+
+            Parameter();
+        }
+
+        function LoadDetailshidestockvalue(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=300px>Item Code</th><th  width=1000px>Item Name</th><th  width=15px>Qty.</th><th class='text-right'  width=15px>Cost</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+
+                    responseText += "<tr class='jsgrid-row' >" +
+             "<td class='text-left'> " + (i + 1) + " </td>" +
+             "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+             "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+             "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+             "<td id='Col4_" + i + "' class='text-right'>" + parseFloat(result[i].AvgCost || 0).toFixed(Decimal) + "</td>" +
+             "</tr>";
+                }
+
+                else {
+                    responseText += "<tr  style=background-color:#cfd8dc  class='jsgrid-row' >" +
+                    "<td class='text-left'> " + (i + 1) + " </td>" +
+                    "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+                    "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+                    "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+                    "<td id='Col4_" + i + "' class='text-right'>" + result[i].AvgCost + "</td>" +
+         "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th> </th><th> </th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+             
+            Parameter();
+        }
+
+        function LoadDetailshidedeatils(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=300px>Item Code</th><th  width=1000px>Item Name</th><th  width=15px>Qty.</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+
+                    responseText += "<tr class='jsgrid-row' >" +
+             "<td class='text-left'> " + (i + 1) + " </td>" +
+             "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+             "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+             "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+             "</tr>";
+                }
+
+                else {
+                    responseText += "<tr  style=background-color:#cfd8dc  class='jsgrid-row' >" +
+                    "<td class='text-left'> " + (i + 1) + " </td>" +
+                    "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+                    "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+                    "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+         "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th> </th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+            
+            Parameter();
+        }
+
+
+        function LoadDetailsAllhidecost(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=300px>Item Code</th><th  width=1000px>Item Name</th><th width=15px>Unit</th><th  width=15px>Qty.</th><th class='text-right'  width=200px>Stock Value</th><th  width=200px>Group</th><th  width=200px>Sub Group</th><th  width=200px>Category</th><th  width=200px>Sub Category</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+                    responseText += "<tr  class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+            "<td id='Col6_" + i + "' class='text-left'> " + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+            "<td id='Col5_" + i + "' class='text-right'>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</td>" +
+             "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+          "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+           "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+           "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+                }
+
+                else {
+                    responseText += "<tr style=background-color:#cfd8dc class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+            "<td id='Col6_" + i + "' class='text-left'>" + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+            "<td id='Col5_" + i + "' class='text-right'><b>" + parseFloat(result[i].StockValue || 0).toFixed(Decimal) + "</b></td>" +
+            "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+            "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+             "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+             "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th>Unit</th><th> </th><th> </th><th>Group</th><th>Sub Group</th><th>Category</th><th>Sub Category</th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+            
+            Parameter();
+        }
+
+
+        function LoadDetailsAllhidestock(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=300px>Item Code</th><th  width=1000px>Item Name</th><th  width=15px>Unit</th><th  width=15px>Qty.</th><th class='text-right'  width=15px>Cost</th><th  width=200px>Group</th><th  width=200px>Sub Group</th><th  width=200px>Category</th><th  width=200px>Sub Category</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+                    responseText += "<tr  class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+            "<td id='Col6_" + i + "' class='text-left'> " + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+            "<td id='Col4_" + i + "' class='text-right'>" + parseFloat(result[i].AvgCost || 0).toFixed(Decimal) + "</td>" +
+             "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+          "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+           "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+           "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+                }
+
+                else {
+                    responseText += "<tr style=background-color:#cfd8dc class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+            "<td id='Col6_" + i + "' class='text-left'>" + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+            "<td id='Col4_" + i + "' class='text-right'>" + result[i].AvgCost + "</td>" +
+            "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+            "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+             "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+             "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th>Unit</th><th> </th><th> </th><th>Group</th><th>Sub Group</th><th>Category</th><th>Sub Category</th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+            
+            Parameter();
+        }
+
+
+        function LoadDetailsAllhideDetails(result) {
+            $('#paramOfReport').text('');
+            $('#Loc').text('');
+            $('#Groupparam').text('');
+            $('#SubGroupparam').text('');
+            $('#Catparam').text('');
+            $('#SubCatparam').text('');
+            disable_datatable('Locationwisetbl', 'itemListButtonPlace');
+
+            var responseText = "<thead><tr><th>Sl#</th><th  width=300px>Item Code</th><th  width=1000px>Item Name</th><th  width=15px>Unit</th><th  width=15px>Qty.</th><th  width=200px>Group</th><th  width=200px>Sub Group</th><th  width=200px>Category</th><th  width=200px>Sub Category</th></tr></thead><tbody>";
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].ItemDesc != 'Grand Total') {
+                    responseText += "<tr  class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'>" + result[i].ItemDesc + "</td>" +
+            "<td id='Col6_" + i + "' class='text-left'> " + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'>" + parseInt(result[i].StockQty || 0) + "</td>" +
+             "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+          "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+           "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+           "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+                }
+
+                else {
+                    responseText += "<tr style=background-color:#cfd8dc class='jsgrid-row' >" +
+            "<td class='text-left'> " + (i + 1) + " </td>" +
+            "<td id='Col1_" + i + "' class='text-left'>" + result[i].ItemCode + "</td>" +
+            "<td id='Col2_" + i + "' class='text-left'><b>" + result[i].ItemDesc + "</b></td>" +
+            "<td id='Col6_" + i + "' class='text-left'>" + result[i].Unit + "</td>" +
+            "<td id='Col3_" + i + "' class='text-left'><b>" + parseInt(result[i].StockQty || 0) + "</b></td>" +
+            "<td id='Col7_" + i + "' class='text-left'>" + result[i].Group + "</td>" +
+            "<td id='Col8_" + i + "' class='text-left'>" + result[i].SubGroup + "</td>" +
+             "<td id='Col9_" + i + "' class='text-left'>" + result[i].Category + "</td>" +
+             "<td id='Col10_" + i + "' class='text-left'>" + result[i].SubCategory + "</td>" +
+            "</tr>";
+
+                }
+
+            }
+            $('#Loading').hide();
+            $('#Locationwisetbl').append(responseText + '</tbody><tfoot><tr><th width=15px>Sl#</th><th>Item Code</th><th>Item Name</th><th>Unit</th><th> </th><th>Group</th><th>Sub Group</th><th>Category</th><th>Sub Category</th></tr></tfoot>');
+            $('#Tblreportprint').html(responseText)
+            datatableWithsearch('Locationwisetbl', true, 'Detailed Stock Report', 'itemListButtonPlace');
+            $('#popup').show();
+            $('#header').text('Stock Report');
+            $('#ResultLength').val(result.length);
+            $('#paramOfReport').append('As On <b>' + $('#ToDate').val() + '</b>')
+            
+            Parameter();
+        }
+
+
+        function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+            var a = '#' + tablename + ' tfoot th'
+            $(a).each(function () {
+                var title = $(this).text();
+                if (title != 'Edit' && title != 'Select' && title != 'Slno' && title != 'Sl#' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != ' ')
+                    $(this).html('<input type="text" placeholder="Search ' + title + '" style="width=100%" />');
+                if (title == 'Date')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Cost')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Unit')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Item Name')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Item Code')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Stock Value')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Qty.')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Group')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Sub Group')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Category')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+                if (title == 'Sub Category')
+                    $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            });
+            var table = null;
+            if (download) {
+                if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+
+                table = $('#' + tablename).DataTable({
+                    // dom: 'Bfrtip',
+                    dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                    buttons: []
+
+                });
+                new $.fn.dataTable.Buttons(table, {
+                    buttons: [
+                    {
+                        extend: 'collection',
+                        text: 'Export',
+                        className: 'excelexport',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            },
+                            {
+                                extend: 'print',
+                                title: title,
+                                messageTop: 'MEDOC HMS',
+                                exportOptions: { columns: ":visible" }
+                            }
+                        ]
+                    },
+                    'colvis'
+                    ]
+                });
+                table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+                $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+           
+            } else {
+                table = $('#' + tablename).DataTable();
+            }
+            table.columns().every(function () {
+                var that = this;
+                $('input', this.footer()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+
+                    }
+                });
+            });
+            if (ExcelExport == 0) {
+                $('.excelexport').hide();
+            }
+        }
+
+        function disable_datatable(tablename, tableButtonContainerId) {
+            $('#Warningpopup').fadeOut();
+            if ($.fn.DataTable.isDataTable('#' + tablename)) {
+                var table = $('#' + tablename).DataTable();
+                table.destroy();
+                if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+                return;
+            }
+        }
+
+
+</script>
+
+
+

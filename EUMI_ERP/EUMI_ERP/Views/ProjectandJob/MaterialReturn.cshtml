@@ -1,0 +1,539 @@
+﻿
+@{
+    ViewBag.Title = "MaterialReturn";
+}
+
+<script type="text/javascript" src="../Projectscript/MaterialReturn.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<script type="text/javascript" src="~/ProjectScript/DosPrint.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+
+<style>
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+    /*.form-control
+    {
+        font-weight:bold;
+    }*/
+
+    .htdleft {
+        padding-left: 2%;
+    }
+
+    .htdright {
+        padding-right: 2%;
+    }
+
+    .htdtop {
+        padding-top: .5%;
+    }
+
+    .htdbot {
+        padding-bottom: .5%;
+    }
+
+    .overlay1 {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 45%;
+        left: 50%;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    .modal-xl {
+        max-width: 100%;
+        margin-left: 10%;
+        margin-right: 3%;
+    }
+
+    .input-group-text {
+        cursor: pointer;
+        border-color: rgb(0, 142, 145) !important;
+        background-color: transparent;
+        color: rgb(0, 142, 145) !important;
+    }
+
+        .input-group-text:hover {
+            transform: scale(1.1);
+            transition: transform 0.1s;
+        }
+
+        .input-group-text:hover {
+            background-color: rgb(0, 142, 145) !important;
+            color: rgb(255, 255, 255) !important;
+        }
+
+    .botlbl {
+        margin-bottom: 0rem;
+    }
+
+    .Adddets .form-control:not(.tdes) {
+        width: 90%;
+         margin-top: -5%;
+    }
+     .Adddets .form-control.tdes {
+        width: 95%;
+         margin-top: -2.5%;
+    }
+
+    .headertable tr {
+        border: 1px solid #BABFC7;
+        height: 30px;
+    }
+
+    .hidtd {
+        display: none;
+    }
+    .mgtp{
+        margin-top:-1%;
+    }
+</style>
+
+<div class="myData" data-x="M289" />
+<div id="Entry" style="">
+
+    <section class="grid-row-label">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <div class="px-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h2 class="card-title mb-0 font-large-1" style="font-weight:bold;text-align:left;padding-top:20px">PROJECT MATERIAL RETURN</h2>
+                            </div>                        
+                            <div class="col-md-8">
+                                <h2 style="font-weight:600;text-align:right;padding-top:20px;">Total Amount &nbsp; <span style="font-weight:600;text-align:right;color:red;padding-top:20px;" id="TotalAmountLbl"></span></h2>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card-content collapse show">
+                        <div class="card-body" style="margin-top:-75px">
+
+                            <form action="#">
+
+                                <div class="form-body">
+                                    <hr style="margin-top:75px" />
+
+
+                                    <table class="hedrtbl" style="width:100%;background-color:#F0F6F6;margin-top:-1%">
+                                        <tr class="row htdtop">
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">PR No</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="ReturnNo" class="form-control EnbTxt AvoidClear" disabled="">
+                                                <div id="CopyDiv" class="input-group" style="margin-bottom:0rem;display:none">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" onclick="GetPrevNextNo(-1)"><b><i class="ft-chevron-left"></i></b></span>
+                                                    </div>
+                                                    <input type="text" id="ReturnNoCopy" class="form-control EnbTxt AvoidClear atfcs" onfocus="SearchVocNo()">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text" onclick="GetPrevNextNo(1)"><b><i class="ft-chevron-right"></i></b></span>
+                                                    </div>
+                                                </div>
+                                                <div style="display:none">
+                                                    <input type="text" id="SavedReturnNo" class="form-control">
+                                                    <input type="text" id="CurrentReturnNo" class="form-control AvoidClear">
+                                                </div>
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Return Date</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control" id="ReturnDate" /> 
+                                            </td>
+
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Job Code</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control atfcs" id="JobCode" onfocus="LoadJob('JobCode')" />
+                                            </td>
+                                            <td class="col-md-1 ">
+                                                <label style="font-weight:bold">Cost Code</label>
+                                            </td>
+                                            <td class="col-md-2 htdright">
+                                                <input type="text" class="form-control" id="CostCodeId" style="display:none" /> 
+                                                <input type="text" class="form-control atfcs" id="CostCode" onfocus="LoadCostCode('CostCode', 0)" /> 
+
+                                                @*<select type="text" class="form-control" id="CostCode" onchange="$('#PCostCode0').val($('#CostCode').val())"></select>*@
+                                            </td>
+                                        </tr>
+
+                                        <tr class="row htdtop" style="">
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">From</label>
+                                            </td>
+                                            <td class="col-md-5 input-group" colspan="3">
+                                                <input type="text" id="CreditAcc" class="form-control atfcs" onfocus="LoadAccount('CreditAcc')" style="width:37%;">
+                                                <input type="text" id="CreditAccDesc" class="form-control input-append atfcs" style="width:63%" onkeydown="Focusinput('Product0', event, 'CreditAccDesc')">
+                                            </td>
+                                            <td class="col-md-1" rowspan="2">
+                                                <label style="font-weight:bold">Comments</label>
+                                            </td>
+                                            <td class="col-md-5 htdright" rowspan="2">
+                                                <textarea class="form-control" id="Comments" rows="2" style="resize:none;height:140%"></textarea>
+                                            </td>                                        
+                                        </tr>
+                                        <tr class="row mgtp" >
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">To</label> 
+                                            </td>
+                                            <td class="col-md-5 input-group">
+                                                <input type="text" id="DebitAcc" class="form-control atfcs" onfocus="LoadAccount('DebitAcc')" style="width:37%">
+                                                <input type="text" id="DebitAccDesc" class="form-control input-append atfcs" style="width:63%" onkeydown="Focusinput('Product0', event, 'DebitAccDesc')">
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                    <hr style="margin-top:.3%" />
+
+                                    <div class="px-3" style="margin-top:-1%;overflow:auto">
+                                        <table style="" class="Adddets">
+                                            <tr>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Product</label>
+                                                </td>                                          
+                                                <td width="20%">
+                                                    <label style="font-weight:bold">Description</label>
+                                                </td>
+                                                <td width="9%">
+                                                    <label style="font-weight:bold">Unit</label>
+                                                </td>
+                                                <td width="9%">
+                                                    <label style="font-weight:bold">Location</label>
+                                                </td>
+                                                <td width="9%">
+                                                    <label style="font-weight:bold">Quantity</label>
+                                                </td>
+                                                <td width="9%">
+                                                    <label style="font-weight:bold">Price</label>
+                                                </td>
+                                                <td width="9%">
+                                                    <label style="font-weight:bold">Total</label>
+                                                </td>
+                                                <td width="9%">
+                                                    <label style="font-weight:bold">CostCode</label>
+                                                </td>                                               
+                                                <td width="5%" valign="middle">
+                                                   
+                                                </td>                                           
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" id="Product0" class="form-control atfcs Addchk" onfocus="LoadProduct('Product0',event)">  
+                                                    <input type="text" id="ProductId0" class="form-control Addchk" style="display:none"> 
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="PDescr0" class="form-control Addchk tdes" >
+                                                </td>
+                                                <td>
+                                                    <select type="text" id="PUnit0" class="form-control Addchksl"></select> 
+                                                </td>
+                                                <td>
+                                                    <select type="text" id="PLoc0" class="form-control Addchksl"></select> 
+                                                </td>
+                                                <td >
+                                                    <input type="text" id="PQty0" class="form-control Addchk" onkeypress="isNumberInt(event, this)" onkeyup="RowAmountCalculation(0,0)"> 
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="PPrice0" class="form-control Addchk" onkeypress="isNumber(event,this)" onkeyup="RowAmountCalculation(0,0)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="PAmount0" class="form-control Addchk  EnbTxt" disabled="">
+                                                </td>
+                                                <td>
+                                                    @*<select type="text" class="form-control Addchksl" id="PCostCode0"></select>*@    
+                                                    <input type="text" class="form-control atfcs Addchk" id="PCostCode0" onfocus="LoadCostCode('PCostCode', 0)" />   
+                                                    <input type="text" class="form-control Addchk" id="PCostCodeId0" style="display:none" />                                                 
+                                                </td>
+                                                <td class="pt-1">
+                                                    <button type="button" class="btn btn-outline-primary " id="AddChequ" onclick="Itemaddconfirm(0)"  onkeydown="Focusbtn('AutoChequ',event,'AddChequ')">ADD <i class="fa fa-plus"></i></button>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+                                    </div>
+                                  
+                                    <div class="px-2">
+                                        <div id="customView" class="jsgrid" style="position: relative; height: auto; width: 100%; border:solid 1px;border-color:#e9e9e9;overflow-x: auto;overflow-y: hidden;margin-bottom:-10px;">
+                                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width: 100%;">
+                                                <table class="jsgrid-table" id="tblsalesinvoiceheader">
+                                                    <tr class="jsgrid-header-row">
+                                                        <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:3%"><i class="icon-trash"></i></th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:3%">No</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:12%">Product</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:25%">Description</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:6%">Unit</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:8%">Location</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:6%">Qty.</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:6%">Price</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:8%">Amount</th> 
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:8%">CostCode</th>    
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div id="proddiv" class="" style="position: relative; overflow-x: hidden;overflow-y: scroll; height:280px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                                <table class="jsgrid-table" id="TblMaterialReturn"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions row px-3">
+                                        <div class="col-md-3 row">                                          
+                                            <div class="col-md-12">
+                                                <table class="headertable" id="" style="background-color:white;width:100%;">
+                                                    <tr>
+                                                        <td class="text-center" width="50%" style="border-left:1px solid #BABFC7;"><b>Total Qty.</b></td>
+                                                        <td class="text-center" width="50%" style="border-left:1px solid #BABFC7;"><b>Total Amount</b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                            <label style="font-weight:bold;"><span id="TotalQty"></span></label>
+                                                        </td>                                                       
+                                                        <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                            <label style="font-weight:bold;"><span id="TotalAmt"></span></label>
+                                                        </td>
+
+                                                    </tr>
+
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-9 text-right">
+                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:100px" id="btncopy" onclick="Clear(1)" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:100px" id="btnnew" onclick="Clear(0)" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btnedit" onclick="$('#otptype').val(1), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-secondary btn-min-width mr-1 mb-1">Edit<i class="fa ft-edit"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btnupdate" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btndelete" onclick="$('#otptype').val(0), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-danger btn-min-width mr-1 mb-1">Delete<i class="fa fa-times"></i></button>                                         
+                                            <button style="display:none;width:120px" type="button" id="btnprint1" onclick="confirmprint()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                            <button type="button" class="btn btn-primary btn-min-width mr-1 mb-1"  onclick="Clear(2)">View <i class="ft-eye"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none">
+
+    <input type="text" id="CreditAccId" class="form-control AvoidClear" value="1">
+    <input type="text" id="DebitAccId" class="form-control AvoidClear" value="1"> 
+    <input type="text" id="JobCodeId" class="form-control">
+
+</div>
+
+
+<div style="display:none">
+    <input type="text" id="EditingRow" class="form-control" value="0" />
+   
+</div>
+
+
+<div id="Loadingsave" class="overlay1" style="background: none;display: none;">
+    <div style="">
+        <img src="/app-assets/img/Loading_1.gif">
+    </div>
+</div>
+
+<div id="itempopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="top:5%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">              
+               
+                <div class="col-md-2">
+                    <input type="text" id="FromDate" class="form-control ITMP1 EnbTxt AvoidClear atfcs" onkeydown="Focusinput('ToDate', event, 'FromDate')"> 
+                </div>
+                <div style="margin-top:.5%">
+                    -
+                </div>
+               
+                <div class="col-md-2">
+                    <input type="text" id="ToDate" class="form-control ITMP1 EnbTxt AvoidClear atfcs" onkeydown="Focusinput('Department', event, 'ToDate')">
+
+                </div>
+                <div class="col-md-1 white" style="margin-top:.5%">
+                   Department
+                </div>
+                <div class="col-md-2">
+                    <select id="Department" class="form-control ITMPS1 EnbTxt atfcs "  onkeydown="Focusinput('btnad', event, 'Department')"></select>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" id="btnad" onclick="Prodpopshow(0)" class="btn btn-warning" style="" onkeydown="Focusbtn('Department', event, 'btnad')">GO</button>    
+                </div>
+                
+               
+                <button type="button" class="close" onclick="Prodpopshow(4)" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="GoldItemDiv">
+                <div class="modal-body">
+                  
+                    <br />
+                    <div class="px-2">
+                        <div id="" class="jsgrid" style="position: relative; height: 500px; width: 100%;margin-top:-10px;overflow-x: auto;overflow-y: hidden;margin-bottom:-10px;">
+                          <table class="table table-responsive-md-md text-center table-striped table-bordered zero-configuration dataTable" id="TblView" style="font-weight:400"></table>
+                        </div>
+                    </div>
+                   
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="productpdiv" style="display:none;border-radius: 25px;">
+    <div id="toast-containerinfo" class="toast-container toast-top-half-width" style="position:absolute; top:0; right:0%;opacity:100">
+        <div class="toast-primary" style="height:180px;margin-top:60px;font-weight:500;text-align:center;opacity:100;width:100%" id="infomessage">
+            <button type="button" class="close" onclick="productpopuprefresh()" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <section id="productdiv" style="display:none;height:25%;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <input type="hidden" id="LPCost" value="0" />
+                            <input type="hidden" id="AvgCost" value="0" />
+                            <input type="hidden" id="Sumtotqty" value="0" />
+                            <input type="hidden" id="LastSellingPrice" value="0" />
+                            <div class="card-block" style="height:115px;width:100%;">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="OTPDiv" class="modal fade text-left show ImpDiv" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="txtotp" class="form-control" autocomplete="off" onkeydown="Focusinput('otpremarks', event, 'txtotp')">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off" onkeydown="Focusinput('btnotpsave', event, 'otpremarks')">
+                        </div>
+                    </div>
+                    <div style="display:none">
+                        <input type="text" class="form-control" id="otptype" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btnotpcancel" onclick="$('#OTPDiv').hide(),$('#txtotp,#otpremarks').val('')" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px" id="btnotpsave" onclick="CheckEditandDeleteInvoce($('#otptype').val())" class="btn btn-outline-warning">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Jobpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="top:15%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="">JOB DETAILS</h3>
+                <button type="button" class="close" onclick="Prodpopshow(2)" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form >
+                <div class="modal-body">
+                    <div class="px-3">
+                        <table style="" class="Adddets" width="100%">
+                            <tr>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Job</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Description</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Unit</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Qty.</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Rate</label>
+                                </td>                               
+                                <td width="12%">
+                                    <label style="font-weight:bold">Amount</label>
+                                </td>
+                                <td width="4%"></td>
+                                <td width="4%"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" id="JobCodePop" class="form-control ITMP" onfocus="LoadAccount('A')">
+                                </td>
+                                <td>
+                                    <input type="text" id="JobDesc" class="form-control ITMP">
+                                </td>
+                                <td>
+                                    <select id="JobUnit" class="form-control ITMPS">
+                                       
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" id="JobQty" class="form-control ITMP" onkeypress="isNumberInt(event, this)" onkeyup="RowAmountCalculation(0,1)">
+                                </td>
+                                <td>
+                                    <input type="text" id="JobRate" class="form-control ITMP" onkeypress="isNumber(event,this)" onkeyup="RowAmountCalculation(0,1)">
+                                </td>                               
+                                <td>
+                                    <input type="text" id="JobAmount" class="form-control ITMP EnbTxt" disabled="">
+                                </td>
+                                <td>
+                                    <button type="button" id="btnaddjob" onclick="Prodpopshow(3)" class="btn btn-outline-primary"  onkeydown="Focusbtn('', event, 'btnaddjob')">ADD</button>
+                                </td>
+                                <td>
+                                    <button type="button" id="btnclrjob" onclick="Prodpopshow(5)" class="btn btn-outline-primary" onkeydown="Focusbtn('', event, 'btnclrjob')">Clear</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>                  
+
+                    <div class="form-actions text-right row">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

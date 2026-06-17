@@ -1,0 +1,524 @@
+﻿
+@{
+    ViewBag.Title = "LocationTransfer";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    
+    #slidedec {
+        display: none;
+    }
+
+</style>
+<div class="myData" data-x="M110" />
+<div id="Entry">
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">               
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0">LOCATION TRANSFER</h4>
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div style="height:15px;"></div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Transfer Date<span class="danger">*</span></label>
+                                                <div class="form-group">
+                                                    <input type="text" id="txtdate" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Chasis Number<span class="danger">*</span></label>
+                                                <div class="form-group ">
+                                                    <input type="text" id="Chasisnumber" onkeyup="changetoupper(this.id),empty()" class="form-control" autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" value="0" id="hiddenItemId" class="form-control" autocomplete="off">
+                                        <input type="hidden" id="ProductLength"> 
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                
+                                                <div class="form-group" id="slidedec">
+                                                    <input type="text" style="background-color:white;border:hidden;font-weight:700;width:100%" id="description" autocomplete="off" disabled >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Load From<span class="danger">*</span></label>
+                                                <div class="form-group">
+                                                    <select id="Location" class="form-control" aria-describedby="addsbloc" onchange="LocationChange()">
+                                                        <option value="0">
+                                                            ---Select Location---
+                                                        </option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>UnLoad To<span class="danger">*</span></label>
+                                                <div class="form-group">
+                                                    <select id="Location1" class="form-control" aria-describedby="addsbload" onchange="LocationChange()">
+                                                        <option value="0">
+                                                            ---Select Location---
+                                                        </option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="row">
+                                            <div class="col-md-3">
+                                                <label>Key Available<span class="danger">*</span></label>
+                                                <div class="form-group">
+                                                    <select id="Available" class="form-control" aria-describedby="addsbload">
+                                                        <option value="0">Select</option>
+                                                        <option value="Yes">Yes</option>
+                                                        <option value="No">No</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>*@                
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Remarks</label>
+                                                <div class="form-group ">
+                                                    <input type="text" id="Remarks" class="form-control" autocomplete="off">
+                                                </div>
+                                            </div>
+                                            </div>
+                                                                 
+                                        </div>
+                                    <label>Key Available<span class="danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+                                            <label class="custom-control-label" for="customRadioInline1">Yes</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+                                            <label class="custom-control-label" for="customRadioInline2">No</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions row ">
+                                        <div class="text-left col-md-6">
+                                       <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                      <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                            @*<button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>*@
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display:none;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title"> LOCATION TRANSFER</h4></td>
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div class="btn-group">
+                                            <button type="button" onclick="closetable(1)" class="btn btn-outline-primary"><i class="ft-edit"></i> Add New</button>
+                                            <button type="button" class="btn btn-outline-primary"><i class="ft-edit"></i> Export</button>
+                                            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">Excel</a>
+                                                <a class="dropdown-item" href="#">PDF</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Print</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card-content collapse show" style="overflow:auto;">
+                        <div class="card-body card-dashboard">
+                            <table id="tblLocationTransferTransport" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none"><input type="text" value="0" id="LocTransId" /></div>
+
+
+
+
+
+
+
+<script>
+    var Dept = ERPDeptId;
+   
+    $(document).ready(function () {
+        Defaultfocus();
+        LoadFrom(0);
+        $("#btnsubmit").click(function (e) {
+            SaveAndUpdate(1)            
+        });
+        $('#txtdate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#Chasisnumber").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                         
+            if (key!=13) {             
+                LoadFrom(0);
+                $('#description').hide();
+                $('#slidedec').hide();
+                $('#description').val('');
+                $('#Location').val('0');
+                $('#Location1').val('0');
+                $('#hiddenItemId').val(0);
+            }
+            else
+                $('#Location').focus();
+              
+        });
+       
+    });
+   
+
+    function Defaultfocus() {
+        $('#Chasisnumber').focus(); 
+    }
+
+    function LoadFrom(LocationId) {       
+        var data = {};
+        data.LocationId = LocationId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                if (LocationId == 0)                    
+                LocationLoad(result.oList);             
+            }
+        });
+
+    }
+    function LocationLoad(result) {
+        $("#Location,#Location1").empty();
+        $("#Location,#Location1").append("<option value='0'>Select Location</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Location,#Location1").append("<option value='" + result[i].LocationId + "'>" + result[i].LocationName + "</option>");
+        }
+    }
+    function ItemLocationLoad(result,locid) { 
+        $("#Location").empty();
+        $("#Location").append("<option value='0'>Select Location</option>"); 
+        for (var i = 0; i < result.length; i++) {
+            $("#Location").append("<option value='" + result[i].LocId + "'>" + result[i].LocationName + "</option>");
+        }
+        $("#Location").val(locid);
+    }
+    function LocationChange()
+    {
+        
+        if (( $("#Location1").val()!=0)&&($('#Location1').val() == ($('#Location').val()))) {
+            warningshow('From Location and To Location Cannot be same', 'Location1');
+            $("#Location1").val(0); 
+            return false;
+        }       
+    }
+    $("#Chasisnumber").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#Chasisnumber").val();
+
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                  
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '02',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            ItemCode: item.ItemCode,
+                            Description: item.Description,
+                            ProductId: item.ItemId,
+                            headers: ["Item Code", "Description",]
+                        })
+                    }));
+                }
+
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            console.log('a')
+            $('#Chasisnumber').val(ui.item.ItemCode);
+            $('#hiddenItemId').val(ui.item.ProductId);
+            $('#description').val(ui.item.Description);
+            $('#ProductLength').val((ui.item.ItemCode).length);
+            $("#slidedec").slideToggle("fast");
+            $('#description').show();
+            Itemlocation(ui.item.ProductId,0);
+        },
+    });
+
+
+    function Itemlocation(ProductId,locid)  
+    {
+        var data = {};
+        data.ItemId = ProductId;
+        data.DeptId = Dept;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/ItemLocationGetandGets",
+            data: data,
+            success: function (result) {
+                ItemLocationLoad(result.oList, locid); 
+            }
+        });
+    }
+   
+    function formrefresh() {
+        $('#Chasisnumber').val('');
+        $('#description').val('');
+        $('#Location').val('0');
+        $('#Location1').val('0');
+        $('#hiddenItemId').val(0);
+        $('#ProductLength').val('');
+        $('#Chasisnumber').focus();       
+        $('#btndelete').hide();
+        $('#LocTransId').val(0);
+        $('#Remarks').val('');
+        $('#Available').val(0);
+        $('#header1').text('(Yes)')
+        $('#header1').css('color', 'Green');       
+        LoadFrom(0);
+        $('#description').hide();
+        $('#slidedec').hide();
+        $('#txtdate').val(CurDate);
+        checkflag = 1;
+        $('#customRadioInline1').prop("checked", false);
+        $('#customRadioInline2').prop("checked", false);
+        
+    }
+    
+    var checkflag = 1;
+    function SaveAndUpdate(Flag) {
+
+        var s = 0;
+        if ($('#customRadioInline1').prop("checked"))
+            s = "Yes"
+        else if ($('#customRadioInline2').prop("checked"))
+            s = "No"
+
+
+        if ($('#hiddenItemId').val() == 0) {
+            warningshow('Please Enter Valid Chasis Number', 'Chasisnumber');
+            $('#Chasisnumber').select();
+        }
+        else if ($('#Chasisnumber').val() == "") {
+            warningshow('Please Enter Chasis Number', 'Chasisnumber');
+        }       
+        else if ($('#Location').val() == 0) {
+            warningshow('Please Enter Load From', 'Location');
+        }
+        else if ($('#Location1').val() == 0) {
+            warningshow('Please Enter Unload To', 'Location1');
+        }
+        else if (s == 0) {
+            warningshow('Please Select Key Availability', 'customRadioInline1');
+        }
+        else {
+            $('#btnsubmit').prop("disabled", true);
+            var data = {};   //array
+            data.ItemId = $('#hiddenItemId').val();
+            data.LocTransId = $('#LocTransId').val();
+            data.LoadFrom = $('#Location').val();
+            data.LoadTo = $('#Location1').val();
+            data.ItemKey = s;
+            data.DelFlag = Flag;
+            data.Flag = 1;
+            data.UserId = ERPUserId;
+            data.DeptId = ERPDeptId;
+            data.Remarks = $('#Remarks').val();
+            data.CheckFlag = checkflag;
+            data.TransferDate = $('#txtdate').val();
+            $.ajax({
+                type: "POST",
+                url: "../LocationTransfer/LocationTransferInsertandUpdate",
+                data: data,
+                success: function (result) {                 
+                        var status = result.oList[0].Status;
+                        $('#btnsubmit').prop("disabled", false);
+                        if (status == 0)
+                        {
+                            showwarning()
+                        }
+                        else
+                        {
+                            Showalerts(status);
+                        }                                           
+                }
+            });
+
+        }
+
+
+    }
+    function showwarning()
+    {
+        $('#confirm').show();
+        $('#confirmOk').focus();
+        $('#confirmmessage').text('Already Transferd.Do You Want To Continue?');
+        $('#confirmCancel').text('No');
+        $('#confirmOk').text('Yes');
+        $('#Confirmflag').val('add'); $('#ConfirmRowId').val(RowId);
+    }
+
+    function ConfirmboxResult(Result, status, rowid) {
+        if (Result == 'false' && status == 'add') {
+            focusloc();
+        }
+        if (Result == 'true' && status == 'add') {
+            checkflag = 0;
+            SaveAndUpdate(1);
+        }
+        $('#confirm').fadeOut();
+    }
+    function focusloc()
+    {
+        $('#Location1').val('0');
+        $('#Location').val('0');
+        $('#Chasisnumber').val('');
+        $('#description').val('');
+        $('#description').hide();
+        $('#slidedec').hide();
+        
+    }
+    function closetable(value) {
+        $('#Entry').show();
+        $('#listing').hide();
+        if (value == 1)
+            formrefresh();
+    }
+
+    function ShowLocationTransferlist(result) {
+        disable_datatable('tblLocationTransferTransport');
+        $('#Entry').hide();
+        $('#listing').show();
+        var responseText = "<thead><tr><th width=15px>Slno</th><th>Chasis Number</th><th>Description</th><th>Load From</th><th>Unload To</th><th>Key</th><th>User</th><th>Remarks</th><th>Date</th><th width=15px>Edit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td>' + slno + '</td><td>' + result[i].ChasisNumber + '</td><td>' + result[i].Description + '</td><td>' + result[i].LoadFrom + '</td><td>' + result[i].LoadTo + '</td><td>' + result[i].ItemKey + '</td><td>' + result[i].UserName + '</td><td>' + result[i].Remarks + '</td><td>' + result[i].TransferDate + '</td><td align=center><a onclick="GetRows(' + result[i].LocTransId + ')">' + Editbutton + '</a></td></tr>';
+        }
+        $('#tblLocationTransferTransport').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>ChasisNumber</th><th>Description</th><th>LoadFrom</th><th>UnloadTo</th><th>Key</th><th>User</th><th>Remarks</th><th> </th><th>Edit</th></tr></tfoot>');
+        datatableWithsearch('tblLocationTransferTransport');
+    }
+
+    function ShowLocationTransferGet(result) {
+
+        Itemlocation(result[0].ItemId, result[0].FromLoad);
+        
+        $('#customRadioInline1').prop("checked", false);
+        $('#customRadioInline2').prop("checked", false);
+
+        for (var i = 0; i < result.length; i++) {                     
+            $('#LocTransId').val(result[i].LocTransId); 
+            $('#Chasisnumber').val(result[i].ChasisNumber);
+            $('#description').val(result[i].Description); 
+           // $('#Location').val(result[i].FromLoad);
+            $('#Location1').val(result[i].ToLoad);  
+            $('#Available').val(result[i].ItemKey);
+            //$('#hiddenItemId').val(result[i].ItemId); 
+            $('#Remarks').val(result[i].Remarks);
+            $('#txtdate').val(result[i].TransferDate);
+
+            if ((result[i].ItemKey = "Yes"))
+                $('#customRadioInline1').prop("checked", true);
+            else if ((result[i].ItemKey = "No"))
+                $('#customRadioInline2').prop("checked", true);
+
+
+            $('#Chasisnumber').focus();
+            $('#description').show();          
+        }
+
+      //  $('#Location').val(result[0].FromLoad);
+        $('#Entry').show();
+        $('#listing').hide();
+        $('#btndelete').show();
+        $("#slidedec").show();
+        
+    }
+
+
+
+    function GetRows(LocTransId) {
+        $('#LocTransId').val(LocTransId)
+        var data = {};
+        data.LocTransId = LocTransId;
+        $.ajax({
+            type: "POST",
+            url: "../LocationTransfer/LocationTransferGetandGets",
+            data: data,
+            success: function (result) {
+                if (LocTransId == 0)
+                    ShowLocationTransferlist(result.oList);
+                else
+                    ShowLocationTransferGet(result.oList);
+
+            }
+        });
+
+    }
+
+
+
+
+   
+    
+</script>

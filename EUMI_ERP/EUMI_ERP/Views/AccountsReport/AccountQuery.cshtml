@@ -1,0 +1,355 @@
+﻿
+@{
+    ViewBag.Title = "AccountQuery";
+}
+
+
+
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<style>
+     #Tblreport tr:hover {
+            background-color: cyan;
+        }
+     .abc{
+         background-color: orange;
+     }
+   
+</style>
+
+<div class="myData" data-x="M188" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="36%"></td>
+                                <td>
+                                    <div class="btn-group" style="margin-left:50%">
+                                        <button class="btn btn-warning" style="width:150px" id="btnInv" onclick="getInvoice( $('#accountid').val(),$('#acccode').val(),$('#accdesc').val(),$('#custtype').val(),$('#custid').val())" type="button">Invoice</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" style="margin-left:40%">
+                                        <button class="btn btn-primary" id="btnStatement" onclick="getstatement( $('#accountid').val(),$('#acccode').val())" type="button">Account Statement</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group" style="margin-left:30%">
+                                        <button class="btn btn-primary" id="btnOutStatement" onclick="getoutstatement( $('#accountid').val(),$('#acccode').val())" type="button">Outstanding Statement</button>
+                                    </div>
+                                </td>
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+                            <div class="heading-elements">
+
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:.1%;" />
+
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                                <input type="text" id="accountid" style="display:none"/>
+                                <input type="text" id="acccode" style="display:none" />
+                                <input type="text" id="custtype" style="display:none" />
+                                <input type="text" id="accdesc" style="display:none" />
+                                <input type="text" id="custid" style="display:none" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function getid(accountid, custid,acccode, custtype)
+    {
+        if (custtype == 'C')
+        {
+            $('#btnInv').text('Make Sales')
+            $('#btnInv').css('background-color', '#ccffdd');
+            $("#btnInv").css("border-color", "#ccffdd");
+        }
+        else if (custtype == 'S')
+        {
+            $('#btnInv').text('Make Purchase')
+            $('#btnInv').css('background-color', '#ffb3b3');
+            $("#btnInv").css("border-color", "#ffb3b3");
+        }
+        else
+        {
+            $('#btnInv').text('Invoice')
+            $('#btnInv').css('background-color', 'orange');
+            $("#btnInv").css("border-color", "orange");
+        }
+        $('#accountid').val(accountid);
+        $('#acccode').val(acccode);
+        $('#custtype').val(custtype);
+        $('#accdesc').val($('#Desc' + accountid).text());
+        $('#custid').val(custid);
+
+    }
+
+    function Showreport(result) {
+        console.log(result)
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th>Sl#</th><th>Account Code</th><th>Account Description</th><th>Balance</th><th>Credit Limit</th><th>Opening Balance</th><th>Address</th><th>Phone#</th><th>Email</th><th>Salesman</th><th>Contact Name</th><th>DueDays</th><th>Fx.</th><th>Area</th><th>Status</th><th>Created Date</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr  id="mltplerow_' + slno + '"  onclick=rowbgcolor(' + slno + '),getid(' + result[i].AccId + ',' + result[i].CustId + ',"' + result[i].AccountCode + '","' + result[i].CustType + '")>' +
+                '<td align=center>' +
+
+                '<input type="text" style="display:none;" id="aqaccid_' + slno + '" value="' + result[i].AccId + '" />' +
+                '<input type="text" style="display:none;" id="aqcustid_' + slno + '" value="' + result[i].CustId + '" />' +
+                '<input type="text" style="display:none;" id="aqacccode_' + slno + '" value="' + result[i].AccountCode + '" />' +
+                '<input type="text" style="display:none;" id="aqcusttype_' + slno + '" value="' + result[i].CustType + '" />'
+
+                + slno + '</td>' +
+
+
+                '<td>' + result[i].AccountCode + '</td><td id=' + "Desc" + result[i].AccId + '>' + result[i].AccDesc + '</td><td align=right>' + parseFloat(result[i].Balance).toFixed(Decimal) + '</td><td align=right>' + parseFloat(result[i].CreditLimit).toFixed(Decimal) + '</td><td align=right>' + parseFloat(result[i].OpenBal).toFixed(Decimal) + '</td><td>' + result[i].Address + '</td><td>' + result[i].PhoneNum + '</td><td>' + result[i].Email + '</td><td>' + result[i].SalesMan + '</td><td>' + result[i].ContactName + '</td><td>' + result[i].DueDays + '</td><td>' + result[i].Currency + '</td><td>' + result[i].Area + '</td><td>' + result[i].Status + '</td><td>' + result[i].CreatedDate + '</td></tr>';
+
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Account Code</th><th>Account Description</th><th> </th><th> </th><th> </th><th>Address</th><th>Phone#</th><th>Email</th><th>Salesman</th><th>Contact Name</th><th>DueDays</th><th>Fx.</th><th>Area</th><th>Status</th><th>Created Date</th></tr> </tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Account Query";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+
+    function rowbgcolor(Id) {
+        var a;
+        try {
+            a = $('#Tblreport > tbody > tr:last-child()').attr('id').match(/\d+/)[0];
+        }
+        catch (err) {
+            a = 1;
+        }
+        for (var c = 1; c <= a; c++) {
+            $('#mltplerow_' + c).css('background-color', '');
+            $('#mltplerow_' + c).css('font-weight', '');
+        }
+        if (Id != 0) {
+            $('#mltplerow_' + Id).css('background-color', '#9fdfbf');
+            $('#mltplerow_' + Id).css('font-weight', 'bold');
+        }
+    }
+
+
+    function getstatement(AccId, AccountCode) {
+        if (AccId != '') {
+            window.open('../AccountsReport/AccountStatement?AccId=' + AccId + '&AccountCode=' + AccountCode);
+        }
+    }
+    function getoutstatement(AccId, AccountCode) {
+        if (AccId != '') {
+            window.open('../AccountsReport/OutstandingStatement?AccId=' + AccId + '&AccountCode=' + AccountCode);
+        }
+    }
+    function getInvoice(AccId, AccountCode,AccDesc, CustType, CustId) {
+        if (CustType == 'C')
+        {
+            
+            if ((usermenu1.indexOf("M54") != -1)) {
+                window.open('../Inventory/SalesInvoice?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+
+            }
+            else if ((usermenu1.indexOf("M227") != -1)) {
+                window.open('../Inventory/SalesInvoiceNew?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+         
+        }
+        else if(CustType == 'S')
+        {
+            if ((usermenu1.indexOf("M31") != -1)) {
+                window.open('../inventory/PurchaseInvoice?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+
+            }
+            else if ((usermenu1.indexOf("M233") != -1)) {
+                window.open('../Purchase/PurchaseInvoiceNew?AccId=' + AccId + '&AccountCode=' + AccountCode + '&AccDesc=' + AccDesc + '&CustType=' + CustType + '&CustId=' + CustId);
+            }
+            else {
+                warningshow('Invalid User Rights');
+                return false;
+            }
+
+        }
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    $(function () {
+                $('#Loading').show();
+
+                var data = {};
+                $.ajax({
+                    type: "POST",
+                    url: "../AccountsReport/AccountQuery",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        Showreport(result);
+                    }
+                });
+    });
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width=100%" />');
+
+            if (title == 'Account Code')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Account Description')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:400px" />');
+            if (title == 'Phone#')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Email')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:150px" />');
+            if (title == 'Contact Name')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Status')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Fx.')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Area')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            if (title == 'Created Date')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:150px" />');
+            if (title == 'Address')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:250px" />');
+            if (title == 'DueDays')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                // dom: 'Bfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+            $('input[type="search"]').on('keyup change', function () {
+                                   
+                    table.rows('.selected').deselect();
+                    table.row(':eq(0)', { page: 'current' }).select();
+
+                    var CurrentRow = document.getElementsByClassName('selected')[0].id
+                    var FindCurrentId = CurrentRow.split('_')
+                    console.log(FindCurrentId[1])
+                    console.log($('#aqaccid_' + FindCurrentId[1]).val());
+                    getid($("#aqaccid_" + FindCurrentId[1]).val(), $("#aqcustid_" + FindCurrentId[1]).val(), $("#aqacccode_" + FindCurrentId[1]).val(), $("#aqcusttype_" + FindCurrentId[1]).val())
+
+                    //$('#accountid').val();
+                    //$('#acccode').val();
+                    ////$('#accdesc').val($("#aqaccid_"+FindCurrentId).val());
+                    //$('#custtype').val();
+                    //$('#custid').val();
+                
+            });
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+</script>
+
+
+

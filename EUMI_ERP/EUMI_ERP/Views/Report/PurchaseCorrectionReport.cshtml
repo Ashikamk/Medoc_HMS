@@ -1,0 +1,319 @@
+﻿
+@{
+    ViewBag.Title = "PurchaseCorrectionReport";
+}
+
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+    #btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnback:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnprint:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+
+<div class="myData" data-x="M374" />
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+
+
+                        <table width="130%">
+                            <tr width="130%">
+                                <td><h4 id="header"></h4></td>
+                                <td width="0%" ></td>
+                                <td align="right"><button type="button" style="width:100px;margin-left:40px" onclick="$('#popupdiv').show(), $('#User').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:10px;" id="btnprint" onclick="PrintthisReportWindows('LABBillREPORT', $('#LabBillLength').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+                                <td align="right">
+
+                                    <div class="btn-group" id="buttonPlace" style="margin-right:500px;">
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                        <div align="right">
+
+                            <div class="heading-elements">
+
+                                <div id="divreport" style="display:none; overflow:auto">
+                                    <hr style="margin-top:.1%;width:130%" />
+
+                                    <table id="Tblreport" class="table table-striped table-bordered dataTable" style="width:130%;margin: 0 auto 0 0;"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader" >Purchase Correction Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:11%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:4%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:6%" id="btnsubmit" class="btn btn-primary">Go</button>
+                    <input type="hidden" id="LabBillLength" class="form-control" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+
+    function Showreport(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th align= center>Sl#</th><th>Date</th><th>Product</th><th>Old Batch</th><th>New Batch</th><th>Old Quantity</th><th> New Quantity</th><th>Old Expiry</th><th>New Expiry</th><th> Old SellPrice</th><th> New SellPrice</th><th>Old MRP</th><th> New MRP</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr ><td align= center id = Col1_' + slno + '>' + slno + '</td><td id= Col5_' + slno + '>' + result[i].ShipDate + '</td><td id= Col5_' + slno + '>' + result[i].Variable1 + '</td><td  id= Col7_' + slno + '>' + result[i].PO_No + '</td><td id= Col2_' + slno + '>' + result[i].MRV_No + '</td><td id= Col4_' + slno + '>' + result[i].FCGST_5 + '</td><td id= Col4_' + slno + '>' + result[i].FCGST_0 + '</td><td id= Col3_' + slno + '>' + result[i].Variable2 + '</td><td id= Col4_' + slno + '>' + result[i].Expiry + '</td><td align= right id= Col10_' + slno + '>' + parseFloat(result[i].SellingRate).toFixed(Decimal) + '</td><td align= right id= Col10_' + slno + '>' + parseFloat(result[i].Margin).toFixed(Decimal) + '</td><td align=right id= Col9_' + slno + '>' + parseFloat(result[i].MRP).toFixed(Decimal) + '</td><td align = right  id= Col11_' + slno + '>' + parseFloat(result[i].BaseTotal).toFixed(Decimal) + '</td></tr>';
+
+        }
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th> </th><th> </th><th> </th><th> </th><th> </th><th></th><th></th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th></tr> </tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var title = "Purchase Correction Report - from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch2('Tblreport', true, title, 'buttonPlace');
+        $('#LabBillLength').val(result.length);
+        $('#header').text(title);
+
+    
+    }
+
+
+    $(function () {
+
+        $('#User').focus();
+        $('#Dept').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        $('#DateFrom,#DateTo').val(CurDate);
+
+        $("#btnsubmit").click(function (e) {
+
+
+            if ($('#DateFrom').val() == '') {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+
+            else {
+                $('#Loading').show();
+
+                var data = {};
+                data.FromDate = $('#DateFrom').val();
+                data.ToDate = $('#DateTo').val();
+                data.reasonid = parseInt($('#reasonid').val() || 0);
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/PurchaseCorrectionReport",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+                        Showreport(result);
+
+
+                    }
+                });
+            }
+        });
+
+    });
+
+
+    function datatableWithsearch2(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+
+        });
+        var table = null;
+        if (download) {
+
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+                "columnDefs": [
+                        { "width": "0%", "targets": 0 },
+                      { "width": "8%", "targets": 1 },
+                      { "width": "10%", "targets": 2 },
+                      { "width": "8%", "targets": 3 },
+                      { "width": "8%", "targets": 4 },
+                      { "width": "8%", "targets": 5 },
+                      { "width": "8%", "targets": 6 },
+                      { "width": "8%", "targets": 7 },
+                      { "width": "8%", "targets": 8 },
+                      { "width": "8%", "targets": 9 },
+                      { "width": "8%", "targets": 10 },
+                      { "width": "8%", "targets":11 },
+                      { "width": "8%", "targets": 12 },
+
+
+
+                ],
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12] }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12] }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12] }
+                        }
+                    ]
+                },
+                'colvis'
+                ],
+
+            });
+
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+
+
+        }
+        else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+    }
+
+</script>
+
+
+
+
+
+

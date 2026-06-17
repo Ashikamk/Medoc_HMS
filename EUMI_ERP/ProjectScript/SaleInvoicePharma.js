@@ -368,7 +368,7 @@ function DoctorLoad(ID) {
                     $("#HDoctor").val(ID);
                     $('#Doctorname').val($("#HDoctor option:selected").text());
                 }
-                initDoctorAutocomplete(); // add this at the end of your doctor load function
+                initDoctorAutocomplete(); 
             }
         }
     });

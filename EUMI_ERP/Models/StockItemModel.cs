@@ -14,8 +14,6 @@ namespace EUMI_ERP.Models
         public decimal? UnitVal { get; set; }
         public decimal? TaxVal { get; set; }
         public string Status { get; set; }
-
-        // for HMS_UnitGets
         public long UnitId { get; set; }
         public string UnitName { get; set; }
 

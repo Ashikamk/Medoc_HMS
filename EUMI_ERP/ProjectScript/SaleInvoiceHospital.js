@@ -1675,8 +1675,10 @@ function SalesGetandGets(result) {
 
 
 
+    //var Qr = result[0].Remarks.split("##");
+    //$("#custaddress1").val(Qr[1] + '##' + Qr[2] + '##' + Qr[3] + '##' + Qr[4])
     var Qr = result[0].Remarks.split("##");
-    $("#custaddress1").val(Qr[1] + '##' + Qr[2] + '##' + Qr[3] + '##' + Qr[4])
+    $("#custaddress1").val((Qr[1] || '') + '##' + (Qr[2] || '') + '##' + (Qr[3] || '') + '##' + (Qr[4] || ''))
     $('#Remarks').val(Qr[0]);
     /*    anu */
 

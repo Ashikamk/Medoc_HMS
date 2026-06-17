@@ -459,12 +459,13 @@ function IDPrintRegistration() {
                                                                 <input type="text" class="form-control frsdwn" id="Age" autocomplete="off" placeholder="YEAR" onkeypress="return isNumberInt(event, this)" onkeyup="CalcYear()">
                                                             </div>
 
-                                                            <div class="col-md-3">   
-                                                                <input type="text" class="form-control" style="margin-left:-10%" id="month" placeholder="MONTH" autocomplete="off" onkeypress="return isNumberInt(event, this)" onkeyup="CalcYear()">
+                                                            <div class="col-md-3">
+                                                                <input type="text" class="form-control" style="margin-left:-10%" id="Age1" placeholder="MONTH" autocomplete="off" onkeypress="return isNumberInt(event, this)" onkeyup="CalcYear()">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <input type="text" class="form-control" readonly id="Age2" style="width:135%;margin-left:-35%" placeholder="DAY" autocomplete="off">
+                                                                <input type="text" class="form-control"  id="Age2" style="width:135%;margin-left:-35%" placeholder="DAY" autocomplete="off" onkeypress="return isNumberInt(event, this)" onkeyup="CalcYear()">
                                                             </div>
+                                                      
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-md-4 label-control" for="userinput2">Mobile No.<span class="danger">*</span></label>
@@ -1049,31 +1050,68 @@ function IDPrintRegistration() {
     $('#RegSeries').change(function () { createQRCode(); generatebarcode(); })
     createQRCode();
 
+    //function CalcYear() {
+
+    //    var Age = parseInt($("#Age").val()) || 0;
+    //    var month = parseInt($("#Age1").val()) || 0;
+
+    //    if (month > 11) {
+    //        warningshow('Month cannot be greater than 11');
+    //        $("#Age1").val('');
+    //        $("#Age1").focus();
+    //        return;
+    //    }
+
+    //    var d = new Date();
+    //    d.setFullYear(d.getFullYear() - Age);
+    //    d.setMonth(d.getMonth() - month);
+
+    //    var Day = d.getDate();
+    //    if (Day < 10) { Day = '0' + Day; }
+
+    //    var Month = d.getMonth() + 1;
+    //    if (Month < 10) { Month = '0' + Month; }
+
+    //    var Year = d.getFullYear();
+
+    //    if (Month == 2 && Day == 29) { Day = 28 }
+
+    //    $("#PDOB").val(Day + '/' + Month + '/' + Year);
+    //}
+
     function CalcYear() {
 
-        var Age = parseInt($("#Age").val()) || 0;      
-        var month = parseInt($("#month").val()) || 0;
+        var Age = parseInt($("#Age").val()) || 0;
+        var month = parseInt($("#Age1").val()) || 0;
+        var day = parseInt($("#Age2").val()) || 0;
 
         if (month > 11) {
             warningshow('Month cannot be greater than 11');
-            $("#month").val('');
-            $("#month").focus();
+            $("#Age1").val('');
+            $("#Age1").focus();
+            return;
+        }
+
+        if (day > 31) {
+            warningshow('Day cannot be greater than 31');
+            $("#Age2").val('');
+            $("#Age2").focus();
             return;
         }
 
         var d = new Date();
+
         d.setFullYear(d.getFullYear() - Age);
         d.setMonth(d.getMonth() - month);
+        d.setDate(d.getDate() - day);
 
         var Day = d.getDate();
-        if (Day < 10) { Day = '0' + Day; }
+        if (Day < 10) Day = '0' + Day;
 
         var Month = d.getMonth() + 1;
-        if (Month < 10) { Month = '0' + Month; }
+        if (Month < 10) Month = '0' + Month;
 
         var Year = d.getFullYear();
-
-        if (Month == 2 && Day == 29) { Day = 28 }
 
         $("#PDOB").val(Day + '/' + Month + '/' + Year);
     }

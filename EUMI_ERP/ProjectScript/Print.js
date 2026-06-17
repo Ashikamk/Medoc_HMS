@@ -16,17 +16,16 @@
     var complaint = $('#Complaint').val();
     var diagnosis = $('#ICDDetails').val();
 
-    // FORMAT AGE
+
     var ageFormatted = patAge
         .replace(/(\d+)\s*Yrs?/i, '$1y')
         .replace(/(\d+)\s*Mths?/i, '$1m')
         .replace(/\s*\d+\s*Days?/i, '')
         .trim();
 
-    // FORMAT DATE
+
     var caseDateFormatted = caseDate ? caseDate.replace(/\//g, '-') : '';
 
-    // HEADER using ComapnyImage
     var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
     $(ComapnydivToPrintLab).css('height', 100);
     $(ComapnydivToPrintLab).css('width', 700);
@@ -34,7 +33,6 @@
         + ComapnydivToPrintLab.outerHTML
         + '</td></tr></table>';
 
-    // PATIENT SUMMARY box
     var patientSummaryHtml =
         '<table width="100%"><tr><td style="font-family:tahoma;font-size:13px;font-weight:normal;" align="center">PATIENT SUMMARY</td></tr></table>' +
         '<div style="border:1px solid black;border-top:1px solid black;border-radius:10px">' +
@@ -176,7 +174,7 @@
 
     myWindow.document.close();
 
-    // BUILD MEDICINE ROWS
+
     var hasMedicine = false;
     var rows = '';
 

@@ -13,6 +13,8 @@ namespace EUMI_ERP.DataLayer
     public class DHospital
     {
         private SqlParameter[] arlParms;
+
+    
         public DataSet HMS_PatientTestDetailsGet(LabBill LabBill, string dbName) 
         {
             try
@@ -1284,7 +1286,20 @@ public DataSet HMS_SalesInvoiceDeletestockout(SaleInvoiceHospital SaleInvoiceHos
                 return null;
             }
         }
+       
 
+        public DataSet GetPharmacyDashboardData(string dbName)
+        {
+            try
+            {
+                return SQLHelper.ExecuteDataset("GetPharmacyDashboardData", dbName, null);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
         public DataSet HMS_SalesReturnGetandGetsOpticals(SaleInvoiceHospital SaleInvoiceHospital, string dbName)
         {
             try

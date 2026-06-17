@@ -1,0 +1,843 @@
+﻿
+@{
+    ViewBag.Title = "Contract";
+}
+
+<script type="text/javascript" src="../Projectscript/Contract.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<script type="text/javascript" src="~/ProjectScript/DosPrint.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+
+<style>
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+    /*.form-control
+    {
+        font-weight:bold;
+    }*/
+
+    .htdleft {
+        padding-left: 2%;
+    }
+
+    .htdright {
+        padding-right: 2%;
+    }
+
+    .htdtop {
+        padding-top: .5%;
+    }
+
+    .htdbot {
+        padding-bottom: .5%;
+    }
+
+    .overlay1 {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 45%;
+        left: 50%;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    .modal-xl {
+        max-width: 100%;
+        margin-left: 10%;
+        margin-right: 3%;
+    }
+
+    .input-group-text {
+        cursor: pointer;
+        border-color: rgb(0, 142, 145) !important;
+        background-color: transparent;
+        color: rgb(0, 142, 145) !important;
+    }
+
+        .input-group-text:hover {
+            transform: scale(1.1);
+            transition: transform 0.1s;
+        }
+
+        .input-group-text:hover {
+            background-color: rgb(0, 142, 145) !important;
+            color: rgb(255, 255, 255) !important;
+        }
+
+    .botlbl {
+        margin-bottom: 0rem;
+    }
+    .Adddets .form-control{
+        width:90%;
+    }
+   .topcn{
+       margin-top:-5%;
+   }
+      .headertable tr {
+        border: 1px solid #BABFC7;
+        height: 30px;
+    }
+      .hidtd{
+          display:none;
+      }
+     #MultipleUpload.btn[class*="btn-"], #MultipleUpload.fc button[class*="btn-"] {
+     margin-bottom: 0rem !important; 
+}
+       .AutoBlue{
+        color:#0033cc;
+        font-weight:500;
+        text-align:center;
+    }
+    .AutoRed{
+        color:#ef1111;
+        font-weight:500;
+        text-align:center;
+    }     
+
+  #Uploadpopupdiv ::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#Uploadpopupdiv ::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#Uploadpopupdiv ::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
+}
+</style>
+
+<div class="myData" data-x="M273" />
+<div id="Entry" style="">
+
+    <section class="grid-row-label" >
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                  
+                    <div class="px-3">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h2 class="card-title mb-0 font-large-1" style="font-weight:bold;text-align:left;padding-top:20px">CONTRACT ENTRY</h2> 
+                            </div>
+                            <div class="col-md-2">
+                                <br />
+                                <kbd style="display:none;background-color:#009da0;font-weight:700" class="stdiv">Status &nbsp;: <span id="ConStatus"></span></kbd>  
+                            </div>
+                            <div class="col-md-6">
+                                <h2 style="font-weight:600;text-align:right;color:grey;padding-top:20px;">Rent Amount <i class="fa fa-money" style="font-size:34px;margin-top:2px"></i> <span style="font-weight:600;text-align:right;color:red;padding-top:20px;" id="TotalRent"></span></h2> 
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <div class="card-content collapse show">
+                        <div class="card-body" style="margin-top:-75px">
+
+                            <form action="#">
+
+                                <div class="form-body">
+                                    <hr style="margin-top:75px" />
+
+
+                                    <table class="hedrtbl" style="width:100%;background-color:#F0F6F6;margin-top:-1%">
+                                        <tr class="row htdtop">
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">CONT. No</label> 
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="ContractNo" class="form-control EnbTxt AvoidClear" disabled="">
+                                                <div id="CopyDiv" class="input-group" style="margin-bottom:0rem;display:none">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" onclick="GetPrevNextContNo(-1)"><b><i class="ft-chevron-left"></i></b></span>
+                                                    </div>
+                                                    <input type="text" id="ContractNoCopy" class="form-control EnbTxt AvoidClear atfcs" onfocus="SearchVocNo()"> 
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text" onclick="GetPrevNextContNo(1)"><b><i class="ft-chevron-right"></i></b></span> 
+                                                    </div>
+                                                </div>
+                                                <div style="display:none"> 
+                                                    <input type="text" id="SavedContNo" class="form-control">
+                                                    <input type="text" id="CurrentContNo" class="form-control AvoidClear">  
+                                                </div>
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Date</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control" id="ContDate"  />
+                                            </td>
+                                           
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Flat No.</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control atfcs" id="FlatNo" onfocus="LoadFlat()" /> 
+                                            </td> 
+                                            <td class="col-md-1 ">
+                                                <label style="font-weight:bold">D.E.W.A No</label>
+                                            </td>
+                                            <td class="col-md-2 htdright">
+                                                <input type="text" class="form-control" id="DEWANo"  />
+                                            </td>                                          
+                                        </tr>
+                                        <tr class="row htdtop">
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">Premise</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control atfcs" id="Premise" onfocus="LoadPremise()" />  
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Subject</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control" id="Subject" />                                             
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Rent</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control" id="Rent" onkeypress="isNumber(event,this)" onkeyup="RentLoad(0)" /> 
+                                              
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Deposit</label>
+                                            </td>
+                                            <td class="col-md-2 htdright">
+                                                <input type="text" id="Deposit" class="form-control" onkeypress="isNumber(event,this)" onkeyup="RentLoad(1)"> 
+                                                
+                                            </td>
+                                            
+                                        </tr>
+
+                                        <tr class="row htdtop">
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">Tenant</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" class="form-control atfcs" id="Tenant" onfocus="LoadTenant()" /> 
+                                            </td>
+                                            
+                                            <td class="col-md-2" style="display:none"> 
+                                                <label style="font-weight:bold">Document</label>
+                                                <div class="input-group">
+                                                    <select id="ContDocument" class="form-control"></select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-outline-primary" id="AddDoc"> <i class="fa fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Period</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <select id="ContPeriod" class="form-control atfcs" onchange="TermsType()" onkeydown="Focusinput('PaymentTerms', event, 'ContPeriod')">
+                                                    <option value="2"> 
+                                                        1 Year
+                                                    </option>
+                                                    <option value="4">
+                                                        Half Year
+                                                    </option>
+                                                    <option value="5">
+                                                        Quarter Year
+                                                    </option>
+                                                    <option value="1">
+                                                        Monthly
+                                                    </option>
+                                                    <option value="3">
+                                                        Others
+                                                    </option>
+                                                </select>
+                                                
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">From</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="FromPeriod" class="form-control" onchange="dateafteroneyear()"> 
+                                            </td>  
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">To</label>
+                                            </td>
+                                            <td class="col-md-2 htdright">
+                                                <input type="text" id="ToPeriod" class="form-control atfcs" onkeydown="Focusinput('', event, 'ToPeriod')">
+                                            </td>                                                                                 
+                                        </tr>
+                                        <tr class="row htdtop htdbot" style="">
+                                           
+                                            <td class="col-md-1 htdleft">
+                                                <label style="font-weight:bold">Installments</label>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="PaymentTerms" class="form-control atfcs" onkeypress="isNumberInt(event,this)" onkeydown="Focusinput('ContMode0', event, 'PaymentTerms')" onkeyup="CheckTerms(1)" onblur="CheckTerms(1)"> 
+                                                <input type="text" id="YearlyTerms" style="display:none" class="form-control atfcs" onkeypress="isNumberInt(event,this)" onkeydown="Focusinput('ContMode0', event, 'YearlyTerms')" onkeyup="CheckTerms(2)" onblur="CheckTerms(2)"> 
+                                                @*<select id="YearlyTerms" class="form-control atfcs" style="display:none" onkeydown="Focusinput('ContMode0', event, 'YearlyTerms')">   
+                                                    <option value="1">
+                                                        1 Year
+                                                    </option>
+                                                    <option value="2">
+                                                        Half Year
+                                                    </option>
+                                                    <option value="3">
+                                                        Quarter Year
+                                                    </option>
+                                                </select>*@
+                                            </td>
+                                            <td class="col-md-1">
+                                                <label style="font-weight:bold">Observations</label>
+                                            </td>
+                                            <td class="col-md-7">
+                                                <textarea class="form-control" id="Observations" rows="2" style="resize:none"></textarea>
+                                            </td>
+                                            <td class="col-md-1 htdright">
+                                                <button type="button" class="btn btn-warning" id="MultipleUpload" onclick="$('#Uploadpopupdiv').show()" style="">Upload <i class="fa fa-upload"></i></button>
+                                            </td>
+                                            @*<td>
+                                                <input type="file" id="selectedImage" style="height:50px" class="btn btn-lg gradient-back-to-earth font-small-2 white p-2 mr-2" autocomplete="off" >
+                                            </td>*@
+                                        </tr>
+                                      
+                                    </table>
+
+                                    <hr style="margin-top:.3%"/>
+
+                                    <div class="px-3" style="margin-top:-1%">
+                                        <table style="" class="Adddets">
+                                            <tr >
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Mode</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Cheque No</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Cheque Date</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Bank</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Branch</label>
+                                                </td>
+
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Amount</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Remarks</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Type</label>
+                                                </td>
+                                                <td width="10%">
+                                                    <label style="font-weight:bold">Account</label> 
+                                                </td>
+                                                <td width="5%" rowspan="2" valign="bottom"> 
+                                                    <button type="button" class="btn btn-outline-primary" id="AddChequ" onclick="Chequeaddconfirm(0)" style="margin-left:-1%" onkeydown="Focusbtn('AutoChequ',event,'AddChequ')">ADD <i class="fa fa-plus"></i></button>
+                                                </td>
+                                                <td width="5%" rowspan="2" valign="bottom">
+                                                  <button type="button" class="btn btn-outline-primary" id="AutoChequ" onclick="Chequeaddconfirm(1)" style="margin-left:-1%" onkeydown="Focusbtn('AddChequ',event,'AutoChequ')">AUTO <i class="fa fa-plus"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td >
+                                                    <select id="ContMode0" class="form-control Addchksl topcn cnmode" onchange="GetAcnt()"> 
+                                                        <option value="0">
+                                                            Cheque
+                                                        </option>
+                                                        <option value="1">
+                                                            Cash
+                                                        </option>
+                                                        <option value="2">
+                                                            Bank
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="ChequeNo0" class="form-control Addchk topcn" >
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="ChequeDate0" class="form-control Addchk topcn" >
+                                                </td>
+                                                <td class="row input-group pl-3" >        
+                                                                                              
+                                                  <select id="ContBank0" class="form-control Addchksl atfcs" onchange="GetBranch(0)" style="margin-top:6px;height:40px;width:70%" onkeydown="Focusinput('ContBranch0',event,'ContBank0')"></select>
+                                                 <button type="button" onclick="$('#popupdiv').show(),$('#NewBankCode').focus()" class="btn btn-outline-primary input-group-append" id="" style="margin-top:6px;border-top-left-radius:0px;border-bottom-left-radius:0px;width:30%"> <i class="fa fa-plus"></i></button>  
+                                                    
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="ContBranch0" class="form-control Addchk topcn" >
+                                                </td>
+
+                                                <td>
+                                                    <input type="text" id="Amount0" class="form-control Addchk topcn" onkeypress="isNumber(event,this)">
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="Remarks0" class="form-control Addchk topcn" >
+                                                </td>
+                                                <td>
+                                                    <select id="RentType0" class="form-control Addchksl topcn"> 
+                                                        <option value="1">
+                                                            Rent
+                                                        </option>
+                                                        <option value="2">
+                                                            SD
+                                                        </option>                                                       
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="Account0" class="form-control Addchk atfcs topcn" onfocus="LoadAccount(0)" > 
+                                                </td>
+                                               
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <br />
+                                    <div class="px-2">
+                                        <div id="customView" class="jsgrid" style="position: relative; height: auto; width: 100%; border:solid 1px;border-color:#e9e9e9;margin-top:-30px;overflow-x: auto;overflow-y: hidden;margin-bottom:-10px;">
+                                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width: 100%;">
+                                                <table class="jsgrid-table" id="tblsalesinvoiceheader">
+                                                    <tr class="jsgrid-header-row">
+                                                        <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:2%"><i class="icon-trash"></i></th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:2%">No</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:8%">Mode</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:6%">Cheque No.</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:6%">Cheque Date</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:8%">Bank</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:7%">Branch</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:6%">Amount</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:13%">Remarks</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:5%">Type</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:8%">Account</th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div id="proddiv" class="" style="position: relative; overflow-x: hidden;overflow-y: scroll; height:280px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                                <table class="jsgrid-table" id="TblContract"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions row px-3">
+                                        <div class="col-md-7 row">
+                                         
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-outline-primary" id="AddPdct" onclick="Prodpopshow(0)">Other Transactions <i class="fa fa-plus"></i></button>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <table class="headertable" id="" style="background-color:white;width:100%;">
+
+                                                    <tr>
+                                                        <td class="text-center" width="33.33%" style="border-left:1px solid #BABFC7;"><b>Other Trans. Amount</b></td>
+                                                        <td class="text-center" width="33.33%" style="border-left:1px solid #BABFC7;"><b>Deposit</b></td>
+                                                        <td class="text-center" width="33.33%" style="border-left:1px solid #BABFC7;"><b>Received Amount</b></td>
+                                                       
+                                                    </tr>
+                                                    <tr>
+
+                                                       
+                                                        <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                            <label style="font-weight:bold;"><span id="TotalOtherAmt"></span></label> 
+                                                        </td>
+                                                        <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                            <label style="font-weight:bold;"><span id="TotalDeposit"></span></label>
+                                                        </td>
+                                                        <td style="border-left:1px solid #BABFC7;text-align:center;" class="pt-1">
+                                                            <label style="font-weight:bold;"><span id="TotalChqAmt"></span></label>  
+                                                        </td>
+                                                       
+                                                    </tr>
+
+                                                </table>
+                                            </div>
+
+                                        </div>                                       
+                                        <div class="col-md-5 text-right">
+                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:100px" id="btncopy" onclick="Clear(1)" class="btn btn-primary btn-min-width mr-1 mb-1">Copy <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:100px" id="btnnew" onclick="Clear(0)" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btnedit" onclick="$('#otptype').val(1), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-secondary btn-min-width mr-1 mb-1">Edit<i class="fa ft-edit"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btnupdate" class="btn btn-secondary btn-min-width mr-1 mb-1">Update<i class="fa fa-check-square-o"></i></button>
+                                            <button style="display:none;width:100px" type="button" id="btndelete" onclick="$('#otptype').val(0), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-danger btn-min-width mr-1 mb-1">Delete<i class="fa fa-times"></i></button>     
+                                            <button style="display:none;width:100px" type="button" id="btnclose" onclick="$('#otptype').val(2), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-danger btn-min-width mr-1 mb-1">Close <i class="icon-close"></i></button>                                            
+                                            <button style="display:none;width:120px" type="button" id="btnprint" onclick="confirmprint()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                            <button type="button" style="display:none" id="btnuploaddoc" onclick="ViewMyFiles(),$('#ViewUploadpopupdiv').show()" class="btn btn-warning btn-min-width mr-1 mb-1">Documents</button>
+                                         </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div style="display:none"><input type="text" id="EditNamesSave" /></div>
+
+<div id="ViewUploadpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-lg" role="document" style="top:10%;height:1000px;width:1000px">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white" style="height:50px">
+                <h4 class="modal-title" id="myheader" style="margin-top:-2%;text-align:center">Documents</h4>
+                <button type="button" class="close" onclick="$('#ViewUploadpopupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div id="DD">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+
+                            <div class="px-3 card-body card-dashboard overflow-auto" style="height:500px;">
+                                <table id="tbldocumentlist" class="table table-striped table-bordered zero-configuration dataTable"></table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Uploadpopupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="width:55%;left:18%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Document Upload</h4>
+                <button type="button" class="close" onclick="$('#Uploadpopupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="categorydiv">
+                <div class="modal-body" >
+                    <br />
+                    <div style="overflow-y:scroll;overflow-x:hidden;">
+                        <div class="px-3">
+                            <div class="row">
+
+                                <label class="col-md-2" style="font-weight:bold;">Doc Type</label>
+                                <div class="col-md-3">
+                                    <select id="UploadDocument1" class="form-control slfile" onchange=Checkdup(1)></select>
+                                    <input id="UploadDocumentId1" style="display:none" />
+                                </div>
+                                <label class="col-md-2" style="font-weight:bold;">Document</label>
+                                <div class="col-md-4">
+                                    <input type='file' id="files1" class="btn btn-lg gradient-back-to-earth font-small-2 white p-2 mr-2" name="files[]" multiple accept="image/*,application/pdf,application/vnd.ms-excel" />
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary" id="MultipleUploadbtn" onclick="AddUploadDiv(1,2)" style="margin-top:15%">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="MainDivseq" style="height:400px;overflow-y:scroll;overflow-x:hidden;">
+
+                    </div>                       
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="checkupload()" >Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div style="display:none">
+    <input type="text" id="EditingRow" class="form-control" value="0" />
+    <input type="text" id="FlatNoId" class="form-control" value="" /> 
+    <input type="text" id="TenantId" class="form-control" value="" /> 
+    <input type="text" id="Chqdt" class="form-control"/>
+    <input type="text" id="AccountId0" class="form-control" /> 
+    <input type="text" id="PremiseId" class="form-control" value="" /> 
+    
+    <input type="text" class="form-control" id="TenantAddress1" />
+    <input type="text" class="form-control" id="TenantAddress2" />
+    <input type="text" class="form-control" id="TenantAddress3" />
+    <input type="text" class="form-control" id="TenantPOBOXNo" />
+    <input type="text" class="form-control" id="TenantEmail" />
+    <input type="text" class="form-control" id="TenantPhone" />
+    <input type="text" class="form-control" id="TenantEMRID" />
+
+
+    <input type="text"  id="HiddenDocId" />
+    <input type="text"  id="HiddenDocuName" />
+    <input type="text"  id="HiddenContractaNo" />
+    <input type="text"  id="HiddenTableId" />
+    <input type="text"  id="MaxFolderName" />
+    <input type="text"  id="RowCount" value="1" />
+    <input type="text"  id="MaxContractaNo" value="0" />
+    <input type="text"  id="MaxDocId" value="0" />
+    <input type="text"  id="UpdateStatus" value="0" /> 
+    <input type="text" id="RemoveCheck" value="NO" /> 
+</div>
+
+
+<div id="Loadingsave" class="overlay1" style="background: none;display: none;">
+    <div style="">
+        <img src="/app-assets/img/Loading_1.gif">
+    </div>
+
+
+</div>
+
+<div id="itempopup" class="modal fade text-left show ImpDiv" tabindex="-1" role="dialog" aria-labelledby="jobheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog modal-xl" role="document" style="top:5%;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="">Other Transactions</h3>
+                <button type="button" class="close" onclick="Prodpopshow(4)" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="GoldItemDiv">
+                <div class="modal-body">
+                    <div class="px-3" >
+                        <table style="" class="Adddets" width="100%">
+                            <tr>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Account</label>
+                                </td>
+                                <td width="12%"> 
+                                    <label style="font-weight:bold">Description</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Type</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Remarks</label>
+                                </td>
+                                <td width="12%">
+                                    <label style="font-weight:bold">Amount</label>
+                                </td>
+                                <td width="10%">
+                                   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="text" id="OtherAccount0" class="form-control ITMP atfcs" onfocus="LoadAccount('A')" >   
+                                </td>
+                                <td>
+                                    <input type="text" id="OtherDesc0" class="form-control ITMP">
+                                </td>
+                                <td>                                  
+                                    <select  id="Type0" class="form-control ITMPS" >
+                                        <option value="D">
+                                            DEBIT
+                                        </option>
+                                        <option value="C">
+                                            CREDIT
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" id="OtherRemarks0" class="form-control ITMP" >
+                                </td>
+                                <td>
+                                    <input type="text" id="OtherAmount0" class="form-control ITMP" onkeypress="isNumber(event,this)"> 
+                                </td>
+                                <td>
+                                    <button type="button" id="btnaddot" onclick="OtherTransAdd()" class="btn btn-outline-primary" style="margin-top:1.5%" onkeydown="Focusbtn('OtherAmount0', event, 'btnaddot')">ADD</button>
+                                    <input type="text" id="OtherAccountId0" class="form-control ITMP" style="display:none">    
+                                    <input type="text" id="OtherAccId0" class="form-control ITMP" style="display:none">     
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <div class="px-2">
+                        <div id="" class="jsgrid" style="position: relative; height: auto; width: 100%; border:solid 1px;border-color:#e9e9e9;margin-top:-10px;overflow-x: auto;overflow-y: hidden;margin-bottom:-10px;">
+                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width: 100%;">
+                                <table class="jsgrid-table" id="">
+                                    <tr class="jsgrid-header-row">
+                                        <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:2%"><i class="icon-trash"></i></th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:3%">No</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:10%">Account</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:20%">Description</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:7%">Type</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:19%">Remarks</th>
+                                        <th class="jsgrid-header-cell jsgrid-align-right" style="width:10%">Amount</th>
+
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="" class="" style="position: relative; overflow-x: hidden;overflow-y: scroll; height:280px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                <table class="jsgrid-table" id="TblOtherTrans"></table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions text-right row">
+                       
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label style="font-size:20px">Total Debit : <label style="font-size:20px" id="TotDebit"></label></label></div> 
+                        <div class="col-md-3"><label style="font-size:20px">Total Credit : <label style="font-size:20px" id="TotCredit"></label></label></div>   
+                        <div class="col-md-2"> <button type="button" id="btnadd" class="btn btn-outline-primary" onkeydown="Focusbtn('btnadd', event, 'btnadd')" onclick="Prodpopshow(4)">Save</button>  </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div id="productpdiv" style="display:none;border-radius: 25px;">
+    <div id="toast-containerinfo" class="toast-container toast-top-half-width" style="position:absolute; top:0; right:0%;opacity:100">
+        <div class="toast-primary" style="height:180px;margin-top:70px;font-weight:500;text-align:center;opacity:100;width:100%" id="infomessage">
+            <button type="button" class="close" onclick="productpopuprefresh()" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <section id="productdiv" style="display:none;height:25%;">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card-body">
+                            <input type="hidden" id="LPCost" value="0" />
+                            <input type="hidden" id="AvgCost" value="0" />
+                            <input type="hidden" id="Sumtotqty" value="0" />
+                            <input type="hidden" id="LastSellingPrice" value="0" />
+                            <div class="card-block" style="height:115px;width:100%;">
+                                <table class="table table-responsive-md-md text-center" id="tblproductdetails"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="OTPDiv" class="modal fade text-left show ImpDiv" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#OTPDiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Enter the OTP:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="txtotp" class="form-control" autocomplete="off" onkeydown="Focusinput('otpremarks', event, 'txtotp')">
+                        </div>
+                    </div>
+                    <div class="row" id="panel" style="margin-top:2%;">
+                        <label class="col-md-5" style="text-align:left" id="reason">Remarks:</label>
+                        <div class="col-md-7">
+                            <input type="text" id="otpremarks" class="form-control" autocomplete="off" onkeydown="Focusinput('btnotpsave', event, 'otpremarks')">
+                        </div>
+                    </div>
+                    <div style="display:none">
+                        <input type="text" class="form-control" id="otptype" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" id="btnotpcancel" onclick="$('#OTPDiv').hide(),$('#txtotp,#otpremarks').val('')" class="btn btn-outline-secondary">Cancel</button> 
+                <button type="button" style="width:100px" id="btnotpsave" onclick="CheckEditandDeleteInvoce($('#otptype').val())" class="btn btn-outline-warning">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Bank</h4>
+                <button type="button" class="close" onclick="$('#popupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="categorydiv">
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <label class="col-md-5" style="font-weight:bold;">Code<span class="danger">*</span></label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control ClearDet" id="NewBankCode" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <label class="col-md-5" style="font-weight:bold;">Name</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control ClearDet" id="NewBankName" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <label class="col-md-5" style="font-weight:bold;">Address</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control ClearDet" id="NewBankAddress" onkeyup="changetoupper(this.id)">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="col-md-5" style="font-weight:bold;">Branch</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control ClearDet" id="NewBankBranch" >
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnNewbanksave" onclick="AddNewBankDetails(1)">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="$('#popupdiv').hide()" data-dismiss="modal" value="close">
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div id="CustomPrint" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="background:rgba(0,0,0,0.5); display: block;margin-top:0%;display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top:-25%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Print</h3>
+                <button type="button" class="close" onclick="$('#CustomPrint').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row" id="panel" style="margin-top:2%;">
+
+                        <div class="col-md-6  text-left">
+                            <button type="button" style="width:100px" id="btncustprnt" onclick="PrintBill(1)" class="btn btn-warning white">RENT <i class="ft-printer"></i></button>
+                        </div>
+                        <div class="col-md-6  text-right">
+                            <button type="button" style="width:100px" id="btncustprnt1" onclick="PrintBill(2)" class="btn btn-primary">SD <i class="ft-printer"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1365,6 +1365,117 @@ namespace EUMI_ERP.Controllers
 
 
 
+        // ── Add this action to your RevisitController ────────────────────────────────
+        // File: Controllers/RevisitController.cs
+        [HttpPost]
+        public ActionResult HMS_DoctorDashboardAdvice(WorkSheet WorkSheet)
+        {
+            var med = new List<WorkSheet>();
+            var lab = new List<WorkSheet>();
+            var ready = new List<WorkSheet>();
+            var pending = new List<WorkSheet>();
+
+            try
+            {
+                WorkSheet obj = new WorkSheet();
+                DataSet ds = obj.HMS_DoctorDashboardAdvice(WorkSheet, dbName);
+
+                if (ds == null || ds.Tables.Count < 4)
+                    return Json(new { med, lab, ready, pending, success = false },
+                                JsonRequestBehavior.AllowGet);
+
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    med.Add(new WorkSheet
+                    {
+                        PatientName = row["PatientName"].ToString(),
+                        MedicineName = row["MedicineName"].ToString(),
+                        Form = row["Form"].ToString(),
+                        Count = Convert.ToInt32(row["Count"].ToString() == "" ? "0" : row["Count"].ToString()),
+                        Status = row["Status"].ToString(),
+                        PatientId = Convert.ToInt64(row["PatientId"].ToString() == "" ? "0" : row["PatientId"].ToString()),
+                        RevisitId = Convert.ToInt64(row["RevisitId"].ToString() == "" ? "0" : row["RevisitId"].ToString()),
+                        OPNumber = row["OPNumber"].ToString(),
+                        RevisitDate = row["RevisitDate"].ToString(),
+                        Age = Convert.ToInt32(row["Age"].ToString() == "" ? "0" : row["Age"].ToString()),
+                        Gender = row["Gender"].ToString(),
+                        Contact = row["Contact"].ToString(),
+                        DoctorName = row["DoctorName"].ToString()
+                    });
+                }
+                foreach (DataRow row in ds.Tables[1].Rows)
+                {
+                    lab.Add(new WorkSheet
+                    {
+                        PatientName = row["PatientName"].ToString(),
+                        TestName = row["TestName"].ToString(),
+                        Priority = row["Priority"].ToString(),
+                        Status = row["Status"].ToString(),
+                        PatientId = Convert.ToInt64(row["PatientId"].ToString() == "" ? "0" : row["PatientId"].ToString()),
+                        RevisitId = Convert.ToInt64(row["RevisitId"].ToString() == "" ? "0" : row["RevisitId"].ToString()),
+                        OPNumber = row["OPNumber"].ToString(),
+                        RevisitDate = row["RevisitDate"].ToString(),
+                        Age = Convert.ToInt32(row["Age"].ToString() == "" ? "0" : row["Age"].ToString()),
+                        Gender = row["Gender"].ToString(),
+                        Contact = row["Contact"].ToString(),
+                        DoctorName = row["DoctorName"].ToString()
+                    });
+                }
+
+                foreach (DataRow row in ds.Tables[2].Rows)
+                {
+                    ready.Add(new WorkSheet
+                    {
+                        PatientName = row["PatientName"].ToString(),
+                        TestName = row["TestName"].ToString(),
+                        ResultDate = row["ResultDate"].ToString(),
+                        ResultTime = row["ResultTime"].ToString(),   
+                        ResultStatus = row["ResultStatus"].ToString(),
+                        IsReady = Convert.ToInt32(row["IsReady"].ToString() == "" ? "0" : row["IsReady"].ToString()),
+                        SubResultId = Convert.ToInt64(row["SubResultId"].ToString() == "" ? "0" : row["SubResultId"].ToString()),
+                        PatientId = Convert.ToInt64(row["PatientId"].ToString() == "" ? "0" : row["PatientId"].ToString()),
+                        RevisitId = Convert.ToInt64(row["RevisitId"].ToString() == "" ? "0" : row["RevisitId"].ToString()),
+                        OPNumber = row["OPNumber"].ToString(),
+                        Age = Convert.ToInt32(row["Age"].ToString() == "" ? "0" : row["Age"].ToString()),
+                        Gender = row["Gender"].ToString(),
+                        Contact = row["Contact"].ToString(),
+                        DoctorName = row["DoctorName"].ToString(),
+                        BillYear = Convert.ToInt32(row["BillYear"].ToString() == "" ? "0" : row["BillYear"].ToString())
+                    });
+                }
+
+                foreach (DataRow row in ds.Tables[3].Rows)
+                {
+                    pending.Add(new WorkSheet
+                    {
+                        PatientName = row["PatientName"].ToString(),
+                        TestName = row["TestName"].ToString(),
+                        SampleDate = row["SampleDate"].ToString(),
+                        SampleTime = row["SampleTime"].ToString(),
+                        ResultStatus = row["ResultStatus"].ToString(),
+                        IsReady = Convert.ToInt32(row["IsReady"].ToString() == "" ? "0" : row["IsReady"].ToString()),
+                        SubResultId = Convert.ToInt64(row["SubResultId"].ToString() == "" ? "0" : row["SubResultId"].ToString()),
+                        PatientId = Convert.ToInt64(row["PatientId"].ToString() == "" ? "0" : row["PatientId"].ToString()),
+                        RevisitId = Convert.ToInt64(row["RevisitId"].ToString() == "" ? "0" : row["RevisitId"].ToString()),
+                        OPNumber = row["OPNumber"].ToString(),
+                        Age = Convert.ToInt32(row["Age"].ToString() == "" ? "0" : row["Age"].ToString()),
+                        Gender = row["Gender"].ToString(),
+                        Contact = row["Contact"].ToString(),
+                        DoctorName = row["DoctorName"].ToString(),
+                        BillYear = Convert.ToInt32(row["BillYear"].ToString() == "" ? "0" : row["BillYear"].ToString())
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("HMS_DoctorDashboardAdvice Error: " + ex.Message + " | " + ex.StackTrace);
+                return Json(new { med, lab, ready, pending, success = false },
+                            JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { med, lab, ready, pending, success = true },
+                        JsonRequestBehavior.AllowGet);
+        }
 
 
         public ActionResult HMS_LabBillGets(LabResult LabResult)
@@ -2714,6 +2825,51 @@ namespace EUMI_ERP.Controllers
             // return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
             return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
         }
+        //public ActionResult HMS_OPWorkSheetStaff(WorkSheet WorkSheet)
+        //{
+        //    WorkSheet obj = new WorkSheet();
+        //    List<WorkSheet> oList = new List<WorkSheet>();
+        //    try
+        //    {
+        //        DataSet dsDataSet = new DataSet();
+        //        dsDataSet = obj.HMS_OPWorkSheetStaff(WorkSheet, dbName);
+        //        foreach (DataRow row in dsDataSet.Tables[0].Rows)
+        //        {
+        //            WorkSheet MModels = new WorkSheet();
+        //            MModels.RevId = Convert.ToInt32(row["PId"].ToString());
+        //            MModels.RevisitId = Convert.ToInt32(row["Revisit_Id"].ToString());
+        //            MModels.PatientId = Convert.ToInt32(row["Patient_Id"].ToString());
+        //            MModels.OPSerName = row["Prefix"].ToString();
+        //            MModels.OPSerId = Convert.ToInt32(row["OP_Series"].ToString());
+        //            MModels.OPNumber = row["OP_Number"].ToString();
+        //            MModels.PatientName = row["PName"].ToString();
+        //            MModels.DoctorName = row["Name"].ToString();
+        //            MModels.DoctorId = Convert.ToInt32(row["Doctor_Id"].ToString());
+        //            MModels.ShiftName = row["ShiftName"].ToString();
+        //            MModels.TokenNumber = row["TokenNumber"].ToString();
+        //            MModels.Gender = row["PGender"].ToString();
+        //            MModels.DOB = row["PDOB"].ToString();
+        //            MModels.Contact = row["MobileNo"].ToString();
+        //            MModels.Flag = Convert.ToInt32(row["STYPE"].ToString());
+        //            MModels.RevisitDate = row["VisitingDate"].ToString();
+        //            MModels.Status = row["Status"].ToString();
+        //            MModels.BloodGroup = row["BloodGroup"].ToString();
+        //            MModels.IPNumber = Convert.ToInt32(row["IPNumber"].ToString());
+        //            MModels.DelFlag = Convert.ToInt32(row["DFlag"].ToString());
+        //            MModels.CSFlag = row["CSFlag"].ToString();
+        //            oList.Add(MModels);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+        //    }
+
+        //    // return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        //    return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
+        //}
+
         public ActionResult HMS_OPWorkSheetStaff(WorkSheet WorkSheet)
         {
             WorkSheet obj = new WorkSheet();
@@ -2745,7 +2901,6 @@ namespace EUMI_ERP.Controllers
                     MModels.BloodGroup = row["BloodGroup"].ToString();
                     MModels.IPNumber = Convert.ToInt32(row["IPNumber"].ToString());
                     MModels.DelFlag = Convert.ToInt32(row["DFlag"].ToString());
-                    MModels.CSFlag = row["CSFlag"].ToString();
                     oList.Add(MModels);
                 }
 
@@ -4056,7 +4211,7 @@ namespace EUMI_ERP.Controllers
         {
             ReVisitModel obj = new ReVisitModel();
             List<ReVisitModel> verifiedList = new List<ReVisitModel>();
-            List<ReVisitModel> nonVerifiedList = new List<ReVisitModel>();  // ADD THIS
+            List<ReVisitModel> nonVerifiedList = new List<ReVisitModel>();  
             List<ReVisitModel> approvedList = new List<ReVisitModel>();
             List<ReVisitModel> nonApprovedList = new List<ReVisitModel>();
 

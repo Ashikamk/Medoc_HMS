@@ -1521,7 +1521,7 @@ namespace EUMI_ERP.DataLayer
         {
             try
             {
-                arlParms = new SqlParameter[8];
+                arlParms = new SqlParameter[9];   
                 arlParms[0] = new SqlParameter("@SampleId", model.SampleId);
                 arlParms[1] = new SqlParameter("@Pid", model.Pid);
                 arlParms[2] = new SqlParameter("@RegNo", model.RegNo);
@@ -1530,6 +1530,7 @@ namespace EUMI_ERP.DataLayer
                 arlParms[5] = new SqlParameter("@userid", model.userid);
                 arlParms[6] = new SqlParameter("@SampleDate", model.SampleDate);
                 arlParms[7] = new SqlParameter("@Flag", model.Flag);
+                arlParms[8] = new SqlParameter("@Mode", model.Mode ?? (object)DBNull.Value);   
                 return SQLHelper.ExecuteDataset("HMS_LabResultVerificationInsert", dbName, arlParms);
             }
             catch (SqlException exMe)
@@ -1547,6 +1548,25 @@ namespace EUMI_ERP.DataLayer
                 arlParms[0] = new SqlParameter("@SampleId", model.SampleId);
                 return SQLHelper.ExecuteDataset("HMS_LabResultVerificationGet", dbName, arlParms);
                 
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
+        public DataSet HMS_DoctorDashboardAdvice(WorkSheet WorkSheet, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[4];
+                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate ?? "");
+                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate ?? "");
+                arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
+                arlParms[3] = new SqlParameter("@DeptId", WorkSheet.DeptId);
+
+                return SQLHelper.ExecuteDataset("HMS_DoctorDashboardAdvice", dbName, arlParms);
             }
             catch (SqlException exMe)
             {
@@ -1934,7 +1954,7 @@ namespace EUMI_ERP.DataLayer
             {
                 arlParms = new SqlParameter[2];
 
-                // Pass as NVARCHAR string directly — SP handles CONVERT(DATE, @FromDate, 103)
+                
                 arlParms[0] = new SqlParameter("@FromDate", SqlDbType.NVarChar, 20);
                 arlParms[0].Value = string.IsNullOrEmpty(fromDate) ? (object)DBNull.Value : fromDate.Trim();
 

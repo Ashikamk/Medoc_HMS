@@ -1,0 +1,307 @@
+﻿    @model EUMI_ERP.Models.DonarRegistrationModel
+
+    @{
+        ViewBag.Title = "Donar Registration";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <style>
+        body {
+            background: #dcdcdc;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Main Form Box */
+        .main-box {
+            background: #ffffff;
+            border: 2px solid #008c8c;
+            border-radius: 15px;
+            padding: 0;
+            width: 100%;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .box-header {
+            background: #008c8c;
+            color: white;
+            padding: 14px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .box-header span {
+                font-size: 15px;
+                font-weight: bold;
+            }
+
+        /* Body */
+        .box-body {
+            padding: 25px;
+            background: #f7f7f7;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: #222;
+        }
+
+        /* Input Boxes */
+        .form-control {
+            height: 48px;
+            border-radius: 12px;
+            border: 1px solid #888;
+            font-size: 15px;
+            padding: 8px 12px;
+            transition: 0.2s;
+        }
+
+        textarea.form-control {
+            height: 95px !important;
+            border-radius: 12px;
+        }
+
+        .form-control:focus {
+            border: 2px solid #008c8c;
+            box-shadow: 0px 0px 6px rgba(0, 140, 140, 0.4);
+        }
+
+        /* Buttons */
+        .btn-custom {
+            background: #008c8c;
+            color: white;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 11px 40px;
+            border: none;
+            font-size: 15px;
+        }
+
+            .btn-custom:hover {
+                background: #006d6d;
+                color: white;
+            }
+
+        .btn-clear {
+            background: #555;
+            color: white;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 11px 40px;
+            border: none;
+            font-size: 15px;
+        }
+
+            .btn-clear:hover {
+                background: #333;
+                color: white;
+            }
+
+        /* Popup Overlay Fade */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 999;
+        }
+
+        /* Popup Bright Center */
+        .popup-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 28px;
+            width: 450px;
+            border-radius: 14px;
+            text-align: center;
+            border: 3px solid #008c8c;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: popAnimation 0.4s ease-in-out;
+        }
+
+        @@keyframes popAnimation {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        .popup-box h4 {
+            font-weight: bold;
+            color: #008c8c;
+            margin-bottom: 10px;
+        }
+
+        .popup-box p {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .popup-box button {
+            margin-top: 18px;
+            padding: 10px 35px;
+            border-radius: 10px;
+            border: none;
+            background: #008c8c;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+            .popup-box button:hover {
+                background: #006d6d;
+            }
+    </style>
+
+
+    <div class="container-fluid mt-2 mb-2 px-4">
+
+        <div class="main-box">
+
+            <!-- Header -->
+            <div class="box-header">
+                DONAR REGISTRATION
+                <span>@DateTime.Now.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <!-- Body -->
+            <div class="box-body">
+
+                @using (Html.BeginForm("DonarRegistration", "Donar", FormMethod.Post, new { id = "donarForm" }))
+                {
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <label>Donar Name</label>
+                            @Html.TextBoxFor(m => m.DonarName, new { @class = "form-control", placeholder = "Enter Donar Name" })
+                            @Html.ValidationMessageFor(m => m.DonarName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Gender</label>
+                            @Html.DropDownListFor(m => m.Gender,
+                                new SelectList(new[] { "Male", "Female", "Other" }),
+                                "--Select--",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Date of Birth</label>
+                            @Html.TextBoxFor(m => m.DOB, new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(m => m.DOB, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Blood Group</label>
+                            @Html.DropDownListFor(m => m.BloodGroup,
+                                new SelectList(new[] { "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-" }),
+                                "--Select--",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.BloodGroup, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Phone</label>
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter Phone Number" })
+                            @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Email</label>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email Address" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>City</label>
+                            @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "Enter City" })
+                            @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>State</label>
+                            @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "Enter State" })
+                            @Html.ValidationMessageFor(m => m.State, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Last Donation Date</label>
+                            @Html.TextBoxFor(m => m.LastDonationDate, new { @class = "form-control", type = "date" })
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Any Disease?</label>
+                            @Html.DropDownListFor(m => m.Disease,
+                                new SelectList(new[] { "No", "Yes" }),
+                                "--Select--",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Disease, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-8 mb-3">
+                            <label>Address</label>
+                            @Html.TextAreaFor(m => m.Address, new { @class = "form-control", rows = "2", placeholder = "Enter Full Address" })
+                            @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-custom">Submit</button>
+                        <button type="reset" class="btn btn-clear">Clear</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Overlay -->
+    <div class="popup-overlay" id="popupOverlay"></div>
+
+    <!-- Popup -->
+    <div class="popup-box" id="popupBox">
+        <h4>✅ Registration Successful</h4>
+        <p>Your donor registration has been submitted successfully.</p>
+        <button onclick="closePopup()">OK</button>
+    </div>
+
+
+    <script>
+        function closePopup() {
+            document.getElementById("popupOverlay").style.display = "none";
+            document.getElementById("popupBox").style.display = "none";
+        }
+
+        window.onload = function () {
+            var msg = '@ViewBag.Message';
+
+            if (msg !== '') {
+                document.getElementById("popupOverlay").style.display = "block";
+                document.getElementById("popupBox").style.display = "block";
+            }
+        };
+    </script>

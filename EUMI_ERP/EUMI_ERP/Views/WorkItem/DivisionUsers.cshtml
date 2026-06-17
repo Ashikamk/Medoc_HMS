@@ -1,0 +1,378 @@
+﻿@model EUMI_ERP.Models.WorkItemDivDeptModel
+@{
+    ViewBag.Title = "Users by Division";
+}
+<style type="text/css">
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+    /* .eumi-search-table tbody td { border:none; } */
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+</style>
+<script type="text/javascript">
+    window.DivisionUserRefKey = "@Html.Raw((Request.QueryString["refno"] != null ? ("refno=" + Uri.EscapeUriString(Request.QueryString["refno"])) : "") 
+                                + (Request.QueryString["reftype"] != null ? ("&reftype=" + Uri.EscapeUriString(Request.QueryString["reftype"])) : "")
+                                + (Request.QueryString["wid"] != null ? ("&wid=" + Uri.EscapeUriString(Request.QueryString["wid"])) : ""))";
+    window.DivisionUserParams = { divId: "@(Model.SelectedDiv)", deptId: "@(Model.SelectedDept)" };
+</script>
+<div class="row m-1">
+    <div class="col-md-4">
+        <h2>Users By Division</h2>
+    </div>
+    <div class="col-md-8 eumi-button-area" id="divDownload" data-download-url="@Url.Action("DivisionUsersDownload", "WorkItem")">
+        <div class="btn-group" role="group">
+            <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Columns
+            </button>
+            <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tagModal" onclick="tagLoad();">Add Time Tags</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#paramModal">Add/Edit Division</button>
+
+        <div class="btn-group" role="group">
+            <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+            </div>
+        </div>
+        <button class="btn btn-outline-primary" data-eumi-clear="1" type="button">Clear Search</button>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="p-4">
+    <div class="p-2" style="border-radius:4px;box-shadow:0 0 4px 4px rgba(190, 190, 190, 0.5);">
+        <div class="row">
+            <div class="col-md-12 col-lg-11 col-xl-9">
+                <form autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="paramsDept">Department:</label>
+                            <select id="paramsDept" class="form-control">
+                                <option value="0"> - All - </option>
+                                @foreach (var oneItem in Model.DeptList)
+                                {
+                                    if (oneItem.Id == Model.SelectedDept)
+                                    {
+                                        <option value="@oneItem.Id" selected="selected">@oneItem.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@oneItem.Id">@oneItem.Name</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="paramsDiv">Division:</label>
+                            <select id="paramsDiv" class="form-control">
+                                <option value="0"> - None - </option>
+                                @foreach (var oneItem in Model.DivList)
+                                {
+                                    if (oneItem.Id == Model.SelectedDiv)
+                                    {
+                                        <option value="@oneItem.Id" selected="selected">@oneItem.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@oneItem.Id">@oneItem.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="display: block">
+                                &nbsp;
+                            </label>
+                            <button type="button" class="btn btn-outline-primary" onclick="ApplyUserDivParams(false)">Apply</button>
+                            <a href="#" onclick="OpenAssign(0); return false;" class="btn btn-outline-primary">Assign</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="myData" data-x="M133" />
+<table id="divisionusers" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+    <tfoot>
+        <tr class="eumi-search-row">
+            <th></th>
+            <th></th>
+            <th>User Name</th>
+            <th>E-Mail</th>
+            <th>Dept</th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+<div class="text-right m-1 p-1">
+</div>
+<div style="height:100px;clear: both">
+    &nbsp;
+</div>
+<script type="text/javascript">
+    function ApplyUserDivParams(silent) {
+        window.DivisionUserParams = {};
+        window.DivisionUserParams.deptId = $("#paramsDept").val();
+        window.DivisionUserParams.divId = $("#paramsDiv").val();
+        if (!silent && $.fn.DataTable.isDataTable('#divisionusers')) {
+            $("#divisionusers").DataTable().ajax.reload();
+        }
+    }
+    $(document).ready(function () {
+        ApplyUserDivParams(true);
+        //$("body").addClass("eumi-loader");
+        var table = $("#divisionusers").EumiDataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "../WorkItem/DivisionUsersJson",
+                "type": "POST",
+                "data": function (data) {
+                    data.addData = window.DivisionUserParams;
+                }
+            },
+            "columnDefs": [{
+                "targets": 1,
+                "render": function (data, type, row, meta) {
+                    return '<input type="checkbox" class="form-check-input" ' + (row.isInCurrentDiv ? 'checked="checked" ' : ' ') + 'onclick="SetDivision(this, ' + row.UserId + ');return false;" />'
+                }
+            },
+            {
+                "targets": 5,
+                "render": function (data, type, row, meta) {
+                    return (row.isInCurrentDiv ? '<a href="#" onclick="OpenAssign(' + row.UserId + '); return false;">Assign</a>' : '');
+                }
+            }],
+            "columns": [
+                { data: "slno", title: "Slno", searchable: false, sortable: false },
+                { data: "isInCurrentDiv", title: "Add", className: "text-center" },
+                { data: "UserName", title: "User Name" },
+                { data: "eMail", title: "E-Mail" },
+                { data: "DeptName", title: "Dept" },
+                { data: "UserId", title: "Assign" },
+            ],
+        });
+    });
+
+    function SetDivision(objThis, userId) {
+        var data = {};
+        data.delete = !objThis.checked;
+        data.div = parseInt(window.DivisionUserParams.divId, 10);
+        data.dept = parseInt(window.DivisionUserParams.deptId, 10);
+        data.user = parseInt(userId, 10);
+        objThis.enabled = false;
+        if (!isNaN(data.div) && !isNaN(data.dept) && !isNaN(data.user) && data.div && data.dept && data.user) {
+            $.ajax({
+                url: "@Url.Action("AddUser", "WorkItem")",
+                data: data,
+                type: "POST",
+                success: function (result) {
+                    objThis.enabled = true;
+                    var table = $("#divisionusers").DataTable();
+                    var cell = $(objThis).closest("td");
+                    table.cell(cell).data(result.IsAdded);
+                    table.row(cell.closest("tr")).draw();
+                }
+            });
+        } else {
+            swal("Alert", "Department or Division not specified", "error");
+        }
+        // on development
+    }
+    function OpenAssign(user) {
+        var data = {};
+        data.div = parseInt(window.DivisionUserParams.divId, 10);
+        data.dept = parseInt(window.DivisionUserParams.deptId, 10);
+
+        if (!isNaN(data.div) && !isNaN(data.dept) && data.div && data.dept) {
+            var url = "@Url.Action("Assign", "WorkItem")"
+                + "?dept=" + data.dept
+                + "&div=" + data.div;
+            if (user && !isNaN(user) && user > 0) {
+                url = url + "&user=" + user;
+            }
+            if (window.DivisionUserRefKey && window.DivisionUserRefKey != "") {
+                url = url + window.DivisionUserRefKey;
+            }
+            window.location.href = url;
+        } else {
+            swal("Alert", "Department or Division not specified", "error");
+        }
+    }
+</script>
+@section bottomscripts {
+    <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+    <script type="text/javascript">
+        function reloadPage() {
+            window.location.reload();
+        }
+
+        function popupRefresh(objThis, delflag) {
+            objThis.enabled = false;
+            if ($("#popupDivisionForm").length > 0 && (delflag == 1 || !$("#popupDivName").val().match(/^\s*$/))) {
+                $.ajax({
+                    url: $(objThis).attr('data-load-url'),
+                    data: $("#popupDivisionForm").serialize(),
+                    type: "POST",
+                    success: function (html) {
+                        $("#popupRefreshArea").html(html);
+                        if ($("#popupDivisionForm").attr("data-last-flag") == 1) {
+                            swal("Success", "Last action successful", "success");
+                        }
+                        objThis.enabled = true;
+                    }
+                });
+            }
+            else {
+                swal("Validation", "New name required", "error");
+            }
+        }
+        function tagLoad() {
+            var data = {};
+            data.div = parseInt(window.DivisionUserParams.divId, 10);
+            $("#tagNoneArea").css("display", "none");
+            $("#tagRefreshArea").empty();
+            if (!isNaN(data.div) && data.div) {
+                $.ajax({
+                    url: $("#tagRefreshArea").attr("data-load-url"),
+                    data: { "div": data.div },
+                    type: "POST",
+                    success: function (html) {
+                        $("#tagRefreshArea").html(html);
+                    }
+                });
+            } else {
+                $("#tagNoneArea").show();
+            }
+        }
+        function tagRefresh(objThis, delflag) {
+            objThis.enabled = false;
+            var jqForm = $(objThis).closest("form");
+            if (jqForm.length > 0) {
+                $.ajax({
+                    url: $(objThis).attr('data-load-url'),
+                    data: jqForm.serialize(),
+                    type: "POST",
+                    success: function (jsonData) {
+                        if (jsonData.lastActionSuccess == 1) {
+                            swal("Success", "Last action successful", "success");
+                        }
+                        objThis.enabled = true;
+                        tagLoad();
+                    }
+                });
+            }
+            else {
+                swal("Validation", "New name required", "error");
+            }
+        }
+    </script>
+}
+
+@section popups {
+    <div class="modal" id="paramModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add/Edit Division</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" id="popupRefreshArea">
+                    @Html.Action("LoadPartial", "WorkItem")
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="popupRefresh(this, 1);" data-load-url="@Url.Action("DeletePartial", "WorkItem")">Delete</button>
+                    <button type="button" class="btn btn-primary" onclick="popupRefresh(this, 0);" data-load-url="@Url.Action("SavePartial", "WorkItem")">Apply</button>
+                    <button type="button" class="btn btn-primary" onclick="reloadPage()" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="tagModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add/Delete Time Tags</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" id="tagRefreshArea" data-load-url="@Url.Action("LoadTagPartial", "WorkItem")">
+                    ...
+                </div>
+                <!-- Modal footer -->
+                <div id="tagNoneArea" class="modal-footer">
+                    <div>
+                        No Division selected. Select a division first.&nbsp;&nbsp;
+                    </div>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
