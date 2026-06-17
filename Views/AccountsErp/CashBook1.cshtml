@@ -1,0 +1,619 @@
+﻿
+@{
+    ViewBag.Title = "CashBook";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ <div class="myData" data-x="M388" />
+
+<style>
+    .lblbold{
+        font-weight:500;
+    }
+    .FormHeadClr  {
+    background-color: #009da0 !important;
+    color: white;
+}
+    #customView{
+    border: 1px solid #CCD6E6;
+}
+</style>
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <h4 class="card-title mb-0" style="font-weight:bold;">CASH BOOK</h4>
+                </div>
+                <div class="card-body ">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body ">
+                                <div style="height:15px;"></div>
+                                <form action="#">
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <label class="mt-1 lblbold">Book Name<span class="danger">*</span></label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="BookName" class="form-control clrval Avdfc" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-1 pl-3">
+                                                <label class="mt-1 lblbold">Date</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="BookDate" class="form-control" onchange="LoadResult(0)">
+                                            </div>
+                                            <div class="col-md-1 pl-3">
+                                                <label class="mt-1 lblbold">Account<span class="danger">*</span></label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="AccountHead0" class="form-control clrval Avdfc" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-1 pl-3">
+                                                <label class="mt-1 lblbold">Open Balance</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="OpenBalance0" class="form-control clrval disbtext" autocomplete="off" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-1">
+                                                <label class="mt-1 lblbold">Debit </label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="DebitAmt0" class="form-control clrval" onkeyup="EnterAmt(event,1,0)" onkeypress="isNumberFloatCommon(event,this)" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-1 pl-3"> 
+                                                <label class="mt-1 lblbold">Credit</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="CreditAmt0" class="form-control clrval" onkeyup="EnterAmt(event,0, 0)" onkeypress="isNumberFloatCommon(event, this)" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-1 pl-3">
+                                                <label class="mt-1 lblbold">Narration </label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" id="Narration0" class="form-control clrval" autocomplete="off">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" id="AddBtns" class="btn btn-outline-primary btn-min-width mr-1 mb-1" onclick="AddToTable(0,0)">Add <i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-12">
+                                                <div id="customView" class="jsgrid" style="position: relative; height: 375px; width: auto;overflow-x: auto;overflow-y:hidden ">
+                                                    <div class="jsgrid-grid-header" style="width:100%;">
+                                                        <table class="jsgrid-table table-bordered">
+                                                            <tbody>
+                                                                <tr class="FormHeadClr">
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%"><i class="icon-trash"></i></th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:5%">SL#</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:20%">Account Head</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:40%">Narration</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:15%">Debit</th>
+                                                                    <th class="jsgrid-header-cell jsgrid-align-center" style="width:15%">Credit</th>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 315px; width:100%;">
+                                                        <table class="jsgrid-table table-bordered" id="TblCashBook"></table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions row pt-2 pb-1 mt-1">
+                                        <div class="col-md-8 text-left input-group">
+                                            <label class="mt-1 lblbold">Closing Balance :  </label>
+                                            <label class="mt-1 lblbold red" id="ClosingBalance">  </label>
+                                        </div>
+                                        <div class="col-md-4 text-right">
+                                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                            <button type="button" style="width:100px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                            <button type="button" style="width:100px" id="btnnew" onclick="formrefresh()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                            <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+<div style="display:none">
+    <input type="text" class="clrval" value="0" id="CashBookId" />
+    <input type="text" class="clrval" value="0" id="BookId" />
+    <input type="text" class="clrval" id="BookCode" />
+    <input type="text" class="clrval" value="0" id="AccountHeadId0" />
+    <input type="text" class="clrval"  id="AccountCode0" />
+</div>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script>
+    var TbId = 1;
+    $(document).ready(function () {
+        LoadDate();
+        Defaultfocus();
+        LoadAccount(0);
+        LoadBook();
+        CalcColsing();
+
+        $('.clrval:not(.Avdfc)').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                var inputs = $(this).closest('form').find(':input.clrval:enabled');
+                inputs.eq(inputs.index(this) + 1).focus();
+                inputs.eq(inputs.index(this) + 1).select();
+            }
+        });
+        $('#Narration0').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                window.setTimeout(function () {
+                    $('#AddBtns').focus();
+                });
+            }
+        });
+
+        BtnFocusClr();
+
+        $("#btnsubmit").click(function (e) {
+            SaveCashBook();
+        });
+
+      
+    });
+
+    function Defaultfocus()
+    {
+        $('#BookName').focus();
+    }
+
+    function LoadDate()
+    {
+        $('#BookDate').daterangepicker({
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth()+1, new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'DD/MM/YYYY' },
+        }).val(CurDate);
+    }
+
+    function formrefresh() {
+        $('.clrval').val('');
+        $('#TblCashBook').html('');
+
+        Defaultfocus();
+        LoadDate();
+
+        TbId = 1;
+        LoadResult(1);
+        CalcColsing();
+    }
+
+    function LoadAccount(Id)
+    {
+        $("#AccountHead" + Id).autocomplete({
+            source: function (request, response) {
+                $('#AccountHeadId' + Id).val(0);
+                $("#AccountCode" + Id).val('');
+                var data = {};
+                data.AccCode = $("#AccountHead" + Id).val();
+                $.ajax({
+                    url: '../AccountsErp/AccSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-2',
+                                label: item.AccDescription,
+                                label1: item.AccCode,
+
+                                AccountName: item.AccDescription,
+                                AccCode: item.AccCode,
+                                AccountId: item.AccId,
+                                headers: ["Account Name", "Account Code"]
+                            })
+                        }));
+
+                    }
+                })
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#AccountHeadId' + Id).val(ui.item.AccountId);
+                $("#AccountCode" + Id).val(ui.item.AccCode);
+            },
+        }).on('keydown', function (e) {
+            if (Id == 0)
+            {
+                if ((e.which == 13) && (($('#AccountHead0').val() != '') && (($('#AccountHeadId0').val() || 0) != 0))) {
+                    $('#DebitAmt0').focus();
+                }
+            }
+        });
+    }
+
+    function LoadBook()
+    {
+        $("#BookName").autocomplete({
+            source: function (request, response) {
+                $('#BookId').val(0);
+                $('#OpenBalance0,#BookCode').val('');
+                var data = {};
+                data.AccCode = $("#BookName").val();
+                $.ajax({
+                    url: '../AccountsErp/AccSearch',
+                    type: "POST",
+                    data: data,
+                    dataType: "json",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return ({
+                                ColCount: '-2',
+                                label: item.AccDescription,
+                                label1: item.AccCode,
+
+                                AccountName: item.AccDescription,
+                                AccCode: item.AccCode,
+                                AccountId: item.AccId,
+                                headers: ["Account Name", "Account Code"]
+                            })
+                        }));
+                    }
+                })
+            },
+            autoFocus: true,
+            select: function (event, ui) {
+                $('#BookId').val(ui.item.AccountId);
+                $("#BookCode").val(ui.item.AccCode);
+                balload(ui.item.AccCode);
+            },
+        }).on('keydown', function (e) {
+            if ((e.which == 13) && (($('#BookName').val() != '') && (($('#BookId').val() || 0) != 0))) {
+                $('#BookDate').focus();
+            }
+        });
+    }
+
+    function balload(ACCode) {
+        var data = {};
+        data.BankAccount = ACCode;
+        data.VoucherDate = $('#BookDate').val();
+        data.Flag = 0;
+        $.ajax({
+            type: "POST",
+            url: "../../AccountsErp/AccountbalGetandGets", 
+            data: data,
+            success: function (result) {
+                
+                if (result.oList.length == 0) { $('#OpenBalance0').val(parseFloat(0).toFixed(Decimal)); }
+                else
+                {
+                    balo = result.oList[0].bal;
+                    if (balo < 0) {
+                        // balo = balo * -1;
+                        $('#OpenBalance0').val(parseFloat(balo).toFixed(Decimal));  //+ ' CR'
+                    }
+                    else {
+                        $('#OpenBalance0').val(parseFloat(balo).toFixed(Decimal)); // + ' DR'
+                    }
+                }
+                CalcColsing();
+            }
+        });
+    }
+
+    function CalcColsing()
+    {
+        $('#ClosingBalance').text((0).toFixed(Decimal));
+
+        var TotClosing = parseFloat($('#OpenBalance0').val() || 0);
+
+        for (var j = 1; j <= TbId; j++) {
+            if ($('#CBTbRow' + j).length != 0) {
+
+                var DrAmt = 0; var CrAmt = 0;
+                if (parseFloat($('#DebitAmt' + j).val()) > 0) { DrAmt = parseFloat($('#DebitAmt' + j).val() || 0); }
+                else if (parseFloat($('#CreditAmt' + j).val()) > 0) { CrAmt = parseFloat($('#CreditAmt' + j).val() || 0); }
+
+                TotClosing = TotClosing + DrAmt - CrAmt;
+
+            }
+        }
+        $('#ClosingBalance').text((TotClosing).toFixed(Decimal));
+    }
+
+    function AddToTable(flg, Id)  // flg: 0 - Add   ::::
+    {
+        if ($.trim($('#AccountHead' + Id).val()) == '') {
+            warningshow('Please select an Account', 'AccountHead' + Id)
+        }
+        else if(($('#AccountHeadId' + Id).val()||0)==0)
+        {
+            warningshow('Please select a valid Account', 'AccountHead' + Id)
+        }
+        else if ((($('#DebitAmt' + Id).val() || 0) == 0) && (($('#CreditAmt' + Id).val() || 0) == 0)) {
+            warningshow('Please Enter Amount', 'DebitAmt' + Id)
+        }
+        else
+        { 
+            if (flg == 0)   //Add
+            {
+                var TId = parseInt(TbId); var SlNo = parseInt($('.TblNewRow').length) + 1;
+                var TbRow = '<tr class="TblNewRow" id="CBTbRow' + TId + '">' +
+                            '<td class="jsgrid-header-cell jsgrid-align-center p-0" style="width:5%"><i class="icon-trash font-medium-2" style="cursor:pointer" onclick=RemoveTblRow(' + TId + ')></i></td>' +
+                            '<td class="jsgrid-header-cell jsgrid-align-center p-0" style="width:5%" id="SlNum' + TId + '">' + SlNo + ' </td>' +
+                            '<td class="jsgrid-header-cell jsgrid-align-left p-0" style="width:20%"> <input type="text" id="AccountHead' + TId + '" class="form-control tbtxt"  value="' + $('#AccountHead' + Id).val() + '"></td>' +
+                            '<td class="jsgrid-header-cell jsgrid-align-left p-0" style="width:40%">  <input type="text" id="Narration' + TId + '" class="form-control tbtxt" value="' + $('#Narration' + Id).val() + '"  ></td>' +
+                            '<td class="jsgrid-header-cell jsgrid-align-right p-0" style="width:15%"> <input type="text" id="DebitAmt' + TId + '" class="form-control tbtxt" onkeyup="EnterAmt(event,1,' + TId + ')" onkeypress="isNumberFloatCommon(event,this)" value=' + parseFloat($('#DebitAmt' + Id).val()).toFixed(Decimal) + '></td>' +
+                            '<td class="jsgrid-header-cell jsgrid-align-right p-0" style="width:15%"> <input type="text" id="CreditAmt' + TId + '" class="form-control tbtxt" onkeyup="EnterAmt(event,0,' + TId + ')" onkeypress="isNumberFloatCommon(event, this)" value=' + parseFloat($('#CreditAmt' + Id).val()).toFixed(Decimal) + '></td>' +
+                '<td class="d-none"> <input type="text"  value=' + $('#AccountHeadId' + Id).val() + ' id="AccountHeadId' + TId + '" /> ' +
+                '<input type="text" value=' + $('#AccountCode' + Id).val() + ' id="AccountCode' + TId + '" />' +
+                '</td>' +
+                            ' </tr>';
+                $('#TblCashBook').append(TbRow);
+                $('.tbtxt').css('border', 'none');
+                LoadAccount(TId);
+                TbId++;
+                ClearThisRow(Id);
+            }
+            CalcColsing();
+        }
+    }
+
+    function ClearThisRow(Id)
+    {
+        $('#AccountHead' + Id).val('').focus();
+        $('#AccountHeadId' + Id).val(0);
+        $('#Narration' + Id).val('');
+        $('#DebitAmt' + Id).val('');
+        $('#CreditAmt' + Id).val('');
+    }
+
+    function EnterAmt(e,flg,Id)
+    {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key != 13) {
+            if (flg == 0) {  //Credit keypress
+                $('#DebitAmt' + Id).val((0).toFixed(Decimal));
+            }
+            else if (flg == 1) {  //Debit keypress
+                $('#CreditAmt' + Id).val((0).toFixed(Decimal));
+            }
+            CalcColsing();
+        }
+    }
+
+    function RemoveTblRow(Id)
+    {
+        var Slno = 1;
+        $('#CBTbRow' + Id).remove();
+        for (var j = 1; j <= TbId; j++) {
+            if ($('#CBTbRow' + j).length != 0) {
+                $('#SlNum' + j).text(Slno);
+                Slno++;
+            }
+        }
+        CalcColsing();
+        $('#AccountHead0').focus().select();
+    }
+
+    function SaveCashBook() {
+        if (parseInt($('.TblNewRow').length)==0)
+        {
+            warningshow('Please add Accounts', 'AccountHead0');
+        }
+        else
+        {
+            $('#confirm').show();
+            $('#confirmOk').focus();
+            $('#Confirmflag').val('Save'); $('#ConfirmRowId').val(0);
+            $('#confirmmessage').text('Do You Want To Save The Cash Book?');
+        }
+    }
+
+    function ConfirmboxResult(Result, status, rowid) {
+        $('#btnsubmit').prop('disabled', true);
+        if (Result == 'true' && status == 'Save') {
+            SaveCashBookConfirm();
+        }
+        $('#confirm').fadeOut();
+        window.setTimeout(function () {
+            $('#btnsubmit').prop('disabled', false);
+        }, 3000);
+    }
+   
+    function SaveCashBookConfirm()
+    {
+        $('#btnsubmit').prop('disabled', true);
+        var oArray = new Array();
+        for (var i = 1; i <= TbId; i++) {
+            if ($('#AccountHead' + i).val() != undefined) {
+                var TTYpe = '';
+                if (($("#DebitAmt" + i).val() || 0) > 0) { TTYpe = 'D' }
+                else if (($("#CreditAmt" + i).val() || 0) > 0) { TTYpe = 'C' }
+                oArray.push({
+                    'CashBookId': $("#CashBookId").val(),
+                    'BookName': $("#BookCode").val(),
+                    'BookDate': $.trim($("#BookDate").val()),
+                    'AccountHead': $('#AccountCode' + i).val(),
+                    'Narration': $("#Narration" + i).val(),
+                    'DebitAmt': $("#DebitAmt"+i).val()||0,
+                    'CreditAmt': $("#CreditAmt" + i).val() || 0,
+                    'TransType': TTYpe,
+                    'ClosingBalance': $("#ClosingBalance").text()||0,
+                    'Variable1': '',
+                    'Variable2': '',
+                    'Variable3': '',
+                    'Variable4': '',
+                    'Variable5': '',
+                    'DeptId': ERPDeptId,
+                    'UserId': ERPUserId,
+                });
+            }
+        }
+        if (oArray != "") {
+            var data = { 'CashBookModel': oArray };
+                $.ajax({
+                    type: "POST",
+                    url: "../AccountsErp/CashBookInsert",
+                    data: data,
+                    success: function (result) {
+                        $('#btnsubmit').prop('disabled', false);
+                        if (result.oList.length > 0) {
+                            Showalerts(result.oList[0].Status);
+                        }
+                    }
+                });
+        }
+    }
+
+    function LoadResult(flg)
+    {
+        if (flg == 0)
+        {
+            $('.clrval').val('');
+            $('#TblCashBook').html('');
+            TbId = 1;
+        }
+        
+        CashBookLoad();
+    }
+
+    function CashBookLoad()
+    {
+        var data = {};
+        data.BookDate = $.trim($("#BookDate").val());
+        data.CashBookId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../AccountsErp/CashBookGetandGets",
+            data: data,
+            success: function (result) {
+                CashBookGet(result.oList);
+            }
+        });
+    }
+
+    function CashBookGet(result)
+    {
+        for (var j = 0;j<result.length;j++)
+        {
+            $('#BookId').val(1);
+            $('#BookCode').val(result[j].BOOKACC);
+            $('#BookName').val(result[j].BookName);
+            $('#BookDate').val(result[j].BookDate);
+            var TId = parseInt(TbId); var SlNo = parseInt($('.TblNewRow').length) + 1;
+            var TbRow = '<tr class="TblNewRow" id="CBTbRow' + TId + '">' +
+                        '<td class="jsgrid-header-cell jsgrid-align-center p-0" style="width:5%"><i class="icon-trash font-medium-2" style="cursor:pointer" onclick=RemoveTblRow(' + TId + ')></i></td>' +
+                        '<td class="jsgrid-header-cell jsgrid-align-center p-0" style="width:5%" id="SlNum' + TId + '">' + SlNo + ' </td>' +
+                        '<td class="jsgrid-header-cell jsgrid-align-left p-0" style="width:20%"> <input type="text" id="AccountHead' + TId + '" class="form-control tbtxt"  value="' + result[j].ACDESC + '"></td>' +
+                        '<td class="jsgrid-header-cell jsgrid-align-left p-0" style="width:40%">  <input type="text" id="Narration' + TId + '" class="form-control tbtxt" value="' + result[j].Narration + '"  ></td>' +
+                        '<td class="jsgrid-header-cell jsgrid-align-right p-0" style="width:15%"> <input type="text" id="DebitAmt' + TId + '" class="form-control tbtxt" onkeyup="EnterAmt(event,1,' + TId + ')" onkeypress="isNumberFloatCommon(event,this)" value=' + parseFloat(result[j].DebitAmt).toFixed(Decimal) + '></td>' +
+                        '<td class="jsgrid-header-cell jsgrid-align-right p-0" style="width:15%"> <input type="text" id="CreditAmt' + TId + '" class="form-control tbtxt" onkeyup="EnterAmt(event,0,' + TId + ')" onkeypress="isNumberFloatCommon(event, this)" value=' + parseFloat(result[j].CreditAmt).toFixed(Decimal) + '></td>' +
+            '<td class="d-none"> <input type="text"  value=' + 1 + ' id="AccountHeadId' + TId + '" /> ' +
+            '<input type="text" value=' + result[j].AccountHead + ' id="AccountCode' + TId + '" />' +
+            '</td>' +
+            ' </tr>';
+            $('#TblCashBook').append(TbRow);
+            $('.tbtxt').css('border', 'none');
+            LoadAccount(TId);
+            TbId++;
+            balload(result[j].BOOKACC);
+        }
+        CalcColsing();
+    }
+
+    //Show Warnig Popup right top
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').show();
+        $('#' + Id).focus().select();
+        window.setTimeout(function () {
+            $('#Warningpopup').hide();
+        }, 3000);
+    }
+
+    function Showalerts(Status) {
+        if (Status == 1) {
+            LoadResult(0);
+            swal('CashBook'," Saved Successfully", "success");
+            $('.swal-button swal-button--info').focus();
+        }
+        else if (Status == 2) {
+            formrefresh();
+            swal('CashBook', " Updated Successfully", "success");
+            $('.swal-button swal-button--info').focus();
+        }
+    }
+
+    //Numeric Only Text Boxes
+    function isNumber(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode != 43 && charCode != 45 && charCode != 40 && charCode != 41 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    //Numeric Only Text Boxes with Decimal Point
+    function isNumberFloatCommon(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+    }
+
+    function BtnFocusClr() {
+        $(".btn-outline-primary").focus(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-outline-primary");
+            $('#' + Id).addClass("btn-primary");
+        });
+        $(".btn-outline-primary").focusout(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-primary");
+            $('#' + Id).addClass("btn-outline-primary");
+        });
+        $(".btn-outline-secondary").focus(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-outline-secondary");
+            $('#' + Id).addClass("btn-secondary");
+        });
+        $(".btn-outline-secondary").focusout(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-secondary");
+            $('#' + Id).addClass("btn-outline-secondary");
+        });
+        $(".btn-outline-warning").focus(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-outline-warning");
+            $('#' + Id).addClass("btn-warning");
+        });
+        $(".btn-outline-warning").focusout(function (e) {
+            var Id = $(this).attr('id');
+            $('#' + Id).removeClass("btn-warning");
+            $('#' + Id).addClass("btn-outline-warning");
+        });
+    }
+</script>
+

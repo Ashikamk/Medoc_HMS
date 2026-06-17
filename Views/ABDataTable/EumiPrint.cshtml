@@ -1,0 +1,74 @@
+﻿@model EUMI_ERP.DataTablesServer.EumiPrintData
+@{
+    Layout = null;
+    var setId = 0;
+    var dt = Model.getOneSet(setId);
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+   
+    <title>@Model.title</title>
+    <style type="text/css">
+        body { font-family:sans-serif; font-size: 11px; line-height: 1.2;}
+        table { border-collapse:collapse; }
+        table td { border : 1px solid black; padding:3px 5px;}
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <h1>eumi</h1>
+    <img src="/app-assets/img/text.png" alt="company logo">
+    <div>
+        <table style="width:100%;">
+            <thead>
+                <tr>
+                    @foreach (System.Data.DataColumn dc in dt.Columns)
+                    {
+                        <th>@dc.Caption</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @do
+                {
+                    foreach (System.Data.DataRow dr in dt.Rows)
+                    {
+                        <tr>
+                            @foreach (System.Data.DataColumn dc in dt.Columns)
+                            {
+                                <td>@dr[dc]</td>
+                            }
+
+                        </tr>
+                    }
+                    try
+                    {
+                        setId++;
+                        dt = Model.getOneSet(setId);
+                        if (dt.Rows.Count == 0)
+                        {
+                            break;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        System.Diagnostics.Trace.WriteLine("Exception : " + ex.Message);
+                        System.Diagnostics.Trace.WriteLine(ex.StackTrace);
+                        break;
+                    }
+                    Response.Flush();
+                } while (setId <= 1000);
+            </tbody>
+        </table>
+
+    </div>
+</body>
+</html>

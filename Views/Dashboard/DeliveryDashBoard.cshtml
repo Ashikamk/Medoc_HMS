@@ -1,0 +1,422 @@
+﻿
+@{
+    ViewBag.Title = "DeliveryDashBoard";
+}
+
+<script type="text/javascript" src="~/ProjectScript/DeliveryDashboard.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+<script type="text/javascript" src="~/app-assets/FromStack/dist/JsBarcode.all.js"></script>
+
+<style>
+  
+    .newrow {
+      
+       line-height:35px;
+        
+    }
+</style>
+
+
+<div class="myData" data-x="M217" />
+<div class="content-wrapper">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h4 class="card-title" style="font-weight:bold;">Delivery Details</h4>
+                    </div>
+
+                        <div class="row" style="margin-left:700px;margin-top:-40px">
+                            <div class="col-md-1" style="margin-top:-10px;margin-right:65px;">
+                                <input type="text" style="width:125px;border-radius:10px" id="DateFrom" onchange="GetSalesDetails(0,0,0,0,0)" class="form-control">
+                            </div>
+                            <div>
+                                -
+                            </div>
+                            <div class="col-md-3" style="margin-top:-10px;">
+                                <input type="text" style="width:125px;border-radius:10px" id="DateTo" onchange="GetSalesDetails(0,0,0,0,0)" class="form-control">
+                            </div>
+                        </div>
+                        <div class="card-body" style="margin-top:20px; height:725px; overflow:auto;">
+                            <table class="table table-striped table-bordered base-style dataTable" id="salesdetails"></table>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:280px; width: 2050px;border-bottom:1px solid;border-bottom-color:#e9e9e9;display:none">
+ <table class="jsgrid-table" id="tblsalesinvoice"></table>
+ </div>
+
+
+
+
+
+<div style="display:none">
+    <img id="barcode1" />
+    <input type="text" id="GrandTotal"/>
+    <input type="text" id="Trnno" />
+    <input type="text" id="txtcustomer" />
+
+    <input type="text" id="savedbillno" />
+    <input type="text" id="txtBillSlNocopy" />
+    <input type="text" id="txtSalesNo" />
+    <input type="text" id="txtBillseriesId" />
+    <input type="text" id="txtaddress" />
+    <select id="select_payterms"></select>
+    <select id="select_terms"></select>
+    <select id="select_location0"></select>
+    <select id="select_locn"></select>
+    <input type="text" id="txtcreditlimit" />
+   
+    <input type="text" id="DepartmentCode" /> 
+    <input type="text" id="txtivdate" /> 
+    <select id="select_salesman"></select>
+    <select  id="select_unit0"></select>
+    <input type="text" id="TotalPdtQty" />  
+    <input type="text" id="TotalProducts" />   
+    <input type="text" id="txtquantity" />   
+    <input type="text" id="ProductDesc" />   
+    <input type="text" id="txtproduct"/> 
+    <input type="text"  id="CurrentTimeSales" /> 
+    
+</div>
+<script>
+    var UnitSelect = '';
+    var LocnSelect = '';
+    var LocArray = [];
+
+    $(document).ready(function () {
+        LocnLoad(0);
+        $('#DateFrom').val(CurDate);
+        $('#DateTo').val(CurDate);
+        GetSalesDetails(0, 0, 0, 0, 0);
+      setInterval(function () { GetSalesDetails(0, 0, 0, 0, 0); }, 10000); 
+      
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        
+       
+        deptload();
+        units();
+        Salesman(0);
+    });
+
+    function deptload() {
+        var data = {};
+        data.DepartmentId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                $("#DepartmentCode").val(result.oList[0].DepartmentCode);
+              
+            }
+        });
+    }
+    function Salesman(id) {
+
+        var data = {};
+        data.Id = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/SalesmanGetandGets",
+            data: data,
+            success: function (result) {
+                SalesmanLoad(result.oList, id);
+
+
+            }
+        });
+
+    }
+    var UserSalesmanId = 0;
+    function SalesmanLoad(result, a) {
+        $("#select_salesman").empty();
+        $("#select_salesman").append("<option value='0'>--Select--</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#select_salesman").append("<option value='" + result[i].Id + "'>" + result[i].FirstName + "</option>");
+            if (result[i].UserId == ERPUserId)
+                UserSalesmanId = result[i].Id;
+        }
+        if (a == 0) {
+            $('#select_salesman').val(UserSalesmanId);
+        }
+        else {
+            $('#select_salesman').val(a);
+        }
+    }
+    
+    function LocnLoad(id) {
+        var data = {};
+        data.LocationId = 0;
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/LocationGetandGets",
+            data: data,
+            success: function (result) {
+                LocationLoad(result.oList, id);
+            }
+        });
+
+    }
+
+    function LocationLoad(result, a) {
+        $("#select_locn,#select_location0").empty();
+        LocnSelect = "<option value=0>-Select-</option>";
+        for (var i = 0; i < result.length; i++) {
+            if (LocArray.includes(result[i].LocationId))
+                LocnSelect += "<option value='" + result[i].LocationId + "' name='" + result[i].NegativeBillingFlag + "'>" + result[i].LocationCode + "</option>";
+            else
+                LocnSelect += "<option style='color:#26ACAE' disabled value='" + result[i].LocationId + "' name='" + result[i].NegativeBillingFlag + "'>" + result[i].LocationCode + "</option>";
+        }
+        $("#select_location0").append(LocnSelect);
+        $('#select_locn').val(UserLocationId);
+        $('#select_location0').val(UserLocationId);
+       
+    }
+  
+    function units()
+    {
+        var data = {};
+        data.UnitId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UnitGetandGets",
+            data: data,
+            success: function (result) {
+                UnitLoad(result.oList);
+            }
+        });
+    }
+    function UnitLoad(result) {
+        $("#select_unit0,#unit_job").empty();
+        UnitSelect = "<option value=0>-Select-</option>";
+        var UnitJob = "<option value=0>-Select-</option>";
+        for (var i = 0; i < result.length; i++) {
+            UnitSelect += "<option value='" + result[i].UnitId + "'name='" + result[i].UnitName + "'>" + result[i].UnitName + "</option>";
+            UnitJob += "<option value='" + result[i].UnitId + "'name='" + result[i].UnitName + "'>" + result[i].UnitName + "</option>";
+        }
+        $("#select_unit0").append(UnitSelect);
+        $("#unit_job").append(UnitJob);
+    }
+    function SalesGets(result) {
+
+ 
+        for (var n = 0; n < result.length; n++) {
+            var bins = '';
+
+            if (result[n].LocnId == 1) {
+                if (result[n].Bin_A != '') { bins = bins + result[n].Bin_A; }
+            }
+            else if (result[n].LocnId == 2) {
+                if (result[n].Bin_B != '') { bins = bins + result[n].Bin_B; }
+            }
+            else if (result[n].LocnId == 3) {
+                if (result[n].Bin_C != '') { bins = bins + result[n].Bin_C; }
+            }
+            else if (result[n].LocnId == 4) {
+                if (result[n].Bin_D != '') { bins = bins + result[n].Bin_D; }
+            }
+            else if (result[n].LocnId == 5) {
+                if (result[n].Bin_E != '') { bins = bins + result[n].Bin_E; }
+            }
+            else if (result[n].LocnId == 6) {
+                if (result[n].Bin_F != '') { bins = bins + result[n].Bin_F; }
+            }
+            else if (result[n].LocnId == 7) {
+                if (result[n].Bin_G != '') { bins = bins + result[n].Bin_G; }
+            }
+            else if (result[n].LocnId == 8) {
+                if (result[n].Bin_H != '') { bins = bins + result[n].Bin_H; }
+
+            }
+            $('#CurrentTimeSales').val(result[n].CurrentDate);
+            $('#txtBillSlNocopy').val(result[n].BillSlNo);
+            $('#txtSalesNo').val(result[n].BillSlNo);
+            $('#txtBillseriesId').val(result[n].BillSeriesId);
+            $('#txtcustomer').val(result[n].CustName);
+            $('#txtCustId').val(result[n].CustId);
+            $('#txtaddress').val(result[n].CustAddress);
+            $('#select_payterms').val(result[n].PayType);
+          
+            $('#select_terms').val(result[n].InvTerms);
+            $('#txtduedate').val(result[n].DueDate);
+            $('#CashAdvance').val((result[n].CashAdvance).toFixed(Decimal));
+            $('#txtcreditlimit').val((result[n].CreditLimit || 0).toFixed(Decimal));
+          
+
+            if (result[n].SalesManId != 0 || result[n].SalesManId != '')
+                $('#select_salesman').val(result[n].SalesManId);
+            else
+                $('#select_salesman').val(UserSalesmanId);
+            if (result[n].AreaId != 0 || result[n].AreaId != '')
+                $('#select_place').val(result[n].AreaId);
+            else
+                $('#select_place').val(0);
+            if (result[n].CurrencyId != 0 || result[n].CurrencyId != '') {
+                $('#select_crncy').val(result[n].CurrencyId);
+                $('#txtcrncyrate').val(parseFloat(result[n].CurrencyRate));
+            }
+            else {
+                $('#select_crncy').val(BaseCurrency);
+                $('#txtcrncyrate').val($('#select_crncy').find("option:selected").attr("name"));
+            }
+            $('#select_locn').val(result[n].LocId);
+            $('#select_location0').val($('#select_locn').val());
+            $('#select_jobno').val(result[n].JobCode);
+            $('#GrandTotal').val((parseFloat(result[n].FCGrandTotal).toFixed(Decimal)));
+            $('#FcGrandTotal').val((parseFloat(result[n].GrandTotal).toFixed(Decimal)));
+            $('#TotalTaxable').val((parseFloat(result[n].TotalTaxable).toFixed(Decimal)));
+            $('#FcTotalTaxable').val((parseFloat(result[n].FCTotTaxable).toFixed(Decimal)));
+            $('#TotalDiscount').val((parseFloat(result[n].TotalDiscount).toFixed(Decimal)));
+            $('#FcTotalDiscount').val((parseFloat(result[n].FCTotalDiscount).toFixed(Decimal)));
+            $('#TotalTax').val((parseFloat(result[n].TotalTax).toFixed(Decimal)));
+            $('#FcTotalTax').val((parseFloat(result[n].FCTotTax).toFixed(Decimal)));
+            $('#txtmsg').val(result[n].Remarks);
+            $('#gndtotal').text(parseFloat(result[n].GrandTotal).toFixed(Decimal));
+            $('#ProjectJobId').val(result[n].JobNumber);
+            $('#TotalAvgCost').val((parseFloat(result[n].TotalCost).toFixed(Decimal)));
+            $('#txtivdate').val(result[n].InvDate);
+            $('#disc').val(parseFloat(result[n].BillDiscount).toFixed(Decimal));
+            $('#fcdisc').val(parseFloat(result[n].FcBillDiscount).toFixed(Decimal));
+            $('#Trnno').val(result[n].LPONumber);
+            $('#txtlpono').val(result[n].LPONumber);
+            $('#PhoneNo').val(result[n].PhoneNumber);
+         
+            if (result[n].RoundFCGrandTotal != 0) {
+                $('#roundoffstatus').prop("checked", true);
+                $('#TotRoundOff').val(parseFloat(result[n].RoundFCGrandTotal).toFixed(Decimal) || 0);
+                $('#roundgndtotal').val(parseFloat(result[n].RoundGrandTotal).toFixed(Decimal) || 0);
+                $('#roundfcgndtotal').val(parseFloat(result[n].RoundFCGrandTotal).toFixed(Decimal) || 0);
+            }
+            else {
+                $('#roundoffstatus').prop("checked", false);
+                $('#TotRoundOff').val('0.00');
+                $('#roundgndtotal').val('0.00');
+                $('#roundfcgndtotal').val('0.00');
+            }
+
+
+            BillDiscountFlag = 0;
+           
+            var id = parseInt(n + 1);
+            
+            var Otherdescription = "";
+            if (result[n].Otherdescription != undefined)
+                Otherdescription = result[n].Otherdescription;
+
+            var desc = result[n].ProductDescr;
+            var j = 0, strLength = desc.length;
+            for (j; j < strLength; j++) { desc = desc.replace(" ", "#%#"); }
+
+            var code = result[n].ProductCode;
+            var k = 0, strLength1 = code.length;
+            for (k; k < strLength1; k++) { code = code.replace(" ", "#%#"); }
+
+            var ProdRow1 = "<tr  class='jsgrid-row'>" +
+                      "<td id= 'col13_" + id + "' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:15px'><input class='jsgrid-button jsgrid-delete-button jsgrid-align-center' id='btnrodelt' type='button' onclick='rowdelete(" + id + ")' title='Delete'></td>" +
+                      //"<td id=" + 'td' + id + " class='jsgrid-cell' style='width:15px;text-align:center'>" + slno + " </td>" +
+                      "<td class='jsgrid-cell jsgrid-align-right' style='width:75px;text-align:center'><input type='text' id=" + 'slordeno' + id + " style='display:none' value='" + result[n].OrderNo + "' /><input type='text' id=" + 'delvno' + id + " style='display:none' value='" + result[n].DeliveryOrderNo + "' /><input type='text' id=" + 'slordsubid' + id + " style='display:none' value='" + result[n].SOSubId + "' /><input type='text' id=" + 'delvsubid' + id + " style='display:none' value='" + result[n].DOrdSubId + "' /><input type='text' style='display:none;height:30px' id=" + 'Otherdescription' + id + " value='" + Otherdescription + "'><input type='text' id=" + 'PrdtId' + id + " style='display:none' value='" + result[n].ProductId + "' /><input type='text' style='height:30px;background-color:white' disabled='' class='form-control text-left' id=" + 'txtproduct' + id + " value='" + result[n].ProductCode + "' data-toggle='tooltip' title='" + result[n].ProductCode + "'></td>" +
+                      "<td class='jsgrid-cell jsgrid-align-right' style='width:75px;text-align:center'><input type='text' style='height:30px;background-color:white'  class='form-control text-left' id=" + 'ProductDesc' + id + " value='" + result[n].ProductDescr + "' data-toggle='tooltip' title='" + result[n].ProductDescr + "'></td>" +
+                      "<td class='jsgrid-cell jsgrid-align-center' style='width:75px'><select  id=" + 'select_unit' + id + " style='background-color:white;height:30px' class='form-control' onchange='changeunit(" + id + ",this)' onkeydown=Focusnextgrid(event,'u'," + id + ") onfocusout=focusoutgrid('u'," + id + ") onfocusin=focusingrid('u'," + id + ")>" + UnitSelect + "</select></td>" +
+                      "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:100px'><select id=" + 'select_location' + id + "  style='background-color:white;height:30px'  class='form-control' >" + LocnSelect + "</select></td>" +
+                      "<td class='jsgrid-cell jsgrid-align-center' style='width:75px'><input type='text'  class='form-control text-center' id=" + 'txtquantity' + id + " value=" + result[n].ProdQty + " style='background-color:white;height:30px' onkeyup='checkqty(" + id + "),amountcalculation(" + id + ")' onkeydown=Focusnextgrid(event,'q'," + id + ") onkeypress=isNumberInt(event,this) onfocusout=focusoutgrid('q'," + id + ") onfocusin=focusingrid('q'," + id + ")><input type='text' class='form-control text-center' id=" + 'txtstocktotloseqty' + id + " value='0' style='display:none'></td>" +
+                      "<td class='jsgrid-cell jsgrid-align-center' style='width:75px'> <input type='text' id=" + 'txtfcrate' + id + " value=" + parseFloat(result[n].FcProdRate).toFixed(Decimal) + "  style='display:none'><input type='text'  class='form-control text-center' id=" + 'txtrate' + id + " value=" + parseFloat(result[n].ProdRate).toFixed(Decimal) + " style='background-color:white;height:30px' onkeyup='amountcalculation(" + id + ")' onkeypress=isNumber(event,this) onkeydown=Focusnextgrid(event,'r'," + id + ") onfocusout=focusoutgrid('r'," + id + ") onfocusin=focusingrid('r'," + id + ")></td>" +
+                      "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:75px'><input type='text' id=" + 'txtfcdiscount' + id + " value=" + parseFloat(result[n].FcProdDisc).toFixed(Decimal) + "  style='display:none'><input type='text'  id=" + 'txtdiscount' + id + " class='form-control text-center' style='background-color:white;height:30px' value=" + parseFloat(result[n].ProdDisc).toFixed(Decimal) + " onkeyup='amountcalculation(" + id + ")' onkeypress=isNumber(event,this) onkeydown=Focusnextgrid(event,'d'," + id + ") onfocusout=focusoutgrid('d'," + id + ") onfocusin=focusingrid('d'," + id + ")></td>" +
+                      "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:75px'><input type='text' id=" + 'txtfctaxableamnt' + id + " value=" + parseFloat(result[n].FCTaxableAmount).toFixed(Decimal) + "  style='display:none'><input type='text'  class='form-control text-center' style='background-color:white;height:30px' id=" + 'txttaxableamnt' + id + " value=" + parseFloat(result[n].TaxableAmount).toFixed(Decimal) + " onkeyup='amountcalculation(" + id + ")'></td>" +
+                     // "<td class='jsgrid-cell jsgrid-align-center' style='width:38px'><select style='background-color:white;height:30px' disabled='' id=" + 'select_tax' + id + " class='form-control' onchange='ChangeTax(" + id + ",this)' onkeydown=Focusnextgrid(event,'t'," + id + ") onfocusout=focusoutgrid('t'," + id + ") onfocusin=focusingrid('t'," + id + ")>" + TaxSelect + "</select></td>" +
+                      "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:75px;display:none'><input typ='text'  style='background-color:white;height:30px' class='form-control text-center' id=" + 'txttaxpercent' + id + " value=" + result[n].TaxPercent + " onkeyup='amountcalculation(" + id + ")'></td>" +
+                      "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:75px;display:none'><input type='text' id=" + 'txtfctaxamnt' + id + " value=" + parseFloat(result[n].FCTaxAmount).toFixed(Decimal) + "  style='display:none'><input typ='text' style='background-color:white;height:30px' class='form-control text-center'  id=" + 'txttaxamnt' + id + " value=" + parseFloat(result[n].TaxAmount).toFixed(Decimal) + " ></td>" +
+                      "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' style='width:75px;display:none'><input type='text' id=" + 'txtfcamnt' + id + " value=" + parseFloat(result[n].FCAmount).toFixed(Decimal) + "  style='display:none'><input typ='text' class='form-control text-center' style='background-color:white;height:30px'  id=" + 'txtamnt' + id + " value=" + parseFloat(result[n].Amount).toFixed(Decimal) + "></td>" +
+                      "<td class='jsgrid-cell jsgrid-align-center' style='width:75px;display:none'><input type='text' id=" + 'LineAvgCost' + id + " value=" + (result[n].AvgCost * result[n].ProdQty) + " style='display:none'> <input type='text'  class='form-control text-center' id=" + 'AvgCost' + id + " value=" + parseFloat(result[n].AvgCost).toFixed(Decimal) + " style='background-color:white;height:30px'></td>" +
+                      "<td style='display:none' id=" + 'Bin' + id + ">" + bins + "</td>" +
+                      "</tr>";
+            $('#tblsalesinvoice').append(ProdRow1);
+            $('#select_unit' + id).val(result[n].UnitId);
+            $('#select_tax' + id).val(result[n].TaxId);
+            $('#select_location' + id).val(result[n].LocnId);
+         
+            $('.jsgrid-button').prop("disabled", true);
+            i++;
+
+        }
+        totalproducts();
+    }
+
+    function totalproducts() {
+        var ln = $('#tblsalesinvoice tr').length;
+        var totqty = 0;
+        $('#TotalProducts').val(0);
+        $('#TotalPdtQty').val(0);
+        for (var p = 1; p <= i; p++) {
+            totqty = totqty + parseFloat($('#txtquantity' + p).val() || 0);
+        }
+        $('#TotalProducts').val(ln);
+        $('#TotalPdtQty').val(totqty);
+    }
+
+
+    function PrintthisBill(BillSeriesId, BillSlNo, DeptId, LocId, UserId) {
+        JsBarcode("#barcode1", BillSeriesId + '-' + BillSlNo);
+        $('#tblsalesinvoice tr').remove();
+        var data = {};
+        data.BillSeriesId = BillSeriesId;
+        data.BillSlNo = BillSlNo;
+        data.DeptId = DeptId;
+        $.ajax({
+            type: "POST",
+            url: "../SalesInvoice/SalesGetandGets",
+            data: data,
+            success: function (result) {
+                $('#txtBillseriesId').val(data.BillSeriesId);
+                
+                $('#txtBillSlNocopy').focus();
+                $('#txtBillSlNocopy').select();
+               
+                $('#btnsubmit').prop("disabled", true);
+                $('#btnlist').prop("disabled", true);
+                $('#btnadd').prop("disabled", true);
+                $('#btnedit').show();
+               
+                SalesGets(result.oList);
+
+                PrintThisBillConfirm();
+             GetSalesDetails(BillSeriesId, BillSlNo, DeptId, LocId, UserId); 
+            }
+        });
+    
+     
+    }
+    function PrintThisBillConfirm() {
+        PrintthisBillWindows('SALES', i, 'WITHBINAUTOMOBILESCOPY');
+       
+        GetSalesDetails(0, 0, 0, 0, 0);
+       
+    }
+
+  
+</script>

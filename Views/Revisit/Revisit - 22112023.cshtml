@@ -1,0 +1,921 @@
+﻿
+@{
+    ViewBag.Title = "Revisit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    img {
+        max-height: 250px;
+        max-width: 250px;
+    }
+    .modal-xl {
+    max-width: 1200px;
+}
+</style>
+
+<script type="text/javascript" src="~/ProjectScript/Revisit.js"></script>
+<script type="text/javascript" src="~/ProjectScript/CommonHMS.js"></script>
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M352" />
+
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header p-2" style="border-bottom:1px solid #e6e6e6;background-color:#009da0;">
+                    <div class="row">
+                        <h4 class="card-title mb-0 text-left col-md-4" style="font-weight:bold;color:white;">OP-Visit Information</h4>
+
+                        <div class="col-md-8">
+                            <table width="100%" style="table-layout:fixed;">
+                                <tr>
+                                    <td>
+                                        <label class="card-title mb-0" style="font-weight:bold;float:right;color:white;font-size:large;">OP-Visit ID:- </label>
+
+                                    </td>
+                                    <td>
+                                        <label id="CurRevisitId" class="card-title mb-0" style="font-weight:bold;float:left;color:white;font-size:large;"></label>
+                                    </td>
+                                    <td>
+                                        <label id="RevisitTime" class="card-title mb-0 pl-1" style="font-weight:bold;float:right;color:white;font-size:large;"></label>
+
+                                        <label id="LabelDate" class="card-title mb-0 pr-1" style="font-weight:bold;float:right;color:white;font-size:large;"></label>
+                                        
+                                    </td>
+                                   
+                                </tr>
+                            </table>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="px-3">
+                        <div class="card-content collapse show">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-body">
+
+                                        <div class="row mt-1">
+                                            <div class="col-md-4" style="border-right:1px solid #d3dce9;">
+
+                                                <div class="row pb-2 ml-0 pr-2">
+                                                    <label class="p-1" style="font-weight:bold;font-size:large;border:1px solid #b4b0b0;border-radius:3px;">Search Patient</label>
+                                                </div>
+
+                                                <div class="row mb-1">
+                                                    <label class="col-md-4 label-control">Reg Number<span class="danger">*</span></label>
+                                                    <div class="col-md-8 input-group m-0">
+                                                        <input type="text" id="RegSeries" class="form-control denull col-md-4" disabled style="background-color:white;" />
+                                                        <input type="text" id="RegNumber" class="form-control denull enterflow" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-1">
+                                                    <label class="col-md-4 label-control">Name<span class="danger">*</span></label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="PatName" disabled onkeyup="changetoupper('PatName')" class="form-control denull enterflow" autocomplete="off" style="background-color:white;color:red;font-weight:bold;" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-1">
+                                                    <label class="col-md-4 label-control">Doctor Name<span class="danger">*</span></label>
+                                                    <div class="col-md-8">
+                                                        <select id="DocName" class="form-control dezero" autocomplete="off" onchange="TokenNumberLoad(),ChangeFee()"></select>
+                                                    </div>
+                                                </div>
+                                                <hr class="mb-1" />
+                                                <div class="row pr-2 ml-0">
+                                                    <label class="p-1" style="font-weight:bold;font-size:large;border:1px solid #b4b0b0;border-radius:3px;">Fees</label>
+                                                </div>
+
+
+                                                <div class="row mb-1">
+                                                    <label class="col-md-4 label-control">Visiting</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="VisitingFees" onkeypress="isNumber(event,this)" class="form-control denull enterflow" autocomplete="off" onkeyup="amountfillinpopup()" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-1">
+                                                    <label class="col-md-4 label-control">Consultation</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="ConsultationFees" onkeypress="isNumber(event,this)" class="form-control denull enterflow" autocomplete="off" onkeyup="amountfillinpopup()" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-1">
+                                                    <label class="col-md-4 label-control">Other</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" readonly id="OtherFees" onkeypress="isNumber(event,this)" class="form-control denull enterflow" autocomplete="off" onkeyup="amountfillinpopup()" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8" style="border-right:1px solid #e6e6e6;">
+                                                <div class="row  pb-2 pl-2 pr-2">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="text-left">
+                                                                    <label class="p-1" style="font-weight:bold;font-size:large;border:1px solid #b4b0b0;border-radius:3px;">Patient Information</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="pull-right">
+                                                                    <input type="text" disabled class="form-control" id="RevisitDate" style="display:none;font-weight:bold;font-size:large;border:none;text-align:right;background-color:white;" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6" style="border-right:1px solid #d3dce9;">
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Age</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatAge" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Gender</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatGender" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">DOB</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatDOB" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Blood Group</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatBloodGrp" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Occupation</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatOccupation" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Last Visit</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatLastVisit" class="label-control detextnull"></label>
+                                                            </div>
+                                                           
+                                                        </div>
+
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Last Visit Days</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                           
+                                                            <div class="col-md-7">
+                                                                <label id="PatLastVisitdayes" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Date of Register</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatDOR" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Health Card No</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatHealthCard" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Aadhar No</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatAadhar" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Address</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatAdd1" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-5 label-control"></label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatAdd2" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-5 label-control"></label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatAdd3" class="label-control detextnull m-0"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+
+                                                        <div class="row mb-2" style="height:250px;">
+                                                            <div class="card m-0 col-md-12">
+                                                                <div class="card-header text-center p-0" style="">
+                                                                    <img id="myImg" src="~/app-assets/img/portrait/medium/avatar-m-100.jpg" alt="Gini" class="img-thumbnail  gray" onerror="this.onerror = null; this.src = '../app-assets/img/portrait/medium/avatar-m-100.jpg';">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Contact Number</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-7">
+                                                                <label id="PatNumber" class="label-control detextnull"></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Shift</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-4">
+                                                                <select id="Shift" class="form-control" autocomplete="off" onchange="TokenNumberLoad()"></select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-1">
+                                                            <label class="col-md-4 label-control">Token</label>
+                                                            <label class="col-md-1 label-control">:</label>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="PatTokenNumber" onkeypress="isNumberInt(event,this)" class="form-control denull" style="font-size:xx-large;font-weight:bold;color:red;height:150%;text-align:center" autocomplete="off" />
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <script>
+                                            function TokenPrint() {
+                                                var today1 = new Date();
+                                                var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
+                                                ComapnydivToPrintLab.style.width = "300px";
+                                                ComapnydivToPrintLab.style.height = "100px";
+                                                var myWindow = window.open("", "", "width=1500,height=1500"); $('#PayType :selected').text()
+
+                                                myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+                                                myWindow.document.write(PrintBG3);
+
+                                                //  myWindow.document.write('<table height=80px width=100%><tr><td colspan=12></td></tr> </table>');
+
+                                                //  myWindow.document.write('<table width=100%><tr><td colspan=8></td></tr> </table>');
+                                                myWindow.document.write('<table width=100% ><tr>');
+                                                myWindow.document.write('<td width=100% style="border:none;"><table width=100%><tr align=center><td colspan=6 >');
+                                                myWindow.document.write('<table width=100% ><tr ><td  align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+
+                                                // myWindow.document.write('<table width=100%; style="text-align:center;"><tr><td style="font-family:tahoma;font-size: 20px;font-weight: bold;"> ' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td style="font-family:tahoma;font-size: 17px;font-weight: bold;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td style="font-family:tahoma;font-size: 17px;font-weight: bold;">' + window.CompanySettingsArray.Email + '</td></tr> <tr><td style="font-family:tahoma;font-size: 17px;font-weight: bold;">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');    
+                                                myWindow.document.write('</td></tr></table></td></tr></table>');
+
+                                                myWindow.document.write('<table width=100%><tr><td colspan=8 style="border-top: dotted;font-family:tahoma;"></td></tr> </table>');
+
+                                                var myTag = $('#DocName').find('option:selected').attr('tokenprefix');
+
+                                                myWindow.document.write('<table width=100%>' +
+                                                    '<tr><td style="font-family:tahoma;font-size: 13px;font-weight:bold;" width=100%> Date &#160;&#160;&#160; : ' + $('#LabelDate').text() + '   ' + time + '</td></tr>' +
+
+                                                    '<tr><td style="font-family:tahoma;font-size: 13px;font-weight:bold;" width=100%>Patient :' + $('#PatName').val() + ' / ' + ' MR# :  ' + $('#RegNumber').val() + '</td></tr>' +
+                                                    '<tr><td style="font-family:tahoma;font-size: 13px;font-weight:bold;" width=100%>Doctor : ' + $('#DocName :selected').text() + '</td></tr></table>');
+                                                // myWindow.document.write('<table height=20px><tr><td colspan=12></td></tr> </table>');
+                                                myWindow.document.write('<table width=100%><tr height=50px> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;" width=100%> <center>TOKEN NUMBER</center></td></tr> <tr> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;" width=100%> <center>' + myTag + '-' + $('#PatTokenNumber').val() + '</center></td ></tr> </table> ');
+                                                // myWindow.document.write('<table height=20px><tr><td colspan=12></td></tr> </table>');
+                                                myWindow.document.write('<table width=100%><tr><td colspan=8 style="border-top: dotted;font-family:tahoma;"></td></tr> </table>');
+                                                myWindow.document.write('<table width=100%><tr><td style="font-family:tahoma;font-size: 13px;font-weight:bold;text-align:center;">Thank You..Visit Again..</td></tr>   </table>');
+
+
+                                                myWindow.print();
+                                                myWindow.close();
+
+
+                                            }
+
+
+                                        </script>
+
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="text-left">
+                                                        @*<button type="button" style="width:160px" class="btn btn-primary btn-min-width mr-1 mb-1" onclick="HealthPop(0)">Health Details <i class="fa fa-heart-o"></i></button>*@
+                                                        <button type="button" style="width:160px" id="btnvisiting" class="btn btn-primary btn-min-width mr-1 mb-1">Pre-Visit Details <i class="fa fa-list"></i></button>
+                                                        <button type="button" style="width:160px" id="btnpayment" class="btn btn-primary btn-min-width mr-1 mb-1" onclick="PaymentPop(0)">Payment <i class="fa fa-list"></i></button>
+                                                        <button type="button" style="width:100px;display:none" id="btnprint" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+                                                        <button  type="button" style="display:none" id="btntoken" onclick="TokenPrint()" class="btn btn-primary btn-min-width mr-1 mb-1">Token<i class="ft-file-text"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="text-right">
+                                                        <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                                        <button type="button" style="width:120px" id="btnsavesubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave & Bill <i class="fa fa-check-square-o"></i></button>
+
+                                                        <button type="button" style="width:100px" id="btnlist" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
+                                                        <button type="button" style="width:100px" id="btnnew" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                                        <button style="display:none" type="button" id="btndelete" class="btn btn-primary btn-min-width mr-1 mb-1">Delete <i class="fa fa-times"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    Primary Key
+    <input type="text" id="RevPrimaryId" value="0" class="dezero" />
+    Prev Shift
+    <input type="text" id="PrevShift" value="0" />
+    Patient Id
+    <input type="text" id="PatientId" value="0" class="dezero" />
+    RevisitId
+    <input type="text" id="CurRevId" />
+    RegSerId
+    <input type="text" id="RegSeriesId" value="0" class="dezero" />
+</div>
+
+<div style="display:none;" id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr>
+                                <td><h4 class="card-title" style="font-weight:bold;">Re-Visit Info</h4></td>
+
+                                <td align="right">
+                                    <div class="heading-elements">
+                                        <div>
+                                            <button type="button" onclick="Filter()" class="btn btn-outline-primary" id="Filter"><i class="fa fa-search"></i> Search</button>
+                                            <button type="button" onclick="closelist()" class="btn btn-outline-primary" id="ed"><i class="ft-edit"></i> Add New</button>
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard" style="overflow:auto">
+                            <table id="tbl_Revisit" class="table table-striped table-bordered base-style dataTable"></table>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="confirmff" class="overlay" style="display:none;">
+    <div class="modal fade text-left show" id="keyboardff" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display:none;padding-right: 17px; top:28%;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body" style="text-align:center">
+                    <h3 style="color:red"><B>ADD RE-VISIT NUMBER !!!</B></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none;height:200%;width:115%">
+    <div class="modal-dialog modal-lg" role="document" style="top:8%">
+        <div class="modal-content" style="width:66%">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Search Options</h3>
+
+                <button type="button" class="close" onclick="$('#popupdiv').hide()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+
+                <div class="modal-body">
+                    <div class="row">
+
+                        <label class="col-md-2" style="font-weight:bold;text-align:right;">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="FromDate" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label class="col-md-2" style="font-weight:bold;text-align:right;">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="ToDate" class="form-control" autocomplete="off">
+                        </div>
+
+                    </div>
+
+                    <div class="row p-1" style="border-bottom:1px solid #cfd8dc;"></div>
+                    <div class="row pt-2">
+                        <label class="col-md-2" style="font-weight:bold;">Doctor </label>
+                        <div class="col-md-4" style="">
+                            <select id="DoctorSearchId" class="form-control dezero" autocomplete="off"></select>
+                        </div>
+
+
+                        <label class="col-md-2" style="font-weight:bold;">Reg No</label>
+                        <div class="col-md-4" style="">
+                            <input type="text" id="SearchRegNo" class="form-control ui-autocomplete-input" autocomplete="off">
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="GetRows(0)" style="width:100px;margin-right:40%" id="btnsearch" class="btn btn-primary">Go <i class="fa fa-search"></i></button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog" style="">
+        <div class="modal-dialog modal-xl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="row col-md-12 p-0">
+                        <div class="col-md-6">
+                            <h4 class="modal-title font-weight-bold">Pre-Visit Details</h4>
+                        </div>
+                        <div class="col-md-5">
+                            <h6 class="modal-title font-weight-bold" style="float:right;color:blue;" id="PatientNameMo"></h6>
+                        </div>
+                        <div class="col-md-1 p-0">
+                            <button type="button" class="close pull-right" onclick="ngOnDestroy()">&times;</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <table id="tbl_PreRevisit" width="100%" class="table table-striped table-bordered base-style dataTable"></table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="ngOnDestroy()">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="modal fade" id="revisitpayment" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold">Payment Methods</h4>
+                    <button type="button" class="close pull-right"  onclick="closePop()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mt-1">
+                        <div class="col-md-6">
+                            <label class="label-control mb-0">
+                                PayType
+                            </label>
+
+                            <select id="PayType" name="priority" onchange="paymethodchange()" class="form-control smallTextbox topfocs">
+
+                                <option value="1">Cash</option>
+                                <option value="2">Credit</option>
+                                <option value="3">UPI Pay</option>
+                                <option value="4">Card Pay</option>
+                                <option value="0">FOC</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="label-control mb-0">
+                                Total Amount
+                            </label>
+                            <input type="text" id="revtotal" class="form-control form-control-md Patadddet" autocomplete="off" readonly />
+                        </div>
+                    </div>
+                    <div class="row mt-3"></div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                Cash
+                            </label>
+                            <input type="text" id="revcash" class="form-control form-control-md Patadddet" autocomplete="off" onkeypress="isNumber(event,this)" onkeyup="SpceialAmountCalc(this.id)" />
+
+                        </div>
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                UPI Pay
+                            </label>
+                            <input type="text" id="revupi" class="form-control form-control-md Patadddet" autocomplete="off" onkeypress="isNumber(event,this)" onkeyup="SpceialAmountCalc(this.id)" />
+
+                        </div>
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                Card Pay
+                            </label>
+                            <input type="text" id="revcard" class="form-control form-control-md Patadddet" autocomplete="off" onkeypress="isNumber(event,this)" onkeyup="SpceialAmountCalc(this.id)" />
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="closePop()">&#160;&#160;OK&#160;&#160;</button>
+
+                    @*<button type="button" class="btn btn-outline-primary btn-sm" onclick="closePop()">Close</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="modal fade" id="DetailsModal" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold">Health Details</h4>
+                    <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                BP
+                            </label>
+                            <input type="text" id="PatBP" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                Temperature
+                            </label>
+                            <input type="text" id="PatTemperature" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                Sugar
+                            </label>
+                            <input type="text" id="PatSugar" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                        </div>
+                       
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                Height
+                            </label>
+                            <input type="text" id="PatHeight" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="label-control mb-0">
+                                Weight
+                            </label>
+                            <input type="text" id="PatWeight" class="form-control form-control-sm Patadddet" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="HealthPop(3)" >Save</button>
+                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="HealthPop(2)">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#RevisitDate,#FromDate,#ToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+    $("#RegNumber").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            ClearPatData();
+            var data = {};
+            data.PatientName = $("#RegNumber").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '3RR',
+                            label: item.OPSerName+'-'+item.OPNumber,
+                            label1: item.PatientName ,
+                            label2: item.Add1,
+                            label3: item.Add2,
+                            label4:  item.Contact,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["RegNo", "Patient", "Place", "Address", "Mobile"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            var data = {};                                       //dropdownbind
+            data.PatientId = ui.item.PatientId;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../Revisit/HMS_PatientSearchGet",
+                data: data,
+                success: function (result) {
+                    if (result.oList.length > 0) {
+                        GetPatientData(result.oList, 1);
+                    }
+                }
+            });
+            $("#DocName").focus();
+        },
+
+    });
+    $("#PatName").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.PatientName = $("#PatName").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.PatientName,
+                            label1: item.OPSerName + '-' + item.OPNumber,
+
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["Patient", "RegNo"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            var data = {};                                       //dropdownbind
+            data.PatientId = ui.item.PatientId;
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                type: "POST",
+                url: "../Revisit/HMS_PatientSearchGet",
+                data: data,
+                success: function (result) {
+                    if (result.oList.length > 0) {
+                        GetPatientData(result.oList, 1);
+                    }
+                }
+            });
+            $("#DocName").focus();
+        },
+
+    });
+    $("#SearchRegNo").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.PatientName = $("#SearchRegNo").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_PatientSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.OPSerName + '-' + item.OPNumber,
+                            label1: item.PatientName,
+                            PatientId: item.PatientId,
+                            DOB: item.DOB,
+                            Contact: item.Contact,
+                            OPNumber: item.OPNumber,
+                            PatientName: item.PatientName,
+                            headers: ["RegNo", "Patient"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+
+            $("#btnsearch").focus();
+        },
+
+    });
+    setInterval(function () {
+        var date = new Date();
+
+        $('#RevisitTime').text(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds())
+
+    }, 500);
+
+    if ("@Request.QueryString["from"]" == "PRegistration") {
+
+        var PatId = sessionStorage.getItem("PatId");
+
+        sessionStorage.removeItem("PatId");
+
+        var data = {};                                       //dropdownbind
+        data.PatientId = PatId;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_PatientSearchGet",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    GetPatientData(result.oList, 1);
+                }
+            }
+        });
+        $("#DocName").focus();
+
+    }
+</script>
+
+
+<script>
+
+    function PaymentPop(flg) {
+        $('#revisitpayment').modal('show');
+        $('#revisitpayment').appendTo('body');
+        //amountfillinpopup();
+        //SpceialAmountCalc();
+    }
+
+    var DDCONFEE = 0, DDREGFEE = 0;
+    function paymethodchange() {
+       
+        var ptype = $('#PayType').val();
+        if (ptype == 0) {
+            $('#ConsultationFees').val(0)
+            $('#VisitingFees').val(0)
+        }
+        else {
+            $('#ConsultationFees').val(DDCONFEE);
+            $('#VisitingFees').val(DDREGFEE)
+        }
+        amountfillinpopup()
+    }
+
+
+    function amountfillinpopup() {
+        var visiting = parseFloat($('#VisitingFees').val() || 0);
+        var Consultation = parseFloat($('#ConsultationFees').val() || 0);
+        var others = parseFloat($('#OtherFees').val() || 0);
+        var tot = parseFloat(visiting + Consultation + others);
+        $('#revtotal').val(tot.toFixed(2));
+
+        var Id = $('#PayType').val();
+        $('#revcash').val(0.00);
+        $('#revupi').val(0.00);
+        $('#revcard').val(0.00);
+
+        if (Id == 1) { $('#revcash').val(tot); }
+        else if (Id == 3) { $('#revupi').val(tot); }
+        else if (Id == 4) { $('#revcard').val(tot); }
+
+        else { $('#revupi').val(0); $('#revupi').val(0); $('#revcard').val(0); }
+    }
+
+    function closePop() {
+        var Cash = parseFloat($("#revcash").val() || 0);
+        var Upi = parseFloat($("#revupi").val() || 0);
+        var Card = parseFloat($("#revcard").val() || 0);
+        var Result = (Cash + Upi + Card);
+
+        if ($('#PayType').val() == 2) {
+            $("#revcash").val(0)
+            $("#revupi").val(0)
+            $("#revcard").val(0)
+            $('#revisitpayment').modal('hide');
+        }
+        else {
+
+            if (Result != parseFloat($('#revtotal').val()||0)) {
+                warningshow('Please Check Payment Amount', 'revcash');
+            }
+            else {
+                $('#revisitpayment').modal('hide');
+            }
+        }
+    }
+
+    SelectPayType()
+    function SelectPayType() {
+        if (SalesPayType == 'Credit') {
+            $('#PayType').val(2);
+        }
+        else if (SalesPayType == 'UPI Pay') {
+            $('#PayType').val(3);
+        }
+        else if (SalesPayType == 'Card Pay') {
+            $('#PayType').val(4);
+        }
+        else {
+            $('#PayType').val(1);
+        }
+        if (ERPUserId > 3) {
+            var x = document.getElementById("PayType").options[4].disabled = true;
+        }
+    }
+
+
+    
+
+</script>

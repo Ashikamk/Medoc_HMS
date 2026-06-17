@@ -1,0 +1,303 @@
+﻿
+@{
+    ViewBag.Title = "AccountsQuery";
+}
+
+
+
+
+<style type="text/css">
+        .main-panel {
+            height: auto;
+            width: auto;
+            max-height: none;
+            min-height: 100%;
+            margin: 0;
+            padding-top: 85px;
+            float: none;
+        }
+
+        .eumi-search-box {
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        body.eumi-loader::before {
+            content: '';
+            display: block;
+            position: fixed;
+            z-index: 31000;
+            height: 4px;
+            background-color: rgba(0, 157, 160, 0.2);
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        body.eumi-loader::after {
+            content: '';
+            display: block;
+            position: fixed;
+            z-index: 31001;
+            height: 4px;
+            background-color: rgba(0, 157, 160, 1);
+            top: 0;
+            width: 50px;
+            animation: eumiloader 4s infinite linear;
+        }
+
+        ::-webkit-input-placeholder {
+            text-align: center;
+        }
+
+        .eumi-search-table, .eumi-shadow {
+            border-spacing: 0 0px;
+            box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+        }
+        /* .eumi-search-table tbody td { border:none; } */
+        @@keyframes eumiloader {
+            from {
+                right: 100%;
+            }
+
+            to {
+                right: 0;
+            }
+        }
+
+
+
+        #Accountslist tr:hover {
+            background-color: cyan;
+        }
+</style>
+
+<div class="myData" data-x="M188" />
+<div id="listing">
+
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%">
+                            <tr style="border-bottom:1px solid gray">
+                                <td><h4 class="card-title"> Accounts Query</h4></td>
+                                <td align="right">
+                                    <div class="col-md-6 eumi-button-area" id="divReportOptions" data-download-url="@Url.Action("AccountsQueryDownload", "Report")">
+
+
+                                        @*<div class="btn-group" role="group">
+                                            <button class="btn btn-outline-primary" id="btnGo" onclick="window.open('../Master/ItemMaster')" type="button">Add Product</button>
+                                        </div>*@
+                                        <div class="btn-group" role="group">
+                                            <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Columns
+                                            </button>
+                                            <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                                            </div>
+                                        </div>
+                                        <div class="btn-group excelexport" role="group">
+                                            <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Export
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                                                <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                                                <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                                                <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                                                <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                                            </div>
+                                        </div>
+
+                                        <button class="btn btn-outline-primary" data-eumi-clear="1" type="button" onclick="$('.forsearch').val('');">Clear Search</button>
+                                        <div class="clearfix"></div>
+                                        <div><input type="hidden" id="ProductId" class="form-control" /></div>
+                                        <div><input type="hidden" id="ItemCode" class="form-control" /></div>
+                                        <div><input type="hidden" id="ItemDescription" class="form-control" /></div>
+                                        <div><input type="hidden" id="OpenQty" class="form-control" /></div>
+                                        <div><input type="hidden" id="AvgCost" class="form-control" /></div>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                    </div>
+
+                    <div class="card-content collapse show">
+                        <div class="card-body card-dashboard">
+
+                            <div style="overflow:auto;">
+                                <table id="Accountslist" onclick="itempopup()" class="table  table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+
+                                    <thead>
+                                        <tr>
+
+                                            <th>Slno</th>
+                                            <th>Date</th>
+                                            <th>Account Code</th>
+                                            <th>Account Description</th>
+                                            <th>Account Group</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th>Date</th>
+                                            <th>Account Code</th>
+                                            <th>Account Description</th>
+                                            <th>Account Group</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                                <br />
+                            </div>
+                            <div style="clear: both">
+                                &nbsp;
+                            </div>
+                            <br />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+<script type="text/javascript">
+
+            $(document).ready(function () {
+
+                var decimal = (window.Decimal || 1);
+                $('#Accountslist tr td').remove();
+                var table = $("#Accountslist").EumiDataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "ajax": {
+                            "url": "../Report/AccountsQueryJson",
+                            "type": "POST",
+                        },
+
+                        "columnDefs": [
+                       {
+                           "targets": 5,
+                           "className": "text-right",
+                           "render": function (data) {
+                               return (data || 0).toFixed(decimal);
+                           }
+                       },
+                 ],
+                        "columns": [
+                            { data: "slno", title: "Slno", searchable: false, sortable: false },
+                            { data: "VDate", title: "Date" },
+                            { data: "AccCode", title: "Account Code" },
+                            { data: "Acc_Description", title: "Account Description" },
+                            { data: "AccGroup", title: "Account Group" },
+                            { data: "Amount", title: "Amount" },
+                            ],
+                       // dom: 'tipr',
+                        dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                             "<'row'<'col-sm-12'tr>>" +
+                             "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+                        orderCellsTop: true,
+
+
+                    });
+                var a = '#Accountslist tr:eq(1) th'
+
+                    $(a).each(function () {
+                        var title = $(this).text();
+                        if (title != '')
+                            if (title == 'Select' || title == 'Details') {
+                                $(this).html('<input type="text" class="forsearch"  style="width:100%;display:none"  placeholder="  ' + title + '"/>')
+                            }
+                            else {
+                                $(this).html('<input type="text" class="forsearch"   placeholder="' + title + '"/>')
+                            }
+
+                    });
+
+                    var table = $('#Accountslist').DataTable();
+
+                    table.columns().every(function (index) {
+                        $('#Accountslist thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                            table.column($(this).parent().index() + ':visible')
+                                .search(this.value)
+                               .draw();
+                        });
+                    });
+
+                   
+                });
+
+
+         
+            function datatableWithsearch(tablename, Type) {
+                var a = '#' + tablename + ' tr:eq(1) th'
+
+                $(a).each(function () {
+                    var title = $(this).text();
+                    if (title != ' ')
+                        if (title == 'Select' || title == 'Details') {
+                            $(this).html('<input type="text" class="form-control"  style="width:30px;display:none"  placeholder="' + title + '"/>')
+                        }
+                        else {
+                            $(this).html('<input type="text" class="form-control"   placeholder="' + title + '"/>')
+                        }
+                });
+
+                var table = null;
+
+                if (Type == 'Single') {
+
+                    table = $('#' + tablename).DataTable({
+                        dom: 'tipr',
+                        orderCellsTop: true,
+                        //"order": false,
+                    });
+
+                }
+                else if (Type == 'Multiple') {
+                    table = $('#' + tablename).DataTable({
+                        dom: 'tir',
+                        orderCellsTop: true,
+                        "order": false,
+                        "pageLength": -1
+                    });
+
+                }
+                table.columns().every(function (index) {
+                    $('#' + tablename + ' thead tr:eq(1) th:eq(' + index + ') input').on('keyup change', function () {
+                        table.column($(this).parent().index() + ':visible')
+                            .search(this.value)
+                            .draw();
+                    });
+                });
+            }
+
+
+            function disable_datatable(tablename) {
+                $('#Warningpopup').fadeOut();
+                if ($.fn.DataTable.isDataTable('#' + tablename)) {
+                    var table = $('#' + tablename).DataTable();
+                    table.destroy();
+                    return;
+                }
+            }
+
+
+</script>
+@section bottomscripts {
+    <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datable-SQ.js"></script>
+}
+
+
+
+

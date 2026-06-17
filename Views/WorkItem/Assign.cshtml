@@ -1,0 +1,192 @@
+﻿@model EUMI_ERP.Models.AWWorkAssignModel
+@{
+    ViewBag.Title = "WorkItem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SelectList items = new SelectList(Model.timeItems, "Id", "Name");
+    SelectList statusList = new SelectList(Model.statusList, "value", "text");
+    var assignNeeded = (Model.data.AssignedToDivId <= 0 || Model.data.DeptId <= 0);
+    var reassignNeeded = (Model.data.Status == "Re-assign");
+}
+
+<div>
+    <form method="post" action="@Url.Action("SaveItem", "WorkItem")" autocomplete="off">
+        <div class="row">
+            <div class="col-md-1 col-lg-2 col-xl-3"></div>
+            <div class="col-md-10 col-lg-8 col-xl-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>@(Request.QueryString["wid"] != null ? (ViewBag.HideSave != null ? "View" : "Edit ") : "Assign ") WorkItem</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row m-1">
+                            <div class="col-md-12">
+                                <span class="@ViewBag.EumiClass1">@ViewBag.EumiMessage</span>
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="col-md-5">
+                                <label>Assigned To:</label>
+                            </div>
+                            <div class="col-md-7">
+                                <span>@Model.dataText.DeptName</span>
+                                @if (!string.IsNullOrWhiteSpace(Model.dataText.DivName))
+                                {
+                                    <span> - </span>
+                                    <span>@Model.dataText.DivName</span>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(Model.dataText.UserName))
+                                {
+                                    <span> - </span>
+                                    <span>@Model.dataText.UserName</span>
+                                }
+                                @Html.HiddenFor(x => x.data.WorkItemId)
+                                @Html.HiddenFor(x => x.data.AssignedByUserId)
+                                @Html.HiddenFor(x => x.data.AssignedToUserId, new { id = "workAssignToMe" })
+                                @Html.HiddenFor(x => x.data.AssignedToDivId)
+                                @Html.HiddenFor(x => x.data.DeptId)
+                                @if (assignNeeded)
+                                {
+                                    <button onclick="window.location.href = '@Url.Action("DivisionUsers", "WorkItem", new { refno = Model.data.ReferenceId, reftype = Model.data.ReferenceType })';" class="btn btn-primary m-0" type="button">Select</button>
+                                }
+                                @if (reassignNeeded)
+                                {
+                                    <button onclick="window.location.href = '@Url.Action("DivisionUsers", "WorkItem", new { wid = Model.data.WorkItemId })';" class="btn btn-primary m-0" type="button">Select</button>
+                                }
+                            </div>
+                        </div>
+                        @if (!assignNeeded)
+                        {
+                            <div class="row m-1">
+                                <div class="col-md-5">
+                                    <label>Title:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(x => x.data.Title, new { @class = "form-control", maxlength = 255, required = "required" })
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-5">
+                                    <label>Description:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.TextAreaFor(x => x.data.Description, new { @class = "form-control", maxlength = 1000, required = "required", style = "height:150px" })
+                                </div>
+                            </div>
+
+                            <div class="row m-1">
+                                <div class="col-md-5">
+                                    <label>Reference Type:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(x => x.data.ReferenceType, new { @class = "form-control", required = "required", maxlength = 255 })
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-5">
+                                    <label>Reference Id:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.TextBoxFor(x => x.data.ReferenceId, new { @class = "form-control", required = "required", maxlength = 255 })
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-5">
+                                    <label>Turn around time:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(x => x.data.TurnAroundTimeInMinutes, items, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-5">
+                                    <label>Status:</label>
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.DropDownListFor(x => x.data.Status, statusList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <div class="row m-1">
+                            <div class="col-md-12 text-right">
+                                @if (ViewBag.AssignedToMeEnabled == 1 && ViewBag.UserSet is System.Data.DataSet)
+                                {
+                                    <button type="button" class="btn btn-primary" onclick="assignMeWI();">Assign To Me</button>
+                                }
+                                <a href="@Url.Action("Listitems", "WorkItem")" class="btn btn-outline-primary">Item List</a>
+                                <a href="@Url.Action("DivisionUsers", "WorkItem")" class="btn btn-outline-primary">Division Users List</a>
+                                @if (!assignNeeded && ViewBag.HideSave == null)
+                                {
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                }
+                                @if (ViewBag.ShowDelete == 1)
+                                {
+                                    <button type="button" class="btn btn-primary" onclick="deleteWI();">Delete</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section bottomscripts {
+@if (ViewBag.ShowDelete == 1)
+{
+    <script>
+        function deleteWI() {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this work item!",
+                icon: "warning",
+                showCancelButton: true,
+                buttons: {
+                    cancel: {
+                        text: "No, cancel plx!",
+                        value: null,
+                        visible: true,
+                        className: "btn-warning",
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "Yes, delete it!",
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: false
+                    }
+                }
+            }).then(isConfirm => {
+                if (isConfirm) {
+                    deleteWI2func();
+                }
+            });;
+        }
+        function deleteWI2func() {
+            data = {};
+            data.wid = "@Model.data.WorkItemId";
+            $.ajax({
+                url: "@Url.Action("ItemDelete", "WorkItem")",
+                data: data,
+                type: "POST",
+                success: function (result) {
+                    if (result.success) {
+                        window.location.href = "@Url.Action("ListItems", "WorkItem")";
+                    }
+                }
+            });
+        }
+    </script>
+}
+@if (ViewBag.UserSet is System.Data.DataSet)
+{
+    <script>
+        function assignMeWI() {
+            $("#workAssignToMe").val("@(ViewBag.UserSet.Tables[0].Rows[0]["UserId"])");
+            $("#workAssignToMe").closest("form").submit();
+        }
+    </script>
+}
+}

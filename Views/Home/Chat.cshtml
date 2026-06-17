@@ -1,0 +1,270 @@
+﻿
+@{
+    ViewBag.Title = "Chat";
+}
+
+<div class="myData" data-x="M128" />
+<div class="content-wrapper">
+    <div class="chat-application" style="height: 826px;">
+        <div class="content-overlay"></div>
+        <div class="chat-sidebar float-left d-none d-sm-none d-md-block d-lg-block ps-container ps-theme-default" data-ps-id="438e22d1-5866-6dcb-5898-69f3e0abbd0d">
+            <div class="chat-sidebar-content">
+                <div class="chat-fixed-search p-2">
+                    <form>
+                        <div class="position-relative has-icon-left">
+                            <input class="form-control" id="timesheetinput1" name="employeename" type="text">
+                            <div class="form-control-position">
+                                <i class="ft-user"></i>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="users-list" class="list-group position-relative">
+                    <div id="userlist" class="users-list-padding">
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 3px;"><div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;"><div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div></div>
+        </div>
+        <div class="chat-name p-2 bg-white">
+            <div id="recever" class="media">
+              
+                <div class="media-body"><img src="../app-assets/img/portrait/small/avatar-s-3.png" width="37" class="rounded-circle mr-1" alt="avatar">
+                    <span>Elizabeth Elliott</span><i class="ft-more-vertical float-right mt-1"></i></div>
+            </div>
+        </div>
+        <section class="chat-app-window">
+            <div class="badge badge-dark mb-1">Chat History</div>
+            <div class="chats">
+                <div id="chatwindow" class="chats">
+
+
+                       
+
+                    
+                </div>
+            </div>
+        </section>
+        <section class="chat-app-form bg-blue-grey bg-lighten-5">
+
+            <input type="hidden" id="chatreceverId" value="0" />
+            <div class="chat-app-input row">
+                <fieldset class="form-group position-relative has-icon-left col-lg-10 col-8 m-0">
+                   
+                    <input type="text" class="form-control" id="iconLeft4" placeholder="Type your message" autocomplete="off">
+                  
+                </fieldset>
+                <fieldset class="form-group position-relative has-icon-left col-lg-2 col-4 m-0">
+                    <button type="button" id="sendmsg" class="btn btn-raised btn-primary" onclick="sendmessage()">
+                        <i class="fa fa-paper-plane-o hidden-lg-up"></i> Send
+                    </button>
+                </fieldset>
+            </div>
+        </section>
+    </div>
+</div>
+@*<input type="button" value="receve" onclick="Getmessage()" />*@
+
+
+@*<img src = "../ProjectImages/User/Image/23.png" id="img1" />*@
+
+
+<div id="myDiv">
+
+</div>
+
+
+<script>
+window.addEventListener('error', function(e) {
+    console.log(e);
+
+}, true);
+
+    var Count = 0;
+    GetUsers();
+    function GetUsers() {
+        var data = {};
+        data.UserId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UsersGetandGets",
+            data: data,
+            success: function (result) {
+                ShowUserslist(result.oList);
+
+               
+
+            }
+        });
+    }
+
+
+   
+    function Getmessage(Flag) {
+
+        if (Flag == 'All')
+        {
+            $('#chatwindow').html('')
+        }
+       
+        if (Count == 0) {
+            Count=1
+            var data = {};
+            data.SenderId = ERPUserId;
+            data.ReceiverId = $('#chatreceverId').val();
+            data.Viewflag = 0;
+            data.DelFlag = 0;
+            data.Status = Flag;
+
+
+            $.ajax({
+                type: "POST",
+                url: "../Home/Ex_ChatGet",
+                data: data,
+                success: function (result) {
+                    result = result.oList;
+                    for (var i = 0; i < result.length; i++) {
+                        var Sender = result[i].SenderId
+                        if (ERPUserId != Sender)
+                        {
+                            var MsgRow = ' <div class="chat chat-left"><div class="chat-avatar"><a class="avatar" data-toggle="tooltip" href="#" data-placement="left" title="" data-original-title=""><img src="../app-assets/img/portrait/small/avatar-s-7.png" class="width-50 rounded-circle" alt="avatar" ></a></div><div class="chat-body"><div class="chat-content"><p>' + result[i].ChatMessage + '</p></div></div></div>';
+                        }
+                        else
+                        {
+                            var MsgRow = ' <div class="chat"><div class="chat-avatar"><a class="avatar" data-toggle="tooltip" href="#" data-placement="right" title="" data-original-title=""><img src="../app-assets/img/portrait/small/avatar-s-1.png" class="width-50 rounded-circle" alt="avatar"></a></div><div class="chat-body"><div class="chat-content"><p>' + result[i].ChatMessage + '</p></div></div></div>';
+
+                        }
+                        $('#chatwindow').append(MsgRow)
+                    }
+                    Count = 0
+                   
+                }
+            });
+        }
+
+    }
+
+
+
+
+
+    setInterval(function () {
+        if($('#chatreceverId').val()!=0)
+        {
+            Getmessage('Now');
+        }
+        
+    }, 5000);
+
+    
+
+  
+
+
+    //var obj = new Image();
+    //obj.src = "../ProjectImages/User/Image/' + 23 + '.png";
+
+    //if (obj.complete) {
+    //    alert('worked');
+    //} else {
+    //    alert('doesnt work');
+    //}
+
+    //function imageExists(url, callback) {
+    //    var img = new Image();
+    //    img.onload = function () { callback(true); };
+    //    img.onerror = function () { callback(false); };
+    //    img.src = url;
+    //}
+
+    //// Sample usage
+    //var imageUrl = '  "../ProjectImages/User/Image/' + 23 + '.png"'; 
+    //imageExists(imageUrl, function (exists) {
+    //    console.log('RESULT: url=' + imageUrl + ', exists=' + exists);
+    //});
+   
+    function imgLoaded(imgElement) {
+        return $('#image_2').complete && imgElement.naturalHeight !== 0; 
+    }
+ 
+
+
+    function ShowUserslist(result) {
+        var data = "";
+
+        for (var i = 0; i < result.length; i++) {
+            
+           
+            var status = result[i].Status;
+            var userid = result[i].UserId;
+            var username = result[i].Name;
+            if (status==404) {
+                data = '<a id=' + "rec" + userid + ' onclick="sennmessagetothis(' + userid + ')" class="list-group-item no-border"><span class="media">' +
+                   '<span class="avatar avatar-md avatar-online">' +
+                   '<img class="media-object d-flex mr-3 bg-primary height-50 rounded-circle" src= "../app-assets/img/portrait/small/avatar-s-1.png" ><i></i></span><div class="media-body"><h6  class="list-group-item-heading"><span id=' + "Recname" + userid + '>' + username + '</span><span class="font-small-3 float-right primary">4:14 AM</span></h6><p class="list-group-item-text text-muted"><i class="ft-check primary font-small-2"></i> demo<span class="float-right primary"><i class="font-medium-1 icon-pin blue-grey lighten-3"></i></span></p></div></span></a>';
+                $('#userlist').append(data);
+            }
+            else {
+                data = '<a id=' + "rec" + userid + ' onclick="sennmessagetothis(' + userid + ')" class="list-group-item no-border"><span class="media">' +
+                    '<span class="avatar avatar-md avatar-online">' +
+                    '<img class="rounded-circle" height="45" width="45" src="../ProjectImages/User/Image/' + userid + '.png" alt=""><i></i></span><div class="media-body"><h6  class="list-group-item-heading"><span id=' + "Recname" + userid + '>' + username + '</span><span class="font-small-3 float-right primary">4:14 AM</span></h6><p class="list-group-item-text text-muted"><i class="ft-check primary font-small-2"></i> demo<span class="float-right primary"><i class="font-medium-1 icon-pin blue-grey lighten-3"></i></span></p></div></span></a>';
+                $('#userlist').append(data);
+
+            }
+
+ 
+        
+
+        }
+       
+    }
+
+
+    function sennmessagetothis(UID)
+    {
+        var userid = UID;
+       $('#chatreceverId').val(UID);
+       $('#recever').html('');
+       var recever = '<div class="media-body"><img src="../ProjectImages/User/Image/' + userid + '.png" width="37" class="rounded-circle mr-1" alt="avatar"><span>' + $('#Recname' + UID).text() + '</span><i class="ft-more-vertical float-right mt-1"></i></div>'
+       $('#recever').append(recever);
+       Getmessage('All')
+
+    }
+
+
+    function sendmessage() {
+
+        var Message = $('#iconLeft4').val();
+        var MsgRow = ' <div class="chat"><div class="chat-avatar"><a class="avatar" data-toggle="tooltip" href="#" data-placement="right" title="" data-original-title=""><img src="../app-assets/img/portrait/small/avatar-s-1.png" class="width-50 rounded-circle" alt="avatar"></a></div><div class="chat-body"><div class="chat-content"><p>' + Message + '</p></div></div></div>';
+        $('#chatwindow').append(MsgRow)
+
+        var data = {};
+        data.Ex_ChatId = 1;
+        data.SenderId = ERPUserId;
+        data.ReceiverId =$('#chatreceverId').val();
+        data.ChatMessage = $('#iconLeft4').val();
+        data.Date = $('#Date').val();
+        data.DelFlag = 1;
+        $.ajax({
+            type: "POST",
+            url: "../Home/Ex_ChatInsert",
+            data: data,
+            success: function (result) {
+                $('#iconLeft4').val('');
+                $('#iconLeft4').focus();
+                  
+            }
+        });
+
+    }
+
+   
+  
+
+</script>
+
+
+
+
+

@@ -1,0 +1,276 @@
+﻿
+@{
+    ViewBag.Title = "IPBPTempEntry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script type="text/javascript" src="~/ProjectScript/IPBPTempEntry.js"></script>
+
+<style>
+    .label-control {
+        font-weight: bold;
+    }
+
+    .bgcolor {
+        background-color: #daeff1;
+    }
+    
+    .smallTextbox {
+        height: 34px !important;
+    }
+    .smallTextBox{
+        height:30px !important;
+    }
+    .modal-sxl{
+        max-width:80%;
+    }
+    #EntryArea{
+        min-height:545px !important;
+        max-height:545px !important;
+    }
+</style>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div class="myData" data-x="M371" />
+
+
+<div style="display:none;">
+    <label class="label-control">Doctor</label>
+    <input type="text" id="Doctor" class="form-control col-md-2" />
+    <input type="hidden" id="DoctorId" class="form-control" value="0" />
+    <input id="CurrentGraph" value="0" />
+</div>
+<div id="listing">
+    <section>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <table width="100%" style="table-layout:fixed" class="bgcolor" >
+                            <tr>
+                                <td width="25%">
+                                    <h4 class="card-title p-2" style="font-weight:bold;">BP-Temperature Entry</h4>
+                                </td>
+                                <td>
+                                    <table width="100%" style="">
+                                        <tr>
+                                            <td class="text-right">
+                                                <label class="label-control pl-1">Reg# :</label>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="RegNo" onfocus="RegNoLoad('RegNo')" class="form-control denull" />
+                                                <input type="hidden" id="PatientId" class="form-control dezero" value="0" />
+
+
+                                            </td>
+
+
+                                            <td align="left">
+                                                <button type="button" id="btnsearch" class="btn btn-outline-primary mt-2 ml-1">
+                                                <i class="fa fa-search"></i>
+                                                </button>
+
+                                                <button id="btnrefresh" type="button" class="btn btn-outline-info mt-2">
+                                                    <i class="ft-refresh-cw"></i>
+                                                </button>
+                                                <div class="d-inline-block custom-control custom-radio mr-2 ml-2">
+                                                    <input type="radio" name="entrytype" class="custom-control-input " id="btntemp" value="Temperature" checked onchange="GetType('Temperature')">
+                                                    <label class="custom-control-label" for="btntemp">Temperature </label>
+                                                </div>
+                                                <div class="d-inline-block custom-control custom-radio mr-2">
+                                                    <input type="radio" name="entrytype" class="custom-control-input" id="btnBP" value="BP" onchange="GetType('BP')">
+                                                    <label class="custom-control-label" for="btnBP">BP </label>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td align="right" width="25%">
+
+                                    <div class="heading-elements">
+                                        <div>
+                                           
+                                            <span id="itemListButtonPlace">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                        
+
+                        
+                    </div>
+                    <div class="card-content collapse show" >
+                        <div class="card-body card-dashboard" style="overflow:auto" id="EntryArea">
+                            <table width="100%" id="tbl_WorkSheet" class="table table-striped table-bordered base-style dataTable"></table>
+                           
+                           
+                        </div>
+                        <div class="card-footer text-right">
+                            <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="TemperatureG" role="dialog" style="">
+        <div class="modal-dialog modal-sxl">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold" id="PopupHead"></h4>
+                    <h4 class="modal-title font-weight-bold ml-3" style="color:red" id="TempPatName"></h4>
+                    <button type="button" class="close" onclick="PopUpClose(1)" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                <div class="col-md-1">
+                                    <label for="TempFromDate" class="label-control">Date :</label>
+                                </div>
+                                <div class="col-md-2">
+
+                                    <input type="text" id="TempFromDate" class="form-control smallTextbox" placeholder="From Date">
+
+                                </div>
+                                <div>
+                                    <label for="TempToDate" class="label-control"> - </label>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <input type="text" id="TempToDate" class="form-control smallTextbox" placeholder="To Date">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" onclick="GetTempandBPGraph(0,1,1,'line')" id="" class="btn btn-primary btn-sm mr-1 mb-1 " style="position:absolute;width:100px;font-weight:400;"><i class="ft-refresh-cw"></i>  </button>
+                                </div>
+
+                                <div class="col-md-5 text-right" style="font-weight:bold;">
+                                    <span class="col-md-3">Admit Date : </span>
+                                    <span class="graphnull ml-2 col-md-3" id="TempAdmitDate"></span>
+                                    <span class="ml-2 col-md-3">Admit Time</span>
+                                    <span class="graphnull ml-2 col-md-3" id="TempAdmitTIme"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="ContainerTemp" style="height:340px"></div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="text-left">
+                                    <div class="d-inline-block custom-control custom-radio mr-2 ml-2">
+                                        <input type="radio" name="GraphType" class="custom-control-input" id="btngraphtemp" value="1" onclick="GetGraph()">
+                                        <label class="custom-control-label" for="btngraphtemp">Temperature </label>
+                                    </div>
+                                    <div class="d-inline-block custom-control custom-radio mr-2">
+                                        <input type="radio" name="GraphType" class="custom-control-input" id="btngraphbp" value="2" onclick="GetGraph()">
+                                        <label class="custom-control-label" for="btngraphbp">BP </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-right">
+                                    <button type="button" class="btn btn-default" onclick="PopUpClose(1)">OK</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#TempFromDate,#TempToDate,#BPFromDate,#BPToDate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+
+    $("#Doctor").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            $("#DoctorId").val(0);
+            var data = {};
+            data.DoctorName = $("#Doctor").val();
+            data.DeptId = ERPDeptId;
+
+            $.ajax({
+                url: '../Revisit/HMS_WorkSheetDoctorSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DoctorName,
+                            label1: item.Status,
+                            DoctorId: item.DoctorId,
+                            headers: ["Doctor", "Department"]
+                        })
+                    }));
+                }
+
+
+
+            })
+        },
+        autoFocus: true,
+
+        select: function (event, ui) {
+            $("#DoctorId").val(ui.item.DoctorId);
+            $("#btnsearch").focus();
+        },
+
+    });
+
+    $("#btnsearch").focus(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-primary");
+    });
+
+    $("#btnsearch").focusout(function (e) {
+        $("#btnsearch").removeClass("btn btn-outline-primary");
+        $("#btnsearch").addClass("btn btn-outline-primary");
+    });
+
+
+
+
+</script>
+
+
+
+

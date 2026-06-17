@@ -1,0 +1,405 @@
+﻿
+@{
+    ViewBag.Title = "StockTransferOutReport";
+}
+
+<style type="text/css">
+    .main-panel {
+        height: auto;
+        width: auto;
+        max-height: none;
+        min-height: 100%;
+        margin: 0;
+        padding-top: 85px;
+        float: none;
+    }
+
+    .eumi-search-box {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    body.eumi-loader::before {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31000;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 0.2);
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    body.eumi-loader::after {
+        content: '';
+        display: block;
+        position: fixed;
+        z-index: 31001;
+        height: 4px;
+        background-color: rgba(0, 157, 160, 1);
+        top: 0;
+        width: 50px;
+        animation: eumiloader 4s infinite linear;
+    }
+
+    .eumi-search-table, .eumi-shadow {
+        border-spacing: 0 0px;
+        box-shadow: 0px 0px 0px 2px #fff, 0 0 2px 2px #999;
+    }
+    /* .eumi-search-table tbody td { border:none; } */
+    @@keyframes eumiloader {
+        from {
+            right: 100%;
+        }
+
+        to {
+            right: 0;
+        }
+    }
+
+    
+        .form-control {
+        font-weight: bold;
+    }
+     #btnsubmit:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnclose:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+
+    #btnchgp:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+         #btnColVisibility:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+      #btnGroupDropDownload:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+       #ClearSearch:hover {
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+<div class="myData" data-x="M114" />
+<div class="card">
+    <div class="row m-1">
+        <div class="col-md-6">
+            <h2>Stock Transfer Out Report</h2>
+        </div>
+        <div class="col-md-6 eumi-button-area" id="divReportOptions" data-download-url="@Url.Action("StockTransferOutReportDownload", "Report")">
+
+
+            <div class="btn-group" role="group">
+                <button id="btnColVisibility" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Columns
+                </button>
+                <div class="dropdown-menu eumi-col-show" aria-labelledby="btnColVisibility">
+                </div>
+            </div>
+
+            <button type="button" id="btnchgp"  class="btn btn-primary" data-toggle="modal" data-target="#paramModal">Change Parameters</button>
+
+            <div class="btn-group excelexport" role="group">
+                <button id="btnGroupDropDownload" type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Export
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDropDownload">
+                    <a class="dropdown-item buttons-excel" data-eumi-download="excel" href="#">Excel</a>
+                    <a class="dropdown-item buttons-pdf" data-eumi-download="pdf" href="#">PDF</a>
+                    <a class="dropdown-item buttons-csv" data-eumi-download="csv" href="#">CSV</a>
+                    <a class="dropdown-item buttons-print" data-eumi-download="print" href="#">Print</a>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary" data-eumi-clear="1" type="button">Clear Search</button>
+        </div>
+    </div>
+
+    <div class="row m-1">
+        <div id="paramOfReport" class="row m-1"></div>
+    </div>
+
+    <div style="overflow:auto;">
+        <table id="StockTransferOutReport" class="table table-condensed table-light table-striped table-bordered eumi-search-table" style="width:100%; margin: 0 auto 0 0;">
+            <tfoot>
+                <tr class="eumi-search-row">
+                    <th></th>
+                    <th>Item Code</th>
+                    <th>Item Name</th>
+                    <th>Date</th>
+                    <th>From Location</th>
+                    <th>To Location</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Grand Total</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th id="eumiQuantity" class="text-left">Quantity</th>
+                    <th id="eumiRate" class="text-right">Rate</th>
+                    <th id="eumiAmount" class="text-right">Amount</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div style="height:100px;clear: both">
+    &nbsp;
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnchgp').click();
+        $('#UserId').val(ERPUserId);
+
+            var decimal = (window.Decimal || 1);
+            window.EumiLastSelectedInItemRpt = null;
+            var table = $('#StockTransferOutReport').EumiDataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "../Report/StockTransferOutReportJson",
+                    "type": "POST",
+                    "data": function (data, settings) {
+                        var addData = (window.EumiLastSelectedInItemRpt || {});
+                        addData.dateFrom = moment(addData.dateFrom || new Date()).format("YYYY-MM-DD");
+                        addData.dateTo = moment(addData.dateTo || new Date()).format("YYYY-MM-DD");
+                        addData.DepartmentId = (addData.DepartmentId || 0);
+                        addData.UserId = (addData.UserId || 0);
+
+                        if (!addData.title) {
+                            addData.title = "Parameters - " + "From: " + moment(new Date()).format("DD-MM-YYYY") + " To: " + moment(new Date()).format("DD-MM-YYYY")
+                            $("#paramOfReport").text(addData.title);
+                        }
+                        data.addData = addData;
+                        $("#eumiQuantity").text(0);
+                        $("#eumiRate").text(parseFloat(0).toFixed(decimal));
+                        $("#eumiAmount").text(parseFloat(0).toFixed(decimal));
+                    }
+                },
+                "columnDefs": [
+                     {
+                         "targets": 0,
+                         "width": "1%",
+                         "className": "text-center",
+
+                     },
+                     {
+                         "targets": 1,
+                         "width": "10%",
+
+                     },
+                      {
+                          "targets": 2,
+                          "width": "25%",
+
+                      },
+                     {
+                         "targets": 3,
+                         "width": "5%",
+
+                     },
+                         {
+                             "targets": 4,
+                             "width": "10%",
+
+                         },
+                      {
+                          "targets": 5,
+                          "width": "10%",
+
+                      },
+                       {
+                           "targets": 6,
+                           "width": "5%",
+
+                       },
+                    {
+
+                        "targets": 7,
+                        "className": "text-right",
+                        "width": "1%",
+                        "render": function (data) {
+                            return (data || 0).toFixed(decimal);
+                        }
+                    },
+                {
+                    "targets": 8,
+                    "className": "text-right",
+                    "width": "1%",
+                    "render": function (data) {
+                        return (data || 0).toFixed(decimal);
+                    }
+                },
+                ],
+                "columns": [
+                    { data: "slno", title: "Sl#", searchable: false, sortable: false },
+                    { data: "ItemCode", title: "Item Code", sortable: false },
+                    { data: "ItemDescription", title: "Item Name", sortable: false },
+                    { data: "StockDate", title: "Date", sortable: false },
+                    { data: "FromLocation", title: "From Location", sortable: false },
+                    { data: "ToLocation", title: "To Location", sortable: false },
+                    { data: "Quantity", title: "Qty.", sortable: false },
+                    { data: "Price", title: "Rate", sortable: false },
+                    { data: "Total", title: "Amount", sortable: false },
+                ],
+                "createdRow": function (row, data, index) {
+                    if (index == 0) {
+                        $("#eumiQuantity").text(data._quantity);
+                        $("#eumiRate").text(data._price.toFixed(decimal));
+                        $("#eumiAmount").text(data._total.toFixed(decimal));
+                        console.log(index);
+                    }
+                },
+            });
+
+            $('#StockTransferOutReport tbody').on('click', 'tr', function () {
+
+            });
+        });
+</script>
+
+
+@section popups {
+    <div class="modal" id="paramModal" style="margin-top:15%">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header bg-primary white">
+                    <h4 class="modal-title">Report Parameters</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:10%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:-1%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="dateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:2%">
+                        <label style="font-weight:bold;margin-left:10%">Dept.</label>
+                        <div class="col-md-4">
+                            <select id="Department" class="form-control">
+                                <option value="0">- All -</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <input type="text" class="form-control" id="UserId" style="display:none">
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" style="margin-right:2%" data-dismiss="modal" onclick="redrawTable();">Apply</button>
+                    <button type="button" class="btn btn-primary" style="margin-right:32%" data-dismiss="modal">Close</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+@section bottomscripts {
+    <script type="text/javascript" src="~/Scripts/EumiDataTable/eumi-datatable.js"></script>
+    <script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+           
+
+                $('#dateFrom, #dateTo').daterangepicker({
+                    minDate: minDate,
+                    maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+
+
+                GetDept(0);
+             
+            });
+
+
+            function getTableRow(item, keyArray, widthArray, headersArray) {
+                var jqRow = $("<tr>")
+                for (var x = 0; x < keyArray.length; x++) {
+                    $("<td>").css({ "border": "1px solid #d6d9db", "width": widthArray[x] })
+                        .html(item[keyArray[x]])
+                        .attr("data-em-header", (headersArray[x] || ""))
+                        .appendTo(jqRow)
+                }
+                return jqRow;
+            }
+
+
+            function GetDept(id) {
+                var data = {};
+                data.UserId = ERPUserId;
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/UserDepartmentGetandGets",
+                    data: data,
+                    success: function (result) {
+                        DepartmentLoad(result.oList, id);
+
+                    }
+                });
+            }
+
+            function DepartmentLoad(result, a) {
+                $("#Department").empty();
+                $("#Department").append("<option value='0'>-All-</option>");
+                for (var i = 0; i < result.length; i++) {
+                    $("#Department").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+                }
+            }
+    
+            function redrawTable() {
+                var data = {};
+                data.dateFrom = moment($('#dateFrom').val(), "DD-MM-YYYY").toDate();
+                data.dateTo = moment($('#dateTo').val(), "DD-MM-YYYY").toDate();
+                data.DepartmentId = parseInt($('#Department').val() || 0);
+                data.UserId = parseInt($('#UserId').val() || 0);
+
+                data.title = "Parameters - "
+                    + "From: " + $('#dateFrom').val()
+                    + " To: " + $('#dateTo').val()
+                    + " Department: " + $('#Department').find("option:selected").text();
+                if ($.fn.DataTable.isDataTable('#StockTransferOutReport')) {
+                    window.EumiLastSelectedInItemRpt = data;
+                    $("#StockTransferOutReport").DataTable().ajax.reload();
+                    $("#paramOfReport").text(data.title);
+                }
+            }
+    </script>
+}
+
+
+

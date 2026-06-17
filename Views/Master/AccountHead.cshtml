@@ -1,0 +1,1360 @@
+﻿
+@{
+    ViewBag.Title = "AccountHead";
+}
+
+
+
+<script type="text/javascript" src="../Projectscript/Common.js"> </script>
+<style>
+    #tree {
+        float: left;
+    }
+
+        #tree li {
+            white-space: nowrap;
+            user-select: none;
+        }
+
+            #tree li::before {
+                content: '\f105';
+                font-family: FontAwesome;
+                display: inline-block;
+                padding-right: 5px;
+            }
+
+            #tree li span {
+                cursor: pointer;
+            }
+
+        #tree ul, #tree ul li {
+            list-style: none;
+            margin: 2px 5px 2px 20px;
+            padding: 2px;
+            display: block;
+        }
+
+        #tree ul {
+            display: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #tree > ul, #tree .eumi-open-list > ul {
+            display: block;
+        }
+
+        #tree .eumi-open-list::before {
+            content: '\f107';
+            font-family: FontAwesome;
+            display: inline-block;
+            padding-right: 5px;
+        }
+
+        #tree li.eumi-leaf::before {
+            content: '\f192';
+            font-family: FontAwesome;
+            display: inline-block;
+            padding-right: 5px;
+        }
+    /*.form-control{
+            font-weight:bold;
+        }*/
+</style>
+
+
+
+<script>
+   
+    function Defaultfocus() {
+
+    }
+
+    function Addschedule(Id) {
+        var SheduleName = $('#SchName' + Id).val();
+        var ScheduleCode = $('#ACCODE' + Id).val();
+
+        $('#scheduleId').val(Id);
+        $('#schhead').text(SheduleName);
+        $('#popup1').show();
+        $('#divschedule').show();
+        $('#divachead').hide();
+        $('#txtschedulename').focus();
+    }
+
+
+    function AddAccounthead(Id) {
+        $('#AccEditDiv').show();
+        $('.AccAutoDiv').hide();
+        var SheduleName = $('#SchName' + Id).val();
+        var ScheduleCode = $('#ACCODE' + Id).val();
+        var AccSlno = $('#ACCSlno' + Id).val();
+        var ScheduleType = $('#SchType' + Id).val();
+        $('#SCHTYPE').val(ScheduleType);
+        var Prefix = ["", "0", "00", "000"];
+        var i = 4 - AccSlno.length
+        if (i < 4) { Pre = Prefix[i] } else { Pre = ''; }
+        $('#scheduleId').val(Id);
+        $('#txtacccode').val(ScheduleCode + '-' + Pre + AccSlno);
+        $('#txtacccodeauto').val(ScheduleCode);
+        $('#txtacccodeman').val(Pre + AccSlno);
+        $('#myModalLabel1').text(SheduleName);
+        $('#popup1').show();
+        $('#divschedule,#btnDelete').hide();
+        $('#divachead').show();
+        $('#txtaccname,#txtaccnamrration,#txtob').val('');
+        $('AccID').val(0);
+        $('#amttype').text('');
+        $("#txtob").prop('readonly', true);
+        $('input[name=customRadioInline1]').attr('checked', false);
+        $('input[name=customRadioInline1]').prop('disabled', false);
+        $('#txtaccname').focus();
+
+    }
+
+
+    function Showtree(result) {
+        $("#tree").empty();
+        for (var i = 0; i < result.length; i++) {
+            var data = {
+                SchName: result[i].description,
+                ACCODE: result[i].accountCode,
+                ACCSlno: result[i].slno,
+                SchType: result[i].Scheduletype
+            }
+            for (var key in data) {
+                $("#tree").append($('<input type="hidden" />').attr("id", key + result[i].accountId).val(data[key]));
+            }
+        }
+        var list = GetScheduleUL(0, result);
+        if (list != null && list.length > 0) {
+            $('#tree').append(list);
+            AddTreeEvents();
+        }
+    }
+
+    function GetScheduleUL(parentId, result) {
+        var arrMainSch = result.filter(function (ele) { return ele.parentId === parentId });
+        // if (parentId == 0) {
+        //     console.log(arrMainSch);
+        // }
+        var jqList = null;
+        if (arrMainSch.length > 0) {
+            jqList = $("<ul>");
+        }
+        for (var j = 0; j < arrMainSch.length; j++) {
+            var jqItem = $("<li>").attr("data-eumi-id-li", arrMainSch[j].accountId).append($("<span>").addClass("eumi-node-span").text(arrMainSch[j].description))
+                .append(' ')
+                .append($("<span>").addClass("eumi-add ft-plus-circle text-primary").attr("data-eumi-id", arrMainSch[j].accountId));
+            jqList.append(jqItem);
+            var jqChildList = GetScheduleUL(arrMainSch[j].accountId, result);
+            if (jqChildList != null && jqChildList.length > 0) {
+                jqItem.append(jqChildList)
+            } else {
+                jqItem.addClass("eumi-leaf");
+            }
+
+        }
+        return jqList;
+    }
+
+    function AddTreeEvents() {
+        $("#tree").off(".eumiTreeEvents").on("click.eumiTreeEvents", ".eumi-add", function () {
+            if ($(this).parentsUntil("#tree", "ul").length >= ScheduleLevels) {  //----------------------------------> ScheduleLevels-read from layout set 2 or 3 Depends Customer requirment)
+                AddAccounthead($(this).attr("data-eumi-id"));
+            } else {
+                Addschedule($(this).attr("data-eumi-id"));
+                $("#tree").find(".eumi-current-node").removeClass("eumi-current-node");
+                $("#tree").find(".eumi-open-list").removeClass("eumi-open-list");
+                $(this).closest("li").addClass("eumi-current-node");
+                $(this).parentsUntil("#tree", "li").addClass("eumi-open-list");
+
+
+            }
+        }).on("click.eumiTreeEvents", ".eumi-node-span", function () {
+
+            if (!$(this).closest("li").is(".eumi-current-node")) {
+                if (!$.fn.DataTable.isDataTable('#example')) {
+                    var table = $("#tblacchead").DataTable();
+                    //table.column(4).search($(this).text()).draw();
+                    table.column(4).search('^' + $.trim($(this).text()) + '$', true, false, true).draw();
+                }
+            }
+            var currentNodeOpen = false;
+            if ($(this).closest("li").is(".eumi-open-list")) {
+                currentNodeOpen = true;
+            }
+            $("#tree").find(".eumi-current-node").removeClass("eumi-current-node");
+            $("#tree").find(".eumi-open-list").removeClass("eumi-open-list");
+            $(this).closest("li").addClass("eumi-current-node");
+            $(this).parentsUntil("#tree", "li").addClass("eumi-open-list");
+            if (currentNodeOpen) {
+                $(this).closest("li").removeClass("eumi-open-list");
+            }
+            //GetAllaccHead($(this).parentsUntil("#tree", "li.eumi-current-node").attr("data-eumi-id-li"))
+        });
+    }
+
+    function formrefresh() {
+        $('#txtacccode#txtacccodeauto,#txtacccodeman').val('');
+        $('#txtaccname').val('');
+        $('#txtaccnamrration').val('');
+        $('#txtob').val('');
+        $('#popup1').hide();
+        $('#txtschedulename').val('');
+        $('#txtschedulcode').val('');
+        $('.swal-button swal-button--confirm').focus();
+        $('#tblopencost tr.jsgrid-row').remove();
+        popupclose();
+        //  x = 1;
+        $('#Xvariable').val(1);
+        $('#AccID').val(0);
+        CurrencyGets(0);
+    }
+
+
+    function ShowAccheadList(result) {
+
+        disable_datatable('tblacchead');
+        var responseText = "<thead><tr><th align=center>Sl#</th><th>Code</th><th>Name</th><th>Opening</th><th>Schedule</th><th align=center>Edit</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            responseText += '<tr><td align=center>' + slno + '</td><td>' + result[i].AcntCode + '</td><td>' + result[i].AcntDescription + '</td><td>' + result[i].Opening + '</td><td>' + result[i].schedul + '</td><td align=center><a onclick="GetRows(' + result[i].AcntId + ')">' + Editbutton + '</a></td></tr>';
+        }
+        $('#tblacchead').html(responseText + '</tbody><tfoot><tr><th> </th><th>Code</th><th>Name</th><th>Opening</th><th>Schedule</th><th align=center> </th></tr></tfoot>');
+        datatableWithsearch1('tblacchead');
+
+    }
+
+
+
+
+    function datatableWithsearch1(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != ' ') {
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
+            }           
+
+        });
+        var table = null;
+        table = $('#' + tablename).DataTable({
+           
+            dom: "<'row'<'col-sm-2'l><'col-sm-10'f>>" +
+                     "<'row'<'col-sm-12'tr>>" +
+                     "<'row'<'col-sm-6'i><'col-sm-6'p>>",
+            "columnDefs": [
+                                { "width": "1%", "targets": 0 },
+                                { "width": "3%", "targets": 1 },
+                                { "width": "30%", "targets": 2 },
+                                { "width": "2%", "targets": 3 },
+                                { "width": "20%", "targets": 4 },
+                                { "width": "1%", "targets": 5 },
+            ],
+            buttons: [],           
+
+        });
+
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: ":visible" }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: ":visible" }
+                    },
+                    {
+                        extend: 'print',
+                        title: title,
+                        messageTop: 'MEDOC HMS',
+                        exportOptions: { columns: ":visible" }
+                    }
+                ]
+            },
+            'colvis'
+            ]
+        });
+        table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+        $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+    }
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+
+
+
+
+
+
+    function GetRows(Ac_Id) {
+     
+        $('#AccID').val(Ac_Id);
+        var data = {};
+        data.AcntId = Ac_Id;
+        data.ScheduleId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/AccountHeadGetandGets",
+            data: data,
+            success: function (result) {
+            
+                $('#Xvariable').val(1);
+                ShowAccheadheadGets(result);
+            }
+        });
+    }
+
+
+    function ShowAccheadheadGets(result) {
+
+        $('#AccEditDiv').hide();
+        $('.AccAutoDiv').show();
+        $('#popup1,#divachead,#btnDelete').show();
+        $('#txtacccode').val(result[0].AcntCode);
+        $('#txtaccname').val(result[0].AcntDescription);
+        $('#txtaccnamrration').val(result[0].Narration);
+        $('#txtob').val(parseFloat(result[0].Opening).toFixed(Decimal));
+        $('#scheduleId').val();
+        $("#txtob").prop('readonly', true);
+      
+        $('#txtaccname').focus();
+
+
+        var data = {};
+        data.AcntId = result[0].AcntId;
+        data.AcntCode = result[0].AcntCode;
+
+        $.ajax({
+            type: "POST",
+            url: "../Master/AccountHeadGetAccountTransaction",
+            data: data,
+            success: function (result) {
+                ShowAccheadheadTransaction(result.oList);
+            }
+        });
+
+      
+
+    }
+
+    function ShowAccheadheadTransaction(result) {
+
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            if (result[i].FlagOP == 0) {
+                var balance =
+                       "<tr id='row" + slno + "' class='jsgrid-row' style=border:1px solid;height:30px>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='slno_" + slno + "'>" + slno + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opndate_" + slno + "'>" + result[i].Date + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opntype" + slno + "'>" + result[i].Type + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opndesc" + slno + "'>" + result[i].Description + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnCurrency" + slno + "'>" + result[i].Currency + " <input type='hidden' id='CurrencyId" + slno + "' value=" + result[i].CurrencyId + "></td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='CurrencyRate" + slno + "'>" + parseFloat(result[i].Rate).toFixed(Decimal) + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnamount" + slno + "'>" + parseFloat(result[i].Amount).toFixed(Decimal) + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnrefrnc" + slno + "'>" + result[i].ReferanceNo + "</td>" +
+                       "<td style='display:none' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opproductid" + slno + "'>" + result[i].ProductId + "</td>" +
+                       "<td style='display:none' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opproductname" + slno + "'>" + result[i].ProductName + "</td>" +
+                       "<td style='display:none' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opbillserid" + slno + "'>" + result[i].BillSerId + "</td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' > <button type='button' class='btn mr-1 mb-1 btn-warning btn-sm'  onclick='rowdelet(" + slno + ")'><i class='ft-x'></i> </button></td>" +
+                       "</tr>";
+                $('#tblopencost').append(balance);
+              
+            }
+            else if (result[i].FlagOP == 1) {
+                var balance =
+                        "<tr id='row" + slno + "' class='jsgrid-row' style=border:1px solid;height:30px>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='slno_" + slno + "'>" + slno + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opndate_" + slno + "'>" + result[i].Date + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opntype" + slno + "'>" + result[i].Type + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opndesc" + slno + "'>" + result[i].Description + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnCurrency" + slno + "'>" + result[i].Currency + " <input type='hidden' id='CurrencyId" + slno + "' value=" + result[i].CurrencyId + "></td>" +
+                       "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='CurrencyRate" + slno + "'>" + parseFloat(result[i].Rate).toFixed(Decimal) + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnamount" + slno + "'>" + parseFloat(result[i].Amount).toFixed(Decimal) + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnrefrnc" + slno + "'>" + result[i].ReferanceNo + "</td>" +
+                        "<td style='display:none' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opproductid" + slno + "'>" + result[i].ProductId + "</td>" +
+                        "<td style='display:none' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opproductname" + slno + "'>" + result[i].ProductName + "</td>" +
+                        "<td style='display:none' class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opbillserid" + slno + "'>" + result[i].BillSerId + "</td>" +
+                        "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' ></td>" +
+                        "</tr>";
+                $('#tblopencost').append(balance);
+              
+            }
+
+        }
+
+        $('#Xvariable').val(result.length + 1);
+
+    }
+
+
+    function Gettreeview() {
+        var data = {};
+        data.AreaGrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/TreeViewGets",
+            data: data,
+            success: function (result) {
+                Showtree(result.oList);
+            }
+        });
+    }
+
+
+    function GetAllaccHead(Flag) {
+        var data = {};
+        data.AcntId = 0;
+        data.ScheduleId = 0;
+        data.BillSerId = Flag;
+        $.ajax({
+            type: "POST",
+            url: "../Master/AccountHeadGetandGets",
+            data: data,
+            success: function (result) {
+                ShowAccheadList(result);
+            }
+        });
+
+    }
+
+
+    $(document).keydown(function (e) {
+        if (e.keyCode == 115)     //f4 - add OpenBalance
+        {
+            calcopnblnc();
+            openblncrefresh();
+        }
+        else if (e.keyCode == 27) {                           //esc
+            $('#popup1').hide();
+            hidepopup();
+            popupclose();
+        }
+    });
+
+    $(document).ready(function () {
+
+        Gettreeview();
+        GetAllaccHead(0);
+        CurrencyGets(0);
+
+        $("#opnCurrency").change(function () {
+            var selectedValue = $(this).val();
+            $("#CurrencyRate").val(parseFloat($(this).find("option:selected").attr("name") || 0).toFixed(Decimal))
+        });
+
+        $("#txtob,#txtschedulcode").on("keypress keyup blur", function (event) {
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
+        $("#tblacchead").on('order.dt search.dt', function () {
+            var t = $("#tblacchead").DataTable();
+            
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        });
+
+
+        $("#txtaccname").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $("#txtaccnamrration").focus();
+            }
+        });
+        $("#txtaccnamrration").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $("#btnsubmit").focus();
+            }
+        });
+
+        $("#txtschedulename").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $("#txtschedulcode").focus();
+            }
+        });
+        $("#txtschedulcode").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $("#acnttype").focus();
+            }
+        });
+        $("#acnttype").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $("#btnsubmitschedule").focus();
+            }
+        });
+        $('#opnamount').keydown(function (e) {
+
+            var opnamount = parseFloat($('#opnamount').val() || 0);
+            opnamount = isNaN(opnamount) ? 0 : opnamount;
+
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13 && ($('#opnamount').val() == '' || opnamount == 0)) {
+                warningshow('Please Enter the Amount', 'opnamount');
+                return false;
+            }
+            else if (key == 13) {
+                e.preventDefault();
+                $('#opnsave').focus();
+            }
+
+
+        });
+
+        $("#btnsubmitschedule").click(function (e) {
+
+            var data = {};
+            if ($('#txtschedulename').val() == '') {
+                $('#txtschedulename').focus();
+            }
+            else if ($('#txtschedulcode').val() == '' || ($('#txtschedulcode').val()).length < 4) {
+                $('#txtschedulcode').focus();
+            }
+            else if ($('#acnttype').val() == '0') {
+                $('#acnttype').focus();
+            }
+
+
+            else {
+                data.schedul = $('#txtschedulename').val();
+                data.AcntCode = $('#txtschedulcode').val();
+                data.ScheduleId = $('#scheduleId').val();
+                data.SCHType = $('#acnttype').val();
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/AccountScheduleInsertandUpdate",
+                    data: data,
+                    success: function (result) {
+                        for (var i = 0; i < result.oList.length; i++) {
+                            var status = result.oList[i].Flag;
+                            Showalerts(status);
+                            Gettreeview();
+                            $('#acnttype').val('0');
+
+                        }
+                    }
+                });
+            }
+        });
+
+
+        $("#btnadd").focus(function (e) {
+            $("#btnadd").removeClass("btn btn-outline-primary");
+            $("#btnadd").addClass("btn btn-primary");
+        });
+        $("#btnadd").focusout(function () {
+            $("#btnadd").removeClass("btn btn-primary");
+            $("#btnadd").addClass("btn btn-outline-primary");
+        });
+
+
+        $("#btnsubmit").click(function (e) {
+            Accoundheadsave(1)
+        });
+
+        $("#btnDelete").click(function (e) {
+            var Result = confirm("Do You Want Delete this record?")
+            if (Result == true) {
+
+                var oArray = new Array();
+
+                var AcntDescription = $('#txtaccname').val();
+                var Narration = $('#txtaccnamrration').val();
+                var AcntCode = $('#txtacccode').val();
+                var Opening = '';
+                var ScheduleId = parseFloat($('#scheduleId').val() || 0);
+                var AcntId = $('#AccID').val();
+                var DelFlag = 0;
+                var UserId = ERPUserId;
+                var DeptId = ERPDeptId;
+                var SCHType = $('#SCHTYPE').val();
+                var Type = '';
+                var Description = '';
+                var Currency = '';
+                var Rate = '';
+                var Amount = '';
+                var Date = '';
+                var ReferanceNo = '';
+                var NewAccCode = 'x';
+                var Variable1 = 'y';
+                var Variable2 = 'z';
+
+                oArray.push({
+
+                    'AcntDescription': AcntDescription,
+                    'Narration': Narration,
+                    'AcntCode': AcntCode,
+                    'Opening': Opening,
+                    'ScheduleId': ScheduleId,
+                    'AcntId': AcntId,
+                    'DelFlag': DelFlag,
+                    'UserId': UserId,
+                    'DeptId': DeptId,
+                    'SCHType': SCHType,
+                    'Type': Type,
+                    'Description': Description,
+                    'Currency': Currency,
+                    'Rate': Rate,
+                    'Amount': Amount,
+                    'Date': Date,
+                    'ReferanceNo': ReferanceNo,
+                    'NewAccCode': NewAccCode,
+                    'Variable1': Variable1,
+                    'Variable2': Variable2,
+                })
+
+                
+
+                var data = { 'AccountSchedule': oArray };
+                $.ajax({
+                    type: "POST",
+                    url: "../Master/AccountHeadInsertandUpdate",
+                    data: data,
+                    success: function (result) {
+                        for (var i = 0; i < result.oList.length; i++) {
+                            var status = result.oList[i].Flag;
+                            var Accode = result.oList[i].AcntCode;
+                            $('#ACCSlno' + $('#scheduleId').val()).val(Accode + 1)
+                            Showalerts(status);
+                            GetAllaccHead(0);
+                            $('#AccID').val(0);
+
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+        function Accoundheadsave(DelFlag) {
+            var NewAccCodeLen = $.trim($('#txtacccodeman').val()).length;
+
+            if ($('#txtaccname').val() == '') {
+                warningshow('Press Enter Account Name', 'txtaccname');
+            }
+            else if ($('#AccID').val() == 0 && NewAccCodeLen != 4) {
+                warningshow('Enter 4 Digit Code', 'txtacccodeman');
+            }
+            else {
+                $("#btnsubmit").prop("disabled", true);
+                var oArray = new Array();
+
+                //console.log($('#Xvariable').val())
+                for (var k = 1; k <= $('#Xvariable').val() ; k++) {
+
+                    var Ob = 0;
+                    if (parseFloat($('#txtob').val() || 0) != 0) {
+                        var Ob = parseFloat($('#txtob').val() * $('#obtype').val())
+                    }
+
+                    var AcntDescription = $.trim($('#txtaccname').val());
+                    var Narration = $('#txtaccnamrration').val();
+                    var AcntCode = $('#txtacccode').val();
+                    var Opening = Ob;
+                    var ScheduleId = parseFloat($('#scheduleId').val() || 0);
+                    var AcntId = $('#AccID').val();
+                    var DelFlag = DelFlag;
+                    var UserId = ERPUserId;
+                    var DeptId = ERPDeptId;
+                    var SCHType = $('#SCHTYPE').val();
+                    var Type = $('#opntype' + k).text();
+                    var Description = $('#opndesc' + k).text();
+                    var Currency = $('#CurrencyId' + k).val();
+                    var Rate = $('#CurrencyRate' + k).text();
+                    var Amount = $('#opnamount' + k).text();
+                    var Date = $('#opndate_' + k).text();
+                    var ReferanceNo = $('#opnrefrnc' + k).text();
+                    var ProductId = $('#opproductid' + k).text();
+                    var ProductName = $('#opproductname' + k).text();
+                    var BillSerId = $('#opbillserid' + k).text();
+                    var NewAccCode = $.trim($('#txtacccodeman').val());
+                    var Variable1 = 'y';
+                    var Variable2 = 'z';
+
+                    console.log(AcntDescription)
+
+                    if (Type == 'C' || Type == 'D' || AcntDescription!='') {
+
+                        oArray.push({
+
+                            'AcntDescription': AcntDescription,
+                            'Narration': Narration,
+                            'AcntCode': AcntCode,
+                            'Opening': Opening,
+                            'ScheduleId': ScheduleId,
+                            'AcntId': AcntId,
+                            'DelFlag': DelFlag,
+                            'UserId': UserId,
+                            'DeptId': DeptId,
+                            'SCHType': SCHType,
+                            'Type': Type,
+                            'Description': Description,
+                            'Currency': Currency,
+                            'Rate': Rate,
+                            'Amount': Amount,
+                            'Date': Date,
+                            'ReferanceNo': ReferanceNo,
+                            'ProductId': ProductId,
+                            'ProductName': ProductName,
+                            'BillSerId': BillSerId,
+                            'NewAccCode': NewAccCode,
+                            'Variable1': Variable1,
+                            'Variable2': Variable2,
+                        })
+                    }
+
+                }
+             
+                console.log(oArray)
+
+                if (oArray != "") {
+                    var data = { 'AccountSchedule': oArray };
+                    console.log(data)
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/AccountHeadInsertandUpdate",
+                        data: data,
+                        success: function (result) {
+                            for (var i = 0; i < result.oList.length; i++) {
+                                var status = result.oList[i].Flag;
+                                var Accode = result.oList[i].AcntCode;
+                                $('#ACCSlno' + $('#scheduleId').val()).val(Accode + 1);
+                                $("#btnsubmit").prop("disabled", false);
+                                Showalerts(status);
+                                GetAllaccHead(0);
+                                $('#AccID').val(0)
+
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+
+    });
+
+
+    function hidepopup() {
+        $('#popup1').hide()
+        $('#AccID').val(0);
+        openblncrefresh();
+        $('#tblopencost tr.jsgrid-row').remove();
+    }
+
+
+
+
+    function Addpopupwindow(Id) {
+        $('#openingentry').hide();
+        $('#popupdiv').show();
+
+        if (Id == 0) {
+            $('#myheader').text('Opening Balance');
+            $('#openingentry').show();
+            $('#opndesc').focus();
+
+            if ($('#tblopencost tr').length <= 1) {
+                
+                $('#Xvariable').val(1);
+            }
+        }
+    }
+
+
+</script>
+<script>
+
+    function CurrencyGets(id) {
+        var data = {};
+        data.Id = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CurrencyGetandGets",
+            data: data,
+            success: function (result) {
+                CurrencyLoad(result.oList, id);
+            }
+        });
+    }
+    var BaseCurrency;
+    function CurrencyLoad(result, a) {
+        $("#opnCurrency").empty();
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].BaseCurrencyId != 0) {
+                BaseCurrency = result[i].BaseCurrencyId;
+            }
+        }
+        $("#opnCurrency").append("<option value='0'>--Select--</option>");
+
+        for (var i = 0; i < result.length; i++) {
+            $("#opnCurrency").append("<option value='" + result[i].Id + "' name='" + result[i].CurrencyRate + "'>" + result[i].CurrencyName + "</option>");
+        }
+        if (a == 0) {
+            $('#opnCurrency').val(BaseCurrency);
+            $('#CurrencyRate').val(parseFloat($('#opnCurrency').find("option:selected").attr("name") || 0).toFixed(Decimal));
+
+        }
+        else {
+            $('#opnCurrency').val(a);
+            $('#CurrencyRate').val(parseFloat($('#opnCurrency').find("option:selected").attr("name") || 0).toFixed(Decimal));
+        }
+    }
+    $('#opndate').val(CurDate);
+
+
+
+    function openblncrefresh() {
+
+        $('#openingentry').hide();
+        $('#popupdiv').hide();
+        clear();
+       
+    }
+
+    function addbalance() {
+
+        var opnamount = parseFloat($('#opnamount').val() || 0);
+        opnamount = isNaN(opnamount) ? 0 : opnamount;
+
+        if ($('#opndesc').val() == '') {
+            warningshow('Please Enter the Description', 'opndesc');
+        }
+        else if ($('#opnCurrency').val() == 0) {
+            warningshow('Please Select Currency', 'opnCurrency');
+        }
+        else if (($('#CurrencyRate').val() == 0)) {
+            warningshow('Please Enter Currency Rate', 'CurrencyRate');
+        }
+        else if (($('#CurrencyRate').val() == '')) {
+            warningshow('Please Enter Currency Rate', 'CurrencyRate');
+        }
+        else if ($('#opnamount').val() == '') {
+            warningshow('Please Enter the Amount', 'opnamount');
+            $('#opnamount').select();
+        }
+        else if (opnamount == 0) {
+            warningshow('Please Enter the Amount', 'opnamount');
+            $('#opnamount').select();
+        }
+        else {
+            var xvar = $('#Xvariable').val();
+
+            var slno = 1;
+            slno = parseInt($('#tblopencost tr').length);
+            var balance =
+           "<tr id='row" + xvar + "' class='jsgrid-row' style=border:1px solid;height:25px>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='slno_" + xvar + "'>" + slno + "</td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opndate_" + xvar + "'>" + $('#opndate').val() + "</td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opntype" + xvar + "'>" + $('#opntype').val() + "</td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opndesc" + xvar + "'>" + $('#opndesc').val() + "</td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnCurrency" + xvar + "'>" + $('#opnCurrency option:selected').html() + " <input type='hidden' id='CurrencyId" + xvar + "' value=" + $('#opnCurrency').val() + "> </td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='CurrencyRate" + xvar + "'>" + parseFloat($('#CurrencyRate').val()).toFixed(Decimal) + "</td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnamount" + xvar + "'>" + parseFloat($('#opnamount').val()).toFixed(Decimal) + "</td>" +
+            "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' id='opnrefrnc" + xvar + "'>" + ($('#opnrefrncno').val() || 0) + "</td>" +
+           "<td class='jsgrid-cell jsgrid-control-field jsgrid-align-center' > <button type='button' class='btn mr-1 mb-1 btn-warning btn-sm'  onclick='rowdelet(" + xvar + ")'><i class='ft-x'></i> </button></td>" +
+           "</tr>";
+            $('#tblopencost').append(balance);
+            clear();
+
+            xvar++;
+            $('#Xvariable').val(xvar + 1);
+            CurrencyGets(0);
+        }
+        $('#openingdiv').animate({ scrollTop: 5000 }, 900);
+
+    }
+
+    function clear() {
+        $('#opndate').val(CurDate)
+        $('#opntype').val('C')
+        $('#opndesc').val('')
+        $('#opnamount').val('')
+        $('#opnrefrncno').val('')
+        $('#opndesc').focus();
+    }
+
+    function isNumber(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+        $('#Warningpopup').fadeOut();
+    }
+
+    //Numeric Only Text Boxes without Decimal Point
+
+    function isNumberInt(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+
+    }
+
+
+    function CheckCodeLength() {
+        var NewLen = $.trim($('#txtacccodeman').val()).length;
+        if (NewLen > 4) {
+            warningshow('Enter 4 Digit Code', 'txtacccodeman');
+            $('#txtacccodeman').val($.trim($('#txtacccodeman').val()).slice(0, 4));          
+        }
+    }
+
+    function calcopnblnc() {
+
+        var optablelength = $('#Xvariable').val();
+
+        var TotalOpnBalance = 0;
+        var CreditRate = 0;
+        var DebitRate = 0;
+        var CreditAmt = 0;
+        var DebitAmt = 0;
+        var CurRate = 0;
+        var CreditTot = 0;
+        var DebitTot = 0;
+        console.log("========================================")
+        for (var i = 1; i <= optablelength; i++) {
+            if ($('#opntype' + i).text() == 'C') {
+                CurRate = parseFloat($('#CurrencyRate' + i).text() || 0);
+                console.log('CurRate::' + CurRate)
+                CreditRate = parseFloat($('#opnamount' + i).text() || 0) * parseFloat(CurRate);
+                console.log('CreditRate::' + CreditRate)
+                CreditAmt = parseFloat(CreditAmt) + parseFloat(CreditRate);
+                console.log('CreditAmt::' + CreditAmt)
+            }
+            else if ($('#opntype' + i).text() == 'D') {
+                CurRate = parseFloat($('#CurrencyRate' + i).text() || 0);
+                console.log('CurRate::' + CurRate)
+                DebitRate = parseFloat($('#opnamount' + i).text() || 0) * parseFloat(CurRate);
+                console.log('DebitRate::' + DebitRate)
+                DebitAmt = parseFloat(DebitAmt) + parseFloat(DebitRate);
+                console.log('DebitAmt::' + DebitAmt)
+            }
+        }
+      
+        TotalOpnBalance = parseFloat(DebitAmt - CreditAmt);
+        console.log('TotalOpnBalance::' + TotalOpnBalance)
+        console.log("========================================")
+        $('#txtob').val(TotalOpnBalance.toFixed(Decimal));
+    }
+
+    function rowdelet(RowId) {
+
+        var slno = 1;
+        var rowslno = parseInt(slno);
+        $('#row' + RowId).remove();
+        for (var j = 1; j <= $('#Xvariable').val() ; j++) {
+            if ($('#opndesc' + j).val() != undefined) {
+                $('#slno_' + j).text(slno);
+                slno++;
+            }
+        }
+        $('#opndesc').focus();
+    }
+
+    $("#btnadd").focus(function (e) {
+        $("#btnadd").removeClass("btn btn-outline-primary");
+        $("#btnadd").addClass("btn btn-primary");
+    });
+
+    $("#btnadd").focusout(function () {
+        $("#btnadd").removeClass("btn btn-primary");
+        $("#btnadd").addClass("btn btn-outline-primary");
+    });
+
+    $("#btncnclopnblnc").keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 39) {
+            $("#btnsubmitopnblnc").focus();
+        }
+    });
+
+    $("#btnsubmitopnblnc").keydown(function (e) {
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 37) {
+            $("#btncnclopnblnc").focus();
+        }
+    });
+
+    //Date Picker
+    $(function () {
+        $('#opndate').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+
+
+    function popupclose() {
+        calcopnblnc();
+        openblncrefresh();
+    }
+</script>
+
+
+
+<div class="myData" data-x="M14" />
+
+<div class="row" style="height: 800px;">
+
+
+    <!--Basic List Group Starts-->
+    <div class="col-sm-10 col-md-5 col-lg-4" style="height:inherit">
+        <div class="card" style="height:inherit">
+            <div class="card-header">
+                <a href="@Url.Action("AccountSchedule", "Print")" target="_blank" class="pull-right" title="Print tree"><i class="ft-printer"></i></a>
+
+                <div class="row">
+                    <div class="col-md-8"><h4 class="card-title" style="font-weight:bold">Account Schedule</h4></div>
+                    <div class="col-md-2" style="overflow:auto">
+
+                        <a onclick="($('#confirm').show())">
+                            <i class="fa fa-question-circle"></i>
+                        </a>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            <div class="card-body" style="margin-top:-10%;">
+                <div class="card-block">
+                    <div style="height: 650px;overflow:auto;">
+                        <div id="tree">
+
+                        </div>
+                        <div style="clear:both"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Basic List Group Ends-->
+    <!--List Group with badges Starts-->
+    <div class="col-sm-6 col-md-6 col-lg-8" style="height:inherit">
+        <div class="card" style="height:inherit">
+            <div class="card-header">
+                <a onclick="GetAllaccHead(0)"> <h4 class="card-title" style="font-weight:bold">ACCOUNT HEAD</h4></a>
+                <hr />
+            </div>
+            <div class="card-body" style="margin-top:-3%;overflow-x:auto;overflow-y:auto">
+                <div class="card-block">
+                    <table id="tblacchead" class="table table-striped table-bordered base-style dataTable" style=""></table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <input type="hidden" id="AccID" value="0" />
+
+</div>
+
+<div class="modal fade text-left show" id="popup1" style="display: none;background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog" id="divachead" role="document" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel1" style="font-weight:bold">Account Head</h4>
+                <button type="button" class="close" onclick="hidepopup()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp" style="font-weight:bold">Account Code<span class="danger">*</span></label>
+                    <input type="text" id="txtacccode" class="form-control AccAutoDiv" disabled>
+
+                    <div class="input-group" id="AccEditDiv">
+                        <input type="text" id="txtacccodeauto" class="form-control col-md-3" disabled>
+                        <input type="text" id="txtacccodeman" class="form-control" onkeypress=isNumberInt(event,this) onkeyup="CheckCodeLength()">
+                    </div>
+                </fieldset>
+                
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp" style="font-weight:bold">Account Name<span class="danger">*</span></label>
+                    <input type="text" id="txtaccname" class="form-control" name="Code">
+
+                </fieldset>
+                <br>
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="sbgroupname" style="font-weight:bold">Narration</label>
+                    <input type="text" id="txtaccnamrration" class="form-control" name="Name">
+                </fieldset>
+                <br>
+                <fieldset class="form-group floating-label-form-group">
+                    <div class="row">
+                        <div class="col-md-7"><label for="sbgroupdesc" style="font-weight:bold">Opening Balance</label><label style="color:red" id="amttype"></label></div>
+                        <div class="col-md-2" style="display:none">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" onclick="chekselect(-1)">
+                                <label class="custom-control-label" for="customRadioInline1">Credit</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-1" style="display:none">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" onclick="chekselect(1)">
+                                <label class="custom-control-label" for="customRadioInline2">Debit</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="obtype" value="1" />
+                    <input type="hidden" id="SCHTYPE" />
+                    <input type="text" id="txtob" class="form-control" readonly onclick="Addpopupwindow(0)">
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center">
+                    <button type="button" class="btn grey btn-outline-secondary" onclick="hidepopup()">Cancel</button>
+                    <button type="button" id="btnsubmit" class="btn btn-outline-primary">Save </button>
+                    <button type="button" id="btnDelete" class="btn btn-outline-primary" style="display:none;">Delete </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-dialog" id="divschedule" style="display:none;top:20%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="schhead" style="font-weight:bold">Schedule</h4>
+                <button type="button" class="close" onclick="($('#popup1').hide())">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp" style="font-weight:bold">Group Name<span class="danger">*</span></label>
+                    <input type="text" id="txtschedulename" class="form-control">
+                </fieldset>
+
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp" style="font-weight:bold">Code(4 digit)<span class="danger">*</span></label>
+                    <input type="text" id="txtschedulcode" maxlength="4" class="form-control">
+                </fieldset>
+
+                <fieldset class="form-group floating-label-form-group">
+                    <label for="grp" style="font-weight:bold">Account Type<span class="danger">*</span></label>
+                    <select class="form-control" id="acnttype">
+                        <option value="0">----Select----</option>
+                        <option value="O">Other</option>
+                        <option value="C">Customer</option>
+                        <option value="S">Supplier</option>
+
+                    </select>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn grey btn-outline-secondary" onclick="($('#popup1').hide())">Cancel</button>
+                <button type="button" id="btnsubmitschedule" style="margin-right:35%;" class="btn btn-outline-primary">Save </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+
+<div id="confirm" class="overlay" style="display: none;">
+    <div class="modal fade text-left show" id="keyboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display: block; padding-right: 17px; top:28%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <b>ASSETS</b>            Range Starting from  <b> 1000-1999</b>          <br />      <b> LIABILITY</b>         Range Starting from  <b>  2000-2999</b>      <br />
+                    <b> EQUITY </b>           Range Starting from  <b>   3000-3999</b>     <br />    <b>INCOME </b>          Range Starting from  <b>    4000-4999</b>     <br />
+                    <b>COST OF SALE </b>    Range Starting from  <b>    5000-5999</b>     <br />    <b>EXPENSE </b>         Range Starting from  <b>6000-6999
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="margin-right:45%" onclick="($('#confirm').hide())" id="confirmOk" class="btn btn-outline-primary" autofocus="">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+
+    <input type="text" id="scheduleId" />
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="revheader" style="background:rgba(0,0,0,0.5); display: block; display:none;">
+    <div class="modal-dialog modal-xl" role="document" style="margin-top:50px">
+        <div class="modal-content" style="width:1550px;margin-left:-105%">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="revheader">Opening Balance</h3>
+                <button type="button" class="close" id="popupclose" onclick="popupclose()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <form id="openingentry" style="display:none;max-width:100%">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label for="opndate" style="font-weight:bold">Date<span class="danger">*</span></label>
+                            <input type="text" id="opndate" class="form-control">
+                        </div>
+
+                        <div class="col-md-1">
+                            <label for="opntype" style="font-weight:bold">Type</label>
+                            <select id="opntype" class="form-control" name="Code">
+                                <option value="C">
+                                    Credit
+                                </option>
+                                <option value="D">
+                                    Debit
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="opndesc" style="font-weight:bold">Description<span class="danger">*</span></label>
+                            <input type="text" id="opndesc" class="form-control" name="Name">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="opnCurrency" style="font-weight:bold">Currency<span class="danger">*</span></label>
+                            <table width="100%">
+                                <tr>
+                                    <td width="40%">
+                                        <select type="text" id="opnCurrency" class="form-control" onkeyup="$('#opnCurrency').val('0'), $('#CurrencyId').val(0)" style="border-right:none;border-top-right-radius:0px;border-bottom-right-radius:0px;text-align:left;height:40px"></select>
+                                        <input type="hidden" id="CurrencyId" class="form-control" />
+
+                                    </td>
+                                    <td>
+                                        <input type="text" id="CurrencyRate" class="form-control" onkeypress=isNumber(event,this) name="acnt1" autocomplete="off" style="border-top-left-radius:0px;border-bottom-left-radius:0px;border-left:none">
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                        </div>
+                        <div class="col-md-2">
+                            <label for="opnamount" style="font-weight:bold">Amount<span class="danger">*</span></label>
+                            <input type="text" id="opnamount" class="form-control" name="Name" onkeypress=isNumber(event,this)>
+                        </div>
+                        <div class="col-md-1">
+
+                            <label for="opnrefrncno" style="font-weight:bold">Reference#</label>
+                            <input type="text" id="opnrefrncno" class="form-control" name="Name" onkeypress=isNumber(event,this)>
+
+                        </div>
+
+                        <div class="col-md-1">
+
+                            <label for="btnadd" style="opacity:0">Add</label>
+                            <button type="button" id="btnadd" onclick="addbalance()" class="btn btn-outline-primary" style="height:40px;">+Add</button>
+
+                        </div>
+
+                    </div>
+                    <div class="row" style="border-top:1px solid #BABFC7">
+
+                        <div id="openingdiv" class="col-md-12" style="height:270px;width:100%;overflow-y:auto;border-right:1px solid #BABFC7;border-left:1px solid #BABFC7;">
+                            <table class="table table-responsive-md-md text-center" id="tblopencost">
+                                <tr style="border-bottom:1px solid #BABFC7;border-top:3px solid white;">
+                                    <th>
+                                        Sl#
+                                    </th>
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th>
+                                        Currency
+                                    </th>
+                                    <th>
+                                        Rate
+                                    </th>
+                                    <th>
+                                        Amount
+                                    </th>
+                                    <th>
+                                        Reference#
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <div class="text-right"> <button type="button" id="btnsubmitopnblnc" style="margin-right:45%" class="btn btn-primary" onclick="calcopnblnc(), openblncrefresh()">Save - [F4] </button></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div style="display:none;"><input id="Xvariable" value="1" /></div>
+

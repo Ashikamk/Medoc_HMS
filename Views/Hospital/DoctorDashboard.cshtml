@@ -1,0 +1,1685 @@
+﻿@{
+    ViewBag.Title = "DoctorDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/app_demo/assets/js/Chart.js"></script>
+<style>
+    :root {
+        --blue: #1a73e8;
+        --orange: #f59e0b;
+        --green: #10b981;
+        --red: #ef4444;
+        --purple: #8b5cf6;
+        --teal: #06b6d4;
+        --pink: #ec4899;
+        --indigo: #6366f1;
+        --font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        --mono: Consolas, "Courier New", monospace;
+        --bg: #f3f4f6;
+        --card: #ffffff;
+        --border: #e5e7eb;
+        --txt: #111827;
+        --muted: #6b7280;
+        --radius: 10px;
+        --shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--txt);
+        font-size: 13px;
+    }
+
+    .dd-wrap {
+        padding: 20px 24px 48px;
+    }
+
+    .stat-row {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        border-radius: var(--radius);
+        padding: 18px 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.10);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+        border: none;
+    }
+
+        .stat-card .sc-label {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .stat-card .sc-val {
+            font-size: 32px;
+            font-weight: 900;
+            font-family: var(--mono);
+            line-height: 1;
+            color: #fff;
+        }
+
+    .analytics-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .a-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .a-card-title {
+        font-size: 18px;
+        font-weight: 700;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        border-radius: 8px 8px 0 0;
+    }
+
+    .a-card-body {
+        padding: 16px 24px;
+        min-height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .donut-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-height: 160px;
+    }
+
+    .donut-canvas {
+        flex-shrink: 0;
+    }
+
+    .donut-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .dl-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+    }
+
+    .dl-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .dl-label {
+        flex: 1;
+    }
+
+    .dl-val {
+        font-weight: 700;
+        font-family: var(--mono);
+    }
+
+    .dl-pct {
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .adv-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .adv-row:last-child {
+            border-bottom: none;
+        }
+
+    .adv-label {
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .adv-bar-wrap {
+        flex: 1;
+        margin: 0 10px;
+        height: 7px;
+        background: #f3f4f6;
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .adv-bar {
+        height: 100%;
+        border-radius: 99px;
+    }
+
+    .adv-val {
+        font-weight: 700;
+        font-size: 13px;
+        font-family: var(--mono);
+        min-width: 36px;
+        text-align: right;
+    }
+
+    .queue-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .queue-head {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 700;
+        border-radius: 8px 8px 0 0;
+    }
+
+        .queue-head h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+    .q-pills {
+        display: flex;
+        gap: 8px;
+    }
+
+    .q-pill {
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .q-pill-blue {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+    .q-pill-green {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .q-pill-orange {
+        background: #fff7ed;
+        color: #c2410c;
+        border: 1px solid #fed7aa;
+    }
+
+
+
+    .tbl-search {
+        padding: 6px 14px 6px 32px;
+        border-radius: 99px;
+        border: 1px solid var(--border);
+        font: 13px var(--font);
+        color: var(--txt);
+        width: 200px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        .tbl-search:focus {
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(147,197,253,.3);
+            background-color: #fff;
+        }
+
+        .tbl-search::placeholder {
+            color: var(--muted);
+        }
+
+    .tbl-scroll {
+        overflow-x: auto;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+
+    .data-table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+        font-size: 14px;
+        color: #000;
+        border: 1px solid var(--border);
+    }
+
+        .data-table thead th {
+            padding: 10px 14px;
+            text-align: left;
+            background: #f9fafb;
+            border-bottom: 2px solid var(--border);
+            border-right: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--muted);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+            .data-table thead th:first-child {
+                padding-left: 16px;
+            }
+
+            .data-table thead th:last-child {
+                padding-right: 16px;
+                border-right: none;
+            }
+
+        .data-table tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+            .data-table tbody tr:hover {
+                background: #f0f9ff;
+                cursor: pointer;
+            }
+
+            .data-table tbody tr:last-child td {
+                border-bottom: 1px solid var(--border);
+            }
+
+            .data-table tbody tr.done-row {
+                background: #f0fdf4;
+            }
+
+                .data-table tbody tr.done-row:hover {
+                    background: #dcfce7;
+                }
+
+        .data-table td {
+            padding: 10px 14px;
+            vertical-align: middle;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+            .data-table td:first-child {
+                padding-left: 16px;
+            }
+
+            .data-table td:last-child {
+                padding-right: 16px;
+                border-right: none;
+            }
+
+        .data-table tfoot td {
+            padding: 7px 14px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            background: #f9fafb;
+            border-top: 2px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+            .data-table tfoot td:first-child {
+                padding-left: 16px;
+            }
+
+            .data-table tfoot td:last-child {
+                padding-right: 16px;
+                border-right: none;
+            }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .b-new {
+        background: #fff7ed;
+        color: #c2410c;
+        border: 1px solid #fed7aa;
+    }
+
+    .b-revisit {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .b-admit {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fca5a5;
+    }
+
+    .b-dis {
+        background: #e0f2fe;
+        color: #0369a1;
+        border: 1px solid #bae6fd;
+    }
+
+    .b-ready {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .b-done {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .four-row {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .p-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+
+    .p-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 24px;
+        border-bottom: 1px solid var(--border);
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    }
+
+        .p-card-head .ph-icon {
+            margin-right: 5px;
+        }
+
+    .p-count {
+        padding: 2px 10px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .pc-blue {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .pc-green {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .pc-orange {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .pc-red {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .mini-tbl {
+        width: 100%;
+        min-width: 400px;
+        border-collapse: collapse;
+        font-size: 14px;
+        color: #000;
+        border: 1px solid var(--border);
+    }
+
+        .mini-tbl thead th {
+            padding: 8px 12px;
+            text-align: left;
+            background: #f9fafb;
+            border-bottom: 2px solid var(--border);
+            border-right: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--muted);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+            .mini-tbl thead th:first-child {
+                padding-left: 16px;
+            }
+
+            .mini-tbl thead th:last-child {
+                padding-right: 16px;
+                border-right: none;
+            }
+
+        .mini-tbl tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+            .mini-tbl tbody tr:last-child td {
+                border-bottom: 1px solid var(--border);
+            }
+
+            .mini-tbl tbody tr:hover {
+                background: #f8fafc;
+                cursor: pointer;
+            }
+
+        .mini-tbl td {
+            padding: 8px 12px;
+            vertical-align: middle;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+            .mini-tbl td:first-child {
+                padding-left: 16px;
+            }
+
+            .mini-tbl td:last-child {
+                padding-right: 16px;
+                border-right: none;
+            }
+
+        .mini-tbl tfoot td {
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            background: #f9fafb;
+            border-top: 2px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+            .mini-tbl tfoot td:first-child {
+                padding-left: 16px;
+            }
+
+            .mini-tbl tfoot td:last-child {
+                padding-right: 16px;
+                border-right: none;
+            }
+
+    .txt-green {
+        color: #10b981;
+        font-weight: 700;
+    }
+
+    .txt-orange {
+        color: #f59e0b;
+        font-weight: 700;
+    }
+
+    .txt-red {
+        color: #ef4444;
+        font-weight: 700;
+    }
+
+    .empty-msg {
+        padding: 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .three-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .qa-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 14px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .qa-item:last-child {
+            border-bottom: none;
+        }
+
+    .qa-icon {
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .qa-label {
+        flex: 1;
+        font-size: 12.5px;
+        font-weight: 500;
+    }
+
+    .qa-num {
+        font-weight: 800;
+        font-family: var(--mono);
+        font-size: 14px;
+        padding: 2px 9px;
+        border-radius: 99px;
+        min-width: 32px;
+        text-align: center;
+    }
+
+    .token-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-family: var(--mono);
+        font-size: 12px;
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .done-row .token-num {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .lab-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--blue);
+        margin-right: 4px;
+        animation: pdot 1.4s infinite;
+    }
+
+    #dd-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(243,244,246,.8);
+        backdrop-filter: blur(2px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .spin {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--border);
+        border-top-color: var(--blue);
+        border-radius: 50%;
+        animation: spin .65s linear infinite;
+    }
+
+    #dd-notif {
+        position: fixed;
+        top: 70px;
+        right: 20px;
+        z-index: 9998;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        background: var(--card);
+        padding: 14px 18px;
+        border-radius: var(--radius);
+        box-shadow: 0 8px 24px rgba(0,0,0,.12);
+        border-left: 4px solid var(--blue);
+        min-width: 320px;
+    }
+
+        #dd-notif .n-icon {
+            font-size: 24px;
+            color: var(--blue);
+        }
+
+        #dd-notif .n-body h4 {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        #dd-notif .n-body p {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+    .n-btn {
+        margin-left: auto;
+        padding: 7px 14px;
+        border-radius: 6px;
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        font: 600 12px var(--font);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 1200px) {
+        .stat-row {
+            grid-template-columns: repeat(5,1fr);
+        }
+
+        .analytics-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .four-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .three-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .two-advice-row, .two-lab-row {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .queue-card .tbl-scroll {
+        height: 350px;
+        overflow-y: auto;
+        overflow-x: auto;
+        padding: 0 16px;
+    }
+
+    .p-card .tbl-scroll {
+        height: 300px;
+        overflow-y: auto;
+        overflow-x: auto;
+        padding: 0 16px;
+    }
+
+    .p-card .quick-actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    #quick-actions-card {
+        height: 100%;
+    }
+
+
+    @@keyframes pdot {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: .3;
+            transform: scale(.6);
+        }
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes blinkCard {
+        0%, 100% {
+            box-shadow: 0 0 8px rgba(255,255,255,.3);
+        }
+
+        50% {
+            box-shadow: 0 0 20px rgba(255,255,255,.9);
+        }
+    }
+
+    .blink-card {
+        animation: blinkCard 0.8s infinite;
+    }
+
+    @@keyframes pendingBlink {
+        0%, 100% {
+            background: #fff7ed;
+            color: #c2410c;
+            box-shadow: 0 0 5px rgba(245,158,11,.3);
+        }
+
+        50% {
+            background: #ef4444;
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(239,68,68,.8);
+        }
+    }
+
+    .b-pending {
+        background: #fff7ed;
+        color: #c2410c;
+        animation: pendingBlink 1s infinite;
+        font-weight: 700;
+    }
+
+    @@keyframes actionBlink {
+        0%, 100% {
+            background: #fff7ed;
+            color: #c2410c;
+            box-shadow: 0 0 5px rgba(245,158,11,.3);
+        }
+
+        50% {
+            background: #ef4444;
+            color: #ffffff;
+            box-shadow: 0 0 14px rgba(239,68,68,.85);
+        }
+    }
+
+    .action-blink {
+        animation: actionBlink 1s infinite;
+        font-weight: 700;
+    }
+
+    @@keyframes blinkGreen {
+        0%, 100% {
+            background: #D8F3DC;
+            border-left-color: #2D6A4F;
+        }
+
+        50% {
+            background: #bbf7d0;
+            border-left-color: #ef4444;
+            box-shadow: 0 0 14px rgba(239,68,68,.45);
+        }
+    }
+
+    @@keyframes blinkRed {
+        0%, 100% {
+            background: #FFCCD5;
+            border-left-color: #E63946;
+        }
+
+        50% {
+            background: #fca5a5;
+            border-left-color: #f59e0b;
+            box-shadow: 0 0 14px rgba(239,68,68,.55);
+        }
+    }
+
+    @@keyframes blinkOrange {
+        0%, 100% {
+            background: #FFF1C1;
+            border-left-color: #F4A261;
+        }
+
+        50% {
+            background: #fde68a;
+            border-left-color: #ef4444;
+            box-shadow: 0 0 14px rgba(239,68,68,.45);
+        }
+    }
+
+    .blink-header-green {
+        animation: blinkGreen 1s infinite;
+    }
+
+    .blink-header-red {
+        animation: blinkRed 1s infinite;
+    }
+
+    .blink-header-orange {
+        animation: blinkOrange 1s infinite;
+    }
+</style>
+
+
+<div id="dd-loader"><div class="spin"></div></div>
+
+
+<div id="dd-notif">
+    <span class="n-icon">👤</span>
+    <div class="n-body">
+        <h4>New Patient Added</h4>
+        <p>A new patient has joined the queue.</p>
+    </div>
+    <button class="n-btn" onclick="refreshAll()">Refresh Queue</button>
+</div>
+
+
+<input type="hidden" id="DoctorId" value="0" />
+<input type="hidden" id="PatientId" value="0" />
+
+
+<div style="background:#0d9488;padding:18px 24px;border-left:6px solid #065f46;">
+    <h2 style="color:#ffffff;font-size:28px;font-weight:900;text-transform:uppercase;
+               letter-spacing:.08em;margin:0;">
+        Doctor Dashboard
+    </h2>
+</div>
+
+<div class="dd-wrap">
+
+
+    <div class="stat-row">
+        <div class="stat-card" style="background:linear-gradient(135deg,#1a73e8,#4f9cf9);">
+            <div class="sc-label">Total Cases</div>
+            <div class="sc-val" id="sc-total">—</div>
+        </div>
+        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">
+            <div class="sc-label">Pending Cases</div>
+            <div class="sc-val" id="sc-pending">—</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#10b981,#34d399);">
+            <div class="sc-label">Done Cases</div>
+            <div class="sc-val" id="sc-done">—</div>
+        </div>
+        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">
+            <div class="sc-label">New Patients</div>
+            <div class="sc-val" id="sc-new">—</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#06b6d4,#22d3ee);">
+            <div class="sc-label">Revisit Patients</div>
+            <div class="sc-val" id="sc-revisit">—</div>
+        </div>
+        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#d97706,#fbbf24);">
+            <div class="sc-label">Lab Advice</div>
+            <div class="sc-val" id="sc-labadvice">—</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#ec4899,#f472b6);">
+            <div class="sc-label">Medicine Advice</div>
+            <div class="sc-val" id="sc-medadvice">—</div>
+        </div>
+        <div class="stat-card" style="background:linear-gradient(135deg,#059669,#10b981);">
+            <div class="sc-label">Lab Result Ready</div>
+            <div class="sc-val" id="sc-labready">—</div>
+        </div>
+        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#ef4444,#f87171);">
+            <div class="sc-label">Lab Result Pending</div>
+            <div class="sc-val" id="sc-labpending">—</div>
+        </div>
+    </div>
+
+
+    <div class="analytics-row">
+        <div class="a-card">
+            <div class="a-card-title" style="background:#FFE5B4;border-left:5px solid #F59E0B;color:#92400E;">
+                📊 Case Status Breakdown
+            </div>
+            <div class="a-card-body">
+                <div class="donut-wrap" style="justify-content:center;">
+                    <canvas id="c-case" width="220" height="220" class="donut-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="a-card">
+            <div class="a-card-title" style="background:#DDD6FE;border-left:5px solid #8B5CF6;color:#5B21B6;">
+                👥 Patient Flow
+            </div>
+            <div class="a-card-body">
+                <canvas id="c-flow" style="width:100%;height:240px;"></canvas>
+            </div>
+        </div>
+        <div class="a-card">
+            <div class="a-card-title" style="background:#CCFBF1;border-left:5px solid #14B8A6;color:#115E59;">
+                🧪 Lab Result Status
+            </div>
+            <div class="a-card-body">
+                <canvas id="c-lab" style="width:100%;height:240px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:80% 20%;gap:16px;margin-bottom:20px;align-items:start;">
+
+
+        <div class="queue-card" style="margin-bottom:0;">
+            <div class="queue-head" style="background:#DBEAFE;border-left:5px solid #2563EB;">
+                <h3>Patient Queue (OP Worksheet)</h3>
+                <div class="q-pills">
+                    <span class="q-pill q-pill-blue" id="qp-total">cases: 0</span>
+                    <span class="q-pill q-pill-green" id="qp-done">▶ Done: 0</span>
+                    <span class="q-pill q-pill-orange" id="qp-pending">▶ Pending: 0</span>
+                </div>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'queue-tbody')" style="margin-left:12px;">
+            </div>
+            <div class="tbl-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>SL#</th>
+                            <th>Reg#</th>
+                            <th>Visit#</th>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Gender</th>
+                            <th>Contact</th>
+                            <th>Shift</th>
+                            <th>Token</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queue-tbody">
+                        <tr><td colspan="11" class="empty-msg">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="p-card" id="quick-actions-card" style="margin-bottom:0;">
+            <div class="p-card-head" style="background:#FEF3C7;border-left:5px solid #F59E0B;">
+                <span>⚡ Quick Actions</span>
+            </div>
+            <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;">
+                <button onclick="window.open('../Master/PRegistration','_blank')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #bfdbfe;
+                        background:#dbeafe;color:#1d4ed8;font:600 14px var(--font);
+                        cursor:pointer;width:100%;min-height:100px;">
+                    <span style="font-size:30px">🆕</span>Registration
+                </button>
+                <button onclick="window.open('../Revisit/Revisit','_blank')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #a7f3d0;
+                        background:#d1fae5;color:#065f46;font:600 14px var(--font);
+                        cursor:pointer;width:100%;min-height:100px;">
+                    <span style="font-size:30px">📄</span>Revisit
+                </button>
+                <button onclick="window.open('../Revisit/OPWorkSheet_D','_blank')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #fed7aa;
+                        background:#fff7ed;color:#c2410c;font:600 14px var(--font);
+                        cursor:pointer;width:100%;min-height:100px;">
+                    <span style="font-size:30px">📋</span>OP Worksheet
+                </button>
+                <button onclick="window.open('../Revisit/LabBill','_blank')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #fde68a;
+                        background:#fef3c7;color:#b45309;font:600 14px var(--font);
+                        cursor:pointer;width:100%;min-height:100px;">
+                    <span style="font-size:30px">🔬</span>Lab Bill
+                </button>
+                <button onclick="window.open('../Revisit/LabResult','_blank')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #ddd6fe;
+                        background:#f5f3ff;color:#6d28d9;font:600 14px var(--font);
+                        cursor:pointer;width:100%;min-height:100px;">
+                    <span style="font-size:30px">🧪</span>Lab Result
+                </button>
+                <button onclick="window.open('../Hospital/SaleInvoiceHospital','_blank')"
+                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #fca5a5;
+                        background:#fee2e2;color:#b91c1c;font:600 14px var(--font);
+                        cursor:pointer;width:100%;min-height:100px;">
+                    <span style="font-size:30px">💊</span>Sales Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+
+        <div class="p-card">
+            <div class="p-card-head blink-header-orange" style="background:#FFF1C1;border-left:5px solid #F4A261;color:#333;">
+                <span><span class="ph-icon">📄</span>Pending Case Sheet Patients</span>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'tb-pendcs')">
+            </div>
+            <div class="tbl-scroll">
+                <table class="mini-tbl">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Reg No</th>
+                            <th>OP No</th>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Age/Sex</th>
+                            <th>Contact</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb-pendcs"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="p-card">
+            <div class="p-card-head" style="background:#D9F99D;border-left:5px solid #65A30D;color:#333;">
+                <span><span class="ph-icon">✅</span>Completed Case Sheet Patients</span>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'tb-compcs')">
+            </div>
+            <div class="tbl-scroll">
+                <table class="mini-tbl">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Reg No</th>
+                            <th>OP No</th>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Age/Sex</th>
+                            <th>Contact</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb-compcs"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px;margin-bottom:20px;">
+
+        <div class="p-card">
+            <div class="p-card-head" style="background:#D8F3DC;border-left:5px solid #2D6A4F;color:#333;">
+                <span><span class="ph-icon">💊</span>Medicine Advice</span>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'tb-med')">
+            </div>
+            <div class="tbl-scroll">
+                <table class="mini-tbl">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Reg#</th>
+                            <th>OP#</th>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Age/Sex</th>
+                            <th>Contact</th>
+                            <th>Doctor</th>
+                            <th>Medicine</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb-med"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="p-card">
+            <div class="p-card-head blink-header-green" style="background:#D8F3DC;border-left:5px solid #2D6A4F;color:#333;">
+                <span><span class="ph-icon">🧪</span>Lab Advice</span>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'tb-lab')">
+            </div>
+            <div class="tbl-scroll">
+                <table class="mini-tbl">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Reg#</th>
+                            <th>OP#</th>
+                            <th>Date</th>
+                            <th>Patient</th>
+                            <th>Age/Sex</th>
+                            <th>Contact</th>
+                            <th>Doctor</th>
+                            <th>Lab Test</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb-lab"><tr><td colspan="10" class="empty-msg">—</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+
+        <div class="p-card">
+            <div class="p-card-head" style="background:#CAF0F8;border-left:5px solid #0077B6;color:#333;">
+                <span><span class="ph-icon">🔬</span>Lab Result Ready Patients</span>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'tb-lready')">
+            </div>
+            <div class="tbl-scroll">
+                <table class="mini-tbl">
+                    <thead>
+                        <tr>
+                            <th>Sl#</th>
+                            <th>Reg#</th>
+                            <th>OP#</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Age/Sex</th>
+                            <th>Contact</th>
+                            <th>Doctor</th>
+                            <th>Bill No</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb-lready"><tr><td colspan="11" class="empty-msg">—</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="p-card">
+            <div class="p-card-head blink-header-red" style="background:#FFCCD5;border-left:5px solid #E63946;color:#333;">
+                <span><span class="ph-icon">⏱️</span>Lab Result Pending Patients</span>
+                <input class="tbl-search" type="text" placeholder="Search..."
+                       oninput="filterTable(this,'tb-lpending')">
+            </div>
+            <div class="tbl-scroll">
+                <table class="mini-tbl">
+                    <thead>
+                        <tr>
+                            <th>Sl#</th>
+                            <th>Reg#</th>
+                            <th>OP#</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Age/Sex</th>
+                            <th>Contact</th>
+                            <th>Doctor</th>
+                            <th>Bill No</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tb-lpending"><tr><td colspan="11" class="empty-msg">—</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+     var CurDate = '';
+    var labReadyMap = {};
+    var prevTotal = 0;
+
+    (function () {
+        var d = new Date();
+        var dd = String(d.getDate()).padStart(2, '0');
+        var mm = String(d.getMonth() + 1).padStart(2, '0');
+        var yy = d.getFullYear();
+        CurDate = dd + '/' + mm + '/' + yy;
+        var hdrDate = document.getElementById('hdr-date');
+        if (hdrDate) {
+            var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+            hdrDate.textContent = mm + '/' + dd + '/' + yy + ' (' + days[d.getDay()] + ')';
+        }
+    })();
+
+     var chartCase = null, chartFlow = null, chartLab = null;
+
+    function drawCaseChart(done, pending, total) {
+        var ctx = document.getElementById('c-case').getContext('2d');
+        if (chartCase) chartCase.destroy();
+        chartCase = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Done', 'Pending'],
+                datasets: [{
+                    data: total ? [done, pending] : [1],
+                    backgroundColor: total ? ['#10b981', '#f59e0b'] : ['#e5e7eb'],
+                    borderWidth: 2, borderColor: '#fff'
+                }]
+            },
+            options: {
+                cutout: '62%', responsive: false,
+                plugins: {
+                    legend: {
+                        display: true, position: 'bottom',
+                        labels: { font: { size: 12, weight: '600' }, color: '#374151', usePointStyle: true, pointStyleWidth: 10, padding: 14 }
+                    },
+                    tooltip: { callbacks: { label: function (ctx) { return ' ' + ctx.label + ': ' + ctx.raw; } } }
+                }
+            }
+        });
+    }
+
+    function drawFlowChart(newPt, revisit) {
+        var ctx = document.getElementById('c-flow').getContext('2d');
+        if (chartFlow) chartFlow.destroy();
+        chartFlow = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['New Patients', 'Revisit Patients'],
+                datasets: [
+                    { label: 'New Patients',    data: [newPt, 0],    backgroundColor: 'rgba(236,72,153,0.8)',  borderColor: '#ec4899', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 },
+                    { label: 'Revisit Patients', data: [0, revisit], backgroundColor: 'rgba(139,92,246,0.8)',  borderColor: '#8b5cf6', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom', labels: { font: { size: 12, weight: '600' }, color: '#374151', usePointStyle: true, pointStyleWidth: 10, boxHeight: 6, padding: 16, filter: function (item) { return item.text !== ''; } } },
+                    tooltip: { backgroundColor: '#fff', borderColor: '#e5e7eb', borderWidth: 1, titleColor: '#111827', bodyColor: '#374151', padding: 10, callbacks: { label: function (ctx) { var val = ctx.datasetIndex === 0 ? newPt : revisit; return '  ' + ctx.dataset.label + ': ' + val; } } }
+                },
+                scales: {
+                    x: { grid: { display: false, drawBorder: false }, border: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: '#374151' } },
+                    y: { beginAtZero: true, grid: { display: false, drawBorder: false, drawOnChartArea: false }, border: { display: false }, ticks: { stepSize: 1, precision: 0, font: { size: 11 }, color: '#6b7280', callback: function (value) { if (Number.isInteger(value)) return value; } } }
+                }
+            }
+        });
+    }
+
+    function drawLabChart(ready, pending) {
+        var ctx = document.getElementById('c-lab').getContext('2d');
+        if (chartLab) chartLab.destroy();
+        chartLab = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Lab Ready', 'Lab Pending'],
+                datasets: [
+                    { label: 'Lab Ready',   data: [ready, 0],    backgroundColor: 'rgba(26,115,232,0.8)',  borderColor: '#1a73e8', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 },
+                    { label: 'Lab Pending', data: [0, pending],  backgroundColor: 'rgba(16,185,129,0.8)',  borderColor: '#10b981', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom', labels: { font: { size: 12, weight: '600' }, color: '#374151', usePointStyle: true, pointStyleWidth: 10, boxHeight: 6, padding: 16, filter: function (item) { return item.text !== ''; } } },
+                    tooltip: { backgroundColor: '#fff', borderColor: '#e5e7eb', borderWidth: 1, titleColor: '#111827', bodyColor: '#374151', padding: 10, callbacks: { label: function (ctx) { var val = ctx.datasetIndex === 0 ? ready : pending; return '  ' + ctx.dataset.label + ': ' + val; } } }
+                },
+                scales: {
+                    x: { grid: { display: false, drawBorder: false }, border: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: '#374151' } },
+                    y: { beginAtZero: true, grid: { display: false, drawBorder: false, drawOnChartArea: false }, border: { display: false }, ticks: { stepSize: 1, precision: 0, font: { size: 11 }, color: '#6b7280', callback: function (value) { if (Number.isInteger(value)) return value; } } }
+                }
+            }
+        });
+    }
+
+    function pct(v, t) { return t ? Math.round(v / t * 100) + '%' : '0%'; }
+
+     function refreshAll() {
+        document.getElementById('dd-notif').style.display = 'none';
+        loadWorksheet();
+        loadAdviceData();
+    //    loadCompletedCaseSheets();
+    }
+
+     function loadWorksheet() {
+        $.ajax({
+            type: 'POST', url: '../Revisit/HMS_OPWorkSheetDoctor',
+            data: {
+                FromDate: CurDate, ToDate: CurDate,
+                DoctorId: $('#DoctorId').val() || 0,
+                PatientId: $('#PatientId').val() || 0,
+                DeptId: (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0),
+                UserId: (typeof ERPUserId !== 'undefined' ? ERPUserId : 0)
+            },
+            success: function (r) { buildQueue(r || []); },
+            error:   function () { $('#dd-loader').hide(); }
+        });
+    }
+
+    function buildQueue(data) {
+        var total = data.length, done = 0, pending = 0, newPt = 0, revisit = 0;
+        var today = new Date(), yyyy = today.getFullYear();
+        var qHTML = '', pendHTML = '', compHTML = '', pendCnt = 0, compCnt = 0;
+
+        for (var i = 0; i < data.length; i++) {
+            var r = data[i];
+            var badge = '';
+            if (r.IPNumber && r.IPNumber != 0) {
+                badge = r.DelFlag == 0
+                    ? '<span class="badge b-admit">Admitted</span>'
+                    : '<span class="badge b-dis">Discharged</span>';
+            } else if (r.Status == 'New') {
+                badge = '<span class="badge b-new">New-Reg</span>'; newPt++;
+            } else {
+                badge = '<span class="badge b-revisit">Re-Visit</span>'; revisit++;
+            }
+
+            var age = '—';
+            try { age = yyyy - parseInt((r.DOB || '').substring(6, 15) || 0); } catch (e) { }
+
+            var isDone = r.CSFlag && r.CSFlag != 0;
+            if (isDone) done++; else pending++;
+
+            var labdot = labReadyMap[r.RevisitId] ? '<span class="lab-dot" title="Lab Result Ready"></span>' : '';
+            var rowCls = isDone ? ' class="done-row"' : '';
+
+            qHTML += '<tr' + rowCls + ' ondblclick="goCS(' + r.PatientId + ',' + r.RevisitId + ')">'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (i + 1) + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (r.OPNumber || '') + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.RevisitId || '') + '</td>'
+                + '<td style="color:#000;white-space:nowrap;font-size:14px">' + (r.RevisitDate || '') + '</td>'
+                + '<td style="color:#000;font-weight:600;font-size:14px">' + (r.PatientName || '') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + labdot + (r.Gender || '') + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.Contact || '') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + ((r.ShiftName || '').substring(0, 4)) + '</td>'
+                + '<td><span class="token-num">' + (r.TokenNumber || '') + '</span></td>'
+                + '<td>' + badge + '</td>'
+                + '<td>'
+                + (isDone
+                    ? '<span class="badge b-done" style="font-size:12px;padding:4px 12px;">Done</span>'
+                    : '<span class="badge b-pending action-blink" style="font-size:12px;padding:4px 12px;">Pending</span>')
+                + '</td>'
+                + '</tr>';
+
+            if (!isDone) {
+                pendCnt++;
+                pendHTML += '<tr>'
+                    + '<td style="color:#000;font-size:14px">' + pendCnt + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.PatientId || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.OPNumber || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.RevisitDate || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.PatientName || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + age + ' / ' + (r.Gender || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.Contact || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.DoctorName || '') + '</td>'
+                    + '<td><span class="badge b-pending">Pending</span></td>'
+                    + '</tr>';
+            }
+
+            if (isDone) {
+                compCnt++;
+                compHTML += '<tr>'
+                    + '<td style="color:#000;font-size:14px">' + compCnt + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.PatientId || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.OPNumber || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.RevisitDate || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.PatientName || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + age + ' / ' + (r.Gender || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.Contact || '') + '</td>'
+                    + '<td style="color:#000;font-size:14px">' + (r.DoctorName || '') + '</td>'
+                    + '<td><span class="badge b-done">Completed</span></td>'
+                    + '</tr>';
+            }
+        }
+
+        $('#queue-tbody').html(qHTML || '<tr><td colspan="11" class="empty-msg">No patients.</td></tr>');
+        $('#qp-total').text('cases: ' + total);
+        $('#qp-done').text('▶ Done: ' + done);
+        $('#qp-pending').text('▶ Pending: ' + pending);
+        $('#sc-total').text(total);
+        $('#sc-pending').text(pending);
+        $('#sc-done').text(done);
+        $('#sc-new').text(newPt);
+        $('#sc-revisit').text(revisit);
+        drawCaseChart(done, pending, total);
+        drawFlowChart(newPt, revisit);
+
+        $('#tb-pendcs').html(pendHTML || '<tr><td colspan="9" class="empty-msg">No pending case sheets.</td></tr>');
+        $('#tb-compcs').html(compHTML || '<tr><td colspan="9" class="empty-msg">No completed case sheets yet.</td></tr>');
+
+        if (prevTotal > 0 && total > prevTotal) {
+            $('#dd-notif').css('display', 'flex');
+            setTimeout(function () { $('#dd-notif').hide(); }, 8000);
+        }
+        prevTotal = total;
+        $('#dd-loader').hide();
+    }
+
+    // function loadCompletedCaseSheets() {
+    //    $.ajax({
+    //        type: 'POST', url: '../Revisit/HMS_GetCompletedCaseSheets',
+    //        data: {
+    //            FromDate: CurDate, ToDate: CurDate,
+    //            DoctorId: (typeof ERPUserId !== 'undefined' ? ERPUserId : 0),
+    //            DeptId:   (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0)
+    //        },
+    //        success: function (r) { buildCompleted(r || []); },
+    //        error:   function () { }
+    //    });
+    //}
+
+    function buildCompleted(data) {
+        if (!data.length) return;
+        var html = '', cnt = data.length;
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            html += '<tr>'
+                + '<td style="font-weight:600">' + (d.PatientName || d.Patient || '') + '</td>'
+                + '<td style="font-size:11px">'  + (d.CompletedTime || d.VisitTime || '') + '</td>'
+                + '<td style="font-size:11px">'  + (d.DoctorName || d.Doctor || '') + '</td>'
+                + '<td><span class="badge b-done">Completed</span></td>'
+                + '</tr>';
+        }
+        $('#tb-compcs').html(html);
+    }
+
+     function loadAdviceData() {
+        $.ajax({
+            type: 'POST', url: '../Revisit/HMS_DoctorDashboardAdvice',
+            data: {
+                FromDate: CurDate, ToDate: CurDate,
+                DoctorId: $('#DoctorId').val() || 0,
+                DeptId: (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0)
+            },
+            success: function (res) {
+                if (res && res.med !== undefined) {
+                    buildMedAdvice(res.med || []);
+                    buildLabAdvice(res.lab || []);
+                    buildLabResults(res.ready || [], res.pending || []);
+                }
+            },
+            error: function () {
+                buildMedAdvice([]); buildLabAdvice([]); buildLabResults([], []);
+            }
+        });
+    }
+
+    function buildMedAdvice(data) {
+        var html = '', grouped = {}, order = [];
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var key = d.RevisitId ? String(d.RevisitId) : d.PatientName;
+            if (!grouped[key]) {
+                grouped[key] = {
+                    PatientName: d.PatientName || '', RegNo: d.OPNumber || d.RegNo || '—',
+                    OPNo: d.RevisitId || d.OPNo || '—', VisitDate: d.RevisitDate || d.VisitDate || '—',
+                    Age: d.Age || '—', Sex: d.Gender || d.Sex || '—',
+                    Contact: d.Contact || d.Mobile || '—', Doctor: d.DoctorName || d.Doctor || '—',
+                    Medicines: [], TotalCount: 0
+                };
+                order.push(key);
+            }
+            grouped[key].TotalCount += parseInt(d.Count || d.Qty || 1);
+            var medName = (d.MedicineName || '').trim();
+            if (medName) grouped[key].Medicines.push(medName);
+        }
+        for (var j = 0; j < order.length; j++) {
+            var g = grouped[order[j]];
+            var uniqueMeds = g.Medicines.filter(function (v, i, a) { return a.indexOf(v) === i; });
+            html += '<tr>'
+                + '<td style="color:#000;font-size:14px">' + (j + 1) + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.RegNo + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.OPNo + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.VisitDate + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.PatientName + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Age + ' / ' + g.Sex + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Contact + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Doctor + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (uniqueMeds.length ? uniqueMeds.join(', ') : '—') + '</td>'
+                + '</tr>';
+        }
+        $('#tb-med').html(html || '<tr><td colspan="9" class="empty-msg">No medicine advice.</td></tr>');
+        $('#sc-medadvice').text(order.length);
+    }
+
+    function buildLabAdvice(data) {
+        var html = '', grouped = {}, order = [];
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var key = d.RevisitId || d.PatientName;
+            if (!grouped[key]) {
+                grouped[key] = {
+                    PatientName: d.PatientName || '', RegNo: d.OPNumber || d.RegNo || '—',
+                    OPNo: d.RevisitId || d.OPNo || '—', VisitDate: d.RevisitDate || d.VisitDate || '—',
+                    Age: d.Age || '—', Sex: d.Gender || d.Sex || '—',
+                    Contact: d.Contact || d.Mobile || '—', Doctor: d.DoctorName || d.Doctor || '—',
+                    Tests: [], Status: d.Status
+                };
+                order.push(key);
+            }
+            grouped[key].Tests.push(d.TestName || '');
+            if ((d.Status || '').toUpperCase() !== 'DONE') grouped[key].Status = 'PENDING';
+        }
+        for (var j = 0; j < order.length; j++) {
+            var g = grouped[order[j]];
+            var isDone = (g.Status || '').toUpperCase() === 'DONE';
+            html += '<tr>'
+                + '<td style="color:#000;font-size:14px">' + (j + 1) + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.RegNo + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.OPNo + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.VisitDate + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.PatientName + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Age + ' / ' + g.Sex + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Contact + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Doctor + '</td>'
+                + '<td style="color:#000;font-size:14px">' + g.Tests.join(', ') + '</td>'
+                + '<td><span class="badge ' + (isDone ? 'b-done">Done' : 'b-pending">Pending') + '</span></td>'
+                + '</tr>';
+        }
+        $('#tb-lab').html(html || '<tr><td colspan="10" class="empty-msg">No lab advice.</td></tr>');
+        $('#sc-labadvice').text(order.length);
+    }
+
+    function buildLabResults(readyList, pendList) {
+
+        labReadyMap = {};
+
+        // ================= READY =================
+        var readyHTML = '';
+
+        for (var i = 0; i < readyList.length; i++) {
+
+            var r = readyList[i];
+
+            if (r.SubResultId)
+                labReadyMap[r.SubResultId] = true;
+
+            readyHTML += '<tr>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (i + 1) + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.OPNumber || '—') + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.RevisitId || '—') + '</td>'
+                + '<td style="color:#000;white-space:nowrap;font-size:14px">' + (r.ResultDate || '—') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (r.ResultTime || '—') + '</td>'
+                + '<td style="color:#000;font-weight:600;font-size:14px">' + (r.PatientName || '') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (r.Age || '—') + ' / ' + (r.Gender || '—') + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.Contact || '—') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (r.DoctorName || '') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (r.SubResultId || '') + '</td>'
+                + '<td><span class="badge b-ready">Ready</span></td>'
+                + '</tr>';
+        }
+
+        $('#tb-lready').html(
+            readyHTML ||
+            '<tr><td colspan="11" class="empty-msg">No results ready.</td></tr>'
+        );
+
+        $('#sc-labready').text(readyList.length);
+
+        // ================= PENDING =================
+        var pendHTML = '';
+
+        for (var k = 0; k < pendList.length; k++) {
+
+            var p = pendList[k];
+
+            pendHTML += '<tr>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (k + 1) + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (p.OPNumber || '—') + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (p.RevisitId || '—') + '</td>'
+                + '<td style="color:#000;white-space:nowrap;font-size:14px">' + (p.SampleDate || '—') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (p.SampleTime || '—') + '</td>'
+                + '<td style="color:#000;font-weight:600;font-size:14px">' + (p.PatientName || '') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (p.Age || '—') + ' / ' + (p.Gender || '—') + '</td>'
+                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (p.Contact || '—') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (p.DoctorName || '') + '</td>'
+                + '<td style="color:#000;font-size:14px">' + (p.SubResultId || '') + '</td>'
+                + '<td><span class="badge b-pending">Pending</span></td>'
+                + '</tr>';
+        }
+
+        $('#tb-lpending').html(
+            pendHTML ||
+            '<tr><td colspan="11" class="empty-msg">No pending results.</td></tr>'
+        );
+
+        $('#sc-labpending').text(pendList.length);
+
+        drawLabChart(readyList.length, pendList.length);
+    }
+
+     var _maxAdv = 1;
+    function updateAdvBar(barId, val) {
+        _maxAdv = Math.max(_maxAdv, val, 1);
+        $('#' + barId).css('width', Math.round(val / _maxAdv * 100) + '%');
+    }
+
+     function filterTable(input, tbodyId) {
+        var term = input.value.toLowerCase().trim();
+        var rows = document.getElementById(tbodyId).getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++) {
+            var txt = rows[i].textContent.toLowerCase();
+            rows[i].style.display = (!term || txt.indexOf(term) > -1) ? '' : 'none';
+        }
+    }
+
+     function goCS(pid, vid) {
+        sessionStorage.setItem('PatientId', pid);
+        sessionStorage.setItem('VisitId', vid);
+        window.location = '@Url.Action("CaseSheet","Hospital", new { from = "DoctorDashboard" })';
+    }
+
+     $(function () {
+        refreshAll();
+        setInterval(loadAdviceData, 15000);
+        setInterval(loadWorksheet, 60000);
+    });
+</script>

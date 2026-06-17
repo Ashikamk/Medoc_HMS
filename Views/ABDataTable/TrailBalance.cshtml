@@ -1,0 +1,713 @@
+﻿@*26/12/2018*@
+
+
+@{
+    ViewBag.Title = "TrailBalance";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="~/ProjectScript/ReportPrint.js"></script>
+
+<style>
+    .form-control {
+        font-weight: bold;
+    }
+
+</style>
+
+
+<div class="myData" data-x="M84" />
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td style="display:none;"><h5 id="header2"></h5></td>
+                                <td width="20%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#Account').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td><button type="button" style="width:100px;margin-left:30%;" id="btnprint3" onclick="PrintthisReportWindows('TRIALBALNCE', $('#ResultLength').val(), $('#seltype').val())" class="btn btn-primary">Print <i class="ft-printer"></i></button></td>
+
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right">
+                            <div class="heading-elements">
+                                <br /><hr style="margin-top:-1%" />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="ResultLength" class="form-control" />
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%;width:115%">
+    <div class="modal-dialog modal-lg" role="document" style="top:8%">
+        <div class="modal-content" style="width:66%">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Trial Balance Report</h3>
+
+                <fieldset>
+                    <div class="custom-control custom-checkbox" style="float:right">
+                        <input type="checkbox" class="custom-control-input" id="select_status" checked="">
+                        <label class="custom-control-label" for="select_status"></label>
+                    </div>
+                </fieldset>
+
+
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <label style="font-weight:bold;margin-left:11.5%">From</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="font-weight:bold;margin-left:10%">To</label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:2.5%;"></div>
+                    <div class="row" style="margin-top:1%">
+                        <label style="margin-top:2%;font-weight:bold;margin-left:6.1%">Account </label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <input type="text" id="Account" class="form-control">
+                            <input type="hidden" id="AccountId" class="form-control" />
+                        </div>
+
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:-1.5%">Cost Code </label>
+                        <div class="col-md-4" style="margin-top:2%">
+                            <select id="CostCode" name="priority" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label style="margin-top:2%;font-weight:bold;margin-left:10.8%">Dept.</label>
+                        <div class="col-md-4" style="margin-top:2%;">
+                            <select id="department" name="priority" class="form-control"></select>
+                        </div>
+
+
+                        <label style="margin-top:2%;font-weight:bold;margin-left:2.8%">Sort By</label>
+                        <div class="col-md-4" style="margin-top:2%;">
+                            <select id="seltype" name="priority" class="form-control">
+                                <option value="ASON">AS ON</option>
+                                <option value="WITHOP">WITH OPENING</option>
+                                <option value="SUMMERY">SUMMARY</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="width:100px;margin-right:40%" id="btnsubmit" class="btn btn-primary">Go</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div id="popupdiv1" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background: rgba(0, 0, 0, 0.5); display: block;display:none; height: 200%; width:155%;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="width:1000px;margin-left:-560px">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Statement</h3>
+
+              
+
+                <button type="button" class="close" onclick="($('#popupdiv1').hide())" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="">
+
+                <div class="modal-body">
+                    <table id="Tblsummaryreport"  class="table table-condensed table-light table-striped table-bordered eumi-search-table" width="100%"></table>
+                </div>
+            
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $('#idtitle').text('hhhh')
+    var decimal = Decimal;
+    $("#Account").autocomplete({
+        source: function (request, response) {
+
+            var data = {};
+            data.AccountCode = $("#Account").val();
+            $.ajax({
+                url: '../Master/AccountScheduleSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.AccountCode,
+                            label1: item.AcntDescription,
+                            AcntId: item.AcntId,
+                            headers: ["Code", "Decription"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#AccountId').val(ui.item.AcntId)
+        },
+
+    });
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+    function ShowListwithopening(result) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var FromDate = []; var ToDate = [];
+        FromDate = ($("#DateFrom").val()).split('/');
+        ToDate = ($("#DateTo").val()).split('/');
+
+        var FromDatePrint = FromDate[0] + '-' + monthNames[parseInt(FromDate[1] - 1)] + '-' + FromDate[2];
+        var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+        var Bal = 0;
+        disable_datatable('Tblreport', 'buttonPlace');
+        var slno = 1;
+        var responseText = "<thead><tr><th  style='width:10px'>Sl#</th><th style='width:200px'>Account Code</th><th style='width:1000px'>Account Name</th><th class=opcr  style=text-align:right;width:150px>Opening Debit</th><th class=opcr  style=text-align:right;width:150px>Opening Credit</th><th  style=text-align:right;width:150px>Debit</th><th  style=text-align:right;width:150px>Credit</th><th class=opcr  style=text-align:right;width:150px>Balance</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+
+            Bal = result[i].Balance;
+            if (Bal < 0) {
+
+                Bal = Bal * -1;
+                Bal = parseFloat(Bal).toFixed(Decimal) + ' Cr';
+            }
+            else {
+
+                Bal = parseFloat(Bal).toFixed(Decimal) + ' Dr';
+            }
+
+            if (result[i].AccDesc != 'STOCKVAL')
+
+
+                if (result[i].AccCode.length > 5) {
+                    if (result[i].AccCode == '') {
+                        responseText += '<tr style=background-color:#cfd8dc><td style="width:10px">' + slno + '</td><td style="width:70px"  id="Col1_' + slno + '">' + result[i].AccCode + '</td><td  id="Col2_' + slno + '"><b>' + result[i].AccDesc + '</b></td><td class=opcr  style=text-align:right;width:150px  id="Col5_' + slno + '"><b>' + (result[i].OPDebit).toFixed(Decimal) + '</b></td><td class=opcr  style=text-align:right;width:150px  id="Col6_' + slno + '"><b>' + (result[i].OPCredit).toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px  id="Col3_' + slno + '"><b>' + (result[i].Debit).toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px  id="Col4_' + slno + '"><b>' + (result[i].Credit).toFixed(Decimal) + '</b></td><td class=opcr  style=text-align:right;width:150px  id="Col7_' + slno + '"><b>' + Bal + '</b></td></tr>';
+                        slno += 1
+                    }
+                    else {
+                        responseText += '<tr  style="cursor:pointer"  onclick="GetSummary(' + result[i].AccCode + ')" ><td  style="width:10px">' + slno + '</td><td style="width:70px"  id="Col1_' + slno + '">' + result[i].AccCode + '</td><td  id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td class=opcr  style=text-align:right;width:150px  id="Col5_' + slno + '">' + (result[i].OPDebit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px  id="Col6_' + slno + '">' + (result[i].OPCredit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px  id="Col3_' + slno + '">' + (result[i].Debit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px  id="Col4_' + slno + '">' + (result[i].Credit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px  id="Col7_' + slno + '">' + Bal + '</td></tr>';
+                        slno += 1
+                    }
+                }
+                else if (result[i].AccCode.length == 4 && result[i].AccCode != '' && result[i].AccDesc != '') {
+                    responseText += '<tr style=background-color:#cfd8dc;font-weight:bold><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td class=opcr  style=text-align:right;width:150px id="Col5_' + slno + '"></td><td class=opcr  style=text-align:right;width:150px id="Col6_' + slno + '"></td><td  style=text-align:right;width:150px id="Col3_' + slno + '"></td><td  style=text-align:right;width:150px id="Col4_' + slno + '"></td><td class=opcr  style=text-align:right;width:150px id="Col7_' + slno + '"></td></tr>';
+                    slno += 1
+
+                }
+                else if (result[i].AccCode == '' && result[i].AccDesc == '') {
+                    responseText += '<tr style=background-color:#cfd8dc;font-weight:bold><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">TOTAL</td><td class=opcr  style=text-align:right;width:150px id="Col5_' + slno + '">' + (result[i].OPDebit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px id="Col6_' + slno + '">' + (result[i].OPCredit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '">' + (result[i].Debit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col4_' + slno + '">' + (result[i].Credit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px id="Col7_' + slno + '">' + Bal + '</td></tr>';
+                    slno += 1
+
+                }
+                else if (result[i].AccCode.length == 4 && result[i].AccDesc == '') {
+                    responseText += '<tr style=font-weight:bold><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '"></td><td class=opcr  style=text-align:right;width:150px id="Col5_' + slno + '">' + (result[i].OPDebit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px id="Col6_' + slno + '">' + (result[i].OPCredit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '">' + (result[i].Debit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col4_' + slno + '">' + (result[i].Credit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px id="Col7_' + slno + '">' + Bal + '</td></tr>';
+                    slno += 1
+
+                }
+                else {
+                    responseText += '<tr style=background-color:#cfd8dc;font-weight:font><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td class=opcr  style=text-align:right;width:150px id="Col5_' + slno + '">' + (result[i].OPDebit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px id="Col6_' + slno + '">' + (result[i].OPCredit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '">' + (result[i].Debit).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col4_' + slno + '">' + (result[i].Credit).toFixed(Decimal) + '</td><td class=opcr  style=text-align:right;width:150px id="Col7_' + slno + '">' + Bal + '</td></tr>';
+                    slno += 1
+
+                }
+
+        }
+        // responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td id="Col1_' + slno + '"></td><td id="Col2_' + slno + '"><b>TOTAL</b></td><td  style=text-align:right;width:150px id="Col5_' + slno + '"><b>' + parseFloat(result[i].OPDebit).toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px id="Col6_' + slno + '"><b>' + result[i].OPCredit.toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px id="Col3_' + slno + '"><b>' + DrAmount.toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px id="Col4_' + slno + '"><b>' + CrAmount.toFixed(Decimal) + '</b></td><td class=opcr  style=text-align:right;width:150px id="Col7_' + slno + '">' + Bal + '</td></tr>';
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th style="width:10px">Sl#</th><th style="width:200px">Account Code</th><th style="width:1000px">Account Name</th><th  style=text-align:right;width:150px> </th><th  style=text-align:right;width:150px> </th><th  style=text-align:right;width:150px> </th><th  style=text-align:right;width:150px> </th><th  style=text-align:right;width:150px> </th></tr></tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var status = $("#seltype option:selected").text();
+        var title = "TRIAL BALANCE   " + status + "  - FROM " + $("#DateFrom").val() + " TO " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+        $('#header2').text("From " + FromDatePrint + " to " + ToDatePrint + "");
+        $('#ResultLength').val($("#Tblreportprint tbody tr").length);
+    }
+
+
+    function GetSummary(Acccode)
+    {
+       
+        var data = {};
+        data.DateFrom = $('#DateFrom').val();
+        data.DateTo = $('#DateTo').val();
+        data.AccountCode = Acccode;
+        data.UserId = 1;
+      
+
+        $.ajax({
+            type: "POST",
+            url: "../AccountsReport/TrialsBalanceSummeryGets",
+            data: data,
+            success: function (result) {
+                ShowSummery(result)
+            }
+        });
+    }
+
+
+
+    function ShowSummery(result)
+    {
+        disable_datatable('Tblsummaryreport');
+        var responseText = "<thead><tr><th style='width:1%'>Sl#</th><th style='width:2%'>Date</th><th style='width:77%'>Description</th><th style='width:10%' class='text-right'>Debit</th><th style='width:10%' class='text-right'>Credit</th></tr></thead><tbody>";
+
+        for (var i = 0; i < result.length; i++) {
+            var slno;
+            slno = parseInt(i+1);
+            var DebitAmt = parseFloat(result[i].Debit || 0).toFixed(Decimal);
+            var CreditAmt = parseFloat(result[i].Credit || 0).toFixed(Decimal);
+            if (DebitAmt == 0)
+                DebitAmt = '';
+            if (CreditAmt == 0)
+                CreditAmt = '';
+
+             if (result[i].BillSeriesId == 1) {
+                 responseText += '<tr style="background-color:#cfd8dc"><td align=center  id="Colsl_' + slno + '"><b>' + slno + '</b></td><td   id="Col1_' + slno + '" ><b>' + result[i].VDate + '</b></td><td   id="Col2_' + slno + '" ><b>' + result[i].VDesc + '</b></td><td   id="Col3_' + slno + '" style="text-align:right"><b>' + DebitAmt + '</b></td><td id="Colc_' + slno + '" style="text-align:right"><b>' + CreditAmt + '</sb></td></td></tr>';
+            }
+            else if (result[i].AccDesc!='') {
+                responseText += '<tr><td align=center id="Colsl_' + slno + '">' + slno + '</td><td   id="Col1_' + slno + '" >' + result[i].VDate + '</td><td   id="Col2_' + slno + '" >' + result[i].VDesc + '</td><td   id="Col3_' + slno + '" style="text-align:right">' + DebitAmt + '</td><td id="Colc_' + slno + '"  style="text-align:right">' + CreditAmt + '</td></td></tr>';
+            }
+          
+        }
+
+        $('#Tblsummaryreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Date#</th><th>Description</th><th> </th><th> </th></tr></tfoot>');
+        datatableWithsearch('Tblsummaryreport');
+        $('#popupdiv1').show();
+     
+    }
+  
+
+
+
+    function ShowListwithASONsummery(result) {
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var FromDate = []; var ToDate = [];
+        FromDate = ($("#DateFrom").val()).split('/');
+        ToDate = ($("#DateTo").val()).split('/');
+
+        var FromDatePrint = FromDate[0] + '-' + monthNames[parseInt(FromDate[1] - 1)] + '-' + FromDate[2];
+        var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th  style='width:10px'>Sl#</th><th style='width:200px'>Account Code</th><th style='width:1000px'>Account Name</th><th  style=text-align:right;width:150px>Debit</th><th  style=text-align:right;width:150px>Credit</th></tr></thead><tbody>";
+        var CrAmount = 0; var DrAmount = 0;
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].AccDesc != 'STOCKVAL' && result[i].AccCode != '')
+
+                var slno = parseInt(i) + 1;
+            if (result[i].AccCode != '' && result[i].AccDesc != '') {
+
+                if ((result[i].Balance).toFixed(Decimal) > 0) {
+                    responseText += '<tr><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '">' + (result[i].Balance).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col4_' + slno + '"></td></tr>';
+                    DrAmount += parseFloat(result[i].Balance)
+                }
+                else {
+                    responseText += '<tr><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '"></td><td  style=text-align:right;width:150px id="Col4_' + slno + '">' + (-1 * result[i].Balance).toFixed(Decimal) + '</td></tr>';
+                    CrAmount += parseFloat(-1 * result[i].Balance)
+                }
+            }
+        }
+        var slno = (slno + 1)
+        responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td  id="Col1_' + slno + '"></td><td  id="Col2_' + slno + '"><b>TOTAL</b></td><td  style=text-align:right;width:150px  id="Col3_' + slno + '"><b>' + DrAmount.toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px  id="Col4_' + slno + '"><b>' + CrAmount.toFixed(Decimal) + '</b></td></tr>';
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th style="width:10px">Sl#</th><th style="width:70px">Account Code</th><th>Account Name</th><th> </th><th> </th></tr></tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var status = $("#seltype option:selected").text();
+        var title = "TRIAL BALANCE   " + status + "  - FROM " + $("#DateFrom").val() + " TO " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+        $('#header2').text("From " + FromDatePrint + " to " + ToDatePrint + "");
+        $('#ResultLength').val($("#Tblreportprint tbody tr").length);
+    }
+
+
+
+
+
+    function ShowListwithASON(result) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var FromDate = []; var ToDate = [];
+
+        ToDate = ($("#DateTo").val()).split('/');
+
+
+        var ToDatePrint = ToDate[0] + '-' + monthNames[parseInt(ToDate[1] - 1)] + '-' + ToDate[2];
+
+        disable_datatable('Tblreport', 'buttonPlace');
+        var responseText = "<thead><tr><th  style='width:10px'>Sl#</th><th style='width:200px'>Account Code</th><th style='width:1000px'>Account Name</th><th  style=text-align:right;width:150px>Debit</th><th  style=text-align:right;width:150px>Credit</th></tr></thead><tbody>";
+        var CrAmount = 0; var DrAmount = 0;
+        var slno = 1
+        for (var i = 0; i < result.length; i++) {
+
+
+            if (result[i].AccDesc != 'STOCKVAL' && result[i].AccCode != '')
+                if (result[i].AccCode.length > 5) {
+
+                    if ((result[i].Balance).toFixed(Decimal) > 0) {
+                        responseText += '<tr style="cursor:pointer"  onclick="GetSummary(' + result[i].AccCode + ')"><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '">' + (result[i].Balance).toFixed(Decimal) + '</td><td  style=text-align:right;width:150px id="Col4_' + slno + '"></td></tr>';
+                        DrAmount += parseFloat(result[i].Balance)
+                        slno += 1
+
+                    }
+                    else if ((result[i].Balance).toFixed(Decimal) < 0) {
+                        responseText += '<tr style="cursor:pointer"  onclick="GetSummary(' + result[i].AccCode + ')"><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '">' + result[i].AccCode + '</td><td id="Col2_' + slno + '">' + result[i].AccDesc + '</td><td  style=text-align:right;width:150px id="Col3_' + slno + '"></td><td  style=text-align:right;width:150px id="Col4_' + slno + '">' + (-1 * result[i].Balance).toFixed(Decimal) + '</td></tr>';
+                        CrAmount += parseFloat(-1 * result[i].Balance)
+                        slno += 1
+                    }
+
+                }
+                else {
+                    if ($('#select_status').prop("checked")) {
+                        if (result[i].AccDesc == '') {
+
+                            if (result[i].Balance > 0) {
+                                responseText += '<tr style=background-color:#cfd8dc><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '"><b></b></td><td id="Col2_' + slno + '"><b>' + result[i].AccDesc + '</b></td><td  style=text-align:right;width:150px id="Col3_' + slno + '"><b>' + (result[i].Balance).toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px id="Col4_' + slno + '"></b></td></tr>';
+                                slno += 1
+                            }
+                            else {
+                                responseText += '<tr style=background-color:#cfd8dc><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '"><b></b></td><td id="Col2_' + slno + '"><b>' + result[i].AccDesc + '</b></td><td  style=text-align:right;width:150px id="Col3_' + slno + '"></td><td  style=text-align:right;width:150px id="Col4_' + slno + '"><b>' + (-1 * result[i].Balance).toFixed(Decimal) + '</b></td></tr>';
+                                slno += 1
+                            }
+
+                        }
+                        else {
+                            responseText += '<tr style=background-color:#cfd8dc><td  style="width:10px">' + slno + '</td><td style="width:70px" id="Col1_' + slno + '"><b>' + result[i].AccCode + '</b></td><td id="Col2_' + slno + '"><b>' + result[i].AccDesc + '</b></td><td  style=text-align:right;width:150px id="Col3_' + slno + '"></td><td  style=text-align:right;width:150px id="Col4_' + slno + '"><b></b></td></tr>';
+                            slno += 1
+
+                        }
+                    }
+
+                }
+
+        }
+
+
+        responseText += '<tr style=background-color:#cfd8dc><td>' + slno + '</td><td id="Col1_' + slno + '"></td><td id="Col2_' + slno + '"><b>TOTAL</b></td><td  style=text-align:right;width:150px id="Col3_' + slno + '"><b>' + DrAmount.toFixed(Decimal) + '</b></td><td  style=text-align:right;width:150px id="Col4_' + slno + '"><b>' + CrAmount.toFixed(Decimal) + '</b></td></tr>';
+        $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th style="width:10px">Sl#</th><th style="width:70px">Account Code</th><th>Account Name</th><th> </th><th> </th></tr></tfoot>');
+        $('#Tblreportprint').html(responseText + '</tbody>');
+        var status = $("#seltype option:selected").text();
+        var title = "TRIAL BALANCE   " + status + "  - FROM " + $("#DateFrom").val() + " TO " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+        $('#header2').text("Date As On " + ToDatePrint + "");
+        $('#ResultLength').val($("#Tblreportprint tbody tr").length);
+    }
+
+
+
+
+
+    $(document).ready(function () {
+        GetCostCode(0);
+        GetDepartment(0);
+        $('#Account').focus();
+
+
+        $('#CostCode').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#department').focus();
+                e.preventDefault();
+            }
+        });
+        $('#department').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $("#Account").keyup(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#CostCode').focus();
+                e.preventDefault();
+            }
+
+        });
+        $(document).keydown(function (e) {
+            if (e.keyCode == 27) {                           //esc
+                popuprefresh();
+                $('#popupdiv1').hide();
+            }
+        });
+
+        $('#DateFrom').val(FinanceStartDate)
+
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear()+20, new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#btnsubmit").click(function (e) {
+
+            if ($('#DateFrom').val() == '') {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+            }
+
+            else {
+                $('#Loading').show();
+
+                var data = {};
+                data.FromDate = $('#DateFrom').val();
+                data.ToDate = $('#DateTo').val();
+                data.Account =parseInt( $('#Account').val()||0);
+                data.CostCode = $('#CostCode').val();
+                data.Department = $('#department').val();
+                data.Status = $('#seltype').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../AccountsErp/TrailsBalanceGetandGets",
+                    data: data,
+                    success: function (result) {
+                        $('#Loading').hide();
+                        $('#divreport').show();
+                        $('#popupdiv').hide();
+
+                        var Flag = $('#seltype').val()
+                        if (Flag == 'WITHOP')
+                        {
+                            ShowListwithopening(result.oList);
+                        }
+                        else if (Flag == 'ASON') {
+                            ShowListwithASON(result.oList);
+
+                        }
+                        else {
+
+                            ShowListwithASONsummery(result.oList);
+                        }
+
+                       
+                    }
+                });
+
+            }
+        });
+    });
+
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Slno' && title != 'Sl#' && title != 'Credit Limit' && title != 'Due Days' && title != 'O Balance' && title != ' ')
+                $(this).html('<input type="text" placeholder="Search ' + title + '" style="width=100%" />');
+            if (title == 'Account Code') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Account Name') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Debit') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+            if (title == 'Credit' || title == 'Date#' || title == 'Description') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+         
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+            // AddColumnSelectionButton(tableButtonContainerId, tablename)
+
+            table = $('#' + tablename).DataTable({
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+                     "<'row'<'col-sm-12'tr>>" +
+                     "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: []
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+           
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+    function disable_datatable(tablename, tableButtonContainerId) {
+        $('#Warningpopup').fadeOut();
+        if ($.fn.DataTable.isDataTable('#' + tablename)) {
+            var table = $('#' + tablename).DataTable();
+            table.destroy();
+            if (tableButtonContainerId) { $("#" + tableButtonContainerId).empty(); }
+            return;
+        }
+    }
+
+
+    function GetDepartment(id) {
+        var data = {};
+        data.DeptId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/DepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result) {
+        $("#department").empty();
+        $("#department").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#department").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+
+    }
+    function GetCostCode(id) {
+        var data5 = {};
+        data5.CostCenterId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CostCenterGetandGets",
+            data: data5,
+            success: function (result) {
+                CostCenterLoad(result.oList);
+
+            }
+        });
+    }
+    function CostCenterLoad(result) {
+        $("#CostCode").empty();
+        $("#CostCode").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#CostCode").append("<option value='" + result[i].CostCenterId + "'>" + result[i].CostCenterCode + "</option>");
+        }
+    }
+
+</script>

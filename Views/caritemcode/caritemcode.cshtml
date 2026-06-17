@@ -1,0 +1,1228 @@
+﻿
+@{
+    ViewBag.Title = "caritemcode";
+}
+
+
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid-theme.min.css">
+<link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/jsgrid/jsgrid.min.css">
+<link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/hopscotch.css">
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="/Scripts/Autocomplete/jquery-ui.js"></script>
+<script type="text/javascript" src="~/ProjectScript/DosPrint.js"></script>
+
+
+
+<div class="myData" data-x="M193" />
+<script>
+
+    function PrintthisBill() {
+       
+    if (VoucherBillType == 'USEDCARS-LAZOR') {
+        if (copyflag== 1)
+            PrintthisBillWindows('VCCReceived', $('#tblvcc tr').length, 'LAZORCOPY')
+        else
+            PrintthisBillWindows('VCCReceived', $('#tblvcc tr').length, 'LAZORSAVE')
+    }
+    else {
+        PrintVCCSave($('#tblvcc tr').length)
+    }
+    }
+</script>
+<style>
+    #fixed {
+        width: 100%;
+        position: fixed;
+        top: 0px;
+    }
+
+    #customView {
+        border: 1px solid #CCD6E6;
+    }
+
+    #OtherCostView {
+        border: 1px solid #CCD6E6;
+    }
+
+    #Cell1 {
+        width: 80%;
+    }
+
+    #Cell2 {
+        width: 20%;
+        text-align: right;
+    }
+
+    #panel1 {
+        display: none;
+    }
+
+    .modal-xl {
+        max-width: 90%;
+        margin-left: 7%;
+        margin-right: 3%;
+    }
+
+    .modal-llg {
+        max-width: 80%;
+        margin-left: 13%;
+        margin-right: 7%;
+    }
+
+    .footertable tr {
+        border: 1px solid #BABFC7;
+        height: 45px;
+    }
+
+    .headertable tr {
+        border: 1px solid #BABFC7;
+        height: 40px;
+    }
+</style>
+
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+
+
+<div id="Entry" style="margin-top:-20px;">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0" style="float:left;color:orange;font-weight:600;font-size:x-large" id="vccid">Deposit Received</h4>
+                    <h3 class="col-md-3 text-md-right" id="gndtotal" style="float:right;color:red;font-weight:500">0.00 </h3>
+                    @*<h2 class="text-right" id="gndtotal" style="float:right;">0.00</h2>
+                        <h2 class="col-md-2" id="fc" style="float:right;opacity:0">fc </h2>*@
+
+                </div>
+                <div class="card-body" style="margin-top:-00px">
+                    <div class="card-content collapse show">
+                        <div class="card-body">
+                            <form action="#">
+                                <div class="form-body">
+                                    <hr style="margin-top:0px" />
+                                    <div class="row" style="background-color:#E0F3F4;margin-left:3px;width:100%;margin-top:-20px;height:225px">
+
+                                        <div class="col-md-12">
+                                            <br />
+                                            <div class="form-group">
+
+
+
+                                                <div class="hopscotch-bubble animated tour-demo-tour" id="tour1" style="position: absolute; top: 65px; left:18%;display:none">
+                                                    <div class="hopscotch-bubble-container" style="width: 280px; padding: 10px;">
+                                                        <div class="hopscotch-bubble-content">
+                                                            <h3 class="hopscotch-title">Search Invoice Number Here.</h3>
+                                                            <div class="hopscotch-content"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hopscotch-bubble-arrow-container hopscotch-arrow up">
+                                                        <div class="hopscotch-bubble-arrow-border"></div>
+                                                        <div class="hopscotch-bubble-arrow"></div>
+                                                    </div>
+                                                </div>
+
+
+
+
+
+
+
+                                                <div class="form-group">
+                                                    <div class="row" style="margin-left:1px;">
+                                                        <label class="text-lg-right">VCC No#</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" class="form-control editds" id="vccnoid"  style="margin-left:5px" disabled>
+                                                        </div>
+                                                        <label class="text-lg-right col-md-1">Account Type</label>
+                                                        <div class="col-md-2">
+                                                            <select id="Accounttypeid" style="margin-left:8px" class="form-control">
+                                                                <option value="Cash">Cash</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Currency</label>
+                                                        <div class="col-md-2">
+                                                            <select id="select_crncy" class="form-control" style="margin-left:5px" onchange="CurrencyChange(this.id),findtotal()"></select>
+                                                        </div>
+                                                        <label class="text-lg-right col-md-1">Account</label>
+                                                        <div class="col-md-2">
+
+                                                            <input type="text" id="Accountvcc" class="form-control" style="">
+                                                            <input type="text" id="AccountvccID" class="form-control" style="display:none" value="0">
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row" style="margin-left:1px;margin-top:5px">
+                                                        <label class="text-lg-right">Customer</label>
+                                                        <div class="col-md-2">
+
+                                                            <input type="text" id="txtcustomer" class="form-control" onclick="GetList()" style="" onkeyup="changetoupper(this.id), checkcustomerempty()">
+                                                            <input type="text" id="txtCustId" style="display:none" />
+
+                                                        </div>
+                                                        <label class="text-lg-right col-md-1">Date</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" style="" class="form-control" id="date" autocomplete="off">@*placeholder="--select--"*@
+
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Rate</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" id="txtcrncyrate" class="form-control" onkeypress="return isNumbercheck(event, this)" onkeyup="findtotal()" autocomplete="off">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="text" id="txtmsg" disabled class="form-control"  style="border:none;background-color:#E0F3F4;position:absolute;height:80px;color:blue;font-weight:700;font-size:x-large" autocomplete="off">
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row" style="margin-left:1px;margin-top:5px">
+                                                        <label class="text-lg-right">Address</label>
+                                                        <div class="col-md-2">
+
+                                                            <input type="text" id="addressid" class="form-control" style="margin-left:11px;height:80px">
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Chassis No#</label>
+                                                        <div class="col-md-2">
+                                                            <input type="hidden" id="hiddenitemId" />
+                                                            <input type="text" class="form-control" id="chassisnoid" style="margin-left:12px;height:80px;" autocomplete="off" onkeyup="clearitemcode()">@*placeholder="--select--"*@
+
+                                                        </div>
+
+                                                        <label class="text-lg-right col-md-1">Amount</label>
+                                                        <div class="col-md-2">
+                                                            <input type="text" id="amountid" class="form-control" style="margin-left:12px;height:80px;text-align:center;font-size:x-large" onkeypress="return isNumbercheck(event, this)" onkeyup="findtotal()" autocomplete="off">
+                                                        </div>
+                                                    </div>
+
+
+                                                    
+                                                       
+                                                    
+
+
+
+
+                                                </div>
+
+
+
+                                                @*=================*@
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*<label style="margin-left:600px;margin-top:20px;" id="label"><b>INVOICE DETAILS</b></label>*@
+
+                                    @*=================*@
+
+
+                                    <div class="px-2">
+                                        <div id="customView" class="jsgrid" style="position: relative; height: 320px; width:100%; margin-top:14px;overflow-x: auto;overflow-y: hidden; ">
+                                            <div class="jsgrid-grid-header jsgrid-header-scrollbar" style="width:100%;">
+                                                <table class="jsgrid-table">
+                                                    <tr class="jsgrid-header-row">
+                                                        @*<th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" style="width:20px"></th>*@
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:10px">No</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Inv No</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:50px">Description</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Inv Date</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Base Amount</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Rec Amount</th>
+                                                        <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width:30px">Bal Amount</th>                                                       
+                                                     </tr>
+                                                </table>
+                                            </div>
+                                            <div id="proddiv" class="" style="position: relative; overflow-x: auto;overflow-y:scroll; height: 246px; width:100%;">
+                                                <table class="jsgrid-table" id="tblvcc"></table>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </div>
+
+                                    <div class="text-right" style="height:130px;top:0px">
+
+                                        <br />
+                                        <button type="button" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
+                                        <button type="button" style="width:100px" id="btnlist" onclick="enablenobox()" class="btn btn-primary btn-min-width mr-1 mb-1">Copy<i class="ft-align-justify"></i></button>
+                                        <button type="button" id="btnnew" onclick="createnew()" class="btn btn-primary btn-min-width mr-1 mb-1">Clear <i class="ft-refresh-cw position-right"></i></button>
+                                        <button style="display:none" type="button" id="btnprint" onclick="PrintthisBill()" class="btn btn-primary btn-min-width mr-1 mb-1">Print <i class="ft-printer"></i></button>
+
+                                     </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:10%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader"></h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="currencydiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="txt_code">Code<span class="danger">*</span></label>
+                        <input type="text" id="txt_code" onkeyup="changetoupper(this.id),$('#txt_cname').val($('#txt_code').val())" class="form-control">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitdesc">Name</label>
+                        <input type="text" id="txt_cname" maxlength="100" class="form-control">
+                    </fieldset>
+                    <br />
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitname">Rate<span class="danger">*</span></label>
+                        <input type="text" id="txt_rate" maxlength="8" onkeypress="return isNumber(event, this)" class="form-control">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="unitname">Remarks</label>
+                        <textarea id="txt_remark" rows="5" class="form-control" name="comment"></textarea>
+                    </fieldset>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btncrncysave" onclick="SaveCurrency(1)">
+                </div>
+            </form>
+            <form id="areadiv" style="display:none">
+                <div class="modal-body" style="overflow:auto;height:250px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupcode">Area Code<span class="danger">*</span></label>
+                        <input type="text" onkeyup="changetoupper(this.id),$('#txtname').val($('#txtcode').val())" id="txtcode" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupname">Area Name<span class="danger">*</span></label>
+                        <input type="text" id="txtname" class="form-control" autocomplete="off">
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Group</label>
+                        <select id="select_areagroup" class="form-control"></select>
+                    </fieldset>
+                    <br>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="groupdesc">Description</label>
+                        <input type="text" id="txtdescription" class="form-control" autocomplete="off">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnareasave" onclick="SavePlace(1)">
+                </div>
+            </form>
+            <form id="salesmandiv" style="display:none;">
+                <div class="modal-body" style="overflow:auto;height:290px;">
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catcode">Code<span class="danger">*</span></label>
+                        <input type="text" id="code" maxlength="25" onkeyup="changetoupper(this.id),$('#txt_fname').val($('#txt_code').val())" class="form-control" name="txt_code">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catname">Name<span class="danger">*</span></label>
+                        <input type="text" id="txt_fname" maxlength="100" class="form-control" name="txt_fname">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Target Amount</label>
+                        <input type="text" id="txt_amount" maxlength="12" class="form-control" name="txt_amount" onkeypress="return isNumber(event, this)">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Address 1</label>
+                        <input type="text" id="txt_address1" maxlength="100" class="form-control" name="txt_address1">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Address 2</label>
+                        <input type="text" id="txt_address2" maxlength="100" class="form-control" name="txt_address2">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Address 3</label>
+                        <input type="text" id="txt_address3" maxlength="100" class="form-control" name="txt_address3">
+                    </fieldset>
+                    <fieldset class="form-group floating-label-form-group">
+                        <label for="catdesc">Contact Number</label>
+                        <input type="text" id="txt_contactnumber" maxlength="13" class="form-control" name="txt_contactnumber">
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <input type="reset" class="btn btn-outline-secondary" onclick="popuprefresh()" data-dismiss="modal" value="close">
+                    <input type="button" class="btn btn-outline-primary" value="Save" id="btnsalesmansave" onclick="SaveSalesman(1)">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div id="alertpopupy" style="display:none;" onclick="closewarning()">
+    <div id="toast-container" class="toast-container  toast-top-right" @*style="margin-top:50px;width:60px;height:40px;margin-left:-150%;"*@>
+        <div class="toast toast-warning" aria-live="assertive">
+            <div class="toast-red" id="type-error">Hello</div>
+        </div>
+        @*<button type="button" class="btn btn-lg btn-block btn-danger mb-2" id="type-error">Error</button>*@
+    </div>
+</div>
+
+<div id="alertpopupn" style="display:none;" onclick="closewarning()">
+    <div id="toast-container" class="toast-container  toast-top-right" @*style="margin-top:50px;width:60px;height:40px;margin-left:-150%;"*@>
+        <div class="toasty toast-success" aria-live="assertive">
+            <div class="toast-green" id="type-show">Hello</div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="confirm" class="overlay" style="display: none;">
+    <div class="modal fade text-left show" id="keyboard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" style="display: block; padding-right: 17px; top:28%">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div id="paymenticonid" class="swal-icon swal-icon--warning">
+                        <span id="span1ttt" class="swal-icon--warning__body">
+                            <span id="span2ttt" class="swal-icon--warning__dot"></span>
+                        </span>
+                    </div>
+                    <div id="confirmmessage" class="swal-title" style="">Do You Want To Save The Bill?</div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="Confirmflag" value="save">
+                    <input type="hidden" id="ConfirmRowId" value="0">
+                    <button type="button" onclick="ConfirmboxResult('true', $('#Confirmflag').val(), $('#ConfirmRowId').val())" id="confirmOk" class="btn btn-outline-primary" autofocus="" autocomplete="off">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="alertpopup" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none">
+    <div class="modal-dialog" role="document" style="top:25%">
+        <div class="modal-content" style="width:600px">
+            <form id="alertdiv" style="display:none;">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="placeholder"></div>
+                        <div class="col-md-12" style="overflow:scroll;height:auto;width:100%;overflow:auto;">
+                            <div class="swal2-icon swal2-success animate" style="display: block;"><span class="line tip animate-success-tip"></span> <span class="line long animate-success-long"></span><div class="placeholder"></div> <div class="fix"></div></div>
+                            <br />
+                            <h2 id="savealert" class="text-center"></h2>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <input type="button" class="btn btn-primary" value="Print" id="btnok">
+                        <input type="button" class="btn btn-outline-primary" value="Cancel" id="btncnclalrt">
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div style="display:none">
+    <table id="DosPrintRV" class="dataTableRV"></table>
+</div>
+<input id="VoucherNoMain" style="display:none"/>
+
+<script type="text/javascript" src="~/ProjectScript/Windowsprint.js"></script>
+
+
+
+
+<style>
+   
+
+    .toast {
+        background-color: red;
+        /*width:70px;
+    height:30px;*/
+    }
+
+    .toast-red {
+        background-color: red;
+        font-size: xx-large;
+    }
+
+    .toasty {
+        background-color: #4caf50;
+    }
+
+    .toast-green {
+        background-color: #4caf50;
+        font-size: xx-large;
+    }
+</style>
+
+
+
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+
+        $('#chassisnoid').focus();
+
+        $('#amountid').val(parseFloat(0).toFixed(Decimal));
+
+        $('#date').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+        serialnoload();
+        GetCurrency(0);
+
+        $('#vccnoid').keyup(function (e) {
+            e.preventDefault();           
+            var entrkey = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (entrkey == 8) {
+                clearbox();                
+            }
+        });
+
+
+
+        $('#Accountvcc').keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 8) {
+                $("#AccountvccID").val(0);
+            }
+
+        });
+
+    });
+
+
+
+
+    function closewarning() {
+        $('#alertpopupy').fadeOut();
+    }
+    function warningpopupshow(message, Id) {
+        $('#type-error').text(message);
+        $('#alertpopupy').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#alertpopupy').hide();
+        }, 3000);
+    }
+    function warningpopupshown(message, Id) {
+        $('#type-show').text(message);
+        $('#alertpopupn').show();
+        $('#' + Id).focus();
+        window.setTimeout(function () {
+            $('#alertpopupn').hide();
+        }, 3000);
+    }
+
+
+    $('#label').css('color', 'blue');
+    $('#label').css({ 'font-weight': 'bold' });
+
+    $('#amtid').css('color', 'black');
+    $('#amtid').css({ 'font-weight': 'bold' });
+
+    $('#vccid').css('color', 'orange');
+    $('#vccid').css({ 'font-weight': 'bold' });
+
+    $('#amountid').css('color', 'black');
+    $('#amountid').css({ 'font-weight': 'bold' });
+    $('#chassisnoid').css('color', 'black');
+    $('#chassisnoid').css({ 'font-weight': 'bold' });
+
+
+
+    function Addpopupwindow(Id) {
+        $("#popupdiv").css("margin-top", '0px');
+        $('#currencydiv').hide(); $('#areadiv').hide();
+        $('#locationdiv').hide(); $('#salesmandiv').hide();
+        $('#termsdiv').hide();
+        $('#popupdiv').show();
+
+        if (Id == 1) {
+            $('#myheader').text('Currency');
+            $('#currencydiv').show();
+            $('#txt_code').focus();
+        }
+    }
+
+
+
+
+
+    var BaseCurrency;
+
+    function CurncyLoad(result, a) {
+        $("#select_crncy").empty();
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].BaseCurrencyId != 0) {
+                BaseCurrency = result[i].BaseCurrencyId;
+            }
+        }
+        $("#select_crncy").append("<option value='0'>--Select--</option>");
+
+        for (var i = 0; i < result.length; i++) {
+            $("#select_crncy").append("<option value='" + result[i].Id + "' name='" + result[i].CurrencyRate + "'>" + result[i].CurrencyName + "</option>");
+        }
+        if (a == 0) {
+            $('#select_crncy').val(BaseCurrency);
+            $('#txtcrncyrate').val($('#select_crncy').find("option:selected").attr("name"));
+
+        }
+        else {
+            $('#select_crncy').val(a);
+            $('#txtcrncyrate').val($('#select_crncy').find("option:selected").attr("name"));
+        }
+    }
+
+    function CurrencyChange(Id) {
+        $('#txtcrncyrate').val($('#' + Id).find("option:selected").attr("name"));
+    }
+
+
+    function GetCurrency(id) {
+
+        var data = {};
+        data.Id = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CurrencyGetandGets",
+            data: data,
+            success: function (result) {
+                CurncyLoad(result.oList, id);
+            }
+        });
+    }
+
+
+    $('#txtcrncyrate').keyup(function (e) {
+
+        for (j = 0; j <= i; j++) {
+            amountcalculation(j);
+        }
+        CalcGrandTotal(i);
+    });
+
+
+
+
+    function Defaultfocus() {
+        $('#chassisnoid').fous();
+    }
+
+
+
+
+
+
+
+    $("#txtcustomer").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.CustName = $("#txtcustomer").val();
+            data.CustType = 'C';
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '-2ph',
+                            label: item.CustName,
+                            label1: item.CustAccount,
+                            label2: item.PhoneNumber,
+                            CustName: item.CustName,
+                            Address: item.CustStreet1 + '\n' + item.CustCity1 + '\n' + item.CustState1,
+                            Street: item.CustStreet1,
+                            City: item.CustCity1,
+                            State: item.CustState1,
+                            TRNNumber: item.TRNNumber,
+                            CustId: item.CustId,
+                            SalesmanId: item.SalesmanId,
+                            CurncyId: item.CurrencyId,
+                            CustTermsId: item.CustTermsId,
+                            AreaId: item.AreaId,
+                            PriceGroupId: item.PriceGroupId,
+                            headers: ["Customer Name", "Account Code", "Phone No"]
+                        })
+                    }));
+                }
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#txtcustomer').val(ui.item.CustName);
+            $('#txtaddress').val(ui.item.Address);
+            $('#txtCustId').val(ui.item.CustId);
+            // if (ui.item.SalesmanId != 0 && ui.item.SalesmanId!=null)
+            //    $('#select_salesman').val(ui.item.SalesmanId);
+            //$('#select_crncy').val(ui.item.CurncyId);
+            //$('#txtcrncyrate').val($('#select_crncy').find("option:selected").attr("name"));
+            //$('#select_terms').val(ui.item.CustTermsId || 0);
+            //$('#adr1').val(ui.item.Street);
+            //$('#adr2').val(ui.item.City);
+            //$('#adr3').val(ui.item.State);
+            //$('#Trnno').val(ui.item.TRNNumber);
+            //if (ui.item.AreaId != 0)
+            //    $('#select_place').val(ui.item.AreaId||0);
+            //$('#txtproduct0').focus();
+            //$('#PriceGroupId').val(ui.item.PriceGroupId || 0);
+            //},
+
+        }
+    });
+
+
+
+
+    $("#chassisnoid").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.ItemCode = $("#chassisnoid").val();
+            $.ajax({
+                url: '../Purchase/ProductSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                   // console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '4',
+                            label: item.ItemCode,
+                            label1: item.Description,
+                            label2: item.UnitName,
+                            label3: item.SellingPrice.toFixed(Decimal),
+                            label4: '0',
+                            label5: '0',
+                            ItemId: item.ItemId,
+                            ItemCode: item.ItemCode,
+                            headers: ["Item Code", "Description", "Unit Name", "Average Cost"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#hiddenitemId').val(ui.item.ItemId);
+            $('#chassisnoid').val(ui.item.ItemCode);
+            var data = {};
+            data.ProductId = $('#hiddenitemId').val();
+            data.ProductCode = $("#chassisnoid").val();
+            $.ajax({
+                type: "POST",
+                url: "../../caritemcode/VCCAmountGet",
+                data: data,
+                success: function (result) {
+                        GetVCCItem(result.oList);
+                }
+            });
+        },
+    });
+
+
+    $("#Accountvcc").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.AccountDescription = $("#Accountvcc").val();
+            $.ajax({
+                url: '../Inventory/AccountNumberSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    //console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '2',
+                            label: item.DebitAccount,
+                            label1: item.AccountDescription,
+                            DebitAccount: item.DebitAccount,
+                            AccountDescription: item.AccountDescription,
+                            AccountId: item.AccountId,
+                            headers: ["Account Code","Description"]
+                        })
+                    }));
+                }
+            })
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#AccountvccID').val(ui.item.AccountId)
+            $('#Accountvcc').val(ui.item.DebitAccount);
+            //$('#accountdescription').val(ui.item.AccountDescription);
+
+        },
+    });
+
+    function serialnoload() {
+        var srlno = {};
+        srlno.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../../AccountsErp/VoucherNoGetandGets",
+            data: srlno,
+            success: function (result){
+                //console.log(result)
+                getslno(result.oList);
+            }
+        });
+
+
+        var dataz = {};
+        dataz.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Common/CashAccountGets",
+            data: dataz,
+            success: function (result) {
+                //console.log(result)
+                GetCashAccount(result.oList);
+            }
+        });
+    }
+
+
+    //Seriel No Get
+    function getslno(result) {
+        //console.log(result.oList)
+        for (var k = 0; k < result.length; k++) {
+        //for (var k = 0; k < 1; k++) {
+            $('#vccnoid').val(result[k].RVNo);
+        }
+           // $('#vccnoid').val(result[0].RVNo);
+    }
+
+    function GetCashAccount(result) {
+        //console.log(result.oList)
+        for (var k = 0; k < result.length; k++) {
+
+            $('#Accountvcc').val(result[k].GICash);
+            $('#AccountvccID').val(result[k].AccId);
+        }
+    }
+
+    function GetVCCItem(result)
+    {
+        if (result[0].DelFlag == 1)
+        {
+            $('#txtmsg').val('Amount Already Paid:' + result[0].PayType);
+            $('#btnsubmit').prop('disabled', true);
+            $('#btnsubmit').hide();
+        }
+        else
+        {
+            $('#tblvcc tr').remove();
+            $('#txtmsg').val('');
+            $('#btnsubmit').prop('disabled', false);
+            $('#btnsubmit').show();
+            $('#txtCustId').val(result[0].CustId);
+            $('#txtcustomer').val(result[0].CustName);
+            $('#addressid').val(result[0].CustAddress);
+            if (parseFloat(result[0].balanceamt) == 0) {
+                swal('Payment Cleared', "", "success");
+                $('.swal-button swal-button--confirm').focus();
+
+                //$('#confirm').show();
+                //$('#confirmmessage').text('Payment Cleared');
+            }
+            else {
+                swal('Payment Not cleared', "", "warning");
+                $('.swal-button swal-button--confirm').focus();
+
+                //$('#confirm').show();
+                //$('#confirmmessage').text('Payment Not cleared');
+
+            }           
+        }
+        for (i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1)
+            var VCCRowEdit = "<tr id=" + 'row' + slno + " class= jsgrid-row ><td  id=" + 'td' + slno + " class= jsgrid-cell  style= width:5px;text-align:center >"
+                      + slno + "</td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:30px;text-align:center' ><input type='text' class='form-control' disabled=disabled  style='background-color:white;height:30px;border:none;' id='txtinvono" + slno + "' value='"
+                      + result[i].BillSlNo + "'> </td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:50px;text-align:center'> <input type='text' class='form-control'  disabled  style='background-color:white;height:30px;border:none;' id='txtdesc" + slno + "' value='"
+                      + result[i].ProductDescr + "'> <input type='text' class='form-control'  disabled  style='background-color:white;height:30px;border:none;display:none' id='prodesc" + slno + "' value='"
+                      + result[i].ProductCode + "'> </td>  <td class= 'jsgrid-cell jsgrid-align-left' style='width:30px;'><input type='text' class='form-control text-center'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='txtdate" + slno + "' value='"
+                      + result[i].InvDate + "'></td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input type='text' class='form-control text-center'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='txtamnt" + slno + "' value='"
+                      + result[i].Amnt + "'><input type='hidden' id='hiddenqty" + slno + "' value='" + parseInt($('#txtquantity').val()) + "'/>  </td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled style='background-color:white;height:30px;border:none;' id='txtadv" + slno + "' value="
+                      + parseFloat(result[i].Amnt - result[i].balanceamt).toFixed(Decimal) + "></td><td class= 'jsgrid-cell jsgrid-control-field jsgrid-align-left'  style='width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled  style='background-color:white;height:30px;background-color:white;border:none;' readonly onkeyup=''   id='balamnt" + slno + "' value="
+                      + result[i].balanceamt + "></td></tr>";
+            $('#tblvcc').append(VCCRowEdit);
+        }  
+    }
+    function clearitemcode()
+
+    {
+        $('#txtmsg').val('');
+        $('#btnsubmit').prop('disabled', false);
+        $('#btnsubmit').show();
+        $('#hiddenitemId').val('0');
+        $('#tblvcc tr').remove();
+    }
+    function clearbox(evt) {
+
+        $('#txtcustomer').val('');
+        $('#addressid').val('');
+        $('#chassisnoid').val('');
+        $('#select_crncy').val('0');
+        $('#txtcrncyrate').val(1);
+        $('#amountid').val('0.00');
+        $('#gndtotal').text('0.00');
+        GetCurrency(0);
+        $('#tblvcc tr').remove();
+        clearitemcode();
+      
+    }
+
+    $('#btnsubmit').click(function (e) {
+        SaveandUpdate(1);
+    });
+    var rowcount;
+    function SaveandUpdate(flag)
+    {
+        if($('#hiddenitemId').val()==0)
+        {
+            warningshow('Please Enter Valid Chassis Number', "chassisnoid")
+        }
+       else if ($("#tblvcc tr").length < 0) {
+        warningshow('Please Enter A Chassis Number')
+       }
+       else if (parseInt($("#AccountvccID").val()||0) == 0) {
+           warningshow('Please Select Valid Account',"Accountvcc")
+       }
+       else if (parseFloat($('#amountid').val() || 0) == 0) {
+           warningshow('Please Enter Amount', "amountid");
+           $('#amountid').select();
+       }
+       else {
+           rowcount = $('#tblvcc tr').length;
+           $('#btnsubmit').prop('disabled', true);
+           for (var k = 1; k < 2 ; k++) {
+               var data = {};
+               data.BillSlNo = $('#txtinvono' + k).val();
+               data.ProductDescr = $.trim($('#txtdesc' + k).val());
+               data.FromDate = $('#txtdate' + k).val();
+               data.Amount = $('#txtamnt' + k).val();
+               data.CashAdvnce = $('#txtadv' + k).val();
+               data.balanceamt = $('#balamnt' + k).val();
+               data.DelFlag = flag;
+               data.ProductCode = $('#chassisnoid').val();
+               data.acctype = $('#Accounttypeid').val();
+               data.BlSlNo = $('#vccnoid').val();
+               data.CustName = $('#txtcustomer').val();
+               data.CustAddress = $('#addressid').val();
+               data.DeptId = ERPDeptId;
+               data.VCCDate = $('#date').val();
+               data.UserId = ERPUserId;
+               data.Location = UserLocationId;
+               data.CustId = $('#txtCustId').val();
+               data.ProductId = $('#hiddenitemId').val();
+               data.CurrencyId = $('#select_crncy').val();
+               data.CurrencyRate = $('#txtcrncyrate').val();
+               data.VCCBaseAmount = $('#gndtotal').text();
+               data.FCAmount = $('#amountid').val();
+               data.AccountId = $("#AccountvccID").val();
+               data.Account = $("#Accountvcc").val();
+
+
+               //console.log(data.acctype)
+               $.ajax({
+                   type: "POST",
+                   url: "../caritemcode/VCCInsertandUpdate",
+                   data: data,
+                   success: function (result) {
+                       for (var i = 0; i < result.oList.length; i++) {
+                           var status = result.oList[i].Status;
+                           var billno = result.oList[i].BlSlNo;
+                           Showalert(status, billno);
+                           $('#btnsubmit').prop('disabled', false);
+                       }
+                   }
+               });
+           }
+       }
+                
+        }
+    function Showalert(Status,billno) {
+        $('#savealert').html('');
+        $('#alertpopup').hide();
+        $('#alertdiv').hide();
+        if (Status == 1) {
+            $('#VoucherNoMain').val(billno);
+            $('#alertpopup').show();
+            $('#alertdiv').show();
+            $('#savealert').text('');
+            $('#savealert').append('Saved Successfully!<br>Do you want to print this bill?');
+            $('#btnok').focus();
+            //formrefresh();
+            //swal('VCC Number :' + Billno, " Saved Successfully", "success");
+            //$('.swal-button swal-button--confirm').focus();
+        }
+    }
+
+    $('#btnok').click(function () {
+        PrintthisBill();
+        alertpopuprefresh();
+        formrefresh();
+    });
+    $('#btncnclalrt').click(function () {
+        alertpopuprefresh();
+        formrefresh();
+    });
+
+    function alertpopuprefresh() {
+        $('#alertpopup').hide();
+        $('#alertdiv').hide();
+    }
+
+    //copy
+    function enablenobox() {
+        var rowcount = $('#tblvcc tr').length;
+         if (rowcount > 0) {
+            $('#Confirmflag').val('copy'), $('#ConfirmRowId').val(1)
+            $('#confirmmessage').text('Data Will be Lost.Do you want to Continue?')
+            $('#confirm').show();
+            $('#confirmOk').focus();
+        }
+        else if (rowcount == 0) {
+            enablecopy();
+        }
+    }
+    var copyflag = 0;
+    function enablecopy() {
+        copyflag = 1;
+        $('#txtmsg').val('');
+        $('#vccnoid').val('');        
+        $('#txtcustomer').val('');
+        $('#addressid').val('');
+        $('#chassisnoid').val('');
+        $('#select_crncy').val('0');
+        $('#txtcrncyrate').val(1);
+        $('#amountid').val('0.00');
+        $('.form-control').prop("disabled", true);
+        $('#vccnoid').prop('disabled', false);
+        $('#tblvcc tr').remove();
+        $('#vccnoid').focus();
+        $('#btnprint').show();
+        $('#btnsubmit').hide();
+        $('#btnlist').hide();
+    }
+    function ConfirmboxResult(Result, status, rowid) {
+       if (Result == 'true' && status == 'createnew') {
+            formrefresh();
+        }
+        else if (Result == 'true' && status == 'copy') {
+            copyflag = 1;
+                enablecopy();
+            }
+        $('#confirm').fadeOut();
+    }
+
+
+    //Stock Out No#
+    $("#vccnoid").autocomplete({
+        source: function (request, response) {
+            var data = {};
+            data.BillSlNo = $("#vccnoid").val();
+            data.DeptId = ERPDeptId;
+            $.ajax({
+                url: '../caritemcode/VCCGetandGets',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                   // console.log(data+'data');
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '3',
+                            label: item.BillSlNo ,
+                            label1: item.VCCDate,
+                            label2: item.ProductCode,
+                            BillSlNo: item.BillSlNo,
+                            VCCDate: item.VCCDate,
+                            ProductCode: item.ProductCode,
+                            ItemName: item.ItemName,
+                            CustName:item.CustName,
+                            CustAddress:item.CustAddress,
+                            BlSlNo: item.BlSlNo,
+                            ProductDescr: item.ProductDescr,
+                            Amnt: item.Amnt,
+                            CashAdvnce: item.CashAdvnce,
+                            balanceamt: item.balanceamt,
+                            CurrencyId: item.CurrencyId,
+                            CurrencyRate: item.CurrencyRate,
+                            Amount: item.Amount,
+                            FCAmount: item.FCAmount,
+                            InvDate: item.InvDate,
+                            Account: item.Account,
+                            AccountId:item.AccountId,
+                            headers: ["VCC No", "VCC Date", "Chassis No"]
+                        })
+                    }));
+                }
+            })
+        },
+
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#tblvcc tr').remove();
+            $('#vccnoid').val(ui.item.BillSlNo);
+            $('#date').val(ui.item.VCCDate);
+            $('#addressid').val(ui.item.CustAddress);
+            $('#txtcustomer').val(ui.item.CustName);
+            $('#select_crncy').val(ui.item.CurrencyId);
+            $('#txtcrncyrate').val(ui.item.CurrencyRate);
+            $('#amountid').val(parseFloat(ui.item.FCAmount).toFixed(Decimal));
+            $('#chassisnoid').val(ui.item.ProductCode);
+            $('#gndtotal').text(parseFloat(ui.item.Amount).toFixed(Decimal));
+            $("#Accountvcc").val(ui.item.Account);
+            $("#AccountvccID").val(ui.item.AccountId);
+
+
+
+            var slno = 1;
+            var VCCRowEdit = "<tr id=" + 'row' + slno + " class= jsgrid-row ><td  id=" + 'td' + slno + " class= jsgrid-cell  style= width:5px;text-align:center >"
+                     + slno + "</td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:30px;text-align:center' ><input type='text' class='form-control' disabled=disabled  style='background-color:white;height:30px;border:none;' id='txtinvono" + slno + "' value='"
+                     + ui.item.BlSlNo + "'> </td><td class= 'jsgrid-cell jsgrid-align-left'  style='width:50px;text-align:center'> <input type='text' class='form-control'  disabled  style='background-color:white;height:30px;border:none;' id='txtdesc" + slno + "' value='"
+                     + ui.item.ProductDescr + "'> <input type='text' class='form-control'  disabled  style='background-color:white;height:30px;border:none;display:none' id='prodesc" + slno + "' value='"
+                     + ui.item.ItemName + "'> </td>  <td class= 'jsgrid-cell jsgrid-align-left' style='width:30px;'><input type='text' class='form-control text-center'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='txtdate" + slno + "' value='"
+                     + ui.item.InvDate + "'></td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input type='text' class='form-control text-center'  disabled=disabled  style='background-color:white;height:30px;border:none;'   id='txtamnt" + slno + "' value='"
+                     + ui.item.Amnt + "'><input type='hidden' id='hiddenqty" + slno + "' value='" + parseInt($('#txtquantity').val()) + "'/>  </td><td class= 'jsgrid-cell jsgrid-align-left'  style= 'width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled style='background-color:white;height:30px;border:none;' id='txtadv" + slno + "' value="
+                     + ui.item.CashAdvnce + "></td><td class= 'jsgrid-cell jsgrid-control-field jsgrid-align-left'  style='width:30px;' ><input typ='text' class='form-control text-right' disabled=disabled  style='background-color:white;height:30px;background-color:white;border:none;' readonly onkeyup=''   id='balamnt" + slno + "' value="
+                     + ui.item.balanceamt + "></td></tr>";
+            $('#tblvcc').append(VCCRowEdit);
+        },
+    });
+    //new
+    function createnew() {
+
+        var rowcount = document.getElementById('tblvcc').rows.length;
+            if (rowcount > 0 && copyflag == 0) {
+                $('#Confirmflag').val('createnew'), $('#ConfirmRowId').val(1)
+                $('#confirmmessage').text('Data Will be Lost.Do you want to Continue?')
+                $('#confirm').show();
+                $('#confirmOk').focus();
+            }
+            else {
+                formrefresh();
+            }
+        }
+
+    function formrefresh()
+    {
+        $('.form-control').prop("disabled", false);
+        $('#vccnoid,#txtmsg').prop('disabled', true);
+        copyflag = 0;
+        $('#vccnoid').select();
+        $('#btnsubmit').show();
+        $('#btnlist').show();
+        clearbox();
+        serialnoload()
+        GetCurrency(0);
+        $('#VoucherNoMain').val('');
+        
+        $('#date').val(CurDate);
+        $('#btnprint').hide();
+        $('#btnsubmit').prop('disabled', false);
+    }
+    function findtotal()
+    {
+        var amt = parseFloat($('#amountid').val() || 0);
+        var rate = parseFloat($('#txtcrncyrate').val() || 0);
+        rate = isNaN(rate) ? 0 : rate;
+        var total = parseFloat(amt * rate).toFixed(Decimal);
+        $('#gndtotal').text(total);
+    }
+
+    
+
+    function isNumbercheck(evt, selectedvalue) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
+        if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {
+            evt.preventDefault();
+            warningshow('Digits Only')
+            return false;
+        }
+        return true;
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1351 @@
+﻿@{
+    ViewBag.Title = "ProfitAnalysisGroupwise";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<script src="~/Scripts/Chart/highcharts.js"></script>
+<script src="~/Scripts/Chart/export-data.js"></script>
+<script src="~/Scripts/Chart/exporting.js"></script>
+
+<style type="text/css">
+    .form-control {
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    var decimal = Decimal;
+    $(function () {
+        GroupPageLoad(0);
+        CategoryPageLoad(0);
+        GetDepartment(0);
+
+        $("#customer").focus();
+
+        $("#cmbGroup").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $("#cmbSubgroup").focus();
+            }
+
+        });
+        $("#cmbSubgroup").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $("#cmbCategory").focus();
+            }
+
+        });
+        $("#cmbCategory").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $("#cmbSubcategory").focus();
+            }
+
+        });
+        $("#cmbSubcategory").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $("#enquiryno").focus();
+            }
+
+        });
+        $("#enquiryno").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $("#vDept").focus();
+            }
+
+        });
+        $("#vDept").keydown(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                e.preventDefault();
+                $("#btnsubmit").focus();
+            }
+
+        });
+        $("#Summary").click(function (e) {
+            $('#Datetype').val('0');
+            $("#customRadioInline1").prop("checked", true);
+            $('#Loading').hide();
+            $('#graph').hide();
+            Summary();
+            $('#pi').hide();
+            $('#halfpi').hide();
+            $("#Summary").prop("checked", true);
+            $("#Graphical").prop("checked", false);
+        });
+        $("#graphreport").click(function (e) {
+            $('#Datetype').val('0');
+            $("#customRadioInline1").prop("checked", true);
+            $('#Loading').hide();
+            graphreport();
+            $("#Graphical").prop("checked", true);
+            $("#Summary").prop("checked", false);
+            $('#pi').hide();
+            $('#halfpi').hide();
+        });
+        $("#customRadioInline1").click(function (e) {
+            $('#pi').hide();
+            $('#halfpi').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+        $("#customRadioInline2").click(function (e) {
+            $('#pi').hide();
+            $('#halfpi').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+        $("#customRadioInline3").click(function (e) {
+            $('#pi').show();
+            $('#halfpi').hide();
+            $('#Sales').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+        $("#customRadioInline4").click(function (e) {
+            $('#halfpi').show();
+            $('#pi').hide();
+            $('#Sales').hide();
+            $('#Sales').show();
+            $('#Loading').hide();
+        });
+
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    });
+
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+
+
+</script>
+
+<div class="myData" data-x="M330" />
+
+<div id="Entry">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+
+                                <td id="checkall" style="display:none">
+                                    <div class="row">
+
+                                        <div class="col-md-5">
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio"  name="sd" id="Summary" checked="" onclick="Summary()" class="custom-control-input">
+                                                <label class="custom-control-label" for="Summary">Summary</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio"  name="sd" id="graphreport" class="custom-control-input" onclick="graphreport()">
+                                                <label class="custom-control-label" for="graphreport">Graphical</label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#customer').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right">
+                            <div class="heading-elements">
+                                <hr style="margin-top:-1px;" />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+
+                                <div id="graph" style="display:none;margin-top:-25px;">
+                                    <div class="card-body">
+                                        <div class="card-block">
+                                            <div class="" style="float:left;margin-left:30px">
+                                                <select id="Datetype" class="" style="border:none" onchange="ChangeType()">
+                                                    <option value="0">Period</option>
+                                                    <option value="1">Daily</option>
+                                                    <option value="2">Weekly</option>
+                                                    <option value="3">Monthly</option>
+                                                    <option value="4">Yearly</option>
+                                                </select>
+                                            </div>
+
+                                           
+                                            <div id="line-area" class="height-350 lineArea">
+                                                <div id="Sales" style="min-width: 310px; height: 350px; margin: 0 auto"></div>
+
+                                                <div class="input-group" style="margin-top:-10px;">
+
+
+                                                    <div class="custom-control custom-radio custom-control-inline" style="margin-left:20px">
+                                                        <input type="radio" id="customRadioInline1" checked="" name="customRadioInline1" class="custom-control-input" onclick="GroupwiseGraphReport('column')">
+                                                        <label class="custom-control-label" for="customRadioInline1">Column chart</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" onclick="GroupwiseGraphReport('line')">
+                                                        <label class="custom-control-label" for="customRadioInline2">Line chart</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input" onclick="('container')">
+                                                        <label class="custom-control-label" for="customRadioInline3">Pi chart</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input type="radio" id="customRadioInline4" name="customRadioInline1" class="custom-control-input" onclick="('container2')">
+                                                        <label class="custom-control-label" for="customRadioInline4">Half-Pi chart</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <table id="salesrept" style="float:left;table-layout:fixed;width:700px;overflow:auto" border="1"></table>
+                                            <div class="card-body" id="pi" style="display:none;margin-left:20px;min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px">
+                                                <div id="container" style="min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px; margin: 0 auto;"></div>
+                                            </div>
+
+                                            <div class="card-body" id="halfpi" style="display:none;margin-left:20px;min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px;">
+                                                <div id="container2" style="min-width: 310px; height: 400px; max-width: 600px;margin-top:-20px; margin: 0 auto"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%;width:580px;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h4 class="modal-title" id="myheader">Profit Analysis Groupwise Report</h4>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2 text-right">
+                            <label style="font-weight:bold;">From</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+                        <div class="col-md-2 text-right">
+                            <label style="font-weight:bold;">To</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:2.5%;"></div>
+
+                    <div class="row" style="margin-top:2%;">
+                        <div class="col-md-2 text-right">
+                            <label style="font-weight:bold;">Group</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Group" name="priority" class="form-control"></select>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <label style="font-weight:bold;">SubGroup</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="SubGroup" name="priority" class="form-control"></select>
+                        </div>
+                    </div>
+
+                    @*<div class="row" style="margin-top:2%;">
+                    <div class="col-md-2 text-right">
+                    <label style="font-weight:bold;">Category</label>
+                    </div>
+                    <div class="col-md-4">
+                    <select id="Category" name="priority" class="form-control"></select>
+                    </div>
+                    <div class="col-md-2 text-right">
+                    <label style="font-weight:bold;">SubCat.</label>
+                    </div>
+                    <div class="col-md-4">
+                    <select id="SubCategory" name="priority" class="form-control"></select>
+                    </div>
+                    </div>*@
+
+                    @*<div class="row" style="margin-top:2%;">
+                        <div class="col-md-2 text-right">
+                            <label style="font-weight:bold">Dept.</label>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="Dept" name="priority" class="form-control"></select>
+                        </div>
+                    </div>*@
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnsubmit" style="margin-right:40%" class="btn btn-primary" data-dismiss="modal">Apply</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var hhh = new Date();
+    var mmmonth = hhh.getMonth() + 1;
+    var ddday = hhh.getDate();
+    var MonthFirst = '01/' + (mmmonth < 10 ? '0' : '') + mmmonth + '/' + hhh.getFullYear();
+    var monthtext = '';
+
+    $("#customer").autocomplete({
+        delay: 0,
+        minLength: 0,
+        source: function (request, response) {
+            var data = {};
+            data.CustName = $("#customer").val();
+            data.CustType = 'C';
+
+            $.ajax({
+                url: '../Master/CustomerOrSupplierSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: '+2',
+                            label: item.CustAccount,
+                            label1: item.CustName,
+                            CustId: item.CustId,
+                            CustName: item.CustName,
+                            CustAccount: item.CustAccount,
+                            headers: ["Customer Name", "Account Code"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#customerId').val(ui.item.CustId);
+            $('#customer').val(ui.item.CustAccount);
+            $('#custnames').val(ui.item.CustName)
+            $('#Group').focus();
+        },
+    });
+
+    $("#btnsubmit").click(function (e) {
+        Summary();
+        $('#checkall').show();
+    });
+
+   
+
+    function Summary() {
+        $('#Loading').show();
+        if ($('#customer').val() == '') {
+            $('#customerId').val(0);
+        }
+
+        var data = {};
+        data.FromDate = $('#DateFrom').val();
+        data.ToDate = $('#DateTo').val();
+        data.GroupId = $('#Group').val();
+        data.SubGroupId = $('#SubGroup').val();
+
+        $.ajax({
+            type: "POST",
+            url: "../SalesReport/ProfitAnalysisGroupwiseReportGets",
+            data: data,
+            success: function (result) {
+                $('#divreport').show();
+                $('#popupdiv').hide();
+                $('#Loading').hide();
+                $('#graph').hide();
+                $("#Summary").prop("checked", true);
+                $("#graphreport").prop("checked", false);
+
+                disable_datatable('Tblreport', 'buttonPlace');
+                var responseText = "<thead><tr><th>Sl#</th><th>Group</th>" +
+                    "<th style=text-align:center>Qty.</th><th style=text-align:right>Taxable Amount</th><th style=text-align:right>Tax Amount</th><th style=text-align:right>Amount</th><th style=text-align:right>Cost</th><th style=text-align:right>Profit</th><th style=text-align:right>Profit%</th></thead><tbody>";
+                for (var i = 0; i < result.length; i++) {
+                    var slno = parseInt(i + 1);
+                    if (result[i].Group == 'Total') {
+                        responseText += '<tr style="background-color:#cfd8dc;font-weight:bold"><td>' + slno + '</td>' +
+                            '<td>' + result[i].Group + '</td>' +
+                             '<td style=text-align:center>' + parseInt(result[i].SalesQty || 0) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].TotalTaxable || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].TotalTax || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].SalesAmount || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].Cost || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].Profit || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right></td>' +
+                            '</tr>';
+                    }
+                    else {
+                              responseText += '<tr><td>' + slno + '</td>' +
+                             '<td>' + result[i].Group + '</td>' +
+                             '<td style=text-align:center>' + parseInt(result[i].SalesQty || 0) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].TotalTaxable || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].TotalTax || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].SalesAmount || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].Cost || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].Profit || 0).toFixed(Decimal) + '</td>' +
+                            '<td style=text-align:right>' + parseFloat(result[i].ProfitPer || 0).toFixed(Decimal) + '</td>' +
+                            '</tr>';
+                    }
+
+                }
+                $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Sl#</th><th>Group</th>' +
+                    '<th>Qty.</th><th> </th><th> </th><th> </th><th> </th><th> </th><th> </th></tr></tfoot>');
+
+                var title = "Profit Analysis Groupwise Report- from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+                datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+                $('#header').text(title);
+            }
+        });
+    }
+
+    function ChangeType() {
+        GroupwiseGraphReport('column');
+        $("#customRadioInline1").prop("checked", true);
+    }
+    function GetFormattedDate(datetoformat) {
+        var todayTime = new Date(datetoformat);
+        var month = todayTime.getMonth() + 1;
+        var day = todayTime.getDate();
+        var year = todayTime.getFullYear();
+
+        if (day < 10)
+            day = '0' + day
+        if (month < 10)
+            month = '0' + month
+
+        return day + "/" + month + "/" + year;
+    }
+     function graphreport() {
+        $("#graphreport").prop("checked", true);
+        GroupwiseGraphReport('column');
+    }
+
+
+
+     function GroupwiseGraphReport(Grtype) {
+        $('#Loading').show();
+
+        var data = {};
+        data.FromDate = $('#DateFrom').val();
+        data.ToDate = $('#DateTo').val();
+        data.GroupId = parseInt($('#Group').val() || 0);
+        data.SubGroupId = parseInt($('#SubGroup').val() || 0);
+
+
+
+
+
+
+        if ($("#graphreport").prop("checked")) {
+            var data = {};
+            data.FromDate = $('#DateFrom').val();
+            data.ToDate = $('#DateTo').val();
+            data.GroupId = parseInt($('#Group').val()||0);
+            data.SubGroupId = parseInt($('#SubGroup').val()||0);
+           
+            $.ajax({
+                type: "POST",
+                url: "../Purchaseandsalesreports/ProfitAnalysisGraphDailyReport",
+                data: data,
+                success: function (result) {
+                    ShowReportShort(result, Grtype);
+                    $('#Loading').hide();
+                    $('#divreport').hide();
+                    $('#popupdiv').hide();
+                    // $('#Main').hide();
+                    $('#graph').show();
+                    $("#graphreport").prop("checked", true);
+                    $("#Summary").prop("checked", false);
+                }
+            });
+
+
+            if ($('#Datetype').val() == 0) {
+
+                var datamnt = {};
+                datamnt.FromDate = $('#DateFrom').val();
+                datamnt.ToDate = $('#DateTo').val();
+                datamnt.GroupId = parseInt($('#Group').val() || 0);
+                datamnt.SubGroupId = parseInt($('#SubGroup').val() || 0);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/ProfitAnalysisGraphDailyReport",
+                    data: datamnt,
+                    success: function (result) {
+                        GroupwiseSalesGraphPeriod(result, Grtype);
+                    }
+                });
+            }
+            else if ($('#Datetype').val() == 1) {
+                var datamnt = {};
+                datamnt.Fromdate = CurDate;
+                datamnt.Todate = CurDate;
+                datamnt.GroupId = parseInt($('#Group').val() || 0);
+                datamnt.SubGroupId = parseInt($('#SubGroup').val() || 0);
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/ProfitAnalysisGraphDailyReport",
+                    data: datamnt,
+                    success: function (result) {
+                        GroupwiseSalesGraph(result, Grtype);
+                    }
+                });
+            }
+            else if ($('#Datetype').val() == 2) {
+
+                var XFromDate = CurDate.split('/');
+                var XXFromDate = XFromDate[2] + '-' + XFromDate[1] + '-' + XFromDate[0];
+
+
+                var prevSat = new Date(XXFromDate);
+                prevSat.setDate(prevSat.getDate() - (prevSat.getDay() + 8) % 7);
+                var FormatedDate = GetFormattedDate(prevSat);
+
+
+                var datamnt = {};
+                datamnt.Fromdate = FormatedDate;                                    //'01/' + mmmonth + '/' + hhh.getFullYear();
+                datamnt.Todate = CurDate;                               //'31/12/' + hhh.getFullYear();
+                datamnt.GroupId = parseInt($('#Group').val() || 0);
+                datamnt.SubGroupId = parseInt($('#SubGroup').val() || 0);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/ProfitAnalysisGraphWeeklyReport",
+                    data: datamnt,
+                    success: function (result) {
+
+                        GroupwiseSalesGraphWeek(result, Grtype);
+                    }
+                });
+            }
+            else if ($('#Datetype').val() == 3) {
+                var XFromDate = CurDate.split('/');
+
+                var datamnt = {};
+                datamnt.Fromdate = '01/' + XFromDate[1] + '/' + +XFromDate[2];              //$('#dpDateFrom').val();
+                datamnt.Todate = CurDate                                                    //$('#dpDateTo').val();
+                datamnt.GroupId = parseInt($('#Group').val() || 0);
+                datamnt.SubGroupId = parseInt($('#SubGroup').val() || 0);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/ProfitAnalysisGraphMonthlyReport",
+                    data: datamnt,
+                    success: function (result) {
+
+                        GroupwiseSalesGraphMonth(result, Grtype);
+                    }
+                });
+            }
+            else if ($('#Datetype').val() == 4) {
+
+                var datamnt = {};
+                datamnt.Fromdate = '01/01/' + hhh.getFullYear();
+                datamnt.Todate = CurDate;                                                         //$('#dpDateTo').val();
+                datamnt.GroupId = parseInt($('#Group').val() || 0);
+                datamnt.SubGroupId = parseInt($('#SubGroup').val() || 0);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Purchaseandsalesreports/ProfitAnalysisGraphYearlyReport",
+                    data: datamnt,
+                    success: function (result) {
+                        GroupwiseSalesGraphYear(result, Grtype);
+                    }
+                });
+            }
+
+
+        }
+
+        else {
+            Summary();
+        }
+
+    }
+
+    function ShowReportShort(result, GrType) {
+        $('#salesrept').html('');
+        var Profit = [];
+        var GroupName = [];
+        var GrData = [];
+        $("#salesrept").append('<thead><th>&ensp;Group</th><th style=text-align:right>&ensp;Sales Amount</th><th style=text-align:right>&ensp;Cost</th><th style=text-align:right>&ensp;Profit</th><th style=text-align:right>&ensp;Profit%</th></thead>');
+        for (var i = 0; i < result.length; i++) {
+            Profit.push(parseFloat(result[i].Profit || 0));
+            GroupName.push('Group:' + result[i].GroupName);
+            GrData.push({ name: result[i].GroupName, y: parseFloat(result[i].Profit || 0) })
+            $("#salesrept").append('<tr><td>&ensp;' + result[i].GroupName + '</td><td align="right"> ' + parseFloat(result[i].Amount || 0).toFixed(Decimal) + '&ensp;</td><td align="right"> ' + parseFloat(result[i].Cost || 0).toFixed(Decimal) + '&ensp;</td><td align="right"> ' + parseFloat(result[i].Profit || 0).toFixed(Decimal) + '&ensp;</td><td align="right"> ' + parseFloat(result[i].ProfitPer || 0).toFixed(Decimal) + '&ensp;</td></tr>');
+        }
+
+
+
+
+        //For PI Chart
+        Highcharts.chart('container', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Profit Analysis Groupwise-PI Chart'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            colors: [
+                   '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Profit',
+                colorByPoint: true,
+                data: GrData
+            }]
+        });
+
+        Highcharts.chart('container2', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                type: 'pie',
+            },
+            title: {
+                text: 'Profit Analysis Groupwise-Half PI Chart'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            colors: [
+                  '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '75%']
+                }
+            },
+            series: [{
+                name: 'Profit',
+                innerSize: '50%',
+                colorByPoint: true,
+                data: GrData
+
+            }]
+        });
+
+
+
+    }
+
+
+
+
+    function GroupwiseSalesGraph(result, Grtype) {
+
+       
+        var Profit = [];
+        var GroupName = [];
+        var GrData = [];
+        var Date = [];
+
+
+            for (var i = 0; i < result.length; i++) {
+                var shodatesplit = result[i].InvDate.split("/");
+                var ShowDate = shodatesplit[0] + '/' + shodatesplit[1];
+                Profit.push(parseFloat(result[i].Profit || 0));
+                GroupName.push(result[i].GroupName);
+                Date.push(ShowDate)
+                GrData.push({ name: result[i].GroupName, y: parseFloat(result[i].Profit || 0) })
+            }
+       
+
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Profit Analysis Groupwise Daily Report'
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Profit()'
+                }
+            },
+            colors: [
+                        '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Profit',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function GroupwiseSalesGraphWeek(result, Grtype) {
+
+        var Profit = [];
+        var GroupName = [];
+        var GrData = [];
+        var Date = [];
+
+
+            for (var i = 0; i < result.length; i++) {
+                Profit.push(parseFloat(result[i].Profit || 0));
+                GroupName.push(result[i].GroupName);
+                Date.push(result[i].InvDate);
+                GrData.push({ name: result[i].GroupName, y: parseFloat(result[i].Profit || 0) })
+            }
+       
+
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Profit Analysis Groupwise Weekly Report '
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Profit()'
+                }
+            },
+            colors: [
+                    '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Profit',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function GroupwiseSalesGraphMonth(result, Grtype) {
+
+        var Profit = [];
+        var GroupName = [];
+        var GrData = [];
+        var Date = [];
+
+
+
+            for (var i = 0; i < result.length; i++) {
+                Profit.push(parseFloat(result[i].Profit || 0));
+                GroupName.push(result[i].GroupName);
+                Date.push(monthNames[result[i].InvDate]);
+                GrData.push({ name: result[i].GroupName, y: parseFloat(result[i].Profit || 0) })
+            }
+       
+
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Profit Analysis Groupwise Monthly Report '
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Profit()'
+                }
+            },
+            colors: [
+                   '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Profit',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function GroupwiseSalesGraphYear(result, Grtype) {
+
+        var Profit = [];
+        var GroupName = [];
+        var GrData = [];
+        var Date = [];
+
+
+            for (var i = 0; i < result.length; i++) {
+                Profit.push(parseFloat(result[i].Profit || 0));
+                GroupName.push(result[i].GroupName);
+                Date.push(result[i].InvDate);
+                GrData.push({ name: result[i].GroupName, y: parseFloat(result[i].Profit || 0) })
+            }
+       
+
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Profit Analysis Groupwise Yearly Report '
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: Date
+            },
+            yAxis: {
+                title: {
+                    text: 'Profit()'
+                }
+            },
+            colors: [
+                    '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Profit',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+
+    function GroupwiseSalesGraphPeriod(result, Grtype) {
+
+
+        var Profit = [];
+        var GroupName = [];
+        var GrData = [];
+        var Date = [];
+
+        
+            for (var i = 0; i < result.length; i++) {
+                Profit.push(parseFloat(result[i].Profit || 0));
+                GroupName.push(result[i].GroupName);
+                GrData.push({ name: result[i].GroupName, y: parseFloat(result[i].Profit || 0) })
+            }
+       
+        Highcharts.chart('Sales', {
+            chart: { type: Grtype },
+            title: {
+                text: 'Profit Analysis Groupwise Period Report '
+            },
+            subtitle: {
+                text: 'Source: eumierp.com'
+            },
+            xAxis: {
+                categories: GroupName
+            },
+            yAxis: {
+                title: {
+                    text: 'Profit()'
+                }
+            },
+            colors: [
+                   '#FF4758',
+                   '#08B46B',
+                   '#19B6D4',
+                    '#FF8558',
+                   '#ec407a',
+                   '#9c27b0',
+                    '#1a237e',
+                    '#3e2723',
+                    '#e91e63',
+                    '#9c27b0',
+                    '#03a9f4',
+                    '#4caf50',
+                    '#795548',
+                    '#9e9e9e',
+            ],
+            plotOptions: {
+                column: {
+                    colorByPoint: true,
+                },
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [
+            {
+                name: 'Profit',
+                data: GrData
+            },
+            ]
+        });
+
+
+    }
+    //Load Group
+    function GroupPageLoad(id) {
+        var data1 = {};
+        data1.GrpId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/GroupGetandGets",
+            data: data1,
+            success: function (result) {
+                GroupLoad(result.oList, id);
+            }
+        });
+    }
+
+    function GroupLoad(result) {
+        $("#Group").empty();
+        $("#Group").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+
+            $("#Group").append("<option value='" + result[i].GrpId + "'>" + result[i].GrpName + "</option>");
+        }
+        SubGroupGets();
+    }
+
+    //Load SubGroup
+
+    function SubGroupGets() {
+        var data = {};
+        data.GroupId = $("#Group").val();
+
+
+        if (data.GroupId == 0) {
+            data.SbgrpId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubGroupGetandGets",
+                data: data,
+                success: function (result) {
+                    SubGroupLoad(result.oList);
+                }
+            });
+        }
+        else {
+            data.SbgrpId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubGroupGetForGroup",
+                data: data,
+                success: function (result) {
+                    SubGroupLoad(result.oList);
+                }
+            });
+        }
+    }
+
+    function SubGroupLoad(result) {
+        $("#SubGroup").empty();
+        $("#SubGroup").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#SubGroup").append("<option value='" + result[i].SbgrpId + "'>" + result[i].SbgrpName + "</option>");
+        }
+    }
+
+    //Load Category
+
+    function CategoryPageLoad(id) {
+        var data2 = {};
+        data2.CategoryId = 0;
+        $.ajax({
+            type: "POST",
+            url: "../Master/CategoryGetandGets",
+            data: data2,
+            success: function (result) {
+                CategoryLoad(result.oList, id);
+            }
+        });
+    }
+
+
+    function CategoryLoad(result) {
+        $("#Category").empty();
+        $("#Category").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Category").append("<option value='" + result[i].CategoryId + "'>" + result[i].CategoryName + "</option>");
+        }
+        SubCategoryGets();
+    }
+    //Load SubCategory
+
+    function SubCategoryGets() {
+
+        var data = {};
+        data.CategoryId = $("#Category").val();
+
+        if (data.CategoryId == 0) {
+            data.SubCategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubCategoryGetandGets",
+                data: data,
+                success: function (result) {
+                    SubCategoryLoad(result.oList);
+
+                }
+            });
+        }
+
+        else {
+            data.SubCategoryId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/SubCategoryGetforCategory",
+                data: data,
+                success: function (result) {
+                    SubCategoryLoad(result.oList);
+                }
+            });
+        }
+    }
+
+
+
+    function SubCategoryLoad(result) {
+        $("#SubCategory").empty();
+        $("#SubCategory").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#SubCategory").append("<option value='" + result[i].SubCategoryId + "'>" + result[i].SubCategoryName + "</option>");
+        }
+    }
+
+    function GetDepartment(id) {
+        var data = {};
+        data.UserId = ERPUserId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/UserDepartmentGetandGets",
+            data: data,
+            success: function (result) {
+                DepartmentLoad(result.oList, id);
+
+
+            }
+        });
+    }
+
+    function DepartmentLoad(result, a) {
+        $("#Dept").empty();
+        $("#Dept").append("<option value='0'>-All-</option>");
+        for (var i = 0; i < result.length; i++) {
+            $("#Dept").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+        }
+    }
+
+
+    function datatableWithsearch(tablename, download, title, tableButtonContainerId) {
+
+        var a = '#' + tablename + ' tfoot th'
+        $(a).each(function () {
+            var title = $(this).text();
+            if (title != 'Edit' && title != 'Select' && title != 'Sl#' && title != 'O Balance' && title != ' ') {
+                $(this).html('<input type="text" placeholder=" ' + title + '" style="width=100%" />');
+            }
+           
+            if (title == 'Group') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:800px" />');
+            }
+            if (title == 'Qty.') {
+                $(this).html('<input type="text" placeholder="' + title + '" style="width:100%" />');
+            }
+          
+           
+        });
+        var table = null;
+        if (download) {
+            if (!title || !tableButtonContainerId) { console.log("download table need title and button container"); }
+
+
+            table = $('#' + tablename).DataTable({
+                //dom: 'Blfrtip',
+                dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
+               "<'row'<'col-sm-12'tr>>" +
+               "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+                buttons: [],
+
+
+            });
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'excelexport',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        },
+                        {
+                            extend: 'print',
+                            title: title,
+                            messageTop: 'MEDOC HMS',
+                            exportOptions: { columns: ":visible" }
+                        }
+                    ]
+                },
+                'colvis'
+                ]
+            });
+            table.buttons(0, null).container().appendTo($("#" + tableButtonContainerId));
+            $("#" + tableButtonContainerId).find(".buttons-collection").addClass("btn-outline-primary mx-1").css("border-radius", "4px");
+
+        } else {
+            table = $('#' + tablename).DataTable();
+        }
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+
+                }
+            });
+        });
+        if (ExcelExport == 0) {
+            $('.excelexport').hide();
+        }
+    }
+
+
+</script>
+
+
+
+
+
+

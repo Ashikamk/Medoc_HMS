@@ -1,0 +1,369 @@
+﻿
+@{
+    ViewBag.Title = "BalanceSheetSummary";
+}
+
+<script type="text/javascript" src="../Projectscript/Common.js"></script>
+<script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
+
+<div id="Entry">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="border-bottom:1px solid #e6e6e6">
+                    <div>
+                        <table width="100%">
+                            <tr>
+                                <td><h4 id="header"></h4></td>
+                                <td width="35%"></td>
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#Account').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
+                                <td align="right">
+                                    <div class="btn-group" id="buttonPlace">
+                                        <div align="right">
+                                            <div class="heading-elements">
+                                                <div class="btn-group" id="buttonPlace">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div align="right">
+                            <div class="heading-elements">
+                                <br /><hr style="margin-top:-1%" />
+                                <div id="divreport" style="overflow:auto;display:none">
+                                    <table id="Tblreport" class="table table-striped table-bordered base-style dataTable"></table><br />
+                                </div>
+                                <div style="display:none">
+                                    <table id="Tblreportprint"></table>
+                                </div>
+
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popupdiv" class="modal fade text-left show" tabindex="-1" role="dialog" aria-labelledby="myheader" style="padding-right: 17px; background:rgba(0,0,0,0.5); display: block; display:none1;height:200%">
+    <div class="modal-dialog modal-lg" role="document" style="top:5%">
+        <div class="modal-content">
+            <div class="modal-header bg-primary white">
+                <h3 class="modal-title" id="myheader">Balance Sheet Report</h3>
+                <button type="button" class="close" onclick="popuprefresh()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form id="monthpopup" style="display:none1">
+                <div class="modal-body">
+                    <div class="row" style="margin-top:20px;margin-left:-10px">
+                        <label style="margin-top:5px;margin-left:30px">From Date </label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateFrom" class="form-control" autocomplete="off">
+                        </div>
+
+
+                        <label style="margin-top:5px;margin-left:70px">To Date </label>
+                        <div class="col-md-4">
+                            <input type="text" id="DateTo" class="form-control" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px;margin-left:-10px">
+
+                        <label style="margin-top:5px;margin-left:45px">Account </label>
+                        <div class="col-md-4">
+                            <input type="text" id="Account" class="form-control">
+                            <input type="hidden" id="AccountId" class="form-control" />
+                        </div>
+
+
+                        <label style="margin-top:5px;margin-left:50px">Cost Code </label>
+                        <div class="col-md-4">
+                            <select id="CostCode" name="priority" class="form-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:20px;margin-left:-10px">
+                        <label style="margin-top:5px;margin-left:20px">Department </label>
+                        <div class="col-md-4">
+                            <select id="department" name="priority" class="form-control"></select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" style="width:100px" id="btnsubmit" class="btn btn-outline-primary">Go</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var decimal = Decimal;
+    $("#Account").autocomplete({
+        source: function (request, response) {
+
+            var data = {};
+            data.AccountCode = $("#Account").val();
+            $.ajax({
+                url: '../Master/AccountScheduleSearch',
+                type: "POST",
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return ({
+                            ColCount: 'TWOEnq',
+                            label: item.AccountCode,
+                            label1: item.AcntDescription,
+                            AcntId: item.AcntId,
+                            headers: ["Code", "Decription"]
+                        })
+                    }));
+                }
+
+            })
+
+        },
+        autoFocus: true,
+        select: function (event, ui) {
+            $('#AccountId').val(ui.item.AcntId)
+        },
+
+    });
+    function popuprefresh() {
+        $('#popupdiv').hide();
+    }
+
+    //function ShowList(result) {
+    //    disable_datatable('Tblreport', 'buttonPlace');
+    //    var amt = 0;
+
+    //    var responseText = "<thead><tr><th style='width=5px'>Slno</th><th>AccountCode</th><th>Purticulars</th><th>Assets</th><th>Liabilities</th></tr></thead><tbody>";
+    //    for (var i = 0; i < result.length; i++) {
+    //        console.log((result[i].AccDesc))
+    //        var slno = parseInt(i) + 1;
+    //        if (result[i].Amount < 0 && result[i].AccCode != '') {
+    //            amt = parseFloat((result[i].Amount)) * -1;
+    //            responseText += '<tr><td style="width=5px">' + slno + '</td><td>' + result[i].AccCode + '</td><td>' + result[i].AccDesc + '</td><td align="right"></td><td align="right">' + (amt).toFixed(decimal) + '</td></tr>';
+    //        }
+    //        else if (result[i].AccCode == '') {
+    //            amt = parseFloat((result[i].Amount)) * -1;
+    //            responseText += '<tr style=background-color:#cfd8dc><td style="width=5px">' + slno + '</td><td>' + result[i].AccCode + '</td><td><b>' + result[i].AccDesc + '</b></td><td align="right"></td><td align="right"><b>' + (amt).toFixed(decimal) + '</b></td></tr>';
+    //        }
+    //        else {
+    //            responseText += '<tr><td style="width=5px">' + slno + '</td><td>' + result[i].AccCode + '</td><td>' + result[i].AccDesc + '</td><td align="right">' + (result[i].Amount).toFixed(decimal) + '</td><td align="right"></td></tr>';
+    //        }
+    //    }
+
+    //    $('#Tblreport').html(responseText + '</tbody><tfoot><tr><th>Slno</th><th>AccountCode</th><th>AccountName</th><th> </th><th> </th></tr></tfoot>');
+    //    $('#Tblreportprint').html(responseText + '</tbody>');
+    //    var title = "Balance Sheet-Summary- from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+    //    datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+    //    $('#header').text(title);
+    //}
+
+    function ShowList(result) {
+        disable_datatable('Tblreport', 'buttonPlace');
+        var ResponseEntity = "<thead><tr><th style='width:10px'>Slno</th><th style='width:70px'>Account Code</th><th>Account Name</th><th style=text-align:right;width:200px>Assets</th><th style=text-align:right;width:200px>Liabilities</th></tr></thead><tbody>";
+        for (var i = 0; i < result.length; i++) {
+            var slno = parseInt(i + 1);
+            
+            if (result[i].AccCode == '') {
+                ResponseEntity += '<tr style=background-color:#cfd8dc><td style="width:70px" >' + slno + '</td><td style="width:50px"><b>' + result[i].AccCode + '</b></td><td><b>' + result[i].AccDesc + '</b></td><td  style=text-align:right;width:200px><b>' + parseFloat(result[i].Assets || 0).toFixed(Decimal) + '</b></td><td  style=text-align:right;width:200px><b>' + parseFloat(result[i].Liabilities || 0).toFixed(Decimal) + '</b></td></tr>';
+
+            }
+            else {
+                ResponseEntity += '<tr><td style="width:10px" >' + slno + '</td><td style="width:70px">' + result[i].AccCode + '</td><td>' + result[i].AccDesc + '</td><td  style=text-align:right;width:200px>' + parseFloat(result[i].Assets || 0).toFixed(Decimal) + '</td><td  style=text-align:right;width:200px>' + parseFloat(result[i].Liabilities || 0).toFixed(Decimal) + '</td></tr>';
+            }
+        }
+
+        $('#Tblreport').html(ResponseEntity + '</tbody><tfoot><tr><th>Slno</th><th>Account Code</th><th>Account Name</th><th> </th><th> </th></tr> </tfoot>');
+
+        var title = "Balance Sheet-Summary Report- from " + $("#DateFrom").val() + " to " + $("#DateTo").val() + "";
+        datatableWithsearch('Tblreport', true, title, 'buttonPlace');
+        $('#header').text(title);
+    }
+    $(document).ready(function () {
+        GetCostCode(0);
+        GetDepartment(0);
+        $('#Account').focus();
+        
+    
+        $('#CostCode').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#department').focus();
+                e.preventDefault();
+            }
+        });
+        $('#department').keypress(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 13) {
+                $('#btnsubmit').focus();
+                e.preventDefault();
+            }
+        });
+        $("#Account").keyup(function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            if (key == 08 || key == 13) {
+                $('#AccountId').val(0);
+                $('#CostCode').focus();
+                e.preventDefault();
+            }
+
+        });
+
+        $('#DateFrom').val(FinanceStartDate)
+        $('#DateFrom').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#DateTo').daterangepicker({
+            minDate: minDate,
+            maxDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#btnsubmit").click(function (e) {
+            var Condition = '';
+            var FromDate = $('#DateFrom').val();
+            var ToDate = $('#DateTo').val();
+            var account = '', costcode = '', dept = '', Condition = 'CONVERT(datetime,VDate,103) >= CONVERT(datetime,' + "'" + FromDate + "'" + ',103) and CONVERT(datetime,VDate,103) <= CONVERT(datetime,' + "'" + ToDate + "'" + ',103)'
+
+            var Account = parseInt($('#AccountId').val() || 0);
+            var CostCode = parseInt($('#CostCode').val() || 0);
+            var Department = parseInt($('#department').val() || 0);
+
+            if ($('#Account').val() == '') {
+                $('#AccountId').val(0);
+            }
+
+
+            if ($('#DateFrom').val() == '') {
+                alert('Please Select From Date');
+                $('#DateFrom').focus();
+
+            }
+            else if ($('#DateTo').val() == '') {
+                alert('Please Select To Date');
+                $('#DateTo').focus();
+
+            }
+
+            else {
+                $('#Loading').show();
+
+                if ($("#withoutzero").prop("checked")) {
+                    if (Account != 0) { Condition += ' and AcntId=' + Account; }
+                    if (CostCode != 0) { Condition += ' and CostCenterId=' + CostCode; }
+                    if (Department != 0) { Condition += ' and at.DeptId=' + Department; }
+
+
+                    var data = {};
+                    data.Condition = Condition;
+                    $.ajax({
+                        type: "POST",
+                        url: "../AccountsErp/BalanceSheetSummary",
+                        data: data,
+                        success: function (result) {
+                            ShowListwithoutzero(result.oList);
+                            $('#Loading').hide();
+                            $('#divreport').show();
+                            $('#popupdiv').hide();
+                        }
+                    });
+
+                }
+                else
+                {
+                    if (Account != 0) { Condition += ' and AcntId=' + Account; }
+                    if (CostCode != 0) { Condition += ' and CostCenterId=' + CostCode; }
+                    if (Department != 0) { Condition += ' and at.DeptId=' + Department; }
+
+
+                    var data = {};
+                    data.Condition = Condition;
+                    $.ajax({
+                        type: "POST",
+                        url: "../AccountsErp/BalanceSheetSummary",
+                        data: data,
+                        success: function (result) {
+                            ShowList(result.oList);
+                            $('#Loading').hide();
+                            $('#divreport').show();
+                            $('#popupdiv').hide();
+                        }
+                    });
+                }
+
+            }
+        });
+    });
+        function GetDepartment(id) {
+            var data = {};
+            data.DeptId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/DepartmentGetandGets",
+                data: data,
+                success: function (result) {
+                    DepartmentLoad(result.oList, id);
+
+
+                }
+            });
+        }
+
+        function DepartmentLoad(result) {
+            $("#department").empty();
+            $("#department").append("<option value='0'>-All-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#department").append("<option value='" + result[i].DepartmentId + "'>" + result[i].DepartmentName + "</option>");
+            }
+      
+        }
+        function GetCostCode(id) {
+            var data5 = {};
+            data5.CostCenterId = 0;
+            $.ajax({
+                type: "POST",
+                url: "../Master/CostCenterGetandGets",
+                data: data5,
+                success: function (result) {
+                    CostCenterLoad(result.oList);
+
+                }
+            });
+        }
+        function CostCenterLoad(result) {
+            $("#CostCode").empty();
+            $("#CostCode").append("<option value='0'>-All-</option>");
+            for (var i = 0; i < result.length; i++) {
+                $("#CostCode").append("<option value='" + result[i].CostCenterId + "'>" + result[i].CostCenterCode + "</option>");
+            }
+        }
+
+      
+</script>
