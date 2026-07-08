@@ -317,7 +317,7 @@ namespace EUMI_ERP
         {
             try
             {
-                arlParms = new SqlParameter[9];
+                arlParms = new SqlParameter[10];
                 arlParms[0] = new SqlParameter("@SalesPrintId", CompanyModel.SalesPrintId);
                 arlParms[1] = new SqlParameter("@SalesReturnPrintId", CompanyModel.SalesReturnPrintId);
                 arlParms[2] = new SqlParameter("@VoucherPrintId", CompanyModel.VoucherPrintId);
@@ -327,6 +327,7 @@ namespace EUMI_ERP
                 arlParms[6] = new SqlParameter("@LabBillId", CompanyModel.LabBillId);
                 arlParms[7] = new SqlParameter("@IPBillId", CompanyModel.IPBillId);
                 arlParms[8] = new SqlParameter("@DischargePrintId", CompanyModel.DischargePrintId);
+                arlParms[9] = new SqlParameter("@PrescriptionId", CompanyModel.PrescriptionId);
                 return SQLHelper.ExecuteDataset("CompanyPrintInsertandUpdate", dbName, arlParms);
 
             }
@@ -338,7 +339,6 @@ namespace EUMI_ERP
 
         }
 
-        
 
         public DataSet BillSeriesInsertandUpdate(BillSeriesModel BillSeriesModel, string dbName)
         {

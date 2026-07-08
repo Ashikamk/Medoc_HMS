@@ -522,7 +522,7 @@ function SaveAndUpdate(flag)
     if (($('#RegSeries').val()||0) == 0) {
         warningshow('Please Enter the RegNo', 'RegNo');
         $('#btnsubmit').show();
-        $('#btnsavesubmit').show(); // ADD THIS
+        $('#btnsavesubmit').show(); 
         BillFlag = 0;  
     }
     else if ($.trim($('#RegNo').val()||0) == 0) {

@@ -1698,10 +1698,55 @@
                     success: function (result) {
 
                         LoadList(result);
+                        GetPaymentStatus(FromDate, ToDate, Doctor, Patient);
                     }
                 });
-            }
+        }
 
+        var PaymentMap = {};
+
+        function GetPaymentStatus(FromDate, ToDate, Doctor, Patient) {
+            var data = {};
+            data.FromDate = FromDate;
+            data.ToDate = ToDate;
+            data.DoctorId = Doctor;
+            data.PatientId = Patient;
+            data.DeptId = ERPDeptId;
+            data.UserId = ERPUserId;
+
+            $.ajax({
+                type: "POST",
+                url: "../Revisit/HMS_OPWorkSheetStaffLAbPayment",
+                data: data,
+                success: function (result) {
+                    PaymentMap = {};
+                    var list = result.oList || result;
+                    $.each(list, function (i, item) {
+                        PaymentMap[item.TokenNumber] = item.PaymentStatus;
+                    });
+                    ApplyPaymentStatusToTable();
+                },
+                error: function () {
+                    console.log("Error loading payment status");
+                }
+            });
+        }
+
+        function ApplyPaymentStatusToTable() {
+            if ($.isEmptyObject(PaymentMap)) return;
+            $("#tbl_WorkSheet tbody tr").each(function () {
+                var row = $(this);
+                var billNo = row.find("input[id^='TokenNo_']").val();
+                if (billNo && PaymentMap.hasOwnProperty(billNo)) {
+                    var status = PaymentMap[billNo];
+                    var badge = (status == 'NOT PAID')
+                        ? '<span class="badge badge-warning white">Not Paid</span>'
+                        : '<span class="badge badge-success">Paid</span>';
+                    row.find("td.payment-cell").html(badge);
+                }
+            });
+        }
+        
             function LoadList(result) {
 
                 disable_datatable('tbl_WorkSheet');
@@ -1741,6 +1786,7 @@
                     "<th>Bill Yr</th>" +
                     "<th>Bill No</th>" +
                     "<th>Status</th>" +
+                    "<th>Payment</th>" +
                     "</tr></thead><tbody>";
                 for (var i = 0; i < result.length; i++) {
 
@@ -1771,6 +1817,7 @@
                         '<input type="hidden" id="Gender_' + slno + '" value="' + result[i].Gender + '" />' +
                         '<input type="hidden" id="IPNumber_' + slno + '" value="' + result[i].IPNumber + '" />' +
                         '<input type="hidden" id="TokenNo_' + slno + '" value="' + result[i].TokenNumber + '" />' +
+                        
                         '<input type="hidden" id="RowStatus_' + slno + '" value="' + result[i].Status + '" />' +  // ADD THIS
                         '</td>' +
                         '<td>' + result[i].OPSerName + '-' + result[i].OPNumber + '</td>' +
@@ -1784,6 +1831,7 @@
                         '<td style="background-color:' + colorArray[result[i].Flag] + '">' + (result[i].ShiftName).substring(0, 4) + '</td>' +
                         '<td align=center style="color:black;font-weight:bold">' + result[i].TokenNumber + '</td>' +
                         '<td align=center>' + Status + '</td>' +
+                        '<td align=center class="payment-cell">Loading...</td>' +
                         '</tr>';
                 }
 
@@ -1799,6 +1847,7 @@
                     "<th>Doctor</th>" +
                     "<th> </th>" +
                     "<th> </th>" +
+                    "<th> </th>" + 
                     "<th> </th>" +
                     "</tr></tfoot>");
                 var title = 'OP WorkSheet From ' + $("#FromDate").val() + ' To ' + $("#ToDate").val();
@@ -1873,6 +1922,20 @@
                             "<'row'<'col-sm-12'tr>>" +
                             "<'row'<'col-sm-1'i><'col-sm-11'p>>",
                         buttons: [],
+                        //"columnDefs": [
+                        //    { "width": "1%", "targets": 0 },
+                        //    { "width": "2%", "targets": 1 },
+                        //    { "width": "2%", "targets": 2 },
+                        //    { "width": "2%", "targets": 3 },
+                        //    { "width": "1%", "targets": 4 },
+                        //    { "width": "13%", "targets": 5 },
+                        //    { "width": "1%", "targets": 6 },
+                        //    { "width": "4%", "targets": 7 },
+                        //    { "width": "10%", "targets": 8 },
+                        //    { "width": "2%", "targets": 9 },
+                        //    { "width": "2%", "targets": 10 },
+                        //    { "width": "2%", "targets": 11 },
+                        //],
                         "columnDefs": [
                             { "width": "1%", "targets": 0 },
                             { "width": "2%", "targets": 1 },
@@ -1885,7 +1948,8 @@
                             { "width": "10%", "targets": 8 },
                             { "width": "2%", "targets": 9 },
                             { "width": "2%", "targets": 10 },
-                            { "width": "2%", "targets": 11 },
+                            { "width": "2%", "targets": 11 },  // Payment
+                            { "width": "2%", "targets": 12 },  // Status
                         ],
 
                     });
@@ -1927,6 +1991,11 @@
                     table = $('#' + tablename).DataTable({
                     });
                 }
+
+                table.on('draw', function () {          // ← ADD THIS
+                    ApplyPaymentStatusToTable();         // ← ADD THIS
+                });  
+
                 table.columns().every(function () {
                     var that = this;
                     $('input', this.footer()).on('keyup change', function () {

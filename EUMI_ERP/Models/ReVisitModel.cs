@@ -454,7 +454,10 @@ namespace EUMI_ERP.Models
     }
     public class IPRegistration
     {
-
+        public string OldAdmitDate { get; set; }
+        public string OldAdmitTime { get; set; }
+        public string OldDischargeDate { get; set; }
+        public string OldDischargeTime { get; set; }
         public string Fstatus { get; set; }
         public string medicine { get; set; }
         public string PC { get; set; }
@@ -507,6 +510,11 @@ namespace EUMI_ERP.Models
         public DataSet HMS_IPmedicineDetailsgets(IPRegistration IPRegistration, string dbName)
         {
             return oDReVisit.HMS_IPmedicineDetailsgets(IPRegistration, dbName);
+        }
+
+        public DataSet HMS_IPRegistrationUpdateDateTime(IPRegistration IPRegistration, string dbName)
+        {
+            return oDReVisit.HMS_IPRegistrationUpdateDateTime(IPRegistration, dbName);
         }
 
         public DataSet HMS_IPDetailsgets(IPRegistration IPRegistration, string dbName)
@@ -569,6 +577,8 @@ namespace EUMI_ERP.Models
         public string PatientName { get; set; }
         public string Gender { get; set; }
         public string DOB { get; set; }
+
+        public string PaymentStatus { get; set; }
         public string Contact { get; set; }
         public string DoctorName { get; set; }
         public string ShiftName { get; set; }
@@ -599,6 +609,11 @@ namespace EUMI_ERP.Models
         public DataSet HMS_OPWorkSheetLabAdvice(WorkSheet WorkSheet, string dbName)
         {
             return oDReVisit.HMS_OPWorkSheetLabAdvice(WorkSheet, dbName);
+        }
+
+        public DataSet HMS_OPWorkSheetStaffLAbPayment(WorkSheet WorkSheet, string dbName)
+        {
+            return oDReVisit.HMS_OPWorkSheetStaffLAbPayment(WorkSheet, dbName);
         }
 
         public DataSet HMS_OPWorkSheetMedicineAdvice(WorkSheet WorkSheet, string dbName)

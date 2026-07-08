@@ -225,7 +225,7 @@
 // Morning-Afternoon-Evening-Night pattern, tweak parseFrequency() below.
 // =========================================================================
 
-function princasheetnew() {
+function PrescriptionOnlyPrint() {
 
     var myWindow = window.open("", "", "width=900,height=1100");
 
@@ -241,14 +241,7 @@ function princasheetnew() {
 
     var diagnosis = $('#ICDDetails').val() || '';
 
-    // ---- helpers -----------------------------------------------------
     function esc(v) { return (v == null) ? '' : String(v); }
-
-    // Splits a frequency string like "1-1-1-1" / "0-1-0" into M/A/E/N cells.
-    // 4 parts  -> Morning-Afternoon-Evening-Night
-    // 3 parts  -> Morning-Afternoon-Night (common 3x/day pattern)
-    // 2 parts  -> Morning-Night
-    // 1 part   -> Morning only
     function parseFrequency(str) {
         var parts = (str || '').split('-').map(function (p) { return p.trim(); });
         var cell = { M: '', A: '', E: '', N: '' };
@@ -477,7 +470,6 @@ function princasheetnew() {
 
     myWindow.document.close();
 
-    // ---- build medicine rows ----
     var hasMedicine = false;
     var rows = '';
 

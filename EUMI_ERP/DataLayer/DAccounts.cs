@@ -472,7 +472,7 @@ namespace EUMI_ERP
             catch (SqlException exMe)
             {
                 Console.WriteLine(exMe.Message);
-                return null;
+                throw;
             }
 
         }

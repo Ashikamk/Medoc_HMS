@@ -27,6 +27,11 @@ namespace EUMI_ERP.Controllers
             return View();
         }
 
+        public ActionResult ReagentStockOut()
+        {
+            return View();
+        }
+
         public ActionResult MethodMaster()
         {
             return View();

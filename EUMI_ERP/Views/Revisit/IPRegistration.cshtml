@@ -347,7 +347,8 @@
                                         <div class="form-actions">
                                             <div class="text-left">
                                                 <button style="display: none1" type="button" id="btnsticker" onclick="stickerPrint()" class="btn btn-primary btn-min-width mr-1 mb-1">Sticker<i class="ft-file-text"></i></button>
-</div>
+                                                <button style="display:none" type="button" id="btnChangeAdmitDateTime" onclick="ChangeAdmitDateTime()" class="btn btn-warning btn-min-width mr-1 mb-1">Change Admit Date & Time </button>
+                                            </div>
                                                 <div class="text-right">
                                                     <button type="button" style="width:100px" id="btnsubmit" class="btn btn-primary btn-min-width mr-1 mb-1"><u>S</u>ave <i class="fa fa-check-square-o"></i></button>
                                                     <button type="button" style="width:100px" id="btnlist" class="btn btn-primary btn-min-width mr-1 mb-1">List <i class="ft-align-justify"></i></button>
@@ -486,8 +487,83 @@
     <table id="DosPrinthms" class="dataTable dataTablehms"></table>
 
 </div>
+
+<div id="ChangeAdmitDiv" class="modal fade text-left show" tabindex="-1" role="dialog" style="background:rgba(0,0,0,0.5); display:none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#009da0;">
+                <h5 class="modal-title" style="color:white;font-weight:bold;">Change Admit / Discharge Date & Time</h5>
+                <button type="button" class="close" style="color:white;" onclick="$('#ChangeAdmitDiv').hide()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="row mb-2">
+                        <label class="col-md-5 label-control" style="font-weight:bold;">Admit Date <span class="danger">*</span></label>
+                        <div class="col-md-7">
+                            <input type="text" id="NewAdmitDate" class="form-control" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="col-md-5 label-control" style="font-weight:bold;">Admit Time <span class="danger">*</span></label>
+                        <div class="col-md-7" style="display:flex;gap:5px;align-items:center;">
+                            <select id="NewAdmitHour" class="form-control" style="width:75px;"></select>
+                            <span style="line-height:38px;font-weight:bold;">:</span>
+                            <select id="NewAdmitMinute" class="form-control" style="width:75px;"></select>
+                            <select id="NewAdmitAmPm" class="form-control" style="width:75px;">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <label class="col-md-5 label-control" style="font-weight:bold;">Discharge Date <span class="danger">*</span></label>
+                        <div class="col-md-7">
+                            <input type="text" id="NewDischargeDate" class="form-control" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label class="col-md-5 label-control" style="font-weight:bold;">Discharge Time <span class="danger">*</span></label>
+                        <div class="col-md-7" style="display:flex;gap:5px;align-items:center;">
+                            <select id="NewDischargeHour" class="form-control" style="width:75px;"></select>
+                            <span style="line-height:38px;font-weight:bold;">:</span>
+                            <select id="NewDischargeMinute" class="form-control" style="width:75px;"></select>
+                            <select id="NewDischargeAmPm" class="form-control" style="width:75px;">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="width:100px;" onclick="$('#ChangeAdmitDiv').hide()" class="btn btn-outline-secondary">Cancel</button>
+                <button type="button" style="width:100px;" onclick="SaveNewAdmitDateTime()" class="btn btn-outline-warning">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function () {
+
+
+        //if (usermenu1.indexOf("M431") != -1) {
+        //    $('#btnChangeAdmitDateTime').show();
+        //}
+        //else {
+        //    $('#btnChangeAdmitDateTime').remove();
+        //}
+
+        if (usermenu1.indexOf("M431") == -1) {
+            $('#btnChangeAdmitDateTime').remove();
+        }
+
+
+
+
         $('#IPDate,#FromDate,#ToDate').daterangepicker({
             minDate: minDate,
             maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
@@ -497,7 +573,29 @@
                 format: 'DD/MM/YYYY'
             }
         });
+        $('#NewAdmitDate,#NewDischargeDate').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        // Hours 1-12
+        for (var h = 1; h <= 12; h++) {
+            var hh = h < 10 ? '0' + h : '' + h;
+            $('#NewAdmitHour,#NewDischargeHour').append('<option value="' + hh + '">' + hh + '</option>');
+        }
+        // Minutes 00-59
+        for (var m = 0; m <= 59; m++) {
+            var mm = m < 10 ? '0' + m : '' + m;
+            $('#NewAdmitMinute,#NewDischargeMinute').append('<option value="' + mm + '">' + mm + '</option>');
+        }
     });
+
+
+
+    
     $("#RegNumber").autocomplete({
         delay: 0,
         minLength: 0,

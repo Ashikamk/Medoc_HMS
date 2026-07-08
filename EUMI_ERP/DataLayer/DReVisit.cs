@@ -1917,6 +1917,26 @@ namespace EUMI_ERP.DataLayer
             }
         }
 
+        public DataSet HMS_OPWorkSheetStaffLAbPayment(WorkSheet WorkSheet, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[6];
+                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate);
+                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);
+                arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
+                arlParms[3] = new SqlParameter("@PatientId", WorkSheet.PatientId);
+                arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
+                arlParms[5] = new SqlParameter("@UserId", WorkSheet.UserId);
+                return SQLHelper.ExecuteDataset("HMS_OPWorkSheetStaffLAbPayment", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
         public DataSet HMS_OPWorkSheetLabAdvice(WorkSheet WorkSheet, string dbName)
         {
             try
@@ -1970,6 +1990,31 @@ namespace EUMI_ERP.DataLayer
             }
         }
 
+        public DataSet HMS_IPRegistrationUpdateDateTime(IPRegistration IPRegistration, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[11];
+                arlParms[0] = new SqlParameter("@IPMainId", IPRegistration.IPMainId);
+                arlParms[1] = new SqlParameter("@AdmitDate", IPRegistration.Date);
+                arlParms[2] = new SqlParameter("@InTime", IPRegistration.InTime);
+                arlParms[3] = new SqlParameter("@DischargeDate", IPRegistration.DDate);
+                arlParms[4] = new SqlParameter("@DischargeTime", IPRegistration.DTime);
+                arlParms[5] = new SqlParameter("@DeptId", IPRegistration.DeptId);
+                arlParms[6] = new SqlParameter("@UserId", IPRegistration.UserId);
+                arlParms[7] = new SqlParameter("@OldAdmitDate", IPRegistration.OldAdmitDate);
+                arlParms[8] = new SqlParameter("@OldAdmitTime", IPRegistration.OldAdmitTime);
+                arlParms[9] = new SqlParameter("@OldDischargeDate", IPRegistration.OldDischargeDate);
+                arlParms[10] = new SqlParameter("@OldDischargeTime", IPRegistration.OldDischargeTime);
+
+                return SQLHelper.ExecuteDataset("HMS_IPRegistrationUpdateDateTime", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
         public DataSet HMS_LAstRevisitGetsayurvetha(ReVisitModel ReVisitModel, string dbName)
         {
             try

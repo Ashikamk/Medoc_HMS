@@ -2781,6 +2781,30 @@ namespace EUMI_ERP.Controllers
             return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
         }
 
+        public ActionResult HMS_OPWorkSheetStaffLAbPayment(WorkSheet WorkSheet)
+        {
+            WorkSheet obj = new WorkSheet();
+            List<WorkSheet> oList = new List<WorkSheet>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_OPWorkSheetStaffLAbPayment(WorkSheet, dbName);
+
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    WorkSheet MModels = new WorkSheet();
+                    MModels.TokenNumber = row["BillNo"].ToString();
+                    MModels.PaymentStatus = row["PaymentStatus"].ToString();
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
+        }
+
         public ActionResult HMS_OPWorkSheetStaffLAb(WorkSheet WorkSheet)
         {
             WorkSheet obj = new WorkSheet();
@@ -4256,6 +4280,42 @@ namespace EUMI_ERP.Controllers
                 success = true
             }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult HMS_IPRegistrationUpdateDateTime(IPRegistration IPRegistration)
+        {
+            IPRegistration obj = new IPRegistration();
+            List<IPRegistration> oList = new List<IPRegistration>();
+            try
+            {
+                // Read the 4 new old-value fields from the request
+                IPRegistration.OldAdmitDate = Request["OldAdmitDate"] ?? "";
+                IPRegistration.OldAdmitTime = Request["OldAdmitTime"] ?? "";
+                IPRegistration.OldDischargeDate = Request["OldDischargeDate"] ?? "";
+                IPRegistration.OldDischargeTime = Request["OldDischargeTime"] ?? "";
+
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_IPRegistrationUpdateDateTime(IPRegistration, dbName);
+
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0
+                                       && dsDataSet.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        IPRegistration MModels = new IPRegistration();
+                        MModels.Status = row["Status"].ToString();
+                        oList.Add(MModels);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult HMS_LAstRevisitGetsayurvetha(ReVisitModel HMSSerialModel)
         {

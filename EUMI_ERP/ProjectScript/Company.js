@@ -564,6 +564,20 @@ function GetPrintDefault() {
     });
 
     var data = {};
+    data.BillType = 'Prescription';
+    data.PrintType = '';
+    data.Id = 1;
+    data.DeptId = $('#dept').val();
+    $.ajax({
+        type: "POST",
+        url: "../Company/PrintTypeGets",
+        data: data,
+        success: function (result) {
+            PrintDefaultTypeGets(result.oList, 'PrescriptionPrint');
+        }
+    });
+
+    var data = {};
     data.BillType = 'Voucher';
     data.PrintType = '';
     data.Id = 1;

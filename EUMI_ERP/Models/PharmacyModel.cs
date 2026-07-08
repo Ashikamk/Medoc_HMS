@@ -155,9 +155,15 @@ namespace EUMI_ERP.Models
             return oDPurchase.HMS_PurchaseProductSearch(oItemMasterModel, dbName);
         }
 
+
         public DataSet HMS_LabPurchaseProductSearch(ItemMasterModel oItemMasterModel, string dbName)
         {
             return oDPurchase.HMS_LabPurchaseProductSearch(oItemMasterModel, dbName);
+        }
+
+        public DataSet HMS_ReagentProductSearch(ItemMasterModel oItemMasterModel, string dbName)
+        {
+            return oDPurchase.HMS_ReagentProductSearch(oItemMasterModel, dbName);
         }
 
         public DataSet HMS_OpeningPurchaseInsert(DataTable dt, string dbName)
@@ -238,6 +244,11 @@ namespace EUMI_ERP.Models
         public DataSet HMS_PurchaseGetandGets(PharmacyModel oDPharmacy, string dbName)
         {
             return oDPurchase.HMS_PurchaseGetandGets(oDPharmacy, dbName);
+        }
+
+        public DataSet HMS_LabPurchaseGetandGets(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_LabPurchaseGetandGets(oDPharmacy, dbName);
         }
         public DataSet HMS_PurchaseReturnGetandGets(PharmacyModel oDPharmacy, string dbName)
         {

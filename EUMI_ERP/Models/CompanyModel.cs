@@ -213,6 +213,8 @@ namespace EUMI_ERP
         public int IPBillId { get; set; }
         public string DischargePrint { get; set; } 
         public int DischargePrintId { get; set; }
+        public string PrescriptionPrint { get; set; }
+        public int PrescriptionId { get; set; }
         public string TaxType { get; set; }
         public string IPTaxZero { get; set; }
 

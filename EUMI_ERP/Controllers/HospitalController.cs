@@ -957,11 +957,54 @@ namespace EUMI_ERP.Controllers
             //return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult HMS_LabBatchwiseItemDetailsGets(SaleInvoiceHospital SaleInvoiceHospital)
+        {
+            SaleInvoiceHospital obj = new SaleInvoiceHospital();
+            List<SaleInvoiceHospital> oList = new List<SaleInvoiceHospital>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
 
-        
+                dsDataSet = obj.HMS_LabBatchwiseItemDetailsGets(SaleInvoiceHospital, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    SaleInvoiceHospital MModels = new SaleInvoiceHospital();
+                    MModels.ProductDesc = row["ProductDesc"].ToString();
+                    MModels.Company = row["Company"].ToString();
+                    MModels.Companycode = row["Companycode"].ToString();
+                    MModels.ItemExpiry = row["ItemExpiry"].ToString();
+                    MModels.Stock = Convert.ToDecimal(row["Stock"].ToString());
+                    MModels.Purrate = Convert.ToDecimal(row["Purrate"].ToString());
+                    MModels.Sellingrate = Convert.ToDecimal(row["Sellingrate"].ToString());
+                    MModels.Mrp = Convert.ToDecimal(row["Mrp"].ToString());
+                    MModels.Taxpers = Convert.ToDecimal(row["Taxpers"].ToString());
+                    MModels.BatchSlNo = Convert.ToInt32(row["BatchSlNo"].ToString());
+                    MModels.Batch = row["Batch"].ToString();
+                    MModels.Drugschedule = row["Drugschedule"].ToString();
+                    MModels.Cess = Convert.ToDecimal(row["Model1"].ToString());
+                    MModels.Pack = Convert.ToDecimal(row["Pack"].ToString());
+                    MModels.Variable3 = row["HsnCode"].ToString();
+                    MModels.Variable1 = row["Schedule"].ToString();
+                    MModels.Variable2 = row["TypeId"].ToString();
+                    MModels.Variable4 = row["Type"].ToString();
+
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return Json(oList, JsonRequestBehavior.AllowGet);
+            //return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
 
 
-            [HttpPost]
+
+
+
+        [HttpPost]
         public JsonResult HMS_SalesInvoiceInsert_StockOut(List<SaleInvoiceHospital> SaleInvoiceHospital)
         {
             SaleInvoiceHospital obj = new SaleInvoiceHospital();

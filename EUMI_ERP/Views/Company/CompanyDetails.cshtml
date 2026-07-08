@@ -1776,16 +1776,16 @@
                                                 <div class="col-md-2 text-left">
 
                                                     <div class="custom-control custom-radio display-inline-block white col-md-6" style="float:left;font-weight:normal;">
-                                                        <input type="radio" id="Dischargelazor" checked="" name="Dischargeradio" class="custom-control-input" onchange="GetPrintTypes('Discharge', 'Lazor', 'DischargePrint')">
-                                                        <label class="custom-control-label ml-2" for="Dischargelazor">Lazer</label>
+                                                        <input type="radio" id="prescriptionlazor" checked="" name="prescriptionradio" class="custom-control-input" onchange="GetPrintTypes('Prescription', 'Lazor', 'PrescriptionPrint')">
+                                                        <label class="custom-control-label ml-2" for="prescriptionlazor">Lazer</label>
                                                     </div>
                                                     <div class="custom-control custom-radio display-inline-block white col-md-6" style="float:left;font-weight:normal;">
-                                                        <input type="radio" id="Dischargedotmatrix" name="Dischargeradio" class="custom-control-input" onchange="GetPrintTypes('Discharge', 'DotMatrix', 'DischargePrint')">
-                                                        <label class="custom-control-label ml-2" for="Dischargedotmatrix">DotMatrix</label>
+                                                        <input type="radio" id="prescriptiondotmatrix" name="prescriptionradio" class="custom-control-input" onchange="GetPrintTypes('Prescription', 'DotMatrix', 'PrescriptionPrint')">
+                                                        <label class="custom-control-label ml-2" for="prescriptiondotmatrix">DotMatrix</label>
                                                     </div>
 
                                                 </div>
-                                                <select class="form-control col-md-2" id="DischargePrint"></select>
+                                                <select class="form-control col-md-2" id="PrescriptionPrint"></select>
                                             </div>
 
                                             <div class="row mb-2">
@@ -2188,6 +2188,12 @@
             warningshow('Select Discharge Print', 'DischargePrint');
             return false;
         }
+
+        else if ($("#PrescriptionPrint").val() == 0 || $("#PrescriptionPrint").val() == '' || $("#PrescriptionPrint").val() == null || $("#PrescriptionPrint").val() == undefined) {
+            warningshow('Select Prescription Print', 'PrescriptionPrint');
+            return false;
+        }
+
         else if ($("#PrintColor").val() == 0 || $("#PrintColor").val() == '' || $("#PrintColor").val() == null || $("#PrintColor").val() == undefined) {
             warningshow('Select Print Color', 'PrintColor');
             return false;
@@ -2204,6 +2210,7 @@
             data.LabBillId = $("#LabBillPrint").val();
             data.IPBillId = $("#IPBillPrint").val();
             data.DischargePrintId = $("#DischargePrint").val();
+            data.PrescriptionId = $("#PrescriptionPrint").val();
             $.ajax({
                 type: "POST",
                 url: "../Company/CompanyPrintInsertandUpdate",
@@ -2211,12 +2218,33 @@
                 success: function (result) {
                     var status = result.oList[0].Status;                 
                     //Showalerts(status);
+                    RefreshCompanySettingsCache();
                     swal('Data Updated Successfully', "", "success");
                     $('.swal-button swal-button--confirm').focus();
 
                 }
             });
         }
+    }
+
+    function RefreshCompanySettingsCache() {
+        var data = {};
+        $.ajax({
+            type: "POST",
+            url: "../Login/CompanyDetailGet",
+            data: data,
+            success: function (result) {
+                if (result.QList.length > 0) {
+                    var r = result.QList[0];
+                    var ComanyDetail = '' + r.CompanyId + '%' + r.CompanyCode + '%' + r.CompanyName + '%' + r.Address + '%' + r.PhoneNo + '%' + r.Email + '%' +
+                        r.Fax + '%' + r.PeriodFrom + '%' + r.PeriodTo + '%' + r.ProtectionDate + '%' + r.CurrencyId + '%' + r.Decimals + '%' + r.TRNNo + '%' +
+                        r.DelFlag + '%' + r.Area + '%' + r.BusinessType + '%' + r.CurDate + '%' + r.SalesPrint + '%' + r.SalesReturnPrint + '%' + r.VoucherPrint + '%' +
+                        r.QuotationPrint + '%' + r.PrintColor + '%' + r.EODType + '%' + r.CessType + '%' + r.LabBillPrint + '%' + r.IPBillPrint + '%' + r.TaxType + '%' + r.IPTaxZero + '%' + r.DischargePrint + '%' + r.PostingAllow + '';
+
+                    localStorage.setItem('cacaca', ComanyDetail);
+                }
+            }
+        });
     }
 
     function PrintDefaultTypeGets(result, SelectBox) {
@@ -2301,6 +2329,16 @@
             else {
                 $("#Dischargedotmatrix").prop("checked", true);
                 $("#Dischargelazor").prop("checked", false);
+            }
+        }
+        else if (SelectBox == 'PrescriptionPrint') {
+            if (result[0].PrintType == 'Lazor') {
+                $("#prescriptionlazor").prop("checked", true);
+                $("#prescriptiondotmatrix").prop("checked", false);
+            }
+            else {
+                $("#prescriptiondotmatrix").prop("checked", true);
+                $("#prescriptionlazor").prop("checked", false);
             }
         }
     }

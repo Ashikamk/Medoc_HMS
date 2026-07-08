@@ -139,8 +139,13 @@ namespace EUMI_ERP.Models
             return oDHospital.HMS_BatchwiseItemDetailsGets(oSaleInvoiceHospital, dbName); 
         }
 
-        
-            public DataSet HMS_SalesInvoiceInsert_StockOut(DataTable dt, string dbName)
+        public DataSet HMS_LabBatchwiseItemDetailsGets(SaleInvoiceHospital oSaleInvoiceHospital, string dbName)
+        {
+            return oDHospital.HMS_LabBatchwiseItemDetailsGets(oSaleInvoiceHospital, dbName);
+        }
+
+
+        public DataSet HMS_SalesInvoiceInsert_StockOut(DataTable dt, string dbName)
         {
             return oDHospital.HMS_SalesInvoiceInsert_StockOut(dt, dbName);
         }

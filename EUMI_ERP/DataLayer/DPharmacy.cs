@@ -70,6 +70,25 @@ namespace EUMI_ERP.DataLayer
 
         }
 
+        public DataSet HMS_ReagentProductSearch(ItemMasterModel ItemMasterModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[5];
+                arlParms[0] = new SqlParameter("@ItemCode", ItemMasterModel.ItemCode);
+                arlParms[1] = new SqlParameter("@SupplierId", ItemMasterModel.SlNumber);
+                arlParms[2] = new SqlParameter("@JobNo", ItemMasterModel.JobNo);
+                arlParms[3] = new SqlParameter("@DeptId", ItemMasterModel.DeptId);
+                arlParms[4] = new SqlParameter("@UserId", ItemMasterModel.UserId);
+                return SQLHelper.ExecuteDataset("HMS_ReagentProductSearch", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
         public DataSet HMS_LabPurchaseProductSearch(ItemMasterModel ItemMasterModel, string dbName)
         {
             try
@@ -360,6 +379,25 @@ namespace EUMI_ERP.DataLayer
                 arlParms[1] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
 
                 return SQLHelper.ExecuteDataset("HMS_PurchaseGetandGets", dbName, arlParms);
+
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
+
+        public DataSet HMS_LabPurchaseGetandGets(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[2];
+                arlParms[0] = new SqlParameter("@SlNo", PharmacyModel.SlNo);
+                arlParms[1] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+
+                return SQLHelper.ExecuteDataset("HMS_LabPurchaseGetandGets", dbName, arlParms);
 
             }
             catch (SqlException exMe)

@@ -206,6 +206,8 @@ namespace EUMI_ERP.Controllers
 
         }
 
+
+
         public ActionResult HMS_LabPurchaseProductSearch(ItemMasterModel ItemMasterModel)
         {
             PharmacyModel obj = new PharmacyModel();
@@ -214,6 +216,107 @@ namespace EUMI_ERP.Controllers
             {
                 DataSet dsDataSet = new DataSet();
                 dsDataSet = obj.HMS_LabPurchaseProductSearch(ItemMasterModel, dbName);
+
+                // ADD THIS NULL CHECK
+                if (dsDataSet == null || dsDataSet.Tables.Count == 0)
+                    return Json(oList, JsonRequestBehavior.AllowGet);
+
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    ItemMasterModel MModels = new ItemMasterModel();
+
+                    MModels.ItemId = row["ItemId"] != DBNull.Value ? Convert.ToInt32(row["ItemId"]) : 0;
+
+                    MModels.ItemCode = row["ItemCode"] != DBNull.Value
+                        ? row["ItemCode"].ToString()
+                        : "";
+
+                    MModels.Description = row["Description"] != DBNull.Value
+                        ? row["Description"].ToString()
+                        : "";
+
+                    MModels.VatId = row["VatId"] != DBNull.Value
+                        ? Convert.ToInt32(row["VatId"])
+                        : 0;
+
+                    MModels.VatPer = row["TaxRate"] != DBNull.Value
+                        ? Convert.ToDecimal(row["TaxRate"])
+                        : 0;
+
+                    MModels.SellingPrice = row["SellingPrice"] != DBNull.Value
+                        ? Convert.ToDecimal(row["SellingPrice"])
+                        : 0;
+
+                    MModels.MRP = row["MrpRate"] != DBNull.Value
+                        ? Convert.ToDecimal(row["MrpRate"])
+                        : 0;
+
+                    MModels.AvgCost = row["AvgCost"] != DBNull.Value
+                        ? Convert.ToDecimal(row["AvgCost"])
+                        : 0;
+
+                    MModels.LPCost = row["LPCost"] != DBNull.Value
+                        ? Convert.ToDecimal(row["LPCost"])
+                        : 0;
+
+                    MModels.GrpId = row["GroupId"] != DBNull.Value
+                        ? Convert.ToInt32(row["GroupId"])
+                        : 0;
+
+                    MModels.Group = row["GrpCode"] != DBNull.Value
+                        ? row["GrpCode"].ToString()
+                        : "";
+
+                    MModels.CategoryId = row["CategoryId"] != DBNull.Value
+                        ? Convert.ToInt32(row["CategoryId"])
+                        : 0;
+
+                    MModels.Category = row["CategoryCode"] != DBNull.Value
+                        ? row["CategoryCode"].ToString()
+                        : "";
+
+                    MModels.SubCategoryId = row["SubCategoryId"] != DBNull.Value
+                        ? Convert.ToInt32(row["SubCategoryId"])
+                        : 0;
+
+                    MModels.SubCategoryName = row["SubCategoryName"] != DBNull.Value
+                        ? row["SubCategoryName"].ToString()
+                        : "";
+
+                    MModels.UnitId = row["UnitId"] != DBNull.Value
+                        ? Convert.ToInt32(row["UnitId"])
+                        : 0;
+
+                    MModels.UnitName = row["UnitName"] != DBNull.Value
+                        ? row["UnitName"].ToString()
+                        : "";
+
+                    MModels.Model1 = row["Model1"] != DBNull.Value
+                        ? row["Model1"].ToString()
+                        : "0";
+
+                    MModels.NoQty = row["Model3"] != DBNull.Value
+                        ? Convert.ToInt32(row["Model3"])
+                        : 0;
+
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return Json(oList, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult HMS_ReagentProductSearch(ItemMasterModel ItemMasterModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            List<ItemMasterModel> oList = new List<ItemMasterModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_ReagentProductSearch(ItemMasterModel, dbName);
 
                 // ADD THIS NULL CHECK
                 if (dsDataSet == null || dsDataSet.Tables.Count == 0)
@@ -2738,6 +2841,123 @@ namespace EUMI_ERP.Controllers
             {
                 DataSet dsDataSet = new DataSet();
                 dsDataSet = obj.HMS_PurchaseGetandGets(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.PurMainId = Convert.ToInt32(row["PurMainId"].ToString());
+                    MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
+                    MModels.InvoNo = row["InvoNo"].ToString();
+                    MModels.SupplierId = Convert.ToInt32(row["SupplierId"].ToString());
+                    MModels.PayType = row["PayType"].ToString();
+                    MModels.PurchaseType = row["PurchaseType"].ToString();
+                    MModels.InvoDate = row["InvoDate"].ToString();
+                    MModels.CurrencyId = Convert.ToInt32(row["CurrencyId"].ToString());
+                    MModels.CurrencyRate = Convert.ToDecimal(row["CurrencyRate"].ToString());
+                    MModels.FBillDiscount = Convert.ToDecimal(row["FBillDiscount"].ToString());
+                    MModels.FDiscount = Convert.ToDecimal(row["FDiscount"].ToString());
+                    MModels.FTaxable = Convert.ToDecimal(row["FTaxable"].ToString());
+                    MModels.FTax = Convert.ToDecimal(row["FTax"].ToString());
+                    MModels.FCTotal = Convert.ToDecimal(row["FCTotal"].ToString());
+                    MModels.InvoiceTotal = Convert.ToDecimal(row["InvoiceTotal"].ToString());
+                    MModels.FCGST_0 = Convert.ToDecimal(row["FCGST_0"].ToString());
+                    MModels.FCGST_5 = Convert.ToDecimal(row["FCGST_5"].ToString());
+                    MModels.FCGST_12 = Convert.ToDecimal(row["FCGST_12"].ToString());
+                    MModels.FCGST_18 = Convert.ToDecimal(row["FCGST_18"].ToString());
+                    MModels.FCGST_28 = Convert.ToDecimal(row["FCGST_28"].ToString());
+                    MModels.FCess = Convert.ToDecimal(row["FCess"].ToString());
+                    MModels.BilDiscount = Convert.ToDecimal(row["BillDiscount"].ToString());
+                    MModels.TotalDiscount = Convert.ToDecimal(row["TotalDiscount"].ToString());
+                    MModels.TotalTaxable = Convert.ToDecimal(row["TotalTaxable"].ToString());
+                    MModels.TotalTax = Convert.ToDecimal(row["TotalTax"].ToString());
+                    MModels.BaseTotal = Convert.ToDecimal(row["BaseTotal"].ToString());
+                    MModels.BaseInvoiceTotal = Convert.ToDecimal(row["BaseInvoiceTotal"].ToString());
+                    MModels.BCGST_0 = Convert.ToDecimal(row["BCGST_0"].ToString());
+                    MModels.BCGST_5 = Convert.ToDecimal(row["BCGST_5"].ToString());
+                    MModels.BCGST_12 = Convert.ToDecimal(row["BCGST_12"].ToString());
+                    MModels.BCGST_18 = Convert.ToDecimal(row["BCGST_18"].ToString());
+                    MModels.BCGST_28 = Convert.ToDecimal(row["BCGST_28"].ToString());
+                    MModels.BCess = Convert.ToDecimal(row["BCess"].ToString());
+                    MModels.FCRoundOff = Convert.ToDecimal(row["FCRoundOff"].ToString());
+                    MModels.RoundOff = Convert.ToDecimal(row["RoundOff"].ToString());
+                    MModels.BDFlag = Convert.ToInt32(row["BDFlag"].ToString());
+                    MModels.CessFlag = Convert.ToInt32(row["CessFlag"].ToString());
+                    MModels.Remarks = row["Remarks"].ToString();
+                    MModels.SubId = Convert.ToInt32(row["SubId"].ToString());
+                    MModels.ItemId = Convert.ToInt32(row["ItemId"].ToString());
+                    MModels.ItemCode = row["ItemCode"].ToString();
+                    MModels.ItemDescription = row["ItemDescription"].ToString();
+                    MModels.LocationId = Convert.ToInt32(row["LocationId"].ToString());
+                    MModels.UnitId = Convert.ToInt32(row["UnitId"].ToString());
+                    MModels.BatchSlNo = Convert.ToInt32(row["BatchSlNo"].ToString());
+                    MModels.Batch = row["Batch"].ToString();
+                    MModels.Expiry = row["Expiry"].ToString();
+                    MModels.Pack = Convert.ToInt32(row["Pack"].ToString());
+                    MModels.Quantity = Convert.ToDecimal(row["Quantity"].ToString());
+                    MModels.Free = Convert.ToDecimal(row["Free"].ToString());
+                    MModels.Loose = Convert.ToDecimal(row["Loose"].ToString());
+                    MModels.SellingRate = Convert.ToDecimal(row["P_SR"].ToString());
+                    MModels.MRP = Convert.ToDecimal(row["P_MRP"].ToString());
+                    MModels.TQty = Convert.ToDecimal(row["TQty"].ToString());
+                    MModels.TLQty = Convert.ToDecimal(row["TLQty"].ToString());
+                    MModels.TaxId = Convert.ToInt32(row["TaxId"].ToString());
+                    MModels.TaxRate = Convert.ToDecimal(row["TaxRate"].ToString());
+                    MModels.FCRate = Convert.ToDecimal(row["FCRate"].ToString());
+                    MModels.FCDiscount = Convert.ToDecimal(row["FCDiscount"].ToString());
+                    MModels.FCTaxable = Convert.ToDecimal(row["FCTaxable"].ToString());
+                    MModels.FCTax = Convert.ToDecimal(row["FCTax"].ToString());
+                    MModels.FCAmount = Convert.ToDecimal(row["FCAmount"].ToString());
+                    MModels.FC_Cess = Convert.ToDecimal(row["FC_Cess"].ToString());
+                    MModels.Rate = Convert.ToDecimal(row["Rate"].ToString());
+                    MModels.Discount = Convert.ToDecimal(row["Discount"].ToString());
+                    MModels.TaxableAmount = Convert.ToDecimal(row["TaxableAmount"].ToString());
+                    MModels.TaxAmount = Convert.ToDecimal(row["TaxAmount"].ToString());
+                    MModels.Amount = Convert.ToDecimal(row["Amount"].ToString());
+                    MModels.B_Cess = Convert.ToDecimal(row["B_Cess"].ToString());
+                    MModels.Margin = Convert.ToDecimal(row["Margin"].ToString());
+                    MModels.P_OtherCost = Convert.ToDecimal(row["P_OtherCost"].ToString());
+                    MModels.DelFlag = Convert.ToInt32(row["DelFlag"].ToString());
+                    MModels.UserId = Convert.ToInt32(row["UserId"].ToString());
+                    MModels.DeptId = Convert.ToInt32(row["DeptId"].ToString());
+                    MModels.IMEINumber = row["IMEINumber"].ToString();
+                    MModels.PO_No = row["PO_No"].ToString();
+                    MModels.PO_SubTbl_Id = row["PO_SubTbl_Id"].ToString();
+                    MModels.MRV_No = row["MRV_No"].ToString();
+                    MModels.MRV_SubTbl_Id = row["MRV_SubTbl_Id"].ToString();
+                    MModels.Performa_NO = row["Performa_NO"].ToString();
+                    MModels.Performa_SubTbl_Id = Convert.ToInt32(row["Performa_SubTbl_Id"].ToString());
+                    MModels.Terms = row["Terms"].ToString();
+                    MModels.DueDate = row["DueDate"].ToString();
+                    MModels.LPO_No = row["LPO_No"].ToString();
+                    MModels.JobNo = Convert.ToInt32(row["JobNo"].ToString());
+                    MModels.Area = Convert.ToInt32(row["PlaceOfSupply"].ToString());
+                    MModels.ShipDate = row["ShipDate"].ToString();
+                    MModels.SupplierName = row["CustName"].ToString();
+                    MModels.Status = row["Name"].ToString();
+                    MModels.CessPer = Convert.ToDecimal(row["CessPer"].ToString());
+
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            // return Json(oList, JsonRequestBehavior.AllowGet);
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
+
+        }
+
+        public ActionResult HMS_LabPurchaseGetandGets(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_LabPurchaseGetandGets(PharmacyModel, dbName);
                 foreach (DataRow row in dsDataSet.Tables[0].Rows)
                 {
                     PharmacyModel MModels = new PharmacyModel();

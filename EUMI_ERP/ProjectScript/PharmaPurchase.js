@@ -2556,29 +2556,40 @@ function GetBillPrevousornext(Value) {
 
     var SlNo = parseInt($('#PINo_A').val() || 0);
     SlNo = SlNo + Value;
+
+    TryLoadInvoice(SlNo, Value);
+}
+
+function TryLoadInvoice(SlNo, Value) {
+
     if ((SlNo <= 0) || (SlNo >= NextInvoiceNo)) {
         warningshow('Invoice Number Not Valid', 'PINo_C');
         return false;
     }
-    else {
-        $('#PINo_A').val(SlNo);
-        var data = {};
-        data.SlNo = $('#PINo_A').val();
-        data.DeptId = ERPDeptId;
-        $.ajax({
-            type: "POST",
-            url: "../Pharmacy/HMS_PurchaseGetandGets",
-            data: data,
-            success: function (result) {
+
+    var data = {};
+    data.SlNo = SlNo;
+    data.DeptId = ERPDeptId;
+
+    $.ajax({
+        type: "POST",
+        url: "../Pharmacy/HMS_PurchaseGetandGets",
+        data: data,
+        success: function (result) {
+            if (result.length > 0) {
+                // Found a valid Medicine invoice — show it
+                $('#PINo_A').val(SlNo);
                 formrefresh(1);
                 PurchaseGets(result);
                 $('#btnnew').focus();
-
             }
-        });
-    }
+            else {
+                // Empty (probably a Stock invoice) — skip to next one automatically
+                TryLoadInvoice(SlNo + Value, Value);
+            }
+        }
+    });
 }
-
 function PurchaseGets(result) {
     $("#upload,#fileUpload").hide();
     $("#Tbl_Purchase tr").remove();

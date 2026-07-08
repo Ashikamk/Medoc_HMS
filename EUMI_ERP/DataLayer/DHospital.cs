@@ -376,9 +376,32 @@ namespace EUMI_ERP.DataLayer
 
         }
 
+        public DataSet HMS_LabBatchwiseItemDetailsGets(SaleInvoiceHospital SaleInvoiceHospital, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[7];
+                arlParms[0] = new SqlParameter("@ProductId", SaleInvoiceHospital.ProductId);
+                arlParms[1] = new SqlParameter("@HLocation", SaleInvoiceHospital.HLocation);
+                arlParms[2] = new SqlParameter("@Batch", SaleInvoiceHospital.Batch);
+                arlParms[3] = new SqlParameter("@Type", SaleInvoiceHospital.Type);
+                arlParms[4] = new SqlParameter("@DeptId", SaleInvoiceHospital.DeptId);
+                arlParms[5] = new SqlParameter("@UserId", SaleInvoiceHospital.UserId);
+                arlParms[6] = new SqlParameter("@Flag", SaleInvoiceHospital.Flag);
 
-        
-            public DataSet HMS_SalesInvoiceInsert_StockOut(DataTable dt, string dbName)
+                return SQLHelper.ExecuteDataset("HMS_LabBatchwiseItemDetailsGets", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
+
+
+
+        public DataSet HMS_SalesInvoiceInsert_StockOut(DataTable dt, string dbName)
         {
             try
             {

@@ -359,7 +359,122 @@ function GetList(result) {
     $("#popupdiv").hide();
 }
 
-function GetIPRegistration(result) {
+function SaveNewAdmitDateTime() {
+    var newAdmitDate = $('#NewAdmitDate').val();
+    var newDischargeDate = $('#NewDischargeDate').val();
+
+    // Build admit time string from dropdowns (24-hour for DB storage)
+    var admitH = parseInt($('#NewAdmitHour').val() || 0);
+    var admitM = $('#NewAdmitMinute').val() || '00';
+    var admitAmPm = $('#NewAdmitAmPm').val();
+    if (admitAmPm === 'PM' && admitH !== 12) admitH += 12;
+    if (admitAmPm === 'AM' && admitH === 12) admitH = 0;
+    var admitHH = admitH < 10 ? '0' + admitH : '' + admitH;
+    var newAdmitTime = admitHH + ':' + admitM;
+
+    // Validations
+    if (!newAdmitDate) {
+        warningshow('Please select Admit Date', 'NewAdmitDate');
+        return;
+    }
+    if (!$('#NewAdmitHour').val()) {
+        warningshow('Please select Admit Time', 'NewAdmitHour');
+        return;
+    }
+
+    var status = $('#BadgeStatus').text().trim();
+    var newDischargeTime = '';
+
+    if (status === 'Discharged') {
+        if (!newDischargeDate) {
+            warningshow('Please select Discharge Date', 'NewDischargeDate');
+            return;
+        }
+        if (!$('#NewDischargeHour').val()) {
+            warningshow('Please select Discharge Time', 'NewDischargeHour');
+            return;
+        }
+
+        var disH = parseInt($('#NewDischargeHour').val() || 0);
+        var disM = $('#NewDischargeMinute').val() || '00';
+        var disAmPm = $('#NewDischargeAmPm').val();
+        if (disAmPm === 'PM' && disH !== 12) disH += 12;
+        if (disAmPm === 'AM' && disH === 12) disH = 0;
+        var disHH = disH < 10 ? '0' + disH : '' + disH;
+        newDischargeTime = disHH + ':' + disM;
+
+        var admitParts = newAdmitDate.split('/');
+        var disParts = newDischargeDate.split('/');
+
+        var admitDT = new Date(
+            parseInt(admitParts[2]),
+            parseInt(admitParts[1]) - 1,
+            parseInt(admitParts[0]),
+            parseInt(admitHH),
+            parseInt(admitM)
+        );
+        var disDT = new Date(
+            parseInt(disParts[2]),
+            parseInt(disParts[1]) - 1,
+            parseInt(disParts[0]),
+            disH,
+            parseInt(disM)
+        );
+
+        if (disDT < admitDT) {
+            warningshow('Discharge date/time cannot be before Admit date/time', 'NewDischargeDate');
+            return;
+        }
+    }
+
+    // ── Capture OLD values from screen BEFORE updating ──────────────────
+    var oldAdmitDate = $('#IPDate').val();
+    var oldAdmitTime = $('#IPSavedTime').val();
+    var oldDischargeDate = $('#DDay').text().trim();
+    var oldDischargeTime = $('#DTime').text().trim();
+    // ────────────────────────────────────────────────────────────────────
+
+    var bystander = $('#bystandername').val() || '';
+    var bystanderPhone = $('#bystanderphone').val() || '';
+    var inTimeParam = newAdmitTime + '##' + bystander + '@@' + bystanderPhone;
+
+    var data = {};
+    data.IPMainId = $('#IPPrimaryId').val();
+    data.Date = newAdmitDate;
+    data.InTime = inTimeParam;
+    data.DDate = newDischargeDate || '';
+    data.DTime = newDischargeTime;
+    data.DeptId = ERPDeptId;
+    data.UserId = ERPUserId;
+    data.OldAdmitDate = oldAdmitDate;        // ← OLD values
+    data.OldAdmitTime = oldAdmitTime;
+    data.OldDischargeDate = oldDischargeDate;
+    data.OldDischargeTime = oldDischargeTime;
+
+    $.ajax({
+        type: 'POST',
+        url: '../Revisit/HMS_IPRegistrationUpdateDateTime',
+        data: data,
+        success: function (result) {
+            if (result.oList.length > 0 && result.oList[0].Status == '1') {
+                $('#ChangeAdmitDiv').hide();
+                $('#IPDate').val(newAdmitDate);
+                $('#IPSavedTime').val(newAdmitTime);
+
+                if (status === 'Discharged') {
+                    $('#DDay').text(newDischargeDate);
+                    $('#DTime').text(newDischargeTime);
+                }
+                swal('Date & Time', 'Updated Successfully', 'success');
+            } else {
+                swal('Error', 'Could not update Date & Time', 'error');
+            }
+        },
+        error: function () {
+            swal('Error', 'Server error occurred', 'error');
+        }
+    });
+} function GetIPRegistration(result) {
 
     $("#listing").hide();
     $("#Entry,#btndelete").show();
@@ -378,6 +493,20 @@ function GetIPRegistration(result) {
                 }
             }
         });
+        //if (result[0].Flag == 1) {
+        //    $('.collan').text(':');
+        //    $('#LDDay').text('Discharge Date');
+        //    $('#DDay').text(result[0].DDate);
+        //    $('#LDTime').text('Discharge Time');
+        //    $('#DTime').text(result[0].DTime);
+        //    $("#BadgeStatus").addClass('badge badge-info');
+        //    $("#BadgeStatus").text('Discharged');
+        //}
+        //else {
+        //    $("#BadgeStatus").addClass('badge badge-warning');
+        //    $("#BadgeStatus").text('Admitted');
+        //}
+
         if (result[0].Flag == 1) {
             $('.collan').text(':');
             $('#LDDay').text('Discharge Date');
@@ -386,10 +515,16 @@ function GetIPRegistration(result) {
             $('#DTime').text(result[0].DTime);
             $("#BadgeStatus").addClass('badge badge-info');
             $("#BadgeStatus").text('Discharged');
+            if (usermenu1.indexOf("M431") != -1) {
+                $("#btnChangeAdmitDateTime").show();
+            }
         }
         else {
             $("#BadgeStatus").addClass('badge badge-warning');
             $("#BadgeStatus").text('Admitted');
+            if (usermenu1.indexOf("M431") != -1) {
+                $("#btnChangeAdmitDateTime").show();
+            }
         }
         
     }
@@ -471,6 +606,7 @@ function formrefresh() {
     $("#LabelDate").text(CurDate);
     $('#myImg').attr('src', "/app-assets/img/portrait/medium/avatar-m-100.jpg");
     $("#btndelete").hide();
+    $("#btnChangeAdmitDateTime").hide();
 }
 
 function Showalerts(Status, IPNumber) {
@@ -520,6 +656,87 @@ function Showalerts(Status, IPNumber) {
 
     }
 
+}
+
+function ChangeAdmitDateTime() {
+    // Populate admit date
+    $('#NewAdmitDate').val($('#IPDate').val());
+
+    // --- Parse admit time from IPSavedTime (stored as 24hr: "19:31") ---
+    var savedTime = $('#IPSavedTime').val().trim();
+    if (savedTime) {
+        var parts = savedTime.split(':');
+        var h24 = parseInt(parts[0]);
+        var min = (parts[1] || '00').substring(0, 2); // guard against "13 PM" style
+        var ampm = h24 >= 12 ? 'PM' : 'AM';
+        var h12 = h24 % 12;
+        if (h12 === 0) h12 = 12;
+        var hh = h12 < 10 ? '0' + h12 : '' + h12;
+        $('#NewAdmitHour').val(hh);
+        $('#NewAdmitMinute').val(min);
+        $('#NewAdmitAmPm').val(ampm);
+    }
+
+    // --- Parse discharge time from DTime label ---
+    // DTime can be stored/displayed in multiple formats:
+    //   "23:13"       (24hr, from DB)
+    //   "11:13 PM"    (12hr with AM/PM, if previously set by dropdown)
+    //   "23:13 PM"    (mixed - guard against this too)
+    var dischargeTimeText = $('#DTime').text().trim();
+    if (dischargeTimeText) {
+        var dtAmPm = 'AM';
+        var dtH24, dtMin;
+
+        if (dischargeTimeText.indexOf(' ') !== -1) {
+            // Has a space — could be "11:13 PM" or "23:13 PM"
+            var spParts = dischargeTimeText.split(' ');
+            var timeParts = spParts[0].split(':');
+            dtH24 = parseInt(timeParts[0]);
+            dtMin = timeParts[1] || '00';
+            var rawAmPm = (spParts[1] || '').toUpperCase();
+
+            if (dtH24 > 12) {
+                // 24-hr value — ignore the AM/PM text, derive from hour
+                dtAmPm = dtH24 >= 12 ? 'PM' : 'AM';
+            } else {
+                dtAmPm = (rawAmPm === 'PM') ? 'PM' : 'AM';
+                if (dtAmPm === 'PM' && dtH24 !== 12) dtH24 += 12;
+                if (dtAmPm === 'AM' && dtH24 === 12) dtH24 = 0;
+            }
+        } else {
+            // No space — pure 24-hr "23:13"
+            var timeParts = dischargeTimeText.split(':');
+            dtH24 = parseInt(timeParts[0]);
+            dtMin = timeParts[1] || '00';
+            dtAmPm = dtH24 >= 12 ? 'PM' : 'AM';
+        }
+
+        // Convert to 12-hour for dropdown
+        var dtH12 = dtH24 % 12;
+        if (dtH12 === 0) dtH12 = 12;
+        var dtHH = dtH12 < 10 ? '0' + dtH12 : '' + dtH12;
+
+        $('#NewDischargeHour').val(dtHH);
+        $('#NewDischargeMinute').val(dtMin);
+        $('#NewDischargeAmPm').val(dtAmPm);
+    }
+
+    // Populate discharge date
+    $('#NewDischargeDate').val($('#DDay').text().trim());
+
+    var status = $('#BadgeStatus').text().trim();
+
+    if (status === 'Admitted') {
+        $('#NewDischargeDate').prop('disabled', true).css('background-color', '#e9ecef');
+        $('#NewDischargeHour, #NewDischargeMinute, #NewDischargeAmPm')
+            .prop('disabled', true).css('background-color', '#e9ecef');
+    } else {
+        $('#NewDischargeDate').prop('disabled', false).css('background-color', 'white');
+        $('#NewDischargeHour, #NewDischargeMinute, #NewDischargeAmPm')
+            .prop('disabled', false).css('background-color', 'white');
+    }
+
+    $('#ChangeAdmitDiv').show();
 }
 function closelist() {
     
