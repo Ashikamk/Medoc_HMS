@@ -473,6 +473,10 @@ public DataSet SalesInvoiceGetListStockOut(SalesInvoiceModel oSalesInvoiceModel,
             return oDEnquiry.SalesInvoiceGetListStockOut(oSalesInvoiceModel, dbName);
         }
 
+        public DataSet SalesInvoiceReagentStockOut(SalesInvoiceModel oSalesInvoiceModel, string dbName)
+        {
+            return oDEnquiry.SalesInvoiceReagentStockOut(oSalesInvoiceModel, dbName);
+        }
 
         public DataSet SalesInvoiceGetList(SalesInvoiceModel oSalesInvoiceModel, string dbName)
         {

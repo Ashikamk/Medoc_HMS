@@ -1987,6 +1987,96 @@ obj.RightFarCyl, obj.RightFarAxs, obj.RightFarVA, obj.RightFarPD, obj.RightFarAd
             return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
         }
 
+        [HttpPost]
+        public ActionResult HMS_ReagentGetandGetsStockOut(SaleInvoiceHospital SaleInvoiceHospital)
+        {
+            SaleInvoiceHospital obj = new SaleInvoiceHospital();
+
+            List<SaleInvoiceHospital> oList = new List<SaleInvoiceHospital>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_ReagentGetandGetsStockOut(SaleInvoiceHospital, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    SaleInvoiceHospital MModels = new SaleInvoiceHospital();
+
+                    MModels.SalesMainId = Convert.ToInt32(row["SalesMainId"].ToString());
+                    MModels.HBillSeries = Convert.ToInt32(row["BillSeriesId"].ToString());
+                    MModels.HBillNo = Convert.ToInt32(row["BillSlNo"].ToString());
+                    MModels.HPatient = Convert.ToInt32(row["CustId"].ToString());
+                    MModels.HPatientName = row["CustoName"].ToString();
+                    MModels.PayType = Convert.ToInt32(row["PayType"].ToString());
+                    MModels.PRType = Convert.ToDecimal(row["PRType"].ToString());
+                    MModels.HSalesDate = row["InvDate"].ToString();
+                    MModels.CurrencyId = Convert.ToInt32(row["CurrencyId"].ToString());
+                    MModels.CurrencyRate = Convert.ToDecimal(row["CurrencyRate"].ToString());
+                    MModels.HLocation = Convert.ToInt32(row["LocId"].ToString());
+                    MModels.HDoctor = Convert.ToInt32(row["DoctorId"].ToString());
+                    MModels.Discount = Convert.ToDecimal(row["BillDiscount"].ToString());
+                    MModels.Discountpercent = Convert.ToDecimal(row["Discountpercent"].ToString());
+                    MModels.TotalTaxable = Convert.ToDecimal(row["TotalTaxable"].ToString());
+                    MModels.TotlaTax = Convert.ToDecimal(row["TotalTax"].ToString());
+                    MModels.BaseTextTotal = Convert.ToDecimal(row["GrandTotal"].ToString());
+                    MModels.BCGST_0 = Convert.ToDecimal(row["Taxable1"].ToString());
+                    MModels.BCGST_5 = Convert.ToDecimal(row["Taxable2"].ToString());
+                    MModels.BCGST_12 = Convert.ToDecimal(row["Taxable3"].ToString());
+                    MModels.BCGST_18 = Convert.ToDecimal(row["Taxable4"].ToString());
+                    MModels.BCGST_28 = Convert.ToDecimal(row["Taxable5"].ToString());
+                    MModels.BCess = Convert.ToDecimal(row["DesignRate"].ToString());
+                    MModels.RoundOff = Convert.ToDecimal(row["RoundGrandTotal"].ToString());
+                    MModels.BDFlag = Convert.ToInt32(row["BDFlag"].ToString());
+                    MModels.CessFlag = Convert.ToInt32(row["CessFlag"].ToString());
+                    MModels.Remarks = row["Remarks"].ToString();
+                    MModels.SubId = Convert.ToInt32(row["SalesSubId"].ToString());
+                    MModels.ProductId = Convert.ToInt32(row["ProductId"].ToString());
+                    MModels.ProductDesc = row["ProductCode"].ToString();
+                    MModels.BatchSlNo = Convert.ToInt32(row["BatchSNo"].ToString());
+                    MModels.Batch = row["Batch"].ToString();
+                    MModels.Company = row["ProductDescr"].ToString();
+                    MModels.Expiry = row["Expiry"].ToString();
+                    MModels.Quantity = Convert.ToDecimal(row["ProdQty"].ToString());
+                    MModels.Free = Convert.ToDecimal(row["Free"].ToString());
+                    MModels.Pack = Convert.ToDecimal(row["Pack"].ToString());
+                    MModels.Loose = Convert.ToDecimal(row["Loose"].ToString());
+                    MModels.SellPrice = Convert.ToDecimal(row["ProdRate"].ToString());
+                    MModels.PurPrice = Convert.ToDecimal(row["AverageCost"].ToString());
+                    MModels.Tax = Convert.ToDecimal(row["TaxId"].ToString());
+                    MModels.TaxPercent = Convert.ToDecimal(row["TaxPercent"].ToString());
+                    MModels.TaxableAmt = Convert.ToDecimal(row["TaxableAmount"].ToString());
+                    MModels.TaxAmt = Convert.ToDecimal(row["TaxAmount"].ToString());
+                    MModels.Cess = Convert.ToDecimal(row["CessPerc"].ToString());
+                    MModels.CessAmount = Convert.ToDecimal(row["CessAmount"].ToString());
+                    MModels.Amount = Convert.ToDecimal(row["Amount"].ToString());
+                    MModels.Drugschedule = row["ImeiNo"].ToString();
+                    MModels.DelFlag = Convert.ToInt32(row["DelFlag"].ToString());
+                    MModels.UserId = Convert.ToInt32(row["UserId"].ToString());
+                    MModels.DeptId = Convert.ToInt32(row["DeptId"].ToString());
+                    MModels.LPO_No = row["LPONumber"].ToString();
+                    MModels.RegNo = Convert.ToInt32(row["RegNo"].ToString());
+                    MModels.Variable1 = row["IPNumber"].ToString();
+                    MModels.Variable2 = row["ReceivedAmount"].ToString();
+                    MModels.Variable3 = row["HsnCode"].ToString();
+                    MModels.ProdDisc = Convert.ToDecimal(row["ProdDisc"].ToString());
+                    MModels.Terms = Convert.ToInt32(row["Invterms"].ToString());
+
+                    MModels.SpecialFeeAmt = Convert.ToDecimal(row["SpecialFeeAmt"].ToString());
+                    MModels.Area = Convert.ToInt32(row["areaid"].ToString());
+                    //anu
+                    MModels.JobNo = Convert.ToInt32(row["JobNumber"].ToString());
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            //return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090, };
+        }
+
 
 
 

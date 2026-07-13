@@ -1118,6 +1118,24 @@ namespace EUMI_ERP
             }
         }
 
+        public DataSet SalesInvoiceReagentStockOut(SalesInvoiceModel SalesInvoiceModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[4];
+                arlParms[0] = new SqlParameter("@FromDate", SalesInvoiceModel.FromDate);
+                arlParms[1] = new SqlParameter("@ToDate", SalesInvoiceModel.ToDate);
+                arlParms[2] = new SqlParameter("@DeptId", SalesInvoiceModel.DeptId);
+                arlParms[3] = new SqlParameter("@UserId", SalesInvoiceModel.UserId);
+                return SQLHelper.ExecuteDataset("SalesInvoiceReagentStockOut", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
 
         public DataSet SalesInvoiceGetList(SalesInvoiceModel SalesInvoiceModel, string dbName)
         {

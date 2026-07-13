@@ -7860,6 +7860,52 @@ namespace EUMI_ERP.Controllers
             };
         }
 
+        [HttpPost]
+        public ActionResult SalesInvoiceReagentStockOut(SalesInvoiceModel SalesInvoiceModel)
+        {
+            SalesInvoiceModel obj = new SalesInvoiceModel();
+
+            List<SalesInvoiceModel> oList = new List<SalesInvoiceModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.SalesInvoiceReagentStockOut(SalesInvoiceModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    SalesInvoiceModel SModels = new SalesInvoiceModel();
+                    SModels.BillSeriesId = Convert.ToInt32(row["BillSeriesId"].ToString());
+                    SModels.BillDescription = row["BillDescription"].ToString();
+                    SModels.BillSlNo = Convert.ToInt32(row["BillSlNo"].ToString());
+                    SModels.InvDate = row["InvDate"].ToString();
+                    SModels.CustName = row["CustoName"].ToString();
+                    SModels.CustAddress = row["CustAddress"].ToString();
+                    SModels.LocnId = Convert.ToInt32(row["LocId"].ToString());
+                    SModels.Location = row["LocationName"].ToString();
+                    SModels.DeptId = Convert.ToInt32(row["DeptId"].ToString());
+                    SModels.DepartmentName = row["DepartmentName"].ToString();
+                    SModels.UserId = Convert.ToInt32(row["UserId"].ToString());
+                    SModels.FCGrandTotal = Convert.ToDecimal(row["FCGrandTotal"].ToString());
+                    SModels.LPONumber = row["LPONumber"].ToString();
+                    SModels.SalesManId = Convert.ToInt32(row["SalesmanId"].ToString());
+                    SModels.SalesMan = row["FirstName"].ToString();
+                    SModels.UserName = row["UserName"].ToString();
+                    SModels.ChassisNo = row["ChassisNumber"].ToString();
+                    SModels.checkflag = row["Payterms"].ToString();
+                    oList.Add(SModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return new JsonResult()
+            {
+                Data = oList,
+                MaxJsonLength = 86753090,
+            };
+        }
+
 
 
 

@@ -1509,7 +1509,7 @@ function CallViewList() {
     data.UserId = ERPUserId;
     $.ajax({
         type: "POST",
-        url: '../SalesInvoice/SalesInvoiceGetListStockOut',
+        url: '../SalesInvoice/SalesInvoiceReagentStockOut',
         data: data,
         success: function (result) {
 
@@ -1609,7 +1609,7 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
     CheckEOD();
 }
 
-function SalesGetCall(BillSeriesId, BillSlNo, DeptId, flg) {
+function SalesGetCall(BillSeriesId, BillSlNo, DeptId, flg, direction) {
     if (flg == 1) { PopUpClose(3); }
     var data = {};
     data.HBillNo = BillSeriesId;
@@ -1617,14 +1617,22 @@ function SalesGetCall(BillSeriesId, BillSlNo, DeptId, flg) {
     data.DeptId = DeptId;
     $.ajax({
         type: "POST",
-        url: "../Hospital/HMS_SalesGetandGetsStockOut",
+        url: "../Hospital/HMS_ReagentGetandGetsStockOut",
         data: data,
         success: function (result) {
             if (result.length > 0) {
                 SalesGetandGets(result);
             }
             else {
-                Showalerts(4, BillSlNo);
+                // Bill has no reagent items (e.g. a Stock Transfer Out bill).
+                // If we're navigating with the arrows, keep stepping in the
+                // same direction instead of showing "Not Exists".
+                if (direction === 1 || direction === -1) {
+                    GetBillPrevousornext(direction);
+                }
+                else {
+                    Showalerts(4, BillSlNo);
+                }
             }
         }
     });
@@ -1921,7 +1929,7 @@ function GetBillPrevousornext(Value) {
     else {
         $('#HBillNoCopy').val(SlNo);
         copyrefresh(2);
-        SalesGetCall($('#HBillSeries').val(), SlNo, ERPDeptId, 0);
+        SalesGetCall($('#HBillSeries').val(), SlNo, ERPDeptId, 0, Value);
     }
 }
 //-----End Edit and Delete

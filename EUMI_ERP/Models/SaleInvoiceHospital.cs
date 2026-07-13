@@ -170,6 +170,11 @@ public DataSet HMS_SalesGetandGetsStockOut(SaleInvoiceHospital oSaleInvoiceHospi
             return oDHospital.HMS_SalesGetandGetsStockOut(oSaleInvoiceHospital, dbName);
         }
 
+        public DataSet HMS_ReagentGetandGetsStockOut(SaleInvoiceHospital oSaleInvoiceHospital, string dbName)
+        {
+            return oDHospital.HMS_ReagentGetandGetsStockOut(oSaleInvoiceHospital, dbName);
+        }
+
 
         public DataSet HMS_SalesGetandGets(SaleInvoiceHospital oSaleInvoiceHospital, string dbName)
         {

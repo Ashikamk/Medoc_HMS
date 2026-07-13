@@ -482,6 +482,24 @@ namespace EUMI_ERP.DataLayer
             }
         }
 
+
+        public DataSet HMS_ReagentGetandGetsStockOut(SaleInvoiceHospital SaleInvoiceHospital, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[3];
+                arlParms[0] = new SqlParameter("@BillSeriesId", SaleInvoiceHospital.HBillNo);
+                arlParms[1] = new SqlParameter("@BillSlNo", SaleInvoiceHospital.HBillSeries);
+                arlParms[2] = new SqlParameter("@DeptId", SaleInvoiceHospital.DeptId);
+                return SQLHelper.ExecuteDataset("HMS_ReagentGetandGetsStockOut", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
         public DataSet HMS_SalesGetandGets(SaleInvoiceHospital SaleInvoiceHospital, string dbName)
         {
             try
