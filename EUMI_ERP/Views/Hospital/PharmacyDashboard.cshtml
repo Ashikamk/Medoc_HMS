@@ -6,903 +6,2251 @@
 <script src="~/app_demo/assets/js/Chart.js"></script>
 
 <style>
-     .dashboard-card {
-        border-radius: 16px;
-        margin-bottom: 20px;
-        color: white;
-        cursor: pointer;
-        transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.3);
-        height: 130px;
-        min-height: 130px;
-        max-height: 130px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+    
+    *, *::before, *::after {
         box-sizing: border-box;
-        padding: 15px 10px;
     }
 
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
-        }
-
-        .dashboard-card:not(.alert-blink)::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.12);
-            border-radius: 16px;
-            pointer-events: none;
-        }
-
-    .alert-blink .card-icon,
-    .alert-blink .card-value,
-    .alert-blink .card-label {
-        position: relative;
-        z-index: 1;
+    :root {
+        --indigo: #4F46E5;
+        --indigo-dark: #4338CA;
+        --indigo-light: #EEF2FF;
+        --info: #06B6D4;
+        --info-light: #ECFEFF;
+        --success: #22C55E;
+        --success-light: #F0FDF4;
+        --warning: #F59E0B;
+        --warning-light: #FFFBEB;
+        --danger: #EF4444;
+        --danger-light: #FEF2F2;
+        --purple: #8B5CF6;
+        --purple-light: #F5F3FF;
+        --text: #1E293B;
+        --sub: #64748B;
+        --border: #E7EBF3;
+        --bg: #F8FAFC;
+        --card: #ffffff;
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --radius-sm: 9px;
+        --shadow-sm: 0 1px 3px rgba(15,23,42,.05);
+        --shadow-md: 0 6px 20px rgba(15,23,42,.07);
+        --shadow-lg: 0 16px 40px rgba(79,70,229,.14);
     }
 
-    .card-icon {
-        position: static;
-        font-size: 26px;
-        margin-bottom: 6px;
-        opacity: 0.9;
-        float: none;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    .top-alert {
+        position: fixed;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ff5c70;
+        color: white;
+        padding: 14px 35px;
+        font-weight: 100;
+        font-size: 25px;
+        border-radius: 6px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+        display: none;
+        z-index: 999999;
     }
 
-    .card-value {
-        font-size: 30px;
-        font-weight: 800;
-        margin-bottom: 2px;
-        line-height: 1;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .card-label {
-        font-size: 16px;
-        opacity: 0.95;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 100%;
-        text-align: center;
-        line-height: 1.4;
-        font-weight: 500;
-    }
-
-     .chart-container {
-        background: white;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-    }
-
-        .chart-container canvas {
-            flex: 1;
-            max-height: 220px;
-        }
-
-
-    .medicine-table thead th {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        background-color: #f8f9fa; 
-    }
-     .section-title {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 0;
-        color: #333;
-        border-left: 4px solid #667eea;
-        padding-left: 12px;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between; 
-        padding-right: 12px;  
-    }
-
-    .title-search-box {
-        padding: 4px 10px;
-        border: 1px solid rgba(255,255,255,0.6);
-        border-radius: 20px;
-        font-size: 12px;
-        outline: none;
-        background: rgba(255,255,255,0.35);
-        color: #333;
-        width: 180px;
-        transition: all 0.2s;
-        font-weight: normal;
-    }
-
-        .title-search-box:focus {
-            background: rgba(255,255,255,0.6);
-            border-color: rgba(255,255,255,0.9);
-            width: 210px;
-        }
-
-        .title-search-box::placeholder {
-            color: rgba(0,0,0,0.45);
-        }
-
-    .title-sales-invoice {
-        background: linear-gradient(135deg, #a8b8f8, #c4a8e8);
-    }
-
-    .title-purchase-invoice {
-        background: linear-gradient(135deg, #f9c0f0, #f9a8b8);
-    }
-
-    .title-short-stock {
-        background: linear-gradient(135deg, #ffd4a8, #ffb8b8);
-    }
-
-    .title-fast-moving {
-        background: linear-gradient(135deg, #a8f0c8, #a8e0d8);
-    }
-
-    .title-non-moving {
-        background: linear-gradient(135deg, #a8b8d8, #a8c0e8);
-    }
-
-    .title-expiry {
-        background: linear-gradient(135deg, #f8b8d8, #f8a8a8);
-    }
-
-    .title-out-of-stock {
-        background: linear-gradient(135deg, #d4b8f0, #c4a8e0);
-    }
-
-    .title-quick-actions {
-        background: linear-gradient(135deg, #a8e8f0, #b8c8f8);
+    .pharm-wrap {
+        background: none;
+        font-family: "Rubik", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: var(--text);
+        font-size: 15px;
+        -webkit-font-smoothing: antialiased;
+        margin: -20px -30px -20px -30px;
+        padding: 0 30px 30px 0;
     }
 
     
-    .medicine-table {
-        background: white;
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        height: 350px;
-        display: flex;
-        flex-direction: column;
+    body.modal-open .pharm-wrap,
+    body.modal-open .pharm-topbar,
+    body.modal-open .pharm-body-flex {
+        filter: blur(6px);
+        -webkit-filter: blur(6px);
+        pointer-events: none;
+        user-select: none;
+        transition: filter 0.3s ease;
     }
 
-        .medicine-table th {
-            background-color: #f8f9fa;
-            font-size: 16px;
-            font-weight: bold;
+    #SimpleMedModal.show {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        filter: none !important;
+        -webkit-filter: none !important;
+        pointer-events: auto !important;
+    }
+
+        #SimpleMedModal.show .modal-dialog,
+        #SimpleMedModal.show .modal-content,
+        #SimpleMedModal.show * {
+            filter: none !important;
+            -webkit-filter: none !important;
+            pointer-events: auto !important;
         }
 
-        .medicine-table td {
+    .modal-backdrop.show {
+        opacity: 0.7;
+        background-color: #000;
+    }
+
+
+    .pharm-topbar {
+        background: #008080;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        padding: 0 32px;
+        position: sticky;
+        top: 0;
+        box-shadow: 0 4px 24px rgba(79,70,229,.10);
+        z-index: 950;
+        width: calc(100% + 60px);
+        margin: 0 -30px 18px -30px;
+        justify-content: space-between;
+    }
+        .pharm-topbar h1 {
+            font-size: 25px;
+            font-weight: 800;
+            padding-left: 30px;
+            color: #ffffff;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+    .tbl-controls-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        font-size: 13.5px;
+        color: var(--sub);
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+        .tbl-controls-top select {
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+            outline: none;
+        }
+
+    .tbl-controls-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 18px;
+        border-top: 1px solid var(--border);
+        flex-shrink: 0;
+        font-size: 13px;
+        color: var(--sub);
+    }
+
+    .tbl-pagination {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .tbl-page-btn {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background .15s, color .15s;
+    }
+
+        .tbl-page-btn:hover:not(:disabled) {
+            background: #008080;
+            color: white;
+        }
+
+        .tbl-page-btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        .tbl-page-btn.active {
+            background: #008080;
+            color: #fff;
+            border-color: #008080;
+        }
+
+   
+    .pharm-body-flex {
+        display: flex;
+        align-items: flex-start;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .pharm-sidenav {
+        position: sticky;
+        top: 116px;
+        align-self: flex-start;
+        flex: 0 0 230px;
+        width: 230px;
+        height: 800px;
+        background: #ffffff;
+        border-right: 1px solid var(--border);
+        padding: 16px 12px 20px 12px;
+        z-index: 10;
+        box-shadow: 2px 0 16px rgba(15,23,42,.03);
+        overflow-y: auto;
+        border-radius: 0 18px 18px 0;
+    }
+
+        .pharm-sidenav .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 16px;
+            margin-bottom: 20px;
+            color: #64748B !important;
+            font-size: 19px !important;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid transparent;
+            transition: background .18s, color .18s, transform .12s;
+            white-space: nowrap;
+        }
+
+            .pharm-sidenav .nav-item i {
+                display: inline-block;
+                width: 18px;
+                text-align: center;
+                font-size: 14px;
+                color: #94A3B8;
+                transition: color .18s;
+            }
+
+            .pharm-sidenav .nav-item:hover {
+                background: #F0FDFA;
+                color: #0D9488;
+                text-decoration: none;
+                transform: translateX(2px);
+            }
+
+                .pharm-sidenav .nav-item:hover i {
+                    color: teal;
+                }
+
+            .pharm-sidenav .nav-item.active {
+                background: linear-gradient(135deg, #E6FFFA 0%, #CCFBF1 100%);
+                color: teal !important;
+                border-left: 3px solid #008080;
+                box-shadow: var(--shadow-sm);
+            }
+
+                .pharm-sidenav .nav-item.active i {
+                    color: #008080;
+                }
+
+    .pharm-page {
+        flex: 1 1 0%;
+        min-width: 0;
+        width: auto;
+        scroll-behavior: smooth;
+    }
+
+    .pharm-wrap {
+        overflow-x: hidden;
+    }
+
+    .pharm-page [id^="sec-"], #pharm-top {
+        scroll-margin-top: 110px;
+    }
+
+    @@media (max-width:1300px) {
+        .pharm-sidenav {
+            flex-basis: 64px;
+            width: 64px;
+            padding: 16px 6px;
+        }
+
+            .pharm-sidenav .nav-item {
+                justify-content: center;
+                padding: 12px 0;
+            }
+
+                .pharm-sidenav .nav-item span {
+                    display: none;
+                }
+    }
+
+    @@media (max-width:768px) {
+        .pharm-body-flex {
+            flex-direction: column;
+        }
+
+        .pharm-sidenav {
+            display: none;
+        }
+    }
+
+
+  
+    .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+
+    .kpi-card {
+        border-radius: var(--radius-lg);
+        border: none;
+        padding: 18px 16px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+        gap: 4px;
+        box-shadow: 0 8px 20px rgba(15,23,42,.15);
+        transition: transform .18s, box-shadow .18s;
+        opacity: 0;
+        animation: flyUp .55s cubic-bezier(.22,.9,.4,1) both;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+        cursor: pointer;
+        min-height: 118px;
+    }
+
+    .kpi-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .kpi-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: #ffffff;
+        flex-shrink: 0;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(15,23,42,.22);
+    }
+
+    .kpi-card:nth-child(1) {
+        animation-delay: .05s;
+    }
+
+    .kpi-card:nth-child(2) {
+        animation-delay: .12s;
+    }
+
+    .kpi-card:nth-child(3) {
+        animation-delay: .19s;
+    }
+
+    .kpi-card:nth-child(4) {
+        animation-delay: .26s;
+    }
+
+    .kpi-card:nth-child(5) {
+        animation-delay: .33s;
+    }
+
+    .kpi-card:nth-child(6) {
+        animation-delay: .40s;
+    }
+
+    .kpi-card:nth-child(7) {
+        animation-delay: .47s;
+    }
+
+    .kpi-card:nth-child(8) {
+        animation-delay: .54s;
+    }
+
+    .kpi-card:nth-child(9) {
+        animation-delay: .61s;
+    }
+
+    .kpi-label {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        opacity: .92;
+    }
+
+    .kpi-value {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -.5px;
+        animation: rollIn .8s cubic-bezier(.23,1.12,.4,1) both;
+        animation-delay: .4s;
+    }
+
+    .kpi-blue {
+        background: linear-gradient(135deg, #6366F1 0%, #4338CA 100%);
+    }
+
+    .kpi-teal {
+        background: linear-gradient(135deg, #DB2777 0%, #831843 100%);
+    }
+
+    .kpi-cyan {
+        background: linear-gradient(135deg, #06B6D4 0%, #0E7490 100%);
+    }
+
+    .kpi-rose {
+        background: linear-gradient(135deg, #F97316 0%, #C2410C 100%);
+    }
+
+    .kpi-purple {
+        background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+    }
+
+    .kpi-orange {
+        background: linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%);
+    }
+
+    .kpi-crimson {
+        background: linear-gradient(135deg, #16A34A 0%, #065F46 100%);
+    }
+
+    .kpi-green {
+        background: linear-gradient(135deg, #1E1B3A 0%, #0F0D24 100%);
+    }
+
+    .kpi-indigo {
+        background: linear-gradient(135deg, #A21CAF 0%, #581C5C 100%);
+    }
+
+    @@keyframes flyUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes rollIn {
+        from {
+            opacity: 0;
+            transform: scale(.5);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+
+    
+    .charts-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .chart-card {
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        padding: 18px 18px 16px;
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow .2s;
+    }
+
+        .chart-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+    .chart-card-title {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+        color: #0F766E;
+        margin-bottom: 14px;
+        border-left: 4px solid #008080;
+        padding-left: 10px;
+    }
+
+    .chart-wrap {
+        position: relative;
+        height: 260px;
+    }
+
+   
+    .tbl-card {
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        max-height: 900px;
+        transition: box-shadow .2s;
+        animation: fadeInUp .5s ease both;
+    }
+
+        .tbl-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .tbl-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        background: linear-gradient(135deg, #FAFBFF 0%, #F5F7FF 100%);
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+    .tbl-title {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .tbl-title i {
+            font-size: 30px;
+            color: #008080;
+        }
+
+   
+
+    .tbl-search-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        padding: 0 14px;
+        height: 34px;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+        .tbl-search-box:focus-within {
+            border-color: var(--indigo);
+            box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+        }
+
+        .tbl-search-box i {
+            font-size: 12.5px;
+            color: #A3ADBD;
+        }
+
+        .tbl-search-box input[type="text"] {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 13.5px;
+            font-weight: 500;
+            width: 150px;
+            font-family: "Rubik", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+            .tbl-search-box input[type="text"]::placeholder {
+                color: #A3ADBD;
+            }
+
+    .tbl-scroll {
+        flex: 1;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        .tbl-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .tbl-scroll::-webkit-scrollbar-thumb {
+            background: #D6DCEB;
+            border-radius: 4px;
+        }
+
+        .tbl-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+    .dash-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .dash-table thead th {
+            padding: 8px 14px;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            text-transform: uppercase;
+            color: #475569;
+            border-bottom: 1.5px solid var(--border);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: #F8FAFF;
+        }
+
+        .dash-table tbody tr {
+            border-bottom: 1px solid #EEF1F6;
+            transition: background .2s, transform .15s;
+            height: 32px;
+        }
+
+            .dash-table tbody tr:nth-child(even) {
+                background: #FAFBFF;
+            }
+
+            .dash-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .dash-table tbody tr:hover {
+                background: var(--indigo-light) !important;
+            }
+
+        .dash-table tbody td {
+            padding: 4px 14px;
+            color: #334155;
             font-size: 16px;
             vertical-align: middle;
         }
 
-        .medicine-table .table-responsive {
-            flex: 1;
-            max-height: 100%;
-            overflow-y: auto;
+    .tbl-card.tbl-alert .tbl-header {
+        background: linear-gradient(135deg, #FFF7ED 0%, #FEF2F2 100%);
+    }
+
+    .tbl-alert-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--danger);
+        display: inline-block;
+        margin-right: 2px;
+        animation: dotPulse 1.2s ease-in-out infinite;
+        box-shadow: 0 0 0 0 rgba(239,68,68,.6);
+    }
+
+    @@keyframes dotPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(239,68,68,.55);
         }
 
-     
-    .status-badge {
-        padding: 3px 8px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: bold;
-        display: inline-block;
-    }
+        70% {
+            box-shadow: 0 0 0 7px rgba(239,68,68,0);
+        }
 
-    .status-critical {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .status-warning {
-        background-color: #ffc107;
-        color: #333;
-    }
-
-    .status-good {
-        background-color: #28a745;
-        color: white;
-    }
-
-    
-    .quick-action-btn:hover {
-        transform: translateX(4px);
-        transition: transform 0.2s;
-        text-decoration: none;
+        100% {
+            box-shadow: 0 0 0 0 rgba(239,68,68,0);
+        }
     }
 
    
-    .bg-light {
-        background-color: #f8f9fa !important;
-    }
-
-    .mt-3 {
-        margin-top: 15px;
-    }
-
-    .mb-4 {
-        margin-bottom: 20px;
-    }
-
-    .mb-0 {
-        margin-bottom: 0;
-    }
-
-    .p-3 {
-        padding: 15px;
-    }
-
-    .text-muted {
-        color: #6c757d !important;
-    }
-
-    
-    .row .col-lg[style*="12.5%"] {
-        padding-left: 5px;
-        padding-right: 5px;
-    }
-
-    @@keyframes blink-ring {
-        0%, 100% {
-            box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
-        }
-
-        50% {
-            box-shadow: 0 0 0 8px rgba(255,255,255,0);
-        }
-    }
-
-    @@keyframes pulse-number {
-        0%, 100% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.15);
-        }
-    }
-
-    .alert-blink {
-        animation: blink-ring 1.2s ease-in-out infinite;
-    }
-
-        .alert-blink .card-value {
-            animation: pulse-number 1.2s ease-in-out infinite;
-            color: #fff700;
-        }
-
-        .alert-blink .card-icon {
-            animation: pulse-number 1.2s ease-in-out infinite;
-        }
-
-    @@keyframes wave-ripple {
-        0% {
-            transform: scale(0.8);
-            opacity: 1;
-        }
-
-        100% {
-            transform: scale(2.2);
-            opacity: 0;
-        }
-    }
-
-    .alert-blink::after,
-    .alert-blink::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.8);
-        width: 100%;
-        height: 100%;
-        border-radius: 16px;
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        animation: wave-ripple 2s ease-out infinite;
-        pointer-events: none;
-    }
-
-    .alert-blink::after {
-        animation-delay: 1s;
-    }
-
-    @@keyframes table-border-pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 0 rgba(255, 89, 89, 0.4), 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        50% {
-            box-shadow: 0 0 0 10px rgba(255, 89, 89, 0), 0 2px 10px rgba(0,0,0,0.1);
-        }
-    }
-
-    @@keyframes table-wave-ripple {
-        0% {
-            transform: scale(1);
-            opacity: 0.6;
-        }
-
-        100% {
-            transform: scale(1.02);
-            opacity: 0;
-        }
-    }
-
-    .alert-table {
-        animation: table-border-pulse 2s ease-in-out infinite;
-        border: 2px solid rgba(255, 89, 89, 0.5) !important;
-        position: relative;
-        overflow: visible !important;
-    }
-
-        .alert-table::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 89, 89, 0.4);
-            animation: table-wave-ripple 2s ease-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .alert-table::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 89, 89, 0.3);
-            animation: table-wave-ripple 2s ease-out infinite;
-            animation-delay: 1s;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-    @@keyframes title-blink {
-        0%, 100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.6;
-        }
-    }
-
-    @@keyframes title-glow {
-        0%, 100% {
-            box-shadow: 0 0 5px rgba(255,89,89,0.5);
-        }
-
-        50% {
-            box-shadow: 0 0 20px rgba(255,89,89,0.9);
-        }
-    }
-
-    .title-short-stock {
-        animation: title-blink 1.2s ease-in-out infinite, title-glow 1.2s ease-in-out infinite;
-    }
-
-    .title-expiry {
-        animation: title-blink 1.2s ease-in-out infinite, title-glow 1.2s ease-in-out infinite;
-        animation-delay: 0.4s;
-    }
-
-    .title-out-of-stock {
-        animation: title-blink 1.2s ease-in-out infinite, title-glow 1.2s ease-in-out infinite;
-        animation-delay: 0.8s;
-    }
-     
-    .table-alert-dot {
-        position: relative;
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        margin-left: 10px;
-        vertical-align: middle;
-    }
-
-        .table-alert-dot::before {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ff3300;
-            animation: dot-blink 1s ease-in-out infinite;
-        }
-
-        .table-alert-dot::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 51, 0, 0.5);
-            animation: dot-ripple 1.5s ease-out infinite;
-        }
-    
-    @@keyframes wave-dot-ripple-1 {
-        0% {
-            transform: scale(1);
-            opacity: 0.8;
-        }
-
-        100% {
-            transform: scale(3.5);
-            opacity: 0;
-        }
-    }
-
-    @@keyframes wave-dot-ripple-2 {
-        0% {
-            transform: scale(1);
-            opacity: 0.6;
-        }
-
-        100% {
-            transform: scale(2.8);
-            opacity: 0;
-        }
-    }
-
-    @@keyframes wave-dot-ripple-3 {
-        0% {
-            transform: scale(1);
-            opacity: 0.4;
-        }
-
-        100% {
-            transform: scale(2.2);
-            opacity: 0;
-        }
-    }
-
-    @@keyframes dot-core-blink {
-        0%, 100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        50% {
-            transform: scale(0.7);
-            opacity: 0.5;
-        }
-    }
-
-    .wave-dot {
-        position: relative;
+    .status-badge {
         display: inline-flex;
         align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .2px;
+    }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+    .status-critical {
+        background: var(--danger-light);
+        color: #B91C1C;
+        border: 1px solid #FECACA;
+    }
+
+        .status-critical::before {
+            background: var(--danger);
+        }
+
+    .status-warning {
+        background: var(--warning-light);
+        color: #B45309;
+        border: 1px solid #FDE68A;
+    }
+
+        .status-warning::before {
+            background: var(--warning);
+        }
+
+    .status-good {
+        background: var(--success-light);
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+    }
+
+        .status-good::before {
+            background: var(--success);
+        }
+
+    .status-info {
+        background: var(--info-light);
+        color: #0E7490;
+        border: 1px solid #A5F3FC;
+    }
+
+        .status-info::before {
+            background: var(--info);
+        }
+
+  
+    .qa-card {
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 180px;
+        animation: fadeInUp .5s ease both;
+        animation-delay: .3s;
+    }
+
+    .qa-grid {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
         justify-content: center;
-        width: 22px;
-        height: 22px;
-        margin-right: 14px;
-        vertical-align: middle;
+    }
+
+    #sec-quickactions .tbl-title {
+        color: #0F766E;
+        border-left: 4px solid #008080;
+        padding-left: 10px;
+    }
+
+        #sec-quickactions .tbl-title i {
+            color: #008080;
+        }
+
+    .qa-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14.5px;
+        color: var(--text);
+        background: #F8FAFF;
+        border: 3px solid var(--border);
+        transition: transform .18s, box-shadow .18s, border-color .18s, background .18s;
+    }
+
+        .qa-btn:hover {
+            transform: translateY(-3px);
+            text-decoration: none;
+        }
+
+    .qa-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
         flex-shrink: 0;
     }
 
-         
-        .wave-dot span {
-            position: absolute;
-            border-radius: 50%;
-            background: #ff2200;
-            width: 16px;
-            height: 16px;
-            z-index: 3;
-            animation: dot-core-blink 1s ease-in-out infinite;
-            box-shadow: 0 0 6px rgba(255,34,0,0.8);
+    .qa-btn.qa-indigo {
+        border-color: #C7D2FE;
+        color: var(--indigo);
+    }
+
+        .qa-btn.qa-indigo:hover {
+            background: var(--indigo-light);
+            border-color: var(--indigo);
+            box-shadow: 0 10px 28px rgba(79,70,229,.22);
         }
 
-        .wave-dot::before {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 34, 0, 0.7);
-            animation: wave-dot-ripple-1 1.8s ease-out infinite;
+        .qa-btn.qa-indigo .qa-icon {
+            background: var(--indigo-light);
+            color: var(--indigo);
         }
 
-       
-        .wave-dot::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 34, 0, 0.5);
-            animation: wave-dot-ripple-2 1.8s ease-out infinite 0.6s;
+    .qa-btn.qa-success {
+        border-color: #BBF7D0;
+        color: #15803D;
+    }
+
+        .qa-btn.qa-success:hover {
+            background: var(--success-light);
+            border-color: var(--success);
+            box-shadow: 0 10px 28px rgba(34,197,94,.22);
         }
 
-        
-        .wave-dot i {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 34, 0, 0.3);
-            animation: wave-dot-ripple-3 1.8s ease-out infinite 1.2s;
-            font-style: normal;
-            font-size: 0;
+        .qa-btn.qa-success .qa-icon {
+            background: var(--success-light);
+            color: #15803D;
         }
+
+    .qa-btn.qa-warning {
+        border-color: #FDE68A;
+        color: #B45309;
+    }
+
+        .qa-btn.qa-warning:hover {
+            background: var(--warning-light);
+            border-color: var(--warning);
+            box-shadow: 0 10px 28px rgba(245,158,11,.22);
+        }
+
+        .qa-btn.qa-warning .qa-icon {
+            background: var(--warning-light);
+            color: #B45309;
+        }
+
+    .qa-card.qa-horizontal .qa-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start; 
+        gap: 10px;
+        padding: 14px 16px;
+    }
+    .qa-card.qa-horizontal .qa-btn {
+        flex: 1 1 220px;
+        max-width: 260px;
+        min-height: 60px; 
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+        padding: 10px 16px; 
+    }
+
+        .qa-card.qa-horizontal .qa-btn .qa-icon {
+            width: 26px;
+            height: 26px;
+            font-size: 22px;
+        }
+
+        .qa-card.qa-horizontal .qa-btn span {
+            font-size: 12.5px;
+        }
+
+    .qa-btn.qa-rose {
+        border-color: #FECDD3;
+        color: #E11D48;
+    }
+
+        .qa-btn.qa-rose:hover {
+            background: #FFF1F2;
+            border-color: #E11D48;
+            box-shadow: 0 10px 28px rgba(225,29,72,.22);
+        }
+
+    .qa-btn.qa-danger {
+        border-color: #FECACA;
+        color: var(--danger);
+    }
+
+        .qa-btn.qa-danger:hover {
+            background: var(--danger-light);
+            border-color: var(--danger);
+            box-shadow: 0 10px 28px rgba(239,68,68,.22);
+        }
+
+    .qa-btn.qa-orange {
+        border-color: #FED7AA;
+        color: #C2410C;
+    }
+
+        .qa-btn.qa-orange:hover {
+            background: #FFF7ED;
+            border-color: #C2410C;
+            box-shadow: 0 10px 28px rgba(194,65,12,.22);
+        }
+
+    .qa-btn.qa-cyan {
+        border-color: #A5F3FC;
+        color: var(--info);
+    }
+
+        .qa-btn.qa-cyan:hover {
+            background: var(--info-light);
+            border-color: var(--info);
+            box-shadow: 0 10px 28px rgba(6,182,212,.22);
+        }
+
+    .qa-btn.qa-purple {
+        border-color: #DDD6FE;
+        color: var(--purple);
+    }
+
+        .qa-btn.qa-purple:hover {
+            background: var(--purple-light);
+            border-color: var(--purple);
+            box-shadow: 0 10px 28px rgba(139,92,246,.22);
+        }
+
+   
+    .row-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .row-9-3 {
+        display: grid;
+        grid-template-columns: 9fr 3fr;
+        gap: 16px;
+    }
+
+    .pharm-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 24px;
+        font-size: 13px;
+        color: var(--sub);
+        border-top: 1px solid var(--border);
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        margin-top: 4px;
+    }
+
+    
+    @@media (max-width:1300px) {
+        .charts-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .row-9-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width:768px) {
+        .charts-row {
+            grid-template-columns: 1fr;
+        }
+
+        .row-2col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+   
+
+    .topbar-filter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .topbar-filter label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: .3px;
+            text-transform: uppercase;
+        }
+
+        .topbar-filter input[type="text"] {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            background: #F1F5FB;
+            border: 2px solid #008080;
+            border-radius: 10px;
+            padding: 0 14px;
+            height: 38px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color .15s, background .15s, box-shadow .15s;
+        }
+
+            .topbar-filter input[type="text"]:focus,
+            .topbar-filter input[type="text"]:hover {
+                background: #ffffff;
+                border-color: #008080;
+                box-shadow: 0 0 0 3px rgba(0,128,128,.15);
+            }
+
+    .quick-range-wrap {
+        position: relative;
+    }
+
+    .btn-quick-range {
+        height: 38px;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        background: rgba(255,255,255,.15);
+        border: 1.5px solid rgba(255,255,255,.4);
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background .15s;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+        .btn-quick-range:hover {
+            background: rgba(255,255,255,.28);
+        }
+
+        .btn-quick-range:active,
+        .btn-quick-range:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+    .quick-range-menu {
+        display: none;
+        position: absolute;
+        top: 46px;
+        left: 0;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        box-shadow: var(--shadow-md);
+        min-width: 160px;
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+        .quick-range-menu.open {
+            display: block;
+        }
+
+        .quick-range-menu a {
+            display: block;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            transition: background .15s;
+        }
+
+            .quick-range-menu a:hover {
+                background: #E6FFFA;
+                color: #008080;
+            }
+
+    .btn-dash-apply {
+        font-size: 16px;
+        font-weight: 700;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        padding: 0 18px;
+        height: 38px;
+        cursor: pointer;
+        background: #e0691f;
+        color: #fff;
+        transition: transform .15s;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+        .btn-dash-apply:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-dash-apply:active,
+        .btn-dash-apply:focus {
+            outline: none !important;
+            box-shadow: none !important;
+            border-color: #fff;
+        }
+
+   
+    #SimpleMedModal .med-header {
+        background: #5B4FCF;
+    }
+
+    #SimpleMedModal .med-info-bg {
+        background: #F0EEFF;
+        border-bottom: 0.5px solid #C4B8F8;
+    }
+
+    #SimpleMedModal .med-info-card {
+        background: #fff;
+        border: 1px solid #C4B8F8;
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    #SimpleMedModal .med-info-label {
+        margin: 0;
+        font-size: 13px;
+        color: #3A2D9A;
+    }
+
+    #SimpleMedModal .med-info-value {
+        margin: 5px 0 0;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    #SimpleMedModal .med-info-value-sm {
+        margin: 5px 0 0;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    #SimpleMedModal .med-footer {
+        background: #F0EEFF;
+        border-top: 1px solid #C4B8F8;
+    }
+
+    .btn-close-custom {
+        padding: 8px 20px;
+        border: 1px solid #cbd5e0;
+        background: #fff;
+        border-radius: 6px;
+        font-size: 13px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-close-custom:hover {
+            background: #5B4FCF;
+            color: #fff;
+            border-color: #5B4FCF;
+        }
+
+    .btn-sm {
+        padding: 4px 10px;
+        font-size: 12px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-info {
+        background: #0D9488;
+        color: #fff;
+    }
+
+        .btn-info:hover {
+            background: #0F766E;
+        }
+
+    .btn-success {
+        background: #16A34A;
+        color: #fff;
+    }
+
+        .btn-success:hover {
+            background: #15803D;
+        }
+
+    
+    .modal-backdrop {
+        display: none !important;
+    }
+
+    #SimpleMedModal.show {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #SimpleMedModal .modal-dialog {
+        margin: 0 auto !important;
+    }
+
+    .modal {
+        z-index: 99999 !important;
+    }
+
+    .modal-dialog {
+        z-index: 100000 !important;
+    }
+
+    .modal-content {
+        pointer-events: auto !important;
+    }
+
+    body.modal-open {
+        overflow: hidden !important;
+        padding-right: 0 !important;
+    }
 </style>
 
-<div class="container-fluid">
-    
-    <div class="row">
-        <div class="col-12">
-            <h2 class="mb-4" style="background: teal; height: 60px; display: flex; padding: 0 25px; border-radius: 0; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,.15); font-size: 25px; font-weight: 800; color: #ffffff; letter-spacing: 2px; margin: 0; display: flex; align-items: center; gap: 12px; ">PHARMACY DASHBOARD</h2>
-        </div>
-    </div>
+<div class="pharm-wrap">
 
-   
-    <div class="row">
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card" style="background:linear-gradient(135deg,rgba(102,126,234,0.85),rgba(118,75,162,0.85));">
-                <div class="card-label">Sales Invoice</div><br />
-                <div class="card-value" id="totalSales">0</div>
+    <div class="pharm-topbar">
+        <h1>PHARMACY DASHBOARD</h1>
 
-
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card" style="background:linear-gradient(135deg,rgba(240,147,251,0.85),rgba(245,87,108,0.85));">
-                <div class="card-label">Purchase Invoice</div><br />
-                <div class="card-value" id="totalPurchase">0</div>
-
-
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card" style="background:linear-gradient(135deg,rgba(17,153,142,0.85),rgba(56,239,125,0.85));">
-                <i class="fa fa-store card-icon"></i>
-
-
-                <div class="card-label">Total Medicines</div><br />
-                <div class="card-value" id="totalMedicines">0</div>
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card alert-blink" style="background:linear-gradient(135deg,rgba(255,175,89,0.85),rgba(255,89,89,0.85));">
-
-
-                <div class="card-label">Short Stock Report</div><br />
-                <div class="card-value" id="shortStock">0</div>
-
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card alert-blink" style="background:linear-gradient(135deg,rgba(236,72,153,0.85),rgba(239,68,68,0.85));">
-
-
-                <div class="card-label">Expiry Medicine Report</div><br />
-                <div class="card-value" id="expiryCount">0</div>
-
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card alert-blink" style="background:linear-gradient(135deg,rgba(161,140,209,0.85),rgba(118,75,162,0.85));">
-
-
-                <div class="card-label">Out of Stock Medicines</div><br />
-                <div class="card-value" id="outOfStock">0</div>
-
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card" style="background:linear-gradient(135deg,rgba(67,233,123,0.85),rgba(17,153,142,0.85));">
-                <div class="card-label">Fast Moving Medicines</div><br />
-                <div class="card-value" id="fastMoving">0</div>
-
-
-            </div>
-        </div>
-        <div class="col-lg" style="flex:0 0 12.5%; max-width:12.5%;">
-            <div class="dashboard-card" style="background:linear-gradient(135deg,rgba(30,60,114,0.85),rgba(42,82,152,0.85));">
-
-
-                <div class="card-label">Non Moving Medicines </div><br />
-                <div class="card-value" id="nonMoving">0</div>
-
-            </div>
-        </div>
-    </div>
-
-     <div class="row">
-         
-        <div class="col-md-4">
-            <div class="chart-container">
-                <div class="section-title">SALES INVOICE TREND (Last 7 Days)</div>
-                <canvas id="salesTrendChart" height="260"></canvas>
-            </div>
-        </div>
-       
-        <div class="col-md-4">
-            <div class="chart-container">
-                <div class="section-title">PURCHASE INVOICE TREND (Last 7 Days)</div>
-                <canvas id="purchaseTrendChart" height="260"></canvas>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="chart-container">
-                <div class="section-title">MEDICINES STATUS OVERVIEW</div>
-                <canvas id="medicinesStatusChart" height="260"></canvas>
-            </div>
-        </div>
-    </div>
-
-   
-    <div class="row">
-        <div class="col-md-6">
-            <div class="medicine-table">
-                <div class="section-title p-3 mb-0 title-sales-invoice">
-                    <span><i class="fa fa-file-invoice"></i> SALES INVOICE LIST</span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'salesInvoiceList')">
+        <div class="topbar-filter">
+            <div class="quick-range-wrap">
+                <button type="button" class="btn-quick-range" onclick="togglePharmQuickRange(event)">
+                    <i class="fa fa-calendar"></i> Quick Filter <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="quick-range-menu" id="pharmQuickRangeMenu">
+                    <a href="#" onclick="applyPharmQuickRange('today', event)">Today</a>
+                    <a href="#" onclick="applyPharmQuickRange('yesterday', event)">Yesterday</a>
+                    <a href="#" onclick="applyPharmQuickRange('weekly', event)">This Week</a>
+                    <a href="#" onclick="applyPharmQuickRange('monthly', event)">This Month</a>
+                    <a href="#" onclick="applyPharmQuickRange('lastmonth', event)">Last Month</a>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
+            </div>
+            <label>From</label>
+            <input type="text" id="pharm-from-date" placeholder="dd/mm/yyyy" autocomplete="off" />
+            <label>To</label>
+            <input type="text" id="pharm-to-date" placeholder="dd/mm/yyyy" autocomplete="off" />
+            <button type="button" class="btn-dash-apply" onclick="ApplyPharmDateFilter()">Filter</button>
+        </div>
+    </div>
+
+    <div class="pharm-body-flex">
+
+        <div class="pharm-sidenav">
+            <a class="nav-item active" data-target="pharm-top"><i class="fa fa-home"></i><span>Home</span></a>
+            <a class="nav-item" data-target="sec-medicinequeue"><i class="fa fa-users"></i><span>Medicine Queue</span></a>
+            <a class="nav-item" data-target="sec-sales"><i class="fa fa-list-alt"></i><span>Sales Invoice</span></a>
+            <a class="nav-item" data-target="sec-purchase"><i class="fa fa-clipboard"></i><span>Purchase Invoice</span></a>
+            <a class="nav-item" data-target="sec-totalmedicines"><i class="fa fa-medkit"></i><span>Total Medicines</span></a>
+            <a class="nav-item" data-target="sec-shortstock"><i class="fa fa-exclamation-triangle"></i><span>Short Stock</span></a>
+            <a class="nav-item" data-target="sec-fastmoving"><i class="fa fa-bolt"></i><span>Fast Moving</span></a>
+            <a class="nav-item" data-target="sec-nonmoving"><i class="fa fa-pause-circle"></i><span>Non Moving</span></a>
+            <a class="nav-item" data-target="sec-expiry"><i class="fa fa-hourglass-end"></i><span>Expiry Report</span></a>
+            <a class="nav-item" data-target="sec-outofstock"><i class="fa fa-ban"></i><span>Out of Stock</span></a>
+        </div>
+
+        <div class="container-fluid pharm-page" id="pharm-top" style="padding:0;">
+
+            <div class="kpi-row">
+                <div class="kpi-card kpi-blue" onclick="goToSection('sec-sales')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Sales Invoice</div>
+                        <div class="kpi-value" id="totalSales">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-file-text"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-teal" onclick="goToSection('sec-purchase')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Purchase Invoice</div>
+                        <div class="kpi-value" id="totalPurchase">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-file-text-o"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-cyan" onclick="goToSection('sec-totalmedicines')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Total Medicines</div>
+                        <div class="kpi-value" id="totalMedicines">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-medkit"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-rose kpi-alert" onclick="goToSection('sec-shortstock')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Short Items Report</div>
+                        <div class="kpi-value" id="shortStock">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-exclamation-triangle"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-purple kpi-alert" onclick="goToSection('sec-expiry')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Expiry Items Report</div>
+                        <div class="kpi-value" id="expiryCount">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-hourglass-end"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-orange kpi-alert" onclick="goToSection('sec-outofstock')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Out of Stock Medicines</div>
+                        <div class="kpi-value" id="outOfStock">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-ban"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-crimson" onclick="goToSection('sec-fastmoving')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Fast Moving Medicines</div>
+                        <div class="kpi-value" id="fastMoving">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-bolt"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-green" onclick="goToSection('sec-nonmoving')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Non Moving Medicines</div>
+                        <div class="kpi-value" id="nonMoving">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-pause-circle"></i></div>
+                </div>
+
+                <div class="kpi-card kpi-indigo" onclick="goToSection('sec-medicinequeue')">
+                    <div class="kpi-text">
+                        <div class="kpi-label">Medicine Queue</div>
+                        <div class="kpi-value" id="medicineQueueCount">0</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fa fa-users"></i></div>
+                </div>
+            </div>
+
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-card-title" id="salesChartTitle">Sales Invoice Analysis</div>
+                    <div class="chart-wrap"><canvas id="salesTrendChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-card-title" id="purchaseChartTitle">Purchase Invoice Analysis</div>
+                    <div class="chart-wrap"><canvas id="purchaseTrendChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-card-title">Inventory Status</div>
+                    <div class="chart-wrap"><canvas id="medicinesStatusChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="tbl-card" id="sec-medicinequeue" style="display:none;">
+                <div class="tbl-header">
+                    <div class="tbl-title icon-purple"><i class="fa fa-users"></i> Medicine Queue</div>
+                    <div class="tbl-search-box">
+                        <i class="fa fa-search"></i>
+                        <input type="text" placeholder="Search..." onkeyup="filterTable(this,'medicineQueueList')">
+                    </div>
+                </div>
+                <div class="tbl-controls-top">
+                    Show
+                    <select onchange="setPageSize('medicineQueueList', this.value)">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    entries
+                </div>
+                <div class="tbl-scroll">
+                    <table class="dash-table">
                         <thead>
-                            <tr class="bg-light">
+                            <tr>
                                 <th>Sl No</th>
-                                <th>Invoice No.</th>
+                                <th>Reg#</th>
+                                <th>OP#</th>
                                 <th>Date</th>
-                                <th>Customer</th>
-                                <th>Pay Type</th>
-                                <th>User</th>
-                                <th>View</th>
+                                <th>Time</th>
+                                <th>Patient</th>
+                                <th>Age/Sex</th>
+                                <th>Contact</th>
+                                <th>Doctor</th>
+                                <th>Action</th>
+                                <th>Bill</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="salesInvoiceList">
-                            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                        <tbody id="medicineQueueList">
+                            <tr><td colspan="12" class="text-center">Loading...</td></tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="tbl-controls-bottom">
+                    <span id="medicineQueueList_info">Showing 0 to 0 of 0 entries</span>
+                    <div class="tbl-pagination" id="medicineQueueList_pagination"></div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="medicine-table">
-                <div class="section-title p-3 mb-0 title-purchase-invoice">
-                    <span>PURCHASE INVOICE LIST</span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'purchaseInvoiceList')">
+
+            <div class="tbl-card" id="sec-totalmedicines" style="display:none;">
+                <div class="tbl-header">
+                    <div class="tbl-title icon-navy"><i class="fa fa-medkit"></i> Total Medicines</div>
+                    <div class="tbl-search-box">
+                        <i class="fa fa-search"></i>
+                        <input type="text" placeholder="Search..." onkeyup="filterTable(this,'totalMedicinesList')">
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
+                <div class="tbl-controls-top">
+                    Show
+                    <select onchange="setPageSize('totalMedicinesList', this.value)">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    entries
+                </div>
+                <div class="tbl-scroll">
+                    <table class="dash-table">
                         <thead>
-                            <tr class="bg-light">
+                            <tr>
                                 <th>Sl No</th>
-                                <th>Invoice No.</th>
-                                <th>Date</th>
-                                <th>Supplier</th>
-                                <th>Pay Type</th>
-                                <th>User</th>
-                                <th>View</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Unit</th>
+                                <th>Company</th>
+                                <th>Tax%</th>
+                                <th>Rate</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="purchaseInvoiceList">
-                            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                        <tbody id="totalMedicinesList">
+                            <tr><td colspan="9" class="text-center">Loading...</td></tr>
                         </tbody>
                     </table>
                 </div>
+                <div class="tbl-controls-bottom">
+                    <span id="totalMedicinesList_info">Showing 0 to 0 of 0 entries</span>
+                    <div class="tbl-pagination" id="totalMedicinesList_pagination"></div>
+                </div>
+            </div>
+
+            <div class="row-2col" id="row-sales-purchase">
+                <div class="tbl-card" id="sec-sales">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-navy"><i class="fa fa-list-alt"></i> Sales Invoices</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'salesInvoiceList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('salesInvoiceList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Invoice No.</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Pay Type</th>
+                                    <th>User</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesInvoiceList">
+                                <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="salesInvoiceList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="salesInvoiceList_pagination"></div>
+                    </div>
+                </div>
+                <div class="tbl-card" id="sec-purchase">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-navy"><i class="fa fa-clipboard"></i> Purchase Invoices</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'purchaseInvoiceList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('purchaseInvoiceList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Invoice No.</th>
+                                    <th>Date</th>
+                                    <th>Supplier</th>
+                                    <th>Pay Type</th>
+                                    <th>User</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchaseInvoiceList">
+                                <tr><td colspan="7" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="purchaseInvoiceList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="purchaseInvoiceList_pagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-2col" id="row-short-fast">
+                <div class="tbl-card tbl-alert" id="sec-shortstock">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-rose"><i class="fa fa-exclamation-triangle"></i> Short Stock Medicines</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'shortStockList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('shortStockList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Medicine Name</th>
+                                    <th>Category</th>
+                                    <th>Stock Qty</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody id="shortStockList">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="shortStockList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="shortStockList_pagination"></div>
+                    </div>
+                </div>
+                <div class="tbl-card" id="sec-fastmoving">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-green"><i class="fa fa-bolt"></i> Fast Moving Medicines</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'fastMovingList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('fastMovingList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Medicine Name</th>
+                                    <th>Category</th>
+                                    <th>Stock Qty</th>
+                                    <th>Last Sold Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fastMovingList">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="fastMovingList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="fastMovingList_pagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-2col" id="row-non-expiry">
+                <div class="tbl-card" id="sec-nonmoving">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-navy"><i class="fa fa-pause-circle"></i> Non Moving Medicines</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'nonMovingList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('nonMovingList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Medicine Name</th>
+                                    <th>Category</th>
+                                    <th>Stock Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nonMovingList">
+                                <tr><td colspan="4" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="nonMovingList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="nonMovingList_pagination"></div>
+                    </div>
+                </div>
+                <div class="tbl-card tbl-alert" id="sec-expiry">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-red"><i class="fa fa-hourglass-end"></i> Expiry Report</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'expiryReportList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('expiryReportList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Medicine Name</th>
+                                    <th>Batch No.</th>
+                                    <th>Expiry Date</th>
+                                    <th>Stock Qty</th>
+                                    <th>Days Left</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expiryReportList">
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="expiryReportList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="expiryReportList_pagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-9-3" id="row-out-qa">
+                <div class="tbl-card tbl-alert" id="sec-outofstock">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-orange"><i class="fa fa-ban"></i> Out of Stock Medicines</div>
+                        <div class="tbl-search-box">
+                            <i class="fa fa-search"></i>
+                            <input type="text" placeholder="Search..." onkeyup="filterTable(this,'outOfStockList')">
+                        </div>
+                    </div>
+                    <div class="tbl-controls-top">
+                        Show
+                        <select onchange="setPageSize('outOfStockList', this.value)">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                        entries
+                    </div>
+                    <div class="tbl-scroll">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Sl No</th>
+                                    <th>Medicine Name</th>
+                                    <th>Category</th>
+                                    <th>Last Purchase Date</th>
+                                    <th>Order</th>
+                                </tr>
+                            </thead>
+                            <tbody id="outOfStockList">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tbl-controls-bottom">
+                        <span id="outOfStockList_info">Showing 0 to 0 of 0 entries</span>
+                        <div class="tbl-pagination" id="outOfStockList_pagination"></div>
+                    </div>
+                </div>
+
+                <div class="qa-card qa-horizontal" id="sec-quickactions">
+                    <div class="tbl-header">
+                        <div class="tbl-title icon-navy" style="font-size:16px !important;"> Quick Actions</div>
+                    </div>
+                    <div class="qa-grid">
+                        <a href="/Pharmacy/PharmaPurchase" target="_blank" class="qa-btn qa-indigo">
+                            <div class="qa-icon" style="background:var(--indigo-light);color:var(--indigo);"><i class="fa fa-shopping-cart"></i></div>
+                            <span style="font-size:16px !important;">New Purchase Bill</span>
+                        </a>
+                        <a href="/Hospital/SaleInvoiceHospital" target="_blank" class="qa-btn qa-success">
+                            <div class="qa-icon" style="background:var(--success-light);color:#15803D;"><i class="fa fa-plus-circle"></i></div>
+                            <span style="font-size:16px !important;">New Sales Bill</span>
+                        </a>
+                        <a href="/Pharmacy/Medicine" target="_blank" class="qa-btn qa-warning">
+                            <div class="qa-icon" style="background:var(--warning-light);color:#B45309;"><i class="fa fa-plus"></i></div>
+                            <span style="font-size:16px !important;">Add Medicine</span>
+                        </a>
+                        <a href="#" onclick="showSection('sec-shortstock'); return false;" class="qa-btn qa-rose">
+                            <div class="qa-icon" style="background:#FFF1F2;color:#E11D48;"><i class="fa fa-exclamation-triangle"></i></div>
+                            <span style="font-size:16px !important;">View Short Stock</span>
+                        </a>
+                        <a href="#" onclick="showSection('sec-expiry'); return false;" class="qa-btn qa-danger">
+                            <div class="qa-icon" style="background:var(--danger-light);color:var(--danger);"><i class="fa fa-hourglass-end"></i></div>
+                            <span style="font-size:16px !important;">Expiry Report</span>
+                        </a>
+                        <a href="#" onclick="showSection('sec-outofstock'); return false;" class="qa-btn qa-orange">
+                            <div class="qa-icon" style="background:#FFF7ED;color:#C2410C;"><i class="fa fa-ban"></i></div>
+                            <span style="font-size:16px !important;">Out of Stock</span>
+                        </a>
+                        <a href="#" onclick="showSection('sec-medicinequeue'); return false;" class="qa-btn qa-purple">
+                            <div class="qa-icon" style="background:var(--purple-light);color:var(--purple);"><i class="fa fa-users"></i></div>
+                            <span style="font-size:16px !important;">Medicine Queue</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="Warningpopup" class="top-alert"><span id="popupmessage"></span></div>
+
+<div class="modal fade" id="SimpleMedModal" tabindex="-1" role="dialog" aria-labelledby="SimpleMedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width:720px;" role="document">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden; border:none; font-family:'Segoe UI',sans-serif; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div class="med-header" style="padding:18px 24px; display:flex; justify-content:space-between; align-items:center; background:#5B4FCF;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div>
+                        <p style="margin:0; font-size:20px; font-weight:700; color:#fff;">MEDICINE ADVICE DETAILS</p>
+                    </div>
+                </div>
+                <button type="button" class="close" onclick="CloseMedModal()"
+                        style="color:#fff; font-size:22px; background:rgba(255,255,255,0.2); border-radius:50%; width:28px; height:28px; border:none; cursor:pointer;">
+                    &times;
+                </button>
+            </div>
+
+            <div class="med-info-bg" style="padding:20px 24px; background:#F0EEFF; border-bottom:0.5px solid #C4B8F8;">
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Name</p>
+                        <p id="MM_Patient" class="med-info-value" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Age / Sex</p>
+                        <p id="MM_AgeSex" class="med-info-value" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Phone</p>
+                        <p id="MM_Phone" class="med-info-value" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Reg#</p>
+                        <p id="MM_RegNo" class="med-info-value" style="margin:5px 0 0; font-size:16px; font-weight:700;"></p>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px;">
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Date</p>
+                        <p id="MM_Date" class="med-info-value-sm" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Time</p>
+                        <p id="MM_Time" class="med-info-value-sm" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">OP#</p>
+                        <p id="MM_OPNo" class="med-info-value-sm" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+                    <div class="med-info-card" style="background:#fff; border:1px solid #C4B8F8; border-radius:8px; padding:12px;">
+                        <p class="med-info-label" style="margin:0; font-size:13px; color:#3A2D9A;">Doctor</p>
+                        <p id="MM_Doctor" class="med-info-value-sm" style="margin:5px 0 0; font-size:15px; font-weight:600;"></p>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:20px 24px; background:#fff;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+                    <p style="margin:0; font-size:18px; font-weight:700;">Medicines Advised</p>
+                    <span id="MM_MedCount" style="font-size:13px; color:#6b7280;"></span>
+                </div>
+                <div id="MM_MedicineList"></div>
+            </div>
+
+            <div class="med-footer" style="padding:14px 24px; display:flex; justify-content:flex-end; align-items:center; gap:10px; background:#F0EEFF; border-top:1px solid #C4B8F8;">
+                <button type="button" onclick="PrintMedAdvice()"
+                        style="padding:8px 20px; border:1px solid #5B4FCF; background:#5B4FCF; color:#fff; border-radius:6px; font-size:13px; cursor:pointer;">
+                    <i class="fa fa-print"></i> Print
+                </button>
+                <button type="button" onclick="CloseMedModal()" class="btn-close-custom" style="padding:8px 20px; border:1px solid #cbd5e0; background:#fff; border-radius:6px; font-size:13px; cursor:pointer; transition:all 0.3s ease;">Close</button>
             </div>
         </div>
     </div>
-
-    
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <div class="medicine-table alert-table">
-                <div class="section-title p-3 mb-0 title-short-stock">
-                    <span style="display:flex;align-items:center;">
-                        <div class="wave-dot"><span></span><i></i></div>
-                        SHORT STOCK MEDICINE LIST
-                    </span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'shortStockList')">
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
-                        <thead>
-                            <tr class="bg-light">
-                                <th>Sl No</th>
-                                <th>Medicine Name</th>
-                                <th>Category</th>
-                                <th>Stock Qty</th>
-                                <th>View</th>
-                            </tr>
-                        </thead>
-                        <tbody id="shortStockList">
-                            <tr><td colspan="5" class="text-center">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="medicine-table">
-                <div class="section-title p-3 mb-0 title-fast-moving">
-                    <span>FAST MOVING MEDICINE LIST</span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'fastMovingList')">
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
-                        <thead>
-                            <tr class="bg-light">
-                                <th>Sl No</th>
-                                <th>Medicine Name</th>
-                                <th>Category</th>
-                                <th>Stock Qty</th>
-                                <th>Last Sold Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="fastMovingList">
-                            <tr><td colspan="5" class="text-center">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <div class="medicine-table">
-                <div class="section-title p-3 mb-0 title-non-moving">
-                    <span>NON MOVING MEDICINE LIST</span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'nonMovingList')">
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
-                        <thead>
-                            <tr class="bg-light">
-                                <th>Sl No</th>
-                                <th>Medicine Name</th>
-                                <th>Category</th>
-                                <th>Stock Qty</th>
-                            </tr>
-                        </thead>
-                        <tbody id="nonMovingList">
-                            <tr><td colspan="4" class="text-center">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="medicine-table alert-table">
-                <div class="section-title p-3 mb-0 title-expiry">
-                    <span style="display:flex;align-items:center;">
-                        <div class="wave-dot"><span></span><i></i></div>
-                        EXPIRY REPORT
-                    </span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'expiryReportList')">
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
-                        <thead>
-                            <tr class="bg-light">
-                                <th>Sl No</th>
-                                <th>Medicine Name</th>
-                                <th>Batch No.</th>
-                                <th>Expiry Date</th>
-                                <th>Stock Qty</th>
-                                <th>Days Left</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expiryReportList">
-                            <tr><td colspan="6" class="text-center">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-  
-    <div class="row mt-3 mb-4">
-        <div class="col-md-9">
-            <div class="medicine-table alert-table">
-                <div class="section-title p-3 mb-0 title-out-of-stock">
-                    <span style="display:flex;align-items:center;">
-                        <div class="wave-dot"><span></span><i></i></div>
-                        OUT OF STOCK MEDICINE LIST
-                    </span>
-                    <input type="text" class="title-search-box" placeholder="🔍 Search..." onkeyup="filterTable(this,'outOfStockList')">
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm mb-0">
-                        <thead>
-                            <tr class="bg-light">
-                                <th>Sl No</th>
-                                <th>Medicine Name</th>
-                                <th>Category</th>
-                                <th>Last Purchase Date</th>
-                                <th>Order</th>
-                            </tr>
-                        </thead>
-                        <tbody id="outOfStockList">
-                            <tr><td colspan="5" class="text-center">Loading...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="medicine-table" style="height:350px;">
-                <div class="section-title p-3 mb-0 title-quick-actions">
-                    <i class="fa fa-bolt" style="color:black;"> QUICK ACTIONS </i>
-                </div>
-                <div class="p-3" style="display:flex; flex-direction:column; gap:10px;">
-                    <a href="/Pharmacy/PharmaPurchase" target="_blank" class="btn btn-block text-left quick-action-btn"
-                       style="background:#e3f2fd;border:1px solid #bbdefb;border-radius:10px;padding:12px;">
-                        <i class="fa fa-shopping-cart" style="color:#1976d2;font-size:18px;margin-right:8px;"></i>
-                        <span style="font-weight:600;color:#333;">New Purchase</span>
-                    </a>
-
-                    <a href="/Hospital/SaleInvoiceHospital" target="_blank" class="btn btn-block text-left quick-action-btn"
-                       style="background:#e8f5e9;border:1px solid #c8e6c9;border-radius:10px;padding:12px;">
-                        <i class="fa fa-plus-circle" style="color:#28a745;font-size:18px;margin-right:8px;"></i>
-                        <span style="font-weight:600;color:#333;">New Sale Bill</span>
-                    </a>
-
-                    <a href="/Pharmacy/Medicine" target="_blank" class="btn btn-block text-left quick-action-btn"
-                       style="background:#fff3e0;border:1px solid #ffe0b2;border-radius:10px;padding:12px;">
-                        <i class="fa fa-plus" style="color:#e65100;font-size:18px;margin-right:8px;"></i>
-                        <span style="font-weight:600;color:#333;">Add Medicine</span>
-                    </a>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div> 
+</div>
 
 <script>
     var salesChart, purchaseChart, medicinesChart;
+    var medicineQueueData = [];
 
     $(document).ready(function () {
-        LoadDashboardData();
         document.title = "Pharmacy Dashboard";
+        initSideNav();
+
+        $('#pharm-from-date, #pharm-to-date').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'DD/MM/YYYY' }
+        });
+
+        var today = getPharmTodayFormatted();
+        $('#pharm-from-date').data('daterangepicker').setStartDate(today);
+        $('#pharm-from-date').data('daterangepicker').setEndDate(today);
+        $('#pharm-to-date').data('daterangepicker').setStartDate(today);
+        $('#pharm-to-date').data('daterangepicker').setEndDate(today);
+
+        LoadDashboardData(today, today);
+        LoadMedicineQueue();
+
+        setInterval(function () {
+            var fromVal = $('#pharm-from-date').val();
+            var toVal = $('#pharm-to-date').val();
+            if (fromVal && toVal) {
+                LoadDashboardData(fromVal, toVal);
+            }
+            LoadMedicineQueue();
+        }, 120000);
     });
 
+    function initSideNav() {
+        var navItems = document.querySelectorAll('.pharm-sidenav .nav-item');
 
+        navItems.forEach(function (item) {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                navItems.forEach(function (n) { n.classList.remove('active'); });
+                item.classList.add('active');
+                showSection(item.getAttribute('data-target'));
+            });
+        });
+
+        showSection('pharm-top');
+    }
+
+    function togglePharmQuickRange(e) {
+        e.stopPropagation();
+        document.getElementById('pharmQuickRangeMenu').classList.toggle('open');
+    }
+
+    document.addEventListener('click', function () {
+        var menu = document.getElementById('pharmQuickRangeMenu');
+        if (menu) menu.classList.remove('open');
+    });
+
+    function formatPharmDMY(d) {
+        var dd = (d.getDate() < 10 ? '0' : '') + d.getDate();
+        var mm = ((d.getMonth() + 1) < 10 ? '0' : '') + (d.getMonth() + 1);
+        return dd + '/' + mm + '/' + d.getFullYear();
+    }
+
+    function applyPharmQuickRange(type, e) {
+        if (e) e.preventDefault();
+
+        var today = new Date();
+        var from, to;
+
+        switch (type) {
+            case 'today':
+                from = new Date(today); to = new Date(today);
+                break;
+            case 'yesterday':
+                from = new Date(today); from.setDate(today.getDate() - 1);
+                to = new Date(from);
+                break;
+            case 'weekly':
+                from = new Date(today); from.setDate(today.getDate() - today.getDay());
+                to = new Date(today);
+                break;
+            case 'monthly':
+                from = new Date(today.getFullYear(), today.getMonth(), 1);
+                to = new Date(today);
+                break;
+            case 'lastmonth':
+                from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                to = new Date(today.getFullYear(), today.getMonth(), 0);
+                break;
+        }
+
+        var fromStr = formatPharmDMY(from);
+        var toStr = formatPharmDMY(to);
+
+        var $from = $('#pharm-from-date');
+        var $to = $('#pharm-to-date');
+
+        $from.val(fromStr);
+        $to.val(toStr);
+
+        if ($from.data('daterangepicker')) {
+            $from.data('daterangepicker').setStartDate(fromStr);
+            $from.data('daterangepicker').setEndDate(fromStr);
+        }
+        if ($to.data('daterangepicker')) {
+            $to.data('daterangepicker').setStartDate(toStr);
+            $to.data('daterangepicker').setEndDate(toStr);
+        }
+
+        document.getElementById('pharmQuickRangeMenu').classList.remove('open');
+    }
+
+    function pharmDmyToDate(dmy) {
+        if (!dmy) return null;
+        var p = dmy.split('/');
+        if (p.length !== 3) return null;
+        return new Date(p[2], p[1] - 1, p[0]);
+    }
+
+    function ApplyPharmDateFilter() {
+        var f = document.getElementById('pharm-from-date');
+        var t = document.getElementById('pharm-to-date');
+        if (!f.value || !t.value) { warningshow('Please select both From and To dates.'); return; }
+        var fd = pharmDmyToDate(f.value), td = pharmDmyToDate(t.value);
+        if (fd && td && fd > td) { warningshow('From date cannot be greater than To date.'); return; }
+        LoadDashboardData(f.value, t.value);
+        LoadMedicineQueue();
+    }
+
+    function warningshow(message, Id) {
+        $('#popupmessage').text(message);
+        $('#Warningpopup').stop(true, true).show();
+        if (Id) { $('#' + Id).focus().select(); }
+        clearTimeout(window._warningTimer);
+        window._warningTimer = setTimeout(function () {
+            $('#Warningpopup').fadeOut();
+        }, 3000);
+    }
+
+    function getPharmTodayFormatted() {
+        var now = new Date();
+        var d = (now.getDate() < 10 ? '0' : '') + now.getDate();
+        var m = ((now.getMonth() + 1) < 10 ? '0' : '') + (now.getMonth() + 1);
+        return d + '/' + m + '/' + now.getFullYear();
+    }
+
+    var tablePagers = {};
+
+    function initTablePaging(tbodyId, defaultSize) {
+        var tbody = document.getElementById(tbodyId);
+        var rows = Array.prototype.filter.call(tbody.getElementsByTagName('tr'), function (r) {
+            return r.cells.length > 1;
+        });
+        tablePagers[tbodyId] = { rows: rows, pageSize: defaultSize || 10, currentPage: 1 };
+        renderPage(tbodyId);
+    }
+
+    function setPageSize(tbodyId, size) {
+        if (!tablePagers[tbodyId]) return;
+        tablePagers[tbodyId].pageSize = parseInt(size);
+        tablePagers[tbodyId].currentPage = 1;
+        renderPage(tbodyId);
+    }
+
+    function goToPage(tbodyId, page) {
+        tablePagers[tbodyId].currentPage = page;
+        renderPage(tbodyId);
+    }
+
+    function renderPage(tbodyId) {
+        var pager = tablePagers[tbodyId];
+        if (!pager) return;
+        var tbody = document.getElementById(tbodyId);
+        var total = pager.rows.length;
+        var pageSize = pager.pageSize;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (pager.currentPage > totalPages) pager.currentPage = totalPages;
+
+        var start = (pager.currentPage - 1) * pageSize;
+        var end = Math.min(start + pageSize, total);
+
+        tbody.innerHTML = '';
+        if (total === 0) {
+            var colspan = tbody.closest('table').querySelectorAll('thead th').length;
+            tbody.innerHTML = '<tr><td colspan="' + colspan + '" class="text-center">No data available</td></tr>';
+        } else {
+            for (var i = start; i < end; i++) tbody.appendChild(pager.rows[i]);
+        }
+
+        var infoEl = document.getElementById(tbodyId + '_info');
+        if (infoEl) {
+            infoEl.textContent = total === 0
+                ? 'Showing 0 to 0 of 0 entries'
+                : 'Showing ' + (start + 1) + ' to ' + end + ' of ' + total + ' entries';
+        }
+
+        var pagEl = document.getElementById(tbodyId + '_pagination');
+        if (pagEl) {
+            var html = '<button class="tbl-page-btn" ' + (pager.currentPage === 1 ? 'disabled' : '') +
+                ' onclick="goToPage(\'' + tbodyId + '\',' + (pager.currentPage - 1) + ')">Previous</button>';
+            for (var p = 1; p <= totalPages; p++) {
+                html += '<button class="tbl-page-btn' + (p === pager.currentPage ? ' active' : '') +
+                    '" onclick="goToPage(\'' + tbodyId + '\',' + p + ')">' + p + '</button>';
+            }
+            html += '<button class="tbl-page-btn" ' + (pager.currentPage === totalPages ? 'disabled' : '') +
+                ' onclick="goToPage(\'' + tbodyId + '\',' + (pager.currentPage + 1) + ')">Next</button>';
+            pagEl.innerHTML = html;
+        }
+    }
+
+    function showSection(target) {
+        var kpiRow = document.querySelector('.kpi-row');
+        var chartsRow = document.querySelector('.charts-row');
+        var rowSalesPurchase = document.getElementById('row-sales-purchase');
+        var rowShortFast = document.getElementById('row-short-fast');
+        var rowNonExpiry = document.getElementById('row-non-expiry');
+        var rowOutQa = document.getElementById('row-out-qa');
+        var secTotalMedicines = document.getElementById('sec-totalmedicines');
+
+        var secSales = document.getElementById('sec-sales');
+        var secPurchase = document.getElementById('sec-purchase');
+        var secShortStock = document.getElementById('sec-shortstock');
+        var secFastMoving = document.getElementById('sec-fastmoving');
+        var secNonMoving = document.getElementById('sec-nonmoving');
+        var secExpiry = document.getElementById('sec-expiry');
+        var secOutOfStock = document.getElementById('sec-outofstock');
+        var secQuickActions = document.getElementById('sec-quickactions');
+        var secMedicineQueue = document.getElementById('sec-medicinequeue');
+
+        kpiRow.style.display = 'none';
+        chartsRow.style.display = 'none';
+        rowSalesPurchase.style.display = 'none';
+        secTotalMedicines.style.display = 'none';
+        rowShortFast.style.display = 'none';
+        rowNonExpiry.style.display = 'none';
+        rowOutQa.style.display = 'none';
+        secMedicineQueue.style.display = 'none';
+
+        [secSales, secPurchase, secShortStock, secFastMoving, secNonMoving, secExpiry, secOutOfStock, secQuickActions]
+            .forEach(function (el) { el.style.display = ''; });
+        rowSalesPurchase.style.gridTemplateColumns = '';
+        rowShortFast.style.gridTemplateColumns = '';
+        rowNonExpiry.style.gridTemplateColumns = '';
+        rowOutQa.style.gridTemplateColumns = '';
+        secQuickActions.classList.remove('qa-horizontal');
+
+        if (target === 'pharm-top') {
+            kpiRow.style.display = 'grid';
+            chartsRow.style.display = 'grid';
+            rowOutQa.style.display = 'grid';
+            rowOutQa.style.gridTemplateColumns = '1fr';
+            secOutOfStock.style.display = 'none';
+            secQuickActions.classList.add('qa-horizontal');
+            LoadMedicineQueue();
+        } else if (target === 'sec-medicinequeue') {
+            secMedicineQueue.style.display = 'block';
+            secMedicineQueue.style.width = '100%';
+            LoadMedicineQueue();
+        } else if (target === 'sec-sales') {
+            rowSalesPurchase.style.display = 'grid';
+            rowSalesPurchase.style.gridTemplateColumns = '1fr';
+            secPurchase.style.display = 'none';
+        } else if (target === 'sec-purchase') {
+            rowSalesPurchase.style.display = 'grid';
+            rowSalesPurchase.style.gridTemplateColumns = '1fr';
+            secSales.style.display = 'none';
+        } else if (target === 'sec-shortstock') {
+            rowShortFast.style.display = 'grid';
+            rowShortFast.style.gridTemplateColumns = '1fr';
+            secFastMoving.style.display = 'none';
+        } else if (target === 'sec-fastmoving') {
+            rowShortFast.style.display = 'grid';
+            rowShortFast.style.gridTemplateColumns = '1fr';
+            secShortStock.style.display = 'none';
+        } else if (target === 'sec-nonmoving') {
+            rowNonExpiry.style.display = 'grid';
+            rowNonExpiry.style.gridTemplateColumns = '1fr';
+            secExpiry.style.display = 'none';
+        } else if (target === 'sec-expiry') {
+            rowNonExpiry.style.display = 'grid';
+            rowNonExpiry.style.gridTemplateColumns = '1fr';
+            secNonMoving.style.display = 'none';
+        } else if (target === 'sec-outofstock') {
+            rowOutQa.style.display = 'grid';
+            rowOutQa.style.gridTemplateColumns = '1fr';
+            secQuickActions.style.display = 'none';
+        } else if (target === 'sec-totalmedicines') {
+            secTotalMedicines.style.display = 'block';
+            secTotalMedicines.style.width = '100%';
+            LoadTotalMedicines();
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function LoadTotalMedicines() {
+        $.ajax({
+            type: "POST",
+            url: "../Master/ItemGetAll",
+            data: { dummy: 1 },
+            success: function (result) {
+                LoadTotalMedicinesTable(result);
+            },
+            error: function (xhr) {
+                $('#totalMedicinesList').html('<tr><td colspan="9" class="text-center">Error loading medicines: ' + xhr.status + '</td></tr>');
+            }
+        });
+    }
+
+    function LoadTotalMedicinesTable(result) {
+        var html = '';
+        if (result && result.length > 0) {
+            result.forEach(function (r, i) {
+                var statusBadge = (r.Status === 'Active' || r.Status === 1)
+                    ? '<span class="status-badge status-good">Active</span>'
+                    : '<span class="status-badge status-critical">Inactive</span>';
+
+                var actionBtns =
+                    '<button class="btn btn-sm btn-info" onclick="EditMedicineFromDashboard(' + r.ItemId + ',' + (r.GroupId || r.GrpId || 0) + ',' + (r.CategoryId || 0) + ')"><i class="fa fa-edit"></i></button>';
+
+                html += '<tr>' +
+                    '<td>' + (i + 1) + '</td>' +
+                    '<td>' + (r.ItemCode || '-') + '</td>' +
+                    '<td>' + (r.Description || '-') + '</td>' +
+                    '<td>' + (r.CategoryName || '-') + '</td>' +
+                    '<td>' + (r.UnitName || '-') + '</td>' +
+                    '<td>' + (r.GrpName || '-') + '</td>' +
+                    '<td>' + (r.TaxName || '-') + '</td>' +
+                    '<td>' + (r.MrpRate || '-') + '</td>' +
+                    '<td>' + statusBadge + '</td>' +
+                    '<td style="text-align:center;">' + actionBtns + '</td>' +
+                    '</tr>';
+            });
+        } else {
+            html = '<tr><td colspan="10" class="text-center">No medicines available</td></tr>';
+        }
+        $('#totalMedicinesList').html(html);
+        initTablePaging('totalMedicinesList', 10);
+    }
+
+   function EditMedicineFromDashboard(itemId, groupId, categoryId) {
+    if (!itemId) { warningshow('Invalid medicine record'); return; }
+
+    var newTab = window.open('/Pharmacy/Medicine', '_blank');
+
+    var attempts = 0;
+    var timer = setInterval(function () {
+        attempts++;
+        try {
+            if (newTab && !newTab.closed &&
+                newTab.document.readyState === 'complete' &&
+                typeof newTab.GetItem === 'function') {
+                clearInterval(timer);
+                setTimeout(function () {
+                    newTab.GetItem(itemId, groupId || 0, categoryId || 0);
+                }, 800); 
+            }
+        } catch (e) {
+            clearInterval(timer);
+        }
+        if (attempts > 40) clearInterval(timer); 
+    }, 500);
+}
 
    
-    function LoadDashboardData() {
+
+    function updateChartTitles(fromDate, toDate) {
+        var rangeText = (fromDate === toDate) ? fromDate : (fromDate + ' - ' + toDate);
+        $('#salesChartTitle').text('Sales Invoice Analysis (' + rangeText + ')');
+        $('#purchaseChartTitle').text('Purchase Invoice Analysis (' + rangeText + ')');
+    }
+
+    function LoadDashboardData(fromDate, toDate) {
+        updateChartTitles(fromDate, toDate);
         $.ajax({
             url: '/Hospital/GetPharmacyDashboardData',
             type: 'POST',
             dataType: 'json',
+            data: {
+                FromDate: fromDate || '',
+                ToDate: toDate || ''
+            },
             success: function (response) {
                 if (response.success && response.oList && response.oList.length > 0) {
                     var d = response.oList[0];
 
-                     
                     $('#totalSales').text(d.TotalSalesInvoices || 0);
                     $('#totalPurchase').text(d.TotalPurchaseInvoices || 0);
                     $('#totalMedicines').text(d.TotalMedicines || 0);
@@ -912,33 +2260,37 @@
                     $('#fastMoving').text(d.FastMovingCount || 0);
                     $('#nonMoving').text(d.NonMovingCount || 0);
 
-                    
                     var inStock = parseInt(d.InStock) || 0;
                     var shortSt = parseInt(d.ShortStock) || 0;
                     var outOfSt = parseInt(d.OutOfStock) || 0;
-                    var expiring = parseInt(d.ExpiringIn30) || 0;
-                    var goodStock = parseInt(d.GoodStock) || 0;
 
-
-                     
                     if (d.SalesInvoicesData) LoadInvoiceTable('#salesInvoiceList', d.SalesInvoicesData, 'sales');
                     else $('#salesInvoiceList').html('<tr><td colspan="7" class="text-center">No data</td></tr>');
+                    initTablePaging('salesInvoiceList', 10);
 
                     if (d.PurchaseInvoicesData) LoadInvoiceTable('#purchaseInvoiceList', d.PurchaseInvoicesData, 'purchase');
                     else $('#purchaseInvoiceList').html('<tr><td colspan="7" class="text-center">No data</td></tr>');
+                    initTablePaging('purchaseInvoiceList', 10);
 
-                    
                     BuildChartFromInvoiceData(d.SalesInvoicesData, 'sales');
                     BuildChartFromInvoiceData(d.PurchaseInvoicesData, 'purchase');
 
-                     
-                    LoadMedicinesStatusChart([inStock, shortSt, outOfSt, expiring]);
+                    LoadMedicinesStatusChart([inStock, shortSt, outOfSt]);
 
                     LoadShortStockTable('#shortStockList', d.ShortStockData);
+                    initTablePaging('shortStockList', 10);
+
                     LoadFastMovingTable('#fastMovingList', d.FastMovingData);
+                    initTablePaging('fastMovingList', 10);
+
                     LoadNonMovingTable('#nonMovingList', d.NonMovingData);
+                    initTablePaging('nonMovingList', 10);
+
                     LoadExpiryTable('#expiryReportList', d.ExpiryData);
+                    initTablePaging('expiryReportList', 10);
+
                     LoadOutOfStockTable('#outOfStockList', d.OutOfStockData);
+                    initTablePaging('outOfStockList', 10);
 
                 } else {
                     SetAllError('No data received');
@@ -962,21 +2314,18 @@
         });
     }
 
-    
     function BuildChartFromInvoiceData(dataString, type) {
-         
         var dateCounts = {};
         if (dataString && dataString !== '') {
             dataString.split(',').forEach(function (row) {
                 var cols = row.split('|');
-                var date = (cols[1] || '').trim();   
+                var date = (cols[1] || '').trim();
                 if (date && date !== '-') {
                     dateCounts[date] = (dateCounts[date] || 0) + 1;
                 }
             });
         }
 
-      
         var labels = Object.keys(dateCounts).sort(function (a, b) {
             return new Date(a) - new Date(b);
         });
@@ -986,6 +2335,7 @@
             var ctx = document.getElementById('salesTrendChart').getContext('2d');
             if (salesChart) salesChart.destroy();
             if (labels.length === 0) { LoadEmptyChart('salesTrendChart', 'No sales data'); return; }
+
             salesChart = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -993,12 +2343,12 @@
                     datasets: [{
                         label: 'Sales Invoices',
                         data: counts,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102,126,234,0.15)',
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79,70,229,0.15)',
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
-                        pointBackgroundColor: '#667eea',
+                        pointBackgroundColor: '#4F46E5',
                         pointRadius: 5,
                         pointHoverRadius: 7
                     }]
@@ -1033,12 +2383,12 @@
                     datasets: [{
                         label: 'Purchase Invoices',
                         data: counts,
-                        borderColor: '#f5576c',
-                        backgroundColor: 'rgba(245,87,108,0.15)',
+                        borderColor: '#DB2777',
+                        backgroundColor: 'rgba(219,39,119,0.15)',
                         borderWidth: 2,
                         tension: 0.4,
                         fill: true,
-                        pointBackgroundColor: '#f5576c',
+                        pointBackgroundColor: '#DB2777',
                         pointRadius: 5,
                         pointHoverRadius: 7
                     }]
@@ -1070,14 +2420,14 @@
         if (medicinesChart) medicinesChart.destroy();
         var parsed = data.map(function (v) { return parseInt(v) || 0; });
         var total = parsed.reduce(function (a, b) { return a + b; }, 0);
-        if (total === 0) parsed = [1, 0, 0, 0];
+        if (total === 0) parsed = [1, 0, 0];
         medicinesChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['In Stock', 'Short Stock', 'Out of Stock', 'Expiring ≤30d'],
+                labels: ['In Stock', 'Short Stock', 'Out of Stock'],
                 datasets: [{
                     data: parsed,
-                    backgroundColor: ['#28a745', '#ffc107', '#dc3545', '#fd7e14'],
+                    backgroundColor: ['#22C55E', '#F59E0B', '#EF4444'],
                     borderWidth: 2,
                     borderColor: '#fff'
                 }]
@@ -1107,7 +2457,7 @@
         if (canvasId === 'salesTrendChart' && salesChart) { salesChart.destroy(); salesChart = null; }
         if (canvasId === 'purchaseTrendChart' && purchaseChart) { purchaseChart.destroy(); purchaseChart = null; }
         var chart = new Chart(ctx, {
-            type: 'line',
+            type: canvasId === 'salesTrendChart' ? 'bar' : 'line',
             data: {
                 labels: ['No Data'],
                 datasets: [{
@@ -1124,11 +2474,10 @@
         if (canvasId === 'purchaseTrendChart') purchaseChart = chart;
     }
 
-   
     function LoadInvoiceTable(elementId, dataString, type) {
         var html = '';
         if (dataString) {
-            dataString.split(',').forEach(function (row, i) {
+            splitRowsSmart(dataString, 7).forEach(function (row, i) {
                 row = row.trim();
                 if (!row) return;
                 var c = row.split('|');
@@ -1143,12 +2492,12 @@
                 var badge = payType === 'CASH'
                     ? '<span class="status-badge status-good">CASH</span>'
                     : payType === 'UPI'
-                        ? '<span class="status-badge" style="background:#17a2b8;color:white">UPI</span>'
+                        ? '<span class="status-badge status-info">UPI</span>'
                         : '<span class="status-badge status-warning">' + payType + '</span>';
 
                 var btn = type === 'sales'
-                    ? '<button class="btn btn-xs btn-primary btn-sm" onclick="ViewSalesInvoice(\'' + invoiceNo + '\',\'' + seriesId + '\',\'' + billSlNo + '\')"><i class="fa fa-eye"></i></button>'
-                    : '<button class="btn btn-xs btn-info btn-sm" onclick="ViewPurchaseInvoice(\'' + invoiceNo + '\',\'' + (c[5] || '0').trim() + '\',\'' + (c[6] || '1').trim() + '\')"><i class="fa fa-eye"></i></button>';
+                    ? '<button class="btn btn-sm" style="background:#4F46E5;color:#fff;" onclick="ViewSalesInvoice(\'' + invoiceNo + '\',\'' + seriesId + '\',\'' + billSlNo + '\')"><i class="fa fa-eye"></i></button>'
+                    : '<button class="btn btn-sm" style="background:#0D9488;color:#fff;" onclick="ViewPurchaseInvoice(\'' + invoiceNo + '\',\'' + (c[5] || '0').trim() + '\',\'' + (c[6] || '1').trim() + '\')"><i class="fa fa-eye"></i></button>';
 
                 html += '<tr><td>' + (i + 1) + '</td><td><strong>' + invoiceNo + '</strong></td><td>' + date +
                     '</td><td>' + party + '</td><td>' + badge + '</td><td>' + user +
@@ -1158,12 +2507,10 @@
         $(elementId).html(html || '<tr><td colspan="7" class="text-center">No data available</td></tr>');
     }
 
-   
-
     function LoadShortStockTable(elementId, dataString) {
         var html = '';
         if (dataString) {
-            dataString.split(',').forEach(function (row, i) {
+            splitRowsSmart(dataString, 3).forEach(function (row, i) {
                 var c = row.split('|');
                 html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
                     '</td><td>' + (c[2] || '-') + '</td>' +
@@ -1176,7 +2523,7 @@
     function LoadFastMovingTable(elementId, dataString) {
         var html = '';
         if (dataString) {
-            dataString.split(',').forEach(function (row, i) {
+            splitRowsSmart(dataString, 4).forEach(function (row, i) {
                 var c = row.split('|');
                 html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
                     '</td><td>' + (c[2] || '-') + '</td><td>' + (c[3] || '-') + '</td></tr>';
@@ -1188,7 +2535,7 @@
     function LoadNonMovingTable(elementId, dataString) {
         var html = '';
         if (dataString) {
-            dataString.split(',').forEach(function (row, i) {
+            splitRowsSmart(dataString, 3).forEach(function (row, i) {
                 var c = row.split('|');
                 html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
                     '</td><td>' + (c[2] || '-') + '</td></tr>';
@@ -1200,7 +2547,7 @@
     function LoadExpiryTable(elementId, dataString) {
         var html = '';
         if (dataString) {
-            dataString.split(',').forEach(function (row, i) {
+            splitRowsSmart(dataString, 5).forEach(function (row, i) {
                 var c = row.split('|');
                 var days = parseInt(c[3]) || 0;
                 var cls = days <= 15 ? 'status-critical' : (days <= 30 ? 'status-warning' : 'status-good');
@@ -1215,21 +2562,295 @@
     function LoadOutOfStockTable(elementId, dataString) {
         var html = '';
         if (dataString) {
-            dataString.split(',').forEach(function (row, i) {
+            splitRowsSmart(dataString, 3).forEach(function (row, i) {
                 var c = row.split('|');
                 html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
                     '</td><td>' + (c[2] || '-') + '</td>' +
-                    '<td><a href="/Pharmacy/PharmaPurchase" target="_blank" class="btn btn-sm btn-primary"><i class="fa fa-shopping-cart"></i> Order</a></td></tr>';
+                    '<td><a href="/Pharmacy/PharmaPurchase" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Order</a></td></tr>';
             });
         }
         $(elementId).html(html || '<tr><td colspan="5" class="text-center">No data available</td></tr>');
+    }
+
+    
+    function LoadMedicineQueue() {
+        var today = getPharmTodayFormatted();
+        var fromDate = $('#pharm-from-date').val() || today;
+        var toDate = $('#pharm-to-date').val() || today;
+
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_OPWorkSheetMedicineAdvice",
+            data: {
+                FromDate: fromDate,
+                ToDate: toDate,
+                DoctorId: 0,
+                PatientId: 0,
+                DeptId: 0,
+                UserId: 0
+            },
+            success: function (result) {
+                LoadMedicineQueueTable(result);
+            },
+            error: function (xhr) {
+                $('#medicineQueueList').html('<tr><td colspan="12" class="text-center">Error loading medicine queue data: ' + xhr.status + '</td></tr>');
+                $('#medicineQueueCount').text('0');
+            }
+        });
+    }
+
+    function LoadMedicineQueueTable(data) {
+        var html = '';
+        var pendingCount = 0;
+
+        if (data && data.length > 0) {
+            data.forEach(function (r, i) {
+                if (r.Status !== 'BILLED') pendingCount++;
+
+                var statusBadge = r.Status === 'BILLED'
+                    ? '<span class="status-badge status-good">BILLED</span>'
+                    : '<span class="status-badge status-warning">PENDING</span>';
+
+                var ageSex = (r.BloodGroup || '').split('##')[0] + '/' + (r.Gender || '').substring(0, 1);
+                if (ageSex === '/') ageSex = '-/-';
+
+                var actionButtons = '<button class="btn btn-sm" style="background:#5B4FCF;color:#fff;" onclick="ViewMedicineAdvice(' + i + ')">' +
+                    '<i class="fa fa-eye"></i> View</button>';
+
+                var billButton = '<button class="btn btn-sm btn-info" onclick="GoToBillFromQueue(' + i + ')">' +
+                    '<i class="fa fa-file-text"></i> Go to Bill</button>';
+
+                html += '<tr>' +
+                    '<td>' + (i + 1) + '</td>' +
+                    '<td>' + (r.OPSerName || '-') + '-' + (r.OPNumber || '-') + '</td>' +
+                    '<td>' + (r.RevisitId || '-') + '</td>' +
+                    '<td>' + (r.RevisitDate || '-') + '</td>' +
+                    '<td>' + (r.DOB || '-') + '</td>' +
+                    '<td>' + (r.PatientName || '-') + '</td>' +
+                    '<td>' + ageSex + '</td>' +
+                    '<td>' + (r.Contact || '-') + '</td>' +
+                    '<td>' + (r.DoctorName || '-') + '</td>' +
+                    '<td style="text-align:center;">' + actionButtons + '</td>' +
+                    '<td style="text-align:center;">' + billButton + '</td>' +
+                    '<td style="text-align:center;">' + statusBadge + '</td>' +
+                    '</tr>';
+            });
+
+            window.medicineQueueData = data;
+            $('#medicineQueueCount').text(pendingCount);
+        } else {
+            html = '<tr><td colspan="12" class="text-center">No patients in medicine queue</td></tr>';
+            $('#medicineQueueCount').text('0');
+            window.medicineQueueData = [];
+        }
+
+        $('#medicineQueueList').html(html);
+        initTablePaging('medicineQueueList', 10);
+    }
+
+    $('#SimpleMedModal').on('hidden.bs.modal', function () {
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css({ 'overflow': '', 'padding-right': '' });
+    });
+
+    function CloseMedModal() {
+        $('#SimpleMedModal').removeClass('show').css('display', 'none').attr('aria-hidden', 'true');
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css({ 'overflow': '', 'padding-right': '' });
+    }
+
+    function ViewMedicineAdvice(index) {
+        var data = window.medicineQueueData[index];
+        if (!data) {
+            alert('No data available for this entry.');
+            return;
+        }
+
+        window.currentModalData = data;
+
+       
+        $("#MM_Patient").text(data.PatientName || '-');
+        var ageSex = (data.BloodGroup || '').split('##')[0] + ' Yrs / ' + (data.Gender || '-');
+        $("#MM_AgeSex").text(ageSex);
+        $("#MM_Phone").text(data.Contact || '-');
+        $("#MM_RegNo").text((data.OPSerName || '-') + '-' + (data.OPNumber || '-'));
+        $("#MM_OPNo").text(data.RevisitId || '-');
+        $("#MM_Date").text(data.RevisitDate || '-');
+        $("#MM_Time").text(data.DOB || '-');
+        $("#MM_Doctor").text(data.DoctorName || '-');
+
+        
+        var medicines = data.MedicineAdvice ? data.MedicineAdvice.split(',') : [];
+
+        var listHtml = '<table style="width:100%; border-collapse:collapse; font-family:Segoe UI,sans-serif;">' +
+            '<thead>' +
+            '<tr style="background:#EDE9FF; color:#3A2D9A; font-size:14px;">' +
+            '<th style="padding:10px 14px; text-align:left; border-bottom:2px solid #C4B8F8;">Medicine</th>' +
+            '<th style="padding:10px 14px; text-align:center; border-bottom:2px solid #C4B8F8;">No. of Days</th>' +
+            '<th style="padding:10px 14px; text-align:center; border-bottom:2px solid #C4B8F8;">Frequency</th>' +
+            '<th style="padding:10px 14px; text-align:center; border-bottom:2px solid #C4B8F8;">Total Tablets</th>' +
+            '</tr>' +
+            '</thead><tbody>';
+
+        if (medicines.length > 0) {
+            medicines.forEach(function (med, idx) {
+                var parts = med.trim().split(' | ');
+                var medName = parts[0] || med.trim();
+                var medDetail = parts[1] || '';
+
+                var tabs = '-', freq = '-', days = '-';
+                if (medDetail) {
+                    var detailParts = medDetail.split(' - ');
+                    tabs = detailParts[0] ? detailParts[0].replace('Tab(s)', '').trim() : '-';
+                    if (detailParts[1]) {
+                        var freqDays = detailParts[1].split(' x ');
+                        freq = freqDays[0] ? freqDays[0].trim() : '-';
+                        days = freqDays[1] ? freqDays[1].replace('Day(s)', '').trim() : '-';
+                    }
+                }
+
+                var rowBg = idx % 2 === 0 ? '#F0EEFF' : '#fff';
+                listHtml += '<tr style="background:' + rowBg + '; font-size:16px;">' +
+                    '<td style="padding:12px 14px; font-weight:700; color:#3A2D9A;">' + medName + '</td>' +
+                    '<td style="padding:12px 14px; text-align:center; font-weight:600; color:#854F0B;">' + days + '</td>' +
+                    '<td style="padding:12px 14px; text-align:center; font-weight:600; color:#3B6D11;">' + freq + '</td>' +
+                    '<td style="padding:12px 14px; text-align:center; font-weight:600; color:#185FA5;">' + tabs + '</td>' +
+                    '</tr>';
+            });
+        } else {
+            listHtml += '<tr><td colspan="4" style="padding:20px; text-align:center; color:#718096;">No medicines advised.</td></tr>';
+        }
+
+        listHtml += '</tbody></table>';
+
+        $("#MM_MedicineList").html(listHtml);
+        $("#MM_MedCount").text('Total: ' + medicines.length + ' medicines');
+
+       
+        if ($('#SimpleMedModal').data('bs.modal')) {
+            $('#SimpleMedModal').modal('dispose');
+        }
+
+       
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+
+        
+        $('#SimpleMedModal').modal({
+            backdrop: true,
+            keyboard: true,
+            show: true
+        });
+
+       
+        setTimeout(function () {
+            $('body').addClass('modal-open');
+        }, 100);
+    }
+
+    function GoToBillFromQueue(index) {
+        var data = window.medicineQueueData[index];
+        if (!data) {
+            alert('No data available for this entry.');
+            return;
+        }
+
+        var token = 'ws_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+        sessionStorage.clear();
+
+        sessionStorage.setItem("SI_Token", token);
+        sessionStorage.setItem("SI_FromWorksheet", "1");
+        sessionStorage.setItem("SI_PatientId", data.PatientId);
+        sessionStorage.setItem("SI_OPNumber", data.OPNumber);
+        sessionStorage.setItem("SI_OPSeries", data.OPSerName);
+        sessionStorage.setItem("SI_RevisitId", data.RevisitId);
+        sessionStorage.setItem("SI_PatientName", data.PatientName);
+        sessionStorage.setItem("SI_Gender", data.Gender);
+        sessionStorage.setItem("SI_Contact", data.Contact);
+        sessionStorage.setItem("SI_DoctorId", data.Doctor_Id);
+        sessionStorage.setItem("SI_MedAdvice", data.MedicineAdvice);
+
+        window.open("/Hospital/SaleInvoiceHospital?token=" + token, "_blank");
+    }
+
+    function PrintMedAdvice() {
+        var data = window.currentModalData;
+        if (!data) return;
+
+        var myWindow = window.open("", "", "width=1500,height=1500");
+
+        var ComapnydivToPrint = document.getElementById("ComapnyImage");
+        if (ComapnydivToPrint) {
+            $(ComapnydivToPrint).css('height', 100);
+            $(ComapnydivToPrint).css('width', 700);
+            myWindow.document.write('<table width=100%><tr><td width=100% align=center style=color:#008000;font-weight:bold>' + (ComapnydivToPrint.outerHTML) + '</td></tr></table>');
+        }
+
+        myWindow.document.write('<table width=100%><tr><td style="font-family:tahoma;font-size:13px;font-weight:normal;" align=center>PATIENT SUMMARY</td></tr></table>');
+
+        myWindow.document.write('<div style="border:1px solid black;border-radius:10px"><table style="" width=90%><tr><td width=60%><table style="font-family:tahoma;font-size:13px;font-weight:normal;">' +
+            '<tr><td>MR-No#</td><td> : </td><td>' + $("#MM_RegNo").text() + '</td></tr>' +
+            '<tr><td>Name</td><td> : </td><td>' + $("#MM_Patient").text() + '</td></tr>' +
+            '<tr><td>Doctor</td><td> : </td><td>' + $("#MM_Doctor").text() + '</td></tr></table></td>');
+        myWindow.document.write('<td width=40% align="right"><table style="font-family:tahoma;font-size:13px;font-weight:normal;">' +
+            '<tr><td>OP-No#</td><td> : </td><td>' + $("#MM_OPNo").text() + '</td></tr>' +
+            '<tr><td>Age/Sex</td><td> : </td><td>' + $("#MM_AgeSex").text() + '</td></tr>' +
+            '<tr><td>Date</td><td> : </td><td>' + $("#MM_Date").text() + '</td></tr></table></td></tr></table></div>');
+
+        var row = '<table style="font-family:tahoma;font-size:13px;font-weight:normal;" width=100%>';
+        row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Details</b></td></tr>';
+
+        var medicines = data.MedicineAdvice ? data.MedicineAdvice.split(',') : [];
+        var count = 0;
+        medicines.forEach(function (med) {
+            var line = med.replace(/\|/g, '').replace(/\s+/g, ' ').trim();
+            if (line !== '') {
+                count++;
+                row += '<tr><td>' + count + '. ' + line + '</td></tr>';
+            }
+        });
+        if (count === 0) {
+            row += '<tr><td style="color:#aaa;">No medicines advised.</td></tr>';
+        }
+
+        myWindow.document.write(row);
+        myWindow.document.write('</table>');
+
+        myWindow.document.write('<table width=100% style="font-family:tahoma;font-size:13px;font-weight:normal;margin-top:60px;">' +
+            '<tr><td align="right" style="padding-right:80px;">' + $("#MM_Doctor").text() + '</td></tr></table>');
+
+        if (typeof printFooter === 'function') {
+            printFooter(myWindow);
+        }
+        myWindow.print();
+    }
+
+    function splitRowsSmart(dataString, expectedFieldCount) {
+        if (!dataString) return [];
+        var rawParts = dataString.split(',');
+        var rows = [];
+        var buffer = '';
+
+        for (var i = 0; i < rawParts.length; i++) {
+            buffer = buffer === '' ? rawParts[i] : buffer + ',' + rawParts[i];
+            var fieldCount = buffer.split('|').length;
+
+            if (fieldCount >= expectedFieldCount) {
+                rows.push(buffer);
+                buffer = '';
+            }
+        }
+        if (buffer !== '') rows.push(buffer);
+
+        return rows;
     }
 
     function ViewSalesInvoice(inv, seriesId, billSlNo) {
         inv = inv.trim();
         seriesId = (seriesId || '1').trim();
         billSlNo = (billSlNo || '').trim();
-         window.open('/Hospital/SaleInvoiceHospital?flag=bill&billser=' + seriesId + '&billno=' + billSlNo, '_blank');
+        window.open('/Hospital/SaleInvoiceHospital?flag=bill&billser=' + seriesId + '&billno=' + billSlNo, '_blank');
     }
 
     function ViewPurchaseInvoice(inv, slNo, deptId) {
@@ -1237,15 +2858,12 @@
         slNo = (slNo || '0').trim();
         deptId = (deptId || '1').trim();
 
-        
         $.ajax({
             type: "POST",
-            url: '/Pharmacy/HMS_PurchaseGetandGets',    
+            url: '/Pharmacy/HMS_PurchaseGetandGets',
             data: { SlNo: slNo, DeptId: deptId },
             success: function (result) {
                 if (result && result.length > 0) {
-
-                    
                     var newTab = window.open('/Pharmacy/PharmaPurchase', '_blank');
 
                     var attempts = 0;
@@ -1254,7 +2872,6 @@
                         try {
                             if (newTab && !newTab.closed &&
                                 newTab.document.readyState === 'complete') {
-
                                 clearInterval(timer);
                                 setTimeout(function () {
                                     newTab.formrefresh(1);
@@ -1266,14 +2883,13 @@
                         }
                         if (attempts > 40) clearInterval(timer);
                     }, 500);
- 
+
                     $.ajax({
                         type: "POST",
-                        url: '/Purchase/PurchaseOtherCostGetandGets',  
+                        url: '/Purchase/PurchaseOtherCostGetandGets',
                         data: { SlNo: slNo, DeptId: deptId },
                         success: function (costResult) {
                             if (costResult.dList && costResult.dList.length > 0) {
-                                
                                 var costTimer = setInterval(function () {
                                     try {
                                         if (newTab && !newTab.closed &&
@@ -1282,7 +2898,7 @@
                                             clearInterval(costTimer);
                                             setTimeout(function () {
                                                 newTab.ShowOtherCost(costResult.dList);
-                                            }, 2000); 
+                                            }, 2000);
                                         }
                                     } catch (e) { clearInterval(costTimer); }
                                 }, 500);
@@ -1331,5 +2947,13 @@
         } else {
             if (existing) existing.remove();
         }
+    }
+
+    function goToSection(target) {
+        var navItems = document.querySelectorAll('.pharm-sidenav .nav-item');
+        navItems.forEach(function (n) { n.classList.remove('active'); });
+        var matchingNav = document.querySelector('.pharm-sidenav .nav-item[data-target="' + target + '"]');
+        if (matchingNav) matchingNav.classList.add('active');
+        showSection(target);
     }
 </script>

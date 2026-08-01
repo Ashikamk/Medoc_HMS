@@ -1,15 +1,16 @@
-﻿using EUMI_ERP.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services;
-using System.Text.RegularExpressions;
-using System.Net;
-using System.IO;
+using EUMI_ERP.Models;
 
 
 namespace EUMI_ERP.Controllers
@@ -5792,132 +5793,149 @@ obj.LPO_No, obj.JobNo, obj.Area, obj.Flag, obj.Variable1, obj.Variable2, obj.Var
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult GetPharmacyDashboardData()
+      
+
+[HttpPost]
+    public ActionResult GetPharmacyDashboardData(string FromDate, string ToDate)
+    {
+        PharmacyDashboard obj = new PharmacyDashboard();
+        List<PharmacyDashboard> oList = new List<PharmacyDashboard>();
+
+        try
         {
-            PharmacyDashboard obj = new PharmacyDashboard();
-            List<PharmacyDashboard> oList = new List<PharmacyDashboard>();
+            DateTime today = DateTime.Today;
+            DateTime fromDt, toDt;
 
-            try
+            if (!DateTime.TryParseExact(FromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDt))
+                fromDt = today;
+
+            if (!DateTime.TryParseExact(ToDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out toDt))
+                toDt = today;
+
+            if (fromDt > toDt)
             {
-                DataSet dsDataSet = new DataSet();
-                dsDataSet = obj.GetPharmacyDashboardData(dbName);
+                DateTime tmp = fromDt;
+                fromDt = toDt;
+                toDt = tmp;
+            }
 
-                if (dsDataSet != null && dsDataSet.Tables.Count > 0)
+            DataSet dsDataSet = obj.GetPharmacyDashboardData(dbName, fromDt, toDt);
+
+            if (dsDataSet != null && dsDataSet.Tables.Count > 0)
+            {
+                PharmacyDashboard data = new PharmacyDashboard();
+
+                if (dsDataSet.Tables[0].Rows.Count > 0)
                 {
-                    PharmacyDashboard data = new PharmacyDashboard();
-
-                    if (dsDataSet.Tables[0].Rows.Count > 0)
-                    {
-                        DataRow row = dsDataSet.Tables[0].Rows[0];
-                        data.TotalMedicines = Convert.ToInt32(row["TotalMedicines"]);
-                    }
-
-                    List<string> dates = new List<string>();
-                    List<string> counts = new List<string>();
-                    List<string> amounts = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[1].Rows)
-                    {
-                        dates.Add(row["SaleDate"].ToString());
-                        counts.Add(row["InvoiceCount"].ToString());
-                        amounts.Add(row["TotalAmount"].ToString());
-                    }
-                    data.SalesTrendDates = string.Join(",", dates);
-                    data.SalesTrendCounts = string.Join(",", counts);
-                    data.SalesTrendAmounts = string.Join(",", amounts);
-
-                    dates = new List<string>();
-                    counts = new List<string>();
-                    amounts = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[2].Rows)
-                    {
-                        dates.Add(row["PurchaseDate"].ToString());
-                        counts.Add(row["InvoiceCount"].ToString());
-                        amounts.Add(row["TotalAmount"].ToString());
-                    }
-                    data.PurchaseTrendDates = string.Join(",", dates);
-                    data.PurchaseTrendCounts = string.Join(",", counts);
-                    data.PurchaseTrendAmounts = string.Join(",", amounts);
-
-                    if (dsDataSet.Tables[3].Rows.Count > 0)
-                    {
-                        DataRow row = dsDataSet.Tables[3].Rows[0];
-                        data.InStock = Convert.ToInt32(row["InStock"]);
-                        data.ShortStock = Convert.ToInt32(row["ShortStock"]);
-                        data.OutOfStock = Convert.ToInt32(row["OutOfStock"]);
-                        data.ExpiringIn30 = Convert.ToInt32(row["ExpiringIn30"]);
-                        data.GoodStock = Convert.ToInt32(row["GoodStock"]);
-                    }
-
-                    List<string> salesInvoices = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[4].Rows)
-                    {
-                        salesInvoices.Add($"{row["InvoiceNo"]}|{row["InvoiceDate"]}|{row["CustomerName"]}|{row["PayTerms"]}|{row["UserName"]}|{row["BillSeriesId"]}|{row["BillSlNo"]}");
-                    }
-                    data.SalesInvoicesData = string.Join(",", salesInvoices);
-
-                    List<string> purchaseInvoices = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[5].Rows)
-                    {
-                        purchaseInvoices.Add($"{row["InvoiceNo"]}|{row["InvoiceDate"]}|{row["SupplierName"]}|{row["PayTerms"]}|{row["UserName"]}|{row["SlNo"]}|{row["DepartmentId"]}");
-                    }
-                    data.PurchaseInvoicesData = string.Join(",", purchaseInvoices);
-
-                    List<string> shortStock = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[6].Rows)
-                    {
-                        shortStock.Add($"{row["MedicineName"]}|{row["Category"]}|{row["StockQty"]}");
-                    }
-                    data.ShortStockData = string.Join(",", shortStock);
-
-                    List<string> fastMoving = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[7].Rows)
-                    {
-                        fastMoving.Add($"{row["MedicineName"]}|{row["Category"]}|{row["StockQty"]}|{row["LastSoldDate"]}");
-                    }
-                    data.FastMovingData = string.Join(",", fastMoving);
-
-                    List<string> nonMoving = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[8].Rows)
-                    {
-                        nonMoving.Add($"{row["MedicineName"]}|{row["Category"]}|{row["StockQty"]}");
-                    }
-                    data.NonMovingData = string.Join(",", nonMoving);
-
-                    List<string> expiry = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[9].Rows)
-                    {
-                        expiry.Add($"{row["MedicineName"]}|{row["BatchNo"]}|{row["ExpiryDate"]}|{row["DaysLeft"]}|{row["StockQty"]}");
-                    }
-                    data.ExpiryData = string.Join(",", expiry);
-
-                    List<string> outOfStock = new List<string>();
-                    foreach (DataRow row in dsDataSet.Tables[10].Rows)
-                    {
-                        outOfStock.Add($"{row["MedicineName"]}|{row["Category"]}|{row["LastPurchaseDate"]}");
-                    }
-                    data.OutOfStockData = string.Join(",", outOfStock);
-
-                    data.TotalSalesInvoices = dsDataSet.Tables[4].Rows.Count;
-                    data.TotalPurchaseInvoices = dsDataSet.Tables[5].Rows.Count;
-                    data.ShortStockCount = dsDataSet.Tables[6].Rows.Count;
-                    data.FastMovingCount = dsDataSet.Tables[7].Rows.Count;
-                    data.NonMovingCount = dsDataSet.Tables[8].Rows.Count;
-                    data.ExpiryCount = dsDataSet.Tables[9].Rows.Count;
-                    data.OutOfStockCount = dsDataSet.Tables[10].Rows.Count;
-
-                    oList.Add(data);
+                    DataRow row = dsDataSet.Tables[0].Rows[0];
+                    data.TotalMedicines = Convert.ToInt32(row["TotalMedicines"]);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Message: " + ex.Message + "+" + ex.StackTrace);
-            }
 
-            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+                List<string> dates = new List<string>();
+                List<string> counts = new List<string>();
+                List<string> amounts = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[1].Rows)
+                {
+                    dates.Add(row["SaleDate"].ToString());
+                    counts.Add(row["InvoiceCount"].ToString());
+                    amounts.Add(row["TotalAmount"].ToString());
+                }
+                data.SalesTrendDates = string.Join(",", dates);
+                data.SalesTrendCounts = string.Join(",", counts);
+                data.SalesTrendAmounts = string.Join(",", amounts);
+
+                dates = new List<string>();
+                counts = new List<string>();
+                amounts = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[2].Rows)
+                {
+                    dates.Add(row["PurchaseDate"].ToString());
+                    counts.Add(row["InvoiceCount"].ToString());
+                    amounts.Add(row["TotalAmount"].ToString());
+                }
+                data.PurchaseTrendDates = string.Join(",", dates);
+                data.PurchaseTrendCounts = string.Join(",", counts);
+                data.PurchaseTrendAmounts = string.Join(",", amounts);
+
+                if (dsDataSet.Tables[3].Rows.Count > 0)
+                {
+                    DataRow row = dsDataSet.Tables[3].Rows[0];
+                    data.InStock = Convert.ToInt32(row["InStock"]);
+                    data.ShortStock = Convert.ToInt32(row["ShortStock"]);
+                    data.OutOfStock = Convert.ToInt32(row["OutOfStock"]);
+                    data.ExpiringIn30 = Convert.ToInt32(row["ExpiringIn30"]);
+                    data.GoodStock = Convert.ToInt32(row["GoodStock"]);
+                }
+
+                List<string> salesInvoices = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[4].Rows)
+                {
+                    salesInvoices.Add($"{row["InvoiceNo"]}|{row["InvoiceDate"]}|{row["CustomerName"]}|{row["PayTerms"]}|{row["UserName"]}|{row["BillSeriesId"]}|{row["BillSlNo"]}");
+                }
+                data.SalesInvoicesData = string.Join(",", salesInvoices);
+
+                List<string> purchaseInvoices = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[5].Rows)
+                {
+                    purchaseInvoices.Add($"{row["InvoiceNo"]}|{row["InvoiceDate"]}|{row["SupplierName"]}|{row["PayTerms"]}|{row["UserName"]}|{row["SlNo"]}|{row["DepartmentId"]}");
+                }
+                data.PurchaseInvoicesData = string.Join(",", purchaseInvoices);
+
+                List<string> shortStock = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[6].Rows)
+                {
+                    shortStock.Add($"{row["MedicineName"]}|{row["Category"]}|{row["StockQty"]}");
+                }
+                data.ShortStockData = string.Join(",", shortStock);
+
+                List<string> fastMoving = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[7].Rows)
+                {
+                    fastMoving.Add($"{row["MedicineName"]}|{row["Category"]}|{row["StockQty"]}|{row["LastSoldDate"]}");
+                }
+                data.FastMovingData = string.Join(",", fastMoving);
+
+                List<string> nonMoving = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[8].Rows)
+                {
+                    nonMoving.Add($"{row["MedicineName"]}|{row["Category"]}|{row["StockQty"]}");
+                }
+                data.NonMovingData = string.Join(",", nonMoving);
+
+                List<string> expiry = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[9].Rows)
+                {
+                    expiry.Add($"{row["MedicineName"]}|{row["BatchNo"]}|{row["ExpiryDate"]}|{row["DaysLeft"]}|{row["StockQty"]}");
+                }
+                data.ExpiryData = string.Join(",", expiry);
+
+                List<string> outOfStock = new List<string>();
+                foreach (DataRow row in dsDataSet.Tables[10].Rows)
+                {
+                    outOfStock.Add($"{row["MedicineName"]}|{row["Category"]}|{row["LastPurchaseDate"]}");
+                }
+                data.OutOfStockData = string.Join(",", outOfStock);
+
+                data.TotalSalesInvoices = dsDataSet.Tables[4].Rows.Count;
+                data.TotalPurchaseInvoices = dsDataSet.Tables[5].Rows.Count;
+                data.ShortStockCount = dsDataSet.Tables[6].Rows.Count;
+                data.FastMovingCount = dsDataSet.Tables[7].Rows.Count;
+                data.NonMovingCount = dsDataSet.Tables[8].Rows.Count;
+                data.ExpiryCount = dsDataSet.Tables[9].Rows.Count;
+                data.OutOfStockCount = dsDataSet.Tables[10].Rows.Count;
+
+                oList.Add(data);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Message: " + ex.Message + "+" + ex.StackTrace);
         }
 
-        [HttpPost]
+        return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+    }
+
+    [HttpPost]
         public ActionResult HMS_SalesReturnGetandGetsOpticals(SaleInvoiceHospital SaleInvoiceHospital)
         {
             SaleInvoiceHospital obj = new SaleInvoiceHospital();

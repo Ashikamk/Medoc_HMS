@@ -409,9 +409,18 @@
 
 <script>
 
-    var Diagnosis = [{ value: "ASTHMA", label: "ASTHMA", }, { value: "ALLERGIC RHINITIS", label: "ALLERGIC RHINITIS", }, { value: "COPD", label: "COPD", }, { value: "POST COVID STATUS", label: "POST COVID STATUS", }, { value: "ACUTE BRONCHITIS", label: "ACUTE BRONCHITIS", }, { value: "PULMONARY TB", label: "PULMONARY TB", }, { value: "PNEUMONIA", label: "PNEUMONIA", }, { value: "GASTRITIS", label: "GASTRITIS", }, { value: "GERD", label: "GERD", }, { value: "URTICARIA", label: "URTICARIA", }, { value: "DRUG ALLERGY", label: "DRUG ALLERGY", }, { value: "RHINO BRONCHIAL ALLERGY", label: "RHINO BRONCHIAL ALLERGY", }, { value: "HAEMOPTYSIS", label: "HAEMOPTYSIS", }, { value: "APD", label: "APD", }, { value: "ACUTE GASTROENTERITIS", label: "ACUTE GASTROENTERITIS", }, { value: "CAD", label: "CAD", }, { value: "HTN", label: "HTN", }, { value: "DM", label: "DM", }, { value: "DLP", label: "DLP", }, { value: "EXTRA PULMONARY TB", label: "EXTRA PULMONARY TB", }, { value: "CLINICAL TB", label: "CLINICAL TB", }, { value: "MICROBIOLIGICALLY CONFIRMED B", label: "MICROBIOLIGICALLY CONFIRMED TB", }, { value: "DRTB", label: "DRTB", }, { value: "MDR TB", label: "MDR TB", }, { value: "HEPATITIS", label: "EPATITIS", }, { value: "DRUG INDUCED HEPATITIS", label: "DRUG INDUCED HEPATITIS", }, { value: "VIRAL HEPATITIS", label: "VIRAL HEPATITIS", }, { value: "ASTHMA ACUTE EXACERBATION", label: "ASTHMA ACUTE EXACERBATION", }, { value: "ACUTE SEVERE ASTHMA", label: "ACUTE SEVERE ASTHMA", }, { value: "AE COPD", label: "AE COPD", }, { value: "DPILD", label: "DPILD", }, { value: "ILD", label: "ILD", }, { value: "LRI", label: "LRI", }, { value: "WALRI", label: "WALRI", }, { value: "INTERMITTENT ASTHMA", label: "INTERMITTENT ASTHMA", }, { value: "COUGH VARIANT ASTHMA", label: "COUGH VARIANT ASTHMA", }, { value: "ASTHMA UNCONTROLLED", label: "ASTHMA UNCONTROLLED", }, { value: "LETHARGY", label: "LETHARGY", }, { value: "LOW", label: "LOW", }, { value: "LOA", label: "LOA", }, { value: "PUO", label: "PUO", },
-    { value: "Acute tonsillitis", label: "Acute tonsillitis", }, { value: "Acute pharyngitis", label: "Acute pharyngitis", }
-        , { value: "Pharyngitis", label: "Pharyngitis", }, { value: "Gingivitis laryngitis", label: "Gingivitis laryngitis", }]
+    //var DiagnosisList = [{ value: "ASTHMA", label: "ASTHMA", }, { value: "ALLERGIC RHINITIS", label: "ALLERGIC RHINITIS", }, { value: "COPD", label: "COPD", }, { value: "POST COVID STATUS", label: "POST COVID STATUS", }, { value: "ACUTE BRONCHITIS", label: "ACUTE BRONCHITIS", }, { value: "PULMONARY TB", label: "PULMONARY TB", }, { value: "PNEUMONIA", label: "PNEUMONIA", }, { value: "GASTRITIS", label: "GASTRITIS", }, { value: "GERD", label: "GERD", }, { value: "URTICARIA", label: "URTICARIA", }, { value: "DRUG ALLERGY", label: "DRUG ALLERGY", }, { value: "RHINO BRONCHIAL ALLERGY", label: "RHINO BRONCHIAL ALLERGY", }, { value: "HAEMOPTYSIS", label: "HAEMOPTYSIS", }, { value: "APD", label: "APD", }, { value: "ACUTE GASTROENTERITIS", label: "ACUTE GASTROENTERITIS", }, { value: "CAD", label: "CAD", }, { value: "HTN", label: "HTN", }, { value: "DM", label: "DM", }, { value: "DLP", label: "DLP", }, { value: "EXTRA PULMONARY TB", label: "EXTRA PULMONARY TB", }, { value: "CLINICAL TB", label: "CLINICAL TB", }, { value: "MICROBIOLIGICALLY CONFIRMED B", label: "MICROBIOLIGICALLY CONFIRMED TB", }, { value: "DRTB", label: "DRTB", }, { value: "MDR TB", label: "MDR TB", }, { value: "HEPATITIS", label: "EPATITIS", }, { value: "DRUG INDUCED HEPATITIS", label: "DRUG INDUCED HEPATITIS", }, { value: "VIRAL HEPATITIS", label: "VIRAL HEPATITIS", }, { value: "ASTHMA ACUTE EXACERBATION", label: "ASTHMA ACUTE EXACERBATION", }, { value: "ACUTE SEVERE ASTHMA", label: "ACUTE SEVERE ASTHMA", }, { value: "AE COPD", label: "AE COPD", }, { value: "DPILD", label: "DPILD", }, { value: "ILD", label: "ILD", }, { value: "LRI", label: "LRI", }, { value: "WALRI", label: "WALRI", }, { value: "INTERMITTENT ASTHMA", label: "INTERMITTENT ASTHMA", }, { value: "COUGH VARIANT ASTHMA", label: "COUGH VARIANT ASTHMA", }, { value: "ASTHMA UNCONTROLLED", label: "ASTHMA UNCONTROLLED", }, { value: "LETHARGY", label: "LETHARGY", }, { value: "LOW", label: "LOW", }, { value: "LOA", label: "LOA", }, { value: "PUO", label: "PUO", },
+    //{ value: "Acute tonsillitis", label: "Acute tonsillitis", }, { value: "Acute pharyngitis", label: "Acute pharyngitis", }
+    //    , { value: "Pharyngitis", label: "Pharyngitis", }, { value: "Gingivitis laryngitis", label: "Gingivitis laryngitis", }]
+
+    var DiagnosisList = [
+        { value: "HTN", label: "HTN", },
+        { value: "T2DM", label: "T2DM", },
+        { value: "HYPERLIPIDEMIA", label: "HYPERLIPIDEMIA", },
+        { value: "CKD", label: "CKD", },
+        { value: "CAD", label: "CAD", },
+        { value: "COPD", label: "COPD", }
+    ]
 
 
 
@@ -421,7 +430,15 @@
         Bl = 0;
         $(function () {
             $("#Diagnosis").autocomplete({
-                source: Diagnosis, delay: 0, autoFocus: true,
+                source: function (request, response) {
+                    var term = $.trim(request.term);
+                    var matches = $.grep(DiagnosisList, function (item) {
+                        return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1;
+                    });
+                    response(matches);
+                },
+                delay: 0,
+                autoFocus: true,
                 focus: function (event, ui) { event.preventDefault(); },
                 select: function (event, ui) { $("#Diagnosis").val(ui.item.label); Bl = 1; return false; }
             }).on('keydown', function (e) {
@@ -886,9 +903,7 @@
                                                                                 <textarea style="resize:none;height:100px;overflow-y:scroll" class="form-control patdeys" onkeyup="allergycheck()" id="Complaint" autocomplete="off"></textarea>
                                                                             </div>
                                                                             <div class="col-md-4">
-                                                                                <textarea style="resize:none;height:100px;overflow-y:scroll" class="form-control patdeys" id="Diagnosis" autocomplete="off">
-
-                                                                                </textarea>
+                                                                                <textarea style="resize:none;height:100px;overflow-y:scroll" class="form-control patdeys" id="Diagnosis" autocomplete="off"></textarea>
                                                                             </div>
                                                                             <div class="col-md-4">
                                                                                 <textarea style="resize:none;height:100px;overflow-y:scroll" class="form-control patdeys " id="Allergies" autocomplete="off"></textarea>
@@ -1883,6 +1898,23 @@
 
 <script>
 
+    //function AddQuickComplaint() {
+    //    var val = $('#ComplaintQuick').val();
+    //    if (val == '') return;
+
+    //    var existing = $.trim($('#Complaint').val());
+    //    var parts = existing == '' ? [] : existing.split(',').map(function (s) { return s.trim(); });
+
+      
+    //    if (parts.indexOf(val) === -1) {
+    //        parts.push(val);
+    //    }
+
+    //    $('#Complaint').val(parts.join(', '));
+    //    $('#ComplaintQuick').val(''); 
+    //    $('#Complaint').focus();
+    //    allergycheck();
+    //}
     function gotoprocedureBill() {
         debugger;
         sessionStorage.setItem("BSOP_PI", $('#PatientId').val());

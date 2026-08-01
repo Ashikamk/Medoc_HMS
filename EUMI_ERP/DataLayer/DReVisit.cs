@@ -2032,5 +2032,25 @@ namespace EUMI_ERP.DataLayer
 
         }
 
+        public DataSet HMS_LabQueueGet(WorkSheet WorkSheet, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[6];
+                arlParms[0] = new SqlParameter("@FromDate", WorkSheet.FromDate);
+                arlParms[1] = new SqlParameter("@ToDate", WorkSheet.ToDate);
+                arlParms[2] = new SqlParameter("@DoctorId", WorkSheet.DoctorId);
+                arlParms[3] = new SqlParameter("@PatientId", WorkSheet.PatientId);
+                arlParms[4] = new SqlParameter("@DeptId", WorkSheet.DeptId);
+                arlParms[5] = new SqlParameter("@UserId", WorkSheet.UserId);
+                return SQLHelper.ExecuteDataset("HMS_OPWorkSheetLabAdvice", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
     }
 }

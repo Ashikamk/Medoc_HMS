@@ -4373,6 +4373,46 @@ namespace EUMI_ERP.Controllers
 
         }
 
+        [HttpPost]
+        public ActionResult HMS_LabQueueGet(WorkSheet WorkSheet)
+        {
+            WorkSheet obj = new WorkSheet();
+            List<WorkSheet> oList = new List<WorkSheet>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_OPWorkSheetLabAdvice(WorkSheet, dbName);
+
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        WorkSheet MModels = new WorkSheet();
+                        MModels.RevisitId = Convert.ToInt64(row["RevisitId"]);
+                        MModels.PatientId = Convert.ToInt64(row["PatientId"]);
+                        MModels.OPSerName = row["OPSerName"].ToString();
+                        MModels.OPNumber = row["OPNumber"].ToString();
+                        MModels.PatientName = row["PatientName"].ToString();
+                        MModels.DoctorName = row["DoctorName"].ToString();
+                        MModels.RevisitDate = row["RevisitDate"].ToString();
+                        MModels.DOB = row["DOB"].ToString();
+                        MModels.Gender = row["Gender"].ToString();
+                        MModels.Contact = row["Contact"].ToString();
+                        MModels.LabAdvice = row["LabAdvice"].ToString();
+                        MModels.Status = row["Status"].ToString();
+                        MModels.BloodGroup = row["BloodGroup"].ToString();
+                        oList.Add(MModels);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
 
 
 

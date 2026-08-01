@@ -1018,10 +1018,10 @@ public class PharmacyDashboard
    
     DHospital oDHospital = new DHospital();
 
-    
-    public DataSet GetPharmacyDashboardData(string dbName)
+
+    public DataSet GetPharmacyDashboardData(string dbName, DateTime fromDate, DateTime toDate)
     {
-        return oDHospital.GetPharmacyDashboardData(dbName);
+        return oDHospital.GetPharmacyDashboardData(dbName, fromDate, toDate);
     }
 }
 

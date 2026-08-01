@@ -3,619 +3,1031 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="~/app_demo/assets/js/Chart.js"></script>
-<style>
-    :root {
-        --blue: #1a73e8;
-        --orange: #f59e0b;
-        --green: #10b981;
-        --red: #ef4444;
-        --purple: #8b5cf6;
-        --teal: #06b6d4;
-        --pink: #ec4899;
-        --indigo: #6366f1;
-        --font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        --mono: Consolas, "Courier New", monospace;
-        --bg: #f3f4f6;
-        --card: #ffffff;
-        --border: #e5e7eb;
-        --txt: #111827;
-        --muted: #6b7280;
-        --radius: 10px;
-        --shadow: 0 1px 4px rgba(0,0,0,.08);
-    }
 
-    * {
+<style>
+   
+    *, *::before, *::after {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
     }
 
+    :root {
+        --indigo: #4F46E5;
+        --indigo-dark: #4338CA;
+        --indigo-light: #EEF2FF;
+        --info: #06B6D4;
+        --info-light: #ECFEFF;
+        --success: #22C55E;
+        --success-light: #F0FDF4;
+        --warning: #F59E0B;
+        --warning-light: #FFFBEB;
+        --danger: #EF4444;
+        --danger-light: #FEF2F2;
+        --purple: #8B5CF6;
+        --purple-light: #F5F3FF;
+        --text: #1E293B;
+        --sub: #64748B;
+        --border: #E7EBF3;
+        --bg: #F8FAFC;
+        --card: #ffffff;
+        --header-h: 76px;
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --radius-sm: 9px;
+        --shadow-sm: 0 1px 3px rgba(15,23,42,.05);
+        --shadow-md: 0 6px 20px rgba(15,23,42,.07);
+        --shadow-lg: 0 16px 40px rgba(79,70,229,.14);
+        --sidenav-w: 264px;
+        --sidenav-w-collapsed: 68px;
+    }
+
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
     body {
-        font-family: var(--font);
-        background: var(--bg);
-        color: var(--txt);
-        font-size: 13px;
+        background: radial-gradient(1100px 420px at 100% -10%, #EEF2FF 0%, rgba(238,242,255,0) 60%), radial-gradient(900px 380px at -10% 0%, #ECFEFF 0%, rgba(236,254,255,0) 55%), var(--bg);
+        font-family: "Rubik", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: var(--text);
+        font-size: 15px;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
     }
 
-    .dd-wrap {
-        padding: 20px 24px 48px;
+    img, svg, canvas {
+        max-width: 100%;
     }
 
-    .stat-row {
+ 
+    .doc-topbar {
+        background: #0d9488;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+        padding: 0 32px;
+        justify-content: space-between;
+        box-shadow: 0 4px 24px rgba(13,148,136,.18);
+        position: sticky;
+        top: 60px;
+        z-index: 950;
+        width: calc(100% + 60px);
+        margin-left: -30px;
+        margin-right: -30px;
+        margin-top: -20px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+        .doc-topbar .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .doc-topbar .brand h1 {
+                font-size: 25px;
+                font-weight: 800;
+                color: #fff;
+                letter-spacing: .3px;
+                margin: 0;
+                text-transform: uppercase;
+            }
+
+        .doc-topbar .brand-sub {
+            font-size: 13px;
+            color: rgba(255,255,255,.85);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+    .sidenav-toggle-btn {
+        display: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        border: 1.5px solid rgba(255,255,255,.4);
+        background: rgba(255,255,255,.16);
+        color: #fff;
+        font-size: 18px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+        .sidenav-toggle-btn:hover {
+            background: rgba(255,255,255,.28);
+        }
+
+    .doc-refresh-btn {
+        height: 42px;
+        padding: 0 20px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        background: #e0691f;
+        border: 1.5px solid rgba(255,255,255,.4);
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background .15s;
+        white-space: nowrap;
+    }
+
+        .doc-refresh-btn:hover {
+            background: #e0691f;
+        }
+
+    
+    .doc-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .filter-dropdown-wrap {
+        position: relative;
+    }
+
+    .doc-filter-btn {
+        height: 42px;
+        padding: 0 16px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        background: rgba(255,255,255,.16);
+        border: 1.5px solid rgba(255,255,255,.4);
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background .15s;
+        white-space: nowrap;
+    }
+
+        .doc-filter-btn:hover {
+            background: rgba(255,255,255,.28);
+        }
+
+    .quick-filter-menu {
+        display: none;
+        position: absolute;
+        top: 48px;
+        left: 0;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: var(--shadow-lg);
+        min-width: 170px;
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+        .quick-filter-menu.show {
+            display: block;
+        }
+
+        .quick-filter-menu a {
+            display: block;
+            padding: 10px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+            .quick-filter-menu a:hover {
+                background: #F5F7FF;
+                color: teal;
+                text-decoration: none;
+            }
+
+            .quick-filter-menu a.active-range {
+                background: #F5F7FF;
+                color: teal;
+            }
+
+    .filter-date-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .doc-filter-btn,
+    .doc-refresh-btn {
+        outline: none;
+    }
+
+        .doc-filter-btn:focus,
+        .doc-refresh-btn:focus,
+        .doc-filter-btn:focus-visible,
+        .doc-refresh-btn:focus-visible {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .filter-date-group label {
+            font-size: 17px;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .filter-date-group input[type="text"] {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            background: #F1F5FB;
+            border: 2px solid teal;
+            border-radius: 10px;
+            padding: 0 14px;
+            height: 40px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color .15s, background .15s, box-shadow .15s;
+        }
+
+            .filter-date-group input[type="text"]:focus {
+                background: #ffffff;
+                border-color: teal;
+                box-shadow: 0 0 0 3px rgba(0,128,128,.15);
+            }
+
+    .top-alert {
+        position: fixed;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ff5c70;
+        color: white;
+        padding: 14px 35px;
+        font-weight: 100;
+        font-size: 25px;
+        border-radius: 6px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+        display: none;
+        z-index: 999999;
+    }
+
+    
+    .doc-sidenav-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        top: 100px;
+        background: rgba(15,23,42,.35);
+        z-index: 899;
+    }
+
+    .doc-sidenav {
+        position: fixed;
+        top: 100px;
+        height: calc(100vh - 100px);
+        left: 0;
+        width: 300px;
+        background: #ffffff;
+        border-right: 1px solid var(--border);
+        padding: 18px 14px 20px 14px;
+        z-index: 900;
+        box-shadow: 2px 0 16px rgba(15,23,42,.03);
+        overflow-y: auto;
+        border-radius: 0 18px 18px 0;
+        transition: transform .25s ease;
+    }
+
+    .doc-page {
+        margin-left: var(--sidenav-w);
+        padding: 20px 24px 30px;
+        margin-right: -20px;
+        min-height: calc(100vh - 100px);
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .doc-footer {
+        margin-left: var(--sidenav-w);
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 24px;
+        font-size: 13.5px;
+        color: var(--sub);
+        border-top: 1px solid var(--border);
+        background: var(--card);
+        margin-top: 20px;
+        position: relative;
+        width: calc(100% + 40px);
+        margin-right: -20px;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .doc-sidenav .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 13px 16px;
+        margin-bottom: 30px;
+        color: var(--sub);
+        font-size: 20px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: var(--radius-sm);
+        border-left: 3px solid transparent;
+        transition: background .18s, color .18s, transform .12s;
+        white-space: nowrap;
+    }
+
+        .doc-sidenav .nav-item i {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+            color: #94A3B8;
+            transition: color .18s;
+        }
+
+        .doc-sidenav .nav-item:hover {
+            background: #F5F7FF;
+            color: teal;
+            text-decoration: none;
+            transform: translateX(2px);
+        }
+
+            .doc-sidenav .nav-item:hover i {
+                color: teal;
+            }
+
+        .doc-sidenav .nav-item.active {
+            background: linear-gradient(135deg, var(--indigo-light) 0%, var(--info-light) 100%);
+            color: teal;
+            border-left: 3px solid teal;
+            box-shadow: var(--shadow-sm);
+        }
+
+            .doc-sidenav .nav-item.active i {
+                color: teal;
+            }
+
+   
+    .kpi-row {
         display: grid;
         grid-template-columns: repeat(9, 1fr);
         gap: 12px;
         margin-bottom: 20px;
     }
 
-    .stat-card {
-        border-radius: var(--radius);
-        padding: 18px 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,.10);
+    .kpi-card {
+        border-radius: var(--radius-lg);
+        border: none;
+        padding: 16px 16px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        gap: 6px;
-        border: none;
+        align-items: stretch;
+        justify-content: space-between;
+        gap: 14px;
+        text-align: left;
+        box-shadow: 0 8px 20px rgba(15,23,42,.15);
+        transition: transform .18s, box-shadow .18s;
+        color: #fff;
+        opacity: 0;
+        animation: flyUp .55s cubic-bezier(.22,.9,.4,1) both;
+        min-width: 0;
+        cursor: pointer;
     }
 
-        .stat-card .sc-label {
-            font-size: 16px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: rgba(255,255,255,0.85);
-        }
+    .kpi-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+    }
 
-        .stat-card .sc-val {
-            font-size: 32px;
-            font-weight: 900;
-            font-family: var(--mono);
-            line-height: 1;
-            color: #fff;
-        }
+    .kpi-card:nth-child(1) {
+        animation-delay: .03s;
+    }
 
-    .analytics-row {
+    .kpi-card:nth-child(2) {
+        animation-delay: .07s;
+    }
+
+    .kpi-card:nth-child(3) {
+        animation-delay: .11s;
+    }
+
+    .kpi-card:nth-child(4) {
+        animation-delay: .15s;
+    }
+
+    .kpi-card:nth-child(5) {
+        animation-delay: .19s;
+    }
+
+    .kpi-card:nth-child(6) {
+        animation-delay: .23s;
+    }
+
+    .kpi-card:nth-child(7) {
+        animation-delay: .27s;
+    }
+
+    .kpi-card:nth-child(8) {
+        animation-delay: .31s;
+    }
+
+    .kpi-card:nth-child(9) {
+        animation-delay: .35s;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(15,23,42,.22);
+    }
+
+    .kpi-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 45px;
+        padding-top: 50px;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .kpi-label {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        opacity: .9;
+        padding-top: 4px;
+        overflow-wrap: break-word;
+    }
+
+    .kpi-value {
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -.5px;
+        font-family: Consolas, "Courier New", monospace;
+        text-align: left;
+        animation: rollIn .8s cubic-bezier(.23,1.12,.4,1) both;
+        animation-delay: .4s;
+    }
+
+    .kpi-blue {
+        background: linear-gradient(135deg,#212857,#212857);
+    }
+
+    .kpi-orange {
+        background: linear-gradient(135deg,#D97706,#B45309);
+    }
+
+    .kpi-green {
+        background: linear-gradient(135deg,#158209,#158209);
+    }
+
+    .kpi-purple {
+        background: linear-gradient(135deg,#4a1970,#4a1970);
+    }
+
+    .kpi-info {
+        background: linear-gradient(135deg,#113340,#113340);
+    }
+
+    .kpi-amber {
+        background: linear-gradient(135deg,#571040, #571040);
+    }
+
+    .kpi-pink {
+        background: linear-gradient(135deg,#DB2777,#BE185D);
+    }
+
+    .kpi-emerald {
+        background: linear-gradient(135deg,#195e23,#195e23);
+    }
+
+    .kpi-red {
+        background: linear-gradient(135deg,#DC2626,#B91C1C);
+    }
+
+  
+    .charts-row {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 16px;
         margin-bottom: 20px;
     }
 
-    .a-card {
+    .chart-card {
         background: var(--card);
+        border-radius: var(--radius-lg);
         border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
+        padding: 18px 18px 16px;
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow .2s;
+        height: 350px;
+        min-width: 0;
     }
 
-    .a-card-title {
-        font-size: 18px;
-        font-weight: 700;
-        padding: 14px 20px;
-        border-bottom: 1px solid var(--border);
-        border-radius: 8px 8px 0 0;
+        .chart-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+    .chart-card-title {
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        color: teal;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .a-card-body {
-        padding: 16px 24px;
-        min-height: 280px;
+    .chart-wrap {
+        position: relative;
+        height: 250px;
+    }
+
+    .donut-layout {
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 16px;
+        height: 300px;
+        flex-wrap: wrap;
     }
 
     .donut-wrap {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        min-height: 160px;
-    }
-
-    .donut-canvas {
+        position: relative;
+        width: 220px;
+        height: 220px;
         flex-shrink: 0;
     }
 
-    .donut-legend {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex: 1;
-    }
-
-    .dl-item {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 12px;
-    }
-
-    .dl-dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .dl-label {
-        flex: 1;
-    }
-
-    .dl-val {
-        font-weight: 700;
-        font-family: var(--mono);
-    }
-
-    .dl-pct {
-        font-size: 11px;
-        color: var(--muted);
-    }
-
-    .adv-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 8px 0;
-        border-bottom: 1px solid #f3f4f6;
-    }
-
-        .adv-row:last-child {
-            border-bottom: none;
+        .donut-wrap canvas {
+            display: block;
+            margin: 0 auto;
         }
 
-    .adv-label {
-        font-size: 12px;
-        color: var(--muted);
+    .donut-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        text-align: center;
+        pointer-events: none;
+    }
+
+        .donut-center .dc-val {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -.5px;
+        }
+
+        .donut-center .dc-lbl {
+            font-size: 12px;
+            color: var(--sub);
+            font-weight: 600;
+        }
+
+    .legend-list {
+        flex: 1;
+        display: block;
+        min-width: 150px;
+    }
+
+    .legend-item {
         display: flex;
         align-items: center;
-        gap: 6px;
-    }
-
-    .adv-bar-wrap {
-        flex: 1;
-        margin: 0 10px;
-        height: 7px;
-        background: #f3f4f6;
-        border-radius: 99px;
-        overflow: hidden;
-    }
-
-    .adv-bar {
-        height: 100%;
-        border-radius: 99px;
-    }
-
-    .adv-val {
-        font-weight: 700;
+        gap: 9px;
+        margin-bottom: 10px;
         font-size: 13px;
-        font-family: var(--mono);
-        min-width: 36px;
-        text-align: right;
+        padding: 7px 10px;
+        border-radius: 10px;
+        background: #F8FAFF;
     }
 
-    .queue-card {
+    .legend-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    .legend-name {
+        flex: 1;
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    .legend-val {
+        font-weight: 800;
+        color: var(--text);
+    }
+
+    .legend-pct {
+        color: var(--sub);
+        font-size: 12px;
+    }
+
+   
+    .tbl-card, .qa-card {
         background: var(--card);
+        border-radius: var(--radius-lg);
         border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        margin-bottom: 20px;
+        box-shadow: var(--shadow-sm);
         overflow: hidden;
+        margin: 0 0 20px 0;
+        transition: box-shadow .2s;
+        min-width: 0;
     }
 
-    .queue-head {
-        padding: 14px 20px;
-        border-bottom: 1px solid var(--border);
+        .tbl-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+    .tbl-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-weight: 700;
-        border-radius: 8px 8px 0 0;
+        padding: 15px 18px;
+        background: linear-gradient(135deg, #FAFBFF 0%, #F5F7FF 100%);
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+        gap: 10px;
+        position: relative;
     }
 
-        .queue-head h3 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-    .q-pills {
+    .tbl-title {
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        color: #334155;
         display: flex;
-        gap: 8px;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
     }
 
-    .q-pill {
-        padding: 4px 12px;
-        border-radius: 99px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .q-pill-blue {
-        background: #dbeafe;
-        color: #1d4ed8;
-        border: 1px solid #bfdbfe;
-    }
-
-    .q-pill-green {
-        background: #d1fae5;
-        color: #065f46;
-        border: 1px solid #a7f3d0;
-    }
-
-    .q-pill-orange {
-        background: #fff7ed;
-        color: #c2410c;
-        border: 1px solid #fed7aa;
-    }
-
-
-
-    .tbl-search {
-        padding: 6px 14px 6px 32px;
-        border-radius: 99px;
-        border: 1px solid var(--border);
-        font: 13px var(--font);
-        color: var(--txt);
-        width: 200px;
-        outline: none;
-        transition: border-color .2s, box-shadow .2s;
-    }
-
-        .tbl-search:focus {
-            border-color: #93c5fd;
-            box-shadow: 0 0 0 3px rgba(147,197,253,.3);
-            background-color: #fff;
+        .tbl-title .cnt-pill {
+            font-size: 13.5px;
+            font-weight: 800;
+            padding: 5px 14px;
+            border-radius: 99px;
+            background: var(--indigo-light);
+            color: var(--indigo-dark);
+            margin-left: 6px;
         }
 
-        .tbl-search::placeholder {
-            color: var(--muted);
+    .pill-group-center {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .icon-blue i,
+    .icon-orange i,
+    .icon-green i,
+    .icon-red i,
+    .icon-purple i {
+        color: teal;
+    }
+
+    .tbl-title i {
+        font-size: 25px;
+    }
+
+    .tbl-search-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        padding: 0 14px;
+        height: 36px;
+        transition: border-color .2s, box-shadow .2s;
+        flex: 1 1 170px;
+        max-width: 260px;
+    }
+
+        .tbl-search-box:focus-within {
+            border-color: var(--indigo);
+            box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+        }
+
+        .tbl-search-box i {
+            font-size: 13px;
+            color: #A3ADBD;
+        }
+
+        .tbl-search-box input[type="text"] {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 13.5px;
+            font-weight: 500;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .tbl-search-box input::placeholder {
+            color: #A3ADBD;
         }
 
     .tbl-scroll {
+        margin: 4px 8px 8px 8px;
         overflow-x: auto;
-        padding: 0 16px;
-        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .data-table {
+        .tbl-scroll::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+
+        .tbl-scroll::-webkit-scrollbar-thumb {
+            background: #D6DCEB;
+            border-radius: 4px;
+        }
+
+        .tbl-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+    .dash-table {
         width: 100%;
-        min-width: 600px;
+        min-width: 700px;
         border-collapse: collapse;
-        font-size: 14px;
-        color: #000;
-        border: 1px solid var(--border);
     }
 
-        .data-table thead th {
-            padding: 10px 14px;
+        .dash-table thead th {
+            padding: 12px 14px;
             text-align: left;
-            background: #f9fafb;
-            border-bottom: 2px solid var(--border);
-            border-right: 1px solid var(--border);
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 800;
+            letter-spacing: .5px;
             text-transform: uppercase;
-            letter-spacing: .04em;
-            color: var(--muted);
+            color: #475569;
+            border-bottom: 1.5px solid var(--border);
             white-space: nowrap;
             position: sticky;
             top: 0;
-            z-index: 1;
+            z-index: 2;
+            background: #F8FAFF;
         }
 
-            .data-table thead th:first-child {
-                padding-left: 16px;
-            }
-
-            .data-table thead th:last-child {
-                padding-right: 16px;
-                border-right: none;
-            }
-
-        .data-table tbody tr {
-            border-bottom: 1px solid #e5e7eb;
+        .dash-table tbody tr {
+            border-bottom: 1px solid #EEF1F6;
+            transition: background .2s, transform .15s;
         }
 
-            .data-table tbody tr:hover {
-                background: #f0f9ff;
+            .dash-table tbody tr:nth-child(even) {
+                background: #FAFBFF;
+            }
+
+            .dash-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .dash-table tbody tr:hover {
+                background: var(--indigo-light) !important;
                 cursor: pointer;
             }
 
-            .data-table tbody tr:last-child td {
-                border-bottom: 1px solid var(--border);
+            .dash-table tbody tr.done-row {
+                background: var(--success-light);
             }
 
-            .data-table tbody tr.done-row {
-                background: #f0fdf4;
-            }
-
-                .data-table tbody tr.done-row:hover {
-                    background: #dcfce7;
+                .dash-table tbody tr.done-row:hover {
+                    background: #DCFCE7 !important;
                 }
 
-        .data-table td {
+        .dash-table tbody td {
             padding: 10px 14px;
-            vertical-align: middle;
-            border-right: 1px solid var(--border);
-            border-bottom: 1px solid #e5e7eb;
+            color: #334155;
+            white-space: nowrap;
+            font-size: 15px;
         }
 
-            .data-table td:first-child {
-                padding-left: 16px;
-            }
-
-            .data-table td:last-child {
-                padding-right: 16px;
-                border-right: none;
-            }
-
-        .data-table tfoot td {
-            padding: 7px 14px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--muted);
-            background: #f9fafb;
-            border-top: 2px solid var(--border);
-            border-right: 1px solid var(--border);
-        }
-
-            .data-table tfoot td:first-child {
-                padding-left: 16px;
-            }
-
-            .data-table tfoot td:last-child {
-                padding-right: 16px;
-                border-right: none;
-            }
-
-    .badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 3px 10px;
-        border-radius: 99px;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    .b-new {
-        background: #fff7ed;
-        color: #c2410c;
-        border: 1px solid #fed7aa;
-    }
-
-    .b-revisit {
-        background: #d1fae5;
-        color: #065f46;
-        border: 1px solid #a7f3d0;
-    }
-
-    .b-admit {
-        background: #fee2e2;
-        color: #b91c1c;
-        border: 1px solid #fca5a5;
-    }
-
-    .b-dis {
-        background: #e0f2fe;
-        color: #0369a1;
-        border: 1px solid #bae6fd;
-    }
-
-    .b-ready {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .b-done {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .four-row {
-        display: grid;
-        grid-template-columns: repeat(4,1fr);
-        gap: 16px;
-        margin-bottom: 20px;
-    }
-
-    .p-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        margin-bottom: 0;
-    }
-
-    .p-card-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 24px;
-        border-bottom: 1px solid var(--border);
-        font-size: 18px;
-        font-weight: 700;
-        color: #333;
-        border-radius: 10px 10px 0 0;
-        box-shadow: 0 2px 6px rgba(0,0,0,.08);
-    }
-
-        .p-card-head .ph-icon {
-            margin-right: 5px;
-        }
-
-    .p-count {
-        padding: 2px 10px;
-        border-radius: 99px;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    .pc-blue {
-        background: #dbeafe;
-        color: #1d4ed8;
-    }
-
-    .pc-green {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .pc-orange {
-        background: #fff7ed;
-        color: #c2410c;
-    }
-
-    .pc-red {
-        background: #fee2e2;
-        color: #b91c1c;
-    }
-
-    .mini-tbl {
-        width: 100%;
-        min-width: 400px;
-        border-collapse: collapse;
-        font-size: 14px;
-        color: #000;
-        border: 1px solid var(--border);
-    }
-
-        .mini-tbl thead th {
-            padding: 8px 12px;
-            text-align: left;
-            background: #f9fafb;
-            border-bottom: 2px solid var(--border);
-            border-right: 1px solid var(--border);
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            color: var(--muted);
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-            .mini-tbl thead th:first-child {
-                padding-left: 16px;
-            }
-
-            .mini-tbl thead th:last-child {
-                padding-right: 16px;
-                border-right: none;
-            }
-
-        .mini-tbl tbody tr {
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-            .mini-tbl tbody tr:last-child td {
-                border-bottom: 1px solid var(--border);
-            }
-
-            .mini-tbl tbody tr:hover {
-                background: #f8fafc;
-                cursor: pointer;
-            }
-
-        .mini-tbl td {
-            padding: 8px 12px;
-            vertical-align: middle;
-            border-right: 1px solid var(--border);
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-            .mini-tbl td:first-child {
-                padding-left: 16px;
-            }
-
-            .mini-tbl td:last-child {
-                padding-right: 16px;
-                border-right: none;
-            }
-
-        .mini-tbl tfoot td {
-            padding: 7px 12px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--muted);
-            background: #f9fafb;
-            border-top: 2px solid var(--border);
-            border-right: 1px solid var(--border);
-        }
-
-            .mini-tbl tfoot td:first-child {
-                padding-left: 16px;
-            }
-
-            .mini-tbl tfoot td:last-child {
-                padding-right: 16px;
-                border-right: none;
-            }
-
-    .txt-green {
-        color: #10b981;
-        font-weight: 700;
-    }
-
-    .txt-orange {
-        color: #f59e0b;
-        font-weight: 700;
-    }
-
-    .txt-red {
-        color: #ef4444;
-        font-weight: 700;
+    #tb-med td {
+        padding: 16px 14px;
     }
 
     .empty-msg {
-        padding: 20px;
         text-align: center;
-        color: var(--muted);
-        font-size: 12px;
+        padding: 20px;
+        color: #aaa;
+        font-size: 13px;
     }
 
-    .three-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 16px;
-        margin-top: 16px;
-    }
-
-    .qa-item {
+    .tbl-toolbar {
         display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 9px 14px;
-        border-bottom: 1px solid #f3f4f6;
+        gap: 8px;
+        padding: 10px 18px 0;
+        font-size: 13px;
+        color: var(--sub);
+        font-weight: 600;
+        flex-wrap: wrap;
     }
 
-        .qa-item:last-child {
-            border-bottom: none;
+        .tbl-toolbar select {
+            height: 30px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            padding: 0 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            background: #fff;
         }
 
-    .qa-icon {
-        font-size: 16px;
-        flex-shrink: 0;
+    .tbl-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 18px 14px;
+        font-size: 13px;
+        color: var(--sub);
+        font-weight: 600;
+        flex-wrap: wrap;
+        gap: 10px;
     }
 
-    .qa-label {
-        flex: 1;
-        font-size: 12.5px;
-        font-weight: 500;
+    .tbl-pagination {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
     }
 
-    .qa-num {
-        font-weight: 800;
-        font-family: var(--mono);
-        font-size: 14px;
-        padding: 2px 9px;
-        border-radius: 99px;
+    .pg-numbers {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+
+    .pg-btn, .pg-num {
+        height: 32px;
         min-width: 32px;
-        text-align: center;
+        padding: 0 10px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: #fff;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background .15s, color .15s, border-color .15s;
     }
+
+        .pg-btn:hover:not(:disabled), .pg-num:hover:not(.pg-num-active) {
+            background: var(--indigo-light);
+            border-color: var(--indigo);
+            color: var(--indigo-dark);
+        }
+
+        .pg-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+    .pg-num-active {
+        background: teal;
+        border-color: teal;
+        color: #fff;
+        cursor: default;
+    }
+
+    .pg-num-ellipsis {
+        height: 32px;
+        min-width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--sub);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+   
+    .badge-new, .badge-revisit, .badge-admit, .badge-discharge,
+    .badge-result, .badge-pending, .badge-ready {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 700;
+        font-size: 11.5px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        letter-spacing: .2px;
+        transition: transform .2s;
+    }
+
+        .badge-new::before, .badge-revisit::before, .badge-admit::before, .badge-discharge::before,
+        .badge-result::before, .badge-pending::before, .badge-ready::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .badge-new:hover, .badge-revisit:hover, .badge-admit:hover, .badge-discharge:hover,
+        .badge-result:hover, .badge-pending:hover, .badge-ready:hover {
+            transform: scale(1.06);
+        }
+
+    .badge-new {
+        background: var(--warning-light);
+        color: #B45309;
+        border: 1px solid #FDE68A;
+    }
+
+        .badge-new::before {
+            background: var(--warning);
+        }
+
+    .badge-revisit {
+        background: var(--success-light);
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+    }
+
+        .badge-revisit::before {
+            background: var(--success);
+        }
+
+    .badge-admit {
+        background: var(--danger-light);
+        color: #B91C1C;
+        border: 1px solid #FECACA;
+    }
+
+        .badge-admit::before {
+            background: var(--danger);
+        }
+
+    .badge-discharge {
+        background: var(--info-light);
+        color: #0E7490;
+        border: 1px solid #A5F3FC;
+    }
+
+        .badge-discharge::before {
+            background: var(--info);
+        }
+
+    .badge-result {
+        background: var(--success-light);
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+    }
+
+        .badge-result::before {
+            background: var(--success);
+        }
+
+    .badge-ready {
+        background: var(--success-light);
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+    }
+
+        .badge-ready::before {
+            background: var(--success);
+        }
+
+    .badge-pending {
+        background: var(--warning-light);
+        color: #B45309;
+        border: 1px solid #FDE68A;
+       
+    }
+
+        .badge-pending::before {
+            background: var(--warning);
+        }
 
     .token-num {
         display: inline-flex;
@@ -625,15 +1037,15 @@
         padding: 3px 8px;
         border-radius: 6px;
         font-weight: 700;
-        font-family: var(--mono);
+        font-family: Consolas, "Courier New", monospace;
         font-size: 12px;
-        background: #dbeafe;
-        color: #1d4ed8;
+        background: var(--indigo-light);
+        color: var(--indigo-dark);
     }
 
     .done-row .token-num {
-        background: #d1fae5;
-        color: #065f46;
+        background: var(--success-light);
+        color: #15803D;
     }
 
     .lab-dot {
@@ -641,16 +1053,215 @@
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: var(--blue);
+        background: var(--indigo);
         margin-right: 4px;
         animation: pdot 1.4s infinite;
     }
 
+   
+    .queue-actions-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 4px;
+    }
+
+    .two-col-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    
+    .qa-card {
+        display: block;
+    }
+
+    .qa-grid {
+        padding: 14px;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+    }
+
+    .qa-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-radius: 12px;
+        padding: 12px 8px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        transition: transform .2s, box-shadow .2s, border-color .2s, background .2s;
+        background: #F0F3FA;
+        box-shadow: 6px 6px 12px #d1d5e0, -6px -6px 12px #ffffff;
+        border: 2px solid transparent;
+    }
+
+        .qa-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            text-decoration: none;
+        }
+
+    .qa-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        flex-shrink: 0;
+    }
+
+   
+    .qa-btn.btn-registration {
+        border-color: var(--indigo);
+        color: var(--indigo-dark);
+        background: linear-gradient(180deg, #ffffff 0%, #FAFAFF 100%);
+    }
+
+        .qa-btn.btn-registration:hover {
+            background: var(--indigo-light);
+            border-color: var(--indigo-dark);
+            box-shadow: 0 10px 28px rgba(79,70,229,.22);
+        }
+
+        .qa-btn.btn-registration .qa-icon {
+            background: var(--indigo-light);
+            color: var(--indigo);
+        }
+
+        .qa-btn.btn-registration span {
+            color: var(--indigo-dark);
+            font-weight: 700;
+        }
+
+    /* Revisit - Info Blue */
+    .qa-btn.btn-revisit {
+        border-color: var(--info);
+        color: #0E7490;
+        background: linear-gradient(180deg, #ffffff 0%, #FAFEFF 100%);
+    }
+
+        .qa-btn.btn-revisit:hover {
+            background: var(--info-light);
+            border-color: #0E7490;
+            box-shadow: 0 10px 28px rgba(6,182,212,.22);
+        }
+
+        .qa-btn.btn-revisit .qa-icon {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .qa-btn.btn-revisit span {
+            color: #0E7490;
+            font-weight: 700;
+        }
+
+    
+    .qa-btn.btn-worksheet {
+        border-color: var(--success);
+        color: #15803D;
+        background: linear-gradient(180deg, #ffffff 0%, #FAFFFC 100%);
+    }
+
+        .qa-btn.btn-worksheet:hover {
+            background: var(--success-light);
+            border-color: #15803D;
+            box-shadow: 0 10px 28px rgba(34,197,94,.22);
+        }
+
+        .qa-btn.btn-worksheet .qa-icon {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .qa-btn.btn-worksheet span {
+            color: #15803D;
+            font-weight: 700;
+        }
+
+   
+    .qa-btn.btn-labbill {
+        border-color: var(--warning);
+        color: #B45309;
+        background: linear-gradient(180deg, #ffffff 0%, #FFFDF7 100%);
+    }
+
+        .qa-btn.btn-labbill:hover {
+            background: var(--warning-light);
+            border-color: #B45309;
+            box-shadow: 0 10px 28px rgba(245,158,11,.22);
+        }
+
+        .qa-btn.btn-labbill .qa-icon {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .qa-btn.btn-labbill span {
+            color: #B45309;
+            font-weight: 700;
+        }
+
+    .qa-btn.btn-labresult {
+        border-color: var(--purple);
+        color: #6D28D9;
+        background: linear-gradient(180deg, #ffffff 0%, #FAF5FF 100%);
+    }
+
+        .qa-btn.btn-labresult:hover {
+            background: var(--purple-light);
+            border-color: #6D28D9;
+            box-shadow: 0 10px 28px rgba(139,92,246,.22);
+        }
+
+        .qa-btn.btn-labresult .qa-icon {
+            background: var(--purple-light);
+            color: var(--purple);
+        }
+
+        .qa-btn.btn-labresult span {
+            color: #6D28D9;
+            font-weight: 700;
+        }
+
+    .qa-btn.btn-invoice {
+        border-color: var(--danger);
+        color: #B91C1C;
+        background: linear-gradient(180deg, #ffffff 0%, #FFF9F9 100%);
+    }
+
+        .qa-btn.btn-invoice:hover {
+            background: var(--danger-light);
+            border-color: #B91C1C;
+            box-shadow: 0 10px 28px rgba(239,68,68,.22);
+        }
+
+        .qa-btn.btn-invoice .qa-icon {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .qa-btn.btn-invoice span {
+            color: #B91C1C;
+            font-weight: 700;
+        }
+
+    
     #dd-loader {
         position: fixed;
         inset: 0;
         z-index: 9999;
-        background: rgba(243,244,246,.8);
+        background: rgba(248,250,252,.85);
         backdrop-filter: blur(2px);
         display: flex;
         align-items: center;
@@ -661,102 +1272,41 @@
         width: 36px;
         height: 36px;
         border: 3px solid var(--border);
-        border-top-color: var(--blue);
+        border-top-color: var(--indigo);
         border-radius: 50%;
         animation: spin .65s linear infinite;
     }
 
-    #dd-notif {
-        position: fixed;
-        top: 70px;
-        right: 20px;
-        z-index: 9998;
-        display: none;
-        align-items: center;
-        gap: 12px;
-        background: var(--card);
-        padding: 14px 18px;
-        border-radius: var(--radius);
-        box-shadow: 0 8px 24px rgba(0,0,0,.12);
-        border-left: 4px solid var(--blue);
-        min-width: 320px;
-    }
-
-        #dd-notif .n-icon {
-            font-size: 24px;
-            color: var(--blue);
+    
+    @@keyframes flyUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
         }
 
-        #dd-notif .n-body h4 {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        #dd-notif .n-body p {
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-
-    .n-btn {
-        margin-left: auto;
-        padding: 7px 14px;
-        border-radius: 6px;
-        background: var(--blue);
-        color: #fff;
-        border: none;
-        font: 600 12px var(--font);
-        cursor: pointer;
-        white-space: nowrap;
-    }
-
-    @@media (max-width: 1200px) {
-        .stat-row {
-            grid-template-columns: repeat(5,1fr);
-        }
-
-        .analytics-row {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .four-row {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .three-row {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .two-advice-row, .two-lab-row {
-            grid-template-columns: 1fr !important;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 
-    .queue-card .tbl-scroll {
-        height: 350px;
-        overflow-y: auto;
-        overflow-x: auto;
-        padding: 0 16px;
+    @@keyframes rollIn {
+        from {
+            opacity: 0;
+            transform: scale(.5);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
-    .p-card .tbl-scroll {
-        height: 300px;
-        overflow-y: auto;
-        overflow-x: auto;
-        padding: 0 16px;
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
-
-    .p-card .quick-actions-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        padding: 12px;
-    }
-
-    #quick-actions-card {
-        height: 100%;
-    }
-
 
     @@keyframes pdot {
         0%, 100% {
@@ -770,231 +1320,545 @@
         }
     }
 
-    @@keyframes spin {
-        to {
-            transform: rotate(360deg);
+    
+
+    @@media (max-width: 1400px) {
+        .kpi-row {
+            grid-template-columns: repeat(5,1fr);
         }
     }
 
-    @@keyframes blinkCard {
-        0%, 100% {
-            box-shadow: 0 0 8px rgba(255,255,255,.3);
+    @@media (max-width: 1200px) {
+        :root {
+            --sidenav-w: 68px;
         }
 
-        50% {
-            box-shadow: 0 0 20px rgba(255,255,255,.9);
-        }
-    }
-
-    .blink-card {
-        animation: blinkCard 0.8s infinite;
-    }
-
-    @@keyframes pendingBlink {
-        0%, 100% {
-            background: #fff7ed;
-            color: #c2410c;
-            box-shadow: 0 0 5px rgba(245,158,11,.3);
+        .doc-sidenav {
+            width: var(--sidenav-w-collapsed);
+            padding: 18px 8px;
         }
 
-        50% {
-            background: #ef4444;
-            color: #ffffff;
-            box-shadow: 0 0 12px rgba(239,68,68,.8);
-        }
-    }
+            .doc-sidenav .nav-item {
+                justify-content: center;
+                padding: 14px 0;
+            }
 
-    .b-pending {
-        background: #fff7ed;
-        color: #c2410c;
-        animation: pendingBlink 1s infinite;
-        font-weight: 700;
-    }
+                .doc-sidenav .nav-item span {
+                    display: none;
+                }
 
-    @@keyframes actionBlink {
-        0%, 100% {
-            background: #fff7ed;
-            color: #c2410c;
-            box-shadow: 0 0 5px rgba(245,158,11,.3);
+        .doc-page, .doc-footer {
+            margin-left: var(--sidenav-w-collapsed);
         }
 
-        50% {
-            background: #ef4444;
-            color: #ffffff;
-            box-shadow: 0 0 14px rgba(239,68,68,.85);
+        .charts-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .queue-actions-row {
+            grid-template-columns: 1fr;
+        }
+
+        .two-col-row {
+            grid-template-columns: 1fr;
+        }
+
+        .qa-grid {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
-    .action-blink {
-        animation: actionBlink 1s infinite;
-        font-weight: 700;
-    }
-
-    @@keyframes blinkGreen {
-        0%, 100% {
-            background: #D8F3DC;
-            border-left-color: #2D6A4F;
+    @@media (max-width: 992px) {
+        .kpi-row {
+            grid-template-columns: repeat(3,1fr);
         }
 
-        50% {
-            background: #bbf7d0;
-            border-left-color: #ef4444;
-            box-shadow: 0 0 14px rgba(239,68,68,.45);
-        }
-    }
-
-    @@keyframes blinkRed {
-        0%, 100% {
-            background: #FFCCD5;
-            border-left-color: #E63946;
+        .charts-row {
+            grid-template-columns: 1fr;
         }
 
-        50% {
-            background: #fca5a5;
-            border-left-color: #f59e0b;
-            box-shadow: 0 0 14px rgba(239,68,68,.55);
+        .chart-card {
+            height: auto;
+            padding-bottom: 20px;
+        }
+
+        .chart-wrap {
+            height: 240px;
+        }
+
+        .donut-layout {
+            height: auto;
+            padding: 10px 0;
         }
     }
 
-    @@keyframes blinkOrange {
-        0%, 100% {
-            background: #FFF1C1;
-            border-left-color: #F4A261;
+    @@media (max-width: 768px) {
+        body {
+            font-size: 14px;
+        }
+        :root {
+            --sidenav-w: 0px;
         }
 
-        50% {
-            background: #fde68a;
-            border-left-color: #ef4444;
-            box-shadow: 0 0 14px rgba(239,68,68,.45);
+        .sidenav-toggle-btn {
+            display: flex;
+        }
+
+        .doc-sidenav {
+            width: 260px;
+            transform: translateX(-100%);
+            box-shadow: 4px 0 24px rgba(15,23,42,.18);
+            z-index: 1200;
+        }
+
+            .doc-sidenav.open {
+                transform: translateX(0);
+            }
+
+            .doc-sidenav .nav-item {
+                justify-content: flex-start;
+                padding: 13px 16px;
+            }
+
+                .doc-sidenav .nav-item span {
+                    display: inline;
+                }
+
+        .doc-sidenav-backdrop.show {
+            display: block;
+        }
+
+        .doc-page, .doc-footer {
+            margin-left: 0;
+        }
+
+        .doc-page {
+            padding: 16px 14px 24px;
+            margin-right: 0;
+        }
+
+        .doc-footer {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .kpi-row {
+            grid-template-columns: repeat(2,1fr);
+            gap: 10px;
+        }
+
+        .kpi-card {
+            padding: 12px 14px;
+        }
+
+        .kpi-icon {
+            font-size: 32px;
+            padding-top: 0;
+        }
+
+        .kpi-label {
+            font-size: 12.5px;
+        }
+
+        .kpi-value {
+            font-size: 22px;
+        }
+
+        .charts-row {
+            grid-template-columns: 1fr;
+        }
+
+        .queue-actions-row {
+            grid-template-columns: 1fr;
+        }
+
+        .two-col-row {
+            grid-template-columns: 1fr;
+        }
+
+        .qa-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .doc-topbar {
+            flex-wrap: wrap;
+            height: auto;
+            padding: 14px 16px;
+            gap: 10px;
+            top: 0;
+        }
+
+            .doc-topbar .brand h1 {
+                font-size: 19px;
+            }
+
+        .doc-filter-bar {
+            width: 100%;
+        }
+
+        .filter-date-group {
+            flex: 1 1 45%;
+        }
+
+            .filter-date-group input[type="text"] {
+                width: 100%;
+            }
+
+        .doc-refresh-btn {
+            flex: 1 1 100%;
+            justify-content: center;
+        }
+
+        .tbl-header {
+            padding: 12px 14px;
+        }
+
+       
+
+        .tbl-search-box {
+            flex: 1 1 100%;
+            max-width: none;
+        }
+
+        .tbl-footer {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .tbl-pagination {
+            width: 100%;
+            justify-content: center;
         }
     }
 
-    .blink-header-green {
-        animation: blinkGreen 1s infinite;
+    @@media (max-width: 480px) {
+        .kpi-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .qa-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .qa-btn span {
+            font-size: 12px !important;
+        }
+
+        .doc-topbar .brand h1 {
+            font-size: 17px;
+        }
+
+        .doc-filter-btn, .doc-refresh-btn {
+            font-size: 13px;
+            padding: 0 12px;
+        }
+
+        .filter-date-group {
+            flex: 1 1 100%;
+        }
+
+        .donut-wrap {
+            width: 170px;
+            height: 170px;
+        }
+
+        .dash-table {
+            min-width: 600px;
+        }
     }
 
-    .blink-header-red {
-        animation: blinkRed 1s infinite;
+ 
+    @@media (max-width: 680px) {
+        .tbl-scroll {
+            overflow-x: visible;
+            margin: 4px 0 6px 0;
+        }
+
+        .dash-table {
+            min-width: 0;
+            width: 100%;
+        }
+
+            .dash-table thead {
+                display: none;
+            }
+
+            .dash-table, .dash-table tbody, .dash-table tr {
+                display: block;
+                width: 100%;
+            }
+
+                .dash-table tbody tr {
+                    margin-bottom: 12px;
+                    border: 1px solid var(--border);
+                    border-radius: var(--radius-md);
+                    padding: 6px 12px;
+                    background: #fff;
+                    box-shadow: var(--shadow-sm);
+                }
+
+                    .dash-table tbody tr:nth-child(even) {
+                        background: #fff;
+                    }
+
+                    .dash-table tbody tr.done-row {
+                        background: var(--success-light);
+                    }
+
+                .dash-table tbody td {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    width: 100%;
+                    padding: 8px 2px;
+                    border-bottom: 1px dashed #EEF1F6;
+                    white-space: normal;
+                    text-align: right;
+                    font-size: 13.5px;
+                }
+
+                    .dash-table tbody td:last-child {
+                        border-bottom: none;
+                    }
+
+                    .dash-table tbody td::before {
+                        content: attr(data-label);
+                        font-weight: 700;
+                        font-size: 11px;
+                        text-transform: uppercase;
+                        letter-spacing: .04em;
+                        color: var(--sub);
+                        text-align: left;
+                        flex-shrink: 0;
+                    }
+
+                    .dash-table tbody td.empty-msg {
+                        display: block;
+                        text-align: center;
+                        padding: 18px 6px;
+                    }
+
+                        .dash-table tbody td.empty-msg::before {
+                            content: none;
+                        }
+
+        #tb-med td {
+            padding: 8px 2px;
+        }
     }
 
-    .blink-header-orange {
-        animation: blinkOrange 1s infinite;
+    @@media (max-width: 360px) {
+        .doc-page {
+            padding: 12px 10px 20px;
+        }
+
+        .kpi-value {
+            font-size: 19px;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+        }
+
+        .qa-btn {
+            padding: 10px 6px;
+        }
     }
 </style>
 
-
 <div id="dd-loader"><div class="spin"></div></div>
-
-
-<div id="dd-notif">
-    <span class="n-icon">👤</span>
-    <div class="n-body">
-        <h4>New Patient Added</h4>
-        <p>A new patient has joined the queue.</p>
-    </div>
-    <button class="n-btn" onclick="refreshAll()">Refresh Queue</button>
-</div>
-
+<div id="topAlert" class="top-alert"></div>
 
 <input type="hidden" id="DoctorId" value="0" />
 <input type="hidden" id="PatientId" value="0" />
 
+<div class="doc-topbar">
+    <div class="brand">
+        <button class="sidenav-toggle-btn" type="button" id="sidenavToggleBtn" onclick="toggleSidenav()" aria-label="Toggle menu">
+            <i class="fa fa-bars"></i>
+        </button>
+        <h1>Doctor Dashboard</h1>
+    </div>
 
-<div style="background:#0d9488;padding:18px 24px;border-left:6px solid #065f46;">
-    <h2 style="color:#ffffff;font-size:28px;font-weight:900;text-transform:uppercase;
-               letter-spacing:.08em;margin:0;">
-        Doctor Dashboard
-    </h2>
+    <div class="doc-filter-bar">
+        <div class="filter-dropdown-wrap">
+            <button class="doc-filter-btn" id="quickFilterBtn" type="button" onclick="toggleQuickFilter()">
+                <i class="fa fa-calendar"></i> Quick Filter <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="quick-filter-menu" id="quickFilterMenu">
+                <a href="#" data-range="today" onclick="applyQuickRange('today');return false;">Today</a>
+                <a href="#" data-range="yesterday" onclick="applyQuickRange('yesterday');return false;">Yesterday</a>
+                <a href="#" data-range="week" onclick="applyQuickRange('week');return false;">This Week</a>
+                <a href="#" data-range="month" onclick="applyQuickRange('month');return false;">This Month</a>
+                <a href="#" data-range="lastmonth" onclick="applyQuickRange('lastmonth');return false;">Last Month</a>
+            </div>
+        </div>
+
+        <div class="filter-date-group">
+            <label>From</label>
+            <input type="text" id="FromDateInput" placeholder="dd/mm/yyyy" autocomplete="off" />
+        </div>
+        <div class="filter-date-group">
+            <label>To</label>
+            <input type="text" id="ToDateInput" placeholder="dd/mm/yyyy" autocomplete="off" />
+        </div>
+
+        <button class="doc-refresh-btn" type="button" onclick="applyDateFilter()">
+            Filter
+        </button>
+    </div>
 </div>
 
-<div class="dd-wrap">
+<div class="doc-sidenav-backdrop" id="sidenavBackdrop" onclick="closeSidenav()"></div>
 
+<div class="doc-sidenav" id="docSidenav">
+    <a href="#" class="nav-item active" data-target="top">
+        <i class="fa fa-home"></i><span>Home</span>
+    </a>
+    <a href="#sec-patient-queue" class="nav-item" data-target="sec-patient-queue">
+        <i class="fa fa-list-alt"></i><span>Patient Queue</span>
+    </a>
+    <a href="#sec-case-pending" class="nav-item" data-target="sec-case-pending">
+        <i class="fa fa-hourglass-half"></i><span>Pending Cases</span>
+    </a>
+    <a href="#sec-case-completed" class="nav-item" data-target="sec-case-completed">
+        <i class="fa fa-check-circle-o"></i><span>Completed Cases</span>
+    </a>
+    <a href="#sec-med-advice" class="nav-item" data-target="sec-med-advice">
+        <i class="fa fa-medkit"></i><span>Medicine Adviced</span>
+    </a>
+    <a href="#sec-lab-advice" class="nav-item" data-target="sec-lab-advice">
+        <i class="fa fa-flask"></i><span>Lab Adviced</span>
+    </a>
+    <a href="#sec-lab-ready" class="nav-item" data-target="sec-lab-ready">
+        <i class="fa fa-check-square-o"></i><span>Completed Reports</span>
+    </a>
+    <a href="#sec-lab-pending" class="nav-item" data-target="sec-lab-pending">
+        <i class="fa fa-clock-o"></i><span>Pending Reports</span>
+    </a>
+</div>
 
-    <div class="stat-row">
-        <div class="stat-card" style="background:linear-gradient(135deg,#1a73e8,#4f9cf9);">
-            <div class="sc-label">Total Cases</div>
-            <div class="sc-val" id="sc-total">—</div>
+<div class="doc-page">
+
+   
+    <div class="kpi-row" id="sec-kpi">
+        <div class="kpi-card kpi-blue" onclick="goToKpiSection('sec-patient-queue')">
+            <div class="kpi-top">
+                <div class="kpi-label">Total Patients</div>
+                <div class="kpi-icon"><i class="fa fa-list-ul"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-total">—</div>
         </div>
-        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">
-            <div class="sc-label">Pending Cases</div>
-            <div class="sc-val" id="sc-pending">—</div>
+        <div class="kpi-card kpi-orange" onclick="goToKpiSection('sec-case-pending')">
+            <div class="kpi-top">
+                <div class="kpi-label">Pending Cases</div>
+                <div class="kpi-icon"><i class="fa fa-hourglass-half"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-pending">—</div>
         </div>
-        <div class="stat-card" style="background:linear-gradient(135deg,#10b981,#34d399);">
-            <div class="sc-label">Done Cases</div>
-            <div class="sc-val" id="sc-done">—</div>
+        <div class="kpi-card kpi-green" onclick="goToKpiSection('sec-case-completed')">
+            <div class="kpi-top">
+                <div class="kpi-label">Completed Cases</div>
+                <div class="kpi-icon"><i class="fa fa-check-square-o"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-done">—</div>
         </div>
-        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">
-            <div class="sc-label">New Patients</div>
-            <div class="sc-val" id="sc-new">—</div>
+        <div class="kpi-card kpi-purple" onclick="goToKpiSection('sec-patient-queue')">
+            <div class="kpi-top">
+                <div class="kpi-label">New Patients</div>
+                <div class="kpi-icon"><i class="fa fa-user-plus"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-new">—</div>
         </div>
-        <div class="stat-card" style="background:linear-gradient(135deg,#06b6d4,#22d3ee);">
-            <div class="sc-label">Revisit Patients</div>
-            <div class="sc-val" id="sc-revisit">—</div>
+        <div class="kpi-card kpi-info" onclick="goToKpiSection('sec-patient-queue')">
+            <div class="kpi-top">
+                <div class="kpi-label">Revisit Patients</div>
+                <div class="kpi-icon"><i class="fa fa-repeat"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-revisit">—</div>
         </div>
-        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#d97706,#fbbf24);">
-            <div class="sc-label">Lab Advice</div>
-            <div class="sc-val" id="sc-labadvice">—</div>
+        <div class="kpi-card kpi-amber" onclick="goToKpiSection('sec-lab-advice')">
+            <div class="kpi-top">
+                <div class="kpi-label">Lab Adviced </div>
+                <div class="kpi-icon"><i class="fa fa-flask"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-labadvice">—</div>
         </div>
-        <div class="stat-card" style="background:linear-gradient(135deg,#ec4899,#f472b6);">
-            <div class="sc-label">Medicine Advice</div>
-            <div class="sc-val" id="sc-medadvice">—</div>
+        <div class="kpi-card kpi-pink" onclick="goToKpiSection('sec-med-advice')">
+            <div class="kpi-top">
+                <div class="kpi-label">Medicine Adviced </div>
+                <div class="kpi-icon"><i class="fa fa-medkit"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-medadvice">—</div>
         </div>
-        <div class="stat-card" style="background:linear-gradient(135deg,#059669,#10b981);">
-            <div class="sc-label">Lab Result Ready</div>
-            <div class="sc-val" id="sc-labready">—</div>
+        <div class="kpi-card kpi-emerald" onclick="goToKpiSection('sec-lab-ready')">
+            <div class="kpi-top">
+                <div class="kpi-label">Completed Reports</div>
+                <div class="kpi-icon"><i class="fa fa-check-circle-o"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-labready">—</div>
         </div>
-        <div class="stat-card blink-card" style="background:linear-gradient(135deg,#ef4444,#f87171);">
-            <div class="sc-label">Lab Result Pending</div>
-            <div class="sc-val" id="sc-labpending">—</div>
+        <div class="kpi-card kpi-red" onclick="goToKpiSection('sec-lab-pending')">
+            <div class="kpi-top">
+                <div class="kpi-label">Pending Reports</div>
+                <div class="kpi-icon"><i class="fa fa-clock-o"></i></div>
+            </div>
+            <div class="kpi-value" id="sc-labpending">—</div>
         </div>
     </div>
 
-
-    <div class="analytics-row">
-        <div class="a-card">
-            <div class="a-card-title" style="background:#FFE5B4;border-left:5px solid #F59E0B;color:#92400E;">
-                📊 Case Status Breakdown
-            </div>
-            <div class="a-card-body">
-                <div class="donut-wrap" style="justify-content:center;">
-                    <canvas id="c-case" width="220" height="220" class="donut-canvas"></canvas>
+    <div class="charts-row" id="sec-charts">
+        <div class="chart-card">
+            <div class="chart-card-title">| &nbsp;&nbsp; Patient Overview</div>
+            <div class="chart-wrap"><canvas id="c-flow"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-title">| &nbsp;&nbsp;Consultation Status </div>
+            <div class="donut-layout">
+                <div class="donut-wrap">
+                    <canvas id="c-case" width="220" height="220"></canvas>
                 </div>
+                <div class="legend-list" id="case-legend-list"></div>
             </div>
         </div>
-        <div class="a-card">
-            <div class="a-card-title" style="background:#DDD6FE;border-left:5px solid #8B5CF6;color:#5B21B6;">
-                👥 Patient Flow
-            </div>
-            <div class="a-card-body">
-                <canvas id="c-flow" style="width:100%;height:240px;"></canvas>
-            </div>
-        </div>
-        <div class="a-card">
-            <div class="a-card-title" style="background:#CCFBF1;border-left:5px solid #14B8A6;color:#115E59;">
-                🧪 Lab Result Status
-            </div>
-            <div class="a-card-body">
-                <canvas id="c-lab" style="width:100%;height:240px;"></canvas>
-            </div>
+        <div class="chart-card">
+            <div class="chart-card-title">| &nbsp;&nbsp;Lab Result Status</div>
+            <div class="chart-wrap"><canvas id="c-lab"></canvas></div>
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:80% 20%;gap:16px;margin-bottom:20px;align-items:start;">
+    <div class="queue-actions-row" id="sec-patient-queue">
 
-
-        <div class="queue-card" style="margin-bottom:0;">
-            <div class="queue-head" style="background:#DBEAFE;border-left:5px solid #2563EB;">
-                <h3>Patient Queue (OP Worksheet)</h3>
-                <div class="q-pills">
-                    <span class="q-pill q-pill-blue" id="qp-total">cases: 0</span>
-                    <span class="q-pill q-pill-green" id="qp-done">▶ Done: 0</span>
-                    <span class="q-pill q-pill-orange" id="qp-pending">▶ Pending: 0</span>
+        <div class="tbl-card">
+            <div class="tbl-header">
+                <div class="tbl-title icon-blue">
+                    <i class="fa fa-list-alt"></i>&nbsp;Patient Queue
                 </div>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'queue-tbody')" style="margin-left:12px;">
+
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'queue-tbody')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-queue" onchange="changePageSize('queue-tbody', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="data-table">
+                <table class="dash-table">
                     <thead>
                         <tr>
                             <th>SL#</th>
@@ -1015,284 +1879,714 @@
                     </tbody>
                 </table>
             </div>
+            <div class="tbl-footer">
+                <span id="info-queue">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-queue" onclick="goToPrevPage('queue-tbody')">Previous</button>
+                    <div class="pg-numbers" id="pages-queue"></div>
+                    <button class="pg-btn" id="next-queue" onclick="goToNextPage('queue-tbody')">Next</button>
+                </div>
+            </div>
         </div>
 
+    </div>
 
-        <div class="p-card" id="quick-actions-card" style="margin-bottom:0;">
-            <div class="p-card-head" style="background:#FEF3C7;border-left:5px solid #F59E0B;">
-                <span>⚡ Quick Actions</span>
+    <div class="qa-card" id="quick-actions-card">
+        <div class="tbl-header">
+            <div class="tbl-title" style="color:teal;">
+                | &nbsp;&nbsp;QUICK ACTIONS
             </div>
-            <div style="padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;">
-                <button onclick="window.open('../Master/PRegistration','_blank')"
-                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #bfdbfe;
-                        background:#dbeafe;color:#1d4ed8;font:600 14px var(--font);
-                        cursor:pointer;width:100%;min-height:100px;">
-                    <span style="font-size:30px">🆕</span>Registration
-                </button>
-                <button onclick="window.open('../Revisit/Revisit','_blank')"
-                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #a7f3d0;
-                        background:#d1fae5;color:#065f46;font:600 14px var(--font);
-                        cursor:pointer;width:100%;min-height:100px;">
-                    <span style="font-size:30px">📄</span>Revisit
-                </button>
-                <button onclick="window.open('../Revisit/OPWorkSheet_D','_blank')"
-                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #fed7aa;
-                        background:#fff7ed;color:#c2410c;font:600 14px var(--font);
-                        cursor:pointer;width:100%;min-height:100px;">
-                    <span style="font-size:30px">📋</span>OP Worksheet
-                </button>
-                <button onclick="window.open('../Revisit/LabBill','_blank')"
-                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #fde68a;
-                        background:#fef3c7;color:#b45309;font:600 14px var(--font);
-                        cursor:pointer;width:100%;min-height:100px;">
-                    <span style="font-size:30px">🔬</span>Lab Bill
-                </button>
-                <button onclick="window.open('../Revisit/LabResult','_blank')"
-                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #ddd6fe;
-                        background:#f5f3ff;color:#6d28d9;font:600 14px var(--font);
-                        cursor:pointer;width:100%;min-height:100px;">
-                    <span style="font-size:30px">🧪</span>Lab Result
-                </button>
-                <button onclick="window.open('../Hospital/SaleInvoiceHospital','_blank')"
-                        style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                        gap:8px;padding:20px 8px;border-radius:8px;border:1px solid #fca5a5;
-                        background:#fee2e2;color:#b91c1c;font:600 14px var(--font);
-                        cursor:pointer;width:100%;min-height:100px;">
-                    <span style="font-size:30px">💊</span>Sales Invoice
-                </button>
-            </div>
+        </div>
+        <div class="qa-grid">
+         
+            <a class="qa-btn btn-registration" onclick="window.open('../Master/PRegistration','_blank')">
+                <div class="qa-icon"><i class="fa fa-user-plus"></i></div>
+                <span style="font-size:15px;">New Registration</span>
+            </a>
+
+           
+            <a class="qa-btn btn-revisit" onclick="window.open('../Revisit/Revisit','_blank')">
+                <div class="qa-icon"><i class="fa fa-file-text-o"></i></div>
+                <span style="font-size:15px;">New Revisit</span>
+            </a>
+
+          <a class="qa-btn btn-worksheet" onclick="window.open('../Revisit/OPWorkSheet_D','_blank')">
+                <div class="qa-icon"><i class="fa fa-clipboard"></i></div>
+                <span style="font-size:15px;">OP Worksheet</span>
+            </a>
+
+           
+            <a class="qa-btn btn-labbill" onclick="window.open('../Revisit/LabBill','_blank')">
+                <div class="qa-icon"><i class="fa fa-file-text-o"></i></div>
+                <span style="font-size:15px;">New Lab Bill</span>
+            </a>
+
+            
+            <a class="qa-btn btn-labresult" onclick="window.open('../Revisit/LabResult','_blank')">
+                <div class="qa-icon"><i class="fa fa-flask"></i></div>
+                <span style="font-size:15px;">Lab Result</span>
+            </a>
+
+           
+            <a class="qa-btn btn-invoice" onclick="window.open('../Hospital/SaleInvoiceHospital','_blank')">
+                <div class="qa-icon"><i class="fa fa-medkit"></i></div>
+                <span style="font-size:15px;">Sales Invoice</span>
+            </a>
         </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
 
-        <div class="p-card">
-            <div class="p-card-head blink-header-orange" style="background:#FFF1C1;border-left:5px solid #F4A261;color:#333;">
-                <span><span class="ph-icon">📄</span>Pending Case Sheet Patients</span>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'tb-pendcs')">
+    <div class="two-col-row">
+        <div class="tbl-card" id="sec-case-pending">
+            <div class="tbl-header">
+                <div class="tbl-title icon-orange"> <i class="fa fa-hourglass-half"></i>&nbsp;Pending Cases</div>
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'tb-pendcs')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-pendcs" onchange="changePageSize('tb-pendcs', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="mini-tbl">
+                <table class="dash-table">
                     <thead>
-                        <tr>
-                            <th>Sl No</th>
-                            <th>Reg No</th>
-                            <th>OP No</th>
-                            <th>Date</th>
-                            <th>Patient</th>
-                            <th>Age/Sex</th>
-                            <th>Contact</th>
-                            <th>Doctor</th>
-                            <th>Status</th>
-                        </tr>
+                        <tr><th>Sl No</th><th>Reg No</th><th>OP No</th><th>Date</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Status</th></tr>
                     </thead>
                     <tbody id="tb-pendcs"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
+            <div class="tbl-footer">
+                <span id="info-pendcs">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-pendcs" onclick="goToPrevPage('tb-pendcs')">Previous</button>
+                    <div class="pg-numbers" id="pages-pendcs"></div>
+                    <button class="pg-btn" id="next-pendcs" onclick="goToNextPage('tb-pendcs')">Next</button>
+                </div>
+            </div>
         </div>
 
-        <div class="p-card">
-            <div class="p-card-head" style="background:#D9F99D;border-left:5px solid #65A30D;color:#333;">
-                <span><span class="ph-icon">✅</span>Completed Case Sheet Patients</span>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'tb-compcs')">
+        <div class="tbl-card" id="sec-case-completed">
+            <div class="tbl-header">
+                <div class="tbl-title icon-green"><i class="fa fa-check-circle-o"></i>&nbsp;Completed Cases</div>
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'tb-compcs')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-compcs" onchange="changePageSize('tb-compcs', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="mini-tbl">
+                <table class="dash-table">
                     <thead>
-                        <tr>
-                            <th>Sl No</th>
-                            <th>Reg No</th>
-                            <th>OP No</th>
-                            <th>Date</th>
-                            <th>Patient</th>
-                            <th>Age/Sex</th>
-                            <th>Contact</th>
-                            <th>Doctor</th>
-                            <th>Status</th>
-                        </tr>
+                        <tr><th>Sl No</th><th>Reg No</th><th>OP No</th><th>Date</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Status</th></tr>
                     </thead>
                     <tbody id="tb-compcs"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
+            <div class="tbl-footer">
+                <span id="info-compcs">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-compcs" onclick="goToPrevPage('tb-compcs')">Previous</button>
+                    <div class="pg-numbers" id="pages-compcs"></div>
+                    <button class="pg-btn" id="next-compcs" onclick="goToNextPage('tb-compcs')">Next</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:30px;margin-bottom:20px;">
-
-        <div class="p-card">
-            <div class="p-card-head" style="background:#D8F3DC;border-left:5px solid #2D6A4F;color:#333;">
-                <span><span class="ph-icon">💊</span>Medicine Advice</span>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'tb-med')">
+    <div class="two-col-row">
+        <div class="tbl-card" id="sec-med-advice">
+            <div class="tbl-header">
+                <div class="tbl-title icon-green"><i class="fa fa-medkit"></i>&nbsp;Medicine Adviced</div>
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'tb-med')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-med" onchange="changePageSize('tb-med', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="mini-tbl">
+                <table class="dash-table">
                     <thead>
-                        <tr>
-                            <th>Sl No</th>
-                            <th>Reg#</th>
-                            <th>OP#</th>
-                            <th>Date</th>
-                            <th>Patient</th>
-                            <th>Age/Sex</th>
-                            <th>Contact</th>
-                            <th>Doctor</th>
-                            <th>Medicine</th>
-                        </tr>
+                        <tr><th>Sl No</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Medicine</th></tr>
                     </thead>
                     <tbody id="tb-med"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
+            <div class="tbl-footer">
+                <span id="info-med">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-med" onclick="goToPrevPage('tb-med')">Previous</button>
+                    <div class="pg-numbers" id="pages-med"></div>
+                    <button class="pg-btn" id="next-med" onclick="goToNextPage('tb-med')">Next</button>
+                </div>
+            </div>
         </div>
 
-
-        <div class="p-card">
-            <div class="p-card-head blink-header-green" style="background:#D8F3DC;border-left:5px solid #2D6A4F;color:#333;">
-                <span><span class="ph-icon">🧪</span>Lab Advice</span>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'tb-lab')">
+        <div class="tbl-card" id="sec-lab-advice">
+            <div class="tbl-header">
+                <div class="tbl-title icon-purple"><i class="fa fa-flask"></i>&nbsp;Lab Adviced</div>
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'tb-lab')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-lab" onchange="changePageSize('tb-lab', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="mini-tbl">
+                <table class="dash-table">
                     <thead>
-                        <tr>
-                            <th>Sl No</th>
-                            <th>Reg#</th>
-                            <th>OP#</th>
-                            <th>Date</th>
-                            <th>Patient</th>
-                            <th>Age/Sex</th>
-                            <th>Contact</th>
-                            <th>Doctor</th>
-                            <th>Lab Test</th>
-                            <th>Status</th>
-                        </tr>
+                        <tr><th>Sl No</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Lab Test</th></tr>
                     </thead>
-                    <tbody id="tb-lab"><tr><td colspan="10" class="empty-msg">—</td></tr></tbody>
+                    <tbody id="tb-lab"><tr><td colspan="9" class="empty-msg">—</td></tr></tbody>
                 </table>
+            </div>
+            <div class="tbl-footer">
+                <span id="info-lab">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-lab" onclick="goToPrevPage('tb-lab')">Previous</button>
+                    <div class="pg-numbers" id="pages-lab"></div>
+                    <button class="pg-btn" id="next-lab" onclick="goToNextPage('tb-lab')">Next</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-
-        <div class="p-card">
-            <div class="p-card-head" style="background:#CAF0F8;border-left:5px solid #0077B6;color:#333;">
-                <span><span class="ph-icon">🔬</span>Lab Result Ready Patients</span>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'tb-lready')">
+    <div class="two-col-row">
+        <div class="tbl-card" id="sec-lab-ready">
+            <div class="tbl-header">
+                <div class="tbl-title icon-blue"><i class="fa fa-check-square-o"></i>&nbsp;Completed Reports</div>
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'tb-lready')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-lready" onchange="changePageSize('tb-lready', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="mini-tbl">
+                <table class="dash-table">
                     <thead>
-                        <tr>
-                            <th>Sl#</th>
-                            <th>Reg#</th>
-                            <th>OP#</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Patient</th>
-                            <th>Age/Sex</th>
-                            <th>Contact</th>
-                            <th>Doctor</th>
-                            <th>Bill No</th>
-                            <th>Status</th>
-                        </tr>
+                        <tr><th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Bill No</th><th>Status</th></tr>
                     </thead>
                     <tbody id="tb-lready"><tr><td colspan="11" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
+            <div class="tbl-footer">
+                <span id="info-lready">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-lready" onclick="goToPrevPage('tb-lready')">Previous</button>
+                    <div class="pg-numbers" id="pages-lready"></div>
+                    <button class="pg-btn" id="next-lready" onclick="goToNextPage('tb-lready')">Next</button>
+                </div>
+            </div>
         </div>
 
-        <div class="p-card">
-            <div class="p-card-head blink-header-red" style="background:#FFCCD5;border-left:5px solid #E63946;color:#333;">
-                <span><span class="ph-icon">⏱️</span>Lab Result Pending Patients</span>
-                <input class="tbl-search" type="text" placeholder="Search..."
-                       oninput="filterTable(this,'tb-lpending')">
+        <div class="tbl-card" id="sec-lab-pending">
+            <div class="tbl-header">
+                <div class="tbl-title icon-red"><i class="fa fa-clock-o"></i>&nbsp;Pending Reports</div>
+                <div class="tbl-search-box">
+                    <i class="fa fa-search"></i>
+                    <input type="text" placeholder="Search..." oninput="filterTable(this,'tb-lpending')">
+                </div>
+            </div>
+            <div class="tbl-toolbar">
+                Show
+                <select id="es-lpending" onchange="changePageSize('tb-lpending', this)">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                entries
             </div>
             <div class="tbl-scroll">
-                <table class="mini-tbl">
+                <table class="dash-table">
                     <thead>
-                        <tr>
-                            <th>Sl#</th>
-                            <th>Reg#</th>
-                            <th>OP#</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Patient</th>
-                            <th>Age/Sex</th>
-                            <th>Contact</th>
-                            <th>Doctor</th>
-                            <th>Bill No</th>
-                            <th>Status</th>
-                        </tr>
+                        <tr><th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Bill No</th><th>Status</th></tr>
                     </thead>
                     <tbody id="tb-lpending"><tr><td colspan="11" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
+            <div class="tbl-footer">
+                <span id="info-lpending">Showing 0 entries</span>
+                <div class="tbl-pagination">
+                    <button class="pg-btn" id="prev-lpending" onclick="goToPrevPage('tb-lpending')">Previous</button>
+                    <div class="pg-numbers" id="pages-lpending"></div>
+                    <button class="pg-btn" id="next-lpending" onclick="goToNextPage('tb-lpending')">Next</button>
+                </div>
+            </div>
         </div>
     </div>
 
+</div>
 
+<div class="doc-footer">
+    <span>&#169; <span id="footerYear"></span> Medoc HMS. All rights reserved.</span>
+    <span>Doctor Dashboard</span>
 </div>
 
 <script>
-
     $(document).ready(function () {
         document.title = "Doctor Dashboard";
-
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+        showSection('top');
     });
 
+    
+    function isMobileNav() {
+        return window.matchMedia('(max-width: 768px)').matches;
+    }
 
-     var CurDate = '';
+    function toggleSidenav() {
+        var nav = document.getElementById('docSidenav');
+        var backdrop = document.getElementById('sidenavBackdrop');
+        var isOpen = nav.classList.toggle('open');
+        backdrop.classList.toggle('show', isOpen);
+    }
+
+    function closeSidenav() {
+        document.getElementById('docSidenav').classList.remove('open');
+        document.getElementById('sidenavBackdrop').classList.remove('show');
+    }
+
+  
+    window.addEventListener('resize', function () {
+        if (!isMobileNav()) closeSidenav();
+    });
+
+    
+    function showSection(target) {
+        var sections = {
+            kpi: document.querySelector('.kpi-row'),
+            charts: document.querySelector('.charts-row'),
+            queue: document.querySelector('.queue-actions-row'),
+            qaCard: document.querySelector('.qa-card'),
+            twoColRows: document.querySelectorAll('.two-col-row'),
+            allTables: document.querySelectorAll('.tbl-card')
+        };
+
+        sections.allTables.forEach(function(tbl) {
+            tbl.style.display = 'none';
+        });
+        sections.twoColRows.forEach(function(row) {
+            row.style.display = 'none';
+        });
+        sections.queue.style.display = 'none';
+
+        if (target === 'top') {
+            sections.kpi.style.display = 'grid';
+            sections.charts.style.display = 'grid';
+            sections.qaCard.style.display = 'block';
+        } else {
+            sections.kpi.style.display = 'none';
+            sections.charts.style.display = 'none';
+            sections.qaCard.style.display = 'none';
+
+            var targetEl = document.getElementById(target);
+            if (!targetEl) return;
+
+            if (target === 'sec-patient-queue') {
+                sections.queue.style.display = 'grid';
+                sections.queue.style.gridTemplateColumns = '1fr';
+                var queueTbl = sections.queue.querySelector('.tbl-card');
+                if (queueTbl) queueTbl.style.display = 'block';
+            } else {
+                var parentRow = targetEl.closest('.two-col-row');
+                if (parentRow) {
+                    parentRow.style.display = 'grid';
+                    parentRow.style.gridTemplateColumns = '1fr';
+                    targetEl.style.display = 'block';
+                } else {
+                    targetEl.style.display = 'block';
+                }
+            }
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('.doc-sidenav .nav-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.doc-sidenav .nav-item').forEach(function(n) {
+                n.classList.remove('active');
+            });
+            this.classList.add('active');
+            showSection(this.dataset.target);
+            if (isMobileNav()) closeSidenav();
+        });
+    });
+
+    
+    var paginators = {};
+
+    
+    function pgKey(tbodyId) {
+        return tbodyId.replace('-tbody', '').replace('tb-', '');
+    }
+
+    function initPaginator(tbodyId, colspan) {
+        paginators[tbodyId] = {
+            allRows: [],
+            rows: [],
+            pageSize: 10,
+            currentPage: 1,
+            colspan: colspan,
+            emptyMsg: 'No data.'
+        };
+    }
+
+    
+    function setPaginatorRows(tbodyId, rowsArray, emptyMsg) {
+        var p = paginators[tbodyId];
+        if (!p) return;
+        p.allRows = rowsArray || [];
+        p.rows = p.allRows.slice();
+        if (emptyMsg) p.emptyMsg = emptyMsg;
+        p.currentPage = 1;
+        renderPage(tbodyId);
+    }
+
+    function renderPage(tbodyId) {
+        var p = paginators[tbodyId];
+        if (!p) return;
+
+        var total = p.rows.length;
+        var totalPages = Math.max(1, Math.ceil(total / p.pageSize));
+        if (p.currentPage > totalPages) p.currentPage = totalPages;
+        if (p.currentPage < 1) p.currentPage = 1;
+
+        var start = (p.currentPage - 1) * p.pageSize;
+        var end = Math.min(start + p.pageSize, total);
+        var pageRows = p.rows.slice(start, end);
+
+        var tbodyEl = document.getElementById(tbodyId);
+        if (tbodyEl) {
+            tbodyEl.innerHTML = pageRows.length
+                ? pageRows.join('')
+                : '<tr><td colspan="' + p.colspan + '" class="empty-msg">' + p.emptyMsg + '</td></tr>';
+        }
+
+        var key = pgKey(tbodyId);
+        var infoEl = document.getElementById('info-' + key);
+        var pagesEl = document.getElementById('pages-' + key);
+        var prevEl = document.getElementById('prev-' + key);
+        var nextEl = document.getElementById('next-' + key);
+
+        if (infoEl) {
+            infoEl.textContent = total
+                ? ('Showing ' + (start + 1) + ' to ' + end + ' of ' + total + ' entries')
+                : 'Showing 0 entries';
+        }
+        if (pagesEl) renderPageNumbers(pagesEl, tbodyId, p.currentPage, totalPages);
+        if (prevEl) prevEl.disabled = p.currentPage <= 1;
+        if (nextEl) nextEl.disabled = p.currentPage >= totalPages;
+    }
+
+    
+    function renderPageNumbers(container, tbodyId, current, totalPages) {
+        var pagesToShow = [];
+        var maxButtons = window.matchMedia('(max-width: 480px)').matches ? 3 : 7;
+
+        if (totalPages <= maxButtons) {
+            for (var i = 1; i <= totalPages; i++) pagesToShow.push(i);
+        } else {
+            pagesToShow.push(1);
+            var start = Math.max(2, current - 1);
+            var end = Math.min(totalPages - 1, current + 1);
+
+            if (start > 2) pagesToShow.push('...');
+            for (var j = start; j <= end; j++) pagesToShow.push(j);
+            if (end < totalPages - 1) pagesToShow.push('...');
+
+            pagesToShow.push(totalPages);
+        }
+
+        var html = '';
+        for (var k = 0; k < pagesToShow.length; k++) {
+            var item = pagesToShow[k];
+            if (item === '...') {
+                html += '<span class="pg-num-ellipsis">…</span>';
+            } else {
+                var activeCls = (item === current) ? ' pg-num-active' : '';
+                html += '<button type="button" class="pg-num' + activeCls + '" onclick="goToPage(\'' + tbodyId + '\',' + item + ')">' + item + '</button>';
+            }
+        }
+        container.innerHTML = html;
+    }
+
+    function goToPage(tbodyId, pageNum) {
+        var p = paginators[tbodyId];
+        if (!p) return;
+        p.currentPage = pageNum;
+        renderPage(tbodyId);
+    }
+
+    function changePageSize(tbodyId, selectEl) {
+        var p = paginators[tbodyId];
+        if (!p) return;
+        p.pageSize = parseInt(selectEl.value) || 10;
+        p.currentPage = 1;
+        renderPage(tbodyId);
+    }
+
+    function goToPrevPage(tbodyId) {
+        var p = paginators[tbodyId];
+        if (p && p.currentPage > 1) { p.currentPage--; renderPage(tbodyId); }
+    }
+
+    function goToNextPage(tbodyId) {
+        var p = paginators[tbodyId];
+        if (!p) return;
+        var totalPages = Math.max(1, Math.ceil(p.rows.length / p.pageSize));
+        if (p.currentPage < totalPages) { p.currentPage++; renderPage(tbodyId); }
+    }
+
+    initPaginator('queue-tbody', 11);
+    initPaginator('tb-pendcs', 9);
+    initPaginator('tb-compcs', 9);
+    initPaginator('tb-med', 9);
+    initPaginator('tb-lab', 9);
+    initPaginator('tb-lready', 11);
+    initPaginator('tb-lpending', 11);
+
+    
+    var FromDate = '';      
+    var ToDate = '';        
     var labReadyMap = {};
-    var prevTotal = 0;
+    var pollTimerAdvice = null;
+    var pollTimerQueue = null;
 
-    (function () {
-        var d = new Date();
+    function fmtDMY(d) {
         var dd = String(d.getDate()).padStart(2, '0');
         var mm = String(d.getMonth() + 1).padStart(2, '0');
-        var yy = d.getFullYear();
-        CurDate = dd + '/' + mm + '/' + yy;
-        var hdrDate = document.getElementById('hdr-date');
-        if (hdrDate) {
-            var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-            hdrDate.textContent = mm + '/' + dd + '/' + yy + ' (' + days[d.getDay()] + ')';
-        }
+        return dd + '/' + mm + '/' + d.getFullYear();
+    }
+
+    function dmyToDate(dmy) {
+        if (!dmy) return null;
+        var p = dmy.split('/');
+        if (p.length !== 3) return null;
+        return new Date(p[2], p[1] - 1, p[0]);
+    }
+
+    function warningshow(message) {
+        $('#topAlert').text(message);
+        $('#topAlert').stop(true, true).fadeIn();
+        clearTimeout(window._docWarningTimer);
+        window._docWarningTimer = setTimeout(function () {
+            $('#topAlert').fadeOut();
+        }, 3000);
+    }
+
+    (function initDates() {
+        var today = new Date();
+        var todayStr = fmtDMY(today);
+        FromDate = todayStr;
+        ToDate = todayStr;
+
+        document.getElementById('FromDateInput').value = todayStr;
+        document.getElementById('ToDateInput').value = todayStr;
+        setActiveQuickLabel('today');
     })();
 
-     var chartCase = null, chartFlow = null, chartLab = null;
+   
+    function toggleQuickFilter() {
+        document.getElementById('quickFilterMenu').classList.toggle('show');
+    }
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.filter-dropdown-wrap')) {
+            document.getElementById('quickFilterMenu').classList.remove('show');
+        }
+    });
+
+    function setActiveQuickLabel(range) {
+        document.querySelectorAll('.quick-filter-menu a').forEach(function (a) {
+            a.classList.toggle('active-range', a.dataset.range === range);
+        });
+    }
+
+    
+    function applyQuickRange(range) {
+        var today = new Date();
+        var from = new Date(today), to = new Date(today);
+
+        if (range === 'yesterday') {
+            from.setDate(from.getDate() - 1);
+            to.setDate(to.getDate() - 1);
+        } else if (range === 'week') {
+            from.setDate(today.getDate() - today.getDay());
+        } else if (range === 'month') {
+            from = new Date(today.getFullYear(), today.getMonth(), 1);
+        } else if (range === 'lastmonth') {
+            from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            to = new Date(today.getFullYear(), today.getMonth(), 0);
+        }
+       
+
+        var fromStr = fmtDMY(from);
+        var toStr = fmtDMY(to);
+
+        var $from = $('#FromDateInput');
+        var $to = $('#ToDateInput');
+
+        $from.val(fromStr);
+        $to.val(toStr);
+
+        if ($from.data('daterangepicker')) {
+            $from.data('daterangepicker').setStartDate(fromStr);
+            $from.data('daterangepicker').setEndDate(fromStr);
+        }
+        if ($to.data('daterangepicker')) {
+            $to.data('daterangepicker').setStartDate(toStr);
+            $to.data('daterangepicker').setEndDate(toStr);
+        }
+
+        document.getElementById('quickFilterMenu').classList.remove('show');
+        setActiveQuickLabel(range);
+
+        FromDate = fromStr;
+        ToDate = toStr;
+        
+    }
+
+    function applyDateFilter() {
+        var fromVal = document.getElementById('FromDateInput').value;
+        var toVal = document.getElementById('ToDateInput').value;
+        if (!fromVal || !toVal) { warningshow('Please select both From and To dates.'); return; }
+
+        var fromD = dmyToDate(fromVal), toD = dmyToDate(toVal);
+        if (fromD && toD && fromD > toD) {
+            warningshow('From date cannot be later than To date.');
+            return;
+        }
+
+        FromDate = fromVal;
+        ToDate = toVal;
+        setActiveQuickLabel('custom');
+
+        runFilteredRefresh();
+    }
+
+    function runFilteredRefresh() {
+        refreshAll();
+        managePolling();
+    }
+
+   
+    function managePolling() {
+        if (pollTimerAdvice) { clearInterval(pollTimerAdvice); pollTimerAdvice = null; }
+        if (pollTimerQueue) { clearInterval(pollTimerQueue); pollTimerQueue = null; }
+
+        pollTimerAdvice = setInterval(loadAdviceData, 120000); 
+        pollTimerQueue = setInterval(loadWorksheet, 120000);   
+    }
+
+    var chartCase = null, chartFlow = null, chartLab = null;
+    var CASE_COLORS = ['#22C55E', '#F59E0B'];
+    var LAB_COLORS  = ['#22C55E', '#EF4444'];
 
     function drawCaseChart(done, pending, total) {
         var ctx = document.getElementById('c-case').getContext('2d');
         if (chartCase) chartCase.destroy();
+
+        var t = done + pending;
+        var donePct = t ? Math.round((done / t) * 100) : 0;
+        var pendPct = t ? Math.round((pending / t) * 100) : 0;
+
         chartCase = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Done', 'Pending'],
+                labels: ['Done Cases', 'Pending Cases'],
                 datasets: [{
-                    data: total ? [done, pending] : [1],
-                    backgroundColor: total ? ['#10b981', '#f59e0b'] : ['#e5e7eb'],
-                    borderWidth: 2, borderColor: '#fff'
+                    data: t ? [done, pending] : [1],
+                    backgroundColor: t ? ['#22C55E', '#EF4444'] : ['#e5e7eb'],
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 10
                 }]
             },
             options: {
-                cutout: '62%', responsive: false,
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                legend: { display: false },
                 plugins: {
-                    legend: {
-                        display: true, position: 'bottom',
-                        labels: { font: { size: 12, weight: '600' }, color: '#374151', usePointStyle: true, pointStyleWidth: 10, padding: 14 }
-                    },
-                    tooltip: { callbacks: { label: function (ctx) { return ' ' + ctx.label + ': ' + ctx.raw; } } }
-                }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#fff', borderColor: '#e5e7eb', borderWidth: 1, titleColor: '#111827', bodyColor: '#374151', padding: 12,
+                        callbacks: {
+                            label: function (ctx) {
+                                var tt = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                var p = tt ? Math.round((ctx.raw / tt) * 100) : 0;
+                                return ' ' + ctx.label + ': ' + ctx.raw + ' (' + p + '%)';
+                            }
+                        }
+                    }
+                },
+                animation: { animateRotate: true, duration: 800 }
             }
         });
+
+        var legendHtml = '';
+        var labels = ['Done Cases', 'Pending Cases'];
+        var colors = ['#22C55E', '#EF4444'];
+        var values = [done, pending];
+        var pcts = [donePct, pendPct];
+        for (var i = 0; i < labels.length; i++) {
+            legendHtml += '<div class="legend-item">'
+                + '<span class="legend-dot" style="background:' + colors[i] + '"></span>'
+                + '<span class="legend-name">' + labels[i] + '</span>'
+                + '<span class="legend-val">' + values[i] + '</span>'
+                + '<span class="legend-pct">(' + pcts[i] + '%)</span>'
+                + '</div>';
+        }
+        document.getElementById('case-legend-list').innerHTML = legendHtml;
     }
 
     function drawFlowChart(newPt, revisit) {
@@ -1303,8 +2597,8 @@
             data: {
                 labels: ['New Patients', 'Revisit Patients'],
                 datasets: [
-                    { label: 'New Patients',    data: [newPt, 0],    backgroundColor: 'rgba(236,72,153,0.8)',  borderColor: '#ec4899', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 },
-                    { label: 'Revisit Patients', data: [0, revisit], backgroundColor: 'rgba(139,92,246,0.8)',  borderColor: '#8b5cf6', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 }
+                    { label: 'New Patients',    data: [newPt, 0],    backgroundColor: 'rgba(139,92,246,0.85)',  borderColor: '#8b5cf6', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 55 },
+                    { label: 'Revisit Patients', data: [0, revisit], backgroundColor: 'rgba(6,182,212,0.85)',   borderColor: '#06b6d4', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 55 }
                 ]
             },
             options: {
@@ -1324,20 +2618,27 @@
     function drawLabChart(ready, pending) {
         var ctx = document.getElementById('c-lab').getContext('2d');
         if (chartLab) chartLab.destroy();
+
         chartLab = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Lab Ready', 'Lab Pending'],
+                labels: ['Completed Result', 'Pending Result'],
                 datasets: [
-                    { label: 'Lab Ready',   data: [ready, 0],    backgroundColor: 'rgba(26,115,232,0.8)',  borderColor: '#1a73e8', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 },
-                    { label: 'Lab Pending', data: [0, pending],  backgroundColor: 'rgba(16,185,129,0.8)',  borderColor: '#10b981', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 60 }
+                    { label: 'Completed Result', data: [ready, 0], backgroundColor: 'rgba(179,157,219,0.85)', borderColor: '#9575CD', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 55 },
+                    { label: 'Pending Result', data: [0, pending], backgroundColor: 'rgba(244,63,94,0.85)', borderColor: '#E11D48', borderWidth: 2, borderRadius: 8, borderSkipped: false, barThickness: 55 }
                 ]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: true, position: 'bottom', labels: { font: { size: 12, weight: '600' }, color: '#374151', usePointStyle: true, pointStyleWidth: 10, boxHeight: 6, padding: 16, filter: function (item) { return item.text !== ''; } } },
-                    tooltip: { backgroundColor: '#fff', borderColor: '#e5e7eb', borderWidth: 1, titleColor: '#111827', bodyColor: '#374151', padding: 10, callbacks: { label: function (ctx) { var val = ctx.datasetIndex === 0 ? ready : pending; return '  ' + ctx.dataset.label + ': ' + val; } } }
+                    legend: {
+                        display: true, position: 'bottom',
+                        labels: { font: { size: 12, weight: '600' }, color: '#374151', usePointStyle: true, pointStyleWidth: 10, boxHeight: 6, padding: 16, filter: function (item) { return item.text !== ''; } }
+                    },
+                    tooltip: {
+                        backgroundColor: '#fff', borderColor: '#e5e7eb', borderWidth: 1, titleColor: '#111827', bodyColor: '#374151', padding: 10,
+                        callbacks: { label: function (ctx) { var val = ctx.datasetIndex === 0 ? ready : pending; return '  ' + ctx.dataset.label + ': ' + val; } }
+                    }
                 },
                 scales: {
                     x: { grid: { display: false, drawBorder: false }, border: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: '#374151' } },
@@ -1347,20 +2648,28 @@
         });
     }
 
-    function pct(v, t) { return t ? Math.round(v / t * 100) + '%' : '0%'; }
-
-     function refreshAll() {
-        document.getElementById('dd-notif').style.display = 'none';
-        loadWorksheet();
-        loadAdviceData();
-    //    loadCompletedCaseSheets();
+    function buildLegendItem(name, val, total, color) {
+        var p = total ? Math.round(val / total * 100) : 0;
+        return '<div class="legend-item">'
+            + '<span class="legend-dot" style="background:' + color + '"></span>'
+            + '<span class="legend-name">' + name + '</span>'
+            + '<span class="legend-val">' + val + '</span>'
+            + '<span class="legend-pct">(' + p + '%)</span>'
+            + '</div>';
     }
 
-     function loadWorksheet() {
+    function pct(v, t) { return t ? Math.round(v / t * 100) + '%' : '0%'; }
+
+    function refreshAll() {
+        loadWorksheet();
+        loadAdviceData();
+    }
+
+    function loadWorksheet() {
         $.ajax({
             type: 'POST', url: '../Revisit/HMS_OPWorkSheetDoctor',
             data: {
-                FromDate: CurDate, ToDate: CurDate,
+                FromDate: FromDate, ToDate: ToDate,
                 DoctorId: $('#DoctorId').val() || 0,
                 PatientId: $('#PatientId').val() || 0,
                 DeptId: (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0),
@@ -1374,19 +2683,20 @@
     function buildQueue(data) {
         var total = data.length, done = 0, pending = 0, newPt = 0, revisit = 0;
         var today = new Date(), yyyy = today.getFullYear();
-        var qHTML = '', pendHTML = '', compHTML = '', pendCnt = 0, compCnt = 0;
+        var qRows = [], pendRows = [], compRows = [];
+        var pendCnt = 0, compCnt = 0;
 
         for (var i = 0; i < data.length; i++) {
             var r = data[i];
             var badge = '';
             if (r.IPNumber && r.IPNumber != 0) {
                 badge = r.DelFlag == 0
-                    ? '<span class="badge b-admit">Admitted</span>'
-                    : '<span class="badge b-dis">Discharged</span>';
+                    ? '<span class="badge-admit">Admitted</span>'
+                    : '<span class="badge-discharge">Discharged</span>';
             } else if (r.Status == 'New') {
-                badge = '<span class="badge b-new">New-Reg</span>'; newPt++;
+                badge = '<span class="badge-new">New-Reg</span>'; newPt++;
             } else {
-                badge = '<span class="badge b-revisit">Re-Visit</span>'; revisit++;
+                badge = '<span class="badge-revisit">Re-Visit</span>'; revisit++;
             }
 
             var age = '—';
@@ -1398,59 +2708,62 @@
             var labdot = labReadyMap[r.RevisitId] ? '<span class="lab-dot" title="Lab Result Ready"></span>' : '';
             var rowCls = isDone ? ' class="done-row"' : '';
 
-            qHTML += '<tr' + rowCls + ' ondblclick="goCS(' + r.PatientId + ',' + r.RevisitId + ')">'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (i + 1) + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (r.OPNumber || '') + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.RevisitId || '') + '</td>'
-                + '<td style="color:#000;white-space:nowrap;font-size:14px">' + (r.RevisitDate || '') + '</td>'
-                + '<td style="color:#000;font-weight:600;font-size:14px">' + (r.PatientName || '') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + labdot + (r.Gender || '') + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.Contact || '') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + ((r.ShiftName || '').substring(0, 4)) + '</td>'
-                + '<td><span class="token-num">' + (r.TokenNumber || '') + '</span></td>'
-                + '<td>' + badge + '</td>'
-                + '<td>'
+            qRows.push('<tr' + rowCls + ' ondblclick="goCS(' + r.PatientId + ',' + r.RevisitId + ')">'
+                + '<td data-label="SL#">' + (i + 1) + '</td>'
+                + '<td data-label="Reg#">' + (r.OPNumber || '') + '</td>'
+                + '<td data-label="Visit#">' + (r.RevisitId || '') + '</td>'
+                + '<td data-label="Date">' + (r.RevisitDate || '') + '</td>'
+                + '<td data-label="Patient" style="font-weight:600">' + (r.PatientName || '') + '</td>'
+                + '<td data-label="Gender">' + labdot + (r.Gender || '') + '</td>'
+                + '<td data-label="Contact">' + (r.Contact || '') + '</td>'
+                + '<td data-label="Shift">' + ((r.ShiftName || '').substring(0, 4)) + '</td>'
+                + '<td data-label="Token"><span class="token-num">' + (r.TokenNumber || '') + '</span></td>'
+                + '<td data-label="Status">' + badge + '</td>'
+                + '<td data-label="Action">'
                 + (isDone
-                    ? '<span class="badge b-done" style="font-size:12px;padding:4px 12px;">Done</span>'
-                    : '<span class="badge b-pending action-blink" style="font-size:12px;padding:4px 12px;">Pending</span>')
+                    ? '<span class="badge-result">Done</span>'
+                    : '<span class="badge-pending">Pending</span>')
                 + '</td>'
-                + '</tr>';
+                + '</tr>');
 
             if (!isDone) {
                 pendCnt++;
-                pendHTML += '<tr>'
-                    + '<td style="color:#000;font-size:14px">' + pendCnt + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.PatientId || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.OPNumber || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.RevisitDate || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.PatientName || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + age + ' / ' + (r.Gender || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.Contact || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.DoctorName || '') + '</td>'
-                    + '<td><span class="badge b-pending">Pending</span></td>'
-                    + '</tr>';
+                pendRows.push('<tr ondblclick="goCS(' + r.PatientId + ',' + r.RevisitId + ')">'
+                    + '<td data-label="Sl No">' + pendCnt + '</td>'
+                    + '<td data-label="Reg No">' + (r.PatientId || '') + '</td>'
+                    + '<td data-label="OP No">' + (r.OPNumber || '') + '</td>'
+                    + '<td data-label="Date">' + (r.RevisitDate || '') + '</td>'
+                    + '<td data-label="Patient" style="font-weight:600">' + (r.PatientName || '') + '</td>'
+                    + '<td data-label="Age/Sex">' + age + ' / ' + (r.Gender || '') + '</td>'
+                    + '<td data-label="Contact">' + (r.Contact || '') + '</td>'
+                    + '<td data-label="Doctor">' + (r.DoctorName || '') + '</td>'
+                    + '<td data-label="Status"><span class="badge-pending">Pending</span></td>'
+                    + '</tr>');
             }
 
             if (isDone) {
                 compCnt++;
-                compHTML += '<tr>'
-                    + '<td style="color:#000;font-size:14px">' + compCnt + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.PatientId || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.OPNumber || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.RevisitDate || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.PatientName || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + age + ' / ' + (r.Gender || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.Contact || '') + '</td>'
-                    + '<td style="color:#000;font-size:14px">' + (r.DoctorName || '') + '</td>'
-                    + '<td><span class="badge b-done">Completed</span></td>'
-                    + '</tr>';
+                compRows.push('<tr ondblclick="goCS(' + r.PatientId + ',' + r.RevisitId + ')">'
+                    + '<td data-label="Sl No">' + compCnt + '</td>'
+                    + '<td data-label="Reg No">' + (r.PatientId || '') + '</td>'
+                    + '<td data-label="OP No">' + (r.OPNumber || '') + '</td>'
+                    + '<td data-label="Date">' + (r.RevisitDate || '') + '</td>'
+                    + '<td data-label="Patient" style="font-weight:600">' + (r.PatientName || '') + '</td>'
+                    + '<td data-label="Age/Sex">' + age + ' / ' + (r.Gender || '') + '</td>'
+                    + '<td data-label="Contact">' + (r.Contact || '') + '</td>'
+                    + '<td data-label="Doctor">' + (r.DoctorName || '') + '</td>'
+                    + '<td data-label="Status"><span class="badge-result">Completed</span></td>'
+                    + '</tr>');
             }
         }
 
-        $('#queue-tbody').html(qHTML || '<tr><td colspan="11" class="empty-msg">No patients.</td></tr>');
+        setPaginatorRows('queue-tbody', qRows, 'No patients.');
+        setPaginatorRows('tb-pendcs', pendRows, 'No pending cases.');
+        setPaginatorRows('tb-compcs', compRows, 'No completed cases.');
+
         $('#qp-total').text('cases: ' + total);
-        $('#qp-done').text('▶ Done: ' + done);
-        $('#qp-pending').text('▶ Pending: ' + pending);
+        $('#qp-done').text('Done: ' + done);
+        $('#qp-pending').text('Pending: ' + pending);
         $('#sc-total').text(total);
         $('#sc-pending').text(pending);
         $('#sc-done').text(done);
@@ -1459,50 +2772,22 @@
         drawCaseChart(done, pending, total);
         drawFlowChart(newPt, revisit);
 
-        $('#tb-pendcs').html(pendHTML || '<tr><td colspan="9" class="empty-msg">No pending case sheets.</td></tr>');
-        $('#tb-compcs').html(compHTML || '<tr><td colspan="9" class="empty-msg">No completed case sheets yet.</td></tr>');
-
-        if (prevTotal > 0 && total > prevTotal) {
-            $('#dd-notif').css('display', 'flex');
-            setTimeout(function () { $('#dd-notif').hide(); }, 8000);
-        }
-        prevTotal = total;
         $('#dd-loader').hide();
     }
 
-    // function loadCompletedCaseSheets() {
-    //    $.ajax({
-    //        type: 'POST', url: '../Revisit/HMS_GetCompletedCaseSheets',
-    //        data: {
-    //            FromDate: CurDate, ToDate: CurDate,
-    //            DoctorId: (typeof ERPUserId !== 'undefined' ? ERPUserId : 0),
-    //            DeptId:   (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0)
-    //        },
-    //        success: function (r) { buildCompleted(r || []); },
-    //        error:   function () { }
-    //    });
-    //}
-
-    function buildCompleted(data) {
-        if (!data.length) return;
-        var html = '', cnt = data.length;
-        for (var i = 0; i < data.length; i++) {
-            var d = data[i];
-            html += '<tr>'
-                + '<td style="font-weight:600">' + (d.PatientName || d.Patient || '') + '</td>'
-                + '<td style="font-size:11px">'  + (d.CompletedTime || d.VisitTime || '') + '</td>'
-                + '<td style="font-size:11px">'  + (d.DoctorName || d.Doctor || '') + '</td>'
-                + '<td><span class="badge b-done">Completed</span></td>'
-                + '</tr>';
-        }
-        $('#tb-compcs').html(html);
+    function goToKpiSection(target) {
+        document.querySelectorAll('.doc-sidenav .nav-item').forEach(function (n) {
+            n.classList.toggle('active', n.dataset.target === target);
+        });
+        showSection(target);
+        if (isMobileNav()) closeSidenav();
     }
 
-     function loadAdviceData() {
+    function loadAdviceData() {
         $.ajax({
             type: 'POST', url: '../Revisit/HMS_DoctorDashboardAdvice',
             data: {
-                FromDate: CurDate, ToDate: CurDate,
+                FromDate: FromDate, ToDate: ToDate,
                 DoctorId: $('#DoctorId').val() || 0,
                 DeptId: (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0)
             },
@@ -1519,8 +2804,11 @@
         });
     }
 
+    window.medAdviceGrouped = null;
+    window.medAdviceOrder = null;
+
     function buildMedAdvice(data) {
-        var html = '', grouped = {}, order = [];
+        var medRows = [], grouped = {}, order = [];
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var key = d.RevisitId ? String(d.RevisitId) : d.PatientName;
@@ -1530,6 +2818,7 @@
                     OPNo: d.RevisitId || d.OPNo || '—', VisitDate: d.RevisitDate || d.VisitDate || '—',
                     Age: d.Age || '—', Sex: d.Gender || d.Sex || '—',
                     Contact: d.Contact || d.Mobile || '—', Doctor: d.DoctorName || d.Doctor || '—',
+                    PatientId: d.PatientId || 0, OPSerName: d.OPSerName || '',
                     Medicines: [], TotalCount: 0
                 };
                 order.push(key);
@@ -1541,24 +2830,47 @@
         for (var j = 0; j < order.length; j++) {
             var g = grouped[order[j]];
             var uniqueMeds = g.Medicines.filter(function (v, i, a) { return a.indexOf(v) === i; });
-            html += '<tr>'
-                + '<td style="color:#000;font-size:14px">' + (j + 1) + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.RegNo + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.OPNo + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.VisitDate + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.PatientName + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Age + ' / ' + g.Sex + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Contact + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Doctor + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (uniqueMeds.length ? uniqueMeds.join(', ') : '—') + '</td>'
-                + '</tr>';
+            medRows.push('<tr ondblclick="goToInvoice(' + j + ')" style="cursor:pointer">'
+                + '<td data-label="Sl No">' + (j + 1) + '</td>'
+                + '<td data-label="Reg#">' + g.RegNo + '</td>'
+                + '<td data-label="OP#">' + g.OPNo + '</td>'
+                + '<td data-label="Date">' + g.VisitDate + '</td>'
+                + '<td data-label="Patient" style="font-weight:600">' + g.PatientName + '</td>'
+                + '<td data-label="Age/Sex">' + g.Age + ' / ' + g.Sex + '</td>'
+                + '<td data-label="Contact">' + g.Contact + '</td>'
+                + '<td data-label="Doctor">' + g.Doctor + '</td>'
+                + '<td data-label="Medicine">' + (uniqueMeds.length ? uniqueMeds.join(', ') : '—') + '</td>'
+                + '</tr>');
         }
-        $('#tb-med').html(html || '<tr><td colspan="9" class="empty-msg">No medicine advice.</td></tr>');
+        window.medAdviceGrouped = grouped;
+        window.medAdviceOrder = order;
+        setPaginatorRows('tb-med', medRows, 'No records.');
         $('#sc-medadvice').text(order.length);
     }
 
+    function goToInvoice(index) {
+        var g = window.medAdviceGrouped[window.medAdviceOrder[index]];
+
+        var token = 'si_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+        sessionStorage.clear();
+        sessionStorage.setItem("SI_Token", token);
+        sessionStorage.setItem("SI_FromWorksheet", "1");
+        sessionStorage.setItem("SI_PatientId", g.PatientId);
+        sessionStorage.setItem("SI_OPNumber", g.RegNo);
+        sessionStorage.setItem("SI_OPSeries", g.OPSerName);
+        sessionStorage.setItem("SI_RevisitId", g.OPNo);
+        sessionStorage.setItem("SI_PatientName", g.PatientName);
+        sessionStorage.setItem("SI_Contact", g.Contact);
+
+        window.open("../Hospital/SaleInvoiceHospital?token=" + token, "_blank");
+    }
+
+    window.labAdviceGrouped = null;
+    window.labAdviceOrder = null;
+
     function buildLabAdvice(data) {
-        var html = '', grouped = {}, order = [];
+        var labRows = [], grouped = {}, order = [];
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var key = d.RevisitId || d.PatientName;
@@ -1568,6 +2880,7 @@
                     OPNo: d.RevisitId || d.OPNo || '—', VisitDate: d.RevisitDate || d.VisitDate || '—',
                     Age: d.Age || '—', Sex: d.Gender || d.Sex || '—',
                     Contact: d.Contact || d.Mobile || '—', Doctor: d.DoctorName || d.Doctor || '—',
+                    PatientId: d.PatientId || 0, OPSerName: d.OPSerName || '',
                     Tests: [], Status: d.Status
                 };
                 order.push(key);
@@ -1577,116 +2890,182 @@
         }
         for (var j = 0; j < order.length; j++) {
             var g = grouped[order[j]];
-            var isDone = (g.Status || '').toUpperCase() === 'DONE';
-            html += '<tr>'
-                + '<td style="color:#000;font-size:14px">' + (j + 1) + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.RegNo + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.OPNo + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.VisitDate + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.PatientName + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Age + ' / ' + g.Sex + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Contact + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Doctor + '</td>'
-                + '<td style="color:#000;font-size:14px">' + g.Tests.join(', ') + '</td>'
-                + '<td><span class="badge ' + (isDone ? 'b-done">Done' : 'b-pending">Pending') + '</span></td>'
-                + '</tr>';
+            labRows.push('<tr ondblclick="goToLabBill(' + j + ')" style="cursor:pointer">'
+                + '<td data-label="Sl No">' + (j + 1) + '</td>'
+                + '<td data-label="Reg#">' + g.RegNo + '</td>'
+                + '<td data-label="OP#">' + g.OPNo + '</td>'
+                + '<td data-label="Date">' + g.VisitDate + '</td>'
+                + '<td data-label="Patient" style="font-weight:600">' + g.PatientName + '</td>'
+                + '<td data-label="Age/Sex">' + g.Age + ' / ' + g.Sex + '</td>'
+                + '<td data-label="Contact">' + g.Contact + '</td>'
+                + '<td data-label="Doctor">' + g.Doctor + '</td>'
+                + '<td data-label="Lab Test">' + g.Tests.join(', ') + '</td>'
+                + '</tr>');
         }
-        $('#tb-lab').html(html || '<tr><td colspan="10" class="empty-msg">No lab advice.</td></tr>');
+        window.labAdviceGrouped = grouped;
+        window.labAdviceOrder = order;
+        setPaginatorRows('tb-lab', labRows, 'No records.');
         $('#sc-labadvice').text(order.length);
     }
+
+    function goToLabBill(index) {
+        var g = window.labAdviceGrouped[window.labAdviceOrder[index]];
+
+        var token = 'lb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+        sessionStorage.clear();
+        sessionStorage.setItem("LB_Token", token);
+        sessionStorage.setItem("LB_FromWorksheet", "1");
+        sessionStorage.setItem("LB_PatientId", g.PatientId);
+        sessionStorage.setItem("LB_OPNumber", g.RegNo);
+        sessionStorage.setItem("LB_OPSeries", g.OPSerName);
+        sessionStorage.setItem("LB_Gender", g.Sex);
+        sessionStorage.setItem("LB_Age", g.Age);
+        sessionStorage.setItem("LB_Contact", g.Contact);
+        sessionStorage.setItem("LB_Doctor", g.Doctor);
+        sessionStorage.setItem("LB_RevisitId", g.OPNo);
+        sessionStorage.setItem("LB_CorrectOpNo", g.OPNo);
+
+        window.open("../Revisit/LabBill?token=" + token, "_blank");
+    }
+
+    window.labPendingGrouped = null;
 
     function buildLabResults(readyList, pendList) {
 
         labReadyMap = {};
 
-        // ================= READY =================
-        var readyHTML = '';
-
+        var readyRows = [];
         for (var i = 0; i < readyList.length; i++) {
-
             var r = readyList[i];
+            if (r.SubResultId) labReadyMap[r.SubResultId] = true;
 
-            if (r.SubResultId)
-                labReadyMap[r.SubResultId] = true;
-
-            readyHTML += '<tr>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (i + 1) + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.OPNumber || '—') + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.RevisitId || '—') + '</td>'
-                + '<td style="color:#000;white-space:nowrap;font-size:14px">' + (r.ResultDate || '—') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (r.ResultTime || '—') + '</td>'
-                + '<td style="color:#000;font-weight:600;font-size:14px">' + (r.PatientName || '') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (r.Age || '—') + ' / ' + (r.Gender || '—') + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (r.Contact || '—') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (r.DoctorName || '') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (r.SubResultId || '') + '</td>'
-                + '<td><span class="badge b-ready">Ready</span></td>'
-                + '</tr>';
+            readyRows.push('<tr>'
+                + '<td data-label="Sl#">' + (i + 1) + '</td>'
+                + '<td data-label="Reg#">' + (r.OPNumber || '—') + '</td>'
+                + '<td data-label="OP#">' + (r.RevisitId || '—') + '</td>'
+                + '<td data-label="Date">' + (r.ResultDate || '—') + '</td>'
+                + '<td data-label="Time">' + (r.ResultTime || '—') + '</td>'
+                + '<td data-label="Patient" style="font-weight:600">' + (r.PatientName || '') + '</td>'
+                + '<td data-label="Age/Sex">' + (r.Age || '—') + ' / ' + (r.Gender || '—') + '</td>'
+                + '<td data-label="Contact">' + (r.Contact || '—') + '</td>'
+                + '<td data-label="Doctor">' + (r.DoctorName || '') + '</td>'
+                + '<td data-label="Bill No">' + (r.SubResultId || '') + '</td>'
+                + '<td data-label="Status"><span class="badge-ready">Ready</span></td>'
+                + '</tr>');
         }
-
-        $('#tb-lready').html(
-            readyHTML ||
-            '<tr><td colspan="11" class="empty-msg">No results ready.</td></tr>'
-        );
-
+        setPaginatorRows('tb-lready', readyRows, 'No completed records.');
         $('#sc-labready').text(readyList.length);
 
-        // ================= PENDING =================
-        var pendHTML = '';
-
+        var pendRows = [];
+        window.labPendingGrouped = pendList;
         for (var k = 0; k < pendList.length; k++) {
-
             var p = pendList[k];
-
-            pendHTML += '<tr>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (k + 1) + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (p.OPNumber || '—') + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (p.RevisitId || '—') + '</td>'
-                + '<td style="color:#000;white-space:nowrap;font-size:14px">' + (p.SampleDate || '—') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (p.SampleTime || '—') + '</td>'
-                + '<td style="color:#000;font-weight:600;font-size:14px">' + (p.PatientName || '') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (p.Age || '—') + ' / ' + (p.Gender || '—') + '</td>'
-                + '<td style="color:#000;font-family:var(--mono);font-size:14px">' + (p.Contact || '—') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (p.DoctorName || '') + '</td>'
-                + '<td style="color:#000;font-size:14px">' + (p.SubResultId || '') + '</td>'
-                + '<td><span class="badge b-pending">Pending</span></td>'
-                + '</tr>';
+            pendRows.push('<tr ondblclick="goToLabResult(' + k + ')" style="cursor:pointer">'
+                + '<td data-label="Sl#">' + (k + 1) + '</td>'
+                + '<td data-label="Reg#">' + (p.OPNumber || '—') + '</td>'
+                + '<td data-label="OP#">' + (p.RevisitId || '—') + '</td>'
+                + '<td data-label="Date">' + (p.SampleDate || '—') + '</td>'
+                + '<td data-label="Time">' + (p.SampleTime || '—') + '</td>'
+                + '<td data-label="Patient" style="font-weight:600">' + (p.PatientName || '') + '</td>'
+                + '<td data-label="Age/Sex">' + (p.Age || '—') + ' / ' + (p.Gender || '—') + '</td>'
+                + '<td data-label="Contact">' + (p.Contact || '—') + '</td>'
+                + '<td data-label="Doctor">' + (p.DoctorName || '') + '</td>'
+                + '<td data-label="Bill No">' + (p.SubResultId || '') + '</td>'
+                + '<td data-label="Status"><span class="badge-pending">Pending</span></td>'
+                + '</tr>');
         }
-
-        $('#tb-lpending').html(
-            pendHTML ||
-            '<tr><td colspan="11" class="empty-msg">No pending results.</td></tr>'
-        );
-
+        setPaginatorRows('tb-lpending', pendRows, 'No pending records.');
         $('#sc-labpending').text(pendList.length);
 
         drawLabChart(readyList.length, pendList.length);
     }
 
-     var _maxAdv = 1;
-    function updateAdvBar(barId, val) {
-        _maxAdv = Math.max(_maxAdv, val, 1);
-        $('#' + barId).css('width', Math.round(val / _maxAdv * 100) + '%');
-    }
+    function goToLabResult(index) {
+        var p = window.labPendingGrouped[index];
 
-     function filterTable(input, tbodyId) {
-        var term = input.value.toLowerCase().trim();
-        var rows = document.getElementById(tbodyId).getElementsByTagName('tr');
-        for (var i = 0; i < rows.length; i++) {
-            var txt = rows[i].textContent.toLowerCase();
-            rows[i].style.display = (!term || txt.indexOf(term) > -1) ? '' : 'none';
+        var revisitId = p.RevisitId || '';
+        var opSerName = p.OPSerName || '';
+        var opNumber = p.OPNumber || '';
+        var patientId = p.PatientId || 0;
+        var patientName = p.PatientName || '';
+        var ipNumber = p.IPNumber || '0';
+
+        function doRedirect(dob, bloodGroup, gender, contact, email) {
+            sessionStorage.setItem('SOP_OV', revisitId);
+            sessionStorage.setItem('SOP_RS', opSerName);
+            sessionStorage.setItem('SOP_RN', opNumber);
+            sessionStorage.setItem('SOP_PI', patientId);
+            sessionStorage.setItem('SOP_DO', dob);
+            sessionStorage.setItem('SOP_BG', bloodGroup);
+            sessionStorage.setItem('SOP_PN', patientName);
+            sessionStorage.setItem('SOP_GE', gender);
+            sessionStorage.setItem('SOP_IP', ipNumber);
+            sessionStorage.setItem('SOP_PH', (contact || '') + '##' + (email || ''));
+            window.open('../Revisit/LabResult?from=SOPWorkSheet', '_blank');
         }
+
+        $.ajax({
+            type: 'POST',
+            url: '../Revisit/HMS_RevisitIdSearch',
+            data: {
+                Status: revisitId,
+                DeptId: (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0)
+            },
+            success: function (data) {
+                var pat = null;
+                if (Array.isArray(data) && data.length > 0) pat = data[0];
+                if (pat) {
+                    doRedirect(pat.DOB || '', pat.BloodGroup || '', pat.Gender || (p.Gender || ''), pat.Contact || (p.Contact || ''), pat.Add3 || '');
+                } else {
+                    doRedirect('', '', p.Gender || '', p.Contact || '', '');
+                }
+            },
+            error: function () {
+                doRedirect('', '', p.Gender || '', p.Contact || '', '');
+            }
+        });
     }
 
-     function goCS(pid, vid) {
-        sessionStorage.setItem('PatientId', pid);
-        sessionStorage.setItem('VisitId', vid);
-        window.location = '@Url.Action("CaseSheet","Hospital", new { from = "DoctorDashboard" })';
+    
+    function filterTable(input, tbodyId) {
+        var p = paginators[tbodyId];
+        if (!p) return;
+
+        var term = input.value.toLowerCase().trim();
+        if (!term) {
+            p.rows = p.allRows.slice();
+        } else {
+            p.rows = p.allRows.filter(function (rowHtml) {
+                var tmp = document.createElement('div');
+                tmp.innerHTML = rowHtml;
+                return tmp.textContent.toLowerCase().indexOf(term) > -1;
+            });
+        }
+        p.currentPage = 1;
+        renderPage(tbodyId);
     }
 
-     $(function () {
+  function goCS(pid, vid) {
+    sessionStorage.setItem('PatientId', pid);
+    sessionStorage.setItem('VisitId', vid);
+    window.open('@Url.Action("CaseSheet","Hospital", new { from = "OPWorkSheet_D" })', '_blank');
+}
+
+    $(function () {
+        $('#FromDateInput, #ToDateInput').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'DD/MM/YYYY' }
+        });
+
+        var today = fmtDMY(new Date());
+        $('#FromDateInput').data('daterangepicker').setStartDate(today);
+        $('#FromDateInput').data('daterangepicker').setEndDate(today);
+        $('#ToDateInput').data('daterangepicker').setStartDate(today);
+        $('#ToDateInput').data('daterangepicker').setEndDate(today);
+
         refreshAll();
-        setInterval(loadAdviceData, 15000);
-        setInterval(loadWorksheet, 60000);
+        managePolling();
     });
 </script>

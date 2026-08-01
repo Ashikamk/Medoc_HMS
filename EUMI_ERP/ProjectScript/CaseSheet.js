@@ -3225,6 +3225,12 @@ function Getdosages() {
 
 var Dosages = ["AF", "BF"];
 
+function Loaddosagelist(result) {
+    for (var i = 0; i < result.length; i++) {
+        Dosages.push(result[i].DosageName);
+    }
+}
+
 
 
 function mednoteload3(ID) {

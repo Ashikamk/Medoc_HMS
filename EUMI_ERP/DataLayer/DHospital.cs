@@ -1327,13 +1327,18 @@ public DataSet HMS_SalesInvoiceDeletestockout(SaleInvoiceHospital SaleInvoiceHos
                 return null;
             }
         }
-       
 
-        public DataSet GetPharmacyDashboardData(string dbName)
+
+        public DataSet GetPharmacyDashboardData(string dbName, DateTime fromDate, DateTime toDate)
         {
             try
             {
-                return SQLHelper.ExecuteDataset("GetPharmacyDashboardData", dbName, null);
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new SqlParameter("@FromDate", fromDate.Date),
+            new SqlParameter("@ToDate", toDate.Date)
+                };
+                return SQLHelper.ExecuteDataset("GetPharmacyDashboardData", dbName, parameters);
             }
             catch (SqlException exMe)
             {
