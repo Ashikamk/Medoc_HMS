@@ -49,6 +49,7 @@ namespace EUMI_ERP.Models
         public int DelFlag { get; set; }
 
         public string Status { get; set; }
+       
 
 
         DMasters oDMasters = new DMasters();

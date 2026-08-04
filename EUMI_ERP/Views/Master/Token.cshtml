@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "Set Token";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .tok-wrap {
+        margin-top: 2%;
+    }
+
+    .tok-title {
+        font-weight: bold;
+        color: #12224a;
+        margin-bottom: 4px;
+    }
+
+    .tok-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 15px;
+    }
+
+    @@media (max-width: 992px) {
+        .tok-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .tok-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .tok-card {
+        background: #fff;
+        border: 1px solid #d7e1f5;
+        border-radius: 10px;
+        padding: 14px;
+        box-shadow: 0 1px 3px rgba(20,40,90,.08);
+    }
+
+    .tok-doctor-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: #12224a;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tok-token {
+        font-size: 44px;
+        font-weight: 700;
+        text-align: center;
+        color: #6100ff;
+        margin: 6px 0 12px 0;
+    }
+
+    .tok-next-label {
+        text-align: center;
+        font-size: 12px;
+        color: #6b7896;
+        margin-top: -8px;
+        margin-bottom: 10px;
+    }
+
+    .tok-done-label {
+        text-align: center;
+        font-size: 12px;
+        color: #1d9e75;
+        font-weight: 600;
+        margin-top: -8px;
+        margin-bottom: 10px;
+    }
+
+    .tok-buttons {
+        display: flex;
+        gap: 6px;
+    }
+
+        .tok-buttons button {
+            flex: 1;
+            padding: 6px 0;
+            font-size: 12px;
+            border-radius: 5px;
+            border: 1px solid #d7e1f5;
+            background: #e9f0ff;
+            color: #12224a;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+            .tok-buttons button:hover {
+                background: #d7e6ff;
+            }
+
+            .tok-buttons button:disabled {
+                opacity: .45;
+                cursor: not-allowed;
+                background: #eee;
+            }
+
+    .tok-empty {
+        color: #6b7896;
+        font-size: 13px;
+        padding: 10px 4px;
+    }
+</style>
+
+<div class="tok-wrap">
+    <h2 class="tok-title">Set Token</h2>
+    <div id="doctorCards" class="tok-grid"></div>
+</div>
+
+<script>
+    var tokenData = [];
+
+    $(document).ready(function () {
+        LoadTokenData();
+    });
+
+    // Only source for the doctor list: this already returns ONLY doctors
+    // with a real patient checked in today (fixed Hms_TokenDispaly SP),
+    // same data TokenDisplay.cshtml uses. No separate doctor list call.
+    function LoadTokenData() {
+        $.ajax({
+            type: "POST",
+            url: "../Master/Token123GetandGets",
+            data: { TokNo: 0 },
+            success: function (result) {
+                tokenData = result.oList || [];
+                RenderCards();
+            }
+        });
+    }
+
+    function RenderCards() {
+        if (!tokenData.length) {
+            $('#doctorCards').html('<div class="tok-empty">No doctors have patients registered today</div>');
+            return;
+        }
+
+        var html = '';
+        $.each(tokenData, function (i, d) {
+            var live = d.currenttoken ? d.currenttoken : '-';
+            var atMax = d.PatientCount && d.currenttoken &&
+                parseCount(d.currenttoken) >= d.PatientCount;
+
+            html += '<div class="tok-card" data-doctorid="' + d.DoctorId + '">' +
+                '<div class="tok-doctor-name">' + d.Name + '</div>' +
+                '<div class="tok-token">' + live + '</div>' +
+                (atMax
+                    ? '<div class="tok-done-label">All patients called</div>'
+                    : '<div class="tok-next-label">Next: ' + (d.NextToken || '-') + '</div>') +
+                '<div class="tok-buttons">' +
+                '<button data-act="prev" data-id="' + d.DoctorId + '">PREV</button>' +
+                '<button data-act="next" data-id="' + d.DoctorId + '" ' + (atMax ? 'disabled' : '') + '>NEXT</button>' +
+                '</div>' +
+                '</div>';
+        });
+
+        $('#doctorCards').html(html);
+    }
+
+    // Pulls the trailing number out of a token like "1-4" -> 4
+    function parseCount(tokenStr) {
+        var parts = String(tokenStr).split('-');
+        return parseInt(parts[parts.length - 1], 10) || 0;
+    }
+
+    $('#doctorCards').on('click', 'button', function () {
+        if ($(this).is(':disabled')) return;
+
+        var id = $(this).data('id');
+        var act = $(this).data('act');
+        var card = $(this).closest('.tok-card');
+
+        $.ajax({
+            type: "POST",
+            url: "../Master/HMS_TokenNextPrev",
+            data: { DoctorId: id, Action: act === 'next' ? 'NEXT' : 'PREV' },
+            success: function (result) {
+                if (!result.success) {
+                    alert(result.message);
+                    return;
+                }
+
+                if (result.atMax) {
+                    card.find('.tok-next-label, .tok-done-label').remove();
+                    card.find('.tok-token').after('<div class="tok-done-label">All patients called</div>');
+                    card.find('[data-act="next"]').prop('disabled', true);
+                } else {
+                    card.find('.tok-done-label').remove();
+                    var nextLabel = card.find('.tok-next-label');
+                    if (nextLabel.length) {
+                        nextLabel.text('Next: ' + result.nextTokenNo);
+                    } else {
+                        card.find('.tok-token').after('<div class="tok-next-label">Next: ' + result.nextTokenNo + '</div>');
+                    }
+                    card.find('[data-act="next"]').prop('disabled', false);
+                }
+            }
+        });
+    });
+</script>

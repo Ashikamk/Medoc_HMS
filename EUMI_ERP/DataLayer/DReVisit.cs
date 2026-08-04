@@ -1575,6 +1575,23 @@ namespace EUMI_ERP.DataLayer
             }
         }
 
+        public DataSet HMS_TokenNextPrev(TokenInfoModel obj, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[2];
+                arlParms[0] = new SqlParameter("@DoctorId", obj.DoctorId);
+                arlParms[1] = new SqlParameter("@Action", obj.Action);
+                return SQLHelper.ExecuteDataset("HMS_TokenNextPrev", dbName, arlParms);
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+
 
         public DataSet HMS_IPStatementRoom(IPStatement IPStatement, string dbName)
         {
