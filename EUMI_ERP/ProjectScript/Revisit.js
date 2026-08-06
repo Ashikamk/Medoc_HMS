@@ -720,33 +720,98 @@ function ConfirmboxResult(Result, status, rowid) {
 }
 
 
+//function ShowPrintAlerts(Status, RevisitId, TokenNumber) {
+//    if (Status == 1) {
+//        window.setTimeout(function () {
+//            swal({
+//                title: 'Visit ID: ' + RevisitId + ', Token: ' + TokenNumber + ' Saved Successfully',
+//                //text: "Saved Successfully",
+//                text: "Do you want to Print?",
+//                icon: 'success',
+//                buttons: {
+//                    cancel: "Cancel",
+//                    defeat: "Print",
+//                    //Other: "Go to Bill",
+//                },
+//            })
+//                .then((value) => {
+//                    switch (value) {
+
+//                        case "defeat":
+//                            PrintRevisttype();
+//                            window.setTimeout(function () { formrefresh(); }, 300);
+//                            break;
+
+//                        case "Other":
+//                            window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
+//                            formrefresh();
+//                            break;
+
+//                        default:
+//                            formrefresh();
+//                            break;
+//                    }
+//                });
+//        }, 200);
+//    }
+//    else if (Status == 2) {
+//        window.setTimeout(function () {
+//            swal({
+//                title: 'Visit ID: ' + RevisitId + ', Token: ' + TokenNumber + ' Updated Successfully',
+//                text: "Do you want to Print?",
+//                icon: 'success',
+//                buttons: {
+//                    cancel: "Cancel",
+//                    defeat: "Print",
+//                },
+//            })
+//                .then((value) => {
+//                    switch (value) {
+
+//                        case "defeat":
+//                            PrintRevisttype();
+//                            window.setTimeout(function () { formrefresh(); }, 300);
+//                            break;
+
+//                        default:
+//                            formrefresh();
+//                            break;
+//                    }
+//                });
+//        }, 200);
+//    }
+
+//    if (BillFlag == 1) {
+//        window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
+//        BillFlag = 0;
+//        $('.swal-button--cancel').click();
+//    }
+
+//}
+
 function ShowPrintAlerts(Status, RevisitId, TokenNumber) {
     if (Status == 1) {
         window.setTimeout(function () {
             swal({
                 title: 'Visit ID: ' + RevisitId + ', Token: ' + TokenNumber + ' Saved Successfully',
-                //text: "Saved Successfully",
                 text: "Do you want to Print?",
                 icon: 'success',
                 buttons: {
                     cancel: "Cancel",
                     defeat: "Print",
-                    //Other: "Go to Bill",
+                    prePrint: "Pre-Print",  
                 },
             })
                 .then((value) => {
                     switch (value) {
-
                         case "defeat":
                             PrintRevisttype();
                             window.setTimeout(function () { formrefresh(); }, 300);
                             break;
-
-                        case "Other":
-                            window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
-                            formrefresh();
+                        case "prePrint": 
+                            Printprescription();
+                            window.setTimeout(function () { formrefresh(); }, 300);
                             break;
-
                         default:
                             formrefresh();
                             break;
@@ -763,16 +828,19 @@ function ShowPrintAlerts(Status, RevisitId, TokenNumber) {
                 buttons: {
                     cancel: "Cancel",
                     defeat: "Print",
+                    prePrint: "Pre-Print",  
                 },
             })
                 .then((value) => {
                     switch (value) {
-
                         case "defeat":
                             PrintRevisttype();
                             window.setTimeout(function () { formrefresh(); }, 300);
                             break;
-
+                        case "prePrint":  // Handle Pre-Print button
+                            Printprescription();
+                            window.setTimeout(function () { formrefresh(); }, 300);
+                            break;
                         default:
                             formrefresh();
                             break;
@@ -786,10 +854,101 @@ function ShowPrintAlerts(Status, RevisitId, TokenNumber) {
         BillFlag = 0;
         $('.swal-button--cancel').click();
     }
-
 }
 
+function Printprescription() {
+    var myWindow = window.open("", "", "width=1500,height=1500");
 
+  
+    var patientName = $('#PatName').val() || '';
+    var ageSex = $('#PatAge').text() + '/' + $('#PatGender').text();
+    var regNo = $('#RegSeries').val() + '-' + $('#RegNumber').val();
+    var visitDate = $('#RevisitDate').val() || '';
+
+    myWindow.document.write('<!DOCTYPE html>');
+    myWindow.document.write('<html>');
+    myWindow.document.write('<head>');
+    myWindow.document.write('<title>Prescription</title>');
+    myWindow.document.write('<style>');
+    myWindow.document.write('* { margin: 0; padding: 0; box-sizing: border-box; }');
+    myWindow.document.write('body {');
+    myWindow.document.write('    margin: 0;');
+    myWindow.document.write('    padding: 0;');
+    myWindow.document.write('    font-family: tahoma, sans-serif;');
+    myWindow.document.write('    background: white;');
+    myWindow.document.write('}');
+    myWindow.document.write('@page { margin: 0; }');
+    myWindow.document.write('.container {');
+    myWindow.document.write('    padding: 40px 45px;');
+    myWindow.document.write('}');
+    myWindow.document.write('.blank-space {');
+    myWindow.document.write('    height: 4.3cm;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row {');
+    myWindow.document.write('    display: flex;');
+    myWindow.document.write('    flex-wrap: wrap;');
+    myWindow.document.write('    align-items: center;');
+    myWindow.document.write('    gap: 20px 45px;');
+    myWindow.document.write('    font-size: 15px;');
+    myWindow.document.write('    padding: 10px 0;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row .field {');
+    myWindow.document.write('    display: flex;');
+    myWindow.document.write('    align-items: center;');
+    myWindow.document.write('    white-space: nowrap;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row .label {');
+    myWindow.document.write('    font-weight: bold;');
+    myWindow.document.write('    color: #000;');
+    myWindow.document.write('    margin-right: 6px;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row .value {');
+    myWindow.document.write('    font-weight: normal;');
+    myWindow.document.write('    color: #000;');
+    myWindow.document.write('}');
+    myWindow.document.write('</style>');
+    myWindow.document.write('</head>');
+    myWindow.document.write('<body>');
+
+
+    myWindow.document.write('<div class="container">');
+
+  
+    myWindow.document.write('<div class="blank-space"></div>');
+
+ 
+    myWindow.document.write('<div class="info-row">');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">Name:</span>');
+    myWindow.document.write('        <span class="value">' + patientName + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">Age/Sex:</span>');
+    myWindow.document.write('        <span class="value">' + ageSex + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">OP No:</span>');
+    myWindow.document.write('        <span class="value">' + regNo + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">Date:</span>');
+    myWindow.document.write('        <span class="value">' + visitDate + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('</div>');
+
+    myWindow.document.write('</div>'); 
+    myWindow.document.write('</body>');
+    myWindow.document.write('</html>');
+
+
+    myWindow.document.close();
+    myWindow.focus();
+
+    setTimeout(function () {
+        myWindow.print();
+        myWindow.close();
+    }, 500);
+}
 function PrintRevisttype() {
     if (TOKENPRINTSTSTUS == 0) {
         TokenPrint();

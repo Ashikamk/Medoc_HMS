@@ -873,7 +873,7 @@ namespace EUMI_ERP.Models
     {
         public int DoctorId { get; set; }
         public long DeptId { get; set; }
-        public string Action { get; set; }        // "NEXT" or "PREV"
+        public string Action { get; set; }        
         public string LiveTokenNo { get; set; }
         public string NextTokenNo { get; set; }
         public string PrevTokenNo { get; set; }
