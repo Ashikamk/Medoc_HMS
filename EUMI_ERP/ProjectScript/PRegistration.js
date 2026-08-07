@@ -1159,16 +1159,118 @@ function PrintRegistration() {
 }
 
 
+//function Printprescription() {
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+//    var Age = $('#Age').val() + '/' + $('#PGender :selected').text();
+
+//    // Get the values
+//    var patientName = $('#PName').val() || '';
+//    var regNo = $("#RegSeries option:selected").text() + '-' + $('#RegNo').val();
+//    var regDate = $('#RegDate').val() || '';
+
+//    // Write the HTML content
+//    myWindow.document.write('<!DOCTYPE html>');
+//    myWindow.document.write('<html>');
+//    myWindow.document.write('<head>');
+//    myWindow.document.write('<title>Prescription</title>');
+//    myWindow.document.write('<style>');
+//    myWindow.document.write('* { margin: 0; padding: 0; box-sizing: border-box; }');
+//    myWindow.document.write('body {');
+//    myWindow.document.write('    margin: 0;');
+//    myWindow.document.write('    padding: 0;');
+//    myWindow.document.write('    font-family: tahoma, sans-serif;');
+//    myWindow.document.write('    background: white;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('@page { margin: 0; }');
+//    myWindow.document.write('.container {');
+//    myWindow.document.write('    padding: 40px 45px;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.blank-space {');
+//    myWindow.document.write('    height: 4.3cm;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row {');
+//    myWindow.document.write('    display: flex;');
+//    myWindow.document.write('    flex-wrap: wrap;');
+//    myWindow.document.write('    align-items: center;');
+//    myWindow.document.write('    gap: 20px 45px;');
+//    myWindow.document.write('    font-size: 15px;');
+//    myWindow.document.write('    padding: 10px 0;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row .field {');
+//    myWindow.document.write('    display: flex;');
+//    myWindow.document.write('    align-items: center;');
+//    myWindow.document.write('    white-space: nowrap;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row .label {');
+//    myWindow.document.write('    font-weight: bold;');
+//    myWindow.document.write('    color: #000;');
+//    myWindow.document.write('    margin-right: 6px;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row .value {');
+//    myWindow.document.write('    font-weight: normal;');
+//    myWindow.document.write('    color: #000;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('</style>');
+//    myWindow.document.write('</head>');
+//    myWindow.document.write('<body>');
+
+
+//    myWindow.document.write('<div class="container">');
+
+
+//    myWindow.document.write('<div class="blank-space"></div>');
+
+
+//    myWindow.document.write('<div class="info-row">');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">Name:</span>');
+//    myWindow.document.write('        <span class="value">' + patientName + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">Age/Sex:</span>');
+//    myWindow.document.write('        <span class="value">' + Age + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">OP No:</span>');
+//    myWindow.document.write('        <span class="value">' + regNo + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">Date:</span>');
+//    myWindow.document.write('        <span class="value">' + regDate + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.write('</div>');
+//    myWindow.document.write('</body>');
+//    myWindow.document.write('</html>');
+
+//    myWindow.document.close();
+//    myWindow.focus();
+
+
+//    setTimeout(function () {
+//        myWindow.print();
+//        myWindow.close();
+//    }, 500);
+//}
+
 function Printprescription() {
     var myWindow = window.open("", "", "width=1500,height=1500");
-    var Age = $('#Age').val() + '/' + $('#PGender :selected').text();
 
-    // Get the values
     var patientName = $('#PName').val() || '';
-    var regNo = $("#RegSeries option:selected").text() + '-' + $('#RegNo').val();
-    var regDate = $('#RegDate').val() || '';
 
-    // Write the HTML content
+    var ageParts = [];
+    var yrs = parseInt($('#Age').val()) || 0;
+    var mos = parseInt($('#Age1').val()) || 0;
+    var dys = parseInt($('#Age2').val()) || 0;
+
+    if (yrs > 0) ageParts.push(yrs + (yrs > 1 ? ' Years' : ' Year'));
+    if (mos > 0) ageParts.push(mos + (mos > 1 ? ' Months' : ' Month'));
+    if (dys > 0) ageParts.push(dys + (dys > 1 ? ' Days' : ' Day'));
+
+    var ageSex = ageParts.join(', ') + '/' + $('#PGender :selected').text();
+    var regNo = $('#RegSeries option:selected').text() + '-' + $('#RegNo').val();
+    var visitDate = $('#RegDate').val() || '';
     myWindow.document.write('<!DOCTYPE html>');
     myWindow.document.write('<html>');
     myWindow.document.write('<head>');
@@ -1186,15 +1288,16 @@ function Printprescription() {
     myWindow.document.write('    padding: 40px 45px;');
     myWindow.document.write('}');
     myWindow.document.write('.blank-space {');
-    myWindow.document.write('    height: 4.3cm;');
+    myWindow.document.write('    height: 3.9cm;');
     myWindow.document.write('}');
     myWindow.document.write('.info-row {');
     myWindow.document.write('    display: flex;');
     myWindow.document.write('    flex-wrap: wrap;');
     myWindow.document.write('    align-items: center;');
+    myWindow.document.write('    justify-content: space-between;');
     myWindow.document.write('    gap: 20px 45px;');
     myWindow.document.write('    font-size: 15px;');
-    myWindow.document.write('    padding: 10px 0;');
+    myWindow.document.write('    padding: 3px 0 3px 25px;');
     myWindow.document.write('}');
     myWindow.document.write('.info-row .field {');
     myWindow.document.write('    display: flex;');
@@ -1213,14 +1316,10 @@ function Printprescription() {
     myWindow.document.write('</style>');
     myWindow.document.write('</head>');
     myWindow.document.write('<body>');
-
-  
     myWindow.document.write('<div class="container">');
 
-  
     myWindow.document.write('<div class="blank-space"></div>');
 
-  
     myWindow.document.write('<div class="info-row">');
     myWindow.document.write('    <div class="field">');
     myWindow.document.write('        <span class="label">Name:</span>');
@@ -1228,32 +1327,31 @@ function Printprescription() {
     myWindow.document.write('    </div>');
     myWindow.document.write('    <div class="field">');
     myWindow.document.write('        <span class="label">Age/Sex:</span>');
-    myWindow.document.write('        <span class="value">' + Age + '</span>');
+    myWindow.document.write('        <span class="value">' + ageSex + '</span>');
     myWindow.document.write('    </div>');
+    myWindow.document.write('</div>');
+
+    myWindow.document.write('<div class="info-row">');
     myWindow.document.write('    <div class="field">');
     myWindow.document.write('        <span class="label">OP No:</span>');
     myWindow.document.write('        <span class="value">' + regNo + '</span>');
     myWindow.document.write('    </div>');
     myWindow.document.write('    <div class="field">');
     myWindow.document.write('        <span class="label">Date:</span>');
-    myWindow.document.write('        <span class="value">' + regDate + '</span>');
+    myWindow.document.write('        <span class="value">' + visitDate + '</span>');
     myWindow.document.write('    </div>');
     myWindow.document.write('</div>');
 
-    myWindow.document.write('</div>'); 
+    myWindow.document.write('</div>');
     myWindow.document.write('</body>');
     myWindow.document.write('</html>');
-
     myWindow.document.close();
     myWindow.focus();
-
-  
     setTimeout(function () {
         myWindow.print();
         myWindow.close();
     }, 500);
 }
-
 
 
 

@@ -856,15 +856,107 @@ function ShowPrintAlerts(Status, RevisitId, TokenNumber) {
     }
 }
 
+//function Printprescription() {
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+
+
+//    var patientName = $('#PatName').val() || '';
+//    var ageSex = $('#PatAge').text() + '/' + $('#PatGender').text();
+//    var regNo = $('#RegSeries').val() + '-' + $('#RegNumber').val();
+//    var visitDate = $('#RevisitDate').val() || '';
+
+//    myWindow.document.write('<!DOCTYPE html>');
+//    myWindow.document.write('<html>');
+//    myWindow.document.write('<head>');
+//    myWindow.document.write('<title>Prescription</title>');
+//    myWindow.document.write('<style>');
+//    myWindow.document.write('* { margin: 0; padding: 0; box-sizing: border-box; }');
+//    myWindow.document.write('body {');
+//    myWindow.document.write('    margin: 0;');
+//    myWindow.document.write('    padding: 0;');
+//    myWindow.document.write('    font-family: tahoma, sans-serif;');
+//    myWindow.document.write('    background: white;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('@page { margin: 0; }');
+//    myWindow.document.write('.container {');
+//    myWindow.document.write('    padding: 40px 45px;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.blank-space {');
+//    myWindow.document.write('    height: 3.9cm;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row {');
+//    myWindow.document.write('    display: flex;');
+//    myWindow.document.write('    flex-wrap: wrap;');
+//    myWindow.document.write('    align-items: center;');
+//    myWindow.document.write('    gap: 20px 45px;');
+//    myWindow.document.write('    font-size: 15px;');
+//    myWindow.document.write('    padding: 10px 0;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row .field {');
+//    myWindow.document.write('    display: flex;');
+//    myWindow.document.write('    align-items: center;');
+//    myWindow.document.write('    white-space: nowrap;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row .label {');
+//    myWindow.document.write('    font-weight: bold;');
+//    myWindow.document.write('    color: #000;');
+//    myWindow.document.write('    margin-right: 6px;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('.info-row .value {');
+//    myWindow.document.write('    font-weight: normal;');
+//    myWindow.document.write('    color: #000;');
+//    myWindow.document.write('}');
+//    myWindow.document.write('</style>');
+//    myWindow.document.write('</head>');
+//    myWindow.document.write('<body>');
+
+
+//    myWindow.document.write('<div class="container">');
+
+
+//    myWindow.document.write('<div class="blank-space"></div>');
+
+
+//    myWindow.document.write('<div class="info-row">');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">Name:</span>');
+//    myWindow.document.write('        <span class="value">' + patientName + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">Age/Sex:</span>');
+//    myWindow.document.write('        <span class="value">' + ageSex + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">OP No:</span>');
+//    myWindow.document.write('        <span class="value">' + regNo + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('    <div class="field">');
+//    myWindow.document.write('        <span class="label">Date:</span>');
+//    myWindow.document.write('        <span class="value">' + visitDate + '</span>');
+//    myWindow.document.write('    </div>');
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.write('</div>');
+//    myWindow.document.write('</body>');
+//    myWindow.document.write('</html>');
+
+
+//    myWindow.document.close();
+//    myWindow.focus();
+
+//    setTimeout(function () {
+//        myWindow.print();
+//        myWindow.close();
+//    }, 500);
+//}
+
 function Printprescription() {
     var myWindow = window.open("", "", "width=1500,height=1500");
 
-  
     var patientName = $('#PatName').val() || '';
     var ageSex = $('#PatAge').text() + '/' + $('#PatGender').text();
     var regNo = $('#RegSeries').val() + '-' + $('#RegNumber').val();
     var visitDate = $('#RevisitDate').val() || '';
-
     myWindow.document.write('<!DOCTYPE html>');
     myWindow.document.write('<html>');
     myWindow.document.write('<head>');
@@ -882,15 +974,16 @@ function Printprescription() {
     myWindow.document.write('    padding: 40px 45px;');
     myWindow.document.write('}');
     myWindow.document.write('.blank-space {');
-    myWindow.document.write('    height: 4.3cm;');
+    myWindow.document.write('    height: 3.9cm;');
     myWindow.document.write('}');
     myWindow.document.write('.info-row {');
     myWindow.document.write('    display: flex;');
     myWindow.document.write('    flex-wrap: wrap;');
     myWindow.document.write('    align-items: center;');
+    myWindow.document.write('    justify-content: space-between;');
     myWindow.document.write('    gap: 20px 45px;');
     myWindow.document.write('    font-size: 15px;');
-    myWindow.document.write('    padding: 10px 0;');
+    myWindow.document.write('    padding: 3px 0 3px 25px;');
     myWindow.document.write('}');
     myWindow.document.write('.info-row .field {');
     myWindow.document.write('    display: flex;');
@@ -909,14 +1002,10 @@ function Printprescription() {
     myWindow.document.write('</style>');
     myWindow.document.write('</head>');
     myWindow.document.write('<body>');
-
-
     myWindow.document.write('<div class="container">');
 
-  
     myWindow.document.write('<div class="blank-space"></div>');
 
- 
     myWindow.document.write('<div class="info-row">');
     myWindow.document.write('    <div class="field">');
     myWindow.document.write('        <span class="label">Name:</span>');
@@ -926,6 +1015,9 @@ function Printprescription() {
     myWindow.document.write('        <span class="label">Age/Sex:</span>');
     myWindow.document.write('        <span class="value">' + ageSex + '</span>');
     myWindow.document.write('    </div>');
+    myWindow.document.write('</div>');
+
+    myWindow.document.write('<div class="info-row">');
     myWindow.document.write('    <div class="field">');
     myWindow.document.write('        <span class="label">OP No:</span>');
     myWindow.document.write('        <span class="value">' + regNo + '</span>');
@@ -936,14 +1028,11 @@ function Printprescription() {
     myWindow.document.write('    </div>');
     myWindow.document.write('</div>');
 
-    myWindow.document.write('</div>'); 
+    myWindow.document.write('</div>');
     myWindow.document.write('</body>');
     myWindow.document.write('</html>');
-
-
     myWindow.document.close();
     myWindow.focus();
-
     setTimeout(function () {
         myWindow.print();
         myWindow.close();
@@ -1221,40 +1310,131 @@ function PrintDosPrintLab() {
 
 
 
+//function PrintPatient() {
+
+
+//    var Rowlen = 0; var Rowcount = 10; var TotalAmount = 0;
+//    var TotalAmount = parseFloat($("#VisitingFees").val() || 0) + parseFloat($("#ConsultationFees").val() || 0) + parseFloat($("#OtherFees").val() || 0)
+//    var AmountinWords = convertNumberToWords(TotalAmount);
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+
+//    var Age = $('#PatAge').text() + '/' + $('#PatGender').text();
+//    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+//    myWindow.document.write(PrintBG3);
+//    // $(ComapnydivToPrintLab).css('height', '130px'); $(ComapnydivToPrintLab).css('width', '100%');
+
+//    $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
+//    myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+//    myWindow.document.write('</table>');
+
+//    var TypeText = '';
+
+//    myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>Patient Sheet</b></u></td></tr>');
+//    myWindow.document.write('</table>');
+//    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100%><tr ><td width=10% align=left ><b>RegNo#&#160;&#160; :</b></td><td colspan=4 align=left width=60%><b>' + $('#RegSeries').val() + '-' + $('#RegNumber').val() + '</b></td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#RevisitDate').val() + '-' + $('#RevisitTime').text() + '</td></tr>');
+//    myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=60%>' + $('#PatName').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
+//    myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#DocName :selected').text() + '</td>                                                            <td width=10%><b>Visit Id</b></td><td colspn=2 width=20% ><b>:' + $('#CurRevisitId').text() + '</b></td></tr>');
+//    myWindow.document.write('<tr><td  colspan=8>&#160;<hr></td></tr>');
+//    myWindow.document.write('</table>');
+
+
+//    //  myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
+//    // myWindow.document.write('</table>');
+
+//    myWindow.print();
+
+//}
+
 function PrintPatient() {
-
-
-    var Rowlen = 0; var Rowcount = 10; var TotalAmount = 0;
-    var TotalAmount = parseFloat($("#VisitingFees").val() || 0) + parseFloat($("#ConsultationFees").val() || 0) + parseFloat($("#OtherFees").val() || 0)
-    var AmountinWords = convertNumberToWords(TotalAmount);
     var myWindow = window.open("", "", "width=1500,height=1500");
 
-    var Age = $('#PatAge').text() + '/' + $('#PatGender').text();
-    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-    myWindow.document.write(PrintBG3);
-    // $(ComapnydivToPrintLab).css('height', '130px'); $(ComapnydivToPrintLab).css('width', '100%');
+    var patientName = $('#PatName').val() || '';
+    var ageSex = $('#PatAge').text() + '/' + $('#PatGender').text();
+    var regNo = $('#RegSeries').val() + '-' + $('#RegNumber').val();
+    var visitDate = $('#RevisitDate').val() || '';
+    myWindow.document.write('<!DOCTYPE html>');
+    myWindow.document.write('<html>');
+    myWindow.document.write('<head>');
+    myWindow.document.write('<title>Prescription</title>');
+    myWindow.document.write('<style>');
+    myWindow.document.write('* { margin: 0; padding: 0; box-sizing: border-box; }');
+    myWindow.document.write('body {');
+    myWindow.document.write('    margin: 0;');
+    myWindow.document.write('    padding: 0;');
+    myWindow.document.write('    font-family: tahoma, sans-serif;');
+    myWindow.document.write('    background: white;');
+    myWindow.document.write('}');
+    myWindow.document.write('@page { margin: 0; }');
+    myWindow.document.write('.container {');
+    myWindow.document.write('    padding: 40px 45px;');
+    myWindow.document.write('}');
+    myWindow.document.write('.blank-space {');
+    myWindow.document.write('    height: 3.9cm;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row {');
+    myWindow.document.write('    display: flex;');
+    myWindow.document.write('    flex-wrap: wrap;');
+    myWindow.document.write('    align-items: center;');
+    myWindow.document.write('    justify-content: space-between;');
+    myWindow.document.write('    gap: 20px 45px;');
+    myWindow.document.write('    font-size: 15px;');
+    myWindow.document.write('    padding: 3px 0 3px 25px;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row .field {');
+    myWindow.document.write('    display: flex;');
+    myWindow.document.write('    align-items: center;');
+    myWindow.document.write('    white-space: nowrap;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row .label {');
+    myWindow.document.write('    font-weight: bold;');
+    myWindow.document.write('    color: #000;');
+    myWindow.document.write('    margin-right: 6px;');
+    myWindow.document.write('}');
+    myWindow.document.write('.info-row .value {');
+    myWindow.document.write('    font-weight: normal;');
+    myWindow.document.write('    color: #000;');
+    myWindow.document.write('}');
+    myWindow.document.write('</style>');
+    myWindow.document.write('</head>');
+    myWindow.document.write('<body>');
+    myWindow.document.write('<div class="container">');
 
-    $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
-    myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-    myWindow.document.write('</table>');
+    myWindow.document.write('<div class="blank-space"></div>');
 
-    var TypeText = '';
+    myWindow.document.write('<div class="info-row">');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">Name:</span>');
+    myWindow.document.write('        <span class="value">' + patientName + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">Age/Sex:</span>');
+    myWindow.document.write('        <span class="value">' + ageSex + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('</div>');
 
-    myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>Patient Sheet</b></u></td></tr>');
-    myWindow.document.write('</table>');
-    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100%><tr ><td width=10% align=left ><b>RegNo#&#160;&#160; :</b></td><td colspan=4 align=left width=60%><b>' + $('#RegSeries').val() + '-' + $('#RegNumber').val() + '</b></td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#RevisitDate').val() + '-' + $('#RevisitTime').text() + '</td></tr>');
-    myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=60%>' + $('#PatName').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
-    myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#DocName :selected').text() + '</td>                                                            <td width=10%><b>Visit Id</b></td><td colspn=2 width=20% ><b>:' + $('#CurRevisitId').text() + '</b></td></tr>');
-    myWindow.document.write('<tr><td  colspan=8>&#160;<hr></td></tr>');
-    myWindow.document.write('</table>');
+    myWindow.document.write('<div class="info-row">');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">OP No:</span>');
+    myWindow.document.write('        <span class="value">' + regNo + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('    <div class="field">');
+    myWindow.document.write('        <span class="label">Date:</span>');
+    myWindow.document.write('        <span class="value">' + visitDate + '</span>');
+    myWindow.document.write('    </div>');
+    myWindow.document.write('</div>');
 
-
-    //  myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
-    // myWindow.document.write('</table>');
-
-    myWindow.print();
-
+    myWindow.document.write('</div>');
+    myWindow.document.write('</body>');
+    myWindow.document.write('</html>');
+    myWindow.document.close();
+    myWindow.focus();
+    setTimeout(function () {
+        myWindow.print();
+        myWindow.close();
+    }, 500);
 }
+
+
 //Show Window Alert Insert,update delete  Modify
 function Showalerts(Status, RevisitId,TokenNumber) {
     if (Status == 1) {

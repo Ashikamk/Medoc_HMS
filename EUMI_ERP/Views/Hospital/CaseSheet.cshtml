@@ -1905,13 +1905,13 @@
     //    var existing = $.trim($('#Complaint').val());
     //    var parts = existing == '' ? [] : existing.split(',').map(function (s) { return s.trim(); });
 
-      
+
     //    if (parts.indexOf(val) === -1) {
     //        parts.push(val);
     //    }
 
     //    $('#Complaint').val(parts.join(', '));
-    //    $('#ComplaintQuick').val(''); 
+    //    $('#ComplaintQuick').val('');
     //    $('#Complaint').focus();
     //    allergycheck();
     //}
@@ -2810,7 +2810,7 @@
 
     //}
 
-    
+
 
     function princasheetnew() {
         var mode = getActivePrintMode();
@@ -2839,9 +2839,40 @@
             if ($('#Diagnosis').val() != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Past medical history</b></td></tr><tr><td>' + $('#Diagnosis').val() + '</td></tr>';
             }
-            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Details</b></td></tr>';
+            if ($('#Details').val() != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Vitals</b></td></tr><tr><td>' + $('#Details').val() + '</td></tr>';
+            }
+            if ($('#Notes').val() != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Examinations</b></td></tr><tr><td>' + $('#Notes').val() + '</td></tr>';
+            }
+            if ($('#ICDDetails').val() != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Diagnosis</b></td></tr><tr><td>' + $('#ICDDetails').val() + '</td></tr>';
+            }
+            if ($('#txtremarks').val() != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Notes</b></td></tr><tr><td>' + $('#txtremarks').val() + '</td></tr>';
+            }
+
+            var hasMedicine = false;
+            for (var m = 1; m <= MedCount + 1; m++) {
+                if ($('#Medicine' + m).length && $.trim($('#Medicine' + m).val()) != '') {
+                    hasMedicine = true;
+                    break;
+                }
+            }
+            if (hasMedicine) {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Advice</b></td></tr>';
+            }
+
             myWindow.document.write(row);
-            printMedicines(myWindow);
+            if (hasMedicine) printMedicines(myWindow);
+
+            // Advice now prints AFTER Medicine Advice
+            if ($('#ICD').val() != '') {
+                var adviceRow = '<table style="font-family:tahoma;font-size:13px;font-weight:normal;" width=100%>' +
+                    '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice</b></td></tr><tr><td>' + $('#ICD').val() + '</td></tr>' +
+                    '</table>';
+                myWindow.document.write(adviceRow);
+            }
         }
         else if (mode === 'PRESC') {
             row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Details</b></td></tr>';
@@ -2895,21 +2926,36 @@
         }
     }
     function printMedicines(myWindow) {
+        var html = '<tr><td>' +
+            '<table width=100% style="font-family:tahoma;font-size:13px;font-weight:normal;border-collapse:collapse;">' +
+            '<tr style="background-color:#eeeeee;font-weight:bold;">' +
+            '<td style="border:1px solid #ccc;padding:3px;width:5%">SL#</td>' +
+            '<td style="border:1px solid #ccc;padding:3px;width:35%">Medicine</td>' +
+            '<td style="border:1px solid #ccc;padding:3px;width:20%">Notes</td>' +
+            '<td style="border:1px solid #ccc;padding:3px;width:20%">Dosage</td>' +
+            '<td style="border:1px solid #ccc;padding:3px;width:20%">Days</td>' +
+            '</tr>';
+
         for (var i = 1; i <= MedCount + 1; i++) {
             if ($('#Medicine' + i).length && $.trim($('#Medicine' + i).val()) != '') {
-                var s = '';
-                var medname = i + '.  ' + $('#Medicine' + i).val();
+                var Medicine = $('#Medicine' + i).val();
                 var Dosage = $('#Dosage' + i).val();
                 var Days = parseInt($('#Days' + i).val() || 0);
                 var Notes = $('#mednote' + i).val();
-                s = Days == 1 ? Days + ' day' : Days + ' days';
-                var line = medname;
-                if (Notes) line += '  ' + Notes;
-                if (Dosage) line += '  ' + Dosage;
-                if (Days) line += '  ' + s;
-                myWindow.document.write('<tr><td>' + line + '</td></tr>');
+                var s = Days == 1 ? Days + ' day' : Days + ' days';
+
+                html += '<tr>' +
+                    '<td style="border:1px solid #ccc;padding:3px;">' + i + '</td>' +
+                    '<td style="border:1px solid #ccc;padding:3px;">' + Medicine + '</td>' +
+                    '<td style="border:1px solid #ccc;padding:3px;">' + (Notes || '') + '</td>' +
+                    '<td style="border:1px solid #ccc;padding:3px;">' + (Dosage || '') + '</td>' +
+                    '<td style="border:1px solid #ccc;padding:3px;">' + (Days ? s : '') + '</td>' +
+                    '</tr>';
             }
         }
+
+        html += '</table></td></tr>';
+        myWindow.document.write(html);
     }
 
     function printFooter(myWindow) {
@@ -2927,7 +2973,6 @@
 
 
 </script>
-
 
 <!-- Lab Test History Overview Modal-->
 <script src="~/Scripts/Chart/highcharts.js"></script>
