@@ -1432,6 +1432,7 @@
             if (LabBillType == 'HALFSIZE') { PrintthisBillWindowsHMS('LABBILL', Count, 'COPYHALF', 'LB'); }
             else if (LabBillType == 'FULLSIZE') { PrintthisBillWindowsHMS('LABBILL', Count, 'COPYFULL', 'LB'); }
             else if (LabBillType == 'FULLSIZEHEADER') { PrintthisBillWindowsHMS('LABBILL', Count, 'COPYFULLHEADER', 'LB'); }
+            else if (LabBillType == 'THERMALPRINT') { PrintthisBillLabwiththermalprint(Count, 0, 4, 'LB'); }
             else if (LabBillType == 'DOTMATRIXLAB') { PrintthisBillLabDotmatrix(Count, 'LAB BILL'); }
         }
     }

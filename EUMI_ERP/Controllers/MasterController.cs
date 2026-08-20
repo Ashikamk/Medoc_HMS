@@ -87,6 +87,11 @@ namespace EUMI_ERP.Controllers
             return View();
         }
 
+        public ActionResult TokenSettings()
+        {
+            return View();
+        }
+
 
 
         public ActionResult ReasonMaster()
@@ -7730,6 +7735,35 @@ namespace EUMI_ERP.Controllers
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult HMS_DoctorGetByUserId(int? docId)
+        {
+            var oList = new List<object>();
+            try
+            {
+                DataSet dsDataSet = DMasters.HMS_DoctorGetByUserId(docId ?? 0, dbName);
+                if (dsDataSet.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        oList.Add(new
+                        {
+                            DoctorUserId = row["Doctor_UserId"].ToString(),
+                            Name = row["Name"].ToString(),
+                            Qualification = row["Qualification"].ToString(),
+                            RegNo = row["RegNo"].ToString()
+                        });
+                    }
+                }
+                return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Json(new { oList, success = false });
+            }
+        }
+
         public ActionResult Token123GetandGets(proceduremastercs proceduremastercs)
         {
             proceduremastercs obj = new proceduremastercs();
@@ -7761,6 +7795,35 @@ namespace EUMI_ERP.Controllers
 
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult TokenSettingss(proceduremastercs proceduremastercs)
+        {
+            proceduremastercs obj = new proceduremastercs();
+            List<proceduremastercs> oList = new List<proceduremastercs>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.TokenSettingss(proceduremastercs, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    proceduremastercs MModels = new proceduremastercs();
+                    MModels.DoctorId = Convert.ToInt32(row["DoctorId"]);   
+                    MModels.Name = row["Name"].ToString();
+                    MModels.currenttoken = row["currenttoken"].ToString();
+                    MModels.NextToken = row["NextToken"].ToString();
+                    MModels.IsHidden = Convert.ToBoolean(row["IsHidden"]);
+                    oList.Add(MModels);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }
 

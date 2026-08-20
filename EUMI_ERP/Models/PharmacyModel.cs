@@ -258,6 +258,11 @@ namespace EUMI_ERP.Models
         {
             return oDPurchase.HMS_PurchaseTempList(oDPharmacy, dbName);
         }
+
+        public DataSet HMS_LabPurchaseTempList(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_LabPurchaseTempList(oDPharmacy, dbName);
+        }
         public DataSet HMS_PurchaseTempGets(PharmacyModel oDPharmacy, string dbName)
         {
             return oDPurchase.HMS_PurchaseTempGets(oDPharmacy, dbName);

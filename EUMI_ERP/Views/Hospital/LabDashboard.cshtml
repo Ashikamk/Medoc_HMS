@@ -522,7 +522,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 45px;
+        font-size: 30px;
         flex-shrink: 0;
         box-shadow: none !important;
         text-shadow: none !important;
@@ -2209,13 +2209,16 @@
                             <th>Doctor</th>
                             <th>Bill Yr</th>
                             <th>Bill No</th>
+                            <th>Action</th>
+                            <th>Bill</th>
+                            <th>Result</th>
                             <th>Status</th>
                             <th>Verified</th>
                             <th>Approved</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-recent-bills">
-                        <tr><td colspan="15" style="text-align:center;padding:20px;color:#aaa;">Loading...</td></tr>
+                        <tr><td colspan="18" style="text-align:center;padding:20px;color:#aaa;">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -2336,7 +2339,8 @@
             </div>
             <div class="tbl-scroll">
                 <table class="dash-table">
-                    <thead><tr><th>SL#</th><th>Bill#</th><th>Reg#</th><th>Patient</th><th>Doctor</th><th>Date</th></tr></thead>
+                 
+                    <thead><tr><th>SL#</th><th>Bill#</th><th>Reg#</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Verified By</th></tr></thead>
                     <tbody id="tbody-verified"><tr><td colspan="6" style="text-align:center;padding:14px;color:#aaa;">Loading...</td></tr></tbody>
                 </table>
             </div>
@@ -2396,7 +2400,8 @@
             </div>
             <div class="tbl-scroll">
                 <table class="dash-table">
-                    <thead><tr><th>SL#</th><th>Bill#</th><th>Reg#</th><th>Patient</th><th>Doctor</th><th>Date</th></tr></thead>
+                   
+                    <thead><tr><th>SL#</th><th>Bill#</th><th>Reg#</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Approved By</th></tr></thead>
                     <tbody id="tbody-approved"><tr><td colspan="6" style="text-align:center;padding:14px;color:#aaa;">Loading...</td></tr></tbody>
                 </table>
             </div>
@@ -2664,9 +2669,9 @@
         switch (key) {
             case 'recentbills': renderRecentBillsTable(pageList); break;
             case 'pendingqueue': renderPendingQueueTable(pageList); break;
-            case 'verified': document.getElementById('tbody-verified').innerHTML = buildPatientRows(pageList, 6); break;
+            case 'verified': document.getElementById('tbody-verified').innerHTML = buildPatientRows(pageList, 7); break;
             case 'nonverified': document.getElementById('tbody-nonverified').innerHTML = buildNonVerifiedRows(pageList); break;
-            case 'approved': document.getElementById('tbody-approved').innerHTML = buildPatientRows(pageList, 6); break;
+            case 'approved': document.getElementById('tbody-approved').innerHTML = buildPatientRows(pageList, 7); break;
             case 'nonapproved': document.getElementById('tbody-nonapproved').innerHTML = buildNonApprovedRows(pageList); break;
             case 'labqueue': document.getElementById('tbody-lab-queue').innerHTML = buildLabQueueRows(pageList); break;
         }
@@ -2991,7 +2996,8 @@
             regNo: item.RegNo || '',
             patientName: item.PatientName || '',
             doctorName: item.DoctorName || '',
-            date: item.RevisitDate || item.Date || item.BillDate || ''
+            date: item.RevisitDate || '',
+            userName: item.UserName || '' 
         };
     }
 
@@ -3119,6 +3125,23 @@
 
             var verBadge2 = isVer2 ? '<span class="badge-verified">Verified</span>' : '<span class="badge-unverified">Not Verified</span>';
             var appBadge2 = isApp2 ? '<span class="badge-approved">Approved</span>' : '<span class="badge-unapproved">Not Approved</span>';
+            var actionBtn2 = '<button type="button" class="btn btn-sm btn-primary" onclick="ViewLabAdviceBill(\'' + row.RevisitId + '\')"><i class="fa fa-eye"></i> View</button>';
+            var billBtn2 = '<button type="button" class="btn btn-sm btn-info" onclick="GoToLabBillFromBills(\'' + row.RevisitId + '\')"><i class="fa fa-file-text"></i> Go to Bill</button>';
+            var resultBtn2 =
+                '<button class="btn-add-result" ' +
+                'data-ov="' + escAttr(row.RevisitId) + '" ' +
+                'data-rs="' + escAttr(row.OPSerName) + '" ' +
+                'data-rn="' + escAttr(row.OPNumber) + '" ' +
+                'data-pi="' + escAttr(row.PatientId) + '" ' +
+                'data-age="' + escAttr((row.BloodGroup || '').split(' ##')[0].replace(' Y', '').replace(' M', '').trim()) + '" ' +
+                'data-bg="' + escAttr((row.BloodGroup || '').split(' ##')[1] || '') + '" ' +
+                'data-pn="' + escAttr(row.PatientName) + '" ' +
+                'data-ge="' + escAttr(row.Gender) + '" ' +
+                'data-ip="' + escAttr(row.IPNumber) + '" ' +
+                'style="background:#4F46E5;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;">' +
+                '<i class="fa fa-flask"></i> Add Result' +
+                '</button>';
+
 
             g_recentBillsHTML.push(buildRecentBillRowObj(
                 k + 1,
@@ -3133,6 +3156,9 @@
                 row.DoctorName || '',
                 row.ShiftName || '—',
                 billNo2 || '—',
+                actionBtn2,
+                billBtn2,
+                resultBtn2,
                 sBadge2,
                 verBadge2,
                 appBadge2
@@ -3264,7 +3290,7 @@
                 '</tr>';
         }
         document.getElementById('tbody-recent-bills').innerHTML =
-            skeletonRows || '<tr><td colspan="15" style="text-align:center;padding:20px;color:#aaa;">No records found.</td></tr>';
+            skeletonRows || '<tr><td colspan="18" style="text-align:center;padding:20px;color:#aaa;">No records found.</td></tr>';
     }
 
     function buildPatientRows(list, colspan) {
@@ -3280,6 +3306,7 @@
                 '<td>' + (r.patientName || '') + '</td>' +
                 '<td>' + (r.doctorName || '') + '</td>' +
                 '<td>' + (r.date || '') + '</td>' +
+                '<td>' + (r.userName || '—') + '</td>' +
                 '</tr>';
         }
         return h;
@@ -3549,6 +3576,87 @@
             },
             error: function () {
                 window.open("/Revisit/LabBill?token=" + token, "_blank");
+            }
+        });
+    }
+
+    function ViewLabAdviceBill(revisitId) {
+        var data = null;
+        for (var i = 0; i < g_worksheetRows.length; i++) {
+            if (String(g_worksheetRows[i].RevisitId) === String(revisitId)) { data = g_worksheetRows[i]; break; }
+        }
+        if (!data) { alert('No lab advice found for this patient.'); return; }
+
+        $("#M_Patient").text(data.PatientName || '-');
+        $("#M_AgeSex").text((data.BloodGroup ? data.BloodGroup.split("##")[0] : '-') + ' Yrs / ' + (data.Gender || '-'));
+        $("#M_Phone").text(data.Contact || '-');
+        $("#M_RegNo").text((data.OPSerName || '-') + '-' + (data.OPNumber || '-'));
+        $("#M_OPNo").text(data.RevisitId || '-');
+        $("#M_Date").text(data.RevisitDate || '-');
+        $("#M_Time").text(data.DOB || '-');
+        $("#M_Doctor").text(data.DoctorName || '-');
+
+        var listHtml = '';
+        var tests = data.TestNames ? data.TestNames.split(',') : [];
+        tests.forEach(function (test) {
+            listHtml += '<li style="padding:12px;border:1px solid #9FE1CB;border-radius:8px;background:#fff;margin-bottom:8px;">' +
+                '<span style="font-size:15px;font-weight:600;">' + test.trim() + '</span></li>';
+        });
+        $("#M_LabAdviceList").html(listHtml || '<li style="color:#718096;font-size:14px;padding:10px;">No tests advised.</li>');
+
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+        $("#SimpleLabModal").modal("show");
+    }
+
+    function buildRegSeries(opSerName, opSerId) {
+        var name = opSerName || '';
+        var id = parseInt(opSerId || 0);
+        if (id > 0) {
+            name += String.fromCharCode(64 + id); // 1 -> A, 2 -> B, 3 -> C ...
+        }
+        return name;
+    }
+    function GoToLabBillFromBills(revisitId) {
+        var data = null;
+        for (var i = 0; i < g_worksheetRows.length; i++) {
+            if (String(g_worksheetRows[i].RevisitId) === String(revisitId)) { data = g_worksheetRows[i]; break; }
+        }
+        if (!data) { window.open('/Revisit/LabBill', '_blank'); return; }
+
+        var reqData = {
+            OPNumber: data.OPNumber,
+            PatientId: data.PatientId,
+            DeptId: typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0,
+            Flag: 1
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '../Revisit/HMS_LabBillGets',
+            data: reqData,
+            success: function (res) {
+                var rows = [];
+                if (res && res.oList && res.oList.length > 0) rows = res.oList;
+                else if (Array.isArray(res) && res.length > 0) rows = res;
+
+                var tn = parseInt(data.TokenNumber || 0);
+                var matchedBill = null;
+                for (var i = 0; i < rows.length; i++) {
+                    if (parseInt(rows[i].BillNo) === tn) { matchedBill = rows[i]; break; }
+                }
+
+                if (matchedBill) {
+                    window.open('/Revisit/LabBill?flag=bill&billno=' + matchedBill.BillNo + '&billyear=' + matchedBill.BillYear, '_blank');
+                } else if (rows.length > 0) {
+                    // fallback: just use the first bill found for this patient
+                    window.open('/Revisit/LabBill?flag=bill&billno=' + rows[0].BillNo + '&billyear=' + rows[0].BillYear, '_blank');
+                } else {
+                    alert('No bill found for this patient.');
+                }
+            },
+            error: function () {
+                alert('Error fetching bill details.');
             }
         });
     }
@@ -4224,7 +4332,7 @@
 
     function buildRecentBillRowObj(sl, billNo, regNo, opNo, date, time,
         patientName, ageSex, contact, doctorName, shiftName,
-        billNoFull, statusBadge, verBadge, appBadge) {
+        billNoFull, actionHTML, billHTML, resultHTML, statusBadge, verBadge, appBadge) {
         return {
             sl: sl,
             billNo: String(billNo || ''),
@@ -4238,6 +4346,9 @@
             doctorName: String(doctorName || ''),
             shiftName: String(shiftName || ''),
             billNoFull: String(billNoFull || ''),
+            actionHTML: actionHTML,
+            billHTML: billHTML,
+            resultHTML: resultHTML,
             statusBadge: statusBadge,
             verBadge: verBadge,
             appBadge: appBadge
@@ -4263,7 +4374,7 @@
     function renderRecentBillsTable(list) {
         if (!list || !list.length) {
             document.getElementById('tbody-recent-bills').innerHTML =
-                '<tr><td colspan="15" style="text-align:center;padding:20px;color:#aaa;">No records found.</td></tr>';
+                '<tr><td colspan="18" style="text-align:center;padding:20px;color:#aaa;">No records found.</td></tr>';
             return;
         }
 
@@ -4283,6 +4394,9 @@
                 '<td>' + r.doctorName + '</td>' +
                 '<td>' + r.shiftName + '</td>' +
                 '<td>' + r.billNoFull + '</td>' +
+                '<td>' + r.actionHTML + '</td>' +
+                '<td>' + r.billHTML + '</td>' +
+                '<td>' + r.resultHTML + '</td>' +
                 '<td>' + r.statusBadge + '</td>' +
                 '<td>' + r.verBadge + '</td>' +
                 '<td>' + r.appBadge + '</td>' +

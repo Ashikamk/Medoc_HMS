@@ -374,6 +374,21 @@ namespace EUMI_ERP
             }
 
         }
+
+        public static DataSet HMS_DoctorGetByUserId(int docId, string dbName)
+        {
+            try
+            {
+                var arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@DocId", SqlDbType.Int) { Value = docId };
+                return SQLHelper.ExecuteDataset("HMS_DoctorGetByUserId", dbName, arlParms);
+            }
+            catch (Exception exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
         public DataSet HMS_AppointmentSearch(Appointment Appointment, string dbName)
         {
             try
@@ -5621,6 +5636,23 @@ namespace EUMI_ERP
 
         }
 
+        public DataSet TokenSettingss(proceduremastercs Procedure1, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[4];
+                arlParms[0] = new SqlParameter("@variable", Procedure1.TokNo);
+                arlParms[1] = new SqlParameter("@DoctorId", (object)Procedure1.DoctorId ?? DBNull.Value);
+                arlParms[2] = new SqlParameter("@TokenValue", (object)Procedure1.TokenValue ?? DBNull.Value);
+                arlParms[3] = new SqlParameter("@IsHidden", (object)Procedure1.IsHidden ?? DBNull.Value);
+                return SQLHelper.ExecuteDataset("TokenSettings", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
 
         public DataSet SerialNoSearchOPTICALSORDER(SalesInvoiceModel SalesInvoiceModel, string dbName)
         {

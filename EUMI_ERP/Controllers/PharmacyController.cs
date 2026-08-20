@@ -318,7 +318,7 @@ namespace EUMI_ERP.Controllers
                 DataSet dsDataSet = new DataSet();
                 dsDataSet = obj.HMS_ReagentProductSearch(ItemMasterModel, dbName);
 
-                // ADD THIS NULL CHECK
+               
                 if (dsDataSet == null || dsDataSet.Tables.Count == 0)
                     return Json(oList, JsonRequestBehavior.AllowGet);
 
@@ -3186,6 +3186,39 @@ namespace EUMI_ERP.Controllers
                     MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
                     MModels.InvoNo = row["InvoNo"].ToString();
                     MModels.SupplierId = Convert.ToInt32(row["SupplierId"].ToString());                   
+                    MModels.InvoDate = row["InvoDate"].ToString();
+                    MModels.SupplierName = row["CustName"].ToString();
+                    MModels.PayType = row["PayType"].ToString();
+                    MModels.PurchaseType = row["PurchaseType"].ToString();
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(oList, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult HMS_LabPurchaseTempList(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_LabPurchaseTempList(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+
+                    MModels.SlNo = Convert.ToInt32(row["SlNo"].ToString());
+                    MModels.InvoNo = row["InvoNo"].ToString();
+                    MModels.SupplierId = Convert.ToInt32(row["SupplierId"].ToString());
                     MModels.InvoDate = row["InvoDate"].ToString();
                     MModels.SupplierName = row["CustName"].ToString();
                     MModels.PayType = row["PayType"].ToString();

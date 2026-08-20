@@ -49,7 +49,11 @@ namespace EUMI_ERP.Models
         public int DelFlag { get; set; }
 
         public string Status { get; set; }
-       
+
+        public int? DoctorId { get; set; }
+        public string TokenValue { get; set; }
+        public bool? IsHidden { get; set; }
+
 
 
         DMasters oDMasters = new DMasters();
@@ -100,6 +104,11 @@ namespace EUMI_ERP.Models
         public DataSet Token123GetandGets(proceduremastercs oProcedureModel, string dbName)
         {
             return oDMasters.Token123GetandGets(oProcedureModel, dbName);
+        }
+
+        public DataSet TokenSettingss(proceduremastercs oProcedureModel, string dbName)
+        {
+            return oDMasters.TokenSettingss(oProcedureModel, dbName);
         }
     }
 }

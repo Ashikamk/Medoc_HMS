@@ -3286,7 +3286,7 @@ function GetTempPurchase() {
     data.UserId = ERPUserId;
     $.ajax({
         type: "POST",
-        url: "../Pharmacy/HMS_PurchaseTempList",
+        url: "../Pharmacy/HMS_LabPurchaseTempList",
         data: data,
         success: function (result) {
             FillTempPurchases(result);

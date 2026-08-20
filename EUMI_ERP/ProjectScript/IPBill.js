@@ -1255,7 +1255,7 @@ function LoadBillSearch() {
     });
 }
 
-function GetBillDetails(BilllYear,BillNo, DeptId) {
+function GetBillDetails(BilllYear, BillNo, DeptId) {
     BILLYR = BilllYear;
     var data = {};
     data.BillNo = BillNo;
@@ -1633,6 +1633,7 @@ function PrintthisBill(flg) {
         { PrintthisBillWindowsHMS('LABBILL', Count, 'COPYFULL', 'IB'); }
         else if (LabBillType == 'FULLSIZEHEADER')
         { PrintthisBillWindowsHMS('LABBILL', Count, 'COPYFULLHEADER', 'IB'); }
+        
         else if (LabBillType == 'DOTMATRIXIP')
         { PrintthisBillLabDotmatrix(Count, 'IP BILL'); } 
     }

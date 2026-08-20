@@ -4,6 +4,8 @@
 var ComapnydivToPrint = document.getElementById("ComapnyImage");
 var ComapnyImgToPrint = document.getElementById("ComapnyImage");
 var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+var Comapnylogo = document.getElementById("ComapnyLogo");
+
 
 var pharmasistsign = document.getElementById("pharmisistsign");
 
@@ -347,6 +349,7 @@ function PrintthisBillWindowsHMS(Flag, Rowlen, type,Bill)
         else if (type == 'COPYFULLHEADER')
         { PrintthisBillLabwithletterthead(Rowlen, 0, 3, Bill) }
         else if (type == 'HALFSIZEAYU') { PrintthisBillLabwithlettertheadIPB(Rowlen, 0, 3, Bill) }
+        else if (type == 'THERMALPRINT') { PrintthisBillLabwiththermalprint(Rowlen, 0, 4, Bill) }
         
     }
     else if (Flag == 'SALES') {
@@ -402,7 +405,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG3);
 
-    myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+    //myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
     var PTYPE = "";
     if ($('#PayType').val() == 1) {
         PTYPE = 'CASH'
@@ -413,6 +416,40 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     else {
         PTYPE = 'UPI/BANK'
     }
+
+    hdtype = SalesPrintHeaderFlag;
+
+    var LAB_PRINT_HEADER_HEIGHT = 100;
+
+    if (hdtype == 0) {  //No header
+        myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+        //myWindow.document.write('</table>');
+    }
+    else if (hdtype == 1) {//with image header
+        myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('</table>');
+        // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+    }
+    else if (hdtype == 2) {//with company details
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<hr/>');
+        myWindow.document.write('</table>');
+
+
+    }
+
+    //distype = SalesPrintDiscountFlag;
+    //if (distype == 0) {  //no MRP column / no savings line
+    //    myWindow.document.write('<style type="text/css"> .mrpcol{display:none;} </style>');
+    //}
+    //else if (distype == 1) {  //show MRP column / savings line
+    //    myWindow.document.write('<style type="text/css"> .mrpcol{display:table-cell;} </style>');
+    //}
+
 
     var GSTINNO = 'GSTIN: 32BDNPB3729C1Z1 ';
     var Expd=''
@@ -600,6 +637,22 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 
     }
     myWindow.document.write('<table>');
+
+    distype = SalesPrintDiscountFlag;
+    if (distype == 0) {
+        myWindow.document.write('<style type="text/css"> table[rules="cols"] tr td:nth-child(8){display:none;} td[colspan="12"][align="center"]{display:none;} </style>');
+    }
+    else if (distype == 1) {
+        myWindow.document.write('<style type="text/css"> .mrpcol{display:table-cell;} </style>');
+    }
+
+    taxtype = SalesPrintTaxFlag;
+    if (taxtype == 0) {  // hide the GST/Taxable/CGST/SGST box
+        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:none;} </style>');
+    }
+    else if (taxtype == 1) {  // show it
+        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:table-cell;} </style>');
+    }
 
     myWindow.print();
     myWindow.close();
@@ -1659,7 +1712,222 @@ function PrintthisBillLabwithlettertheadIPB(Rowlen, flg, type, Bill)            
 
 
 
+function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
+{
 
+    var hdtype = 0;
+
+    var TotPQty = 0; var Rowcount = 7;
+    var MaxCnt;
+    if (type == 1)
+        MaxCnt = 20;
+    else
+        MaxCnt = 47;
+
+    var AmountinWords = WordwithDecimal($('#GrandTotal').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var Trnvalue = '';
+    if ($('#txtlpono').val() == 0) {
+        Trnvalue = '';
+    }
+    else {
+        Trnvalue = $('#txtlpono').val();
+    }
+    //if (type != 3)
+    //{ $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
+    //else if (type == 3) {
+    //    $(ComapnydivToPrintLab).css('height', 'auto');
+    //    $(ComapnydivToPrintLab).css('max-height', '200px');
+    //    $(ComapnydivToPrintLab).css('width', '100%');
+    //}
+
+    //$(ComapnydivToPrintLab).css('height',100); $(ComapnydivToPrintLab).css('width', 700);
+
+    var SNo = '';
+    if (flg == 0)
+        SNo = $('#BillNoCopy').val();
+    else if (flg == 1)
+        SNo = $('#BillNoCopy').val();
+    var Age = $('#Age').val() + '/' + $('#Gender :selected').text();
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG3);
+
+    // myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    //// myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+    // myWindow.document.write('</table>');
+    //myWindow.document.write(GetLabBillPrintHeaderHTML());
+    //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+    // myWindow.document.write('</table>');
+
+
+    if (Bill == 'LB') {
+        var billhead = "Lab Bill"
+        hdtype = LabPrintHeaderFlag;
+    }
+    else if (Bill == 'PB') {
+        var billhead = "General Bill"
+        hdtype = ProcPrintHeaderFlag;
+    }
+    else {
+        var billhead = "IP BILL"
+        hdtype = IpPrintHeaderFlag;
+    }
+
+
+    var LAB_PRINT_HEADER_HEIGHT = 100;
+
+    if (hdtype == 0) {  //No header
+        myWindow.document.write('<table width=50%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+        //myWindow.document.write('</table>');
+    }
+    else if (hdtype == 1) {//with image header
+        myWindow.document.write('<table width=50% ><tr ><td width=50% align=center colspan=6 style=color:#008000;font-weight:bold>' + (Comapnylogo.outerHTML) + '</td></tr>');
+        myWindow.document.write('</table>');
+        // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+    }
+    else if (hdtype == 2) {//with company details
+        myWindow.document.write('<table width="50%">' + '<tr>' + '<td colspan="6" style="width:50%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="50%">' + '<tr>' + '<td colspan="6" style="width:50%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="50%">' + '<tr>' + '<td colspan="6" style="width:50%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<hr/>');
+        myWindow.document.write('</table>');
+
+
+    }
+
+
+
+    var MRHEAD = 'MR/OP#'
+    var MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '/' + $('#OpNo').val()
+    if ($('#IpNo').val() != 0) {
+        MRHEAD = 'RegNo:';
+        MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;   IP No:' + $('#IpNo').val()
+
+    }
+
+    myWindow.document.write('<table width=50% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>' + billhead + '</b></u></td></tr>');
+    myWindow.document.write('</table>');
+    var TypeText = '';
+    if (Bill == 'LB' || Bill == 'PB') {
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=50% >');
+
+        myWindow.document.write('<tr ><td style="font-weight:bold;padding-top:15px;" width=5% align=left >' + MRHEAD + ' </td><td colspan=6 style="font-weight:bold;padding-top:15px;" align=left width=20%>:' + MRVALUE + '</td><td style="padding-top:15px;padding-left:20px;" width=10%>Bill No</td><td style="font-weight:bold;padding-top:15px;" colspn=2 width=10% >:' + SNo + '/' + $('#PayType option:selected').text() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=5% align=left >Patient</td><td colspan=6 style="font-weight:bold;" align=left width=90%>:' + $('#Name').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=5% align=left >Age/Sex</td><td colspan=2 align=left width=30% >:' + Age + '</td></tr>');
+        myWindow.document.write('<tr ><td width=10%>Date&#160;&#160;&#160;  </td><td colspn=2 width=20% >:' + $('#BillDate').val() + ' ' + BBilltime + '</td></tr>');
+        myWindow.document.write('<tr ><td width=5% align=left >Doctor</td><td colspan=2 align=left width=30%>:' + $('#Doctor :selected').text() + '</td></tr>');
+
+
+
+
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+        myWindow.document.write('</table>');
+
+    }          
+    else {
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=50% ><tr ><td style="font-weight:bold;" width=10% align=left >' + MRHEAD + ' :</td><td style="font-weight:bold;" colspan=4 align=left width=50%>' + MRVALUE + '</td><td align=left width=8%><b> Bill No</b></td><td  colspn=2 width=15% ><b>:' + $('#BillNoCopy').val() + '</b></td></tr>');
+        myWindow.document.write('<tr ><td width=5% align=left >Patient:</td><td colspan=4 align=left width=50%>' + $('#Name').val() + '</td><td align=left width=8%>Bill Date</td><td colspn=2 width=15% >:' + $('#BillDate').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=5% align=left >Age/Gender</td><td colspan=4 align=left width=50%>' + Age + '</td><td align=left width=8%>DOA </td><td colspn=2 width=15% >:' + $('#AdmitDate').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=5% align=left >Doctor:</td><td colspan=4 align=left width=50%>' + $('#Doctor :selected').text() + '</td><td align=left width=8%>DOD </td><td colspn=2 width=15% >:' + $('#DischargeDate').val() + '</td></tr>');
+
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+        myWindow.document.write('</table>');
+    }
+
+    myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;font-family:tahoma;  width=50%>');
+
+    var HeaderRow = '';
+    if (Bill == 'LB') {
+
+        if ($('#printscheme').is(':checked')) {
+            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;" ><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td  style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;"colspan=7  >TestName</td><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right></td></tr>');
+
+        }
+        else {
+            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;" ><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td  style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;"colspan=7  >TestName</td><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+
+        }
+    }
+    else if (Bill == 'PB') {
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+
+    }
+
+    else {
+        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td>  <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>  <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
+    }
+
+    // myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="white">' + HeaderRow);
+
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#TestName' + Id).length) {
+            Rowcount += 1;
+            if (Bill == 'LB') {
+                if ($('#printscheme').is(':checked')) {
+                    myWindow.document.write('<tr><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="padding-right:5px;font-family:tahoma;font-size: 11px"></td></tr>');
+
+                }
+                else {
+                    myWindow.document.write('<tr><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>');
+
+                }
+            }
+            else if (Bill == 'PB') {
+                myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>');
+            }
+
+            else {
+                myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#TestCode' + Id).val() + '</td>   <td style="padding-left:5px;font-family:tahoma;font-size: 11px" >' + $('#TestName' + Id).val() + '</td>   <td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>');
+            }
+
+        }
+    }
+
+
+
+
+    for (var a = 1; a <= (9 - Rowlen); a++) {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
+    }
+    myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=50%>');
+
+    if (parseFloat($('#DiscAmt').val() || 0) != 0) {
+        myWindow.document.write('<tr><td>&#160;</td> <td style="font-weight: bold;font-size: 14px;" align=right>Total  :</td>   <td  style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#TotalAmt').text()).toFixed(Decimal)) + '</td></tr>');
+        myWindow.document.write('<tr><td></td>   <td style="font-weight: bold;font-size: 14px;" align=right>Dis  :</td><td   style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#DiscAmt').val()).toFixed(Decimal)) + '</td></tr>');
+
+    }
+
+    if (parseFloat($('#Advamount').val() || 0) != 0) {
+        myWindow.document.write('<tr><td style="border-top:1px solid gray" colspan=10></td></tr><tr><td>&#160;</td> <td style="font-weight: bold;font-size: 14px;" align=right>Total  :</td>   <td  style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#Re_total').text()).toFixed(Decimal)) + '</td></tr>');
+        myWindow.document.write('<tr><td></td>   <td style="font-weight: bold;font-size: 14px;" align=right>Paid  :</td><td   style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#Advamount').val()).toFixed(Decimal)) + '</td></tr>');
+
+    }
+
+    myWindow.document.write('<tr><td><b>Rupees ' + AmountinWords + '</b></td><td style="font-weight: bold;font-size: 14px;" align=right >Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
+
+    //myWindow.document.write('<tr><td>This is a computer generated Bill.</td></tr></table>');
+
+
+
+    myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=50%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+
+
+    //myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>General Medicine,Casuality,Pediatrics,Orthopedics,Pulmonology,Surgery,Neurology,Speech Therapy,Occupational Therapy, Psychological Counseling, Behaviour Therapy, IQ Test, Physiothreapy, Child Development & Early Intervention</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('<table style="font-family:tahoma;font-size:10px;" width=50%><tr><td align=left> Prepared by     -' + BUserNm + '</td></tr></table>');
+
+    //myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
+
+
+
+
+
+
+    myWindow.print();
+    myWindow.close();
+}
 
 
 
@@ -1671,7 +1939,7 @@ function PrintthisBillLabwithlettertheadIPB(Rowlen, flg, type, Bill)            
 function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
 {
 
-
+    var hdtype = 0;
   
     var TotPQty = 0; var Rowcount = 7;
     var MaxCnt;
@@ -1697,7 +1965,7 @@ function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF  
     //    $(ComapnydivToPrintLab).css('width', '100%');
     //}
 
-    $(ComapnydivToPrintLab).css('height',100); $(ComapnydivToPrintLab).css('width', 700);
+    //$(ComapnydivToPrintLab).css('height',100); $(ComapnydivToPrintLab).css('width', 700);
 
     var SNo = '';
     if (flg == 0)
@@ -1711,29 +1979,46 @@ function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF  
    // myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
    //// myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
    // myWindow.document.write('</table>');
+    //myWindow.document.write(GetLabBillPrintHeaderHTML());
+       //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+       // myWindow.document.write('</table>');
 
-       myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-        myWindow.document.write('</table>');
+    
+    if (Bill == 'LB') {
+        var billhead = "Lab Bill"
+        hdtype = LabPrintHeaderFlag;
+    }
+    else if (Bill == 'PB') {
+        var billhead = "General Bill"
+        hdtype = ProcPrintHeaderFlag;
+    }
+    else {
+        var billhead = "IP BILL"
+        hdtype = IpPrintHeaderFlag;
+    }
 
-    if (type != 3) {
-        // myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+
+    var LAB_PRINT_HEADER_HEIGHT = 100;
+
+    if (hdtype == 0) {  //No header
+        myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
         //myWindow.document.write('</table>');
     }
-    else if (type == 3) {
-        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-        //myWindow.document.write('</table>');
+    else if (hdtype == 1) {//with image header
+        myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('</table>');
         // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
         //myWindow.document.write('</table>');
 
     }
-    if (Bill == 'LB') {
-        var billhead = "Lab Bill"
-    }
-    else if (Bill == 'PB') {
-        var billhead = "General Bill"
-    }
-    else {
-        var billhead = "IP BILL"
+    else if (hdtype == 2) {//with company details
+        myWindow.document.write('<table width="100%">' +'<tr>' +'<td colspan="6" style="width:100%;">' +'<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' +window.CompanySettingsArray.CompanyName +'</p>' +'</td>' +'</tr>' +'</table>');
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<hr/>');
+        myWindow.document.write('</table>');
+        
+
     }
 
 

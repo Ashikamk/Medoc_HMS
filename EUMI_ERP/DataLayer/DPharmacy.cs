@@ -443,6 +443,25 @@ namespace EUMI_ERP.DataLayer
             }
 
         }
+
+        public DataSet HMS_LabPurchaseTempList(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[2];
+                arlParms[0] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                arlParms[1] = new SqlParameter("@UserId", PharmacyModel.UserId);
+
+                return SQLHelper.ExecuteDataset("HMS_LabPurchaseTempList", dbName, arlParms);
+
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
         public DataSet HMS_PurchaseTempGets(PharmacyModel PharmacyModel, string dbName)
         {
             try

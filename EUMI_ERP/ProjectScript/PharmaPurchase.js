@@ -2577,14 +2577,14 @@ function TryLoadInvoice(SlNo, Value) {
         data: data,
         success: function (result) {
             if (result.length > 0) {
-                // Found a valid Medicine invoice — show it
+               
                 $('#PINo_A').val(SlNo);
                 formrefresh(1);
                 PurchaseGets(result);
                 $('#btnnew').focus();
             }
             else {
-                // Empty (probably a Stock invoice) — skip to next one automatically
+               
                 TryLoadInvoice(SlNo + Value, Value);
             }
         }

@@ -458,7 +458,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 45px;
+        font-size: 30px;
         padding-top: 50px;
         line-height: 1;
         flex-shrink: 0;
@@ -2110,9 +2110,8 @@
             <div class="tbl-scroll">
                 <table class="dash-table">
                     <thead>
-                        <tr><th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Bill No</th><th>Status</th></tr>
-                    </thead>
-                    <tbody id="tb-lready"><tr><td colspan="11" class="empty-msg">—</td></tr></tbody>
+                        <tr><th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Bill No</th><th>View</th><th>Status</th></tr>                    </thead>
+                    <tbody id="tb-lready"><tr><td colspan="12" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
             <div class="tbl-footer">
@@ -2392,7 +2391,7 @@
     initPaginator('tb-compcs', 9);
     initPaginator('tb-med', 9);
     initPaginator('tb-lab', 9);
-    initPaginator('tb-lready', 11);
+    initPaginator('tb-lready', 12);
     initPaginator('tb-lpending', 11);
 
     
@@ -2940,6 +2939,8 @@
             var r = readyList[i];
             if (r.SubResultId) labReadyMap[r.SubResultId] = true;
 
+            var viewBtn = '<button type="button" class="btn btn-sm btn-primary" onclick="event.stopPropagation();viewLabReport(\'' + escAttr(r.SubResultId) + '\',\'' + escAttr(r.OPNumber) + '\')"><i class="fa fa-eye"></i> View Report</button>';
+
             readyRows.push('<tr>'
                 + '<td data-label="Sl#">' + (i + 1) + '</td>'
                 + '<td data-label="Reg#">' + (r.OPNumber || '—') + '</td>'
@@ -2951,6 +2952,7 @@
                 + '<td data-label="Contact">' + (r.Contact || '—') + '</td>'
                 + '<td data-label="Doctor">' + (r.DoctorName || '') + '</td>'
                 + '<td data-label="Bill No">' + (r.SubResultId || '') + '</td>'
+                + '<td data-label="View">' + viewBtn + '</td>'
                 + '<td data-label="Status"><span class="badge-ready">Ready</span></td>'
                 + '</tr>');
         }
@@ -2979,6 +2981,45 @@
         $('#sc-labpending').text(pendList.length);
 
         drawLabChart(readyList.length, pendList.length);
+    }
+
+    function escAttr(val) {
+        return String(val || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    }
+    function viewLabReport(billNo, opNumber) {
+        if (!billNo) { alert('No bill number found for this report.'); return; }
+
+        var reqData = {
+            OPNumber: opNumber,
+            PatientId: 0,
+            DeptId: (typeof ERPDeptId !== 'undefined' ? ERPDeptId : 0),
+            Flag: 1
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '../Revisit/HMS_LabBillGets',
+            data: reqData,
+            success: function (res) {
+                var rows = [];
+                if (res && res.oList && res.oList.length > 0) rows = res.oList;
+                else if (Array.isArray(res) && res.length > 0) rows = res;
+
+                var matchedBill = null;
+                for (var i = 0; i < rows.length; i++) {
+                    if (String(rows[i].BillNo) === String(billNo)) { matchedBill = rows[i]; break; }
+                }
+
+                if (matchedBill) {
+                    window.open('../Revisit/LabResult?flag=bill&billno=' + matchedBill.BillNo + '&billyear=' + matchedBill.BillYear, '_blank');
+                } else {
+                    window.open('../Revisit/LabResult?flag=bill&billno=' + billNo, '_blank');
+                }
+            },
+            error: function () {
+                window.open('../Revisit/LabResult?flag=bill&billno=' + billNo, '_blank');
+            }
+        });
     }
 
     function goToLabResult(index) {

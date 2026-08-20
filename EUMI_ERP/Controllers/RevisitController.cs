@@ -4235,14 +4235,12 @@ namespace EUMI_ERP.Controllers
         {
             ReVisitModel obj = new ReVisitModel();
             List<ReVisitModel> verifiedList = new List<ReVisitModel>();
-            List<ReVisitModel> nonVerifiedList = new List<ReVisitModel>();  
+            List<ReVisitModel> nonVerifiedList = new List<ReVisitModel>();
             List<ReVisitModel> approvedList = new List<ReVisitModel>();
             List<ReVisitModel> nonApprovedList = new List<ReVisitModel>();
-
             try
             {
                 DataSet dsDataSet = obj.HMS_GetVerificationLists(fromDate, toDate, dbName);
-
                 if (dsDataSet != null && dsDataSet.Tables.Count > 0
                     && dsDataSet.Tables[0].Rows.Count > 0)
                 {
@@ -4257,9 +4255,9 @@ namespace EUMI_ERP.Controllers
                         model.DoctorName = row["Doctor"].ToString();
                         model.RevisitDate = row["Date"].ToString();
                         model.StatusType = row["StatusType"].ToString();
-
+                        model.UserName = row.Table.Columns.Contains("UserName") ? row["UserName"].ToString() : "";  // ← ADDED
                         if (listType == "VERIFIED") verifiedList.Add(model);
-                        else if (listType == "NON_VERIFIED") nonVerifiedList.Add(model); // ADD
+                        else if (listType == "NON_VERIFIED") nonVerifiedList.Add(model);
                         else if (listType == "APPROVED") approvedList.Add(model);
                         else if (listType == "NON_APPROVED") nonApprovedList.Add(model);
                     }
@@ -4270,11 +4268,10 @@ namespace EUMI_ERP.Controllers
                 return Json(new { error = ex.Message, success = false },
                             JsonRequestBehavior.AllowGet);
             }
-
             return Json(new
             {
                 verifiedList = verifiedList,
-                nonVerifiedList = nonVerifiedList,   // ADD
+                nonVerifiedList = nonVerifiedList,
                 approvedList = approvedList,
                 nonApprovedList = nonApprovedList,
                 success = true

@@ -3,11 +3,12 @@
     ViewBag.Title = "CaseSheet";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<script>var AppRoot = '@Url.Content("~/")';</script>
 <script type="text/javascript" src="../Projectscript/CommonHMS.js"></script>
 <script type="text/javascript" src="~/ProjectScript/CaseSheet.js"></script>
 <script type="text/javascript" src="~/ProjectScript/HMSPrint.js"></script>
 <script type="text/javascript" src="~/ProjectScript/Print.js"></script>
+<script type="text/javascript" src="~/ProjectScript/PrintSettings.js"></script>
 
 <script src="~/Scripts/Autocomplete/jquery-ui.js"></script>
 <style>
@@ -1338,6 +1339,7 @@
                                 <input type="checkbox" class="custom-control-input print-opt" id="chkLabOnly" onchange="onPrintOptChange('chkLabOnly')">
                                 <label class="custom-control-label" for="chkLabOnly" style="font-size:13px;">LabTest Only</label>
                             </div>
+
                         </div>
 
                         <table width="100%">
@@ -2454,12 +2456,7 @@
                 </div>
                 <div class="modal-footer">
 
-                    <div class="col-4">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="withhead">
-                            <label class="custom-control-label" for="withhead">with Header</label>
-                        </div>
-                    </div>
+
 
                     <div class="col-8">
                         <button type="button" onclick="ConfirmboxResult('false', $('#ConfmSts').val(), $('#ConfmFlag').val())" id="confirmMedCancel" onkeydown="FocusManual('confirmMedCancel','confirmMedOk', event, 39)" class="btn grey btn-outline-secondary btn-sizebig" data-dismiss="modal">Cancel</button>
@@ -2470,6 +2467,13 @@
 
                 </div>
             </div>
+        </div>
+
+    </div>
+    <div class="col-4">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="withhead">
+            <label class="custom-control-label" for="withhead">with Header</label>
         </div>
     </div>
 </div>
@@ -2818,43 +2822,69 @@
         var SignPrint = document.getElementById("signimg");
         var myWindow = window.open("", "", "width=1500,height=1500");
         var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-        $(ComapnydivToPrintLab).css('height', 100);
-        $(ComapnydivToPrintLab).css('width', 700);
-        myWindow.document.write('<table width=100%><tr><td width=100% align=center style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+        //$(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        //myWindow.document.write('<table width=100%><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+        hdtype = PrintHeaderFlag;
+
+        var LAB_PRINT_HEADER_HEIGHT = 100;
+
+        if (hdtype == 0) {  //No header
+            myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+            //myWindow.document.write('</table>');
+        }
+        else if (hdtype == 1) {//with image header
+            myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+            myWindow.document.write('</table>');
+            // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
+            //myWindow.document.write('</table>');
+
+        }
+        else if (hdtype == 2) {//with company details
+            myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p>' + '</td>' + '</tr>' + '</table>');
+            myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
+            myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
+            myWindow.document.write('<hr/>');
+            myWindow.document.write('</table>');
+
+
+        }
         myWindow.document.write('<table width=100%><tr><td style="font-family:tahoma;font-size:13px;font-weight:normal;" align=center>PATIENT SUMMARY</td></tr></table>');
         myWindow.document.write('<div style="border:1px solid black;border-radius:10px"><table style="" width=90%><tr><td width=60%><table style="font-family:tahoma;font-size:13px;font-weight:normal;">' +
             '<tr><td>MR-No#</td><td> : </td><td>' + $("#PRegNo").val() + '</td></tr>' +
             '<tr><td>Name</td><td> : </td><td>' + $("#PatientName").val() + '</td></tr>' +
-            '<tr><td>Doctor</td><td> : </td><td>' + $("#UserDetsss").text() + '</td></tr></table></td>');
+        //    '<tr><td>Doctor</td><td> : </td><td>' + $("#UserDetsss").text() + '</td></tr></table></td>');
+            '<tr><td>Doctor</td><td> : </td><td>' + (DoctorName !== '' ? DoctorName : $("#UserDetsss").text()) + (DoctorQualification !== '' ? ', ' + DoctorQualification : '') + '</td></tr></table></td>');
         myWindow.document.write('<td width=40% align="right"><table style="font-family:tahoma;font-size:13px;font-weight:normal;">' +
             '<tr><td>OP-No#</td><td> : </td><td>' + $("#PatientOP").text() + '</td></tr>' +
             '<tr><td>Sex</td><td> : </td><td>' + $("#PatientGender").text() + '</td></tr>' +
             '<tr><td>Date</td><td> : </td><td>' + $("#CaseDate").val() + '</td></tr></table></td></tr></table></div>');
 
+
         var row = '<table style="font-family:tahoma;font-size:13px;font-weight:normal;" width=100%>';
         if (mode === 'CASESHEET') {
-            if ($('#Complaint').val() != '') {
-                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Patient complaints</b></td></tr><tr><td>' + $('#Complaint').val() + '</td></tr>';
+            if ($.trim($('#Complaint').val()) != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Complaints</b></td></tr><tr><td>' + $('#Complaint').val() + '</td></tr>';
             }
-            if ($('#Diagnosis').val() != '') {
+            if ($.trim($('#Diagnosis').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Past medical history</b></td></tr><tr><td>' + $('#Diagnosis').val() + '</td></tr>';
             }
-            if ($('#Allergies').val() != '') {
+            if ($.trim($('#Allergies').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Drug allergy</b></td></tr><tr><td>' + $('#Allergies').val() + '</td></tr>';
             }
-            if ($('#Details').val() != '') {
+            if ($.trim($('#Details').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Vitals</b></td></tr><tr><td>' + $('#Details').val() + '</td></tr>';
             }
-            if ($('#Notes').val() != '') {
+            if ($.trim($('#Notes').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Examinations</b></td></tr><tr><td>' + $('#Notes').val() + '</td></tr>';
             }
-            if ($('#ICDDetails').val() != '') {
-                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Diagnosis</b></td></tr><tr><td>' + $('#ICDDetails').val() + '</td></tr>';
+            if ($.trim($('#ICDDetails').val()) != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Provisional Diagnosis</b></td></tr><tr><td>' + $('#ICDDetails').val() + '</td></tr>';
             }
-            if ($('#txtremarks').val() != '') {
+            if ($.trim($('#txtremarks').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Notes</b></td></tr><tr><td>' + $('#txtremarks').val() + '</td></tr>';
             }
-            if ($('#Advice').val() != '') {
+            if ($.trim($('#Advice').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice To Nursing Station</b></td></tr><tr><td>' + $('#Advice').val() + '</td></tr>';
             }
 
@@ -2872,8 +2902,7 @@
             myWindow.document.write(row);
             if (hasMedicine) printMedicines(myWindow);
 
-            // Advice now prints AFTER Medicine Advice
-            if ($('#ICD').val() != '') {
+            if ($.trim($('#ICD').val()) != '') {
                 var adviceRow = '<table style="font-family:tahoma;font-size:13px;font-weight:normal;" width=100%>' +
                     '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice</b></td></tr><tr><td>' + $('#ICD').val() + '</td></tr>' +
                     '</table>';
@@ -2884,12 +2913,13 @@
             row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Details</b></td></tr>';
             myWindow.document.write(row);
             printMedicines(myWindow);
-            if ($('#NextDate').val() != '' && $('#NextDate').val() != $('#CaseDate').val()) {
+            if ($.trim($('#NextDate').val()) != '' && $('#NextDate').val() != $('#CaseDate').val()) {
                 myWindow.document.write('<tr><td height=5px>&#160;</td></tr><tr><td>YOUR NEXT VISIT SCHEDULED ON ' + $('#NextDate').val() + '</td></tr>');
             }
             myWindow.document.write('</table>');
-            printFooter(myWindow);
-            myWindow.print();
+            printFooter(myWindow, function () {
+                myWindow.print();
+            });
             return;
         }
         else if (mode === 'LAB') {
@@ -2907,17 +2937,19 @@
             }
             myWindow.document.write(row);
             myWindow.document.write('</table>');
-            printFooter(myWindow);
-            myWindow.print();
+            printFooter(myWindow, function () {
+                myWindow.print();
+            });
             return;
         }
-        if ($('#NextDate').val() != '' && $('#NextDate').val() != $('#CaseDate').val()) {
+        if ($.trim($('#NextDate').val()) != '' && $('#NextDate').val() != $('#CaseDate').val()) {
             myWindow.document.write('<tr><td height=5px>&#160;</td></tr><tr><td>YOUR NEXT VISIT SCHEDULED ON ' + $('#NextDate').val() + '</td></tr>');
         }
 
         myWindow.document.write('</table>');
-        printFooter(myWindow);
-        myWindow.print();
+        printFooter(myWindow, function () {
+            myWindow.print();
+        });
     }
 
     function HandlePrintClick() {
@@ -2942,6 +2974,7 @@
             '<td style="border:1px solid #ccc;padding:3px;width:20%">Days</td>' +
             '</tr>';
 
+        var slno = 1;  
         for (var i = 1; i <= MedCount + 1; i++) {
             if ($('#Medicine' + i).length && $.trim($('#Medicine' + i).val()) != '') {
                 var Medicine = $('#Medicine' + i).val();
@@ -2951,12 +2984,14 @@
                 var s = Days == 1 ? Days + ' day' : Days + ' days';
 
                 html += '<tr>' +
-                    '<td style="border:1px solid #ccc;padding:3px;">' + i + '</td>' +
+                    '<td style="border:1px solid #ccc;padding:3px;">' + slno + '</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;">' + Medicine + '</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;">' + (Notes || '') + '</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;">' + (Dosage || '') + '</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;">' + (Days ? s : '') + '</td>' +
                     '</tr>';
+
+                slno++;
             }
         }
 
@@ -2964,13 +2999,52 @@
         myWindow.document.write(html);
     }
 
-    function printFooter(myWindow) {
+    //function printFooter(myWindow, callback) {
+    //    var doctorName = DoctorName !== '' ? DoctorName : $("#UserDetsss").text();
+    //    var signUrl = window.location.origin + '/app-assets/img/DoctorSign/' + DoctorDocId + '.png';
+
+    //    var doctorBlock = '&#160;' + doctorName;
+    //    if (DoctorQualification !== '') {
+    //        doctorBlock += '<br/><span style="font-size:11px;">' + DoctorQualification + '</span>';
+    //    }
+    //    if (DoctorRegNo !== '') {
+    //        doctorBlock += '<br/><span style="font-size:11px;">' + DoctorRegNo + '</span>';
+    //    }
+
+    //    myWindow.document.write('<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+    //        '<tr><td height=20px></td></tr>' +
+    //        '<tr><td align=left></td><td width=400px align=center></td>' +
+    //        '<td align=center id="footerSignCell">' + doctorBlock + '</td></tr></table>');
+
+    //    if (DoctorUserId !== '') {
+    //        var img = new Image();
+    //        img.onload = function () {
+    //            var cell = myWindow.document.getElementById('footerSignCell');
+    //            cell.innerHTML += '<br/><img src="' + signUrl + '" style="height:45px;max-width:150px;" />';
+    //            if (callback) callback();
+    //        };
+    //        img.onerror = function () {
+    //            if (callback) callback();
+    //        };
+    //        img.src = signUrl;
+    //    } else {
+    //        if (callback) callback();
+    //    }
+    //}
+
+
+    function printFooter(myWindow, callback) {
+        var doctorName = DoctorName !== '' ? DoctorName : $("#UserDetsss").text();
+        var doctorBlock = '&#160;' + doctorName;
+
         myWindow.document.write('<table style="font-family:tahoma;font-size:12px;" width=100%>' +
             '<tr><td height=20px></td></tr>' +
             '<tr><td align=left></td><td width=400px align=center></td>' +
-            '<td align=center>&#160;' + $("#UserDetsss").text() + '</td></tr></table>');
-    }
+            '<td align=center id="footerSignCell">' + doctorBlock + '</td></tr></table>');
 
+        if (callback) callback();
+    }
+   
     LoadMedicine(1)
 
 
@@ -3050,6 +3124,35 @@
 
 
 <script>
+    var DoctorDocId = '';
+    var DoctorUserId = '';
+    var DoctorName = '';
+    var DoctorQualification = '';
+    var DoctorRegNo = '';
+
+    function GetDoctorRegDetails(docId) {
+        DoctorDocId = docId;
+        var data = {};
+        data.docId = docId;
+        $.ajax({
+            type: "POST",
+            url: "../Master/HMS_DoctorGetByUserId",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    DoctorUserId = result.oList[0].DoctorUserId || '';
+                    DoctorName = result.oList[0].Name || '';
+                    DoctorQualification = result.oList[0].Qualification || '';
+                    DoctorRegNo = result.oList[0].RegNo || '';
+                } else {
+                    DoctorUserId = '';
+                    DoctorName = '';
+                    DoctorQualification = '';
+                    DoctorRegNo = '';
+                }
+            }
+        });
+    }
 
     function CasesheetCloseOverviewModal() {
         $('#OverviewModal').css('display', 'none');

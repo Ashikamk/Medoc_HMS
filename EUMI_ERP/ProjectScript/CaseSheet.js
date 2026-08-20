@@ -1284,7 +1284,7 @@ function GetPatientData(result) {
     $('#MotherName').val(result[0].Mname)
     $('#MtOccupation').text(result[0].Moccupation)
     $('#PatientId').val(result[0].PatientId);
-
+    GetDoctorRegDetails(result[0].DoctorId);   // was: result[0].Doctor_Id
     GetTest(result[0].OPNumber, result[0].OPSerId);
     GetVisit(result[0].OPNumber, result[0].OPSerId);
 
