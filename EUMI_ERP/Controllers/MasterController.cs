@@ -697,34 +697,7 @@ namespace EUMI_ERP.Controllers
 
         }
 
-        [HttpPost]
-        public JsonResult HMS_TokenNextPrev(TokenInfoModel model)
-        {
-            try
-            {
-                model.DeptId = Convert.ToInt64(Session["DeptId"] ?? 1);
-                DataSet ds = model.HMS_TokenNextPrev(model, dbName);
-
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                {
-                    DataRow row = ds.Tables[0].Rows[0];
-                    return Json(new
-                    {
-                        success = true,
-                        liveTokenNo = row["LiveTokenNo"].ToString(),
-                        nextTokenNo = row["NextTokenNo"].ToString(),
-                        atMax = row["atMax"] != DBNull.Value && Convert.ToInt32(row["atMax"]) == 1
-                    });
-                }
-
-                return Json(new { success = false, message = "No token record for this doctor" });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return Json(new { success = false, message = "Error updating token" });
-            }
-        }
+       
 
 
 

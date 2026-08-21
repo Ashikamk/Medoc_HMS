@@ -67,7 +67,7 @@
 
 <div class="board-wrap" id="boardWrap">
 
-   
+
     <div class="board-list-outer">
         <div class="table-responsive" id="table-responsive">
             <div id="tblAppointment" class="token-cards"></div>
@@ -89,7 +89,7 @@
             target.requestFullscreen();
         } else if (target.webkitRequestFullscreen) {
             target.webkitRequestFullscreen();
-        } else if (target.msRequestFullscreen) { 
+        } else if (target.msRequestFullscreen) {
             target.msRequestFullscreen();
         }
     }
@@ -125,18 +125,12 @@
         left: 50%;
         transform: translateX(-50%);
     }
+
     .board-list-outer {
         width: 100%;
         height: 100%;
         box-sizing: border-box;
         padding: 0;
-    }
-
-    .token-cards {
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-        padding: 16px;
     }
 
     .table-responsive {
@@ -149,20 +143,21 @@
     .token-cards {
         display: flex;
         flex-direction: column;
-        gap: 18px;
+        gap: 6px;
+        padding: 16px;
     }
+
     .token-card {
         display: flex;
-        align-items: center;
-        background: #142561;
+        align-items: stretch;
         border-radius: 8px;
-        padding: 20px 28px;
+        padding: 10px 28px;
         gap: 20px;
-        min-height: 90px;
+        min-height: 60px;
     }
 
         .token-card .slno {
-            display: none; 
+            display: none;
         }
 
         .token-card .doc-name {
@@ -173,6 +168,8 @@
             font-weight: bold;
             border-radius: 6px;
             padding: 16px 22px;
+            display: flex;
+            align-items: center;
         }
 
         .token-card .tok-nav-btn {
@@ -180,7 +177,7 @@
             background: #99f6e4;
             color: #0b1642;
             width: 72px;
-            height: 72px;
+            height: auto;
             border-radius: 10px;
             font-size: 28pt;
             line-height: 1;
@@ -202,8 +199,9 @@
             font-size: 30pt;
             font-weight: 800;
             border-radius: 10px;
-            padding: 14px 16px;
+            padding: 0 16px;
             width: 150px;
+            height: auto;
             text-align: center;
             border: none;
             outline: none;
@@ -214,7 +212,8 @@
             border: none;
             border-radius: 50%;
             width: 68px;
-            height: 68px;
+            height: auto;
+            aspect-ratio: 1 / 1;
             cursor: pointer;
             font-size: 28pt;
             font-weight: bold;
@@ -240,6 +239,7 @@
             background: #e74c3c;
             color: #fff;
         }
+
         .token-card.collapsed .show-btn {
             opacity: 1;
         }
@@ -255,6 +255,7 @@
         .token-card:not(.collapsed) .hide-btn {
             opacity: 1;
         }
+
         .token-card.collapsed .tok-nav-btn,
         .token-card.collapsed .cur-token-input {
             display: none;
@@ -271,6 +272,22 @@
         .fs-btn:hover {
             opacity: 1;
         }
+
+    .token-toast {
+        display: none;
+        position: fixed;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2ecc71;
+        color: #fff;
+        font-size: 14pt;
+        font-weight: bold;
+        padding: 12px 28px;
+        border-radius: 8px;
+        z-index: 999;
+        box-shadow: 0 4px 12px rgba(0,0,0,.3);
+    }
 </style>
 
 <script>
@@ -296,7 +313,7 @@
         GetRows(0)
     }, 2000);
 
- 
+
     function setHidden(docId, hidden) {
         $('.token-card[data-docid="' + docId + '"]').toggleClass('collapsed', hidden);
         $.ajax({
@@ -305,15 +322,15 @@
             data: { TokNo: 0, DoctorId: docId, IsHidden: hidden }
         });
     }
- 
 
-    
+
+
     var tokenOverrides = {};
 
-   
+
     var tokenPrefixes = {};
 
-   
+
     function splitToken(value) {
         var match = String(value).match(/^(.*)-(\d+)\s*$/);
         if (match) {
@@ -322,12 +339,20 @@
         return { prefix: '', suffix: String(value) };
     }
 
-   
+
     var tokenInputFocused = false;
 
-  
-    function onlyDigits(evt) {
+
+    function onTokenKeypress(evt) {
         var charCode = evt.which ? evt.which : evt.keyCode;
+
+        if (charCode === 13) {
+            evt.preventDefault();
+            onTokenTyped(evt.target);
+            evt.target.blur();
+            return false;
+        }
+
         if (charCode < 48 || charCode > 57) {
             return false;
         }
@@ -335,14 +360,25 @@
     }
 
 
-  
-    function persistTokenValue(docId, fullValue) {
+    function showToast(msg) {
+        var $toast = $('#tokenToast');
+        if ($toast.length === 0) {
+            $('body').append('<div id="tokenToast" class="token-toast"></div>');
+            $toast = $('#tokenToast');
+        }
+        $toast.stop(true, true).text(msg).fadeIn(150).delay(1200).fadeOut(300);
+    }
+
+
+
+    function persistTokenValue(docId, fullValue, showMsg) {
         $.ajax({
             type: "POST",
             url: "../Master/TokenSettingss",
             data: { TokNo: 0, DoctorId: docId, TokenValue: fullValue },
             success: function (result) {
                 if (!tokenInputFocused) ShowTermlist(result.oList);
+                if (showMsg) showToast('Token updated');
             }
         });
     }
@@ -359,7 +395,7 @@
         var fullValue = prefix ? (prefix + '-' + newSuffix) : newSuffix;
         tokenOverrides[docId] = fullValue;
 
-        persistTokenValue(docId, fullValue);
+        persistTokenValue(docId, fullValue, false);  
     }
 
     function onTokenTyped(inputEl) {
@@ -371,11 +407,11 @@
         var fullValue = prefix ? (prefix + '-' + newSuffix) : newSuffix;
         tokenOverrides[docId] = fullValue;
 
-        persistTokenValue(docId, fullValue);
+        persistTokenValue(docId, fullValue, true);   
     }
 
     function GetRows(TokNo) {
-        if (TokNo == 0 && tokenInputFocused) return; 
+        if (TokNo == 0 && tokenInputFocused) return;
         $('#TokNo').val(TokNo)
         var data = {};
         data.TokNo = TokNo;
@@ -399,14 +435,14 @@
             var parts = splitToken(rawValue);
             tokenPrefixes[docId] = parts.prefix;
             var tokenValue = parts.suffix;
-            var isHidden = !!result[i].IsHidden; 
+            var isHidden = !!result[i].IsHidden;
 
             responseText += '' +
                 '<div class="token-card' + (isHidden ? ' collapsed' : '') + '" data-docid="' + docId + '">' +
                 '<div class="slno">' + slno + '</div>' +
                 '<div class="doc-name">Dr. ' + result[i].Name + '</div>' +
                 '<button type="button" class="tok-nav-btn" onclick="changeToken(\'' + docId + '\',\'prev\')">&#8249;</button>' +
-                '<input type="text" inputmode="numeric" pattern="[0-9]*" class="cur-token-input" value="' + tokenValue + '" onkeypress="return onlyDigits(event)" onfocus="tokenInputFocused=true" onblur="tokenInputFocused=false" onchange="onTokenTyped(this)" />' +
+                '<input type="text" inputmode="numeric" pattern="[0-9]*" class="cur-token-input" value="' + tokenValue + '" onkeypress="return onTokenKeypress(event)" onfocus="tokenInputFocused=true" onblur="tokenInputFocused=false" onchange="onTokenTyped(this)" />' +
                 '<button type="button" class="tok-nav-btn" onclick="changeToken(\'' + docId + '\',\'next\')">&#8250;</button>' +
                 '<button type="button" class="show-btn" title="Show" onclick="setHidden(\'' + docId + '\', false)">&#10003;</button>' +
                 '<button type="button" class="hide-btn" title="Hide" onclick="setHidden(\'' + docId + '\', true)">&#10005;</button>' +

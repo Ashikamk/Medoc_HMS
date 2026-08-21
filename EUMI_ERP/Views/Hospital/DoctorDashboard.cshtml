@@ -1675,6 +1675,15 @@
 <div id="dd-loader"><div class="spin"></div></div>
 <div id="topAlert" class="top-alert"></div>
 
+<div id="accessDeniedOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,.45);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:14px;padding:28px 30px;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25);">
+        <div style="font-size:38px;color:#EF4444;margin-bottom:10px;"><i class="fa fa-exclamation-triangle"></i></div>
+        <div style="font-size:17px;font-weight:800;color:#1E293B;margin-bottom:6px;">Access Restricted</div>
+        <div style="font-size:14px;color:#64748B;margin-bottom:18px;"> Please contact admin</div>
+        <button type="button" onclick="closeAccessDenied()" style="background:teal;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-weight:700;cursor:pointer;">OK</button>
+    </div>
+</div>
+
 <input type="hidden" id="DoctorId" value="0" />
 <input type="hidden" id="PatientId" value="0" />
 
@@ -1769,14 +1778,14 @@
             </div>
             <div class="kpi-value" id="sc-done">—</div>
         </div>
-        <div class="kpi-card kpi-purple" onclick="goToKpiSection('sec-patient-queue')">
+        <div class="kpi-card kpi-purple" onclick="filterQueueByType('New')">
             <div class="kpi-top">
                 <div class="kpi-label">New Patients</div>
                 <div class="kpi-icon"><i class="fa fa-user-plus"></i></div>
             </div>
             <div class="kpi-value" id="sc-new">—</div>
         </div>
-        <div class="kpi-card kpi-info" onclick="goToKpiSection('sec-patient-queue')">
+        <div class="kpi-card kpi-info" onclick="filterQueueByType('Revisit')">
             <div class="kpi-top">
                 <div class="kpi-label">Revisit Patients</div>
                 <div class="kpi-icon"><i class="fa fa-repeat"></i></div>
@@ -1898,37 +1907,33 @@
             </div>
         </div>
         <div class="qa-grid">
-         
-            <a class="qa-btn btn-registration" onclick="window.open('../Master/PRegistration','_blank')">
+
+            <a class="qa-btn btn-registration" onclick="openQuickAction('registration','../Master/PRegistration')">
                 <div class="qa-icon"><i class="fa fa-user-plus"></i></div>
                 <span style="font-size:15px;">New Registration</span>
             </a>
 
-           
-            <a class="qa-btn btn-revisit" onclick="window.open('../Revisit/Revisit','_blank')">
+            <a class="qa-btn btn-revisit" onclick="openQuickAction('revisit','../Revisit/Revisit')">
                 <div class="qa-icon"><i class="fa fa-file-text-o"></i></div>
                 <span style="font-size:15px;">New Revisit</span>
             </a>
 
-          <a class="qa-btn btn-worksheet" onclick="window.open('../Revisit/OPWorkSheet_D','_blank')">
+            <a class="qa-btn btn-worksheet" onclick="openQuickAction('worksheet','../Revisit/OPWorkSheet_D')">
                 <div class="qa-icon"><i class="fa fa-clipboard"></i></div>
                 <span style="font-size:15px;">OP Worksheet</span>
             </a>
 
-           
-            <a class="qa-btn btn-labbill" onclick="window.open('../Revisit/LabBill','_blank')">
+            <a class="qa-btn btn-labbill" onclick="openQuickAction('labbill','../Revisit/LabBill')">
                 <div class="qa-icon"><i class="fa fa-file-text-o"></i></div>
                 <span style="font-size:15px;">New Lab Bill</span>
             </a>
 
-            
-            <a class="qa-btn btn-labresult" onclick="window.open('../Revisit/LabResult','_blank')">
+            <a class="qa-btn btn-labresult" onclick="openQuickAction('labresult','../Revisit/LabResult')">
                 <div class="qa-icon"><i class="fa fa-flask"></i></div>
                 <span style="font-size:15px;">Lab Result</span>
             </a>
 
-           
-            <a class="qa-btn btn-invoice" onclick="window.open('../Hospital/SaleInvoiceHospital','_blank')">
+            <a class="qa-btn btn-invoice" onclick="openQuickAction('invoice','../Hospital/SaleInvoiceHospital')">
                 <div class="qa-icon"><i class="fa fa-medkit"></i></div>
                 <span style="font-size:15px;">Sales Invoice</span>
             </a>
@@ -2110,8 +2115,8 @@
             <div class="tbl-scroll">
                 <table class="dash-table">
                     <thead>
-                        <tr><th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Bill No</th><th>View</th><th>Status</th></tr>                    </thead>
-                    <tbody id="tb-lready"><tr><td colspan="12" class="empty-msg">—</td></tr></tbody>
+                        <tr><th>Sl#</th><th>Reg#</th><th>OP#</th><th>Date</th><th>Time</th><th>Patient</th><th>Age/Sex</th><th>Contact</th><th>Doctor</th><th>Bill No</th><th>Status</th></tr>                    </thead>
+                    <tbody id="tb-lready"><tr><td colspan="11" class="empty-msg">—</td></tr></tbody>
                 </table>
             </div>
             <div class="tbl-footer">
@@ -2249,14 +2254,17 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    document.querySelectorAll('.doc-sidenav .nav-item').forEach(function(item) {
-        item.addEventListener('click', function(e) {
+    document.querySelectorAll('.doc-sidenav .nav-item').forEach(function (item) {
+        item.addEventListener('click', function (e) {
             e.preventDefault();
-            document.querySelectorAll('.doc-sidenav .nav-item').forEach(function(n) {
+            document.querySelectorAll('.doc-sidenav .nav-item').forEach(function (n) {
                 n.classList.remove('active');
             });
             this.classList.add('active');
             showSection(this.dataset.target);
+            if (this.dataset.target === 'sec-patient-queue') {
+                renderQueueRows('all');   
+            }
             if (isMobileNav()) closeSidenav();
         });
     });
@@ -2412,6 +2420,23 @@
         var p = dmy.split('/');
         if (p.length !== 3) return null;
         return new Date(p[2], p[1] - 1, p[0]);
+    }
+
+    //var userPermissions = ['registration', 'revisit', 'worksheet', 'labbill', 'labresult', 'invoice'];
+    var userPermissions = ['worksheet'];
+
+    function showAccessDenied() {
+        document.getElementById('accessDeniedOverlay').style.display = 'flex';
+    }
+    function closeAccessDenied() {
+        document.getElementById('accessDeniedOverlay').style.display = 'none';
+    }
+    function openQuickAction(key, url) {
+        if (userPermissions.indexOf(key) === -1) {
+            showAccessDenied();
+            return;
+        }
+        window.open(url, '_blank');
     }
 
     function warningshow(message) {
@@ -2679,7 +2704,66 @@
         });
     }
 
+    function renderQueueRows(filterType) {
+        var data = window.queueRawData || [];
+        var qRows = [];
+        var idx = 0;
+
+        for (var i = 0; i < data.length; i++) {
+            var r = data[i];
+            var isAdmit = r.IPNumber && r.IPNumber != 0;
+            var patientType = isAdmit ? 'Admit' : (r.Status == 'New' ? 'New' : 'Revisit');
+
+            if (filterType !== 'all' && patientType !== filterType) continue;
+
+            idx++;
+            var badge = '';
+            if (isAdmit) {
+                badge = r.DelFlag == 0 ? '<span class="badge-admit">Admitted</span>' : '<span class="badge-discharge">Discharged</span>';
+            } else if (patientType == 'New') {
+                badge = '<span class="badge-new">New-Reg</span>';
+            } else {
+                badge = '<span class="badge-revisit">Re-Visit</span>';
+            }
+
+            var isDone = r.CSFlag && r.CSFlag != 0;
+            var labdot = labReadyMap[r.RevisitId] ? '<span class="lab-dot" title="Lab Result Ready"></span>' : '';
+            var rowCls = isDone ? ' class="done-row"' : '';
+
+            qRows.push('<tr' + rowCls + ' ondblclick="goCS(' + r.PatientId + ',' + r.RevisitId + ')">'
+                + '<td data-label="SL#">' + idx + '</td>'
+                + '<td data-label="Reg#">' + (r.OPNumber || '') + '</td>'
+                + '<td data-label="Visit#">' + (r.RevisitId || '') + '</td>'
+                + '<td data-label="Date">' + (r.RevisitDate || '') + '</td>'
+                + '<td data-label="Patient" style="font-weight:600">' + (r.PatientName || '') + '</td>'
+                + '<td data-label="Gender">' + labdot + (r.Gender || '') + '</td>'
+                + '<td data-label="Contact">' + (r.Contact || '') + '</td>'
+                + '<td data-label="Shift">' + ((r.ShiftName || '').substring(0, 4)) + '</td>'
+                + '<td data-label="Token"><span class="token-num">' + (r.TokenNumber || '') + '</span></td>'
+                + '<td data-label="Status">' + badge + '</td>'
+                + '<td data-label="Action">'
+                + (isDone ? '<span class="badge-result">Done</span>' : '<span class="badge-pending">Pending</span>')
+                + '</td>'
+                + '</tr>');
+        }
+
+        var emptyMsg = filterType === 'New' ? 'No new patients.'
+            : filterType === 'Revisit' ? 'No revisit patients.'
+                : 'No patients.';
+        setPaginatorRows('queue-tbody', qRows, emptyMsg);
+    }
+
+    function filterQueueByType(type) {
+        document.querySelectorAll('.doc-sidenav .nav-item').forEach(function (n) {
+            n.classList.toggle('active', n.dataset.target === 'sec-patient-queue');
+        });
+        showSection('sec-patient-queue');
+        renderQueueRows(type);
+        if (isMobileNav()) closeSidenav();
+    }
+
     function buildQueue(data) {
+        window.queueRawData = data;
         var total = data.length, done = 0, pending = 0, newPt = 0, revisit = 0;
         var today = new Date(), yyyy = today.getFullYear();
         var qRows = [], pendRows = [], compRows = [];
@@ -2829,7 +2913,7 @@
         for (var j = 0; j < order.length; j++) {
             var g = grouped[order[j]];
             var uniqueMeds = g.Medicines.filter(function (v, i, a) { return a.indexOf(v) === i; });
-            medRows.push('<tr ondblclick="goToInvoice(' + j + ')" style="cursor:pointer">'
+            medRows.push('<tr ondblclick="goCS(' + g.PatientId + ',' + g.OPNo + ')" style="cursor:pointer">'
                 + '<td data-label="Sl No">' + (j + 1) + '</td>'
                 + '<td data-label="Reg#">' + g.RegNo + '</td>'
                 + '<td data-label="OP#">' + g.OPNo + '</td>'
@@ -2889,7 +2973,7 @@
         }
         for (var j = 0; j < order.length; j++) {
             var g = grouped[order[j]];
-            labRows.push('<tr ondblclick="goToLabBill(' + j + ')" style="cursor:pointer">'
+            labRows.push('<tr ondblclick="goCS(' + g.PatientId + ',' + g.OPNo + ')" style="cursor:pointer">'
                 + '<td data-label="Sl No">' + (j + 1) + '</td>'
                 + '<td data-label="Reg#">' + g.RegNo + '</td>'
                 + '<td data-label="OP#">' + g.OPNo + '</td>'
@@ -2952,7 +3036,6 @@
                 + '<td data-label="Contact">' + (r.Contact || '—') + '</td>'
                 + '<td data-label="Doctor">' + (r.DoctorName || '') + '</td>'
                 + '<td data-label="Bill No">' + (r.SubResultId || '') + '</td>'
-                + '<td data-label="View">' + viewBtn + '</td>'
                 + '<td data-label="Status"><span class="badge-ready">Ready</span></td>'
                 + '</tr>');
         }

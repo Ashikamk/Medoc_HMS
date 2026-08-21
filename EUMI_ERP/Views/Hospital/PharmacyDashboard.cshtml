@@ -6,7 +6,7 @@
 <script src="~/app_demo/assets/js/Chart.js"></script>
 
 <style>
-    
+
     *, *::before, *::after {
         box-sizing: border-box;
     }
@@ -64,7 +64,7 @@
         padding: 0 30px 30px 0;
     }
 
-    
+
     body.modal-open .pharm-wrap,
     body.modal-open .pharm-topbar,
     body.modal-open .pharm-body-flex {
@@ -112,6 +112,7 @@
         margin: 0 -30px 18px -30px;
         justify-content: space-between;
     }
+
         .pharm-topbar h1 {
             font-size: 25px;
             font-weight: 800;
@@ -187,7 +188,7 @@
             border-color: #008080;
         }
 
-   
+
     .pharm-body-flex {
         display: flex;
         align-items: flex-start;
@@ -301,7 +302,7 @@
     }
 
 
-  
+
     .kpi-row {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -467,7 +468,7 @@
     }
 
 
-    
+
     .charts-row {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -504,7 +505,7 @@
         height: 260px;
     }
 
-   
+
     .tbl-card {
         background: var(--card);
         border-radius: var(--radius-lg);
@@ -562,7 +563,7 @@
             color: #008080;
         }
 
-   
+
 
     .tbl-search-box {
         display: flex;
@@ -696,7 +697,7 @@
         }
     }
 
-   
+
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -755,7 +756,7 @@
             background: var(--info);
         }
 
-  
+
     .qa-card {
         background: var(--card);
         border-radius: var(--radius-lg);
@@ -764,10 +765,14 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        height: 180px;
+        min-height: 180px;
         animation: fadeInUp .5s ease both;
         animation-delay: .3s;
     }
+
+        .qa-card.qa-horizontal {
+            height: auto;
+        }
 
     .qa-grid {
         padding: 20px;
@@ -871,18 +876,19 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: flex-start; 
+        align-items: flex-start;
         gap: 10px;
         padding: 14px 16px;
     }
+
     .qa-card.qa-horizontal .qa-btn {
         flex: 1 1 220px;
         max-width: 260px;
-        min-height: 60px; 
+        min-height: 60px;
         flex-direction: column;
         text-align: center;
         gap: 6px;
-        padding: 10px 16px; 
+        padding: 10px 16px;
     }
 
         .qa-card.qa-horizontal .qa-btn .qa-icon {
@@ -950,7 +956,7 @@
             box-shadow: 0 10px 28px rgba(139,92,246,.22);
         }
 
-   
+
     .row-2col {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -975,7 +981,7 @@
         margin-top: 4px;
     }
 
-    
+
     @@media (max-width:1300px) {
         .charts-row {
             grid-template-columns: 1fr 1fr;
@@ -996,7 +1002,7 @@
         }
     }
 
-   
+
 
     .topbar-filter {
         display: flex;
@@ -1124,7 +1130,7 @@
             border-color: #fff;
         }
 
-   
+
     #SimpleMedModal .med-header {
         background: #5B4FCF;
     }
@@ -1205,7 +1211,7 @@
             background: #15803D;
         }
 
-    
+
     .modal-backdrop {
         display: none !important;
     }
@@ -1446,7 +1452,7 @@
                                 <th>Unit</th>
                                 <th>Company</th>
                                 <th>Tax%</th>
-                                <th>Rate</th>
+
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -2193,43 +2199,43 @@
                     '<td>' + (r.UnitName || '-') + '</td>' +
                     '<td>' + (r.GrpName || '-') + '</td>' +
                     '<td>' + (r.TaxName || '-') + '</td>' +
-                    '<td>' + (r.MrpRate || '-') + '</td>' +
+
                     '<td>' + statusBadge + '</td>' +
                     '<td style="text-align:center;">' + actionBtns + '</td>' +
                     '</tr>';
             });
         } else {
-            html = '<tr><td colspan="10" class="text-center">No medicines available</td></tr>';
+            html = '<tr><td colspan="9" class="text-center">No medicines available</td></tr>';
         }
         $('#totalMedicinesList').html(html);
         initTablePaging('totalMedicinesList', 10);
     }
 
-   function EditMedicineFromDashboard(itemId, groupId, categoryId) {
-    if (!itemId) { warningshow('Invalid medicine record'); return; }
+    function EditMedicineFromDashboard(itemId, groupId, categoryId) {
+        if (!itemId) { warningshow('Invalid medicine record'); return; }
 
-    var newTab = window.open('/Pharmacy/Medicine', '_blank');
+        var newTab = window.open('/Pharmacy/Medicine', '_blank');
 
-    var attempts = 0;
-    var timer = setInterval(function () {
-        attempts++;
-        try {
-            if (newTab && !newTab.closed &&
-                newTab.document.readyState === 'complete' &&
-                typeof newTab.GetItem === 'function') {
+        var attempts = 0;
+        var timer = setInterval(function () {
+            attempts++;
+            try {
+                if (newTab && !newTab.closed &&
+                    newTab.document.readyState === 'complete' &&
+                    typeof newTab.GetItem === 'function') {
+                    clearInterval(timer);
+                    setTimeout(function () {
+                        newTab.GetItem(itemId, groupId || 0, categoryId || 0);
+                    }, 800);
+                }
+            } catch (e) {
                 clearInterval(timer);
-                setTimeout(function () {
-                    newTab.GetItem(itemId, groupId || 0, categoryId || 0);
-                }, 800); 
             }
-        } catch (e) {
-            clearInterval(timer);
-        }
-        if (attempts > 40) clearInterval(timer); 
-    }, 500);
-}
+            if (attempts > 40) clearInterval(timer);
+        }, 500);
+    }
 
-   
+
 
     function updateChartTitles(fromDate, toDate) {
         var rangeText = (fromDate === toDate) ? fromDate : (fromDate + ' - ' + toDate);
@@ -2572,7 +2578,7 @@
         $(elementId).html(html || '<tr><td colspan="5" class="text-center">No data available</td></tr>');
     }
 
-    
+
     function LoadMedicineQueue() {
         var today = getPharmTodayFormatted();
         var fromDate = $('#pharm-from-date').val() || today;
@@ -2668,7 +2674,7 @@
 
         window.currentModalData = data;
 
-       
+
         $("#MM_Patient").text(data.PatientName || '-');
         var ageSex = (data.BloodGroup || '').split('##')[0] + ' Yrs / ' + (data.Gender || '-');
         $("#MM_AgeSex").text(ageSex);
@@ -2679,7 +2685,7 @@
         $("#MM_Time").text(data.DOB || '-');
         $("#MM_Doctor").text(data.DoctorName || '-');
 
-        
+
         var medicines = data.MedicineAdvice ? data.MedicineAdvice.split(',') : [];
 
         var listHtml = '<table style="width:100%; border-collapse:collapse; font-family:Segoe UI,sans-serif;">' +
@@ -2726,23 +2732,23 @@
         $("#MM_MedicineList").html(listHtml);
         $("#MM_MedCount").text('Total: ' + medicines.length + ' medicines');
 
-       
+
         if ($('#SimpleMedModal').data('bs.modal')) {
             $('#SimpleMedModal').modal('dispose');
         }
 
-       
+
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open').css('padding-right', '');
 
-        
+
         $('#SimpleMedModal').modal({
             backdrop: true,
             keyboard: true,
             show: true
         });
 
-       
+
         setTimeout(function () {
             $('body').addClass('modal-open');
         }, 100);

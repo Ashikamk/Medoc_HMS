@@ -869,22 +869,7 @@ namespace EUMI_ERP.Models
         }
     }
 
-    public class TokenInfoModel
-    {
-        public int DoctorId { get; set; }
-        public long DeptId { get; set; }
-        public string Action { get; set; }        
-        public string LiveTokenNo { get; set; }
-        public string NextTokenNo { get; set; }
-        public string PrevTokenNo { get; set; }
-
-        DReVisit oDReVisit = new DReVisit();
-
-        public DataSet HMS_TokenNextPrev(TokenInfoModel model, string dbName)
-        {
-            return oDReVisit.HMS_TokenNextPrev(model, dbName);
-        }
-    }
+    
 
     public class NurseModal
     {
