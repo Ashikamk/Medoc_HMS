@@ -316,10 +316,14 @@
 
     function setHidden(docId, hidden) {
         $('.token-card[data-docid="' + docId + '"]').toggleClass('collapsed', hidden);
+        delete tokenOverrides[docId];
         $.ajax({
             type: "POST",
             url: "../Master/TokenSettingss",
-            data: { TokNo: 0, DoctorId: docId, IsHidden: hidden }
+            data: { TokNo: 0, DoctorId: docId, IsHidden: hidden },
+            success: function (result) {
+                if (!tokenInputFocused) ShowTermlist(result.oList);
+            }
         });
     }
 
@@ -330,6 +334,11 @@
 
     var tokenPrefixes = {};
 
+
+    var tokenMaxBooked = {};
+
+  
+    var tokenCleared = {};
 
     function splitToken(value) {
         var match = String(value).match(/^(.*)-(\d+)\s*$/);
@@ -351,6 +360,9 @@
             onTokenTyped(evt.target);
             evt.target.blur();
             return false;
+        }
+        if (charCode === 45) {
+            return true;
         }
 
         if (charCode < 48 || charCode > 57) {
@@ -377,6 +389,7 @@
             url: "../Master/TokenSettingss",
             data: { TokNo: 0, DoctorId: docId, TokenValue: fullValue },
             success: function (result) {
+                delete tokenOverrides[docId];
                 if (!tokenInputFocused) ShowTermlist(result.oList);
                 if (showMsg) showToast('Token updated');
             }
@@ -384,10 +397,24 @@
     }
 
     function changeToken(docId, direction) {
+       
+        delete tokenCleared[docId];
+
         var $input = $('.token-card[data-docid="' + docId + '"] .cur-token-input');
         var num = parseInt($input.val(), 10);
-        if (isNaN(num)) num = 0;
-        num = direction === 'next' ? num + 1 : Math.max(0, num - 1);
+        if (isNaN(num)) num = 1;
+
+        if (direction === 'next') {
+            var max = tokenMaxBooked[docId] || 0;
+            if (num >= max) {
+                showToast('No more tokens booked for this doctor');
+                return;
+            }
+            num = num + 1;
+        } else {
+            num = Math.max(1, num - 1);
+        }
+
         var newSuffix = String(num);
         $input.val(newSuffix);
 
@@ -395,7 +422,7 @@
         var fullValue = prefix ? (prefix + '-' + newSuffix) : newSuffix;
         tokenOverrides[docId] = fullValue;
 
-        persistTokenValue(docId, fullValue, false);  
+        persistTokenValue(docId, fullValue, false);
     }
 
     function onTokenTyped(inputEl) {
@@ -403,11 +430,50 @@
         var docId = $card.attr('data-docid');
         var newSuffix = $(inputEl).val();
 
+        if (newSuffix === '') {
+            tokenCleared[docId] = true;
+            tokenOverrides[docId] = '';
+            $(inputEl).val('');
+            persistTokenValue(docId, ' ', false);
+            return;
+        }
+
+        // NEW: a lone hyphen is a valid explicit value (shows "-" on the board),
+        // not an empty/cleared box.
+        if (newSuffix === '-') {
+            delete tokenCleared[docId];
+            tokenOverrides[docId] = '-';
+            $(inputEl).val('-');
+            persistTokenValue(docId, '-', true);
+            return;
+        }
+
+        // A real numeric value was typed, so this doctor is no longer "cleared".
+        delete tokenCleared[docId];
+
+        var num = parseInt(newSuffix, 10);
+        if (isNaN(num) || num < 1) num = 1;
+
+        var wasCapped = false;
+        var max = tokenMaxBooked[docId] || 0;
+        if (max > 0 && num > max) {
+            num = max;
+            wasCapped = true;
+        }
+
+        newSuffix = String(num);
+        $(inputEl).val(newSuffix);
+
         var prefix = tokenPrefixes[docId] || '';
         var fullValue = prefix ? (prefix + '-' + newSuffix) : newSuffix;
         tokenOverrides[docId] = fullValue;
 
-        persistTokenValue(docId, fullValue, true);   
+        if (wasCapped) {
+            persistTokenValue(docId, fullValue, false);
+            showToast('Only ' + max + ' tokens booked for this doctor');
+        } else {
+            persistTokenValue(docId, fullValue, true);
+        }
     }
 
     function GetRows(TokNo) {
@@ -434,16 +500,37 @@
             var rawValue = tokenOverrides.hasOwnProperty(docId) ? tokenOverrides[docId] : result[i].currenttoken;
             var parts = splitToken(rawValue);
             tokenPrefixes[docId] = parts.prefix;
-            var tokenValue = parts.suffix;
+
+           
+            var serverSuffixTrimmed = (parts.suffix || '').trim();
+
+            var tokenValue;
+            if (tokenCleared[docId]) {
+                if (serverSuffixTrimmed !== '') {
+                  
+                    delete tokenCleared[docId];
+                    tokenValue = serverSuffixTrimmed;
+                } else {
+                    tokenValue = '';
+                }
+            } else {
+                tokenValue = serverSuffixTrimmed;
+            }
+
             var isHidden = !!result[i].IsHidden;
+
+           
+            var hasToken = tokenValue !== '' || !!tokenCleared[docId];
+
+            tokenMaxBooked[docId] = parseInt(result[i].NextToken, 10) || 0;
 
             responseText += '' +
                 '<div class="token-card' + (isHidden ? ' collapsed' : '') + '" data-docid="' + docId + '">' +
                 '<div class="slno">' + slno + '</div>' +
-                '<div class="doc-name">Dr. ' + result[i].Name + '</div>' +
-                '<button type="button" class="tok-nav-btn" onclick="changeToken(\'' + docId + '\',\'prev\')">&#8249;</button>' +
-                '<input type="text" inputmode="numeric" pattern="[0-9]*" class="cur-token-input" value="' + tokenValue + '" onkeypress="return onTokenKeypress(event)" onfocus="tokenInputFocused=true" onblur="tokenInputFocused=false" onchange="onTokenTyped(this)" />' +
-                '<button type="button" class="tok-nav-btn" onclick="changeToken(\'' + docId + '\',\'next\')">&#8250;</button>' +
+                '<div class="doc-name"> ' + result[i].Name + '</div>' +
+                (hasToken ? '<button type="button" class="tok-nav-btn" onclick="changeToken(\'' + docId + '\',\'prev\')">&#8249;</button>' : '') +
+                (hasToken ? '<input type="text" inputmode="numeric" pattern="[0-9]*" class="cur-token-input" autocomplete="new-password" name="tok_' + docId + '" data-lpignore="true" value="' + tokenValue + '" onkeypress="return onTokenKeypress(event)" onfocus="tokenInputFocused=true" onblur="tokenInputFocused=false" onchange="onTokenTyped(this)" />' : '') +
+                (hasToken ? '<button type="button" class="tok-nav-btn" onclick="changeToken(\'' + docId + '\',\'next\')">&#8250;</button>' : '') +
                 '<button type="button" class="show-btn" title="Show" onclick="setHidden(\'' + docId + '\', false)">&#10003;</button>' +
                 '<button type="button" class="hide-btn" title="Hide" onclick="setHidden(\'' + docId + '\', true)">&#10005;</button>' +
                 '</div>';

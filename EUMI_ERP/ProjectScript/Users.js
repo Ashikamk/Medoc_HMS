@@ -233,6 +233,7 @@ function SaveAndUpdate(Flag) {
         data.UserName = $('#UserName').val();
         data.Password = $('#Password').val();
         data.Email = $('#Email').val();
+        data.Qualification = $('#Qualification').val();
         data.LocationId = $('#LocationName').val();
         data.DepartmentId = $('#DepartmentName').val();
         data.DiscountPercent = parseFloat($('#DiscPercent').val() || 0).toFixed(Decimal); 
@@ -328,6 +329,7 @@ function formrefresh() {
     $('#Password').val('');
     $('#ConfirmPassword').val('');
     $('#Email').val('');
+    $('#Qualification').val('');
     $('#DepartmentName').val('0');
     $('#divisonId').val(0);
     $('#img').val("");
@@ -507,6 +509,7 @@ function ShowUsersGet(result) {
     $('#Password').val(result[0].Password);
     $('#ConfirmPassword').val(result[0].Password);
     $('#Email').val(result[0].Email);
+    $('#Qualification').val(result[0].Qualification);
     $('#DiscPercent').val(result[0].DiscountPercent || 0); 
     $('#myImg').attr('src', "../ProjectImages/User/Image/" + result[0].UserId + ".png");
     

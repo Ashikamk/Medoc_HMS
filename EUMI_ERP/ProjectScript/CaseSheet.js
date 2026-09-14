@@ -1205,7 +1205,7 @@ function GetLastRevisitDetailsnew(PatientId, RevisitId) {
 }
 
 function GetLastRevisitDetails(PatientId, RevisitId) {
-    var data = {};                                       //dropdownbind
+    var data = {};
     data.PatientId = PatientId;
     data.DeptId = RevisitId;
     $.ajax({
@@ -1215,13 +1215,22 @@ function GetLastRevisitDetails(PatientId, RevisitId) {
         success: function (result) {
             if (result.oList.length > 0) {
                 GetPatientData(result.oList, 0);
-                //debugger;
+
+
+                var doctorId = result.oList[0].DoctorId;
+                var tokenNo = result.oList[0].TokenNumber;
+                if (doctorId && tokenNo) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../Master/TokenSettingss",
+                        data: { TokNo: 0, DoctorId: doctorId, TokenValue: tokenNo }
+                    });
+                }
+
                 var OPCaseSheet = parseInt(result.oList[0].OPCaseSheet || 0);
                 if (OPCaseSheet != 0) {
-
                     if (($('#CaseSheetId').val() || 0) == 0)
                         GetRows(OPCaseSheet, "CASE", 1);
-
                 }
             }
         }

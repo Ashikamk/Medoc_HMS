@@ -100,6 +100,23 @@ $(document).ready(function () {
     });
     LoadBatch(0);
 });
+var LocArray = [];
+$(document).on('focusin', '#Location', function () {
+    OldLoc = $(this).val();
+}).on('change', '#Location', function () {
+    var current = parseInt($.trim($('#Location').val()));
+    var LocNmae = $('#Location :selected').text();
+    if (current != 0) { LocNmae = ' to ' + LocNmae }
+    else { LocNmae = ' ' }
+    if ((LocArray.indexOf(current) == -1) && (current != UserLocationId)) {
+        $('#Location').val(OldLoc);
+        warningshow('No access' + LocNmae, 'Location');
+    }
+    else {
+        OldLoc = current;
+    }
+});
+
 
 
 function GetLocation() {

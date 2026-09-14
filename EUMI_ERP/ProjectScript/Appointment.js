@@ -759,6 +759,8 @@ function loadAppointmentList(doctorId, fromDate, toDate, status) {
 //}
 
 function renderAppointmentTable(list) {
+
+    
     if ($.fn.DataTable.isDataTable('#Tblreport')) {
         $('#Tblreport').DataTable().destroy();
     }
@@ -822,7 +824,24 @@ function renderAppointmentTable(list) {
 }
 
 function getStatusBadge(status) {
-    if (!status || status.trim() === '') status = 'Booked';
+    
+    var statusStr = String(status).trim();
+
+   
+    if (statusStr === '0' || statusStr === '1' || statusStr === '') {
+        statusStr = 'Booked';
+    } else if (statusStr === '2') {
+        statusStr = 'Cancelled';
+    } else if (statusStr === '3') {
+        statusStr = 'Rescheduled';
+    } else if (statusStr === '4') {
+        statusStr = 'NotAnswered';
+    } else if (statusStr === '5') {
+        statusStr = 'Others';
+    } else if (statusStr === '6') {
+        statusStr = 'Completed';
+    }
+
     var colors = {
         'Booked': { bg: '#dcfce7', color: '#166534' },
         'Cancelled': { bg: '#fee2e2', color: '#991b1b' },
@@ -831,8 +850,9 @@ function getStatusBadge(status) {
         'Others': { bg: '#ede9fe', color: '#5b21b6' },
         'Completed': { bg: '#dbeafe', color: '#1e40af' }
     };
-    var c = colors[status] || { bg: '#f3f4f6', color: '#374151' };
-    return '<span style="padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:' + c.bg + ';color:' + c.color + ';">' + status + '</span>';
+
+    var c = colors[statusStr] || { bg: '#f3f4f6', color: '#374151' };
+    return '<span style="padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:' + c.bg + ';color:' + c.color + ';">' + statusStr + '</span>';
 }
 
 function getDoctorName(nameFromServer, doctorId) {

@@ -3,6 +3,7 @@
     ViewBag.Title = "OPWorkSheet_S";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script type="text/javascript" src="~/ProjectScript/PrintSettings.js"></script>
 
 <style>
     .label-control {
@@ -341,13 +342,16 @@
                             <a class="nav-link active font-weight-bold" id="baseIcon-tab1" data-toggle="tab" aria-controls="tabIcon1" href="#tabIcon1" aria-expanded="true"><i class="fa fa-stethoscope"></i>  PROGRESS NOTES</a>
                         </li>
                         @*<li class="nav-item">
-                                <a class="nav-link font-weight-bold" id="baseIcon-tab2" data-toggle="tab" aria-controls="tabIcon2" href="#tabIcon2" aria-expanded="false"><i class="fa fa-user"></i>   HISTORY</a>
-                            </li>*@
+            <a class="nav-link font-weight-bold" id="baseIcon-tab2" data-toggle="tab" aria-controls="tabIcon2" href="#tabIcon2" aria-expanded="false"><i class="fa fa-user"></i>   HISTORY</a>
+        </li>*@
                         <li class="nav-item">
                             <a class="nav-link font-weight-bold" id="baseIcon-tab3" data-toggle="tab" aria-controls="tabIcon3" href="#tabIcon3" aria-expanded="false"><i class="fa fa-medkit"></i>  MEDICINE DETAILS</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link font-weight-bold" id="baseIcon-tab4" data-toggle="tab" aria-controls="tabIcon4" href="#tabIcon4" aria-expanded="false"><i class="fa fa-shield"></i>  TEST DETAILS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link font-weight-bold" id="baseIcon-tab5" data-toggle="tab" aria-controls="tabIcon5" href="#tabIcon5" aria-expanded="false"><i class="fa fa-scissors"></i>  PROCEDURE DETAILS</a>
                         </li>
                     </ul>
                     <div class="tab-content px-1 pt-1 pb-0">
@@ -412,10 +416,10 @@
                                 <div class="row">
 
                                     @*<div class="col-md-3">
-                                            <label class="label-control">Remarks</label>
-                                            <textarea class="form-control Pnull" style="resize:none;height:100px" disabled id="PRemarks"></textarea>
+                        <label class="label-control">Remarks</label>
+                        <textarea class="form-control Pnull" style="resize:none;height:100px" disabled id="PRemarks"></textarea>
 
-                                        </div>*@
+                    </div>*@
 
                                     <div class="col-md-6">
                                         <label class="label-control">Advice To Nursing Station</label>
@@ -521,6 +525,29 @@
                                 <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:167px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
                                     <table class="jsgrid-table table-bordered" id="TblImmunization">
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tabIcon5" aria-labelledby="baseIcon-tab5">
+                            <div class="row mb-1" style="height:31px;"></div>
+
+                            <input id="PrevPRGridLength" value="1" type="hidden" />
+                            <div class="jsgrid" style="position: relative; height: 209px; width: 100%; border:solid 1px;border-color:#e9e9e9;overflow-x: auto;overflow-y: hidden;">
+                                <div class="jsgrid-grid-header" style="width: 100%;">
+                                    <table width="100%" class="jsgrid-table table-primary">
+                                        <tbody>
+                                            <tr class="jsgrid-header-row">
+                                                <th class="jsgrid-header-cell jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;"><i class="icon-trash"></i></th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 8%;">SL#</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 38%;">Procedure</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 7%;">Status</th>
+                                                <th class="jsgrid-header-cell jsgrid-align-right jsgrid-header-sortable" style="width: 7%;"></th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="" style="position: relative; overflow-x: auto;overflow-y: scroll; height:167px; width: 100%;border-bottom:1px solid;border-bottom-color:#e9e9e9">
+                                    <table class="jsgrid-table table-bordered" id="TblProcedure"></table>
                                 </div>
                             </div>
                         </div>
@@ -858,7 +885,7 @@ var DoctorRegNo = '';
             url: "../Master/HMS_DoctorGetByUserId",
             data: data,
             success: function (result) {
-                var d = { UserId: '', Name: '', Qualification: '', RegNo: '', DocId: docId };  // <-- added DocId: docId
+                var d = { UserId: '', Name: '', Qualification: '', RegNo: '', DocId: docId };
                 if (result.oList.length > 0) {
                     d.UserId = result.oList[0].DoctorUserId || '';
                     d.Name = result.oList[0].Name || '';
@@ -869,49 +896,48 @@ var DoctorRegNo = '';
             }
         });
     }
-    //function printFooter(myWindow, doctorInfo, callback) {
-    //    var doctorName = doctorInfo.Name !== '' ? doctorInfo.Name : $('#GDoctorNamedis').val();
-    //    var signUrl = window.location.origin + AppRoot + 'app-assets/img/DoctorSign/' + doctorInfo.DocId + '.png';   // <-- changed doctorInfo.UserId to doctorInfo.DocId
-
-    //    var doctorBlock = '&#160;' + doctorName;
-    //    if (doctorInfo.Qualification !== '') {
-    //        doctorBlock += '<br/><span style="font-size:11px;">' + doctorInfo.Qualification + '</span>';
-    //    }
-    //    if (doctorInfo.RegNo !== '') {
-    //        doctorBlock += '<br/><span style="font-size:11px;">Reg No: ' + doctorInfo.RegNo + '</span>';
-    //    }
-
-    //    myWindow.document.write('<table style="font-family:tahoma;font-size:12px;" width=100%>' +
-    //        '<tr><td height=20px></td></tr>' +
-    //        '<tr><td align=left></td><td width=400px align=center></td>' +
-    //        '<td align=center id="footerSignCell">' + doctorBlock + '</td></tr></table>');
-
-    //    if (doctorInfo.DocId !== '' && doctorInfo.DocId != 0) {   // <-- also updated this check to use DocId
-    //        var img = new Image();
-    //        img.onload = function () {
-    //            var cell = myWindow.document.getElementById('footerSignCell');
-    //            cell.innerHTML += '<br/><img src="' + signUrl + '" style="height:45px;max-width:150px;" />';
-    //            if (callback) callback();
-    //        };
-    //        img.onerror = function () {
-    //            if (callback) callback();
-    //        };
-    //        img.src = signUrl;
-    //    } else {
-    //        if (callback) callback();
-    //    }
-    //}
-
     function printFooter(myWindow, doctorInfo, callback) {
         var doctorName = doctorInfo.Name !== '' ? doctorInfo.Name : $('#GDoctorNamedis').val();
+        var signUrl = window.location.origin + AppRoot + 'app-assets/img/DoctorSign/' + doctorInfo.DocId + '.png';
+
+        var doctorBlock = '&#160;' + doctorName;
+      
+        if (doctorInfo.RegNo !== '') {
+            doctorBlock += '<br/><span style="font-size:11px;">' + doctorInfo.RegNo + '</span>';
+        }
 
         myWindow.document.write('<table style="font-family:tahoma;font-size:12px;" width=100%>' +
             '<tr><td height=20px></td></tr>' +
             '<tr><td align=left></td><td width=400px align=center></td>' +
-            '<td align=center id="footerSignCell">&#160;' + doctorName + '</td></tr></table>');
+            '<td align=center id="footerSignCell">' + doctorBlock + '</td></tr></table>');
 
-        if (callback) callback();
+        if (doctorInfo.DocId !== '' && doctorInfo.DocId != 0) {
+            var img = new Image();
+            img.onload = function () {
+                var cell = myWindow.document.getElementById('footerSignCell');
+                var cell = myWindow.document.getElementById('footerSignCell');
+                cell.innerHTML += '<br/><img src="' + signUrl + '" style="height:45px;max-width:150px;" />';
+                if (callback) callback();
+            };
+            img.onerror = function () {
+                if (callback) callback();
+            };
+            img.src = signUrl;
+        } else {
+            if (callback) callback();
+        }
     }
+
+    //function printFooter(myWindow, doctorInfo, callback) {       //no need footer register number digital sigature
+    //    var doctorName = doctorInfo.Name !== '' ? doctorInfo.Name : $('#GDoctorNamedis').val();
+
+    //    myWindow.document.write('<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+    //        '<tr><td height=20px></td></tr>' +
+    //        '<tr><td align=left></td><td width=400px align=center></td>' +
+    //        '<td align=center id="footerSignCell">&#160;' + doctorName + '</td></tr></table>');
+
+    //    if (callback) callback();
+    //}
     function Viewcasesheet() {
 
 
@@ -919,6 +945,7 @@ var DoctorRegNo = '';
         $("#TblMedicinePrev").html('');
         $("#IMTr_NaN").html('');
         $("#TblImmunization").html('');
+        $("#TblProcedure").html('');
         $("#PPatComplaint").val('');
         $("#PDiagnosis").val('');
         $("#PAllergies").val('');
@@ -938,6 +965,7 @@ var DoctorRegNo = '';
         $("#TblMedicinePrev").html('');
         $("#IMTr_NaN").html('');
         $("#TblImmunization").html('');
+        $("#TblProcedure").html('');
 
 
         printcasesheet(0)
@@ -973,6 +1001,7 @@ var DoctorRegNo = '';
         $("#TblMedicinePrev").html('');
         $("#IMTr_NaN").html('');
         $("#TblImmunization").html('');
+        $("#TblProcedure").html('');
         $("#PPatComplaint").val('');
         $("#PDiagnosis").val('');
         $("#PAllergies").val('');
@@ -992,6 +1021,7 @@ var DoctorRegNo = '';
         $("#TblMedicinePrev").html('');
         $("#IMTr_NaN").html('');
         $("#TblImmunization").html('');
+        $("#TblProcedure").html('');
 
 
 
@@ -1036,6 +1066,7 @@ var DoctorRegNo = '';
         $("#TblMedicinePrev").html('');
         $("#IMTr_NaN").html('');
         $("#TblImmunization").html('');
+        $("#TblProcedure").html('');
 
 
 
@@ -1099,6 +1130,7 @@ var DoctorRegNo = '';
 
             /*GetMedicine(result[0].RevisitId, 1);*/
             $("#TblImmunization").html('');
+            $("#TblProcedure").html('');
             //GetMedicine(result[0].RevisitId, 1)
             //GetImmunizationDetails(result[0].RevisitId, 1, 1);
 
@@ -1146,6 +1178,7 @@ var DoctorRegNo = '';
                 $("#TblMedicinePrev").html('');
                 $("#IMTr_NaN").html('');
                 $("#TblImmunization").html('');
+                $("#TblProcedure").html('');
 
             }, 1000);
 
@@ -1193,6 +1226,7 @@ var DoctorRegNo = '';
 
     function GetImmunizationDetails(OPVisit, Type, Flag, callback) {
         $("#TblImmunization").html('');
+        $("#TblProcedure").html('');
         var ImFlag = 1;
         if (Flag == 0) { ImFlag = 0; }
         var data = {};
@@ -1220,53 +1254,115 @@ var DoctorRegNo = '';
         });
     }
 
+    //function LoadImmunizationDetails(result) {
+    //    if (result.length > 0) {
+    //        for (var i = 0; i < result.length; i++) {
+
+
+
+    //            var Id = i + 1;
+    //            var Slno = $('#TblImmunization tr').length + 1;
+
+    //            var GroupSelect = ""
+    //            var MedRow =
+    //                '<tr class="jsgrid-header-row IMRow" id="IMTr_' + Id + '">' +
+    //                '<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;" onclick="DeleteImmune(' + Id + ')" ><i class="icon-trash"></i></td>' +
+    //                '<td class="jsgrid-align-center" style="width: 8%;" id="IMSlno_' + Id + '">' + Slno + '</td>' +
+    //                '<td class="" style="width: 38%;">' +
+    //                '<input type="text" class="form-control brdles"  id="Vaccine_' + Id + '" onfocus="LoadVaccine(\'Vaccine_' + Id + '\', \'VaccineId_' + Id + '\', \'VaccStatus_' + Id + '\')" value="' + result[i].VaccineName + '" />' +
+    //                '<input type="hidden" value="' + result[i].VaccineId + '" id="VaccineId_' + Id + '" />' +
+    //                '</td>' +
+    //                '<td class="" style="width: 18%;display:none">' +
+    //                '<select type="text" class="form-control brdles" id="VaccCompany_' + Id + '"  onkeydown="FocusNext(event, \'\', \'VaccCompany_\', \'VaccDate_\', \'' + Id + '\', \'IMTr_\',1)">' + GroupSelect + '</select>' +
+    //                '</td>' +
+    //                '<td class="" style="width: 12%;display:none">' +
+    //                '<input type="text" class="form-control brdles dedate" id="VaccDate_' + Id + '"  onkeydown="FocusNext(event, \'VaccCompany_\', \'VaccDate_\', \'VacNextDate_\', \'' + Id + '\', \'IMTr_\',1)" />' +
+    //                '</td>' +
+    //                '<td class="" style="width: 12%;display:none1">' +
+    //                '<input type="text" class="form-control brdles dedate" id="VacNextDate_' + Id + '"  value="' + result[i].VaccineDosage + '" />' +
+    //                '</td>' +
+    //                '<td class="" style="width: 7%;dispaly:none1">' +
+    //                '<select type="text" class="form-control brdles" id="VaccStatus_' + Id + '" onkeypress="AddIMRow(event,' + Id + ')">' +
+    //                '<option value="0" >ADD</option>' +
+
+    //                '</select>' +
+    //                '</td>' +
+    //                '</tr>';
+    //            $('#TblImmunization').append(MedRow);
+
+    //            //DeclareDate('VaccDate_' + Id + '')
+    //            //DeclareDate('VacNextDate_' + Id + '');
+
+    //            $('#VaccDate_' + Id).val(result[i].GivenDate);
+    //            $('#VacNextDate_' + Id).val(result[i].VaccineDosage);
+    //            $("#VaccCompany_" + Id).val(result[i].BrandId);
+    //            $("#VaccStatus_" + Id).val(result[i].VaccineStatus)
+
+    //            $('.brdles').css('border', 'none');
+    //            $("#IMMGridLength").val(Id);
+
+    //        }
+    //    }
+    //}
+
     function LoadImmunizationDetails(result) {
         if (result.length > 0) {
             for (var i = 0; i < result.length; i++) {
 
-
-
                 var Id = i + 1;
-                var Slno = $('#TblImmunization tr').length + 1;
+                var Status = $.trim(result[i].VaccineDosage);
+                var GroupSelect = "";
 
-                var GroupSelect = ""
-                var MedRow =
-                    '<tr class="jsgrid-header-row IMRow" id="IMTr_' + Id + '">' +
-                    '<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;" onclick="DeleteImmune(' + Id + ')" ><i class="icon-trash"></i></td>' +
-                    '<td class="jsgrid-align-center" style="width: 8%;" id="IMSlno_' + Id + '">' + Slno + '</td>' +
-                    '<td class="" style="width: 38%;">' +
-                    '<input type="text" class="form-control brdles"  id="Vaccine_' + Id + '" onfocus="LoadVaccine(\'Vaccine_' + Id + '\', \'VaccineId_' + Id + '\', \'VaccStatus_' + Id + '\')" value="' + result[i].VaccineName + '" />' +
-                    '<input type="hidden" value="' + result[i].VaccineId + '" id="VaccineId_' + Id + '" />' +
-                    '</td>' +
-                    '<td class="" style="width: 18%;display:none">' +
-                    '<select type="text" class="form-control brdles" id="VaccCompany_' + Id + '"  onkeydown="FocusNext(event, \'\', \'VaccCompany_\', \'VaccDate_\', \'' + Id + '\', \'IMTr_\',1)">' + GroupSelect + '</select>' +
-                    '</td>' +
-                    '<td class="" style="width: 12%;display:none">' +
-                    '<input type="text" class="form-control brdles dedate" id="VaccDate_' + Id + '"  onkeydown="FocusNext(event, \'VaccCompany_\', \'VaccDate_\', \'VacNextDate_\', \'' + Id + '\', \'IMTr_\',1)" />' +
-                    '</td>' +
-                    '<td class="" style="width: 12%;display:none1">' +
-                    '<input type="text" class="form-control brdles dedate" id="VacNextDate_' + Id + '"  value="' + result[i].VaccineDosage + '" />' +
-                    '</td>' +
-                    '<td class="" style="width: 7%;dispaly:none1">' +
-                    '<select type="text" class="form-control brdles" id="VaccStatus_' + Id + '" onkeypress="AddIMRow(event,' + Id + ')">' +
-                    '<option value="0" >ADD</option>' +
-
-                    '</select>' +
-                    '</td>' +
-                    '</tr>';
-                $('#TblImmunization').append(MedRow);
-
-                //DeclareDate('VaccDate_' + Id + '')
-                //DeclareDate('VacNextDate_' + Id + '');
-
-                $('#VaccDate_' + Id).val(result[i].GivenDate);
-                $('#VacNextDate_' + Id).val(result[i].VaccineDosage);
-                $("#VaccCompany_" + Id).val(result[i].BrandId);
-                $("#VaccStatus_" + Id).val(result[i].VaccineStatus)
+                if (Status == 'PB') {
+                    var Slno = $('#TblProcedure tr').length + 1;
+                    var MedRow =
+                        '<tr class="jsgrid-header-row PRRow" id="PRTr_' + Id + '">' +
+                        '<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;" onclick="DeleteProcedure(' + Id + ')"><i class="icon-trash"></i></td>' +
+                        '<td class="jsgrid-align-center" style="width: 8%;" id="PRSlno_' + Id + '">' + Slno + '</td>' +
+                        '<td class="" style="width: 38%;">' +
+                        '<input type="text" class="form-control brdles" id="PRVaccine_' + Id + '" onfocus="LoadVaccine(\'PRVaccine_' + Id + '\', \'PRVaccineId_' + Id + '\', \'PRVaccStatus_' + Id + '\')" value="' + result[i].VaccineName + '" />' +
+                        '<input type="hidden" value="' + result[i].VaccineId + '" id="PRVaccineId_' + Id + '" />' +
+                        '</td>' +
+                        '<td class="" style="width: 7%;">' +
+                        '<input type="text" class="form-control brdles" id="PRVacNextDate_' + Id + '" value="' + Status + '" readonly style="background-color:white;border:none;" />' +
+                        '</td>' +
+                        '<td class="" style="width: 7%;">' +
+                        '<select type="text" class="form-control brdles" id="PRVaccStatus_' + Id + '" onkeypress="AddIMRow(event,' + Id + ')">' +
+                        '<option value="0">ADD</option>' +
+                        '</select>' +
+                        '</td>' +
+                        '</tr>';
+                    $('#TblProcedure').append(MedRow);
+                } else if (Status == 'LB') {
+                    var Slno = $('#TblImmunization tr').length + 1;
+                    var MedRow =
+                        '<tr class="jsgrid-header-row IMRow" id="IMTr_' + Id + '">' +
+                        '<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;" onclick="DeleteImmune(' + Id + ')"><i class="icon-trash"></i></td>' +
+                        '<td class="jsgrid-align-center" style="width: 8%;" id="IMSlno_' + Id + '">' + Slno + '</td>' +
+                        '<td class="" style="width: 38%;">' +
+                        '<input type="text" class="form-control brdles" id="Vaccine_' + Id + '" onfocus="LoadVaccine(\'Vaccine_' + Id + '\', \'VaccineId_' + Id + '\', \'VaccStatus_' + Id + '\')" value="' + result[i].VaccineName + '" />' +
+                        '<input type="hidden" value="' + result[i].VaccineId + '" id="VaccineId_' + Id + '" />' +
+                        '</td>' +
+                        '<td class="" style="width: 18%;display:none">' +
+                        '<select type="text" class="form-control brdles" id="VaccCompany_' + Id + '" onkeydown="FocusNext(event, \'\', \'VaccCompany_\', \'VaccDate_\', \'' + Id + '\', \'IMTr_\',1)">' + GroupSelect + '</select>' +
+                        '</td>' +
+                        '<td class="" style="width: 12%;display:none">' +
+                        '<input type="text" class="form-control brdles dedate" id="VaccDate_' + Id + '" onkeydown="FocusNext(event, \'VaccCompany_\', \'VaccDate_\', \'VacNextDate_\', \'' + Id + '\', \'IMTr_\',1)" />' +
+                        '</td>' +
+                        '<td class="" style="width: 12%;">' +
+                        '<input type="text" class="form-control brdles dedate" id="VacNextDate_' + Id + '" value="' + Status + '" />' +
+                        '</td>' +
+                        '<td class="" style="width: 7%;">' +
+                        '<select type="text" class="form-control brdles" id="VaccStatus_' + Id + '" onkeypress="AddIMRow(event,' + Id + ')">' +
+                        '<option value="0">ADD</option>' +
+                        '</select>' +
+                        '</td>' +
+                        '</tr>';
+                    $('#TblImmunization').append(MedRow);
+                }
 
                 $('.brdles').css('border', 'none');
                 $("#IMMGridLength").val(Id);
-
             }
         }
     }
@@ -1609,127 +1705,325 @@ var DoctorRegNo = '';
 
 
 
+    //function POPUPMedicinePrint() {     //no need footer register number digital sigature
+
+    //    var visitDocId = $("#GDoctorId").val();
+
+    //    GetDoctorRegDetails(visitDocId, function (doctorInfo) {
+
+    //        var doctorNameForHeader = doctorInfo.Name !== '' ? doctorInfo.Name : $("#GDoctorNamedis").val();
+    //        var doctorQualForHeader = doctorInfo.Qualification ? ' ,' + doctorInfo.Qualification + '' : '';
+
+    //        var myWindow = window.open("", "", "width=1500,height=1500");
+    //        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+    //        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+    //        myWindow.document.write('<table width=100% ><tr ><td width=100% align=center style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+    //        myWindow.document.write('<table width=100%><tr><td style="font-family:tahoma; font-size:13px;font-weight: normal;" align=center>PATIENT SUMMARY</td></tr></table>');
+
+    //        myWindow.document.write('<div style="border:1px solid black;border-top:1px solid black;border-radius:10px"><table style="" width=90%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: normal;">' +
+    //            '<tr><td>MR-No#</td><td> : </td><td>' + $("#GOPNumber").val() + '</td></tr>' +
+    //            '<tr><td>Name</td><td> : </td><td>' + $("#GPatientNamedis").val() + '</td></tr>' +
+    //            '<tr><td>Doctor</td><td> : </td><td>' + doctorNameForHeader + doctorQualForHeader + '</td></tr></table></td>');
+
+    //        myWindow.document.write('<td width=40% align="right"><table style="font-family:tahoma; font-size:13px;font-weight: normal;">' +
+    //            '<tr><td>OP-No#</td><td> : </td><td>' + $("#GRevisitId").val() + '</td></tr>' +
+    //            '<tr><td>Age/Sex</td><td> : </td><td>' + $("#Gender").val() + '</td></tr>' +
+    //            '<tr><td>Date</td><td> : </td><td>' + $("#RevisitDate").val() + '</td></tr></table></td></tr></table></div>');
+
+    //        var row = '<table style="font-family: tahoma; font-size:13px;font-weight: normal;" width=100%>';
+
+    //        if ($('#PPatComplaint').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Complaints</b></td></tr><tr><td>' + $('#PPatComplaint').val() + '</td></tr>';
+    //        }
+
+    //        if ($('#PDiagnosis').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Past medical history</b></td></tr><tr><td>' + $('#PDiagnosis').val() + '</td></tr>';
+    //        }
+
+    //        if ($('#PatAllergy').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Drug allergy</b></td></tr><tr><td>' + $('#PatAllergy').val() + '</td></tr>';
+    //        }
+
+    //        var vitalsParts = [];
+    //        if ($('#PatWeight').val() != '') vitalsParts.push('Weight : ' + $('#PatWeight').val());
+    //        if ($('#PatHeight').val() != '') vitalsParts.push('Height : ' + $('#PatHeight').val());
+    //        if ($('#PatBP').val() != '') vitalsParts.push('BP : ' + $('#PatBP').val());
+    //        if ($('#PatTemperature').val() != '') vitalsParts.push('Temperature : ' + $('#PatTemperature').val());
+    //        if ($('#PatSugar').val() != '') vitalsParts.push('Sugar : ' + $('#PatSugar').val());
+    //        if ($('#PatChest').val() != '') vitalsParts.push('Chest Circumference : ' + $('#PatChest').val());
+    //        if ($('#PatHead').val() != '') vitalsParts.push('Head Circumference : ' + $('#PatHead').val());
+    //        if ($('#PatAbdominal').val() != '') vitalsParts.push('Abdominal : ' + $('#PatAbdominal').val());
+    //        if ($('#PatSP').val() != '') vitalsParts.push('SPO2 : ' + $('#PatSP').val());
+    //        if ($('#PatPulseRate').val() != '') vitalsParts.push('Pulse Rate : ' + $('#PatPulseRate').val());
+    //        if (vitalsParts.length > 0) {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Vitals</b></td></tr><tr><td>' + vitalsParts.join(' &#160;&#160;&#160; ') + '</td></tr>';
+    //        }
+
+    //        if ($('#PNotes').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Examinations</b></td></tr><tr><td>' + $('#PNotes').val() + '</td></tr>';
+    //        }
+
+    //        var chest = $('#abc1-1').val();
+    //        var PA = $('#abc2-1').val();
+    //        var CVS = $('#abc3-1').val();
+    //        var CNS = $('#abc4-1').val();
+    //        var GCS = $('#abc5-1').val();
+    //        var Pupil = $('#abc6-1').val();
+    //        var txtabc = "";
+    //        if (chest != '') { txtabc += 'Chest : ' + chest }
+    //        if (PA != '') { txtabc += '&#160;&#160;&#160;&#160;&#160;PA : ' + PA }
+    //        if (CVS != '') { txtabc += '&#160;&#160;&#160;&#160;CVS : ' + CVS }
+    //        if (CNS != '') { txtabc += '&#160;&#160;&#160;&#160;CNS : ' + CNS }
+    //        if (GCS != '') { txtabc += '&#160;&#160;&#160;&#160;&#160;GCS : ' + GCS }
+    //        if (Pupil != '') { txtabc += '&#160;&#160;&#160;&#160;Pupil : ' + Pupil }
+    //        if (txtabc != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Sys Examinations</b></td></tr><tr><td>' + txtabc + '</td></tr>';
+    //        }
+
+    //        if ($('#PRemarks').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Provisional Diagnosis</b></td></tr><tr><td>' + $('#PRemarks').val() + '</td></tr>';
+    //        }
+
+    //        if ($('#pPAdvice').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Notes</b></td></tr><tr><td>' + $('#pPAdvice').val() + '</td></tr>';
+    //        }
+
+    //        if ($('#pPDetails').val() != '') {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice To Nursing Station</b></td></tr><tr><td>' + $('#pPDetails').val() + '</td></tr>';
+    //        }
+
+    //        var hasMedicine = false;
+    //        for (var m = 1; m <= 15; m++) {
+    //            if ($('#PMedicine_' + m).length && $.trim($('#PMedicine_' + m).val()) != '') { hasMedicine = true; break; }
+    //        }
+    //        if (hasMedicine) {
+    //            row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Advice</b></td></tr>';
+    //        }
+
+    //        myWindow.document.write(row);
+
+    //        if (hasMedicine) {
+    //            var html = '<tr><td><table width=100% style="font-family:tahoma;font-size:13px;font-weight:normal;border-collapse:collapse;">' +
+    //                '<tr style="background-color:#eeeeee;font-weight:bold;">' +
+    //                '<td style="border:1px solid #ccc;padding:3px;width:5%">SL#</td>' +
+    //                '<td style="border:1px solid #ccc;padding:3px;width:35%">Medicine</td>' +
+    //                '<td style="border:1px solid #ccc;padding:3px;width:20%">Notes</td>' +
+    //                '<td style="border:1px solid #ccc;padding:3px;width:20%">Dosage</td>' +
+    //                '<td style="border:1px solid #ccc;padding:3px;width:20%">Days</td></tr>';
+
+    //            for (var i = 1; i <= 15; i++) {
+    //                if ($('#PMedicine_' + i).length && $.trim($('#PMedicine_' + i).val()) != '') {
+    //                    var Medicine = $('#PMedicine_' + i).val();
+    //                    var Dosage = $('#PDosage_' + i).val();
+    //                    var Days = parseInt($('#PDays_' + i).val() || 0);
+    //                    var Notes = $('#pmednote' + i).val();
+    //                    var s = Days == 1 ? Days + ' day' : Days + ' days';
+
+    //                    html += '<tr>' +
+    //                        '<td style="border:1px solid #ccc;padding:3px;">' + i + '</td>' +
+    //                        '<td style="border:1px solid #ccc;padding:3px;">' + Medicine + '</td>' +
+    //                        '<td style="border:1px solid #ccc;padding:3px;">' + (Notes || '') + '</td>' +
+    //                        '<td style="border:1px solid #ccc;padding:3px;">' + (Dosage || '') + '</td>' +
+    //                        '<td style="border:1px solid #ccc;padding:3px;">' + (Days ? s : '') + '</td></tr>';
+    //                }
+    //            }
+    //            html += '</table></td></tr>';
+    //            myWindow.document.write(html);
+    //        }
+
+    //        var row2 = '<table style="font-family: tahoma; font-size:13px;font-weight: normal;" width=100%>';
+    //        if ($('#PMedAdvice').val() != '') {
+    //            row2 += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice</b></td></tr><tr><td>' + $('#PMedAdvice').val() + '</td></tr>';
+    //        }
+    //        if ($('#pPNotes').val() != '') {
+    //            row2 += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Discharge Advice</b></td></tr><tr><td>' + $('#pPNotes').val() + '</td></tr>';
+    //        }
+    //        if ($('#Nextreviewdt').text() != '') {
+    //            row2 += '<tr><td height=5px>&#160;</td></tr><tr><td>YOUR NEXT VISIT SCHEDULED ON ' + $('#Nextreviewdt').text() + '</td></tr>';
+    //        }
+    //        row2 += '</table>';
+    //        myWindow.document.write(row2);
+
+    //        printFooter(myWindow, doctorInfo, function () {
+    //            myWindow.print();
+    //            myWindow.close();
+    //        });
+
+    //    });
+    //}
+
     function POPUPMedicinePrint() {
 
-        var visitDocId = $("#GDoctorId").val();  
+        var visitDocId = $("#GDoctorId").val();
 
         GetDoctorRegDetails(visitDocId, function (doctorInfo) {
 
             var doctorNameForHeader = doctorInfo.Name !== '' ? doctorInfo.Name : $("#GDoctorNamedis").val();
-            var doctorQualForHeader = doctorInfo.Qualification ? ' ,' + doctorInfo.Qualification + '' : '';
+            var doctorQualForHeader = doctorInfo.Qualification ? '  ' + doctorInfo.Qualification : '';
 
             var myWindow = window.open("", "", "width=1500,height=1500");
             var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
             $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
-            myWindow.document.write('<table width=100% ><tr ><td width=100% align=center style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+            var STAFF_PRINT_HEADER_HEIGHT = 100;
+
+            if (StaffPrintHeaderFlag == 0) {   // No header
+                myWindow.document.write('<table width=100%><tr><td style="height:' + STAFF_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+            }
+            else {   // With header
+                myWindow.document.write('<table width=100% ><tr ><td width=100% align=center style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+            }
 
             myWindow.document.write('<table width=100%><tr><td style="font-family:tahoma; font-size:13px;font-weight: normal;" align=center>PATIENT SUMMARY</td></tr></table>');
 
-            myWindow.document.write('<div style="border:1px solid black;border-top:1px solid black;border-radius:10px"><table style="" width=90%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: normal;">' +
-                '<tr><td>MR-No#</td><td> : </td><td>' + $("#GOPNumber").val() + '</td></tr>' +
-                '<tr><td>Name</td><td> : </td><td>' + $("#GPatientNamedis").val() + '</td></tr>' +
-                '<tr><td>Doctor</td><td> : </td><td>' + doctorNameForHeader + doctorQualForHeader + '</td></tr></table></td>');
+            var genderRaw = $("#Gender").val();         
+            var ageOnly = $.trim(genderRaw.split("##")[0]);   
+            var sexOnly = $.trim(genderRaw.split("/")[1]);    
 
-            myWindow.document.write('<td width=40% align="right"><table style="font-family:tahoma; font-size:13px;font-weight: normal;">' +
-                '<tr><td>OP-No#</td><td> : </td><td>' + $("#GRevisitId").val() + '</td></tr>' +
-                '<tr><td>Age/Sex</td><td> : </td><td>' + $("#Gender").val() + '</td></tr>' +
-                '<tr><td>Date</td><td> : </td><td>' + $("#RevisitDate").val() + '</td></tr></table></td></tr></table></div>');
+            myWindow.document.write(
+                '<table width="100%" style="font-family:tahoma;font-size:13px;font-weight:normal;border-collapse:collapse;">' +
+
+                '<tr>' +
+                '<td width="60%" valign="top">' +
+                '<b>MR-No/OP-No:</b> ' + $("#GOPNumber").val() +
+                '</td>' +
+
+                '<td width="40%" valign="top">' +
+                '<div style="margin-left:150px;white-space:nowrap;">' +
+                '<span style="display:inline-block;width:45px;"><b>Date:</b></span>' +
+                $("#RevisitDate").val() +
+                '</div>' +
+                '</td>' +
+                '</tr>' +
+
+                '<tr>' +
+                '<td valign="top">' +
+                '<b>Name:</b> ' + $("#GPatientNamedis").val() +
+                '</td>' +
+
+                '<td valign="top">' +
+                '<div style="margin-left:150px;white-space:nowrap;">' +
+                '<span style="display:inline-block;width:45px;"><b>Sex:</b></span>' +
+                sexOnly +
+                '</div>' +
+                '</td>' +
+                '</tr>' +
+
+                '<tr>' +
+                '<td valign="top">' +
+                '<b>Doctor:</b> ' + doctorNameForHeader + doctorQualForHeader +
+                '</td>' +
+
+                '<td valign="top">' +
+                '<div style="margin-left:150px;white-space:nowrap;">' +
+                '<span style="display:inline-block;width:45px;"><b>Age:</b></span>' +
+                ageOnly +
+                '</div>' +
+                '</td>' +
+                '</tr>' +
+
+                '</table>'
+            );
+
+            if (StaffSummaryGapFlag == 0) {
+                myWindow.document.write('<table width=100%><tr>');
+                myWindow.document.write('<td style="width:150px;height:250px;vertical-align:top;">&#160;</td>');
+                myWindow.document.write('<td style="vertical-align:top;">');
+            }
 
             var row = '<table style="font-family: tahoma; font-size:13px;font-weight: normal;" width=100%>';
 
-            if ($('#PPatComplaint').val() != '') {
-                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Complaints</b></td></tr><tr><td>' + $('#PPatComplaint').val() + '</td></tr>';
+        
+            if ($.trim($('#PPatComplaint').val()) != '') {
+                row += '<tr><td height=25px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Complaints</b></td></tr><tr><td>' + $('#PPatComplaint').val() + '</td></tr>';
             }
 
-            if ($('#PDiagnosis').val() != '') {
+            
+            if ($.trim($('#PDiagnosis').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Past medical history</b></td></tr><tr><td>' + $('#PDiagnosis').val() + '</td></tr>';
             }
 
-            if ($('#PatAllergy').val() != '') {
-                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Drug allergy</b></td></tr><tr><td>' + $('#PatAllergy').val() + '</td></tr>';
+            if ($.trim($('#PAllergies').val()) != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Drug allergy</b></td></tr><tr><td>' + $('#PAllergies').val() + '</td></tr>';
             }
 
-            var vitalsParts = [];
-            if ($('#PatWeight').val() != '') vitalsParts.push('Weight : ' + $('#PatWeight').val());
-            if ($('#PatHeight').val() != '') vitalsParts.push('Height : ' + $('#PatHeight').val());
-            if ($('#PatBP').val() != '') vitalsParts.push('BP : ' + $('#PatBP').val());
-            if ($('#PatTemperature').val() != '') vitalsParts.push('Temperature : ' + $('#PatTemperature').val());
-            if ($('#PatSugar').val() != '') vitalsParts.push('Sugar : ' + $('#PatSugar').val());
-            if ($('#PatChest').val() != '') vitalsParts.push('Chest Circumference : ' + $('#PatChest').val());
-            if ($('#PatHead').val() != '') vitalsParts.push('Head Circumference : ' + $('#PatHead').val());
-            if ($('#PatAbdominal').val() != '') vitalsParts.push('Abdominal : ' + $('#PatAbdominal').val());
-            if ($('#PatSP').val() != '') vitalsParts.push('SPO2 : ' + $('#PatSP').val());
-            if ($('#PatPulseRate').val() != '') vitalsParts.push('Pulse Rate : ' + $('#PatPulseRate').val());
-            if (vitalsParts.length > 0) {
-                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Vitals</b></td></tr><tr><td>' + vitalsParts.join(' &#160;&#160;&#160; ') + '</td></tr>';
+            
+            if ($.trim($('#PDetails').val()) != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Vitals</b></td></tr><tr><td>' + $('#PDetails').val() + '</td></tr>';
             }
 
-            if ($('#PNotes').val() != '') {
+          
+            if ($.trim($('#PNotes').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Examinations</b></td></tr><tr><td>' + $('#PNotes').val() + '</td></tr>';
             }
 
-            var chest = $('#abc1-1').val();
-            var PA = $('#abc2-1').val();
-            var CVS = $('#abc3-1').val();
-            var CNS = $('#abc4-1').val();
-            var GCS = $('#abc5-1').val();
-            var Pupil = $('#abc6-1').val();
-            var txtabc = "";
-            if (chest != '') { txtabc += 'Chest : ' + chest }
-            if (PA != '') { txtabc += '&#160;&#160;&#160;&#160;&#160;PA : ' + PA }
-            if (CVS != '') { txtabc += '&#160;&#160;&#160;&#160;CVS : ' + CVS }
-            if (CNS != '') { txtabc += '&#160;&#160;&#160;&#160;CNS : ' + CNS }
-            if (GCS != '') { txtabc += '&#160;&#160;&#160;&#160;&#160;GCS : ' + GCS }
-            if (Pupil != '') { txtabc += '&#160;&#160;&#160;&#160;Pupil : ' + Pupil }
-            if (txtabc != '') {
-                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Sys Examinations</b></td></tr><tr><td>' + txtabc + '</td></tr>';
-            }
-
-            if ($('#PRemarks').val() != '') {
+       
+            if ($.trim($('#PRemarks').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Provisional Diagnosis</b></td></tr><tr><td>' + $('#PRemarks').val() + '</td></tr>';
             }
 
-            if ($('#pPAdvice').val() != '') {
+            
+            if ($.trim($('#pPAdvice').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Notes</b></td></tr><tr><td>' + $('#pPAdvice').val() + '</td></tr>';
             }
-
-            if ($('#pPDetails').val() != '') {
+            if ($.trim($('#pPDetails').val()) != '') {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice To Nursing Station</b></td></tr><tr><td>' + $('#pPDetails').val() + '</td></tr>';
             }
+            if ($.trim($('#pPNotes').val()) != '') {
+                row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Review</b></td></tr><tr><td>' + $('#pPNotes').val() + '</td></tr>';
+            }
+
+            var $medicineFields = $("[id^='PMedicine_']").filter(function () {
+                return /^PMedicine_\d+$/.test(this.id);
+            }).toArray().sort(function (a, b) {
+                var numA = parseInt(a.id.split('_')[1], 10);
+                var numB = parseInt(b.id.split('_')[1], 10);
+                return numA - numB;
+            });
 
             var hasMedicine = false;
-            for (var m = 1; m <= 15; m++) {
-                if ($('#PMedicine_' + m).length && $.trim($('#PMedicine_' + m).val()) != '') { hasMedicine = true; break; }
+            for (var k = 0; k < $medicineFields.length; k++) {
+                if ($.trim($($medicineFields[k]).val()) != '') { hasMedicine = true; break; }
             }
             if (hasMedicine) {
                 row += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Medicine Advice</b></td></tr>';
             }
 
+
             myWindow.document.write(row);
 
             if (hasMedicine) {
+               
                 var html = '<tr><td><table width=100% style="font-family:tahoma;font-size:13px;font-weight:normal;border-collapse:collapse;">' +
                     '<tr style="background-color:#eeeeee;font-weight:bold;">' +
                     '<td style="border:1px solid #ccc;padding:3px;width:5%">SL#</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;width:35%">Medicine</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;width:20%">Notes</td>' +
                     '<td style="border:1px solid #ccc;padding:3px;width:20%">Dosage</td>' +
-                    '<td style="border:1px solid #ccc;padding:3px;width:20%">Days</td></tr>';
+                    '<td style="border:1px solid #ccc;padding:3px;width:20%">Days</td>' +
+                    '<td style="border:1px solid #ccc;padding:3px;width:20%">NOs</td></tr>';
 
-                for (var i = 1; i <= 15; i++) {
-                    if ($('#PMedicine_' + i).length && $.trim($('#PMedicine_' + i).val()) != '') {
-                        var Medicine = $('#PMedicine_' + i).val();
-                        var Dosage = $('#PDosage_' + i).val();
-                        var Days = parseInt($('#PDays_' + i).val() || 0);
-                        var Notes = $('#pmednote' + i).val();
+                var slCounter = 0;
+                for (var j = 0; j < $medicineFields.length; j++) {
+                    var idNum = $medicineFields[j].id.split('_')[1];
+                    var Medicine = $.trim($('#PMedicine_' + idNum).val());
+
+                    if (Medicine != '') {
+                        slCounter++;
+                        var Dosage = $('#PDosage_' + idNum).val();
+                        var Days = parseInt($('#PDays_' + idNum).val() || 0);
+                        var Notes = $('#pmednote' + idNum).val();
+                        var Nos = $('#PDaily_' + idNum).val();
                         var s = Days == 1 ? Days + ' day' : Days + ' days';
 
                         html += '<tr>' +
-                            '<td style="border:1px solid #ccc;padding:3px;">' + i + '</td>' +
+                            '<td style="border:1px solid #ccc;padding:3px;">' + slCounter + '</td>' +
                             '<td style="border:1px solid #ccc;padding:3px;">' + Medicine + '</td>' +
                             '<td style="border:1px solid #ccc;padding:3px;">' + (Notes || '') + '</td>' +
                             '<td style="border:1px solid #ccc;padding:3px;">' + (Dosage || '') + '</td>' +
-                            '<td style="border:1px solid #ccc;padding:3px;">' + (Days ? s : '') + '</td></tr>';
+                            '<td style="border:1px solid #ccc;padding:3px;">' + (Days ? s : '') + '</td>' +
+                            '<td style="border:1px solid #ccc;padding:3px;">' + (Nos || '') + '</td></tr>';
                     }
                 }
                 html += '</table></td></tr>';
@@ -1737,17 +2031,19 @@ var DoctorRegNo = '';
             }
 
             var row2 = '<table style="font-family: tahoma; font-size:13px;font-weight: normal;" width=100%>';
-            if ($('#PMedAdvice').val() != '') {
+            if ($.trim($('#PMedAdvice').val()) != '') {
                 row2 += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Advice</b></td></tr><tr><td>' + $('#PMedAdvice').val() + '</td></tr>';
             }
-            if ($('#pPNotes').val() != '') {
-                row2 += '<tr><td height=10px>&#160;</td></tr><tr style="background-color:#D3D3D3"><td><b>Discharge Advice</b></td></tr><tr><td>' + $('#pPNotes').val() + '</td></tr>';
-            }
+           
             if ($('#Nextreviewdt').text() != '') {
                 row2 += '<tr><td height=5px>&#160;</td></tr><tr><td>YOUR NEXT VISIT SCHEDULED ON ' + $('#Nextreviewdt').text() + '</td></tr>';
             }
             row2 += '</table>';
             myWindow.document.write(row2);
+
+            if (StaffSummaryGapFlag == 0) {
+                myWindow.document.write('</td></tr></table>');
+            }
 
             printFooter(myWindow, doctorInfo, function () {
                 myWindow.print();
@@ -2358,16 +2654,16 @@ var DoctorRegNo = '';
         })
     }
 
-    function BmiCalc() { 
+    function BmiCalc() {
 
-    var A = parseFloat($("#PatHeight").val() || 0);
-    var Height = A / 100;
-    var Weight = parseFloat($("#PatWeight").val() || 0);
-    var Result = Weight / (Height * Height);
-    $("#PatBmi").val(parseFloat(Result || 0).toFixed(2));
+        var A = parseFloat($("#PatHeight").val() || 0);
+        var Height = A / 100;
+        var Weight = parseFloat($("#PatWeight").val() || 0);tb
+        var Result = Weight / (Height * Height);
+        $("#PatBmi").val(parseFloat(Result || 0).toFixed(2));
 
     }
-    function isNumber(evt, selectedvalue) {
+    function isNumber(evt, selectedvalue) {pop
         var charCode = (evt.which) ? evt.which : event.keyCode
         $(selectedvalue).val($(selectedvalue).val().replace(/[^0-9\.]/g, ''));
         if (charCode != 8 && (charCode != 46 || $(selectedvalue).val().indexOf('.') != -1) && charCode != 13 && (charCode < 48 || charCode > 57)) {

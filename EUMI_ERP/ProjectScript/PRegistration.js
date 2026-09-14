@@ -1,5 +1,5 @@
 ﻿var BloodGroup = [{ value: "A+", label: "A+", }, { value: "A-", label: "A-", }, { value: "B+", label: "B+", }, { value: "B-", label: "B-", },
-                  { value: "O+", label: "O+", }, { value: "O-", label: "O-", }, { value: "AB+", label: "AB+", }, { value: "AB-", label: "AB-", }];
+{ value: "O+", label: "O+", }, { value: "O-", label: "O-", }, { value: "AB+", label: "AB+", }, { value: "AB-", label: "AB-", }];
 var CountryId = 0; var SearchFlag = 0; var Bl = 0;
 var BillFlag = 0;
 $(document).ready(function () {
@@ -61,8 +61,7 @@ $(document).ready(function () {
         if (id == 'tab2') {
             window.setTimeout(function () { $('#OtherFee').focus().select(); });
         }
-        else if (id == 'tab1')
-        { window.setTimeout(function () { $('#State').focus().select(); }); }
+        else if (id == 'tab1') { window.setTimeout(function () { $('#State').focus().select(); }); }
 
     });
 
@@ -76,13 +75,13 @@ $(document).ready(function () {
         SaveAndUpdate(1);
     });
 
-   
+
     //$("#btnsavesubmit").click(function (e) {
 
     //    BillFlag = 1;
     //    SaveAndUpdate(1);
     //});
-   
+
     $("#TokenNo").keydown(function (e) {
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
         if (key == 13) {
@@ -96,7 +95,7 @@ $(document).ready(function () {
             e.preventDefault();
             var inputs = $(this).closest('form').find('.frsdwn:enabled');
             inputs.eq(inputs.index(this) + 1).focus().select();
-        } 
+        }
     });
     $('.frsup').keydown(function (e) {
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
@@ -171,7 +170,7 @@ $(document).ready(function () {
         $("#selectedImage").on("change", function (e) {
             ScratchImgArray = [];
             var files = e.target.files,
-              filesLength = files.length;
+                filesLength = files.length;
             for (var i = 0; i < filesLength; i++) {
                 var f = files[i];
                 var fileReader = new FileReader();
@@ -195,11 +194,10 @@ function changetoupper(Id) {
     $('#' + Id).val($('#' + Id).val().toUpperCase())
 }
 
-function LoadDate()
-{
+function LoadDate() {
     $('#RegDate').daterangepicker({
-       
-        maxDate: new Date(new Date().getFullYear()+1, new Date().getMonth(), new Date().getDate()),
+
+        maxDate: new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDate()),
         singleDatePicker: true,
         showDropdowns: true,
         locale: { format: 'DD/MM/YYYY' },
@@ -222,8 +220,7 @@ function CheckEOD() {
     }
 }
 
-function ShiftLoad()
-{
+function ShiftLoad() {
     var data = {};                                       //dropdownbind
     data.Flag = 0;
     data.DeptId = ERPDeptId;
@@ -236,7 +233,7 @@ function ShiftLoad()
                 $("#Shift").empty();
                 for (var i = 0; i < result.oList.length; i++) {
                     $("#Shift").append("<option value='" + result.oList[i].Flag + "'>" + result.oList[i].Shift + "</option>");
-                }                
+                }
             }
         }
     });
@@ -247,7 +244,7 @@ function TokenLoad() {
         var data = {};
         data.DoctorId = $("#Doctor").val();
         data.Shift = $("#Shift").val();
-        data.RevisitDate = $("#RegDate").val(); 
+        data.RevisitDate = $("#RegDate").val();
         data.DeptId = ERPDeptId;
         $.ajax({
             type: "POST",
@@ -261,61 +258,55 @@ function TokenLoad() {
         });
     }
     else {
-        $("#TokenNo").val(''); 
+        $("#TokenNo").val('');
     }
 }
 
-function OPLoad()
-{  
-  var data = {};
-  data.id = 0;
-  data.DeptId = ERPDeptId;
-  data.BillType = 'OP';
-  $.ajax({
-      type: "POST",
-      url: "../Master/HMS_OPSeriesGetandGets", 
-      data: data,
-      success: function (result) {
-          $("#RegSeries").empty();
-          var regFee = 0;
-          for (var i = 0; i < result.oList.length; i++) {
-              $("#RegSeries").append("<option value='" + result.oList[i].id + "' name='" + result.oList[i].CurrentNo + "'>" + result.oList[i].BillDescription + "</option>");
-              regFee = parseFloat(result.oList[i].StartingNo || 0);
-              if (i == (result.oList.length - 1))
-              { OPNoLoad();}
-          }
-          DDREGFEE = regFee
-          $('#RegFee').val(regFee)
-          createQRCode();
-          generatebarcode();
-      }
-  });    
+function OPLoad() {
+    var data = {};
+    data.id = 0;
+    data.DeptId = ERPDeptId;
+    data.BillType = 'OP';
+    $.ajax({
+        type: "POST",
+        url: "../Master/HMS_OPSeriesGetandGets",
+        data: data,
+        success: function (result) {
+            $("#RegSeries").empty();
+            var regFee = 0;
+            for (var i = 0; i < result.oList.length; i++) {
+                $("#RegSeries").append("<option value='" + result.oList[i].id + "' name='" + result.oList[i].CurrentNo + "'>" + result.oList[i].BillDescription + "</option>");
+                regFee = parseFloat(result.oList[i].StartingNo || 0);
+                if (i == (result.oList.length - 1)) { OPNoLoad(); }
+            }
+            DDREGFEE = regFee
+            $('#RegFee').val(regFee)
+            createQRCode();
+            generatebarcode();
+        }
+    });
 }
 
-function OPNoLoad()
-{
+function OPNoLoad() {
     $('#RegNo').val($("#RegSeries").find("option:selected").attr('name'));
     createQRCode();
     generatebarcode();
 }
 
-function CountryLoad()
-{
+function CountryLoad() {
     var data = {};
     data.CountryId = 0;
     $.ajax({
         type: "POST",
         url: "../Common/GetCountry",
         data: data,
-        success: function (result) {           
+        success: function (result) {
             $("#Country").empty();
-            for (var i = 0; i < result.oList.length; i++) {               
+            for (var i = 0; i < result.oList.length; i++) {
                 $("#Country").append("<option value='" + result.oList[i].CountryId + "'>" + result.oList[i].CountryName + "</option>");
-                if ((result.oList[i].CountryName).toUpperCase() == 'INDIA')
-                { CountryId = result.oList[i].CountryId; }
-                if (i == (result.oList.length - 1) && CountryId > 0)
-                { $("#Country").val(CountryId) }
-           }
+                if ((result.oList[i].CountryName).toUpperCase() == 'INDIA') { CountryId = result.oList[i].CountryId; }
+                if (i == (result.oList.length - 1) && CountryId > 0) { $("#Country").val(CountryId) }
+            }
         }
     });
 }
@@ -333,7 +324,7 @@ function DoctorLoad() {
                 $("#Doctor").empty();
                 $("#Doctor").append("<option value='0' Fee='0'>Select</option>");
                 for (var i = 0; i < result.oList.length; i++) {
-                    $("#Doctor").append("<option value='" + result.oList[i].DoctorId + "'  Tokenprefix='" + result.oList[i].Add1 +"'  Fee='" + result.oList[i].ConsultFees + "'>" + result.oList[i].DoctorName + "</option>");
+                    $("#Doctor").append("<option value='" + result.oList[i].DoctorId + "'  Tokenprefix='" + result.oList[i].Add1 + "'  Fee='" + result.oList[i].ConsultFees + "'>" + result.oList[i].DoctorName + "</option>");
                 }
             }
         }
@@ -367,8 +358,8 @@ function formrefresh() {
         var $item = $(item);
         $item.val($item.find('option:first').val());
     });
-    if (CountryId>0)
-    $("#Country").val(CountryId);
+    if (CountryId > 0)
+        $("#Country").val(CountryId);
     OPLoad();
     PatientSearch(1);
     Bl = 0;
@@ -381,10 +372,8 @@ function formrefresh() {
     CheckEOD();
 }
 
-function ClearData(flg)
-{
-    if (flg == 0)
-    {
+function ClearData(flg) {
+    if (flg == 0) {
         $('.form-control:not(.notclr),#RegDate,#selectedImage').val(''); $('#MFlag').val(0);
         $('#myImg').attr('src', "../app-assets/img/NoImage.png");
         $('select').each((i, item) => {
@@ -394,18 +383,18 @@ function ClearData(flg)
         if (CountryId > 0)
             $("#Country").val(CountryId);
 
-        $('#btnRevisit').hide(); 
+        $('#btnRevisit').hide();
     }
-   
+
 }
 
 function ConfirmboxResult(Result, status, rowid) {
     if (Result == 'true' && status == 'Search') {
         formrefresh();
-        PatientSearch(0); 
+        PatientSearch(0);
     }
     else if (Result == 'true' && status == 'MobileDupe') {
-        SaveAndUpdate(3); 
+        SaveAndUpdate(3);
     }
     else if (Result == 'true' && status == 'Clear') {
         formrefresh();
@@ -416,19 +405,16 @@ function ConfirmboxResult(Result, status, rowid) {
     $('#confirm').fadeOut();
 }
 
-function ConfirmOperation(flg)
-{
-    if ((flg == 'Search' || flg == 'Clear') && ($.trim($('#PName').val()) || $.trim($('#MobileNo').val())))
-    {
-    $('#Confirmflag').val(flg);
-    var msg = '';
-    msg = 'Data Will be Lost!Do You Want To Continue?';
-    $('#confirmmessage').text(msg);
-    $('#confirm').show();
-    $('#confirmOk').focus();
+function ConfirmOperation(flg) {
+    if ((flg == 'Search' || flg == 'Clear') && ($.trim($('#PName').val()) || $.trim($('#MobileNo').val()))) {
+        $('#Confirmflag').val(flg);
+        var msg = '';
+        msg = 'Data Will be Lost!Do You Want To Continue?';
+        $('#confirmmessage').text(msg);
+        $('#confirm').show();
+        $('#confirmOk').focus();
     }
-    else if (flg == 'Search')
-    {
+    else if (flg == 'Search') {
         formrefresh();
         PatientSearch(0);
     }
@@ -437,9 +423,8 @@ function ConfirmOperation(flg)
     }
 }
 
-function PatientSearch(flag)
-{
-    if(flag==0)           //Search Patient
+function PatientSearch(flag) {
+    if (flag == 0)           //Search Patient
     {
         $('#Searchcode').show().focus();
         $("#Searcdiv").hide();
@@ -454,15 +439,14 @@ function PatientSearch(flag)
 }
 
 
-function LoadRegNumber()
-{
+function LoadRegNumber() {
     $("#Searchcode").autocomplete({
         delay: 0,
         minLength: 0,
         source: function (request, response) {
-            
+
             ClearData(0);
-            
+
             var data = {};
             data.PatientName = $("#Searchcode").val();
             data.DeptId = ERPDeptId;
@@ -475,7 +459,7 @@ function LoadRegNumber()
                     response($.map(data, function (item) {
                         return ({
                             ColCount: '3RR',
-                            label: item.OPSerName+' - '+item.OPNumber,
+                            label: item.OPSerName + ' - ' + item.OPNumber,
                             label1: item.PatientName,
                             label2: item.Add1,
                             label3: item.Add2,
@@ -494,8 +478,8 @@ function LoadRegNumber()
         autoFocus: true,
 
         select: function (event, ui) {
-            GetRows(ui.item.PatientId,1);
-           
+            GetRows(ui.item.PatientId, 1);
+
         },
 
     });
@@ -503,33 +487,30 @@ function LoadRegNumber()
 
 
 var REVID = 0;
-function SaveAndUpdate(flag)
-{
+function SaveAndUpdate(flag) {
     var fname = ''; var delfl;
     var fi = document.getElementById('selectedImage');
-    
-        for (var i = 0; i <= fi.files.length - 1; i++) {
-            if (fname == '')
-            { fname = fi.files.item(i).name; }
-            else { fname = fname + ',' + fi.files.item(i).name; }
-        }
 
-        if ((fname == '') && (($('#RegId').val())>0))
-        {
-            fname = $('#ImgName').val(); 
-        }
+    for (var i = 0; i <= fi.files.length - 1; i++) {
+        if (fname == '') { fname = fi.files.item(i).name; }
+        else { fname = fname + ',' + fi.files.item(i).name; }
+    }
 
-    if (($('#RegSeries').val()||0) == 0) {
+    if ((fname == '') && (($('#RegId').val()) > 0)) {
+        fname = $('#ImgName').val();
+    }
+
+    if (($('#RegSeries').val() || 0) == 0) {
         warningshow('Please Enter the RegNo', 'RegNo');
         $('#btnsubmit').show();
-        $('#btnsavesubmit').show(); 
-        BillFlag = 0;  
+        $('#btnsavesubmit').show();
+        BillFlag = 0;
     }
-    else if ($.trim($('#RegNo').val()||0) == 0) {
+    else if ($.trim($('#RegNo').val() || 0) == 0) {
         warningshow('Please Enter the RegNo', 'RegNo');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
 
     //else if ($.trim($('#PName').val()).substring(0, 1) != $("#RegSeries option:selected").text()) {
@@ -541,69 +522,66 @@ function SaveAndUpdate(flag)
         warningshow('Please Enter the Name', 'PName');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
     else if (($('#PGender').val() || 0) == 0) {
         warningshow('Please Select the Gender', 'PGender');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
-    else if (($.trim($("#Bloodgroup").val()) != '') && (Bl == 0))
-    {
+    else if (($.trim($("#Bloodgroup").val()) != '') && (Bl == 0)) {
         warningshow('Please Select a valid Blood Group', 'Bloodgroup'); $('#btnsubmit').removeAttr("disabled");
         $('#btnsavesubmit').show(); // ADD THIS
         BillFlag = 0;
-}
+    }
     else if (($('#Age').val() == '') && ($('#Age1').val() == '') && ($('#Age2').val() == '')) {
         warningshow('Please Select the DOB', 'PDOB');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
-    }   
+        BillFlag = 0;
+    }
     else if ($.trim($('#MobileNo').val()) == "") {
         warningshow('Please Enter the MobileNo', 'MobileNo');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
     //else if ($.trim($('#Address1').val()) == '') {
     //    warningshow('Please Enter the Address', 'Address1');
     //    $('#btnsubmit').show();
     //}
-    else if (($('#Doctor').val()||0) == 0) {
+    else if (($('#Doctor').val() || 0) == 0) {
         warningshow('Please Select the Doctor', 'Doctor');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
     else if (($('#Shift').val() || 0) == 0 || $.trim($('#Shift').val()) == '' || $('#Shift').val() == undefined) {
         warningshow('Please Select the Shift', 'Shift');
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
     //else if ($.trim($('#AdharNo').val()) == '') {
     //    warningshow('Please Enter AdharNo', 'AdharNo');
     //}
-    else if(Validateemail()==false)
-    {
+    else if (Validateemail() == false) {
         return Validateemail();
         $('#btnsubmit').show();
         $('#btnsavesubmit').show(); // ADD THIS
-        BillFlag = 0;  
+        BillFlag = 0;
     }
     else {
         if (flag == 3) { $('#MFlag').val(1); }
         else { $('#MFlag').val(0); }
 
-        if (flag==0) { delfl = 0; }
+        if (flag == 0) { delfl = 0; }
         else { delfl = 1; }
 
         var Sts = 0;
-        if ($('#select_status').is(':checked'))
-        { Sts = 1; }
-  
+        if ($('#select_status').is(':checked')) { Sts = 1; }
+
 
         var data = {};   //array
         data.RegSeries = $('#RegSeries').val();
@@ -634,10 +612,10 @@ function SaveAndUpdate(flag)
         data.FatherOccupation = $('#FtOccupation').val();
         data.MotherOccupation = $('#MtOccupation').val();
         data.UserId = ERPUserId;
-        data.DeptId = ERPDeptId; 
-        data.DelFlag = delfl; 
+        data.DeptId = ERPDeptId;
+        data.DelFlag = delfl;
         data.Status = Sts;
-        data.RegId = $('#RegId').val() || 0;       
+        data.RegId = $('#RegId').val() || 0;
         data.District = $('#District').val();
         data.State = $('#State').val();
         data.Religion = $('#Religion').val();
@@ -648,11 +626,11 @@ function SaveAndUpdate(flag)
         data.Shift = $('#Shift').val();
         data.MFlag = $('#MFlag').val() || 0;
 
-        data.Cash = parseFloat($('#regcash').val()||0);
-        data.Upi  = parseFloat($('#regupi').val()||0);
+        data.Cash = parseFloat($('#regcash').val() || 0);
+        data.Upi = parseFloat($('#regupi').val() || 0);
         data.Card = parseFloat($('#regcard').val() || 0);
 
-        
+
         //ajax code for insert and update to master controller
         $.ajax({
             type: "POST",
@@ -661,22 +639,20 @@ function SaveAndUpdate(flag)
             success: function (result) {
                 $('#btnsubmit').removeAttr("disabled");
                 var status = result.oList[0].Status;
-                var RegId = result.oList[0].RegId;               
+                var RegId = result.oList[0].RegId;
                 var RegNo = result.oList[0].RegNo;
 
                 REVID = result.oList[0].Revisit_Id;
 
                 sessionStorage.setItem("BSOP_PI", RegId);
                 sessionStorage.setItem("BSOP_IP", 0);
-                if (status==0)
-                {
-                swal('Reg No ' + $('#RegSeries :selected').text() + ' - ' + RegNo + ' Already Exists', "", "warning");
-                $('.swal-button swal-button--confirm').focus();
+                if (status == 0) {
+                    swal('Reg No ' + $('#RegSeries :selected').text() + ' - ' + RegNo + ' Already Exists', "", "warning");
+                    $('.swal-button swal-button--confirm').focus();
                     $('#btnsubmit').show();
-               
+
                 }
-                else if (status==6)
-                {
+                else if (status == 6) {
                     swal('Same Patient Name and Mobile Number Already Exists', "", "warning");
                     $('.swal-button swal-button--confirm').focus();
                     $('#btnsubmit').show();
@@ -688,9 +664,8 @@ function SaveAndUpdate(flag)
                     $('#confirmOk').focus();
                     $('.swal-button swal-button--confirm').focus();
                 }
-                else
-                {
-                  
+                else {
+
                     if (status == 1 || status == 2) {
                         fnImageSave(fname, RegId, status);
                         //stickerPrint()
@@ -709,28 +684,27 @@ function GetRows(RegId, fl) {
 
     $('#LoadingSmall').show();
     $('#RegId').val(RegId);
-    if (RegId == 0)
-    {
+    if (RegId == 0) {
         $("#PNameSearch").val('');
         GetRowsInfo(0);
     }
     else {
 
-    var data = {};
-    data.RegId = RegId;
-    data.RegSeries = $('#RegSeries').val();
-    data.RegNo = $('#RegNo').val();
-    $.ajax({
-        type: "POST",
-        url: "../Master/HMS_RegistrationGetandGets",
-        data: data,
-        success: function (result) {
+        var data = {};
+        data.RegId = RegId;
+        data.RegSeries = $('#RegSeries').val();
+        data.RegNo = $('#RegNo').val();
+        $.ajax({
+            type: "POST",
+            url: "../Master/HMS_RegistrationGetandGets",
+            data: data,
+            success: function (result) {
 
-            ShowRegistrationGet(result, fl);
-            $('#LoadingSmall').hide();
+                ShowRegistrationGet(result, fl);
+                $('#LoadingSmall').hide();
 
-        }
-    });
+            }
+        });
 
     }
 }
@@ -795,7 +769,7 @@ function ShowRegistrationlist(result) {
 
 function ShowRegistrationGet(result, fl) {
 
-    
+
     $('#Entry').show();
     $('#listing').hide();
 
@@ -805,52 +779,50 @@ function ShowRegistrationGet(result, fl) {
         $('#select_status').prop('checked', true);
     else
         $('#select_status').prop('checked', false);
-       REVID = result[0].Revisit_Id;
-       $('#RegSeries').val( result[0].RegSeries );                                        
-       $('#RegNo').val( result[0].RegNo );        
-       $('#PName').val( result[0].PName);         
-       $('#PGender').val( result[0].PGender);       
-       $('#Age').val(result[0].Age);
-       $('#Bloodgroup').val(result[0].Bloodgroup);
-       if (result[0].Bloodgroup != '')
-       { Bl = 1; }
-       else
-       { Bl = 0; }
-       $('#PDOB').val( result[0].PDOB );       
-       $('#Doctor').val( result[0].Doctor );       
-       $('#HealthCardNo').val( result[0].HealthCardNo);  
-       $('#MobileNo').val( result[0].MobileNo);      
-       $('#PhoneNo').val( result[0].PhoneNo );  
-       $('#Address1').val( result[0].Address1  );    
-       $('#Address2').val( result[0].Address2  );    
-       $('#Address3').val( result[0].Address3  );    
-       $('#AdharNo').val( result[0].AdharNo );   
-       $('#RegFee').val(parseFloat(result[0].RegFee || 0).toFixed(Decimal));
-       $('#ConsultFee').val(parseFloat(result[0].ConsultFee || 0).toFixed(Decimal));
-       $('#OtherFee').val(parseFloat(result[0].OtherFee || 0).toFixed(Decimal));
-       $('#TokenNo').val( result[0].TokenNo );      
-       $('#RegDate').val(result[0].RegDate);                                     
-       $('#District').val(result[0].District);
-       $('#State').val(result[0].State);
-       $('#Religion').val(result[0].Religion);
-       $('#Occupation').val(result[0].Occupation);
-       $('#EmailId').val(result[0].EmailId);
-       $('#Country').val(result[0].Country);
-       $('#ImgName').val(result[0].selectedImage);
-       $('#Shift').val(result[0].Shift);
+    REVID = result[0].Revisit_Id;
+    $('#RegSeries').val(result[0].RegSeries);
+    $('#RegNo').val(result[0].RegNo);
+    $('#PName').val(result[0].PName);
+    $('#PGender').val(result[0].PGender);
+    $('#Age').val(result[0].Age);
+    $('#Bloodgroup').val(result[0].Bloodgroup);
+    if (result[0].Bloodgroup != '') { Bl = 1; }
+    else { Bl = 0; }
+    $('#PDOB').val(result[0].PDOB);
+    $('#Doctor').val(result[0].Doctor);
+    $('#HealthCardNo').val(result[0].HealthCardNo);
+    $('#MobileNo').val(result[0].MobileNo);
+    $('#PhoneNo').val(result[0].PhoneNo);
+    $('#Address1').val(result[0].Address1);
+    $('#Address2').val(result[0].Address2);
+    $('#Address3').val(result[0].Address3);
+    $('#AdharNo').val(result[0].AdharNo);
+    $('#RegFee').val(parseFloat(result[0].RegFee || 0).toFixed(Decimal));
+    $('#ConsultFee').val(parseFloat(result[0].ConsultFee || 0).toFixed(Decimal));
+    $('#OtherFee').val(parseFloat(result[0].OtherFee || 0).toFixed(Decimal));
+    $('#TokenNo').val(result[0].TokenNo);
+    $('#RegDate').val(result[0].RegDate);
+    $('#District').val(result[0].District);
+    $('#State').val(result[0].State);
+    $('#Religion').val(result[0].Religion);
+    $('#Occupation').val(result[0].Occupation);
+    $('#EmailId').val(result[0].EmailId);
+    $('#Country').val(result[0].Country);
+    $('#ImgName').val(result[0].selectedImage);
+    $('#Shift').val(result[0].Shift);
 
-       $('#BirthWt').val(result[0].Birthweight);
-       $('#CurrentWt').val(result[0].Currentweight);
-       $('#PHeight').val(result[0].Height);
-       $('#FatherName').val(result[0].Fathersname);
-       $('#MotherName').val(result[0].Mothersname);
-       $('#FtOccupation').val(result[0].FatherOccupation);
-       $('#MtOccupation').val(result[0].MotherOccupation);
+    $('#BirthWt').val(result[0].Birthweight);
+    $('#CurrentWt').val(result[0].Currentweight);
+    $('#PHeight').val(result[0].Height);
+    $('#FatherName').val(result[0].Fathersname);
+    $('#MotherName').val(result[0].Mothersname);
+    $('#FtOccupation').val(result[0].FatherOccupation);
+    $('#MtOccupation').val(result[0].MotherOccupation);
 
     DDCONFEE = parseFloat(result[0].ConsultFee || 0)
     DDREGFEE = parseFloat(result[0].RegFee || 0);
 
-    var Am = parseFloat(result[0].RegFee || 0) + parseFloat(result[0].ConsultFee || 0) 
+    var Am = parseFloat(result[0].RegFee || 0) + parseFloat(result[0].ConsultFee || 0)
 
     $('#regtotal').val(Am.toFixed(2))
 
@@ -864,28 +836,28 @@ function ShowRegistrationGet(result, fl) {
     //else { $('#PayType').val(2) }
 
     $('#PayType').val(result[0].Occupation)
- 
 
-      
-       var Ext = (result[0].selectedImage).split('.').pop();
-       CheckImgValid('myImg', result[0].RegId, Ext);
 
-       GetPatientAge();
 
-       if (fl == 0)                                  //Details Get
-       {
-           $('#btndelete,#btntoken,#printId,#btnsticker,#printpresId').show();
-           $('#btnprint').prop('disabled', false);
-           $('#PName').focus();
-       }
-           
-       else if (fl == 1)                            //Revisit
-       {
-           $('#Searchcode').focus();
-           $('#btnRevisit').show();
-       }
+    var Ext = (result[0].selectedImage).split('.').pop();
+    CheckImgValid('myImg', result[0].RegId, Ext);
+
+    GetPatientAge();
+
+    if (fl == 0)                                  //Details Get
+    {
+        $('#btndelete,#btntoken,#printId,#btnsticker,#printpresId').show();
+        $('#btnprint').prop('disabled', false);
+        $('#PName').focus();
+    }
+
+    else if (fl == 1)                            //Revisit
+    {
+        $('#Searchcode').focus();
+        $('#btnRevisit').show();
+    }
     $("#btnprint,#btntoken,#printId,#btnsticker,#btnsticker,#printpresId").show();
-       createQRCode();
+    createQRCode();
     generatebarcode();
     /* anu */
     $('#Entry').on('input change', function () {
@@ -896,11 +868,10 @@ function ShowRegistrationGet(result, fl) {
             $('#btnprint').prop('disabled', true);
         }
     });
-   /*  anu*/
+    /*  anu*/
 }
 
-function CheckImgValid(Id, RegId, Ext)
-{
+function CheckImgValid(Id, RegId, Ext) {
     var d = new Date();
     $.ajax({
         url: "../ProjectImages/PatientImage/" + RegId + "." + Ext + "",
@@ -909,21 +880,20 @@ function CheckImgValid(Id, RegId, Ext)
             $('#' + Id).attr('src', "/app-assets/img/NoImage.png");
         },
         success: function () {
-            $('#' + Id).attr('src', "../ProjectImages/PatientImage/" + RegId + "." + Ext + "?"+d.getSeconds());
+            $('#' + Id).attr('src', "../ProjectImages/PatientImage/" + RegId + "." + Ext + "?" + d.getSeconds());
         }
     });
 }
 
 //Age Calculation
-function GetPatientAge()
-{  
+function GetPatientAge() {
     $('#Age,#Age1,#Age2').val('');
     var yearString = ""; var monthString = ""; var dayString = "";
 
     var dateString = document.getElementById("PDOB").value;
-   
+
     var age = AgeCalculation(dateString);
-  
+
     if (age.years > 1) yearString = " Years";
     else yearString = " Year";
     if (age.months > 1) monthString = " Months";
@@ -931,15 +901,14 @@ function GetPatientAge()
     if (age.days > 1) dayString = " Days";
     else dayString = " Day";
 
-    if(age.years>0){$('#Age').val(age.years + yearString);}
-    if(age.months>0){$('#Age1').val(age.months + monthString);}
-    if(age.days>0){$('#Age2').val(age.days + dayString);}
-  
-    if(dateString==CurDate)
-    {
+    if (age.years > 0) { $('#Age').val(age.years + yearString); }
+    if (age.months > 0) { $('#Age1').val(age.months + monthString); }
+    if (age.days > 0) { $('#Age2').val(age.days + dayString); }
+
+    if (dateString == CurDate) {
         //$('#Age2').val('0 Day');
         $('#Age2').val('');
-    }      
+    }
 }
 
 function validate(file) {
@@ -953,22 +922,22 @@ function validate(file) {
     }
 }
 
-function fnImageSave(imageName, RegId,sts) {
-  
+function fnImageSave(imageName, RegId, sts) {
+
     var formData = new FormData();
     var totalFiles = document.getElementById("selectedImage").files.length;
     var browsedFile = document.getElementById("selectedImage").files[0];
     var ImageId = RegId;
     if ((imageName != "" && totalFiles != 0)) {
-        var Exten = $("#selectedImage").get(0).files[0].name.split('.').pop();       
+        var Exten = $("#selectedImage").get(0).files[0].name.split('.').pop();
         if (browsedFile.type.match('image.*')) {
             formData.append("FileUpload", browsedFile);
             formData.append("ImageName", RegId);
             formData.append("Exten", Exten);
-            formData.append("UniqueId", ImageId);           
+            formData.append("UniqueId", ImageId);
             $.ajax({
                 type: "POST",
-                url: '/Master/UploadPatientImage', 
+                url: '/Master/UploadPatientImage',
                 data: formData,
                 dataType: "html",
                 contentType: false,
@@ -995,8 +964,8 @@ function ShowPrintAlerts(Status, RegId) {
                 buttons: {
                     cancel: "Cancel",
                     defeat: "Print",
-                   // Other: "Go to Bill",
-                    Presprint:"Pre-Print"
+                    // Other: "Go to Bill",
+                    Presprint: "Pre-Print"
 
                 },
             })
@@ -1009,7 +978,7 @@ function ShowPrintAlerts(Status, RegId) {
                             break;
                         case "Other":
                             window.open('../Revisit/LabBill?flag=reg', '_blank');
-                           // window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
+                            // window.open('../Revisit/ProcedureBill?flag=reg', '_blank');
                             formrefresh();
                             break;
 
@@ -1108,14 +1077,16 @@ function PrintRegistration() {
     myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
-    myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>REGISTRATION/CONSULTATION BILL</b></u></td></tr>');
+    myWindow.document.write('<table width=100% style="margin-top:-10px"><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>REGISTRATION/CONSULTATION BILL</b></u></td></tr>');
     myWindow.document.write('</table>');
-    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100%><tr ><td width=10% align=left ><b>RegNo#&#160;&#160; :</b></td><td colspan=4 align=left width=60%><b>' + $("#RegSeries option:selected").text()+'-'+ $('#RegNo').val() + '</b></td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#RegDate').val() + '</td></tr>');
-    myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=60%>' + $('#PName').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
-    myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#Doctor :selected').text() + '</td>                                                            <td width=10%><b>Bill No</b></td><td colspn=2 width=20% ><b>:' + REVID + '</b></td></tr>');
-    myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:10px;table-layout:fixed" width=100%>');
+    myWindow.document.write('<colgroup><col style="width:10%"><col style="width:38%"><col style="width:22%"><col style="width:10%"><col style="width:20%"></colgroup>');
+    myWindow.document.write('<tr ><td align=left ><b>RegNo&#160;&#160; :</b></td><td colspan=2 align=left><b>' + $("#RegSeries option:selected").text() + '-' + $('#RegNo').val() + '</b></td><td align=right style="padding-right:20px;">Date&#160;:</td><td align=left>' + $('#RegDate').val() + '</td></tr>');
+    myWindow.document.write('<tr ><td align=left >Patient:</td><td colspan=2 align=left>' + $('#PName').val() + '</td><td align=right>&#160;&#160;&#160;&#160;Age/Sex&#160;:</td><td align=left>' + Age + '</td></tr>');
+    myWindow.document.write('<tr ><td align=left >Address:</td><td colspan=4 align=left>' + $('#Address1').val() + ', ' + $('#Address2').val() + '</td></tr>');
+    myWindow.document.write('<tr ><td align=left >Doctor:</td><td colspan=2 align=left>' + $('#Doctor :selected').text() + '</td><td align=right style="padding-right:10px;"><b>BillNo&#160;:</b></td><td align=left><b>' + REVID + '</b></td></tr>');
+    myWindow.document.write('<tr><td  colspan=5>&#160;</td></tr>');
     myWindow.document.write('</table>');
-
     myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;font-family:tahoma;  width=100%>');
 
     myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;" ><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td  style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;"colspan=7>Description</td><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
@@ -1135,8 +1106,7 @@ function PrintRegistration() {
     myWindow.document.write('</table>');
 
     myWindow.document.write('<table><tr><td></td><td> ');
-    var myTag = $('#Doctor').find('option:selected').attr('tokenprefix');
-    myWindow.document.write('<table width=100%><tr height=50px> <td style="font-family:tahoma;font-size: 20px;font-weight:bold;color:#989898" width=100%> <center>TOKEN#</center></td></tr> <tr> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;border:5px solid #989898" width=100%> <center>' + myTag + '-' + $('#TokenNo').val() + '</center></td ></tr> </table> ');
+    myWindow.document.write('<table width=100%><tr height=50px> <td style="font-family:tahoma;font-size: 20px;font-weight:bold;color:#989898" width=100%> <center>TOKEN#</center></td></tr> <tr> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;border:5px solid #989898" width=100%> <center>' + $('#TokenNo').val() + '</center></td ></tr> </table> ');
     myWindow.document.write(' </td ><td width=30%></td></tr ></table > ');
 
     myWindow.document.write('<table  width=100%>');
@@ -1151,7 +1121,7 @@ function PrintRegistration() {
     myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
     myWindow.document.write('<tr><td>&#160;</td></tr>');
 
-  //  myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
+    //  myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
     //myWindow.document.write('</table>');
 
     myWindow.print();
@@ -1356,7 +1326,7 @@ function Printprescription() {
 
 
 //Show Window Alert Insert,update delete  Modify
-function Showalerts(Status,RegId) {
+function Showalerts(Status, RegId) {
     if (Status == 1) {
         window.setTimeout(function () {
             formrefresh();
@@ -1369,7 +1339,7 @@ function Showalerts(Status,RegId) {
             formrefresh();
             swal('Reg No. ' + RegId + ' Updated Successfully', "", "success");
             $('.swal-button swal-button--confirm').focus();
-        },200);
+        }, 200);
     }
     else if (Status == 3) {
         formrefresh();
@@ -1404,9 +1374,9 @@ function datatableWithsearch(tablename, download, title, tableButtonContainerId)
     var a = '#' + tablename + ' tfoot th'
     $(a).each(function () {
         var title = $(this).text();
-        if (title != ' ' )
+        if (title != ' ')
             $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%" />');
-        
+
     });
 
 
@@ -1415,55 +1385,55 @@ function datatableWithsearch(tablename, download, title, tableButtonContainerId)
     table = $('#' + tablename).DataTable({
         // dom: 'Bfrtip',
         dom: "<'row'<'col-sm-1'l><'col-sm-11'f>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-1'i><'col-sm-11'p>>",
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-1'i><'col-sm-11'p>>",
         buttons: [],
 
-                  "columnDefs": [
-                   { "width": "5%",  "targets": 0  },
-                   { "width": "8%",  "targets": 1  },
-                   { "width": "20%", "targets": 2  },
-                   { "width": "42%", "targets": 3  },
-                   { "width": "5%",  "targets": 4  },
-                   { "width": "4%",  "targets": 5  },
-                   { "width": "8%",  "targets": 6  },
-                   { "width": "20%", "targets": 7  },
-                   { "width": "8%",  "targets": 8  },
-                   //{ "width": "5%",  "targets": 9  },
-                   //{ "width": "2%",  "targets": 10 },
-                
-                
-                ],
+        "columnDefs": [
+            { "width": "5%", "targets": 0 },
+            { "width": "8%", "targets": 1 },
+            { "width": "20%", "targets": 2 },
+            { "width": "42%", "targets": 3 },
+            { "width": "5%", "targets": 4 },
+            { "width": "4%", "targets": 5 },
+            { "width": "8%", "targets": 6 },
+            { "width": "20%", "targets": 7 },
+            { "width": "8%", "targets": 8 },
+            //{ "width": "5%",  "targets": 9  },
+            //{ "width": "2%",  "targets": 10 },
+
+
+        ],
 
     });
     new $.fn.dataTable.Buttons(table, {
         buttons: [
-        {
-            extend: 'collection',
-            text: 'Export',
-            className: 'excelexport',
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    title: title,
-                    messageTop: 'Medoo Hms',
-                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7] }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    title: title,
-                    messageTop: 'Medoo Hms',
-                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7] }
-                },
-                {
-                    extend: 'print',
-                    title: title,
-                    messageTop: 'Medoo Hms',
-                    exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7] }
-                }
-            ]
-        },
-        'colvis'
+            {
+                extend: 'collection',
+                text: 'Export',
+                className: 'excelexport',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        title: title,
+                        messageTop: 'Medoo Hms',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7] }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: title,
+                        messageTop: 'Medoo Hms',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7] }
+                    },
+                    {
+                        extend: 'print',
+                        title: title,
+                        messageTop: 'Medoo Hms',
+                        exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6, 7] }
+                    }
+                ]
+            },
+            'colvis'
         ]
     });
     table.buttons(0, null).container().appendTo($("#itemListButtonPlace"));
@@ -1536,20 +1506,19 @@ function isNumber(evt, selectedvalue) {
 
 function Validateemail() {
     var email = $('#EmailId').val();
-    if (email != '')
-    {
-    var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    //var address = document.getElementById[email].value;
-    if (reg.test(email) == false) {
-        warningshow('Please Enter a valid Email', 'EmailId');
-        return (false);
+    if (email != '') {
+        var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        //var address = document.getElementById[email].value;
+        if (reg.test(email) == false) {
+            warningshow('Please Enter a valid Email', 'EmailId');
+            return (false);
+        }
+        else
+            return true;
     }
     else
         return true;
-    }
-    else
-        return true;
-  
+
 }
 
 
@@ -1561,24 +1530,24 @@ function Validateemail() {
 function PaymentPop(flg) {
     $('#registrationpayment').modal('show');
     $('#registrationpayment').appendTo('body');
-    
+
 }
 
 var DDCONFEE = 0, DDREGFEE = 0;
 function paymethodchange() {
     debugger;
-   
+
     var ptype = $('#PayType').val();
     if (ptype == 0) {
         $('#RegFee').val(0)
         $('#ConsultFee').val(0)
     }
-    else {     
+    else {
         $('#ConsultFee').val(DDCONFEE);
         $('#RegFee').val(DDREGFEE)
     }
     amountfillinpopup()
-    
+
 }
 
 
@@ -1605,7 +1574,7 @@ function closePop() {
     var Cash = parseFloat($("#regcash").val() || 0);
     var Upi = parseFloat($("#regupi").val() || 0);
     var Card = parseFloat($("#regcard").val() || 0);
-    var Result = parseFloat((Cash + Upi + Card)||0);
+    var Result = parseFloat((Cash + Upi + Card) || 0);
     if ($('#PayType').val() == 2) {
         $("#regcash").val(0)
         $("#regupi").val(0)
@@ -1613,7 +1582,7 @@ function closePop() {
         $('#registrationpayment').modal('hide');
     }
     else {
-        if (Result != parseFloat($('#regtotal').val()||0)) {
+        if (Result != parseFloat($('#regtotal').val() || 0)) {
             warningshow('Please Check Payment Amount', 'revcash');
         }
         else {
@@ -1643,7 +1612,7 @@ function discountcalculation() {
 
 
 
-function GetAppointment(AppointmentId,TknNo) {
+function GetAppointment(AppointmentId, TknNo) {
 
     $('#AppointmentId').val(AppointmentId)
     var data = {};
@@ -1827,7 +1796,7 @@ function ApplyAppointmentReg(AppointmentId, TokenNo, DoctorId, PatientRegId, App
 
                     if (TokenNo && TokenNo > 0) {
                         $('#TokenNo').val(TokenNo);
-                    }proc
+                    } proc
                     $('#AppointmentId').val(AppointmentId);
                     $('#PName').focus();
 

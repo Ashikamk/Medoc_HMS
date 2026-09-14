@@ -3005,7 +3005,6 @@ namespace EUMI_ERP
 
         public DataSet UsersInsertandUpdate(UsersModel UsersModel, string dbName)
         {
-
             try
             {
                 arlParms = new SqlParameter[1];
@@ -3014,8 +3013,8 @@ namespace EUMI_ERP
                     " begin" +
                     " if not  exists(SELECT * FROM Mst_Users where UserName ='" + UsersModel.UserName + "' and DelFlag = 1)" +
                     " begin" +
-                    " INSERT INTO Mst_Users(UserName, Password, Email, DepartmentId, LocationId, DelFlag, Name,DiscountPercent)" +
-                    " select '" + UsersModel.UserName + "',ENCRYPTBYPASSPHRASE('" + KeyValues.DecryptKey + "','" + UsersModel.Password + "'),'" + UsersModel.Email + "','" + UsersModel.DepartmentId + "','" + UsersModel.LocationId + "','" + UsersModel.DelFlag + "','" + UsersModel.Name + "','" + UsersModel.DiscountPercent + "'" +
+                    " INSERT INTO Mst_Users(UserName, Password, Email, DepartmentId, LocationId, DelFlag, Name, DiscountPercent, Qualification)" +
+                    " select '" + UsersModel.UserName + "',ENCRYPTBYPASSPHRASE('" + KeyValues.DecryptKey + "','" + UsersModel.Password + "'),'" + UsersModel.Email + "','" + UsersModel.DepartmentId + "','" + UsersModel.LocationId + "','" + UsersModel.DelFlag + "','" + UsersModel.Name + "','" + UsersModel.DiscountPercent + "','" + UsersModel.Qualification + "'" +
                     " select 1 'Status',SCOPE_IDENTITY()'UserId'" +
                     " END" +
                     " else" +
@@ -3027,7 +3026,7 @@ namespace EUMI_ERP
                     " begin" +
                     " if not  exists(SELECT * FROM Mst_Users where UserName = '" + UsersModel.UserName + "' and UserId <> '" + UsersModel.UserId + "' and DelFlag = 1)" +
                     " begin" +
-                    " update Mst_Users set UserName = '" + UsersModel.UserName + "',Password = ENCRYPTBYPASSPHRASE('" + KeyValues.DecryptKey + "','" + UsersModel.Password + "'),Email = '" + UsersModel.Email + "',DepartmentId = " + UsersModel.DepartmentId + ",LocationId = '" + UsersModel.LocationId + "',DelFlag = '" + UsersModel.DelFlag + "',Name = '" + UsersModel.Name + "',DiscountPercent = '" + UsersModel.DiscountPercent + "' where UserId = '" + UsersModel.UserId + "'" +
+                    " update Mst_Users set UserName = '" + UsersModel.UserName + "',Password = ENCRYPTBYPASSPHRASE('" + KeyValues.DecryptKey + "','" + UsersModel.Password + "'),Email = '" + UsersModel.Email + "',DepartmentId = " + UsersModel.DepartmentId + ",LocationId = '" + UsersModel.LocationId + "',DelFlag = '" + UsersModel.DelFlag + "',Name = '" + UsersModel.Name + "',DiscountPercent = '" + UsersModel.DiscountPercent + "',Qualification = '" + UsersModel.Qualification + "' where UserId = '" + UsersModel.UserId + "'" +
                     " select 2 'Status','" + UsersModel.UserId + "' 'UserId'" +
                     " end" +
                     " else" +
@@ -3041,7 +3040,6 @@ namespace EUMI_ERP
 
                 arlParms[0] = new SqlParameter("@Query", Query);
                 return SQLHelper.ExecuteDataset("UsersInsertandUpdate", dbName, arlParms);
-
             }
             catch (SqlException exMe)
             {
@@ -3057,12 +3055,12 @@ namespace EUMI_ERP
                 arlParms = new SqlParameter[1];
 
                 string Query = "if('" + UsersModel.UserId + "'=0)" +
-                               " select *,0 as 'DivId',0 AS 'DefaultDep',0 AS 'DefaultLoc',isnull(DiscountPercent,0) as DiscountPercent from Mst_Users" +
+                               " select *,0 as 'DivId',0 AS 'DefaultDep',0 AS 'DefaultLoc',isnull(DiscountPercent,0) as DiscountPercent,isnull(Qualification,'') as Qualification from Mst_Users" +
                                " left outer join Mst_Department on Mst_Users.DepartmentId = Mst_Department.DepartmentId" +
                                " left outer join  Mst_Location on Mst_Users.LocationId = Mst_Location.LocationId" +
                                " where Mst_Users.DelFlag = 1 and Mst_Users.UserId!=1" +
                                " else" +
-                               " select Mst_Users.UserId,Name,UserName,CONVERT(VARCHAR(MAX),DECRYPTBYPASSPHRASE('" + KeyValues.DecryptKey + "', Password )) as Password,DivId,DeptId as 'DepartmentId',DepartmentName,LocId as 'LocationId',LocationName,Email,Mst_Users.DepartmentId AS 'DefaultDep',Mst_Users.LocationId AS 'DefaultLoc',isnull(DiscountPercent,0) as DiscountPercent from Mst_Users" +
+                               " select Mst_Users.UserId,Name,UserName,CONVERT(VARCHAR(MAX),DECRYPTBYPASSPHRASE('" + KeyValues.DecryptKey + "', Password )) as Password,DivId,DeptId as 'DepartmentId',DepartmentName,LocId as 'LocationId',LocationName,Email,Mst_Users.DepartmentId AS 'DefaultDep',Mst_Users.LocationId AS 'DefaultLoc',isnull(DiscountPercent,0) as DiscountPercent,isnull(Qualification,'') as Qualification from Mst_Users" +
                                " left outer join  Mst_UserDeptDivision on Mst_Users.UserId=Mst_UserDeptDivision.UserId" +
                                " left outer join Mst_Department on Mst_Users.DepartmentId=Mst_Department.DepartmentId" +
                                " left outer join Mst_Location on Mst_Users.LocationId=Mst_Location.LocationId" +
@@ -3070,14 +3068,27 @@ namespace EUMI_ERP
 
                 arlParms[0] = new SqlParameter("@Query", Query);
                 return SQLHelper.ExecuteDataset("UsersGetandGets", dbName, arlParms);
-
             }
             catch (SqlException exMe)
             {
                 Console.WriteLine(exMe.Message);
                 return null;
             }
+        }
 
+        public DataSet UserSignatureDetailsGet(UsersModel UsersModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@UserId", UsersModel.UserId);
+                return SQLHelper.ExecuteDataset("UserSignatureDetailsGet", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
         }
 
         public DataSet CustomerOrSupplierSearch(CustomerMaster CustomerMaster, string dbName)

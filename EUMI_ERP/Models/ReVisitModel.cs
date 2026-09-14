@@ -597,6 +597,8 @@ namespace EUMI_ERP.Models
 
         public string Departments { get; set; }
 
+        public string ConsultFee { get; set; }
+
 
         DReVisit oDReVisit = new DReVisit();
 

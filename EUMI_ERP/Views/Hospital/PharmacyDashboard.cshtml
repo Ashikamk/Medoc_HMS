@@ -1242,6 +1242,36 @@
         overflow: hidden !important;
         padding-right: 0 !important;
     }
+
+    .pharm-loader-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(248,250,252,.75);
+        backdrop-filter: blur(2px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999998;
+    }
+
+        .pharm-loader-overlay.show {
+            display: flex;
+        }
+
+    .pharm-spin {
+        width: 42px;
+        height: 42px;
+        border: 4px solid var(--border);
+        border-top-color: #008080;
+        border-radius: 50%;
+        animation: pharmSpin .7s linear infinite;
+    }
+
+    @@keyframes pharmSpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 
 <div class="pharm-wrap">
@@ -1620,10 +1650,11 @@
                                     <th>Category</th>
                                     <th>Stock Qty</th>
                                     <th>Last Sold Date</th>
+                                    <th>Stock Out (Qty)</th>
                                 </tr>
                             </thead>
                             <tbody id="fastMovingList">
-                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1699,12 +1730,12 @@
                                     <th>Medicine Name</th>
                                     <th>Batch No.</th>
                                     <th>Expiry Date</th>
-                                    <th>Stock Qty</th>
+                                    @*<th>Stock Qty</th>*@
                                     <th>Days Left</th>
                                 </tr>
                             </thead>
                             <tbody id="expiryReportList">
-                                <tr><td colspan="6" class="text-center">Loading...</td></tr>
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1773,19 +1804,19 @@
                             <div class="qa-icon" style="background:var(--warning-light);color:#B45309;"><i class="fa fa-plus"></i></div>
                             <span style="font-size:16px !important;">Add Medicine</span>
                         </a>
-                        <a href="#" onclick="showSection('sec-shortstock'); return false;" class="qa-btn qa-rose">
+                        <a href="#" onclick="showPharmLoader(); showSection('sec-shortstock'); setTimeout(hidePharmLoader,150); return false;" class="qa-btn qa-rose">
                             <div class="qa-icon" style="background:#FFF1F2;color:#E11D48;"><i class="fa fa-exclamation-triangle"></i></div>
                             <span style="font-size:16px !important;">View Short Stock</span>
                         </a>
-                        <a href="#" onclick="showSection('sec-expiry'); return false;" class="qa-btn qa-danger">
+                        <a href="#" onclick="showPharmLoader(); showSection('sec-expiry'); setTimeout(hidePharmLoader,150); return false;" class="qa-btn qa-danger">
                             <div class="qa-icon" style="background:var(--danger-light);color:var(--danger);"><i class="fa fa-hourglass-end"></i></div>
                             <span style="font-size:16px !important;">Expiry Report</span>
                         </a>
-                        <a href="#" onclick="showSection('sec-outofstock'); return false;" class="qa-btn qa-orange">
+                        <a href="#" onclick="showPharmLoader(); showSection('sec-outofstock'); setTimeout(hidePharmLoader,150); return false;" class="qa-btn qa-orange">
                             <div class="qa-icon" style="background:#FFF7ED;color:#C2410C;"><i class="fa fa-ban"></i></div>
                             <span style="font-size:16px !important;">Out of Stock</span>
                         </a>
-                        <a href="#" onclick="showSection('sec-medicinequeue'); return false;" class="qa-btn qa-purple">
+                        <a href="#" onclick="showPharmLoader(); showSection('sec-medicinequeue'); setTimeout(hidePharmLoader,150); return false;" class="qa-btn qa-purple">
                             <div class="qa-icon" style="background:var(--purple-light);color:var(--purple);"><i class="fa fa-users"></i></div>
                             <span style="font-size:16px !important;">Medicine Queue</span>
                         </a>
@@ -1797,6 +1828,10 @@
     </div>
 </div>
 <div id="Warningpopup" class="top-alert"><span id="popupmessage"></span></div>
+
+<div id="pharm-loader" class="pharm-loader-overlay">
+    <div class="pharm-spin"></div>
+</div>
 
 <div class="modal fade" id="SimpleMedModal" tabindex="-1" role="dialog" aria-labelledby="SimpleMedModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="max-width:720px;" role="document">
@@ -1871,6 +1906,20 @@
 </div>
 
 <script>
+
+    var g_pharmLoaderCount = 0;
+
+    function showPharmLoader() {
+        g_pharmLoaderCount++;
+        $('#pharm-loader').addClass('show');
+    }
+
+    function hidePharmLoader() {
+        g_pharmLoaderCount = Math.max(0, g_pharmLoaderCount - 1);
+        if (g_pharmLoaderCount === 0) {
+            $('#pharm-loader').removeClass('show');
+        }
+    }
     var salesChart, purchaseChart, medicinesChart;
     var medicineQueueData = [];
 
@@ -1897,9 +1946,9 @@
             var fromVal = $('#pharm-from-date').val();
             var toVal = $('#pharm-to-date').val();
             if (fromVal && toVal) {
-                LoadDashboardData(fromVal, toVal);
+                LoadDashboardData(fromVal, toVal, true);
             }
-            LoadMedicineQueue();
+            LoadMedicineQueue(true);
         }, 120000);
     });
 
@@ -1909,9 +1958,11 @@
         navItems.forEach(function (item) {
             item.addEventListener('click', function (e) {
                 e.preventDefault();
+                showPharmLoader();
                 navItems.forEach(function (n) { n.classList.remove('active'); });
                 item.classList.add('active');
                 showSection(item.getAttribute('data-target'));
+                setTimeout(hidePharmLoader, 150);
             });
         });
 
@@ -2019,6 +2070,13 @@
 
     var tablePagers = {};
 
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('.tbl-page-btn');
+        if (btn && !btn.disabled && btn.dataset.tbodyId) {
+            goToPage(btn.dataset.tbodyId, parseInt(btn.dataset.page));
+        }
+    });
+
     function initTablePaging(tbodyId, defaultSize) {
         var tbody = document.getElementById(tbodyId);
         var rows = Array.prototype.filter.call(tbody.getElementsByTagName('tr'), function (r) {
@@ -2069,15 +2127,43 @@
 
         var pagEl = document.getElementById(tbodyId + '_pagination');
         if (pagEl) {
-            var html = '<button class="tbl-page-btn" ' + (pager.currentPage === 1 ? 'disabled' : '') +
-                ' onclick="goToPage(\'' + tbodyId + '\',' + (pager.currentPage - 1) + ')">Previous</button>';
+            var cur = pager.currentPage;
+            var delta = 1;
+            var lastPrinted = 0;
+            var parts = [];
+
+            parts.push({ type: 'nav', page: cur - 1, label: 'Previous', disabled: cur === 1 });
+
             for (var p = 1; p <= totalPages; p++) {
-                html += '<button class="tbl-page-btn' + (p === pager.currentPage ? ' active' : '') +
-                    '" onclick="goToPage(\'' + tbodyId + '\',' + p + ')">' + p + '</button>';
+                var showPage = (p === 1) || (p === totalPages) || (p >= cur - delta && p <= cur + delta);
+                if (showPage) {
+                    if (lastPrinted && p - lastPrinted > 1) {
+                        parts.push({ type: 'ellipsis' });
+                    }
+                    parts.push({ type: 'page', page: p, label: String(p), active: p === cur });
+                    lastPrinted = p;
+                }
             }
-            html += '<button class="tbl-page-btn" ' + (pager.currentPage === totalPages ? 'disabled' : '') +
-                ' onclick="goToPage(\'' + tbodyId + '\',' + (pager.currentPage + 1) + ')">Next</button>';
-            pagEl.innerHTML = html;
+
+            parts.push({ type: 'nav', page: cur + 1, label: 'Next', disabled: cur === totalPages });
+
+            pagEl.innerHTML = '';
+            parts.forEach(function (item) {
+                if (item.type === 'ellipsis') {
+                    var span = document.createElement('span');
+                    span.className = 'tbl-page-ellipsis';
+                    span.textContent = '...';
+                    pagEl.appendChild(span);
+                    return;
+                }
+                var btn = document.createElement('button');
+                btn.className = 'tbl-page-btn' + (item.active ? ' active' : '');
+                btn.textContent = item.label;
+                btn.disabled = !!item.disabled;
+                btn.dataset.tbodyId = tbodyId;
+                btn.dataset.page = item.page;
+                pagEl.appendChild(btn);
+            });
         }
     }
 
@@ -2126,7 +2212,7 @@
             secQuickActions.classList.add('qa-horizontal');
             LoadMedicineQueue();
         } else if (target === 'sec-medicinequeue') {
-            secMedicineQueue.style.display = 'block';
+            secMedicineQueue.style.display = 'flex';
             secMedicineQueue.style.width = '100%';
             LoadMedicineQueue();
         } else if (target === 'sec-sales') {
@@ -2158,7 +2244,7 @@
             rowOutQa.style.gridTemplateColumns = '1fr';
             secQuickActions.style.display = 'none';
         } else if (target === 'sec-totalmedicines') {
-            secTotalMedicines.style.display = 'block';
+            secTotalMedicines.style.display = 'flex';
             secTotalMedicines.style.width = '100%';
             LoadTotalMedicines();
         }
@@ -2167,15 +2253,18 @@
     }
 
     function LoadTotalMedicines() {
+        showPharmLoader();
         $.ajax({
             type: "POST",
             url: "../Master/ItemGetAll",
             data: { dummy: 1 },
             success: function (result) {
                 LoadTotalMedicinesTable(result);
+                hidePharmLoader();
             },
             error: function (xhr) {
                 $('#totalMedicinesList').html('<tr><td colspan="9" class="text-center">Error loading medicines: ' + xhr.status + '</td></tr>');
+                hidePharmLoader();
             }
         });
     }
@@ -2243,8 +2332,9 @@
         $('#purchaseChartTitle').text('Purchase Invoice Analysis (' + rangeText + ')');
     }
 
-    function LoadDashboardData(fromDate, toDate) {
+    function LoadDashboardData(fromDate, toDate, silent) {
         updateChartTitles(fromDate, toDate);
+        if (!silent) showPharmLoader();
         $.ajax({
             url: '/Hospital/GetPharmacyDashboardData',
             type: 'POST',
@@ -2303,11 +2393,13 @@
                     LoadEmptyChart('salesTrendChart', 'No data');
                     LoadEmptyChart('purchaseTrendChart', 'No data');
                 }
+                if (!silent) hidePharmLoader();
             },
             error: function (xhr) {
                 SetAllError('Error: ' + xhr.status);
                 LoadEmptyChart('salesTrendChart', 'Error loading data');
                 LoadEmptyChart('purchaseTrendChart', 'Error loading data');
+                if (!silent) hidePharmLoader();
             }
         });
     }
@@ -2531,11 +2623,16 @@
         if (dataString) {
             splitRowsSmart(dataString, 4).forEach(function (row, i) {
                 var c = row.split('|');
+                var combined = (c[3] || '-~0').split('~');
+                var lastSold = combined[0] || '-';
+                var soldQty = combined[1] || '0';
+
                 html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
-                    '</td><td>' + (c[2] || '-') + '</td><td>' + (c[3] || '-') + '</td></tr>';
+                    '</td><td>' + (c[2] || '-') + '</td><td>' + lastSold + '</td>' +
+                    '<td>' + soldQty + '</td></tr>';
             });
         }
-        $(elementId).html(html || '<tr><td colspan="5" class="text-center">No data available</td></tr>');
+        $(elementId).html(html || '<tr><td colspan="6" class="text-center">No data available</td></tr>');
     }
 
     function LoadNonMovingTable(elementId, dataString) {
@@ -2550,6 +2647,21 @@
         $(elementId).html(html || '<tr><td colspan="4" class="text-center">No data available</td></tr>');
     }
 
+    //function LoadExpiryTable(elementId, dataString) {
+    //    var html = '';
+    //    if (dataString) {
+    //        splitRowsSmart(dataString, 5).forEach(function (row, i) {
+    //            var c = row.split('|');
+    //            var days = parseInt(c[3]) || 0;
+    //            var cls = days <= 15 ? 'status-critical' : (days <= 30 ? 'status-warning' : 'status-good');
+    //            html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
+    //                '</td><td>' + (c[2] || '-') + '</td><td>' + (c[4] || '-') + '</td>' +
+    //                '<td><span class="status-badge ' + cls + '">' + days + ' days</span></td></tr>';
+    //        });
+    //    }
+    //    $(elementId).html(html || '<tr><td colspan="6" class="text-center">No data available</td></tr>');
+    //}
+
     function LoadExpiryTable(elementId, dataString) {
         var html = '';
         if (dataString) {
@@ -2558,11 +2670,11 @@
                 var days = parseInt(c[3]) || 0;
                 var cls = days <= 15 ? 'status-critical' : (days <= 30 ? 'status-warning' : 'status-good');
                 html += '<tr><td>' + (i + 1) + '</td><td>' + (c[0] || '-') + '</td><td>' + (c[1] || '-') +
-                    '</td><td>' + (c[2] || '-') + '</td><td>' + (c[4] || '-') + '</td>' +
+                    '</td><td>' + (c[2] || '-') + '</td>' +
                     '<td><span class="status-badge ' + cls + '">' + days + ' days</span></td></tr>';
             });
         }
-        $(elementId).html(html || '<tr><td colspan="6" class="text-center">No data available</td></tr>');
+        $(elementId).html(html || '<tr><td colspan="5" class="text-center">No data available</td></tr>');
     }
 
     function LoadOutOfStockTable(elementId, dataString) {
@@ -2579,11 +2691,12 @@
     }
 
 
-    function LoadMedicineQueue() {
+    function LoadMedicineQueue(silent) {
         var today = getPharmTodayFormatted();
         var fromDate = $('#pharm-from-date').val() || today;
         var toDate = $('#pharm-to-date').val() || today;
 
+        if (!silent) showPharmLoader();
         $.ajax({
             type: "POST",
             url: "../Revisit/HMS_OPWorkSheetMedicineAdvice",
@@ -2597,10 +2710,12 @@
             },
             success: function (result) {
                 LoadMedicineQueueTable(result);
+                if (!silent) hidePharmLoader();
             },
             error: function (xhr) {
                 $('#medicineQueueList').html('<tr><td colspan="12" class="text-center">Error loading medicine queue data: ' + xhr.status + '</td></tr>');
                 $('#medicineQueueCount').text('0');
+                if (!silent) hidePharmLoader();
             }
         });
     }
@@ -2956,10 +3071,12 @@
     }
 
     function goToSection(target) {
+        showPharmLoader();
         var navItems = document.querySelectorAll('.pharm-sidenav .nav-item');
         navItems.forEach(function (n) { n.classList.remove('active'); });
         var matchingNav = document.querySelector('.pharm-sidenav .nav-item[data-target="' + target + '"]');
         if (matchingNav) matchingNav.classList.add('active');
         showSection(target);
+        setTimeout(hidePharmLoader, 150);
     }
 </script>

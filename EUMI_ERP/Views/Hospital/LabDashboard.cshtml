@@ -357,6 +357,13 @@
             margin: 0;
         }
 
+    .dt-page-ellipsis {
+        padding: 5px 6px;
+        font-size: 13px;
+        color: var(--sub);
+        user-select: none;
+    }
+
     .quick-range-wrap {
         position: relative;
     }
@@ -1806,11 +1813,45 @@
             color: #fff;
             transform: translateY(-1px);
         }
+
+    .dash-loader-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255,255,255,.65);
+        backdrop-filter: blur(2px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+    }
+
+        .dash-loader-overlay.show {
+            display: flex;
+        }
+
+    .dash-spinner {
+        width: 46px;
+        height: 46px;
+        border: 5px solid #E7EBF3;
+        border-top-color: teal;
+        border-radius: 50%;
+        animation: dashSpin .7s linear infinite;
+    }
+
+    @@keyframes dashSpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 
 <script src="~/app-assets/vendors/js/chart.min.js"></script>
 
 <div id="Warningpopup" class="top-alert"><span id="popupmessage"></span></div>
+
+<div id="dashLoader" class="dash-loader-overlay">
+    <div class="dash-spinner"></div>
+</div>
 
 <div class="container">
     <div class="modal fade" id="LabResultDetailModal" role="dialog">
@@ -2502,6 +2543,21 @@
 
 <script>
 
+    var g_loaderCount = 0;
+    var g_silentRefresh = false;
+
+    function showLoader() {
+        g_loaderCount++;
+        document.getElementById('dashLoader').classList.add('show');
+    }
+
+    function hideLoader() {
+        g_loaderCount = Math.max(0, g_loaderCount - 1);
+        if (g_loaderCount === 0) {
+            document.getElementById('dashLoader').classList.remove('show');
+        }
+    }
+
     $(document).ready(function () {
         document.title = "Laboratory Dashboard";
         $("#SimpleLabModal").appendTo("body");
@@ -2620,6 +2676,7 @@
         if (!f.value || !t.value) { warningshow('Please select both From and To dates.'); return; }
         var fd = dmyToDate(f.value), td = dmyToDate(t.value);
         if (fd && td && fd > td) { warningshow('From date cannot be greater than To date.'); return; }
+        showLoader();
         g_verifyMap = {};
         LoadDashboard();
         LoadLabQueue();
@@ -2700,14 +2757,20 @@
         var html = '<button class="dt-page-btn" ' + (st.page === 1 ? 'disabled' : '') +
             ' onclick="changeTablePage(\'' + key + '\',' + (st.page - 1) + ')">Previous</button>';
 
-        var maxBtns = 5;
-        var startPage = Math.max(1, st.page - Math.floor(maxBtns / 2));
-        var endPage = Math.min(totalPages, startPage + maxBtns - 1);
-        startPage = Math.max(1, endPage - maxBtns + 1);
+        var cur = st.page;
+        var delta = 1;
+        var lastPrinted = 0;
 
-        for (var p = startPage; p <= endPage; p++) {
-            html += '<button class="dt-page-btn ' + (p === st.page ? 'active' : '') +
-                '" onclick="changeTablePage(\'' + key + '\',' + p + ')">' + p + '</button>';
+        for (var p = 1; p <= totalPages; p++) {
+            var showPage = (p === 1) || (p === totalPages) || (p >= cur - delta && p <= cur + delta);
+            if (showPage) {
+                if (lastPrinted && p - lastPrinted > 1) {
+                    html += '<span class="dt-page-ellipsis">...</span>';
+                }
+                html += '<button class="dt-page-btn ' + (p === cur ? 'active' : '') +
+                    '" onclick="changeTablePage(\'' + key + '\',' + p + ')">' + p + '</button>';
+                lastPrinted = p;
+            }
         }
 
         html += '<button class="dt-page-btn" ' + (st.page === totalPages ? 'disabled' : '') +
@@ -2795,7 +2858,10 @@
         document.getElementById('quickRangeMenu').classList.remove('open');
     }
 
-    function LoadDashboard() {
+    function LoadDashboard(silent) {
+        g_silentRefresh = !!silent;
+        if (!g_silentRefresh) showLoader();
+
         var fromInput = document.getElementById('dash-from-date');
         var toInput = document.getElementById('dash-to-date');
 
@@ -2818,9 +2884,11 @@
                 FetchBillsForVerification();
                 BuildDailyChart(g_worksheetRows);
             },
-            error: function () { ProcessWorksheetData([]); }
+            error: function () {
+                ProcessWorksheetData([]);
+                if (!g_silentRefresh) hideLoader();
+            }
         });
-
     }
 
     function FetchBillsForVerification(today) {
@@ -2873,6 +2941,7 @@
                     }
                 }
                 FetchVerificationForBills(fakeBills, 0);
+                hideLoader();
             }
         });
     }
@@ -2953,7 +3022,10 @@
                         RebuildWithVerification(bills, {}, {}, {});
                     }
                 },
-                error: function () { RebuildWithVerification(bills, {}, {}, {}); }
+                error: function () {
+                    RebuildWithVerification(bills, {}, {}, {});
+                    hideLoader();
+                }
             });
         }
     }
@@ -3184,16 +3256,19 @@
         rerenderTable('nonapproved');
 
         storeBotData(verifiedList, nonVerifiedList, approvedList, nonApprovedList);
+        if (!g_silentRefresh) hideLoader();
     }
 
     function goToSection(e, target) {
         if (e) e.preventDefault();
+        showLoader();
         document.querySelectorAll('.lab-sidenav .nav-item').forEach(function (n) {
             n.classList.remove('active');
         });
         var navItem = document.querySelector('.lab-sidenav .nav-item[data-target="' + target + '"]');
         if (navItem) navItem.classList.add('active');
         showSection(target);
+        setTimeout(hideLoader, 150);
     }
 
     function ProcessWorksheetData(list) {
@@ -3660,7 +3735,9 @@
     }
     var g_labQueueRaw = [];
 
-    function LoadLabQueue() {
+    function LoadLabQueue(silent) {
+        if (!silent) showLoader();
+
         var fromDate = g_fromDate || getTodayFormatted();
         var toDate = g_toDate || getTodayFormatted();
 
@@ -3705,12 +3782,14 @@
                 g_tablePaging.labqueue.page = 1;
                 rerenderTable('labqueue');
                 setKPI('kpi-labqueue', formattedData.length);
+                if (!silent) hideLoader();
             },
             error: function () {
                 g_botData.labqueue = [];
                 g_tablePaging.labqueue.data = [];
                 rerenderTable('labqueue');
                 setKPI('kpi-labqueue', 0);
+                if (!silent) hideLoader();
             }
         });
     }
@@ -4266,8 +4345,8 @@
 
         setInterval(function () {
             g_verifyMap = {};
-            LoadDashboard();
-            LoadLabQueue();
+            LoadDashboard(true);
+            LoadLabQueue(true);
         }, 120000);
     });
 
@@ -4482,7 +4561,8 @@
             var card = document.getElementById('sec-lab-queue');
             if (card) card.style.display = 'block';
             if (g_botData.labqueue.length === 0) {
-                LoadLabQueue();
+                showLoader();
+                LoadLabQueue(); 
             }
         }
         else {
@@ -4498,11 +4578,13 @@
     document.querySelectorAll('.lab-sidenav .nav-item').forEach(function (item) {
         item.addEventListener('click', function (e) {
             e.preventDefault();
+            showLoader();
             document.querySelectorAll('.lab-sidenav .nav-item').forEach(function (n) {
                 n.classList.remove('active');
             });
             this.classList.add('active');
             showSection(this.dataset.target);
+            setTimeout(hideLoader, 150);
         });
     });
 

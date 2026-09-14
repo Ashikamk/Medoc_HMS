@@ -202,7 +202,8 @@ function SaveAndUpdate(Flag) {
         data.Gender = $('#txt_docgender').val();
         data.selectedImage = fname;
         data.Designation = $('#txt_docdesignation').val();
-        data.Training = 1;//$('#txt_doctraining').val();
+        //data.Training = 1;//$('#txt_doctraining').val();
+        data.Training = $('#txt_doctraining').val();
         data.Acheivement = $('#txtacheive').val();
         data.Certification = $('#txt_docawards').val();
         data.Language = $('#txt_doclang').val();

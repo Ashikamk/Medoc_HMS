@@ -4581,6 +4581,7 @@ namespace EUMI_ERP.Controllers
                     LModels.LocationId = Convert.ToInt32(row["LocationId"].ToString());
                     LModels.LocationName = row["LocationName"].ToString();
                     LModels.Email = row["Email"].ToString();
+                    LModels.Qualification = row["Qualification"].ToString();
                     LModels.DefaultLoc = Convert.ToInt32(row["DefaultLoc"].ToString());
                     LModels.DefaultDep = Convert.ToInt32(row["DefaultDep"].ToString());
                     LModels.DiscountPercent = Convert.ToDecimal(row["DiscountPercent"].ToString());
@@ -4594,6 +4595,35 @@ namespace EUMI_ERP.Controllers
             }
 
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetLoggedInUserDetails(long UserId)
+        {
+            var result = new { Name = "", Qualification = "", UserId = 0 };
+            try
+            {
+                UsersModel obj = new UsersModel();
+                UsersModel model = new UsersModel();
+                model.UserId = UserId;
+
+                DataSet ds = obj.UserSignatureDetailsGet(model, dbName);
+                if (ds != null && ds.Tables[0].Rows.Count > 0)
+                {
+                    var row = ds.Tables[0].Rows[0];
+                    return Json(new
+                    {
+                        Name = row["Name"].ToString(),
+                        Qualification = row["Qualification"].ToString(),
+                        UserId = UserId
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 

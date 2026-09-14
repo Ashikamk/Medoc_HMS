@@ -31,6 +31,7 @@ namespace EUMI_ERP.Models
         public long DefaultDep { get; set; }
         public long DefaultLoc { get; set; }
         public decimal DiscountPercent { get; set; }
+        public string Qualification { get; set; }
 
         DMasters oDMasters = new DMasters();
 
@@ -44,7 +45,12 @@ namespace EUMI_ERP.Models
             return oDMasters.UserDepartmentGets(oUsersModel, dbName);
         }
 
-        
+        public DataSet UserSignatureDetailsGet(UsersModel oUsersModel, string dbName)
+        {
+            return oDMasters.UserSignatureDetailsGet(oUsersModel, dbName);
+        }
+
+
         public DataSet UsersInsertandUpdate(UsersModel oUsersModel, string dbName)
         {
             return oDMasters.UsersInsertandUpdate(oUsersModel, dbName);

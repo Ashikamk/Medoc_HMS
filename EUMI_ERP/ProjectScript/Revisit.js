@@ -1047,7 +1047,7 @@ function PrintRevisttype() {
     }
 }
 
-var BillPtype = 0; //0--DOS 1-Lazer
+var BillPtype = 1; //0--DOS 1-Lazer
 function PrintRevist() {
 
     if (BillPtype == 1) { //LAZER PRINT
@@ -1067,12 +1067,23 @@ function PrintRevist() {
 
         var TypeText = '';
 
-        myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>REVISIT BILL</b></u></td></tr>');
+        //myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>REVISIT BILL</b></u></td></tr>');
+        //myWindow.document.write('</table>');
+        //myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100%><tr ><td width=10% align=left ><b>RegNo#&#160;&#160; :</b></td><td colspan=4 align=left width=60%><b>' + $('#RegSeries').val() + '-' + $('#RegNumber').val() + '</b></td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#RevisitDate').val() + '-' + $('#RevisitTime').text() + '</td></tr>');
+        //myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=60%>' + $('#PatName').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
+        //myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#DocName :selected').text() + '</td>                                                            <td width=10%><b>Bill No</b></td><td colspn=2 width=20% ><b>:' + $('#CurRevisitId').text() + '</b></td></tr>');
+        //myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+        //myWindow.document.write('</table>');
+
+        myWindow.document.write('<table width=100% style="margin-top:-10px"><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>REVISIT BILL</b></u></td></tr>');
         myWindow.document.write('</table>');
-        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100%><tr ><td width=10% align=left ><b>RegNo#&#160;&#160; :</b></td><td colspan=4 align=left width=60%><b>' + $('#RegSeries').val() + '-' + $('#RegNumber').val() + '</b></td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#RevisitDate').val() + '-' + $('#RevisitTime').text() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=60%>' + $('#PatName').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#DocName :selected').text() + '</td>                                                            <td width=10%><b>Bill No</b></td><td colspn=2 width=20% ><b>:' + $('#CurRevisitId').text() + '</b></td></tr>');
-        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:10px;table-layout:fixed" width=100%>');
+        myWindow.document.write('<colgroup><col style="width:10%"><col style="width:38%"><col style="width:22%"><col style="width:10%"><col style="width:20%"></colgroup>');
+        myWindow.document.write('<tr ><td align=left ><b>RegNo&#160;&#160; :</b></td><td colspan=2 align=left><b>' + $('#RegSeries').val() + '-' + $('#RegNumber').val() + '</b></td><td align=right style="padding-right:35px;">Date&#160;:</td><td align=left>' + $('#RevisitDate').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td align=left >Patient:</td><td colspan=2 align=left>' + $('#PatName').val() + '</td><td align=right style="padding-right:30px !important;">Age/Sex&#160;:</td><td align=left>' + Age + '</td></tr>');
+        myWindow.document.write('<tr ><td align=left >Address:</td><td colspan=4 align=left>' + $('#PatAdd1').text() + ', ' + $('#PatAdd2').text() + '</td></tr>');
+        myWindow.document.write('<tr ><td align=left >Doctor:</td><td colspan=2 align=left>' + $('#DocName :selected').text() + '</td><td align=right style="padding-right:25px;"><b>BillNo&#160;:</b></td><td align=left><b>' + $('#CurRevisitId').text() + '</b></td></tr>');
+        myWindow.document.write('<tr><td  colspan=5>&#160;</td></tr>');
         myWindow.document.write('</table>');
 
         myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;font-family:tahoma;  width=100%>');
@@ -1098,8 +1109,11 @@ function PrintRevist() {
         }
 
         myWindow.document.write('<table><tr><td></td><td> ');
-        var myTag = $('#DocName').find('option:selected').attr('tokenprefix');
-        myWindow.document.write('<table width=100%><tr height=50px> <td style="font-family:tahoma;font-size: 20px;font-weight:bold;color:#989898" width=100%> <center>TOKEN#</center></td></tr> <tr> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;border:5px solid #989898" width=100%> <center>' + myTag + '-' + $('#PatTokenNumber').val() + '</center></td ></tr> </table> ');
+        //var myTag = $('#DocName').find('option:selected').attr('tokenprefix');
+        //myWindow.document.write('<table width=100%><tr height=50px> <td style="font-family:tahoma;font-size: 20px;font-weight:bold;color:#989898" width=100%> <center>TOKEN#</center></td></tr> <tr> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;border:5px solid #989898" width=100%> <center>' + myTag + '-' + $('#PatTokenNumber').val() + '</center></td ></tr> </table> ');
+
+        myWindow.document.write('<table width=100%><tr height=50px> <td style="font-family:tahoma;font-size: 20px;font-weight:bold;color:#989898" width=100%> <center>TOKEN#</center></td></tr> <tr> <td style="font-family:tahoma;font-size: 25px;font-weight:bold;border:5px solid #989898" width=100%> <center>' + $('#PatTokenNumber').val() + '</center></td ></tr> </table> ');
+
         myWindow.document.write(' </td ><td width=30%></td></tr ></table > ');
 
 

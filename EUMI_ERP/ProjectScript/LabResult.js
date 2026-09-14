@@ -322,8 +322,9 @@ function LabBillTestLoad(result) {
 
                 depthead = result[i].MedDeptName;
                 var A = depthead.split("#")
+                //dp += '<tr><td width=30px class="jsgrid-header-cell GridBRowTop"><input id=' + "ertyy" + result[i].MedDeptId + ' class="erty" onchange=printdeptselect(' + result[i].MedDeptId + ')  type="checkbox"  ></td><td class="jsgrid-header-cell GridBRowTop">' + A[0] + '</td></tr>'
 
-                dp += '<tr><td width=30px class="jsgrid-header-cell GridBRowTop"><input id=' + "ertyy" + result[i].MedDeptId + ' class="erty" onchange=printdeptselect(' + result[i].MedDeptId + ')  type="checkbox"  ></td><td class="jsgrid-header-cell GridBRowTop">' + A[0] + '</td></tr>'
+                dp += '<tr><td width=30px class="jsgrid-header-cell GridBRowTop"><input id=' + "ertyy" + result[i].MedDeptId + ' class="erty" onchange=printdeptselect(' + result[i].MedDeptId + ',this)  type="checkbox"  ></td><td class="jsgrid-header-cell GridBRowTop">' + A[0] + '</td></tr>'
             }
 
             if (result[i].Flag == 1) {
@@ -661,7 +662,9 @@ function GetResult(result) {
             if (depthead != result[i].MedDeptName) {
 
                 depthead = result[i].MedDeptName
-                dp += '<tr><td width=30px class="jsgrid-header-cell GridBRowTop"><input id=' + "ertyy" + result[i].MedDeptId + '  class="erty" onchange=printdeptselect(' + result[i].MedDeptId + ')  type="checkbox"  ></td><td class="jsgrid-header-cell GridBRowTop">' + result[i].MedDeptName + '</td></tr>'
+                //dp += '<tr><td width=30px class="jsgrid-header-cell GridBRowTop"><input id=' + "ertyy" + result[i].MedDeptId + '  class="erty" onchange=printdeptselect(' + result[i].MedDeptId + ')  type="checkbox"  ></td><td class="jsgrid-header-cell GridBRowTop">' + result[i].MedDeptName + '</td></tr>'
+
+                dp += '<tr><td width=30px class="jsgrid-header-cell GridBRowTop"><input id=' + "ertyy" + result[i].MedDeptId + '  class="erty" onchange=printdeptselect(' + result[i].MedDeptId + ',this)  type="checkbox"  ></td><td class="jsgrid-header-cell GridBRowTop">' + result[i].MedDeptName + '</td></tr>'
             }
 
             if (((result[i].Status).toUpperCase() == 'YES') && CurrentHead != result[i].TestName) {

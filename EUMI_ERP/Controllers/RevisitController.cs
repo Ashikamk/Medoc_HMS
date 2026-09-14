@@ -2969,6 +2969,7 @@ namespace EUMI_ERP.Controllers
                     MModels.IPNumber = Convert.ToInt32(row["IPNumber"].ToString());
                     MModels.DelFlag = Convert.ToInt32(row["DFlag"].ToString());
                     MModels.CSFlag = row["CSFlag"].ToString();
+                    MModels.ConsultFee = row["Consult_Fee"].ToString();
                     oList.Add(MModels);
                 }
 

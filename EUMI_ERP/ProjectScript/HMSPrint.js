@@ -113,12 +113,37 @@ function withDecimal(n) {
 }
 
 
+//function CmnPrintFunction(Form, Rowlen, Type, Flag) {
+
+//    debugger;
+
+//    if (Form == 'TestResult') {
+//        PrintTestResult(Rowlen);
+//    }
+//    else if (Form == 'OPCaseSheet') {
+//        PrintOPMedDescription(Rowlen, Type, Flag);
+//    }
+//    else if (Form == 'CaseSheet') {
+//        PrintthisDescription(Rowlen, Type, Flag);
+//    }
+//    else if (Form == 'PDF') {
+//        PrintTestResultPDF(Rowlen, Type, Flag);
+//    }
+
+
+
+//}
+
 function CmnPrintFunction(Form, Rowlen, Type, Flag) {
 
     debugger;
 
     if (Form == 'TestResult') {
-        PrintTestResult(Rowlen);
+        if ($('#departmentprint').is(':checked')) {
+            PrintTestResult(Rowlen);          
+        } else {
+            PrintTestResultContinuous(Rowlen); 
+        }
     }
     else if (Form == 'OPCaseSheet') {
         PrintOPMedDescription(Rowlen, Type, Flag);
@@ -129,358 +154,791 @@ function CmnPrintFunction(Form, Rowlen, Type, Flag) {
     else if (Form == 'PDF') {
         PrintTestResultPDF(Rowlen, Type, Flag);
     }
-
-    
-
 }
 
 
+//function PrintTestResult(Rowlen) {
+
+//    var SignPrint = document.getElementById("signimg");
+//    var SignPrintincharge = document.getElementById("signimg1");
+
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+
+//    // ---- Print stylesheet for repeating footer on every page ----
+//    myWindow.document.write(`
+//    <style>
+//      @media print {
+//        body {
+//          margin-bottom: 50px; /* reserve space so table content doesn't hide behind footer */
+//        }
+//        .print-footer {
+//          position: fixed;
+//          bottom: 0;
+//          left: 0;
+//          width: 100%;
+//          background: white;
+//        }
+//        table { page-break-inside: auto; }
+//        tr { page-break-inside: avoid; page-break-after: auto; }
+//        thead { display: table-header-group; } /* repeats column header row only, if used */
+//      }
+//      @media screen {
+//        .print-footer {
+//          margin-top: 20px;
+//        }
+//      }
+//    </style>
+//    `);
+
+//    if ($('#headprint').is(':checked')) {
+//        var LB = 2;
+//    }
+//    else {
+//        var LB = LabHead
+//    }
+//    var powerdby = document.getElementById("ComapnyImage1");
+//    var powerdby1 = document.getElementById("printqrr");
+
+//    $(powerdby).css('height', 30); $(powerdby).css('width', 280);
+
+//    if (LB == 1) {
+//        LROW = 90;
+//        myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
+//    }
+//    else if (LB == 2) {
+//        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+
+//        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+//        myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+//        myWindow.document.write('</table>');
+//    }
+//    else {
+//        //blank header row from layout
+//        myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
+//    }
+
+//    myWindow.document.write('<table  style="" width=100%>' +
+//        '<tr>' +
+//        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
+//        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+//        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+//        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+//        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+//        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+//        '</table></td>');
+
+//    myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
+//        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+//        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+//        '</table></td>');
+
+//    var Maxvalue = 0;
+//    var Minvalue = 0;
+//    var Res = ''; var printresult = '';
+
+//    myWindow.document.write(Div);
+//    myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:15px;"><tr>' +
+//        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
+//        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
+//        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+//        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td><tr>');
+//    myWindow.document.write('<tr><td colspan=3 class="p-0" height="10" ></td><tr>');
+
+//    var CurrentDept = 0, CurrentMainTest = 0; var finalnotes = "";
+
+//    for (var i = 1; i <= Rowlen; i++) {
+
+//        Maxvalue = 0;
+//        Minvalue = 0;
+//        Res = 0;
+//        printresult = '';
+//        if ($("#selprint_" + i).is(":checked")) {
+
+//            var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
+
+//            console.log('DE--' + Dept)
+
+//            if ($("#Notes_" + i).val() != '') {
+//                if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
+//                    finalnotes = finalnotes + $("#Notes_" + i).val();
+//                }
+//            }
+
+//            if (Dept != CurrentDept) {
+//                CurrentDept = Dept;
+//                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
+//            }
+
+//            if (($("#TestName_" + i).text()).includes("@@")) {
+//                myWindow.document.write('<tr>' +
+//                    '<td  align=left colspan=4 style="padding:5px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+//                    '<tr>');
+//            }
+
+//            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+//                CurrentMainTest = $("#TestId_" + i).val();
+//                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
+//            }
+//            else if ($.trim($("#Result_" + i).val()) != '') {
+//                Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+//                Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+//                Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
+
+//                if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
+
+//                debugger;
+//                if (Res > Maxvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else if (Res < Minvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else {
+//                    printresult = '' + $("#Result_" + i).val() + '';
+//                }
+//                Res = $("#Result_" + i).val();
+//                if ((Res.toLowerCase()).indexOf("rech") != -1) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+
+//                if (($("#TestName_" + i).text()).includes("##")) {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '<tr>');
+//                }
+//                else {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '<tr>');
+//                }
+//            }
+
+//            console.log($("#TestName_" + i).text());
+//        }
+//    }
+
+//    myWindow.document.write('</table>');
+
+//    $(SignPrintincharge).css('height', 25); $(SignPrintincharge).css('width', 55);
+
+//    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
+
+//    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=10px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr> </table>');
+
+//    // ---- Repeating footer (Lab Technician / Verified By / Lab Incharge) on every printed page ----
+//    myWindow.document.write(
+//        '<div class="print-footer">' +
+//        '<table style="font-family:tahoma;font-size: 12px;"  width=100%>' +
+//        '<tr><td width=150px align=center>&#160; </td><td></td><td width=150px align=center>&#160;' + (SignPrintincharge.outerHTML) + '<br>PREETHA RATHISH </td></tr>' +
+//        '<tr><td  width=150px align=center>LAB TECHNICIAN</td><td align=center>VERIFIED BY</td><td  width=150px align=center>LAB INCHARGE</td></tr>' +
+//        '</table>' +
+//        '</div>'
+//    );
+
+//    myWindow.print();
+
+//    setTimeout(function () {
+//        // myWindow.close();
+//    }, 10000);
+//    myWindow.focus();
+
+//}
+
 function PrintTestResult(Rowlen) {
 
-   
-  
-    var SignPrint = document.getElementById("signimg");
-    var SignPrintincharge = document.getElementById("signimg1");
+    var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
 
+    var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
+    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';          
+
+    var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
+    var SignTechnologist = '<img src="' + signBaseUrl + 'ashique.png" alt="" height="25" width="55" />';
+    var SignLabIncharge = '<img src="' + signBaseUrl + 'wajidha.jpeg" alt="" height="25" width="55" />';
     
     var myWindow = window.open("", "", "width=1500,height=1500");
+
     if ($('#headprint').is(':checked')) {
         var LB = 2;
     }
     else {
         var LB = LabHead
-
     }
+
     var powerdby = document.getElementById("ComapnyImage1");
     var powerdby1 = document.getElementById("printqrr");
-    
-    $(powerdby).css('height', 30); $(powerdby).css('width',280);
-   // myWindow.document.write('<span style="font-family: tahoma; font-size:10px;font-weight: bold;position:fixed;bottom:0"><table cellpadding=0 cellspacing=0><tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">Powered by</td></tr> <tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">' + (powerdby.outerHTML) + '</td></tr> </table></span>')
 
-    //myWindow.document.write('<span style="font-family: tahoma; font-size:10px;font-weight: bold;position:fixed;bottom:0"><table cellpadding=0 cellspacing=0><tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;"></td></tr> <tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">' + (powerdby.outerHTML) + '</td></tr> </table></span>')
+    $(powerdby).css('height', 30); $(powerdby).css('width', 280);
 
+    myWindow.document.write(`
+    <style>
+        @page { size: A4; margin: 15mm; }
 
-   // myWindow.document.write('<span style="font-family: tahoma; font-size:10px;font-weight: bold;position:fixed;bottom:0"><table cellpadding=0 cellspacing=0><tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">' + (powerdby.outerHTML) + '</td></tr> <tr><td style="font-family: tahoma; font-size:10px;font-weight: bold;">Scan this for more details</td></tr>  </table></span>')
+        table { border-collapse: collapse; }
+        table.report-table { width: 100%; }
 
+        .page {
+            display: flex;
+            flex-direction: column;
+            height: 225mm;              
+            page-break-after: always;
+            box-sizing: border-box;
+        }
+        .page:last-child { page-break-after: auto; }
 
-    //myWindow.document.write('<table style="position:fixed;bottom:0;border:1px solid black" width=98% ><tr><td style="font-family: tahoma;text-align: center; font-size:12px;font-weight: bold;">Scan this for more details</td></tr>  </table>')
+        .page-content {
+            flex: 1 1 auto;            
+        }
+        .page-footer {
+            flex-shrink: 0;            
+            margin-top: auto;          
+            width: 100%;
+        }
+    </style>
+    `);
 
+    var ColHeaderRow = '<tr>' +
+        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
+        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
+        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td>' +
+        '</tr>';
 
-
+    var HeaderBlockHTML = '';
     if (LB == 1) {
-        //myWindow.document.write('<table width=100%><tr>' +
-        //    '<td width=50%><table>' +
-        //    '<tr><td style="font-size:22;font-weight:bold;" colspan=3>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
-        //    '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Address + '</td></tr>' +
-        //    //'<tr><td>Fax</td><td> : </td><td>' + window.CompanySettingsArray.Fax + '</td></tr>' +
-        //    '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Email + '</td></tr>' +
-        //    '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
-        //    '</table></td>' +
-        //    '<td width=50% align=right></td>' +
-        //    '</tr>' +
-        //    '<tr><td colspan=2 style="' + BorderX + '"></td></tr>' +
-        //    '</table>');
-        LROW = 90;
-        myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
-
+        var LROW = 90;
+        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
     }
     else if (LB == 2) {
         var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-
         $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
-        myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-        myWindow.document.write('</table>');
+        HeaderBlockHTML = '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' +
+            (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
     }
-
     else {
-
-        //blank header row from layout
-      myWindow.document.write('<table width=100%><tr><td height='+LROW+'px></td></tr></table>');
+        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
     }
 
-   
-
-   // myWindow.document.write('<table  style="" width=100%><tr><td width=60%><table style="font-family: tahoma; font-size:13px;font-weight: bold;">' +
-   // '<tr><td>MR-No#</td><td> : </td><td>' + $("#RegNumber").val() + '</td></tr>' +
-   // '<tr><td>Name</td><td> : </td><td>' + $("#PatientName").val() + '</td></tr>' +
-   // '<tr><td>Doctor</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
-   //// '<tr><td>Spec_Collected</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr></table></td>');
-   //  '<tr><td></td><td>  </td><td></td></tr></table></td>');
-
-
-    //myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
-    //'<tr><td>Rpt-No#</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
-    //'<tr><td>Age & Sex</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
-    //    '<tr><td>Spec_Rcvd</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
-    //'<tr><td>Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr></table></td></tr></table>');
-
-
-    myWindow.document.write('<table  style="" width=100%>' +
+    var PatientInfoHTML = '<table  style="" width=100%>' +
         '<tr>' +
-        '<td width=45%><table style="font-family: tahoma; font-size:11px;">' +
+        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
         '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
         '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
         '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
         '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
-        '<tr><td>Contact No</td> <td> : </td><td>' +( $("#Remarksphone").val()).replace('##','').substring(0, 10) + '</td></tr>' +
-        '</table></td>');
-
-   
-    myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:11px;">' +
+        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+        '</table></td>' +
+        '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
         '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
         '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
         '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
         '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
-        /*     '<tr><td>' + (barcode2.outerHTML) + '</td></tr>' +*/
-        '</table></td>');
+        '</table></td>' +
+        '</tr>' +
+        '</table>';
+    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
+    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr><td height=10px></td></tr>' +
+        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center></td></tr>' +
+        '</table>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr>' +
+        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
+        '<td align=center>&#160;' + SignTechnologist + '</td>' +
+        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
+        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WAJIDHA PK</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>LAB TECHNICIAN</td>' +
+        '<td align=center>LAB INCHARGE </td>' +
+        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
+        '<td align=center>DMLT - Approved by DME KERALA</td>' +
+        '<td width=150px align=center>TCMC REG NO 60682</td>' +
+        '</tr>' +
+        '</table>' +
+        '</div>';
 
-   // myWindow.document.write('<td  width=15% align="right"><table  style="font-family:tahoma; font-size:13px;font-weight: bold;">' +
-       // '<tr><td style="border:2px solid black">' + (powerdby1.outerHTML) + '</td></tr>' +
-    // '</table></td></tr></table>');
+    var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr><td height=10px></td></tr>' +
+        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
+        '</table>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr>' +
+        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
+        '<td align=center>&#160;' + SignTechnologist + '</td>' +
+        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
+        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WAJIDHA PK</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>LAB TECHNICIAN</td>' +
+        '<td align=center>LAB INCHARGE </td>' +
+        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
+        '<td align=center>DMLT - Approved by DME KERALA</td>' +
+        '<td width=150px align=center>TCMC REG NO 60682</td>' +
+        '</tr>' +
+        '</table>' +
+        '</div>';
+
+    myWindow.document.write('<div class="page"><div class="page-content">');
+
+    myWindow.document.write(HeaderBlockHTML);
+
+    myWindow.document.write(Div);
+
+    myWindow.document.write(PatientInfoHTML);
 
     var Maxvalue = 0;
     var Minvalue = 0;
-    var Res = ''; var printresult='';
+    var Res = ''; var printresult = '';
+    var finalnotes = "";
+    var CurrentDept = 0, CurrentMainTest = 0;
 
+    var ROWS_PER_PAGE = 16;
+    var rowsOnThisPage = 0;
+    var hasPrintedAnyRow = false;
 
-    myWindow.document.write(Div);
-    myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:11px;"><tr>' +
-        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
-        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
-        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
-        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td><tr>');
-    myWindow.document.write('<tr><td colspan=3 class="p-0" height="10" ></td><tr>');
+    myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+    myWindow.document.write(ColHeaderRow);
 
-    var CurrentDept = 0, CurrentMainTest = 0; var finalnotes = "";
-    var linecount = 0; var V = 0; var DDh = 0;
     for (var i = 1; i <= Rowlen; i++) {
 
         Maxvalue = 0;
         Minvalue = 0;
         Res = 0;
         printresult = '';
+
         if ($("#selprint_" + i).is(":checked")) {
 
             var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
 
-            console.log( 'DE--' +Dept)
+            var isNewDept = (Dept != CurrentDept);
+
+            if (isNewDept && rowsOnThisPage > 0) {
+                myWindow.document.write('</table>');
+                myWindow.document.write('</div>');
+                myWindow.document.write(FooterHTML);
+                myWindow.document.write('</div>');
+
+                myWindow.document.write('<div class="page"><div class="page-content">');
+                myWindow.document.write('<div class="page"><div class="page-content">');
+                myWindow.document.write(HeaderBlockHTML);
+                myWindow.document.write(PatientInfoHTML);
+                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+                myWindow.document.write(ColHeaderRow);
+
+                rowsOnThisPage = 0;
+                CurrentDept = 0;
+                CurrentMainTest = 0;
+            }
 
             if ($("#Notes_" + i).val() != '') {
-
                 if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
                     finalnotes = finalnotes + $("#Notes_" + i).val();
                 }
             }
 
-            
-            
-                if (Dept != CurrentDept) {
+            if (Dept != CurrentDept) {
                 CurrentDept = Dept;
                 myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
-                linecount += 1;
+                rowsOnThisPage++;
+                hasPrintedAnyRow = true;
             }
-
 
             if (($("#TestName_" + i).text()).includes("@@")) {
                 myWindow.document.write('<tr>' +
-                        '<td  align=left colspan=4 style="padding:5px;  border:0px solid black;font-family:tahoma; font-size: 11px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
-                       '<tr>');
-
+                    '<td  align=left colspan=4 style="padding:10px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+                    '<tr>');
+                rowsOnThisPage++;
+                hasPrintedAnyRow = true;
             }
-
-            
 
             if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
                 CurrentMainTest = $("#TestId_" + i).val();
                 myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
-                linecount += 1;
+                rowsOnThisPage++;
+                hasPrintedAnyRow = true;
             }
             else if ($.trim($("#Result_" + i).val()) != '') {
-             Maxvalue  =parseFloat( $('#MaxVal_' + i).val()||0);
-             Minvalue =parseFloat( $('#MinVal_' + i).val()||0);
-             Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
+                Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+                Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+                Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
 
-             if (isNaN($.trim($("#Result_" + i).val().replace(',', ''))))
-            {Res=0}
+                if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
 
-            debugger;
-            if (Res > Maxvalue ) {
-                 printresult = '<b>' + $("#Result_" + i).val() + '</b>';
-            }
-            else if (Res < Minvalue) {
-                 printresult = '<b>' + $("#Result_" + i).val() + '</b>';
-            }
-            else {
-                 printresult = '' + $("#Result_" + i).val() + '';
-             }
-             Res = $("#Result_" + i).val();
-             if((Res.toLowerCase()).indexOf("rech")!=-1){
-             printresult = '<b>' + $("#Result_" + i).val() + '</b>';
-             }
-
-
-
-            if (($("#TestName_" + i).text()).includes("##")) {
-                myWindow.document.write('<tr>' +
-                        '<td style="padding:2px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 11px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
-                        '<td style="padding:2px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + printresult + '</td>' +
-                         '<td style="padding:2px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
-                        '<td style="padding:2px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
-                        '<tr>');
-            }
-            else {
-                myWindow.document.write('<tr>' +
-                    '<td style="padding:2px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 11px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
-                    '<td style="padding:2px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + printresult + '</td>' +
-                     '<td style="padding:2px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
-                    '<td style="padding:2px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
-                    '<tr>');
-            }
-
-
-
-                DDh = 0;
-                if (($("#NormalValue_" + i).val() != undefined)) {
-                    DDh = ($("#NormalValue_" + i).val()).split("##").length - 1;
-
-                    for (V = 1; V <= DDh; V++) {
-                        linecount += 1;
-                    }
-                      console.log($("#NormalValue_" + i).val())
-                      console.log('c'+DDh)
+                if (Res > Maxvalue) {
+                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
                 }
-                if (DDh == 0) {
-                    linecount += 1;
+                else if (Res < Minvalue) {
+                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
                 }
-            }
-
-
-            console.log($("#TestName_" + i).text());
-            console.log('LC'+linecount)
-
-            if (linecount == 28 || linecount == 29 || linecount == 27)//from layout
-            {
-                var LROW1 = 100;
-                myWindow.document.write('<table width=100%><tr><td height=' + LROW1 + 'px></td></tr></table>');
-                var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-
-                $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
-                if (LB == 1) {
-//                    myWindow.document.write('<table width=100%><tr>' +
-//                        '<td width=50%><table>' +
-//                        '<tr><td style="font-size:22;font-weight:bold;" colspan=3>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
-//                        '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Address + '</td></tr>' +
-//                        //'<tr><td>Fax</td><td> : </td><td>' + window.CompanySettingsArray.Fax + '</td></tr>' +
-//                        '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.Email + '</td></tr>' +
-//                        '<tr><td style="font-size:18;font-weight: bold;" colspan=3>' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
-//                        '</table></td>' +
-//                        '<td width=50% align=right></td>' +
-//                        '</tr>' +
-//                        '<tr><td colspan=2 style="' + BorderX + '"></td></tr>' +
-                    //                        '</table>');
-                    var LROW1=120
-                    myWindow.document.write('<table width=100%><tr><td height=' + LROW1 + 'px></td></tr></table>');
-                }
-                else if (LB == 2) {
-                    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-
-                    $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
-                    myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-                    myWindow.document.write('</table>');
-                }
-
                 else {
-
-                    //blank header row from layout
-                    myWindow.document.write('<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>');
+                    printresult = '' + $("#Result_" + i).val() + '';
+                }
+                Res = $("#Result_" + i).val();
+                if ((Res.toLowerCase()).indexOf("rech") != -1) {
+                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
                 }
 
-
-//                myWindow.document.write('<table  style="" width=100%><tr><td width=60%><table style="font-family: tahoma; font-size:11px;font-weight: bold;">' +
-//                    '<tr><td>MR-No#</td><td> : </td><td>' + $("#RegNumber").val() + '</td></tr>' +
-//                    '<tr><td>Name</td><td> : </td><td>' + $("#PatientName").val() + '</td></tr>' +
-//                    '<tr><td>Spec_Collected</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
-//                    '<tr><td>Doctor</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr></table></td>');
-
-//                myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:11px;font-weight: bold;">' +
-//                    '<tr><td>Rpt-No#</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
-//                    '<tr><td>Age & Sex</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
-//                    '<tr><td>Spec_Rcvd</td><td> : </td><td>' + $("#ResultDate").val() + '</td></tr>' +
-//                    '<tr><td>Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr></table></td></tr></table>');
-
-
-
-                myWindow.document.write('<table  style="" width=100%>' +
-        '<tr>' +
-        '<td width=45%><table style="font-family: tahoma; font-size:11px;">' +
-        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
-        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
-        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
-        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
-        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
-        '</table></td>');
-
-
-                myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:11px;">' +
-        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
-        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
-        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
-        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
-                /*     '<tr><td>' + (barcode2.outerHTML) + '</td></tr>' +*/
-        '</table></td>');
-
-
-
-
-                myWindow.document.write(Div);
-                myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:11px;"><tr>' +
-        '<td class="p-0" style="width:38%;font-weight:bold;' + BorderX + '">Test</td>' +
-        '<td class="p-0" style="width:14%;font-weight:bold;' + BorderX + '">Result</td>' +
-        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
-        '<td class="p-0" style="width:33%;font-weight:bold;' + BorderX + '">Reference Range</td><tr>');
-                myWindow.document.write('<tr><td colspan=3 class="p-0" height="15" ></td><tr>');
-
-                var CurrentDept = 0, CurrentMainTest = 0; var finalnotes = "";
-
-
-                linecount = 0;
+                if (($("#TestName_" + i).text()).includes("##")) {
+                    myWindow.document.write('<tr>' +
+                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                        '<tr>');
+                }
+                else {
+                    myWindow.document.write('<tr>' +
+                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                        '<tr>');
+                }
+                rowsOnThisPage++;
+                hasPrintedAnyRow = true;
             }
 
+            if (rowsOnThisPage >= ROWS_PER_PAGE && i < Rowlen) {
+                myWindow.document.write('</table>');
+                myWindow.document.write('</div>');
+                myWindow.document.write(FooterHTML);
+                myWindow.document.write('</div>');
 
+                myWindow.document.write('<div class="page"><div class="page-content">');
+                myWindow.document.write(HeaderBlockHTML);
+                myWindow.document.write(PatientInfoHTML);
+                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+                myWindow.document.write(ColHeaderRow);
+
+                rowsOnThisPage = 0;
+                CurrentDept = Dept;
+            }
         }
     }
 
     myWindow.document.write('</table>');
 
-    $(SignPrintincharge).css('height', 25); $(SignPrintincharge).css('width', 55);
-    
-    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "")+'</b></td></tr></table>');
+    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
 
+    myWindow.document.write('</div>');
 
-    //myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=20px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr><tr><td height=20px colspan=3 align=center>&#160;</td></tr><tr><td valign=bottom style="font-family:tahoma;font-size: 12px;" align=left><br>LAB TECHNICIAN </td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center>&#160;Approved By</td></tr><tr><td align=left></td><td width=400px align=center></td><td align=center>&#160;' + (SignPrint.outerHTML) + ' </td></tr><tr><td align=left></td><td width=400px align=center></td><td style="font-family:tahoma;font-size: 12px;" align=center>&#160;' + $('#UserDetsss').text()+'<br>LAB INCHARGE</td></tr></table>');
+    myWindow.document.write(FooterHTMLLast);
 
-    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td height=10px></td></tr><tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr> </table>');
-    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%>  <tr><td width=150px align=center>&#160; </td><td></td><td width=150px align=center>&#160;' + (SignPrintincharge.outerHTML) + '<br>PREETHA RATHISH </td></tr>                      <tr><td  width=150px align=center>LAB TECHNICIAN</td><td align=center>VERIFIED BY</td><td  width=150px align=center>LAB INCHARGE</td></tr></table>');
+    myWindow.document.write('</div>');
 
-
-    myWindow.print();
+    myWindow.document.close();
 
     setTimeout(function () {
-       // myWindow.close();
-    }, 10000);
-    myWindow.focus();
+        myWindow.focus();
+        myWindow.print();
+    }, 500);
 }
 
+function PrintTestResultContinuous(Rowlen) {
+
+    var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
+
+  
+    var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
+    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';
+
+    var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
+    var SignTechnologist = '<img src="' + signBaseUrl + 'ashique.png" alt="" height="25" width="55" />';
+    var SignLabIncharge = '<img src="' + signBaseUrl + 'wajidha.jpeg" alt="" height="25" width="55" />';
+
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    if ($('#headprint').is(':checked')) {
+        var LB = 2;
+    }
+    else {
+        var LB = LabHead
+    }
+
+    var powerdby = document.getElementById("ComapnyImage1");
+    var powerdby1 = document.getElementById("printqrr");
+
+    $(powerdby).css('height', 30); $(powerdby).css('width', 280);
+
+    myWindow.document.write(`
+    <style>
+        @page { size: A4; margin: 15mm; }
+
+        table { border-collapse: collapse; }
+        table.report-table { width: 100%; }
+
+        .page {
+            display: flex;
+            flex-direction: column;
+            height: 245mm;              
+            page-break-after: always;
+            box-sizing: border-box;
+        }
+        .page:last-child { page-break-after: auto; }
+
+        .page-content {
+            flex: 1 1 auto;            
+        }
+        .page-footer {
+            flex-shrink: 0;            
+            margin-top: auto;          
+            width: 100%;
+        }
+    </style>
+    `);
+
+    var ColHeaderRow = '<tr>' +
+        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
+        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
+        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td>' +
+        '</tr>';
+
+    var HeaderBlockHTML = '';
+    if (LB == 1) {
+        var LROW = 90;
+        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+    }
+    else if (LB == 2) {
+        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        HeaderBlockHTML = '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' +
+            (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
+    }
+    else {
+        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+    }
+
+    var PatientInfoHTML = '<table  style="" width=100%>' +
+        '<tr>' +
+        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
+        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+        '</table></td>' +
+        '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
+        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+        '</table></td>' +
+        '</tr>' +
+        '</table>';
+
+    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
+
+    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr><td height=10px></td></tr>' +
+        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center></td></tr>' +
+        '</table>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr>' +
+        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
+        '<td align=center>&#160;' + SignTechnologist + '</td>' +
+        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
+        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WADJIDHA PK</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>LAB TECHNICIAN</td>' +
+        '<td align=center>LAB INCHARGE </td>' +
+        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
+        '<td align=center>DMLT - Approved by DME KERALA</td>' +
+        '<td width=150px align=center>TCMC REG NO 60682</td>' +
+        '</tr>' +
+        '</table>' +
+        '</div>';
+
+    var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr><td height=10px></td></tr>' +
+        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
+        '</table>' +
+        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<tr>' +
+        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
+        '<td align=center>&#160;' + SignTechnologist + '</td>' +
+        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
+        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
+        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WADJIDHA PK</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>LAB TECHNICIAN</td>' +
+        '<td align=center>LAB INCHARGE </td>' +
+        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
+        '<td align=center>DMLT - Approved by DME KERALA</td>' +
+        '<td width=150px align=center>TCMC REG NO 60682</td>' +
+        '</tr>' +
+        '</table>' +
+        '</div>';
+
+    myWindow.document.write('<div class="page"><div class="page-content">');
+    myWindow.document.write(HeaderBlockHTML);
+    myWindow.document.write(Div);
+    myWindow.document.write(PatientInfoHTML);
+
+    var Maxvalue = 0;
+    var Minvalue = 0;
+    var Res = ''; var printresult = '';
+    var finalnotes = "";
+    var CurrentDept = 0, CurrentMainTest = 0;
+
+    var ROWS_PER_PAGE = 18;
+    var rowsOnThisPage = 0;
+
+    myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+    myWindow.document.write(ColHeaderRow);
+
+    for (var i = 1; i <= Rowlen; i++) {
+
+        Maxvalue = 0;
+        Minvalue = 0;
+        Res = 0;
+        printresult = '';
+
+        if ($("#selprint_" + i).is(":checked")) {
+
+            var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
 
 
+            if ($("#Notes_" + i).val() != '') {
+                if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
+                    finalnotes = finalnotes + $("#Notes_" + i).val();
+                }
+            }
 
+            if (Dept != CurrentDept) {
+                CurrentDept = Dept;
+                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
+                rowsOnThisPage++;
+            }
 
+            if (($("#TestName_" + i).text()).includes("@@")) {
+                myWindow.document.write('<tr>' +
+                    '<td  align=left colspan=4 style="padding:10px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+                    '<tr>');
+                rowsOnThisPage++;
+            }
 
+            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+                CurrentMainTest = $("#TestId_" + i).val();
+                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
+                rowsOnThisPage++;
+            }
+            //else if ($.trim($("#Result_" + i).val()) != '') {
+            else if ($.trim($("#Result_" + i).val()) != '' && $.trim($("#Result_" + i).val()) != '.') {
+                Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+                Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+                Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
 
+                if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
 
+                if (Res > Maxvalue) {
+                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+                }
+                else if (Res < Minvalue) {
+                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+                }
+                else {
+                    printresult = '' + $("#Result_" + i).val() + '';
+                }
+                Res = $("#Result_" + i).val();
+                if ((Res.toLowerCase()).indexOf("rech") != -1) {
+                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+                }
 
+                if (($("#TestName_" + i).text()).includes("##")) {
+                    myWindow.document.write('<tr>' +
+                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                        '<tr>');
+                }
+                else {
+                    myWindow.document.write('<tr>' +
+                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                        '<tr>');
+                }
+                rowsOnThisPage++;
+            }
 
+            if (rowsOnThisPage >= ROWS_PER_PAGE && i < Rowlen) {
+                myWindow.document.write('</table>');
+                myWindow.document.write('</div>');
+                myWindow.document.write(FooterHTML);
+                myWindow.document.write('</div>');
 
+                myWindow.document.write('<div class="page"><div class="page-content">');
+                myWindow.document.write(HeaderBlockHTML);
+                myWindow.document.write(PatientInfoHTML);
+                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+                myWindow.document.write(ColHeaderRow);
+
+                rowsOnThisPage = 0;
+            }
+        }
+    }
+
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
+
+    myWindow.document.write('</div>');
+
+    myWindow.document.write(FooterHTMLLast);
+
+    myWindow.document.write('</div>');
+
+    myWindow.document.close();
+
+    setTimeout(function () {
+        myWindow.focus();
+        myWindow.print();
+    }, 500);
+}
 
 
 function PrintTestResultPDF(Rowlen) {
@@ -489,7 +947,6 @@ function PrintTestResultPDF(Rowlen) {
 
     var SignPrint = document.getElementById("signimg");
     var SignPrintincharge = document.getElementById("signimg1");
-
 
     var myWindow = window.open("", "", "width=1500,height=1500");
     if ($('#headprint').is(':checked')) {
@@ -565,7 +1022,7 @@ function PrintTestResultPDF(Rowlen) {
 
     myWindow.document.write('<table  style="" width=100%>' +
         '<tr>' +
-        '<td width=45%><table style="font-family: tahoma; font-size:11px;">' +
+        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
         '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
         '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
         '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
@@ -574,7 +1031,7 @@ function PrintTestResultPDF(Rowlen) {
         '</table></td>');
 
 
-    myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:11px;font-weight: bold;">' +
+    myWindow.document.write('<td  width=40% align="right"><table  style="font-family:tahoma; font-size:15px;font-weight: bold;">' +
         '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
         '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
         '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
@@ -592,7 +1049,7 @@ function PrintTestResultPDF(Rowlen) {
 
 
     myWindow.document.write(Div);
-    myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:11px;"><tr>' +
+    myWindow.document.write('<table width=100% style="border-collapse: collapse;font-family:tahoma;font-size:15px;"><tr>' +
         '<td class="p-0" style="width:38%;font-weight:bold;' + BorderX + '">Test</td>' +
         '<td class="p-0" style="width:14%;font-weight:bold;' + BorderX + '">Result</td>' +
         '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
@@ -631,7 +1088,7 @@ function PrintTestResultPDF(Rowlen) {
 
             if (($("#TestName_" + i).text()).includes("@@")) {
                 myWindow.document.write('<tr>' +
-                        '<td  align=left colspan=4 style="padding:5px;  border:0px solid black;font-family:tahoma; font-size: 11px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+                        '<td  align=left colspan=4 style="padding:5px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
                        '<tr>');
 
             }
@@ -670,18 +1127,18 @@ function PrintTestResultPDF(Rowlen) {
 
                 if (($("#TestName_" + i).text()).includes("##")) {
                     myWindow.document.write('<tr>' +
-                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 11px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
-                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + printresult + '</td>' +
-                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
-                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
                         '<tr>');
                 }
                 else {
                     myWindow.document.write('<tr>' +
-                    '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 11px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
-                    '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + printresult + '</td>' +
-                     '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
-                    '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 11px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+                    '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+                    '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+                     '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+                    '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
                     '<tr>');
                 }
 
