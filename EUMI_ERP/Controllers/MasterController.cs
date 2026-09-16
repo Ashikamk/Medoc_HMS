@@ -7396,6 +7396,10 @@ namespace EUMI_ERP.Controllers
                     Reptmodels.RegFee = Convert.ToDecimal(row["Visiting_Fee"].ToString());
                     Reptmodels.ConsultFee = Convert.ToDecimal(row["Consult_Fee"].ToString());
                     Reptmodels.OtherFee = Convert.ToDecimal(row["Other_Fee"].ToString());
+                    Reptmodels.Cash = Convert.ToDecimal(row["Cash"].ToString());
+                    Reptmodels.Upi = Convert.ToDecimal(row["Upi"].ToString());
+                    Reptmodels.Card = Convert.ToDecimal(row["Card"].ToString());
+                    Reptmodels.Amount = Convert.ToDecimal(row["Amount"].ToString());
                     oList.Add(Reptmodels);
                 }
 

@@ -473,34 +473,34 @@ function PrintTestResult(Rowlen) {
         '</table>' +
         '</div>';
 
-    var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-        '<tr><td height=10px></td></tr>' +
-        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
-        '</table>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-        '<tr>' +
-        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
-        '<td align=center>&#160;' + SignTechnologist + '</td>' +
-        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
-        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WAJIDHA PK</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>LAB TECHNICIAN</td>' +
-        '<td align=center>LAB INCHARGE </td>' +
-        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
-        '<td align=center>DMLT - Approved by DME KERALA</td>' +
-        '<td width=150px align=center>TCMC REG NO 60682</td>' +
-        '</tr>' +
-        '</table>' +
-        '</div>';
+    //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+    //    '<tr><td height=10px></td></tr>' +
+    //    '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
+    //    '</table>' +
+    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
+    //    '<td align=center>&#160;' + SignTechnologist + '</td>' +
+    //    '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
+    //    '</tr>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
+    //    '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
+    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WAJIDHA PK</td>' +
+    //    '</tr>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center>LAB TECHNICIAN</td>' +
+    //    '<td align=center>LAB INCHARGE </td>' +
+    //    '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
+    //    '</tr>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
+    //    '<td align=center>DMLT - Approved by DME KERALA</td>' +
+    //    '<td width=150px align=center>TCMC REG NO 60682</td>' +
+    //    '</tr>' +
+    //    '</table>' +
+    //    '</div>';
 
     myWindow.document.write('<div class="page"><div class="page-content">');
 
@@ -646,7 +646,7 @@ function PrintTestResult(Rowlen) {
 
     myWindow.document.write('</div>');
 
-    myWindow.document.write(FooterHTMLLast);
+    myWindow.document.write(FooterHTML);
 
     myWindow.document.write('</div>');
 
@@ -782,34 +782,34 @@ function PrintTestResultContinuous(Rowlen) {
         '</table>' +
         '</div>';
 
-    var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-        '<tr><td height=10px></td></tr>' +
-        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
-        '</table>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-        '<tr>' +
-        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
-        '<td align=center>&#160;' + SignTechnologist + '</td>' +
-        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
-        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WADJIDHA PK</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>LAB TECHNICIAN</td>' +
-        '<td align=center>LAB INCHARGE </td>' +
-        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
-        '<td align=center>DMLT - Approved by DME KERALA</td>' +
-        '<td width=150px align=center>TCMC REG NO 60682</td>' +
-        '</tr>' +
-        '</table>' +
-        '</div>';
+    //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+    //    '<tr><td height=10px></td></tr>' +
+    //    '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
+    //    '</table>' +
+    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
+    //    '<td align=center>&#160;' + SignTechnologist + '</td>' +
+    //    '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
+    //    '</tr>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
+    //    '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
+    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WADJIDHA PK</td>' +
+    //    '</tr>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center>LAB TECHNICIAN</td>' +
+    //    '<td align=center>LAB INCHARGE </td>' +
+    //    '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
+    //    '</tr>' +
+    //    '<tr>' +
+    //    '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
+    //    '<td align=center>DMLT - Approved by DME KERALA</td>' +
+    //    '<td width=150px align=center>TCMC REG NO 60682</td>' +
+    //    '</tr>' +
+    //    '</table>' +
+    //    '</div>';
 
     myWindow.document.write('<div class="page"><div class="page-content">');
     myWindow.document.write(HeaderBlockHTML);
@@ -928,7 +928,7 @@ function PrintTestResultContinuous(Rowlen) {
 
     myWindow.document.write('</div>');
 
-    myWindow.document.write(FooterHTMLLast);
+    myWindow.document.write(FooterHTML);
 
     myWindow.document.write('</div>');
 

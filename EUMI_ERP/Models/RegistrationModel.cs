@@ -61,6 +61,7 @@ namespace EUMI_ERP.Models
         public decimal Cash { get; set; }
         public decimal Upi { get; set; }
         public decimal Card { get; set; }
+        public decimal Amount { get; set; }
 
         DMasters oDMasters = new DMasters();
 
