@@ -7376,15 +7376,23 @@ namespace EUMI_ERP.Controllers
         public ActionResult RevisitReport(RegistrationModel RegistrationModel)
         {
             RegistrationModel obj = new RegistrationModel();
-
             List<RegistrationModel> oList = new List<RegistrationModel>();
+
+            DataSet dsDataSet = new DataSet();
             try
             {
-                DataSet dsDataSet = new DataSet();
                 dsDataSet = obj.RevisitReport(RegistrationModel, dbName);
-                foreach (DataRow row in dsDataSet.Tables[0].Rows)
-                {
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DB fetch error: " + ex.Message);
+                return new JsonResult() { Data = oList, MaxJsonLength = 86753090 };
+            }
 
+            foreach (DataRow row in dsDataSet.Tables[0].Rows)
+            {
+                try
+                {
                     RegistrationModel Reptmodels = new RegistrationModel();
                     Reptmodels.RegId = Convert.ToInt32(row["Revisit_Id"].ToString());
                     Reptmodels.RegNo = Convert.ToInt32(row["OP_Number"].ToString());
@@ -7393,24 +7401,25 @@ namespace EUMI_ERP.Controllers
                     Reptmodels.Doctor = Convert.ToInt32(row["DocId"].ToString());
                     Reptmodels.PName = row["PName"].ToString();
                     Reptmodels.Fathersname = row["Doctor"].ToString();
-                    Reptmodels.Age = Convert.ToInt32(row["Age"].ToString());
+                    Reptmodels.Age = row["Age"] != DBNull.Value && row["Age"].ToString() != ""
+                                        ? Convert.ToInt32(row["Age"]) : 0;
                     Reptmodels.Mothersname = row["Gender"].ToString();
                     Reptmodels.Address1 = row["Address"].ToString();
                     Reptmodels.PhoneNo = row["PhoneNo"].ToString();
-                    Reptmodels.RegFee = Convert.ToDecimal(row["Visiting_Fee"].ToString());
-                    Reptmodels.ConsultFee = Convert.ToDecimal(row["Consult_Fee"].ToString());
-                    Reptmodels.OtherFee = Convert.ToDecimal(row["Other_Fee"].ToString());
-                    Reptmodels.Cash = Convert.ToDecimal(row["Cash"].ToString());
-                    Reptmodels.Upi = Convert.ToDecimal(row["Upi"].ToString());
-                    Reptmodels.Card = Convert.ToDecimal(row["Card"].ToString());
-                    Reptmodels.Amount = Convert.ToDecimal(row["Amount"].ToString());
+                    Reptmodels.RegFee = row["Visiting_Fee"] != DBNull.Value ? Convert.ToDecimal(row["Visiting_Fee"]) : 0;
+                    Reptmodels.ConsultFee = row["Consult_Fee"] != DBNull.Value ? Convert.ToDecimal(row["Consult_Fee"]) : 0;
+                    Reptmodels.OtherFee = row["Other_Fee"] != DBNull.Value ? Convert.ToDecimal(row["Other_Fee"]) : 0;
+                    Reptmodels.Cash = row["Cash"] != DBNull.Value ? Convert.ToDecimal(row["Cash"]) : 0;
+                    Reptmodels.Upi = row["Upi"] != DBNull.Value ? Convert.ToDecimal(row["Upi"]) : 0;
+                    Reptmodels.Card = row["Card"] != DBNull.Value ? Convert.ToDecimal(row["Card"]) : 0;
+                    Reptmodels.Amount = row["Amount"] != DBNull.Value ? Convert.ToDecimal(row["Amount"]) : 0;
+
                     oList.Add(Reptmodels);
                 }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+                catch (Exception rowEx)
+                {
+                    Console.WriteLine("Row skipped. RegId=" + row["Revisit_Id"] + " | Error: " + rowEx.Message);
+                }
             }
 
             return new JsonResult()
@@ -7418,7 +7427,6 @@ namespace EUMI_ERP.Controllers
                 Data = oList,
                 MaxJsonLength = 86753090,
             };
-
         }
         [HttpPost]
         public ActionResult LabTestWiseReport(LabBill LabBill)
