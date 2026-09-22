@@ -24,7 +24,7 @@ namespace EUMI_ERP.DataLayer
             catch (SqlException exMe)
             {
                 Console.WriteLine(exMe.Message);
-                return null;
+                throw;
             }
         }
 
