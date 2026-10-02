@@ -1829,6 +1829,19 @@
 </div>
 <div id="Warningpopup" class="top-alert"><span id="popupmessage"></span></div>
 
+<div id="StockTransferInfoPopUp" style="display:none; position:fixed; top:110px; right:24px; z-index:999997; width:360px;">
+    <div style="background:#fff; border:1px solid #FECACA; border-radius:12px; box-shadow:0 12px 28px rgba(239,68,68,.22); padding:12px 14px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span class="tbl-alert-dot"></span>
+                <span style="font-weight:800; font-size:14px; color:#B91C1C;">Stock Requests</span>
+            </div>
+            <i class="fa fa-close" style="cursor:pointer; color:#94A3B8;" onclick="DismissStockTransferPopup()"></i>
+        </div>
+        <div id="StockTransferList" style="max-height:300px; overflow-y:auto;"></div>
+    </div>
+</div>
+
 <div id="pharm-loader" class="pharm-loader-overlay">
     <div class="pharm-spin"></div>
 </div>
@@ -1920,6 +1933,12 @@
             $('#pharm-loader').removeClass('show');
         }
     }
+
+    function DismissStockTransferPopup() {
+        g_stCurrent.forEach(function (r) { g_stDismissed.push(String(r.TRNo)); });
+        sessionStorage.setItem('ST_Dismissed', JSON.stringify(g_stDismissed));
+        $("#StockTransferInfoPopUp").fadeOut("slow");
+    }
     var salesChart, purchaseChart, medicinesChart;
     var medicineQueueData = [];
 
@@ -1941,6 +1960,7 @@
 
         LoadDashboardData(today, today);
         LoadMedicineQueue();
+        CheckStockTransferNotify();   // <-- ADDED
 
         setInterval(function () {
             var fromVal = $('#pharm-from-date').val();
@@ -1949,8 +1969,72 @@
                 LoadDashboardData(fromVal, toVal, true);
             }
             LoadMedicineQueue(true);
+            CheckStockTransferNotify();   // <-- ADDED
         }, 120000);
+        setInterval(CheckStockTransferNotify, 30000);
     });
+
+    var g_stDismissed = JSON.parse(sessionStorage.getItem('ST_Dismissed') || '[]');
+    var g_stCurrent = [];
+
+    function CheckStockTransferNotify() {
+        var data = {};
+        data.FromLocation = UserLocationId;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Pharmacy/HMS_StockTransferNotifyGet",
+            data: data,
+            success: function (result) {
+                var pending = (result || []).filter(function (r) {
+                    return g_stDismissed.indexOf(String(r.TRNo)) === -1;
+                });
+                g_stCurrent = pending;
+                RenderStockTransferPopup(pending);
+            }
+        });
+    }
+
+    function RenderStockTransferPopup(list) {
+        if (!list.length) { $("#StockTransferInfoPopUp").fadeOut("slow"); return; }
+        var html = '';
+        list.forEach(function (r) {
+            html += '<div id="st_row_' + r.TRNo + '" style="border:1px solid #E7EBF3; border-radius:10px; padding:10px; margin-bottom:8px;">' +
+                '<div style="font-weight:700; font-size:13px; color:#1E293B;">Transfer# ' + r.TRNo + '</div>' +
+                '<div style="font-size:12.5px; color:#64748B; margin:2px 0 8px;">Requested on: ' + (r.TRDate || '-') + '</div>' +
+                '<button class="btn btn-sm btn-success" onclick="TransferStockRequest(' + r.TRNo + ',\'' + (r.TRDate || '') + '\')"><i class="fa fa-exchange"></i> Transfer</button> ' +
+                '<button class="btn btn-sm" style="background:#EF4444;color:#fff;" onclick="RejectStockRequest(' + r.TRNo + ')"><i class="fa fa-ban"></i> Reject</button>' +
+                '</div>';
+        });
+        $("#StockTransferList").html(html);
+        $("#StockTransferInfoPopUp").fadeIn("slow");
+    }
+
+   
+
+    function TransferStockRequest(trNo, trDate) {
+        window.open('/Pharmacy/PharmaStockTransfer?viewonly=1&trno=' + trNo +
+            '&trdate=' + encodeURIComponent(trDate || ''), 'StockTransferTab');
+
+        g_stDismissed.push(String(trNo));
+        sessionStorage.setItem('ST_Dismissed', JSON.stringify(g_stDismissed));
+        $('#st_row_' + trNo).remove();
+        if (!$('#StockTransferList').children().length) $("#StockTransferInfoPopUp").fadeOut("slow");
+    }
+
+    function RejectStockRequest(trNo) {
+        if (!confirm('Reject Transfer# ' + trNo + '?')) return;
+        $.ajax({
+            type: "POST",
+            url: "../Pharmacy/HMS_StockTransferStatusUpdate",
+            data: { TRNo: trNo, Status: 2, UserId: ERPUserId, DeptId: ERPDeptId },
+            success: function () {
+                warningshow('Transfer# ' + trNo + ' rejected');
+                $('#st_row_' + trNo).remove();
+                if (!$('#StockTransferList').children().length) $("#StockTransferInfoPopUp").fadeOut("slow");
+            }
+        });
+    }
 
     function initSideNav() {
         var navItems = document.querySelectorAll('.pharm-sidenav .nav-item');
@@ -2073,7 +2157,11 @@
     document.addEventListener('click', function (e) {
         var btn = e.target.closest('.tbl-page-btn');
         if (btn && !btn.disabled && btn.dataset.tbodyId) {
-            goToPage(btn.dataset.tbodyId, parseInt(btn.dataset.page));
+            if (btn.dataset.all === '1') {
+                showAllRows(btn.dataset.tbodyId);
+            } else {
+                goToPage(btn.dataset.tbodyId, parseInt(btn.dataset.page));
+            }
         }
     });
 
@@ -2082,7 +2170,15 @@
         var rows = Array.prototype.filter.call(tbody.getElementsByTagName('tr'), function (r) {
             return r.cells.length > 1;
         });
-        tablePagers[tbodyId] = { rows: rows, pageSize: defaultSize || 10, currentPage: 1 };
+
+        var prev = tablePagers[tbodyId];   // state from before the refresh (if any)
+
+        tablePagers[tbodyId] = {
+            rows: rows,
+            pageSize: prev ? prev.pageSize : (defaultSize || 10),
+            currentPage: prev ? prev.currentPage : 1,
+            showAll: prev ? prev.showAll : false
+        };
         renderPage(tbodyId);
     }
 
@@ -2090,11 +2186,20 @@
         if (!tablePagers[tbodyId]) return;
         tablePagers[tbodyId].pageSize = parseInt(size);
         tablePagers[tbodyId].currentPage = 1;
+        tablePagers[tbodyId].showAll = false;
         renderPage(tbodyId);
     }
 
     function goToPage(tbodyId, page) {
         tablePagers[tbodyId].currentPage = page;
+        tablePagers[tbodyId].showAll = false;
+        renderPage(tbodyId);
+    }
+
+    function showAllRows(tbodyId) {
+        if (!tablePagers[tbodyId]) return;
+        tablePagers[tbodyId].showAll = true;
+        tablePagers[tbodyId].currentPage = 1;
         renderPage(tbodyId);
     }
 
@@ -2103,7 +2208,8 @@
         if (!pager) return;
         var tbody = document.getElementById(tbodyId);
         var total = pager.rows.length;
-        var pageSize = pager.pageSize;
+        var showAll = !!pager.showAll;
+        var pageSize = showAll ? Math.max(total, 1) : pager.pageSize;
         var totalPages = Math.max(1, Math.ceil(total / pageSize));
         if (pager.currentPage > totalPages) pager.currentPage = totalPages;
 
@@ -2132,7 +2238,7 @@
             var lastPrinted = 0;
             var parts = [];
 
-            parts.push({ type: 'nav', page: cur - 1, label: 'Previous', disabled: cur === 1 });
+            parts.push({ type: 'nav', page: cur - 1, label: 'Previous', disabled: showAll || cur === 1 });
 
             for (var p = 1; p <= totalPages; p++) {
                 var showPage = (p === 1) || (p === totalPages) || (p >= cur - delta && p <= cur + delta);
@@ -2140,12 +2246,13 @@
                     if (lastPrinted && p - lastPrinted > 1) {
                         parts.push({ type: 'ellipsis' });
                     }
-                    parts.push({ type: 'page', page: p, label: String(p), active: p === cur });
+                    parts.push({ type: 'page', page: p, label: String(p), active: !showAll && p === cur });
                     lastPrinted = p;
                 }
             }
 
-            parts.push({ type: 'nav', page: cur + 1, label: 'Next', disabled: cur === totalPages });
+            parts.push({ type: 'nav', page: cur + 1, label: 'Next', disabled: showAll || cur === totalPages });
+            parts.push({ type: 'all', label: 'All', active: showAll });
 
             pagEl.innerHTML = '';
             parts.forEach(function (item) {
@@ -2159,9 +2266,13 @@
                 var btn = document.createElement('button');
                 btn.className = 'tbl-page-btn' + (item.active ? ' active' : '');
                 btn.textContent = item.label;
-                btn.disabled = !!item.disabled;
                 btn.dataset.tbodyId = tbodyId;
-                btn.dataset.page = item.page;
+                if (item.type === 'all') {
+                    btn.dataset.all = '1';
+                } else {
+                    btn.disabled = !!item.disabled;
+                    btn.dataset.page = item.page;
+                }
                 pagEl.appendChild(btn);
             });
         }
@@ -2871,28 +2982,24 @@
 
     function GoToBillFromQueue(index) {
         var data = window.medicineQueueData[index];
-        if (!data) {
-            alert('No data available for this entry.');
-            return;
-        }
+        if (!data) { alert('No data available for this entry.'); return; }
 
-        var token = 'ws_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        console.log('Queue row:', data); // check that PatientId / OPSerId exist
 
-        sessionStorage.clear();
-
-        sessionStorage.setItem("SI_Token", token);
-        sessionStorage.setItem("SI_FromWorksheet", "1");
-        sessionStorage.setItem("SI_PatientId", data.PatientId);
-        sessionStorage.setItem("SI_OPNumber", data.OPNumber);
-        sessionStorage.setItem("SI_OPSeries", data.OPSerName);
-        sessionStorage.setItem("SI_RevisitId", data.RevisitId);
-        sessionStorage.setItem("SI_PatientName", data.PatientName);
-        sessionStorage.setItem("SI_Gender", data.Gender);
-        sessionStorage.setItem("SI_Contact", data.Contact);
-        sessionStorage.setItem("SI_DoctorId", data.Doctor_Id);
-        sessionStorage.setItem("SI_MedAdvice", data.MedicineAdvice);
-
-        window.open("/Hospital/SaleInvoiceHospital?token=" + token, "_blank");
+        var payload = {
+            ts: Date.now(),
+            PatientId: data.PatientId,
+            OPNumber: data.OPNumber,
+            OPSerId: data.OPSerId || 1,          // numeric series id
+            OPSerName: data.OPSerName,
+            RevisitId: data.RevisitId,
+            PatientName: data.PatientName,
+            Gender: data.Gender,
+            Contact: data.Contact,
+            DoctorId: data.Doctor_Id
+        };
+        localStorage.setItem('SI_Worksheet', JSON.stringify(payload));
+        window.open('/Hospital/SaleInvoiceHospital?ws=1', '_blank');
     }
 
     function PrintMedAdvice() {

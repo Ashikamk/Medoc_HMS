@@ -1,10 +1,20 @@
-﻿var SourceRequestTRNo = 0;
+﻿var ViewTRNo = new URLSearchParams(window.location.search).get("trno");
+var IsViewOnly = new URLSearchParams(window.location.search).get("viewonly") === "1";
 
 $(document).ready(function () {
     SerialNoLoad();
     Defaultfocus();
     LoadDate();
     LocnLoad();
+    document.title="Stock Transfer"
+
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("viewonly") === "1") {
+        $(".card").hide();
+        window.setTimeout(function () {
+            ShowView();
+        }, 800);
+    }
 
     $("#btnadd").click(function (e) {
         Productadd();
@@ -27,7 +37,7 @@ $(document).ready(function () {
     $("#btncopy").click(function (e) {
         Copy();
     });
-    
+
     $('#Quantity_0').keydown(function (e) {
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
         if (key == 13) {
@@ -50,7 +60,7 @@ $(document).ready(function () {
     });
 });
 
-function Defaultfocus(){
+function Defaultfocus() {
     $("#FromLoc").focus();
 }
 
@@ -104,18 +114,17 @@ function SerialNoLoad() {
     srlno.DeptId = ERPDeptId;
     $.ajax({
         type: "POST",
-        url: "../../Common/SlNoGetandGets",
+        url: "../Pharmacy/StockTransferSlNoGet",
         data: srlno,
         success: function (result) {
-            GetSlNo(result.oList);
+            GetSlNo(result);
         }
     });
 }
 
 function GetSlNo(result) {
-    $('#TransferNo,#CTransferNo').val(result[0].trNo);
+    $('#TransferNo,#CTransferNo').val(result[0].StockTransferNo);
 }
-
 function formrefresh() {
     if ($("#TblSalesInvoice tr").length > 0) {
         $('#Confirmflag').val('New'), $('#ConfirmRowId').val(0)
@@ -130,7 +139,6 @@ function formrefresh() {
 }
 
 function OKformrefresh(Flag) {
-    SourceRequestTRNo = 0;
     $(".modal").modal("hide");
     $(".dezero").val(0);
     $(".detxzero").text(0);
@@ -155,7 +163,7 @@ function LoadProduct(Id) {
         delay: 0,
         minLength: 0,
         source: function (request, response) {
-            ClearProductRow(1,Id);
+            ClearProductRow(1, Id);
             if (($('#FromLoc').val() || 0) == 0) {
                 warningshow('Please Select Location', 'FromLoc');
                 $("#Product_" + Id).val('');
@@ -193,18 +201,16 @@ function LoadProduct(Id) {
         select: function (event, ui) {
             $('#ProductId_' + Id).val(ui.item.ProductId);
             GetProdDetails(ui.item.ProductId, ERPDeptId);
-            $('#Batch_' + Id).focus().select();
-            LoadBatch(Id);
+            AutoLoadBatch(Id);          
         },
     })
-    .on('autocompleteselect  autocompletefocus', function (ev, ui) {
-        GetProdDetails(ui.item.ProductId, ERPDeptId);
-    }).on('keydown', function (e) {
-        if (Id == 0 && e.which == 13 && ($('#ProductId_' + Id).val() > 0)) {
-            $('#Batch_' + Id).focus().select();
-            LoadBatch(Id);
-        }
-    });
+        .on('autocompleteselect  autocompletefocus', function (ev, ui) {
+            GetProdDetails(ui.item.ProductId, ERPDeptId);
+        }).on('keydown', function (e) {
+            if (Id == 0 && e.which == 13 && ($('#ProductId_' + Id).val() > 0)) {
+                AutoLoadBatch(Id);     
+            }
+        });
 }
 
 function LoadBatch(Id) {
@@ -252,7 +258,7 @@ function LoadBatch(Id) {
                                     Cess: item.Cess,
                                     Mrp: item.Mrp,
                                     HSN: item.Variable3,
-                                    Stock:item.Stock,
+                                    Stock: item.Stock,
                                     headers: ["Batch", "Description", "Company", "ItemExpiry", "Stock", "Selling Price", "Mrp"]
                                 })
                             }));
@@ -277,16 +283,52 @@ function LoadBatch(Id) {
             CalAmount(Id);
         },
     })
-    .on('autocompleteselect  autocompletefocus', function (ev, ui) {
-    }).bind('focus', function () {
-        $(this).keydown();
-    }).on('keydown', function (e) {
-        if (Id == 0 && e.which == 13 && ($('#BatchSlNo_' + Id).val() > 0)) {
-            $('#Quantity_' + Id).focus().select();
+        .on('autocompleteselect  autocompletefocus', function (ev, ui) {
+        }).bind('focus', function () {
+            $(this).keydown();
+        }).on('keydown', function (e) {
+            if (Id == 0 && e.which == 13 && ($('#BatchSlNo_' + Id).val() > 0)) {
+                $('#Quantity_' + Id).focus().select();
+            }
+        });
+}
+
+function AutoLoadBatch(Id) {
+    if (($('#ProductId_' + Id).val() || 0) == 0) return;
+
+    var data = {};
+    data.ProductId = $("#ProductId_" + Id).val();
+    data.HLocation = $("#FromLoc").val();
+    data.Batch = '';
+    data.Type = 1;
+    data.DeptId = ERPDeptId;
+    data.UserId = ERPUserId;
+    data.Flag = 0;
+
+    $.ajax({
+        url: '../Hospital/HMS_BatchwiseItemDetailsGets',
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function (data) {
+            if (data.length) {
+                var item = data[0]; 
+                $('#Batch_' + Id).val(item.Batch);
+                $('#Company_' + Id).val(item.Companycode);
+                $('#Expiry_' + Id).val(item.ItemExpiry);
+                $('#SellPrice_' + Id).val(item.Sellingrate);
+                $('#PHSNCode_' + Id).val(item.Variable3);
+                $('#BatchSlNo_' + Id).val(item.BatchSlNo);
+                $('#DrugSchedule_' + Id).val(item.Variable1);
+                $('#Stock_' + Id).val(item.Stock);
+                CalAmount(Id);
+                $('#Quantity_' + Id).val(1).focus().select();
+            } else {
+                warningshow('No Stock Available!', 'Product_' + Id);
+            }
         }
     });
 }
-
 function GetProdDetails(ItemId, DeptId) {
     var data = {};
     data.ProductId = ItemId;
@@ -325,20 +367,20 @@ function CustPrdctLoad(result) {
         var strr2 = strr1.replace(/#/gi, "&emsp;");
 
         var ProdRow = "<tr class='jsgrid-row' id='pdctrow'>" +
-           "<td style='border:none;font-weight:500;color:yellow' class='text-left'><b>" + result[n].ProductCode + "</b></td>" +
-           "<td class='white font-weight-bold' style='border:none;font-weight:500' class='text-left'>" +
-           "<table width='100%'>" +
-           "<tr>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>C : </b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</td>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>LP : </b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</td>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>" + custstat + " : </b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
-           "<td style='border:none;font-weight:500' class='text-left'><b>Stock : </b>" + (result[n].Sumtotqty || 0) + "</td>" +
-           "<td style='border:none;font-weight:500'><button type='button' class='btn btn-primary btn-sm m-0' onclick=CloseModal()><i class='fa fa-close'></i></button></td>" +
-           "</tr>" +
-           "</table>" +
-           "</td>" +
-           "</tr>" +
-           "<tr class='jsgrid-row' id='pdctrow1'><td colspan=4 class='text-left' style='border:none'> " + strr2 + "</td ></tr>";
+            "<td style='border:none;font-weight:500;color:yellow' class='text-left'><b>" + result[n].ProductCode + "</b></td>" +
+            "<td class='white font-weight-bold' style='border:none;font-weight:500' class='text-left'>" +
+            "<table width='100%'>" +
+            "<tr>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>C : </b>" + (parseFloat(result[n].AvgCost || 0).toFixed(Decimal)) + "</td>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>LP : </b>" + (parseFloat(result[n].LPCost || 0).toFixed(Decimal)) + "</td>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>" + custstat + " : </b>" + (parseFloat(result[n].LastSellingPrice || 0).toFixed(Decimal)) + "</td>" +
+            "<td style='border:none;font-weight:500' class='text-left'><b>Stock : </b>" + (result[n].Sumtotqty || 0) + "</td>" +
+            "<td style='border:none;font-weight:500'><button type='button' class='btn btn-primary btn-sm m-0' onclick=CloseModal()><i class='fa fa-close'></i></button></td>" +
+            "</tr>" +
+            "</table>" +
+            "</td>" +
+            "</tr>" +
+            "<tr class='jsgrid-row' id='pdctrow1'><td colspan=4 class='text-left' style='border:none'> " + strr2 + "</td ></tr>";
 
 
         $('#tblproductdetails').append(ProdRow);
@@ -372,12 +414,12 @@ function ClearProductRow(Flag, Id) {
     }
 }
 
-function CalAmount(RowId){
+function CalAmount(RowId) {
     var Qty = parseInt($("#Quantity_" + RowId).val() || 0);
     var Rate = parseFloat($("#SellPrice_" + RowId).val() || 0);
     var Amount = Qty * Rate;
 
-    $("#Amount_" + RowId).val(parseFloat(Amount||0).toFixed(Decimal));
+    $("#Amount_" + RowId).val(parseFloat(Amount || 0).toFixed(Decimal));
 }
 
 var TOTamt = 0;
@@ -394,9 +436,9 @@ function CalcAmt() {
 
             TOTamt = TOTamt + parseFloat($("#Amount_" + i).val() || 0)
 
-          
-            
-            console.log('t-'+TOTamt)
+
+
+            console.log('t-' + TOTamt)
 
         }
     }
@@ -406,7 +448,7 @@ function CalcAmt() {
 
 function Productadd() {
 
-    var StkCheck = CheckStock(parseInt($("#BatchSlNo_0").val() || 0), parseInt($("#FromLoc").val() || 0), parseInt($("#Stock_0").val() || 0), parseInt($("#Quantity_0").val() || 0),0);
+    var StkCheck = CheckStock(parseInt($("#BatchSlNo_0").val() || 0), parseInt($("#FromLoc").val() || 0), parseInt($("#Stock_0").val() || 0), parseInt($("#Quantity_0").val() || 0), 0);
 
 
     if (parseInt($("#ProductId_0").val() || 0) == 0) {
@@ -417,7 +459,7 @@ function Productadd() {
         warningshow('Select Batch', 'Batch_0');
         return false;
     }
-    else if (parseInt($("#Quantity_0").val() || 0) ==0) {
+    else if (parseInt($("#Quantity_0").val() || 0) == 0) {
         warningshow('Enter Quantity', 'Quantity_0');
         return false;
     }
@@ -426,7 +468,7 @@ function Productadd() {
         return false;
     }
     else if (StkCheck == 1) {
-        warningshow('Not Enough Stock, Available Stock - ' + parseInt($("#Stock_0").val() || 0) , 'Quantity_0');
+        warningshow('Not Enough Stock, Available Stock - ' + parseInt($("#Stock_0").val() || 0), 'Quantity_0');
         return false;
     }
     else {
@@ -446,17 +488,15 @@ function OKProductadd() {
     var id = Number($("#GridLength").val()) + 1;
     var TrLength = Number($("#TblSalesInvoice tr").length) + 1;
 
-    var Text = '<tr id="MTR_'+id+'" onfocusout="UpdateRow('+id+')">' +
+    var Text = '<tr id="MTR_' + id + '" onfocusout="UpdateRow(' + id + ')">' +
         '<td style="width:2%" align="center">' +
         '<input class="jsgrid-button jsgrid-delete-button" type="button" onclick="DeleteRow(' + id + ')" title="Delete" autocomplete="off">' +
         '</td>' +
-        '<td style="width:3%" align="center" id="trno_'+id+'">' + TrLength + '</td>' +
+        '<td style="width:3%" align="center" id="trno_' + id + '">' + TrLength + '</td>' +
         '<td style="width:15%">' +
         '<input class="form-control form-control-sm gridcell" id="Product_' + id + '" value="' + Pname + '"  onkeyup="LoadProduct(' + id + ')"  />' +
         '</td>' +
-        '<td style="width:5%">' +
-        '<input class="form-control form-control-sm gridcell" id="Batch_' + id + '" value="' + $("#Batch_0").val() + '"  onkeyup="LoadBatch(' + id + ')"  />' +
-        '</td>' +
+        
         '<td style="width:10%">' +
         '<input class="form-control form-control-sm gridcell dedisa" disabled id="Company_' + id + '" value="' + $("#Company_0").val() + '"  />' +
         '</td>' +
@@ -477,6 +517,7 @@ function OKProductadd() {
         '</td>' +
         '<td style="display:none">' +
         '<input id="ProductId_' + id + '" value="' + $("#ProductId_0").val() + '"  />' +
+        '<input id="Batch_' + id + '" value="' + $("#Batch_0").val() + '"  />' +
         '<input id="BatchSlNo_' + id + '" value="' + $("#BatchSlNo_0").val() + '"  />' +
         '<input id="Stock_' + id + '" value="' + $("#Stock_0").val() + '"  />' +
         '<input id="PHSNCode_' + id + '" value="' + $("#PHSNCode_0").val() + '"  />' +
@@ -493,9 +534,9 @@ function OKProductadd() {
     CalcAmt();
 }
 
-function CheckStock(Batch, Locn, Stk, Qty,id) {
+function CheckStock(Batch, Locn, Stk, Qty, id) {
 
-    var GridLength=$("#GridLength").val();
+    var GridLength = $("#GridLength").val();
     var CuQty = 0; var OldQty = 0;
 
     for (var i = 1; i <= GridLength; i++) {
@@ -547,7 +588,7 @@ function OKDeleteRow(RowId) {
 }
 
 function UpdateRow(RowId) {
-    var StkCheck = CheckStock(parseInt($("#BatchSlNo_" + RowId).val() || 0), parseInt($("#FromLoc").val() || 0), parseInt($("#Stock_" + RowId).val() || 0), parseInt($("#Quantity_" + RowId).val() || 0),RowId);
+    var StkCheck = CheckStock(parseInt($("#BatchSlNo_" + RowId).val() || 0), parseInt($("#FromLoc").val() || 0), parseInt($("#Stock_" + RowId).val() || 0), parseInt($("#Quantity_" + RowId).val() || 0), RowId);
 
 
     if (parseInt($("#ProductId_" + RowId).val() || 0) == 0) {
@@ -555,7 +596,7 @@ function UpdateRow(RowId) {
         return false;
     }
     else if (parseInt($("#BatchSlNo_" + RowId).val() || 0) == 0) {
-        warningshow('Select Batch', 'Batch_'+RowId);
+        warningshow('Select Batch', 'Batch_' + RowId);
         return false;
     }
     else if (parseInt($("#Quantity_" + RowId).val() || 0) == 0) {
@@ -563,7 +604,7 @@ function UpdateRow(RowId) {
         return false;
     }
     else if (parseInt($("#Quantity_" + RowId).val() || 0) > parseInt($("#Stock_" + RowId).val() + $("#OldQty_" + RowId).val() || 0)) {
-        warningshow('Not Enough Stock, Available Stock - ' + parseInt($("#Stock_" + RowId).val() || 0), 'Quantity_'+ RowId);
+        warningshow('Not Enough Stock, Available Stock - ' + parseInt($("#Stock_" + RowId).val() || 0), 'Quantity_' + RowId);
         return false;
     }
     else if (StkCheck == 1) {
@@ -614,7 +655,7 @@ function Save() {
     }
     else {
         $('#Confirmflag').val('Save'), $('#ConfirmRowId').val(0)
-        $('#confirmmessage').text('Do you want to Save this Location Transfer?')
+        $('#confirmmessage').text('Do you want to Save this Stock Transfer?')
         $('#confirm').show();
         $('#confirmOk').prop("disabled", false);
         $('#confirmOk').focus();
@@ -638,7 +679,7 @@ function OKSave() {
             oArray.push({
 
                 'SlNo': slno,
-                'TRNo': parseInt($("#TransferNo").val()||0),
+                'TRNo': parseInt($("#TransferNo").val() || 0),
                 'TRDate': $.trim($("#Date").val()),
                 'FromLocation': parseInt($("#FromLoc").val() || 0),
                 'ToLocation': parseInt($("#ToLoc").val() || 0),
@@ -647,8 +688,8 @@ function OKSave() {
                 'Remarks': $.trim($("#Remarks").val()),
                 'ItemId': parseInt($("#ProductId_" + i).val() || 0),
                 'BatchSlNo': parseInt($("#BatchSlNo_" + i).val() || 0),
-                'Batch': $.trim($("#Batch_"+i).val()),
-                'ItemCode': $.trim($("#Product_"+i).val()),
+                'Batch': $.trim($("#Batch_" + i).val()),
+                'ItemCode': $.trim($("#Product_" + i).val()),
                 'Quantity': parseInt($("#Quantity_" + i).val() || 0),
                 'Price': parseFloat($("#SellPrice_" + i).val() || 0),
                 'Total': parseFloat($("#Amount_" + i).val() || 0),
@@ -668,7 +709,7 @@ function OKSave() {
 
         $.ajax({
             type: "POST",
-            url: "../Pharmacy/HMS_LocationTransferInsert",
+            url: "../Pharmacy/HMS_StockTransferInsert",
             data: data,
             success: function (result) {
                 $('#LoadingSmall').hide();
@@ -677,14 +718,7 @@ function OKSave() {
                 var no = result.oList[0].TRNo;
                 Showalerts(status, no);
                 if (status == 1) {
-                    if (SourceRequestTRNo > 0) {
-                        $.ajax({
-                            type: "POST",
-                            url: "../Pharmacy/HMS_StockTransferStatusUpdate",
-                            data: { TRNo: SourceRequestTRNo, Status: 1, UserId: ERPUserId, DeptId: ERPDeptId }
-                        });
-                    }
-                    OKformrefresh(0);   // this also resets SourceRequestTRNo to 0
+                    OKformrefresh(0);
                 }
             }
         });
@@ -693,7 +727,7 @@ function OKSave() {
 
 function Edit() {
     $('#Confirmflag').val('Edit'), $('#ConfirmRowId').val(0)
-    $('#confirmmessage').text('Do you want to Edit this Location Transfer?')
+    $('#confirmmessage').text('Do you want to Edit this Stock Transfer?')
     $('#confirm').show();
     $('#confirmOk').prop("disabled", false);
     $('#confirmOk').focus();
@@ -734,7 +768,7 @@ function Update() {
     }
     else {
         $('#Confirmflag').val('Update'), $('#ConfirmRowId').val(0)
-        $('#confirmmessage').text('Do you want to update this location transfer?')
+        $('#confirmmessage').text('Do you want to update this stock transfer?')
         $('#confirm').show();
         $('#confirmOk').prop("disabled", false);
         $('#confirmOk').focus();
@@ -806,10 +840,10 @@ function OKUpdate() {
 
 function Delete() {
     $('#Confirmflag').val('Delete'), $('#ConfirmRowId').val(0)
-    $('#confirmmessage').text('Do you want to delete this location transfer?')
+    $('#confirmmessage').text('Do you want to delete this stock transfer?')
     $('#confirm').show();
     $('#confirmOk').prop("disabled", false);
-    $('#confirmOk').focus(); 
+    $('#confirmOk').focus();
 }
 
 function OKDelete() {
@@ -890,31 +924,39 @@ function SearchLocationTransfer() {
         },
         autoFocus: true,
         select: function (event, ui) {
-            
+
             GetCopyLocationTransfer(ui.item.TRNo);
         },
     });
 }
-
+var ViewTRDate = new URLSearchParams(window.location.search).get("trdate");
 function ShowView() {
     if (!($('#LocationView').is(':visible'))) {
         $("#LocationView").modal("show");
         $("#LocationView").appendTo("body");
     }
     $("#ViewFromDate,#ViewToDate").val(CurDate);
-    GetLocationTransferList()
+
+    if (ViewTRNo) {
+        if (ViewTRDate) $("#ViewFromDate,#ViewToDate").val(ViewTRDate);
+        $("#ViewFilterRow").hide();
+    } else {
+        $("#ViewFilterRow").show();
+    }
+    GetLocationTransferList();
 }
+
 
 function GetLocationTransferList() {
     var data = {};
     data.LocationId = 0;
-    data.FromDate =$("#ViewFromDate").val();
-    data.ToDate=$("#ViewToDate").val();
-    data.DeptId=ERPDeptId;
-    data.UserId=ERPUserId;
+    data.FromDate = $("#ViewFromDate").val();
+    data.ToDate = $("#ViewToDate").val();
+    data.DeptId = ERPDeptId;
+    data.UserId = ERPUserId;
     $.ajax({
         type: "POST",
-        url: "../Pharmacy/HMS_LocationTransferView",
+        url: "../Pharmacy/HMS_StockTransferView",
         data: data,
         success: function (result) {
             LoadLocationTransferList(result);
@@ -925,102 +967,69 @@ function GetLocationTransferList() {
 function LoadLocationTransferList(result) {
     disable_datatable('tbl_LTView');
 
+    if (ViewTRNo) {
+        result = result.filter(function (r) { return String(r.TRNo) === String(ViewTRNo); });
+    }
+
     var responseText = "<thead><tr><th>Sl#</th><th>Transfer#</th><th>Date</th><th>From Location</th><th>To Location</th><th>Remarks</th></tr>" +
-                       "<tr><th> </th><th>Transfer#</th><th>Date</th><th>From Location</th><th>To Location</th><th>Remarks</th></tr></thead><tbody>";
+        "<tr><th> </th><th>Transfer#</th><th>Date</th><th>From Location</th><th>To Location</th><th>Remarks</th></tr></thead><tbody>";
     for (var l = 0; l < result.length; l++) {
         var slno = parseInt(l + 1);
+        var evt = IsViewOnly ? 'onclick' : 'ondblclick';
 
-
-        responseText += '<tr ondblclick="GetCopyLocationTransfer(' + result[l].TRNo + ')">' +
+        responseText += '<tr style="cursor:pointer" ' + evt + '="GetCopyLocationTransfer(' + result[l].TRNo + ')">' +
             '<td style="width:5%" align="center">' + slno + '</td>' +
             '<td style="width:5%;font-weight:bold;" align="center">' + result[l].TRNo + '</td>' +
             '<td style="width:10%" align="left">' + result[l].TRDate + '</td>' +
             '<td style="width:20%" align="left">' + result[l].FLocationName + '</td>' +
-            '<td style="with:20%" align="left">' + result[l].TLocationName + '</td>' +
-            '<td style="" align="left">' + result[l].Remarks + '</td>' +
-
+            '<td style="width:20%" align="left">' + result[l].TLocationName + '</td>' +
+            '<td align="left">' + result[l].Remarks + '</td>' +
             '</tr>';
     }
     $('#tbl_LTView').html(responseText + '</tbody>');
     datatableWithsearch('tbl_LTView', 'Multiple');
 }
+var g_opening = false;
 
+function OpenInLocationTransfer(TRNo) {
+    if (g_opening) return;          // ignore double clicks
+    g_opening = true;
 
+    var newTab = window.open('/Pharmacy/PharmaLocationTransfer', 'LocationTransferTab');
+
+    var attempts = 0;
+    var timer = setInterval(function () {
+        attempts++;
+        try {
+            if (newTab && !newTab.closed &&
+                newTab.document.readyState === 'complete' &&
+                typeof newTab.LoadFromStockTransfer === 'function') {
+                clearInterval(timer);
+                setTimeout(function () {
+                    newTab.LoadFromStockTransfer(TRNo);
+                    g_opening = false;
+                }, 800);
+                return;
+            }
+        } catch (e) {
+            clearInterval(timer);
+            g_opening = false;
+            return;
+        }
+        if (attempts > 40) {
+            clearInterval(timer);
+            g_opening = false;
+        }
+    }, 500);
+}
 function GetCopyLocationTransfer(TRNo) {
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("viewonly") === "1") {
+        OpenInLocationTransfer(TRNo);
+        return;
+    }
+
     OKformrefresh(1);
-    var data = {};
-    data.TRNo = TRNo;
-    data.DeptId = ERPDeptId;
-    data.UserId = ERPUserId;
-    $.ajax({
-        type: "POST",
-        url: "../Pharmacy/HMS_LocationTransferGet",
-        data: data,
-        success: function (result) {
-            LoadCopyLocationTransfer(result);
-        }
-    });
-}
-
-function ShowRequestStatus() {
-    if (!($('#RequestStatusView').is(':visible'))) {
-        $("#RequestStatusView").modal("show");
-        $("#RequestStatusView").appendTo("body");
-    }
-    $("#RSFromDate,#RSToDate").val(CurDate);
-    GetRequestStatusList();
-}
-
-function GetRequestStatusList() {
-    var data = {};
-    data.FromDate = $("#RSFromDate").val();
-    data.ToDate = $("#RSToDate").val();
-    data.DeptId = ERPDeptId;
-    $.ajax({
-        type: "POST",
-        url: "../Pharmacy/HMS_StockTransferStatusReportGet",
-        data: data,
-        success: function (result) {
-            LoadRequestStatusList(result);
-        }
-    });
-}
-function LoadRequestStatusList(result) {
-    disable_datatable('tbl_RSView');
-
-    var transferred = 0, rejected = 0, pending = 0;
-
-    var responseText = "<thead><tr><th>Sl#</th><th>Transfer#</th><th>Date</th><th>From Location</th><th>Remarks</th><th>Status</th><th>View</th></tr>" +
-        "<tr><th> </th><th>Transfer#</th><th>Date</th><th>From Location</th><th>Remarks</th><th>Status</th><th> </th></tr></thead><tbody>";
-
-    for (var l = 0; l < result.length; l++) {
-        var slno = parseInt(l + 1);
-        var statusText = '', statusClass = '';
-
-        if (result[l].RequestStatus == 1) { statusText = 'Transferred'; statusClass = 'status-good'; transferred++; }
-        else if (result[l].RequestStatus == 2) { statusText = 'Rejected'; statusClass = 'status-critical'; rejected++; }
-        else { statusText = 'Pending'; statusClass = 'status-warning'; pending++; }
-
-        responseText += '<tr>' +
-            '<td style="width:5%" align="center">' + slno + '</td>' +
-            '<td style="width:10%;font-weight:bold;" align="center">' + result[l].TRNo + '</td>' +
-            '<td style="width:12%" align="left">' + result[l].TRDate + '</td>' +
-            '<td style="width:18%" align="left">' + result[l].FLocationName + '</td>' +
-            '<td style="width:25%" align="left">' + (result[l].Remarks || '-') + '</td>' +
-            '<td style="width:15%" align="left"><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>' +
-            '<td style="width:10%" align="center"><button class="btn btn-sm btn-info" onclick="ViewRequestItems(' + result[l].TRNo + ')"><i class="fa fa-eye"></i></button></td>' +
-            '</tr>';
-    }
-
-    $('#tbl_RSView').html(responseText + '</tbody>');
-    datatableWithsearch('tbl_RSView', 'Multiple');
-
-    $("#RSTransferredCount").text(transferred);
-    $("#RSRejectedCount").text(rejected);
-    $("#RSPendingCount").text(pending);
-}
-
-function ViewRequestItems(TRNo) {
     var data = {};
     data.TRNo = TRNo;
     data.DeptId = ERPDeptId;
@@ -1030,41 +1039,16 @@ function ViewRequestItems(TRNo) {
         url: "../Pharmacy/HMS_StockTransferGet",
         data: data,
         success: function (result) {
-            ShowRequestItemsModal(TRNo, result);
+            LoadCopyLocationTransfer(result);
         }
     });
 }
 
-function ShowRequestItemsModal(TRNo, result) {
-    var rows = '';
-    for (var i = 0; i < result.length; i++) {
-        rows += '<tr>' +
-            '<td>' + (i + 1) + '</td>' +
-            '<td>' + result[i].ItemCode + '</td>' +
-            '<td>' + result[i].Company + '</td>' +
-            '<td>' + result[i].Expiry + '</td>' +
-            '<td align="center">' + result[i].Quantity + '</td>' +
-            '<td align="right">' + parseFloat(result[i].Price || 0).toFixed(Decimal) + '</td>' +
-            '<td align="right">' + parseFloat(result[i].Total || 0).toFixed(Decimal) + '</td>' +
-            '</tr>';
-    }
-    if (!rows) rows = '<tr><td colspan="7" class="text-center">No items</td></tr>';
-
-    var html = '<table class="table table-bordered" width="100%">' +
-        '<thead><tr><th>SL#</th><th>Name</th><th>Company</th><th>Expiry</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>' +
-        '<tbody>' + rows + '</tbody></table>';
-
-    $('#tblproductdetails').html(html);
-    if (!($('.modalProduct').is(':visible'))) {
-        $('#productpdiv').modal("show");
-        $("#productpdiv").appendTo("body");
-        $('.modal-backdrop').removeClass("modal-backdrop");
-    }
-}
-
 function LoadCopyLocationTransfer(result) {
-    $("#TblSalesInvoice tr").remove(); 
-    
+    $("#LocationView").modal("hide");
+    $("#TransferNo,#btnsubmit").hide();
+    $("#CTransferNo,#btnedit,#btndelete").show();
+
     if (result.length > 0) {
         $("#TransferNo,#CTransferNo").val(result[0].TRNo);
         $("#Date").val(result[0].TRDate);
@@ -1085,9 +1069,7 @@ function LoadCopyLocationTransfer(result) {
             '<td style="width:15%">' +
             '<input class="form-control form-control-sm gridcell cpdisa" id="Product_' + id + '" value="' + result[i].ItemCode + '"  onkeyup="LoadProduct(' + id + ')"  />' +
             '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell cpdisa" id="Batch_' + id + '" value="' + result[i].Batch + '"  onkeyup="LoadBatch(' + id + ')"  />' +
-            '</td>' +
+            
             '<td style="width:10%">' +
             '<input class="form-control form-control-sm gridcell dedisa" disabled id="Company_' + id + '" value="' + result[i].Company + '"  />' +
             '</td>' +
@@ -1118,7 +1100,7 @@ function LoadCopyLocationTransfer(result) {
             '</tr>';
 
 
-        
+
         $("#TblSalesInvoice").append(Text);
     }
     $(".cpdisa").prop("disabled", true);
@@ -1150,7 +1132,7 @@ function ConfirmboxResult(Result, status, rowid) {
     else if (Result == 'true' && status == 'Delete') {
         OKDelete();
     }
-    
+
     $('#confirm').fadeOut();
 }
 
@@ -1174,7 +1156,7 @@ function Showalerts(Status, TRNo) {
         swal('Transfer# - ' + TRNo, " already exists", "warning");
         $('.swal-button swal-button--info').focus();
     }
-   
+
 }
 
 function datatableWithsearch(tablename, Type) {
@@ -1191,7 +1173,7 @@ function datatableWithsearch(tablename, Type) {
 
     var table = null;
 
-     if (Type == 'Single') {
+    if (Type == 'Single') {
 
         table = $('#' + tablename).DataTable({
             dom: 'tipr',
@@ -1260,78 +1242,3 @@ function isNumberInt(evt, selectedvalue) {
     }
     return true;
 }
-
-function LoadFromStockTransfer(TRNo) {
-    OKformrefresh(0);   // Reset to a clean "New" state — auto-generates Transfer#, clears From/To, shows Save
-    SourceRequestTRNo = TRNo;
-    var data = {};
-    data.TRNo = TRNo;
-    data.DeptId = ERPDeptId;
-    data.UserId = ERPUserId;
-    $.ajax({
-        type: "POST",
-        url: "../Pharmacy/HMS_StockTransferGet",
-        data: data,
-        success: function (result) {
-            LoadFromStockTransferFill(result);
-        }
-    });
-}
-
-function LoadFromStockTransferFill(result) {
-    if (result.length > 0) {
-        $("#FromLoc").val(result[0].FromLocation);
-        $("#ToLoc").val(result[0].ToLocation);
-        $("#Remarks").val(result[0].Remarks);
-    }
-    for (var i = 0; i < result.length; i++) {
-        var id = Number(i) + 1;
-        var TrLength = Number($("#TblSalesInvoice tr").length) + 1;
-
-        var Text = '<tr id="MTR_' + id + '" onfocusout="UpdateRow(' + id + ')">' +
-            '<td style="width:2%" align="center">' +
-            '<input class="jsgrid-button jsgrid-delete-button" type="button" onclick="DeleteRow(' + id + ')" title="Delete" autocomplete="off">' +
-            '</td>' +
-            '<td style="width:3%" align="center" id="trno_' + id + '">' + TrLength + '</td>' +
-            '<td style="width:15%">' +
-            '<input class="form-control form-control-sm gridcell" id="Product_' + id + '" value="' + result[i].ItemCode + '"  onkeyup="LoadProduct(' + id + ')"  />' +
-            '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell" id="Batch_' + id + '" value="' + result[i].BatchSlNo + '"  onkeyup="LoadBatch(' + id + ')"  />' +
-            '</td>' +
-            '<td style="width:10%">' +
-            '<input class="form-control form-control-sm gridcell dedisa" disabled id="Company_' + id + '" value="' + result[i].Company + '"  />' +
-            '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell dedisa" disabled id="Expiry_' + id + '" value="' + result[i].Expiry + '"  />' +
-            '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell text-center" id="Quantity_' + id + '" value="' + result[i].Quantity + '" onkeyup="CalAmount(' + id + ')"  onkeypress="isNumberInt(event,this)"  />' +
-            '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell dedisa text-right" disabled id="SellPrice_' + id + '" value="' + parseFloat(result[i].Price || 0).toFixed(Decimal) + '"  onkeypress="isNumberInt(event,this)"  />' +
-            '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell dedisa text-right" disabled id="Amount_' + id + '" value="' + parseFloat(result[i].Total || 0).toFixed(Decimal) + '"  onkeypress="isNumberInt(event,this)"  />' +
-            '</td>' +
-            '<td style="width:5%">' +
-            '<input class="form-control form-control-sm gridcell dedisa" disabled id="DrugSchedule_' + id + '" value="' + result[i].PurchaseType + '"  />' +
-            '</td>' +
-            '<td style="display:none">' +
-            '<input id="ProductId_' + id + '" value="' + result[i].ItemId + '"  />' +
-            '<input id="BatchSlNo_' + id + '" value="' + result[i].BatchSlNo + '"  />' +
-            '<input id="Stock_' + id + '" value="' + result[i].Stock + '"  />' +
-            '<input id="PHSNCode_' + id + '" value="' + result[i].LPO_No + '"  />' +
-            '<input id="FromLoc_' + id + '" value="' + $("#FromLoc").val() + '"  />' +
-            '<input id="ToLoc_' + id + '" value="' + $("#ToLoc").val() + '"  />' +
-            '<input id="OldQty_' + id + '" value="0"  />' +
-            '</td>' +
-            '</tr>';
-
-        $("#TblSalesInvoice").append(Text);
-    }
-    $("#GridLength").val(result.length);
-    CalcAmt();
-}
-
-

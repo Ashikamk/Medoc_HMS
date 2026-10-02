@@ -1,6 +1,6 @@
 ﻿
 var PrintHeaderFlag = 0;          //casesheet print header 0 -> without header, 1 -> with header
-var LabPrintHeaderFlag = 1;       //lab bill print header 0 -> without header, 1 -> with header
+var LabPrintHeaderFlag = 0;       //lab bill print header 0 -> without header, 1 -> with header
 var ProcPrintHeaderFlag = 1;      //procedure bill print 0 -> without header, 1 -> with header
 var IpPrintHeaderFlag = 1;        //ip bill print 0 -> without header, 1 -> with header
 var SalesPrintHeaderFlag = 1;     // sales invoice print 0 -> without header, 1 -> with header

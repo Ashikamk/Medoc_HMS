@@ -9,6 +9,8 @@ namespace EUMI_ERP.Models
 {
     public class PharmacyModel
     {
+        public int RequestStatus { get; set; }
+        public int Mode { get; set; }
         public long InvId { get; set; }
         public decimal CessPer { get; set; }
         public long Flag { get; set; }
@@ -127,7 +129,8 @@ namespace EUMI_ERP.Models
         public string Stock { get; set; }
         public string Company { get; set; }
         public string Unit { get; set; }
-       
+        public int StockTransferNo { get; set; }
+
 
 
         DPharmacy oDPurchase = new DPharmacy();
@@ -200,6 +203,20 @@ namespace EUMI_ERP.Models
         {
             return oDPurchase.HMS_PurchaseUpdate(dt, dbName);
         }
+        public DataSet HMS_StockTransferNotifyGet(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_StockTransferNotifyGet(oDPharmacy, dbName);
+        }
+        public DataSet HMS_StockTransferStatusReportGet(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_StockTransferStatusReportGet(oDPharmacy, dbName);
+        }
+
+        public void HMS_StockTransferStatusUpdate(int TRNo, int Status, int UserId, int DeptId, string dbName)
+        {
+            oDPurchase.HMS_StockTransferStatusUpdate(TRNo, Status, UserId, DeptId, dbName);
+        }
+
         public DataSet HMS_PurchaseReturnInsert(DataTable dt, string dbName)
         {
             return oDPurchase.HMS_PurchaseReturnInsert(dt, dbName);
@@ -291,6 +308,10 @@ namespace EUMI_ERP.Models
         {
             return oDPurchase.HMS_LocationTransferInsert(dt, dbName);
         }
+        public DataSet HMS_StockTransferInsert(DataTable dt, string dbName)
+        {
+            return oDPurchase.HMS_StockTransferInsert(dt, dbName);
+        }
         public DataSet HMS_LocationTransferUpdate(DataTable dt, string dbName)
         {
             return oDPurchase.HMS_LocationTransferUpdate(dt, dbName);
@@ -303,9 +324,21 @@ namespace EUMI_ERP.Models
         {
             return oDPurchase.HMS_LocationTransferGet(oDPharmacy, dbName);
         }
+        public DataSet StockTransferSlNoGet(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.StockTransferSlNoGet(oDPharmacy, dbName);
+        }
+        public DataSet HMS_StockTransferGet(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_StockTransferGet(oDPharmacy, dbName);
+        }
         public DataSet HMS_LocationTransferView(PharmacyModel oDPharmacy, string dbName)
         {
             return oDPurchase.HMS_LocationTransferView(oDPharmacy, dbName);
+        }
+        public DataSet HMS_StockTransferView(PharmacyModel oDPharmacy, string dbName)
+        {
+            return oDPurchase.HMS_StockTransferView(oDPharmacy, dbName);
         }
         public DataSet HMS_LocationTransferSearch(PharmacyModel oDPharmacy, string dbName)
         {

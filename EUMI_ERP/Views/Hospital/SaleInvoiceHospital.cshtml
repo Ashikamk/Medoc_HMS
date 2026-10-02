@@ -2046,103 +2046,54 @@
 
 <script>
     $(document).ready(function () {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ws') !== '1') return;
 
-        var urlParams = new URLSearchParams(window.location.search);
-        var urlToken = urlParams.get("token");
-        var sessionToken = sessionStorage.getItem("SI_Token");
-        var fromWorksheet = sessionStorage.getItem("SI_FromWorksheet");
+        var raw = localStorage.getItem('SI_Worksheet');
+        localStorage.removeItem('SI_Worksheet');
+        window.history.replaceState({}, document.title, window.location.pathname);
+        if (!raw) return;
 
-        sessionStorage.removeItem("SI_Token");
-        sessionStorage.removeItem("SI_FromWorksheet");
+        var p;
+        try { p = JSON.parse(raw); } catch (e) { return; }
+        if (!p.PatientId || Date.now() - p.ts > 60000) return;   // ignore stale data
 
-        if (urlToken) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
-        if (urlToken && sessionToken && urlToken === sessionToken && fromWorksheet === "1") {
-            setTimeout(function () {
-                LoadFromWorksheet();
-            }, 1200);
-        } else {
-            sessionStorage.removeItem("SI_PatientId");
-            sessionStorage.removeItem("SI_OPNumber");
-            sessionStorage.removeItem("SI_OPSeries");
-            sessionStorage.removeItem("SI_RevisitId");
-            sessionStorage.removeItem("SI_PatientName");
-            sessionStorage.removeItem("SI_Gender");
-            sessionStorage.removeItem("SI_Contact");
-            sessionStorage.removeItem("SI_DoctorId");
-            sessionStorage.removeItem("SI_MedAdvice");
-            sessionStorage.removeItem("SI_IPNumber");
-        }
+        setTimeout(function () { LoadFromWorksheet(p); }, 1200);
     });
 
-
-    function LoadFromWorksheet() {
-
-        var patientId = sessionStorage.getItem("SI_PatientId");
-        var opNumber = sessionStorage.getItem("SI_OPNumber");
-        var opSeries = sessionStorage.getItem("SI_OPSeries");
-        var revisitId = sessionStorage.getItem("SI_RevisitId");
-        var patientName = sessionStorage.getItem("SI_PatientName");
-        var contact = sessionStorage.getItem("SI_Contact");
-
-        if (!patientId || patientId === "null") return;
-
-        sessionStorage.removeItem("SI_PatientId");
-        sessionStorage.removeItem("SI_OPNumber");
-        sessionStorage.removeItem("SI_OPSeries");
-        sessionStorage.removeItem("SI_RevisitId");
-        sessionStorage.removeItem("SI_PatientName");
-        sessionStorage.removeItem("SI_Gender");
-        sessionStorage.removeItem("SI_Contact");
-        sessionStorage.removeItem("SI_DoctorId");
-        sessionStorage.removeItem("SI_MedAdvice");
-        sessionStorage.removeItem("SI_IPNumber");
-
-        $('#HPatient').val(patientName);
-        $('#HPatientId').val(patientId);
-        $('#HRegNo').val(opNumber);
-        $('#HRegSeries').val(opSeries);
-        $('#HOpNo').val(revisitId);
-        $('#HRegNowithseries').val(opSeries + '-' + opNumber);
+    function LoadFromWorksheet(p) {
+        $('#HPatient').val(p.PatientName);
+        $('#HPatientId').val(p.PatientId);
+        $('#HRegNo').val(p.OPNumber);
+        $('#HRegSeries').val(p.OPSerId);
+        $('#HOpNo').val(p.RevisitId);
+        $('#HRegNowithseries').val(p.OPSerName + '-' + p.OPNumber);
         $('#IPNumber').val('');
-        $('#Remarks').val(contact);
-
-        var data = {};
-        data.PatientId = patientId;
-        data.DeptId = ERPDeptId;
+        $('#Remarks').val(p.Contact);
 
         $.ajax({
             type: "POST",
             url: "../Revisit/HMS_LAstRevisitGetsOP",
-            data: data,
+            data: { PatientId: p.PatientId, DeptId: ERPDeptId },
             success: function (result) {
                 if (result.oList.length > 0) {
-                    $('#HGender').val(result.oList[0].Gender);
-                    $('#SendSMS').val(result.oList[0].SendSMS);
-                    $('#SpecialFees').val(result.oList[0].SpecialFees);
-                    GetPatientAge(result.oList[0].DOB);
+                    var r = result.oList[0];
+                    $('#HGender').val(r.Gender);
+                    $('#SendSMS').val(r.SendSMS);
+                    $('#SpecialFees').val(r.SpecialFees);
+                    GetPatientAge(r.DOB);
+                    $('#HDoctor').val(p.DoctorId || r.DoctorId);
 
-                    $('#HOpNo').val(revisitId);
-                    $('#HRegNo').val(opNumber);
-                    $('#HRegSeries').val(opSeries);
-                    $('#HRegNowithseries').val(opSeries + '-' + opNumber);
-                    $('#HDoctor').val(result.oList[0].DoctorId);
-
-                    Gettestadviceget(opNumber, opSeries, revisitId);
+                    Gettestadviceget(p.OPNumber, p.OPSerId, p.RevisitId);
                     CreditBillGets();
 
-                    var locCheckCount = 0;
-                    var locInterval = setInterval(function () {
-                        locCheckCount++;
-                        var loc = parseInt($("#HLocation").val() || 0);
-                        if (loc !== 0) {
-                            clearInterval(locInterval);
-                            PrescriptionGets(revisitId);
-                        } else if (locCheckCount > 20) {
-                            clearInterval(locInterval);
-                        }
+                    var tries = 0;
+                    var t = setInterval(function () {
+                        tries++;
+                        if (parseInt($("#HLocation").val() || 0) !== 0) {
+                            clearInterval(t);
+                            PrescriptionGets(p.RevisitId);
+                        } else if (tries > 20) clearInterval(t);
                     }, 200);
                 }
             }

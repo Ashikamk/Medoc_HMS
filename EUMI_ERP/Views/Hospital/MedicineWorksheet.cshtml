@@ -739,24 +739,22 @@
 
     function GoToBill(index) {
         var row = globalWorkSheetData[index];
+        if (!row) { alert('No data available for this entry.'); return; }
 
-        var token = 'ws_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-
-        sessionStorage.clear();
-
-        sessionStorage.setItem("SI_Token", token);
-        sessionStorage.setItem("SI_FromWorksheet", "1");
-        sessionStorage.setItem("SI_PatientId", row.PatientId);
-        sessionStorage.setItem("SI_OPNumber", row.OPNumber);
-        sessionStorage.setItem("SI_OPSeries", row.OPSerName);
-        sessionStorage.setItem("SI_RevisitId", row.RevisitId);
-        sessionStorage.setItem("SI_PatientName", row.PatientName);
-        sessionStorage.setItem("SI_Gender", row.Gender);
-        sessionStorage.setItem("SI_Contact", row.Contact);
-        sessionStorage.setItem("SI_DoctorId", row.Doctor_Id);
-        sessionStorage.setItem("SI_MedAdvice", row.MedicineAdvice);
-
-        window.open("/Hospital/SaleInvoiceHospital?token=" + token, "_blank");
+        var payload = {
+            ts: Date.now(),
+            PatientId: row.PatientId,
+            OPNumber: row.OPNumber,
+            OPSerId: row.OPSerId || 1,      
+            OPSerName: row.OPSerName,
+            RevisitId: row.RevisitId,
+            PatientName: row.PatientName,
+            Gender: row.Gender,
+            Contact: row.Contact,
+            DoctorId: row.Doctor_Id
+        };
+        localStorage.setItem('SI_Worksheet', JSON.stringify(payload));
+        window.open('/Hospital/SaleInvoiceHospital?ws=1', '_blank');
     }
 
     function WhichButton(e, slno) { }

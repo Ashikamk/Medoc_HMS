@@ -375,6 +375,8 @@ function PrintTestResult(Rowlen) {
     var powerdby = document.getElementById("ComapnyImage1");
     var powerdby1 = document.getElementById("printqrr");
 
+   // var barcode2 = document.getElementById("printbarcode1");
+
     $(powerdby).css('height', 30); $(powerdby).css('width', 280);
 
     myWindow.document.write(`
@@ -435,6 +437,8 @@ function PrintTestResult(Rowlen) {
         '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
         '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
         '</table></td>' +
+        //'<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
+
         '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
         '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
         '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
@@ -443,37 +447,32 @@ function PrintTestResult(Rowlen) {
         '</table></td>' +
         '</tr>' +
         '</table>';
-    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
-    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-        '<tr><td height=10px></td></tr>' +
-        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center></td></tr>' +
-        '</table>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+    //var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';     // with loggedin user
+    //var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+    //    '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+    //    '<tr>' +
+    //    '<td></td>' +
+    //    '<td width=200px align=center>' +
+    //    SignLabTech + '<br>' +
+    //    '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span><br>' +
+    //    'LAB TECHNICIAN' +
+    //    '</td>' +
+    //    '</tr>' +
+    //    '</table>' +
+    //    '</div>';
+
+    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : ''; 
+
+    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' + // harcoded
+        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
         '<tr>' +
-        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
-        '<td align=center>&#160;' + SignTechnologist + '</td>' +
-        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
-        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WAJIDHA PK</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>LAB TECHNICIAN</td>' +
-        '<td align=center>LAB INCHARGE </td>' +
-        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
-        '<td align=center>DMLT - Approved by DME KERALA</td>' +
-        '<td width=150px align=center>TCMC REG NO 60682</td>' +
+        '<td width=70%></td>' +
+        '<td width=30% align=center><b>LAB TECHNICIAN</b></td>' +
         '</tr>' +
         '</table>' +
         '</div>';
 
-    //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+    //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +      //cenora
     //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
     //    '<tr><td height=10px></td></tr>' +
     //    '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
@@ -682,6 +681,8 @@ function PrintTestResultContinuous(Rowlen) {
     var powerdby = document.getElementById("ComapnyImage1");
     var powerdby1 = document.getElementById("printqrr");
 
+    // var barcode2 = document.getElementById("printbarcode1");
+
     $(powerdby).css('height', 30); $(powerdby).css('width', 280);
 
     myWindow.document.write(`
@@ -742,6 +743,7 @@ function PrintTestResultContinuous(Rowlen) {
         '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
         '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
         '</table></td>' +
+    //'<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
         '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
         '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
         '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +

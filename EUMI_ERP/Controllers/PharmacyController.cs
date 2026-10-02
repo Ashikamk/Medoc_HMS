@@ -55,8 +55,13 @@ namespace EUMI_ERP.Controllers
             return View();
         }
 
-        
-       public ActionResult HMS_PurchasevaccSearch(ItemMasterModel ItemMasterModel)
+        public ActionResult PharmaStockTransfer()
+        {
+            return View();
+        }
+
+
+        public ActionResult HMS_PurchasevaccSearch(ItemMasterModel ItemMasterModel)
         {
             PharmacyModel obj = new PharmacyModel();
 
@@ -3834,6 +3839,91 @@ namespace EUMI_ERP.Controllers
 
             return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public JsonResult HMS_StockTransferInsert(List<PharmacyModel> PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            DataSet dsDataSet = new DataSet();
+            DataTable dt = new DataTable();
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+
+                string[] tmpTable = new string[21];
+
+                tmpTable[0] = "SlNo";
+                tmpTable[1] = "TRNo";
+                tmpTable[2] = "TRDate";
+                tmpTable[3] = "FromLocation";
+                tmpTable[4] = "ToLocation";
+                tmpTable[5] = "DebitAcc";
+                tmpTable[6] = "CreditAcc";
+                tmpTable[7] = "Remarks";
+                tmpTable[8] = "ItemId";
+                tmpTable[9] = "BatchSlNo";
+                tmpTable[10] = "Batch";
+                tmpTable[11] = "ItemCode";
+                tmpTable[12] = "Quantity";
+                tmpTable[13] = "Price";
+                tmpTable[14] = "Total";
+                tmpTable[15] = "CuStock";
+                tmpTable[16] = "Expiry";
+                tmpTable[17] = "Status";
+                tmpTable[18] = "Variable1";
+                tmpTable[19] = "UserId";
+                tmpTable[20] = "DeptId";
+
+                dt = Common.CreateTable(tmpTable);
+
+                foreach (var details in PharmacyModel)
+                {
+                    obj.SlNo = details.SlNo;
+                    obj.TRNo = details.TRNo;
+                    obj.TRDate = details.TRDate;
+                    obj.FromLocation = details.FromLocation;
+                    obj.ToLocation = details.ToLocation;
+                    obj.DebitAcc = details.DebitAcc;
+                    obj.CreditAcc = details.CreditAcc;
+                    obj.Remarks = details.Remarks;
+                    obj.ItemId = details.ItemId;
+                    obj.BatchSlNo = details.BatchSlNo;
+                    obj.Batch = details.Batch;
+                    obj.ItemCode = details.ItemCode;
+                    obj.Quantity = details.Quantity;
+                    obj.Price = details.Price;
+                    obj.Total = details.Total;
+                    obj.CuStock = details.CuStock;
+                    obj.Expiry = details.Expiry;
+                    obj.Status = details.Status;
+                    obj.Variable1 = details.Variable1;
+                    obj.UserId = details.UserId;
+                    obj.DeptId = details.DeptId;
+
+                    dt.Rows.Add
+                    (
+                        obj.SlNo, obj.TRNo, obj.TRDate, obj.FromLocation, obj.ToLocation, obj.DebitAcc, obj.CreditAcc, obj.Remarks,
+                    obj.ItemId, obj.BatchSlNo, obj.Batch, obj.ItemCode, obj.Quantity, obj.Price, obj.Total, obj.CuStock, obj.Expiry,
+                    obj.Status, obj.Variable1, obj.UserId, obj.DeptId
+                    );
+                }
+
+                dsDataSet = obj.HMS_StockTransferInsert(dt, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.Status = row["Status"].ToString();
+                    MModels.TRNo = Convert.ToInt32(row["TRNo"].ToString());
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public JsonResult HMS_LocationTransferUpdate(List<PharmacyModel> PharmacyModel)
         {
@@ -4008,6 +4098,149 @@ namespace EUMI_ERP.Controllers
 
         }
 
+        public ActionResult HMS_StockTransferGet(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_StockTransferGet(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.TRNo = Convert.ToInt32(row["trNo"].ToString());
+                    MModels.TRDate = row["TRDate"].ToString();
+                    MModels.FromLocation = Convert.ToInt32(row["FromLocation"].ToString());
+                    MModels.ToLocation = Convert.ToInt32(row["ToLocation"].ToString());
+                    MModels.Remarks = row["Comments"].ToString();
+                    MModels.Variable1 = row["CurDate"].ToString();
+                    MModels.ItemId = Convert.ToInt32(row["ProductId"].ToString());
+                    MModels.ItemCode = row["ItemCode"].ToString();
+                    MModels.BatchSlNo = Convert.ToInt32(row["BatchNo"].ToString());
+                    MModels.Expiry = row["Expiry"].ToString();
+                    MModels.Status = row["UnitId"].ToString();
+                    MModels.Quantity = Convert.ToDecimal(row["Quantity"].ToString());
+                    MModels.Price = Convert.ToDecimal(row["Price"].ToString());
+                    MModels.Total = Convert.ToDecimal(row["Total"].ToString());
+                    MModels.LPO_No = row["HsnCode"].ToString();
+                    MModels.PurchaseType = row["SubCategoryName"].ToString();
+                    MModels.Company = row["GrpName"].ToString();
+                    MModels.FLocationName = row["FLocationName"].ToString();
+                    MModels.TLocationName = row["TLocationName"].ToString();
+                    MModels.Stock = row["Stock"].ToString();
+
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return new JsonResult()
+            {
+                Data = oList,
+                MaxJsonLength = 86753090,
+            };
+        }
+
+        public ActionResult HMS_StockTransferNotifyGet(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_StockTransferNotifyGet(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.TRNo = Convert.ToInt32(row["trNo"].ToString());
+                    MModels.TRDate = row["TRDate"] == DBNull.Value ? "" : row["TRDate"].ToString();
+                    MModels.FLocationName = row["FLocationName"] == DBNull.Value ? "" : row["FLocationName"].ToString();
+                    MModels.TLocationName = row["TLocationName"] == DBNull.Value ? "" : row["TLocationName"].ToString();
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090 };
+        }
+
+        public ActionResult HMS_StockTransferStatusReportGet(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                Console.WriteLine("### dbName being used: " + dbName);
+                DataSet dsDataSet = obj.HMS_StockTransferStatusReportGet(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.TRNo = Convert.ToInt32(row["trNo"].ToString());
+                    MModels.TRDate = row["TRDate"] == DBNull.Value ? "" : row["TRDate"].ToString();
+                    MModels.RequestStatus = Convert.ToInt32(row["RequestStatus"].ToString());
+                    MModels.Remarks = row["Remarks"] == DBNull.Value ? "" : row["Remarks"].ToString();
+                    MModels.FLocationName = row["FLocationName"] == DBNull.Value ? "" : row["FLocationName"].ToString();
+                    MModels.TLocationName = row["TLocationName"] == DBNull.Value ? "" : row["TLocationName"].ToString();
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return new JsonResult() { Data = oList, MaxJsonLength = 86753090 };
+        }
+
+        public ActionResult HMS_StockTransferStatusUpdate(int TRNo, int Status, int UserId, int DeptId)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            try
+            {
+                obj.HMS_StockTransferStatusUpdate(TRNo, Status, UserId, DeptId, dbName);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+                return Json(new { success = false });
+            }
+        }
+
+        public ActionResult StockTransferSlNoGet(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.StockTransferSlNoGet(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.StockTransferNo = Convert.ToInt32(row["trNo"].ToString());
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return new JsonResult()
+            {
+                Data = oList,
+                MaxJsonLength = 86753090,
+            };
+        }
+
         public ActionResult HMS_LocationTransferView(PharmacyModel PharmacyModel)
         {
             PharmacyModel obj = new PharmacyModel();
@@ -4025,6 +4258,46 @@ namespace EUMI_ERP.Controllers
                     MModels.FromLocation = Convert.ToInt32(row["FromLocation"].ToString());
                     MModels.ToLocation = Convert.ToInt32(row["ToLocation"].ToString());
                     MModels.FromLocation = Convert.ToInt32(row["FromLocation"].ToString());   
+                    MModels.Remarks = row["Comments"].ToString();
+                    MModels.Variable1 = row["CurDate"].ToString();
+                    MModels.FLocationName = row["FLocationName"].ToString();
+                    MModels.TLocationName = row["TLocationName"].ToString();
+
+                    oList.Add(MModels);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return new JsonResult()
+            {
+                Data = oList,
+                MaxJsonLength = 86753090,
+            };
+
+        }
+
+
+        public ActionResult HMS_StockTransferView(PharmacyModel PharmacyModel)
+        {
+            PharmacyModel obj = new PharmacyModel();
+
+            List<PharmacyModel> oList = new List<PharmacyModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_StockTransferView(PharmacyModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    PharmacyModel MModels = new PharmacyModel();
+                    MModels.TRNo = Convert.ToInt32(row["trNo"].ToString());
+                    MModels.TRDate = row["TRDate"].ToString();
+                    MModels.FromLocation = Convert.ToInt32(row["FromLocation"].ToString());
+                    MModels.ToLocation = Convert.ToInt32(row["ToLocation"].ToString());
+                    MModels.FromLocation = Convert.ToInt32(row["FromLocation"].ToString());
                     MModels.Remarks = row["Comments"].ToString();
                     MModels.Variable1 = row["CurDate"].ToString();
                     MModels.FLocationName = row["FLocationName"].ToString();

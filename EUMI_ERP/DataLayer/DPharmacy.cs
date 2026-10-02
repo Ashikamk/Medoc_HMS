@@ -24,7 +24,7 @@ namespace EUMI_ERP.DataLayer
             catch (SqlException exMe)
             {
                 Console.WriteLine(exMe.Message);
-                throw;
+                return null;
             }
         }
 
@@ -592,6 +592,22 @@ namespace EUMI_ERP.DataLayer
                 return null;
             }
         }
+
+        public DataSet HMS_StockTransferInsert(DataTable dt, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@Type", SqlDbType.Structured);
+                arlParms[0].Value = dt;
+                return SQLHelper.ExecuteDataset("HMS_StockTransferInsert", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
         public DataSet HMS_LocationTransferUpdate(DataTable dt, string dbName)
         {
             try
@@ -642,6 +658,82 @@ namespace EUMI_ERP.DataLayer
             }
 
         }
+
+        public DataSet HMS_StockTransferGet(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[3];
+                arlParms[0] = new SqlParameter("@TRNo", PharmacyModel.TRNo);
+                arlParms[1] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                arlParms[2] = new SqlParameter("@UserId", PharmacyModel.UserId);
+                return SQLHelper.ExecuteDataset("HMS_StockTransferGet", dbName, arlParms);
+
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
+
+        public DataSet HMS_StockTransferNotifyGet(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[2];
+                arlParms[0] = new SqlParameter("@LocationId", PharmacyModel.FromLocation);
+                arlParms[1] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                return SQLHelper.ExecuteDataset("HMS_StockTransferNotifyGet", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
+        public DataSet HMS_StockTransferStatusReportGet(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[3];
+                arlParms[0] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                arlParms[1] = new SqlParameter("@FromDate", PharmacyModel.FromDate);
+                arlParms[2] = new SqlParameter("@ToDate", PharmacyModel.ToDate);
+                return SQLHelper.ExecuteDataset("HMS_StockTransferStatusReportGet", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
+        public void HMS_StockTransferStatusUpdate(int TRNo, int Status, int UserId, int DeptId, string dbName)
+        {
+            arlParms = new SqlParameter[4];
+            arlParms[0] = new SqlParameter("@TRNo", TRNo);
+            arlParms[1] = new SqlParameter("@Status", Status);
+            arlParms[2] = new SqlParameter("@UserId", UserId);
+            arlParms[3] = new SqlParameter("@DeptId", DeptId);
+            SQLHelper.ExecuteNonQuery("HMS_StockTransferStatusUpdate", dbName, arlParms);
+        }
+        public DataSet StockTransferSlNoGet(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                return SQLHelper.ExecuteDataset("StockTransferSlNoGet", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
         public DataSet HMS_LocationTransferView(PharmacyModel PharmacyModel, string dbName)
         {
             try
@@ -653,6 +745,27 @@ namespace EUMI_ERP.DataLayer
                 arlParms[4] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
                 arlParms[5] = new SqlParameter("@UserId", PharmacyModel.UserId);
                 return SQLHelper.ExecuteDataset("HMS_LocationTransferView", dbName, arlParms);
+
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+
+        }
+
+        public DataSet HMS_StockTransferView(PharmacyModel PharmacyModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[6];
+                arlParms[0] = new SqlParameter("@LocationId", PharmacyModel.LocationId);
+                arlParms[1] = new SqlParameter("@From", PharmacyModel.FromDate);
+                arlParms[2] = new SqlParameter("@To", PharmacyModel.ToDate);
+                arlParms[4] = new SqlParameter("@DeptId", PharmacyModel.DeptId);
+                arlParms[5] = new SqlParameter("@UserId", PharmacyModel.UserId);
+                return SQLHelper.ExecuteDataset("HMS_StockTransferView", dbName, arlParms);
 
             }
             catch (SqlException exMe)

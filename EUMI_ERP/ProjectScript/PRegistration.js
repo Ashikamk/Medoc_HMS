@@ -1072,8 +1072,11 @@ function PrintRegistration() {
     var Age = $('#Age').val() + '/' + $('#PGender :selected').text();
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG3);
+    myWindow.document.write('<style>img{image-rendering:crisp-edges;filter:grayscale(1) contrast(3);}</style>');
     //$(ComapnydivToPrintLab).css('height', '130px'); $(ComapnydivToPrintLab).css('width', '100%');
-    $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
+    //$(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
+    //$(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 350);
+    $(ComapnydivToPrintLab).find('img').css({ width: '100%', height: 'auto' });
     myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
@@ -1120,6 +1123,7 @@ function PrintRegistration() {
 
     myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
     myWindow.document.write('<tr><td>&#160;</td></tr>');
+    //myWindow.document.write('<table width=100% style="margin-top:100px;font-family:tahoma;font-size:16px;font-weight:bold;"><tr><td align=right>Signature &amp; Seal</td></tr></table>');
 
     //  myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
     //myWindow.document.write('</table>');

@@ -387,7 +387,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
     var TotPQty = 0; var Rowcount = 7;
     var MaxCnt;
-
+    c
     MaxCnt = 47;
     var department = $('#HLocation').val();
     var BillNo = $('#HBillNo').val();
@@ -2005,7 +2005,7 @@ function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF  
         //myWindow.document.write('</table>');
     }
     else if (hdtype == 1) {//with image header
-        myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('<table width=50% ><tr ><td width=50% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
         myWindow.document.write('</table>');
         // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
         //myWindow.document.write('</table>');
