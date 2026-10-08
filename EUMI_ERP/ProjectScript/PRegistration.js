@@ -1072,11 +1072,9 @@ function PrintRegistration() {
     var Age = $('#Age').val() + '/' + $('#PGender :selected').text();
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG3);
-    myWindow.document.write('<style>img{image-rendering:crisp-edges;filter:grayscale(1) contrast(3);}</style>');
     //$(ComapnydivToPrintLab).css('height', '130px'); $(ComapnydivToPrintLab).css('width', '100%');
-    //$(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
+    $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
     //$(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 350);
-    $(ComapnydivToPrintLab).find('img').css({ width: '100%', height: 'auto' });
     myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';

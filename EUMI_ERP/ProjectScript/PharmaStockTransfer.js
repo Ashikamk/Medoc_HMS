@@ -6,7 +6,7 @@ $(document).ready(function () {
     Defaultfocus();
     LoadDate();
     LocnLoad();
-    document.title="Stock Transfer"
+    document.title="Stock Request"
 
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("viewonly") === "1") {
@@ -655,7 +655,7 @@ function Save() {
     }
     else {
         $('#Confirmflag').val('Save'), $('#ConfirmRowId').val(0)
-        $('#confirmmessage').text('Do you want to Save this Stock Transfer?')
+        $('#confirmmessage').text('Do you want to Save this Stock Request?')
         $('#confirm').show();
         $('#confirmOk').prop("disabled", false);
         $('#confirmOk').focus();
@@ -727,7 +727,7 @@ function OKSave() {
 
 function Edit() {
     $('#Confirmflag').val('Edit'), $('#ConfirmRowId').val(0)
-    $('#confirmmessage').text('Do you want to Edit this Stock Transfer?')
+    $('#confirmmessage').text('Do you want to Edit this Stock Request?')
     $('#confirm').show();
     $('#confirmOk').prop("disabled", false);
     $('#confirmOk').focus();
@@ -768,7 +768,7 @@ function Update() {
     }
     else {
         $('#Confirmflag').val('Update'), $('#ConfirmRowId').val(0)
-        $('#confirmmessage').text('Do you want to update this stock transfer?')
+        $('#confirmmessage').text('Do you want to update this stock Request?')
         $('#confirm').show();
         $('#confirmOk').prop("disabled", false);
         $('#confirmOk').focus();
@@ -840,7 +840,7 @@ function OKUpdate() {
 
 function Delete() {
     $('#Confirmflag').val('Delete'), $('#ConfirmRowId').val(0)
-    $('#confirmmessage').text('Do you want to delete this stock transfer?')
+    $('#confirmmessage').text('Do you want to delete this stock Request?')
     $('#confirm').show();
     $('#confirmOk').prop("disabled", false);
     $('#confirmOk').focus();

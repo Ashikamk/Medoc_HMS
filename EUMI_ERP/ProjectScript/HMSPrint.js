@@ -447,30 +447,30 @@ function PrintTestResult(Rowlen) {
         '</table></td>' +
         '</tr>' +
         '</table>';
-    //var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';     // with loggedin user
-    //var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-    //    '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
-    //    '<tr>' +
-    //    '<td></td>' +
-    //    '<td width=200px align=center>' +
-    //    SignLabTech + '<br>' +
-    //    '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span><br>' +
-    //    'LAB TECHNICIAN' +
-    //    '</td>' +
-    //    '</tr>' +
-    //    '</table>' +
-    //    '</div>';
-
-    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : ''; 
-
-    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' + // harcoded
+    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';     // with loggedin user (janatha clinic)
+    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
         '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
         '<tr>' +
-        '<td width=70%></td>' +
-        '<td width=30% align=center><b>LAB TECHNICIAN</b></td>' +
+        '<td></td>' +
+        '<td width=200px align=center>' +
+        SignLabTech + '<br>' +
+        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span><br>' +
+        'LAB TECHNICIAN' +
+        '</td>' +
         '</tr>' +
         '</table>' +
         '</div>';
+
+    //var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : ''; 
+
+    //var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' + // harcoded
+    //    '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+    //    '<tr>' +
+    //    '<td width=70%></td>' +
+    //    '<td width=30% align=center><b>LAB TECHNICIAN</b></td>' +
+    //    '</tr>' +
+    //    '</table>' +
+    //    '</div>';
 
     //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +      //cenora
     //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
@@ -542,7 +542,7 @@ function PrintTestResult(Rowlen) {
                 myWindow.document.write('</div>');
 
                 myWindow.document.write('<div class="page"><div class="page-content">');
-                myWindow.document.write('<div class="page"><div class="page-content">');
+                //myWindow.document.write('<div class="page"><div class="page-content">');
                 myWindow.document.write(HeaderBlockHTML);
                 myWindow.document.write(PatientInfoHTML);
                 myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');

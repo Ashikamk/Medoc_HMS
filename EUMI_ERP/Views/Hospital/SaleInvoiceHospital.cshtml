@@ -2046,59 +2046,59 @@
 
 <script>
     $(document).ready(function () {
-        var params = new URLSearchParams(window.location.search);
-        if (params.get('ws') !== '1') return;
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('ws') !== '1') return;
 
-        var raw = localStorage.getItem('SI_Worksheet');
-        localStorage.removeItem('SI_Worksheet');
-        window.history.replaceState({}, document.title, window.location.pathname);
-        if (!raw) return;
+    var raw = localStorage.getItem('SI_Worksheet');
+    localStorage.removeItem('SI_Worksheet');
+    window.history.replaceState({}, document.title, window.location.pathname);
+    if (!raw) return;
 
-        var p;
-        try { p = JSON.parse(raw); } catch (e) { return; }
-        if (!p.PatientId || Date.now() - p.ts > 60000) return;   // ignore stale data
+    var p;
+    try { p = JSON.parse(raw); } catch (e) { return; }
+    if (!p.PatientId || Date.now() - p.ts > 60000) return;   // ignore stale data
 
-        setTimeout(function () { LoadFromWorksheet(p); }, 1200);
-    });
+    setTimeout(function () { LoadFromWorksheet(p); }, 1200);
+});
 
-    function LoadFromWorksheet(p) {
-        $('#HPatient').val(p.PatientName);
-        $('#HPatientId').val(p.PatientId);
-        $('#HRegNo').val(p.OPNumber);
-        $('#HRegSeries').val(p.OPSerId);
-        $('#HOpNo').val(p.RevisitId);
-        $('#HRegNowithseries').val(p.OPSerName + '-' + p.OPNumber);
-        $('#IPNumber').val('');
-        $('#Remarks').val(p.Contact);
+function LoadFromWorksheet(p) {
+    $('#HPatient').val(p.PatientName);
+    $('#HPatientId').val(p.PatientId);
+    $('#HRegNo').val(p.OPNumber);
+    $('#HRegSeries').val(p.OPSerId);
+    $('#HOpNo').val(p.RevisitId);
+    $('#HRegNowithseries').val(p.OPSerName + '-' + p.OPNumber);
+    $('#IPNumber').val('');
+    $('#Remarks').val(p.Contact);
 
-        $.ajax({
-            type: "POST",
-            url: "../Revisit/HMS_LAstRevisitGetsOP",
-            data: { PatientId: p.PatientId, DeptId: ERPDeptId },
-            success: function (result) {
-                if (result.oList.length > 0) {
-                    var r = result.oList[0];
-                    $('#HGender').val(r.Gender);
-                    $('#SendSMS').val(r.SendSMS);
-                    $('#SpecialFees').val(r.SpecialFees);
-                    GetPatientAge(r.DOB);
-                    $('#HDoctor').val(p.DoctorId || r.DoctorId);
+    $.ajax({
+        type: "POST",
+        url: "../Revisit/HMS_LAstRevisitGetsOP",
+        data: { PatientId: p.PatientId, DeptId: ERPDeptId },
+        success: function (result) {
+            if (result.oList.length > 0) {
+                var r = result.oList[0];
+                $('#HGender').val(r.Gender);
+                $('#SendSMS').val(r.SendSMS);
+                $('#SpecialFees').val(r.SpecialFees);
+                GetPatientAge(r.DOB);
+                $('#HDoctor').val(p.DoctorId || r.DoctorId);
 
-                    Gettestadviceget(p.OPNumber, p.OPSerId, p.RevisitId);
-                    CreditBillGets();
+                Gettestadviceget(p.OPNumber, p.OPSerId, p.RevisitId);
+                CreditBillGets();
 
-                    var tries = 0;
-                    var t = setInterval(function () {
-                        tries++;
-                        if (parseInt($("#HLocation").val() || 0) !== 0) {
-                            clearInterval(t);
-                            PrescriptionGets(p.RevisitId);
-                        } else if (tries > 20) clearInterval(t);
-                    }, 200);
-                }
+                var tries = 0;
+                var t = setInterval(function () {
+                    tries++;
+                    if (parseInt($("#HLocation").val() || 0) !== 0) {
+                        clearInterval(t);
+                        PrescriptionGets(p.RevisitId);
+                    } else if (tries > 20) clearInterval(t);
+                }, 200);
             }
-        });
-    }
+        }
+    });
+}
 
     function ShowMedAdviceFromWorksheet(medAdvice, revisitId, opNumber, opSeries) {
         var data = {};

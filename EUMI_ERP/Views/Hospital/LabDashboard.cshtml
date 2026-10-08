@@ -2676,7 +2676,7 @@
         if (!f.value || !t.value) { warningshow('Please select both From and To dates.'); return; }
         var fd = dmyToDate(f.value), td = dmyToDate(t.value);
         if (fd && td && fd > td) { warningshow('From date cannot be greater than To date.'); return; }
-        
+
         g_verifyMap = {};
         LoadDashboard();
         LoadLabQueue();
@@ -3196,8 +3196,8 @@
 
             var verBadge2 = isVer2 ? '<span class="badge-verified">Verified</span>' : '<span class="badge-unverified">Not Verified</span>';
             var appBadge2 = isApp2 ? '<span class="badge-approved">Approved</span>' : '<span class="badge-unapproved">Not Approved</span>';
-            var actionBtn2 = '<button type="button" class="btn btn-sm btn-primary" onclick="ViewLabAdviceBill(\'' + row.RevisitId + '\')"><i class="fa fa-eye"></i> View</button>';
-            var billBtn2 = '<button type="button" class="btn btn-sm btn-info" onclick="GoToLabBillFromBills(\'' + row.RevisitId + '\')"><i class="fa fa-file-text"></i> Go to Bill</button>';
+            var actionBtn2 = '<button type="button" class="btn btn-sm btn-primary" onclick="ViewLabAdviceBill(' + k + ')"><i class="fa fa-eye"></i> View</button>';
+            var billBtn2 = '<button type="button" class="btn btn-sm btn-info" onclick="GoToLabBillFromBills(\'' + row.RevisitId + '\',\'' + row.TokenNumber + '\')"><i class="fa fa-file-text"></i> Go to Bill</button>';
             var resultBtn2 =
                 '<button class="btn-add-result" ' +
                 'data-ov="' + escAttr(row.RevisitId) + '" ' +
@@ -3584,6 +3584,32 @@
     }
 
 
+    function ViewLabAdviceBill(idx) {
+        var data = g_worksheetRows[idx];
+        if (!data) { alert('No lab advice found for this patient.'); return; }
+
+        $("#M_Patient").text(data.PatientName || '-');
+        $("#M_AgeSex").text((data.BloodGroup ? data.BloodGroup.split("##")[0] : '-') + ' Yrs / ' + (data.Gender || '-'));
+        $("#M_Phone").text(data.Contact || '-');
+        $("#M_RegNo").text((data.OPSerName || '-') + '-' + (data.OPNumber || '-'));
+        $("#M_OPNo").text(data.RevisitId || '-');
+        $("#M_Date").text(data.RevisitDate || '-');
+        $("#M_Time").text(data.DOB || '-');
+        $("#M_Doctor").text(data.DoctorName || '-');
+
+        var listHtml = '';
+        var tests = data.TestNames ? data.TestNames.split(',') : [];
+        tests.forEach(function (test) {
+            listHtml += '<li style="padding:12px;border:1px solid #9FE1CB;border-radius:8px;background:#fff;margin-bottom:8px;">' +
+                '<span style="font-size:15px;font-weight:600;">' + test.trim() + '</span></li>';
+        });
+        $("#M_LabAdviceList").html(listHtml || '<li style="color:#718096;font-size:14px;padding:10px;">No tests advised.</li>');
+
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css('padding-right', '');
+        $("#SimpleLabModal").modal("show");
+    }
+
     function ViewLabAdvice(revisitId) {
         var data = null;
         for (var i = 0; i < g_labQueueRaw.length; i++) {
@@ -3653,47 +3679,24 @@
         });
     }
 
-    function ViewLabAdviceBill(revisitId) {
-        var data = null;
-        for (var i = 0; i < g_worksheetRows.length; i++) {
-            if (String(g_worksheetRows[i].RevisitId) === String(revisitId)) { data = g_worksheetRows[i]; break; }
-        }
-        if (!data) { alert('No lab advice found for this patient.'); return; }
 
-        $("#M_Patient").text(data.PatientName || '-');
-        $("#M_AgeSex").text((data.BloodGroup ? data.BloodGroup.split("##")[0] : '-') + ' Yrs / ' + (data.Gender || '-'));
-        $("#M_Phone").text(data.Contact || '-');
-        $("#M_RegNo").text((data.OPSerName || '-') + '-' + (data.OPNumber || '-'));
-        $("#M_OPNo").text(data.RevisitId || '-');
-        $("#M_Date").text(data.RevisitDate || '-');
-        $("#M_Time").text(data.DOB || '-');
-        $("#M_Doctor").text(data.DoctorName || '-');
-
-        var listHtml = '';
-        var tests = data.TestNames ? data.TestNames.split(',') : [];
-        tests.forEach(function (test) {
-            listHtml += '<li style="padding:12px;border:1px solid #9FE1CB;border-radius:8px;background:#fff;margin-bottom:8px;">' +
-                '<span style="font-size:15px;font-weight:600;">' + test.trim() + '</span></li>';
-        });
-        $("#M_LabAdviceList").html(listHtml || '<li style="color:#718096;font-size:14px;padding:10px;">No tests advised.</li>');
-
-        $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open').css('padding-right', '');
-        $("#SimpleLabModal").modal("show");
-    }
 
     function buildRegSeries(opSerName, opSerId) {
         var name = opSerName || '';
         var id = parseInt(opSerId || 0);
         if (id > 0) {
-            name += String.fromCharCode(64 + id); // 1 -> A, 2 -> B, 3 -> C ...
+            name += String.fromCharCode(64 + id);
         }
         return name;
     }
-    function GoToLabBillFromBills(revisitId) {
+    function GoToLabBillFromBills(revisitId, billNo) {
         var data = null;
         for (var i = 0; i < g_worksheetRows.length; i++) {
-            if (String(g_worksheetRows[i].RevisitId) === String(revisitId)) { data = g_worksheetRows[i]; break; }
+            if (String(g_worksheetRows[i].RevisitId) === String(revisitId) &&
+                String(g_worksheetRows[i].TokenNumber) === String(billNo)) {
+                data = g_worksheetRows[i];
+                break;
+            }
         }
         if (!data) { window.open('/Revisit/LabBill', '_blank'); return; }
 
@@ -4562,7 +4565,7 @@
             if (card) card.style.display = 'block';
             if (g_botData.labqueue.length === 0) {
                 showLoader();
-                LoadLabQueue(); 
+                LoadLabQueue();
             }
         }
         else {
