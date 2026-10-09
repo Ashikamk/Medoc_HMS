@@ -2277,7 +2277,7 @@ function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF  
     //}
 
     $(ComapnydivToPrintLab).css('height',100); $(ComapnydivToPrintLab).css('width', 700);
-
+    //$(ComapnydivToPrintLab).css({ 'width': '330px', 'height': 'auto' });    //thermmal print
     var SNo = '';
     if (flg == 0)
         SNo = $('#BillNoCopy').val();

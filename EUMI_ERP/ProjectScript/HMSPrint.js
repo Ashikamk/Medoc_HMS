@@ -156,7 +156,7 @@ function CmnPrintFunction(Form, Rowlen, Type, Flag) {
     }
 }
 
-
+//demo
 //function PrintTestResult(Rowlen) {
 
 //    var SignPrint = document.getElementById("signimg");
@@ -357,12 +357,10 @@ function PrintTestResult(Rowlen) {
     var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
 
     var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
-    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';          
+    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';
 
     var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
-    var SignTechnologist = '<img src="' + signBaseUrl + 'ashique.png" alt="" height="25" width="55" />';
-    var SignLabIncharge = '<img src="' + signBaseUrl + 'wajidha.jpeg" alt="" height="25" width="55" />';
-    
+
     var myWindow = window.open("", "", "width=1500,height=1500");
 
     if ($('#headprint').is(':checked')) {
@@ -373,15 +371,13 @@ function PrintTestResult(Rowlen) {
     }
 
     var powerdby = document.getElementById("ComapnyImage1");
-    var powerdby1 = document.getElementById("printqrr");
-
-   // var barcode2 = document.getElementById("printbarcode1");
-
     $(powerdby).css('height', 30); $(powerdby).css('width', 280);
 
     myWindow.document.write(`
     <style>
-        @page { size: A4; margin: 15mm; }
+        @page { size: A4; margin: 12mm; }
+
+        html, body { margin: 0; padding: 0; }
 
         table { border-collapse: collapse; }
         table.report-table { width: 100%; }
@@ -389,18 +385,20 @@ function PrintTestResult(Rowlen) {
         .page {
             display: flex;
             flex-direction: column;
-            height: 225mm;              
-            page-break-after: always;
+            height: 245mm;               /* safe height: leaves room for Chrome header/footer text */
+            overflow: hidden;            /* content can never push the footer to the next sheet */
             box-sizing: border-box;
+            break-after: page;
+            page-break-after: always;
         }
-        .page:last-child { page-break-after: auto; }
+        .page:last-of-type { break-after: auto; page-break-after: auto; }
 
         .page-content {
-            flex: 1 1 auto;            
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .page-footer {
-            flex-shrink: 0;            
-            margin-top: auto;          
+            flex: 0 0 auto;
             width: 100%;
         }
     </style>
@@ -437,7 +435,6 @@ function PrintTestResult(Rowlen) {
         '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
         '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
         '</table></td>' +
-        //'<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
 
         '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
         '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
@@ -447,66 +444,24 @@ function PrintTestResult(Rowlen) {
         '</table></td>' +
         '</tr>' +
         '</table>';
-    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';     // with loggedin user (janatha clinic)
+
+    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
     var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
         '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
         '<tr>' +
         '<td></td>' +
         '<td width=200px align=center>' +
-        SignLabTech + '<br>' +
-        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span><br>' +
-        'LAB TECHNICIAN' +
+        '<b>LAB TECHNICIAN</b>' +
+        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
+        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
         '</td>' +
         '</tr>' +
         '</table>' +
         '</div>';
 
-    //var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : ''; 
-
-    //var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' + // harcoded
-    //    '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
-    //    '<tr>' +
-    //    '<td width=70%></td>' +
-    //    '<td width=30% align=center><b>LAB TECHNICIAN</b></td>' +
-    //    '</tr>' +
-    //    '</table>' +
-    //    '</div>';
-
-    //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +      //cenora
-    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-    //    '<tr><td height=10px></td></tr>' +
-    //    '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
-    //    '</table>' +
-    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
-    //    '<td align=center>&#160;' + SignTechnologist + '</td>' +
-    //    '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
-    //    '</tr>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
-    //    '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
-    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WAJIDHA PK</td>' +
-    //    '</tr>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center>LAB TECHNICIAN</td>' +
-    //    '<td align=center>LAB INCHARGE </td>' +
-    //    '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
-    //    '</tr>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
-    //    '<td align=center>DMLT - Approved by DME KERALA</td>' +
-    //    '<td width=150px align=center>TCMC REG NO 60682</td>' +
-    //    '</tr>' +
-    //    '</table>' +
-    //    '</div>';
-
     myWindow.document.write('<div class="page"><div class="page-content">');
-
     myWindow.document.write(HeaderBlockHTML);
-
     myWindow.document.write(Div);
-
     myWindow.document.write(PatientInfoHTML);
 
     var Maxvalue = 0;
@@ -515,6 +470,7 @@ function PrintTestResult(Rowlen) {
     var finalnotes = "";
     var CurrentDept = 0, CurrentMainTest = 0;
 
+    
     var ROWS_PER_PAGE = 16;
     var rowsOnThisPage = 0;
     var hasPrintedAnyRow = false;
@@ -535,21 +491,33 @@ function PrintTestResult(Rowlen) {
 
             var isNewDept = (Dept != CurrentDept);
 
-            if (isNewDept && rowsOnThisPage > 0) {
+            var needed = 0;
+            if (isNewDept) { needed += 1; }
+            if (($("#TestName_" + i).text()).includes("@@")) { needed += 1; }
+            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+                needed += 1;
+            }
+            else if ($.trim($("#Result_" + i).val()) != '') {
+                var refLines = (($("#NormalValue_" + i).val()) || '').split('##').length;
+                needed += Math.max(1, refLines);
+            }
+
+            if (needed > 0 && rowsOnThisPage > 0 &&
+                ((isNewDept && CurrentDept != 0) || (rowsOnThisPage + needed > ROWS_PER_PAGE))) {
+
                 myWindow.document.write('</table>');
-                myWindow.document.write('</div>');
+                myWindow.document.write('</div>');         
                 myWindow.document.write(FooterHTML);
-                myWindow.document.write('</div>');
+                myWindow.document.write('</div>');         
 
                 myWindow.document.write('<div class="page"><div class="page-content">');
-                //myWindow.document.write('<div class="page"><div class="page-content">');
                 myWindow.document.write(HeaderBlockHTML);
                 myWindow.document.write(PatientInfoHTML);
                 myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
                 myWindow.document.write(ColHeaderRow);
 
                 rowsOnThisPage = 0;
-                CurrentDept = 0;
+                CurrentDept = 0;          
                 CurrentMainTest = 0;
             }
 
@@ -561,7 +529,7 @@ function PrintTestResult(Rowlen) {
 
             if (Dept != CurrentDept) {
                 CurrentDept = Dept;
-                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
+                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td></tr>');
                 rowsOnThisPage++;
                 hasPrintedAnyRow = true;
             }
@@ -569,14 +537,14 @@ function PrintTestResult(Rowlen) {
             if (($("#TestName_" + i).text()).includes("@@")) {
                 myWindow.document.write('<tr>' +
                     '<td  align=left colspan=4 style="padding:10px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
-                    '<tr>');
+                    '</tr>');
                 rowsOnThisPage++;
                 hasPrintedAnyRow = true;
             }
 
             if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
                 CurrentMainTest = $("#TestId_" + i).val();
-                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
+                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '</b></td></tr>');
                 rowsOnThisPage++;
                 hasPrintedAnyRow = true;
             }
@@ -607,7 +575,7 @@ function PrintTestResult(Rowlen) {
                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
-                        '<tr>');
+                        '</tr>');
                 }
                 else {
                     myWindow.document.write('<tr>' +
@@ -615,39 +583,32 @@ function PrintTestResult(Rowlen) {
                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
                         '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
-                        '<tr>');
+                        '</tr>');
                 }
-                rowsOnThisPage++;
+                rowsOnThisPage += Math.max(1, (($("#NormalValue_" + i).val()) || '').split('##').length);
                 hasPrintedAnyRow = true;
-            }
-
-            if (rowsOnThisPage >= ROWS_PER_PAGE && i < Rowlen) {
-                myWindow.document.write('</table>');
-                myWindow.document.write('</div>');
-                myWindow.document.write(FooterHTML);
-                myWindow.document.write('</div>');
-
-                myWindow.document.write('<div class="page"><div class="page-content">');
-                myWindow.document.write(HeaderBlockHTML);
-                myWindow.document.write(PatientInfoHTML);
-                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
-                myWindow.document.write(ColHeaderRow);
-
-                rowsOnThisPage = 0;
-                CurrentDept = Dept;
             }
         }
     }
 
     myWindow.document.write('</table>');
 
-    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
+    var notesText = (finalnotes).replace("undefined", "");
+    if ($.trim(notesText) != '' && rowsOnThisPage + 3 > ROWS_PER_PAGE) {
+        myWindow.document.write('</div>');              
+        myWindow.document.write(FooterHTML);
+        myWindow.document.write('</div>');              
 
-    myWindow.document.write('</div>');
+        myWindow.document.write('<div class="page"><div class="page-content">');
+        myWindow.document.write(HeaderBlockHTML);
+        myWindow.document.write(PatientInfoHTML);
+    }
 
+    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + notesText + '</b></td></tr></table>');
+
+    myWindow.document.write('</div>');                  
     myWindow.document.write(FooterHTML);
-
-    myWindow.document.write('</div>');
+    myWindow.document.write('</div>');                  
 
     myWindow.document.close();
 
@@ -661,13 +622,11 @@ function PrintTestResultContinuous(Rowlen) {
 
     var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
 
-  
+
     var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
     var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';
 
     var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
-    var SignTechnologist = '<img src="' + signBaseUrl + 'ashique.png" alt="" height="25" width="55" />';
-    var SignLabIncharge = '<img src="' + signBaseUrl + 'wajidha.jpeg" alt="" height="25" width="55" />';
 
     var myWindow = window.open("", "", "width=1500,height=1500");
 
@@ -680,8 +639,7 @@ function PrintTestResultContinuous(Rowlen) {
 
     var powerdby = document.getElementById("ComapnyImage1");
     var powerdby1 = document.getElementById("printqrr");
-
-    // var barcode2 = document.getElementById("printbarcode1");
+    var barcode2 = document.getElementById("printbarcode1");
 
     $(powerdby).css('height', 30); $(powerdby).css('width', 280);
 
@@ -726,7 +684,8 @@ function PrintTestResultContinuous(Rowlen) {
     }
     else if (LB == 2) {
         var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-        $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        //$(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+        $(ComapnydivToPrintLab).css({ 'width': '660px', 'height': 'auto' });
         HeaderBlockHTML = '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' +
             (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
     }
@@ -743,7 +702,7 @@ function PrintTestResultContinuous(Rowlen) {
         '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
         '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
         '</table></td>' +
-    //'<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
+        '<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
         '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
         '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
         '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
@@ -754,64 +713,18 @@ function PrintTestResultContinuous(Rowlen) {
         '</table>';
 
     var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
-
     var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-        '<tr><td height=10px></td></tr>' +
-        '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center></td></tr>' +
-        '</table>' +
-        '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
+        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
         '<tr>' +
-        '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
-        '<td align=center>&#160;' + SignTechnologist + '</td>' +
-        '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
-        '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
-        '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WADJIDHA PK</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>LAB TECHNICIAN</td>' +
-        '<td align=center>LAB INCHARGE </td>' +
-        '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
-        '<td align=center>DMLT - Approved by DME KERALA</td>' +
-        '<td width=150px align=center>TCMC REG NO 60682</td>' +
+        '<td></td>' +
+        '<td width=200px align=center>' +
+        '<b>LAB TECHNICIAN</b>' +
+        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
+        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
+        '</td>' +
         '</tr>' +
         '</table>' +
         '</div>';
-
-    //var FooterHTMLLast = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-    //    '<tr><td height=10px></td></tr>' +
-    //    '<tr><td colspan=3 style="font-family:tahoma;font-size: 12px;" align=center>*****  END OF REPORT  *****</td></tr>' +
-    //    '</table>' +
-    //    '<table style="font-family:tahoma;font-size: 12px;" width=100%>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center>&#160;' + SignLabTech + '</td>' +
-    //    '<td align=center>&#160;' + SignTechnologist + '</td>' +
-    //    '<td width=150px align=center>&#160;' + SignLabIncharge + '</td>' +
-    //    '</tr>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</td>' +
-    //    '<td align=center style="font-size:14px;">ASHIQUE VADAKKETHIL</td>' +
-    //    '<td width=150px align=center style="font-size:14px;white-space:nowrap;">DR WADJIDHA PK</td>' +
-    //    '</tr>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center>LAB TECHNICIAN</td>' +
-    //    '<td align=center>LAB INCHARGE </td>' +
-    //    '<td width=150px align=center>MBBS MD PATHOLOGY</td>' +
-    //    '</tr>' +
-    //    '<tr>' +
-    //    '<td width=150px align=center>BSC MLT - Approved by KUHS KERALA</td>' +
-    //    '<td align=center>DMLT - Approved by DME KERALA</td>' +
-    //    '<td width=150px align=center>TCMC REG NO 60682</td>' +
-    //    '</tr>' +
-    //    '</table>' +
-    //    '</div>';
 
     myWindow.document.write('<div class="page"><div class="page-content">');
     myWindow.document.write(HeaderBlockHTML);
@@ -824,7 +737,7 @@ function PrintTestResultContinuous(Rowlen) {
     var finalnotes = "";
     var CurrentDept = 0, CurrentMainTest = 0;
 
-    var ROWS_PER_PAGE = 18;
+    var ROWS_PER_PAGE = 19;
     var rowsOnThisPage = 0;
 
     myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
@@ -866,7 +779,6 @@ function PrintTestResultContinuous(Rowlen) {
                 myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
                 rowsOnThisPage++;
             }
-            //else if ($.trim($("#Result_" + i).val()) != '') {
             else if ($.trim($("#Result_" + i).val()) != '' && $.trim($("#Result_" + i).val()) != '.') {
                 Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
                 Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
@@ -941,6 +853,7 @@ function PrintTestResultContinuous(Rowlen) {
         myWindow.print();
     }, 500);
 }
+
 
 
 function PrintTestResultPDF(Rowlen) {
