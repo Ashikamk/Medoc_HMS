@@ -1829,11 +1829,36 @@
 </div>
 <div id="Warningpopup" class="top-alert"><span id="popupmessage"></span></div>
 
+<div id="rejectConfirmModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; text-align:center; padding:24px 20px; width:360px; max-width:90%;">
+        <div style="font-size:40px; color:#F59E0B; margin-bottom:10px;"><i class="fa fa-exclamation-circle"></i></div>
+        <div id="rejectConfirmMsg" style="font-size:17px; font-weight:700; color:#1E293B; margin-bottom:20px;">
+            Do you want to reject this stock request?
+        </div>
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <button type="button" class="btn btn-outline-secondary" style="min-width:90px;" onclick="$('#rejectConfirmModal').hide();">Cancel</button>
+            <button type="button" class="btn" style="min-width:90px; background:#0D9488; color:#fff;" id="rejectConfirmOk">Ok</button>
+        </div>
+    </div>
+</div>
+
+<div id="rejectSuccessModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; text-align:center; padding:24px 20px; width:360px; max-width:90%; position:relative;">
+        <i class="fa fa-close" style="position:absolute; top:12px; right:14px; cursor:pointer; color:#94A3B8; font-size:16px;" onclick="$('#rejectSuccessModal').hide();"></i>
+        <div style="font-size:40px; color:#22C55E; margin-bottom:10px;"><i class="fa fa-check-circle"></i></div>
+        <div id="rejectSuccessMsg" style="font-size:17px; font-weight:700; color:#1E293B; margin-bottom:18px;">
+            Rejected successfully
+        </div>
+        <button type="button" class="btn" style="min-width:90px; background:#0D9488; color:#fff;" onclick="$('#rejectSuccessModal').hide();">Close</button>
+    </div>
+</div>
+
+
 <div id="StockTransferInfoPopUp" style="display:none; position:fixed; top:110px; right:24px; z-index:999997; width:360px;">
     <div style="background:#fff; border:1px solid #FECACA; border-radius:12px; box-shadow:0 12px 28px rgba(239,68,68,.22); padding:12px 14px;">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
             <span class="tbl-alert-dot"></span>
-            <span style="font-weight:800; font-size:14px; color:#B91C1C;">Stock Requests</span>
+            <span style="font-weight:800; font-size:16px; color:#B91C1C;">Stock Requests</span>
         </div>
         <div id="StockTransferList" style="max-height:300px; overflow-y:auto;"></div>
     </div>
@@ -1994,7 +2019,7 @@
         list.forEach(function (r) {
             html += '<div id="st_row_' + r.TRNo + '" style="position:relative; border:1px solid #E7EBF3; border-radius:10px; padding:10px; margin-bottom:8px;">' +
                 '<i class="fa fa-close" style="position:absolute; top:8px; right:8px; cursor:pointer; color:#94A3B8; font-size:12px;" onclick="DismissSingleStockRequest(' + r.TRNo + ')"></i>' +
-                '<div style="font-size:12.5px; color:#64748B; margin:2px 0 8px; padding-right:16px;">Requested on: ' + (r.TRDate || '-') + '</div>' +
+                '<div style="font-size:15px;font-weight:bold; color:#64748B; margin:2px 0 8px; padding-right:16px;">Requested on: ' + (r.TRDate || '-') + '</div>' +
                 '<button class="btn btn-sm btn-success" onclick="TransferStockRequest(' + r.TRNo + ',\'' + (r.TRDate || '') + '\')"><i class="fa fa-exchange"></i> Transfer</button> ' +
                 '<button class="btn btn-sm" style="background:#EF4444;color:#fff;" onclick="RejectStockRequest(' + r.TRNo + ')"><i class="fa fa-ban"></i> Reject</button>' +
                 '</div>';
@@ -2023,16 +2048,22 @@
     }
 
     function RejectStockRequest(trNo) {
-        if (!confirm('Reject Transfer# ' + trNo + '?')) return;
-        $.ajax({
-            type: "POST",
-            url: "../Pharmacy/HMS_StockTransferStatusUpdate",
-            data: { TRNo: trNo, Status: 2, UserId: ERPUserId, DeptId: ERPDeptId },
-            success: function () {
-                warningshow('Transfer# ' + trNo + ' rejected');
-                $('#st_row_' + trNo).remove();
-                if (!$('#StockTransferList').children().length) $("#StockTransferInfoPopUp").fadeOut("slow");
-            }
+        $('#rejectConfirmMsg').text('Do you want to reject this stock request?');
+        $('#rejectConfirmModal').css('display', 'flex');
+        $('#rejectConfirmOk').off('click').on('click', function () {
+            $('#rejectConfirmModal').hide();
+            $.ajax({
+                type: "POST",
+                url: "../Pharmacy/HMS_StockTransferStatusUpdate",
+                data: { TRNo: trNo, Status: 2, UserId: ERPUserId, DeptId: ERPDeptId },
+                success: function () {
+                    $('#st_row_' + trNo).remove();
+                    if (!$('#StockTransferList').children().length) $("#StockTransferInfoPopUp").fadeOut("slow");
+
+                    $('#rejectSuccessMsg').text('Stock transfer rejected successfully');
+                    $('#rejectSuccessModal').css('display', 'flex');
+                }
+            });
         });
     }
 

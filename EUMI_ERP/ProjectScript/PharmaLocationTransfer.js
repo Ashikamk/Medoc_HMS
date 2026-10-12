@@ -1015,6 +1015,7 @@ function LoadRequestStatusList(result) {
     $('#tbl_RSView').html(responseText + '</tbody>');
     datatableWithsearch('tbl_RSView', 'Multiple');
 
+    $("#RSTotalCount").text(result.length);
     $("#RSTransferredCount").text(transferred);
     $("#RSRejectedCount").text(rejected);
     $("#RSPendingCount").text(pending);
