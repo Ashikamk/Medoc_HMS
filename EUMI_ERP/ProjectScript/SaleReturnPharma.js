@@ -855,6 +855,105 @@ function LoadProduct(Id) {
         }
     });
 }
+//saroja batch filtering code
+//function LoadBatch(Id) {
+//    $("#ProductDesc" + Id).autocomplete({
+//        delay: 0,
+//        minLength: 0,
+//        source: function (request, response) {
+//            ClearFields(2, Id);
+//            if (($('#ProductId' + Id).val() || 0) == 0) {
+//                return false;
+//            }
+//            else {
+//                var term = $.trim(request.term || '').toLowerCase();   // text typed in Batch box
+
+//                var data = {};
+//                data.ProductId = $("#ProductId" + Id).val();
+//                data.HLocation = $("#HLocation").val();
+//                data.Batch = $("#HPatientId").val();
+//                data.Type = 1;
+//                data.DeptId = ERPDeptId;
+//                data.UserId = ERPUserId;
+//                data.Flag = 1;
+//                $.ajax({
+//                    url: '../Hospital/HMS_BatchwiseItemDetailsGetsSalesReturn',
+//                    type: "POST",
+//                    data: data,
+//                    dataType: "json",
+//                    success: function (data) {
+//                        if (!data || !data.length) {
+//                            response([]);
+//                            return;
+//                        }
+
+//                        // 1) filter by typed text   2) remove duplicate batches
+//                        var seen = {};
+//                        var filtered = $.grep(data, function (item) {
+//                            var batch = (item.Batch || '').toLowerCase();
+//                            if (term && batch.indexOf(term) === -1) return false;
+
+//                            var key = batch + '|' + item.ItemExpiry + '|' + item.Mrp + '|' + item.Sellingrate;
+//                            if (seen[key]) return false;
+//                            seen[key] = true;
+//                            return true;
+//                        });
+
+//                        response($.map(filtered, function (item) {
+//                            return ({
+//                                ColCount: '7',
+//                                label: item.Batch,
+//                                label1: item.ProductDesc,
+//                                label2: item.Company,
+//                                label3: item.ItemExpiry,
+//                                label4: item.Stock,
+//                                label5: item.Sellingrate,
+//                                label6: item.Mrp,
+//                                Company: item.Companycode,
+//                                Expiry: item.ItemExpiry,
+//                                SellPrice: item.Sellingrate,
+//                                PurPrice: item.Purrate,
+//                                BatchSlNo: item.BatchSlNo,
+//                                Taxpers: item.Taxpers,
+//                                Drugschedule: item.Drugschedule,
+//                                Cess: item.Cess,
+//                                Mrp: item.Mrp,
+//                                HSN: item.Variable3,
+//                                headers: ["Batch", "Description", "Company", "ItemExpiry", "Stock", "Selling Price", "Mrp"]
+//                            });
+//                        }));
+//                    },
+//                    error: function () {
+//                        response([]);
+//                    }
+//                });
+//            }
+//        },
+//        autoFocus: true,
+//        select: function (event, ui) {
+//            $('#Company' + Id).val(ui.item.Company);
+//            $('#Expiry' + Id).val(ui.item.Expiry);
+//            $('#SellPrice' + Id).val(ui.item.SellPrice);
+//            $('#PHSNCode' + Id).val(ui.item.HSN);
+//            $('#BatchSlNo' + Id).val(ui.item.BatchSlNo);
+//            $('#Quantity' + Id).val(1).focus().select();
+//            if (IPPAtiemtSelect(1) == false) {
+//                $('#Tax' + Id).val(ui.item.Taxpers);
+//                TaxChange(Id);
+//            }
+//            else {
+//                IPPAtiemtSelect(0);
+//            }
+//            $('#PurPrice' + Id).val(ui.item.Mrp);
+//            $('#DrugSchedule' + Id).val(ui.item.Drugschedule);
+//            $("#Cess" + Id).val(ui.item.Cess);
+//        },
+//    })
+//        .on('autocompleteselect  autocompletefocus', function (ev, ui) {
+//        }).bind('focus', function () {
+//            $(this).keydown();
+//        });
+//}
 
 function LoadBatch(Id) {
     $("#ProductDesc" + Id).autocomplete({
