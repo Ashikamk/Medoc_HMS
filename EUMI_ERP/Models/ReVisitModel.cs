@@ -958,6 +958,7 @@ namespace EUMI_ERP.Models
         public long Param5 { get; set; }
         public long Param6 { get; set; }
         public long Param7 { get; set; }
+        public string Location { get; set; }
         public long Param8 { get; set; }
         public long Param9 { get; set; }
         public long DeptId { get; set; }

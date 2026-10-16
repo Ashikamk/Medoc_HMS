@@ -3977,6 +3977,7 @@ namespace EUMI_ERP.Controllers
                     EDModels.MedType = row["MedType"].ToString();
                     EDModels.MedSchedule = row["MedSchedule"].ToString();
                     EDModels.Flag = row["Flag"].ToString();
+                    EDModels.Location = row["Location"].ToString();
                     oList.Add(EDModels);
                 }
             }
