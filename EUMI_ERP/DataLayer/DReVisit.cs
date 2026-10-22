@@ -1863,7 +1863,7 @@ namespace EUMI_ERP.DataLayer
         {
             try
             {
-                arlParms = new SqlParameter[10];
+                arlParms = new SqlParameter[11];
                 arlParms[0] = new SqlParameter("@FromDate", HMSReportModal.Param1);
                 arlParms[1] = new SqlParameter("@ToDate", HMSReportModal.Param10);
                 arlParms[2] = new SqlParameter("@Flag", HMSReportModal.Param2);
@@ -1874,6 +1874,7 @@ namespace EUMI_ERP.DataLayer
                 arlParms[7] = new SqlParameter("@DeptId", HMSReportModal.DeptId);
                 arlParms[8] = new SqlParameter("@UserId", HMSReportModal.UserId);
                 arlParms[9] = new SqlParameter("@LocationId", HMSReportModal.Param7);
+                arlParms[10] = new SqlParameter("@LoginUserId", HMSReportModal.Param8);
 
                 return SQLHelper.ExecuteDataset("HMS_Rpt_ItemExpiry", dbName, arlParms);
             }

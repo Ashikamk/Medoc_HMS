@@ -4,13 +4,11 @@
 var ComapnydivToPrint = document.getElementById("ComapnyImage");
 var ComapnyImgToPrint = document.getElementById("ComapnyImage");
 var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-var Comapnylogo = document.getElementById("ComapnyLogo");
-
 
 var pharmasistsign = document.getElementById("pharmisistsign");
 
 
-var GasLogo = document.getElementById("ComapnyImageDashbpard"); 
+var GasLogo = document.getElementById("ComapnyImageDashbpard");
 
 //Flag -Purchase or sales or return
 //Rowlen-length of item list
@@ -24,7 +22,7 @@ function addCommas(x) {
     return parts.join(".");
 }
 
- 
+
 
 
 
@@ -32,13 +30,13 @@ function addCommas(x) {
 
 function PrintthisBillWindows(Flag, Rowlen, type) {
 
-   
-    
+
+
     if (Flag == 'PUR') {
         PrintthisBillPurchase(Rowlen)
     }
     else if (Flag == 'PERFORMA') {
-        PrintthisPurchasePerforma(Rowlen)       
+        PrintthisPurchasePerforma(Rowlen)
     }
     else if (Flag == 'UNLOADPERFORMA') {
         PrintthisUnloadPurchasePerforma(Rowlen)
@@ -65,7 +63,7 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
             PrintthisBillSalesCOPYAUTOMOBILES(Rowlen)
         else if (type == 'WITHBINAUTOMOBILESCOPY')
             PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen, 1);
-        else if (type == 'WITHBINAUTOMOBILESSAVE') 
+        else if (type == 'WITHBINAUTOMOBILESSAVE')
             PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen, 0);
 
         else if (type == 'AUTOGLASSSAVE')
@@ -77,8 +75,8 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
             PrintthisBillForAUTOPARTSLazor(Rowlen, 0);
         else if (type == 'AUTOPARTSCOPY')
             PrintthisBillForAUTOPARTSLazor(Rowlen, 1);
-   //----------------------SPARE PARTS
-        else if (type == 'WITHBINSPAREPARTSCOPY') 
+        //----------------------SPARE PARTS
+        else if (type == 'WITHBINSPAREPARTSCOPY')
             PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, 1);
         else if (type == 'WITHBINSPAREPARTSSAVE')
             PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, 0);
@@ -87,14 +85,14 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
         else if (type == 'COPYSPAREPARTS')
             PrintthisBillSalesCOPYSPAREPARTS(Rowlen)
 
-            //-------------------Gas Trading
+        //-------------------Gas Trading
         else if (type == 'SALESGASSAVE') {
             PrintthisSalesGas(Rowlen, 0)
         }
         else if (type == 'SALESGASCOPY') {
             PrintthisSalesGas(Rowlen, 1)
         }
-            //-------------------Rent Car
+        //-------------------Rent Car
         else if (type == 'SALESRENTCARSAVE') {
             PrintthisSalesRentCar(Rowlen, 0)
         }
@@ -104,37 +102,33 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
         else if (type == 'SALESRENTCARSAVENEW') {
             PrintthisSalesRentCarNew(Rowlen, 0)
         }
-        else if (type == 'SALESRENTCARCOPYNEW') { 
+        else if (type == 'SALESRENTCARCOPYNEW') {
             PrintthisSalesRentCarNew(Rowlen, 1)
         }
-        
+
     }
     else if (Flag == 'FAZAL') {
         if (type == 'COPY')
-            PrintthisBillForFazalLazor(Rowlen,1)
+            PrintthisBillForFazalLazor(Rowlen, 1)
         else if (type == 'SAVE')
             PrintthisBillForFazalLazor(Rowlen, 0)
-}
+    }
     else if (Flag == 'QUOTATION') {
-        if (type == 'MAIN')
-        { PrintthisBillQuotation(Rowlen) }      
-        else
-        { PrintthisBillQuotationCopy(Rowlen) }
-     
+        if (type == 'MAIN') { PrintthisBillQuotation(Rowlen) }
+        else { PrintthisBillQuotationCopy(Rowlen) }
+
     }
 
     else if (Flag == 'QUOTATIONGAS') {
-        if (type == 'MAIN')
-        { PrintthisBillQuotationforGas(Rowlen, 1) }
-        else
-        { PrintthisBillQuotationforGas(Rowlen, 0) }
+        if (type == 'MAIN') { PrintthisBillQuotationforGas(Rowlen, 1) }
+        else { PrintthisBillQuotationforGas(Rowlen, 0) }
 
     }
 
     else if (Flag == 'SALESORDER') {
         if (type == 'COPYSO')
             PrintthisBillSalesOrder(Rowlen, 1);
-        
+
     }
 
     else if (Flag == 'SALESRETURN') {
@@ -148,9 +142,9 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
             PrintthisBillSalesReturnAutoMobile(Rowlen, 0)
         else if (type == 'RETURNAUTOCOPY')
             PrintthisSalesRETURNAUTO(Rowlen, 1);
-        else if (type == 'RETURNAUTOMAIN') 
+        else if (type == 'RETURNAUTOMAIN')
             PrintthisSalesRETURNAUTO(Rowlen, 0);
-      
+
         else if (type == 'DEFAULTMAIN')
             PrintthisBillSalesReturnDefault(Rowlen, 0);
         else if (type == 'DEFAULTCOPY')
@@ -161,17 +155,17 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
         else if (type == 'DEFAULT_LTR_COPY')
             PrintthisBillSalesReturnDefaultLetter(Rowlen, 1);
 
-        
+
     }
 
     else if (Flag == 'VoucherEntry') {
-        if (type == 'COPY') 
+        if (type == 'COPY')
             PrintthisVoucherEntryCopy(Rowlen)
-        else if (type == 'SAVE') 
+        else if (type == 'SAVE')
             PrintthisVoucherEntrysave(Rowlen)
 
         else if (type == 'DEFAULTCOPY')
-            PrintthisVoucherEntryDefault(Rowlen,0)
+            PrintthisVoucherEntryDefault(Rowlen, 0)
         else if (type == 'DEFAULTSAVE')
             PrintthisVoucherEntryDefault(Rowlen, 1)
         else if (type == 'LAZORCOPY') {
@@ -181,10 +175,10 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
             PrintthisVoucherEntryLazor(Rowlen, 0)
         }
     }
- 
+
     else if (Flag == 'LOCATIONTRANSFER') {
         if (type == 'MAIN') {
-            PrintthisLocationTransfer(Rowlen,0)
+            PrintthisLocationTransfer(Rowlen, 0)
         }
         else if (type == 'COPY') {
             PrintthisLocationTransfer(Rowlen, 1)
@@ -204,13 +198,11 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
         if (type == 'COPY') {
             PrintthisReceiptEntryCopy(Rowlen)
         }
-        else if (type == 'DEFAULTCOPY')
-        {
-            PrintthisReceiptVoucherDefault(Rowlen,1)
+        else if (type == 'DEFAULTCOPY') {
+            PrintthisReceiptVoucherDefault(Rowlen, 1)
         }
-        else if (type == 'DEFAULTSAVE')
-        {
-            PrintthisReceiptVoucherDefault(Rowlen,0)
+        else if (type == 'DEFAULTSAVE') {
+            PrintthisReceiptVoucherDefault(Rowlen, 0)
         }
         else if (type == 'LAZORCOPY') {
             PrintthisReceiptVoucherLazor(Rowlen, 1)
@@ -223,10 +215,10 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
         if (type == 'SAVE') {
             PrintthisReceiptEntrysave(Rowlen)
         }
-        
+
     }
     else if (Flag == 'VCCReceived') {
-   if (type == 'LAZORCOPY') {
+        if (type == 'LAZORCOPY') {
             PrintthisVCCReceivedLazor(Rowlen, 1)
         }
         else if (type == 'LAZORSAVE') {
@@ -250,10 +242,10 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
             PrintthisPaymentEntryCopy(Rowlen)
         }
         else if (type == 'DEFAULTCOPY') {
-            PrintthisPaymentVoucherDefault(Rowlen,1)
+            PrintthisPaymentVoucherDefault(Rowlen, 1)
         }
         else if (type == 'DEFAULTSAVE') {
-            PrintthisPaymentVoucherDefault(Rowlen,0)
+            PrintthisPaymentVoucherDefault(Rowlen, 0)
         }
         else if (type == 'LAZORCOPY') {
             PrintthisPaymentVoucherLazor(Rowlen, 1)
@@ -271,9 +263,9 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
 
 
     else if (Flag == 'PurchaseEnquiry') {
-        
+
         PrintthisPurchaseenquiryCopy(Rowlen)
-       
+
     }
     else if (Flag == 'CONTRACT') {
 
@@ -311,378 +303,51 @@ function PrintthisBillWindows(Flag, Rowlen, type) {
 
 }
 
-function PrintthisBillWindowsNew(Flag, Rowlen, type) 
-{
+function PrintthisBillWindowsNew(Flag, Rowlen, type) {
     if (Flag == 'QUOTATION') {
-        if (type == 'MAIN')
-        { PrintthisBillQuotationNew(Rowlen,1) }  
-        else
-        { PrintthisBillQuotationNew(Rowlen,0) }
+        if (type == 'MAIN') { PrintthisBillQuotationNew(Rowlen, 1) }
+        else { PrintthisBillQuotationNew(Rowlen, 0) }
     }
     else if (Flag == 'QUOTATION_LETTER') {
-        if (type == 'MAIN')
-        { PrintthisBillQuotationNewLetter(Rowlen, 1) }
-        else
-        { PrintthisBillQuotationNewLetter(Rowlen, 0) }
+        if (type == 'MAIN') { PrintthisBillQuotationNewLetter(Rowlen, 1) }
+        else { PrintthisBillQuotationNewLetter(Rowlen, 0) }
     }
     else if (Flag == 'SALES') {
-        if (type == 'SPAREPARTS')
-        { PrintthisBillSalesSPAREPARTSNEW(Rowlen, 1) }
-        else
-        { PrintthisBillSalesSPAREPARTSNEW(Rowlen, 0) } 
+        if (type == 'SPAREPARTS') { PrintthisBillSalesSPAREPARTSNEW(Rowlen, 1) }
+        else { PrintthisBillSalesSPAREPARTSNEW(Rowlen, 0) }
 
     }
     else if (Flag == 'PackingHistory') {
-        PrintthisBillPackingHistory(Rowlen, type) 
+        PrintthisBillPackingHistory(Rowlen, type)
 
     }
 }
 
-function PrintthisBillWindowsHMS(Flag, Rowlen, type,Bill)
-{
+function PrintthisBillWindowsHMS(Flag, Rowlen, type, Bill) {
     if (Flag == 'LABBILL') {
-       
-        if (type == 'COPYHALF')
-        { PrintthisBillLab(Rowlen, 0, 1,Bill) }
-        else if (type == 'COPYFULL')
-        { PrintthisBillLabwithtexthead(Rowlen, 0, 2, Bill) }
-        else if (type == 'COPYFULLHEADER')
-        { PrintthisBillLabwithletterthead(Rowlen, 0, 3, Bill) }
+
+        if (type == 'COPYHALF') { PrintthisBillLab(Rowlen, 0, 1, Bill) }
+        else if (type == 'COPYFULL') { PrintthisBillLabwithtexthead(Rowlen, 0, 2, Bill) }
+        else if (type == 'COPYFULLHEADER') { PrintthisBillLabwithletterthead(Rowlen, 0, 3, Bill) }
         else if (type == 'HALFSIZEAYU') { PrintthisBillLabwithlettertheadIPB(Rowlen, 0, 3, Bill) }
-        else if (type == 'THERMALPRINT') { PrintthisBillLabwiththermalprint(Rowlen, 0, 4, Bill) }
-        
+
     }
     else if (Flag == 'SALES') {
-        if (type == 'COPY')
-        { PrintthisBillHMSSales(Rowlen, 0, 1) }
-        else if (type == 'SAVE')
-        { PrintthisBillHMSSales(Rowlen, 1, 1) }
+        if (type == 'COPY') { PrintthisBillHMSSales(Rowlen, 0, 1) }
+        else if (type == 'SAVE') { PrintthisBillHMSSales(Rowlen, 1, 1) }
     }
     else if (Flag == 'SALESQR') {
         if (type == 'COPY') { PrintthisBillHMSSalesQR(Rowlen, 0, 1) }
         else if (type == 'SAVE') { PrintthisBillHMSSalesQR(Rowlen, 1, 1) }
     }
     else if (Flag == 'SALESRETURN') {
-        if (type == 'COPY')
-        { PrintthisBillHMSSalesReturn(Rowlen, 0, 1) }
+        if (type == 'COPY') { PrintthisBillHMSSalesReturn(Rowlen, 0, 1) }
         //else if (type == 'SAVE')
         //{ PrintthisBillHMSSales(Rowlen, 0, 1) }
     }
-} 
-
-//GST medical shop bill
-//cenora page break
-function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB   -use Landscape mode
-{
-
-    console.log(ComapnydivToPrintLab)
-
-    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-
-    console.log('QRRRR')
-    console.log(ComapnydivToPrintLab)
-    var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    var today1 = new Date();
-    var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
-    var TotPQty = 0; var Rowcount = 7;
-    var MaxCnt;
-
-    MaxCnt = 47;
-    var department = $('#HLocation').val();
-    var BillNo = $('#HBillNo').val();
-    var AmountinWords = WordwithDecimal($('#BaseTextTotalProc').text());
-    var myWindow = window.open("", "", "width=1500,height=1500");
-
-    $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
-
-    var SNo = '';
-    if (flg == 0)
-        SNo = $('#HBillNoCopy').val();
-    else if (flg == 1)
-        SNo = $('#HBillNoSave').val();
-
-    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-    myWindow.document.write(PrintBG3);
-
-    //myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
-    var PTYPE = "";
-    if ($('#PayType').val() == 1) {
-        PTYPE = 'CASH'
-    }
-    else if ($('#PayType').val() == 2) {
-        PTYPE = 'CREDIT'
-    }
-    else {
-        PTYPE = 'UPI/BANK'
-    }
-
-    hdtype = SalesPrintHeaderFlag;
-
-    var LAB_PRINT_HEADER_HEIGHT = 100;
-
-    if (hdtype == 0) {  //No header
-        myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
-        //myWindow.document.write('</table>');
-    }
-    else if (hdtype == 1) {//with image header
-        myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-        myWindow.document.write('</table>');
-        // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
-        //myWindow.document.write('</table>');
-
-    }
-    else if (hdtype == 2) {//with company details
-        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<hr/>');
-        myWindow.document.write('</table>');
-
-
-    }
-
-    //distype = SalesPrintDiscountFlag;
-    //if (distype == 0) {  //no MRP column / no savings line
-    //    myWindow.document.write('<style type="text/css"> .mrpcol{display:none;} </style>');
-    //}
-    //else if (distype == 1) {  //show MRP column / savings line
-    //    myWindow.document.write('<style type="text/css"> .mrpcol{display:table-cell;} </style>');
-    //}
-
-
-    var GSTINNO = 'GSTIN: 32BDNPB3729C1Z1 ';
-    var Expd = ''
-    //myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;">DLNo :RLF21KL2024001000,RLF20KL2024001009</td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
-    myWindow.document.write('<table  width=100% ><tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>BILL#:&#160;' + $("#HBillSeries option:selected").text() + '/' + BillNo + '/' + PTYPE + '</b><td></tr>');
-    myWindow.document.write('<tr><td colspan=8 style="border-top:1px solid black;"></td></tr></table>');
-    var TypeText = '';
-    TypeText += '<td >Paytype</td><td>:' + $('#PayType :selected').text() + '</td>';
-
-    var MRHEAD = 'Ref#'
-
-
-    // var MRHEAD = 'MR/OP#'
-    var MRVALUE = $('#HRegNo').val() + '/' + $('#HOpNo').val()
-    if ($('#IPNumber').val() != 0) {
-        MRHEAD = 'MR/IP#';
-        MRVALUE = $('#HRegNo').val() + '/' + $('#IPNumber').val()
-    }
-
-
-    myWindow.document.write('<table width=100%><tr>');
-    myWindow.document.write('<td width=60%> <table width=100%><tr><td  width=8% style="font-family:tahoma;font-size:12;">' + MRHEAD + '</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + MRVALUE + '</td></tr>   <tr><td  width=8% style="font-family:tahoma;font-size:12;">Patient</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HPatient').val() + '</td></tr></table>');
-    myWindow.document.write('<td width=40%><table width=100%><tr><td  width=10% style="font-family:tahoma;font-size:12;">Date</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HSalesDate').val() + '&#160;&#160;&#160;  ' + time + '</td></tr>      <tr><td  width=10% style="font-family:tahoma;font-size:12;">Doctor</td><td  width=5% style="font-family:tahoma;font-size:12;">:</td><td  width=45% style="font-family:tahoma;font-size:12;">' + $('#HDoctor :selected').text() + '</td></tr></table>');
-    myWindow.document.write('</tr></table>');
-
-    var HeaderRow = '';
-    HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>MRP</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
-
-    myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
-
-    myWindow.document.write('<tr><td colspan=16 style="border-top:1px solid black;"></td></tr>');
-    var slnm = 0; var page = 0; var line = 0; var Dschedule; var totalAount = 0; var lastSl = 0;
-    var pageRows = 0;            
-    var ROWS_PER_PAGE = 12;      
-    for (var i = 0; i <= Rowlen; i++) {
-        var Id = parseInt(i + 1);
-        if ($('#Product' + Id).length) {
-            slnm++;
-            Rowcount += 1;
-            line += 1;
-            pageRows++;
-            lastSl = parseInt($('#tdSl' + Id).text()) || (lastSl + 1);
-            Expd = ($('#Expiry' + Id).val()).replace("/20", "/");
-            Dschedule = $("#DrugSchedule" + Id + " option:selected").text(); //$('#DrugSchedule'+Id).val();
-
-            myWindow.document.write('<tr><td style="border-left:0px solid grey;font-size:11px;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=6 style="padding-left:5px;font-size:11px;">' + $('#Product' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#PHSNCode' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#ProductDesc' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#Company' + Id).val() + '</td><td align=center style="padding-left:5px;font-size:11px;">' + Expd + '</td><td align=center style="padding-left:5px;font-size:11px;">' + $('#Quantity' + Id).val() + '</td><td align=right style="padding-left:5px;font-size:11px;">' + $('#PurPrice' + Id).val() + '</td><td style="padding-right:5px;font-size:11px;" align=right>' + $('#SellPrice' + Id).val() + '</td><td align=right style="padding-right:5px;font-size:11px;">' + $('#Amount' + Id).val() + '</td></tr>');
-
-            totalAount += parseFloat($('#Amount' + Id).val() || 0)
-
-            if (line == 15 || line == 34) {
-
-                myWindow.document.write('<tr><td height=600px colspan=16 style="border-top:1px solid black;border-right:1px solid white;border-left:1px solid white;">&#160;</td></tr>');
-
-                myWindow.document.write('<tr><td colspan=16 style="border:1px solid white;font-size:11px;" align=center>');
-
-                myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
-
-                myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;"></td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
-                myWindow.document.write('<tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>&#160;&#160;&#160;BILLNO  : &#160;' + BillNo + '/' + PTYPE + '</b><td></tr>');
-                myWindow.document.write('<tr><td colspan=8 style="border-top:1px solid black;"></td></tr></table>');
-
-
-                myWindow.document.write('<table width=100%><tr>');
-                myWindow.document.write('<td width=60%> <table width=100%><tr><td  width=8% style="font-family:tahoma;font-size:12;">' + MRHEAD + '</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + MRVALUE + '</td></tr>   <tr><td  width=8% style="font-family:tahoma;font-size:12;">Patient</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HPatient').val() + '</td></tr></table>');
-                myWindow.document.write('<td width=40%><table width=100%><tr><td  width=10% style="font-family:tahoma;font-size:12;">Date</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HSalesDate').val() + '&#160;&#160;&#160;  ' + time + '</td></tr>      <tr><td  width=10% style="font-family:tahoma;font-size:12;">Doctor</td><td  width=5% style="font-family:tahoma;font-size:12;">:</td><td  width=45% style="font-family:tahoma;font-size:12;">' + $('#HDoctor :selected').text() + '</td></tr></table>');
-                myWindow.document.write('</tr></table>');
-
-                myWindow.document.write('</td ></tr> ');
-
-                HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>MRP</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
-
-                //HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=7 align=left width=20%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=5% align=center>BATCH</td><td width=5% align=center>MFR</td><td width=5% align=center>EXPIRY</td><td width=5% align=center>QTY.</td><td align=right width=5%>MRP</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
-
-                myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
-                myWindow.document.write('<tr><td colspan=16 style="border-top:1px solid black;"></td></tr>');
-
-                slnm = 0;
-                pageRows = 0;
-            }
-
-
-        }
-    }
-
-    var Prlen = 1;
-    try {
-        var Prlen = $('#TblProcedure tr:last').attr('id').match(/\d+/)[0];
-    }
-    catch (err) {
-        Prlen = 1;
-    }
-    for (var i = 1; i <= Prlen; i++) {
-        var Id = parseInt(i);
-        if ($('#Procedure' + Id).length) {
-            slnm++;
-            Rowcount += 1;
-            pageRows++;
-            myWindow.document.write('<tr>'
-                + '<td align=center style="font-size:11px;">' + (++lastSl) + '</td>'                       
-                + '<td colspan=6 style="padding-left:5px;font-size:11px;">&#160;&#160;&#160;&#160;&#160;' + $('#Procedure' + Id).val().substring(0, 20) + '</td>'  // PRODUCT
-                + '<td>&#160;</td>'   
-                + '<td>&#160;</td>'  
-                + '<td>&#160;</td>'   
-                + '<td>&#160;</td>'   
-                + '<td>&#160;</td>'   
-                + '<td>&#160;</td>'   
-                + '<td>&#160;</td>'   
-                + '<td align=right style="padding-right:5px;font-size:11px;">' + $('#ProcTot' + Id).val() + '</td>' 
-                + '</tr>');
-            totalAount += parseFloat($('#ProcTot' + Id).val() || 0)
-
-        }
-    }
-
-
-    var fillerRows = Math.max(0, ROWS_PER_PAGE - pageRows);
-    for (var a = 0; a < fillerRows; a++) {
-        myWindow.document.write('<tr style="height:18px;">'
-            + '<td align=center>&#160;</td>'     
-            + '<td colspan=6>&#160;</td>'         
-            + '<td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td>'   
-            + '<td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td>'   
-            + '</tr>');
-    }
-
-    var Line = "";
-    if ($('#hiddensplittaxable_0').val() != 0) {
-
-        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname0').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_0').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_0').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;">' + $('#SGST_0').val() + '</td></tr>'
-
-    }
-    if ($('#hiddensplittaxable_5').val() != 0) {
-
-
-        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname5').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_5').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_5').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_5').val() + '</td></tr>'
-
-    }
-    if ($('#splittaxable_12').val() != 0) {
-
-
-        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname12').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_12').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_12').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_12').val() + '</td></tr>'
-
-    }
-    if ($('#splittaxable_18').val() != 0) {
-
-
-        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname18').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_18').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_18').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_18').val() + '</td></tr>'
-
-    }
-    if ($('#splittaxable_28').val() != 0) {
-
-
-        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname28').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_28').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_28').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_28').val() + '</td></tr>'
-
-    }
-    var pharmasistsign = document.getElementById("pharmisistsign");
-    $(pharmasistsign).css('height', 50); $(pharmasistsign).css('width', 100);
-    //myWindow.document.write('<tr height=2px><td></td></tr>');
-    myWindow.document.write('<table width=100% style="border-right: 1px solid grey;border-left: 1px solid grey;border-bottom: 1px solid grey;border-collapse:collapse;">');
-    myWindow.document.write('<tr style="">');
-    myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;"></td></tr><tr><td align=center style="font-family:tahoma;font-size:12;">' + (pharmasistsign.outerHTML) + '</td></tr> </table></td>');
-
-    //myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;">Prepared By&#160;:&#160;' + Billuser + '</td></tr>  <tr><td align=center style="font-family:tahoma;font-size:12;">YOUR ' + $('#savingvalue').text() + '</td></tr></table></td>');
-
-    myWindow.document.write('<td width="50%">  <table width="100%" style="border-collapse: collapse; border: 1px solid grey;">' +
-        '<tr>' +
-        '<td width="25%" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">GST%</td>' +
-        '<td width="25%" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">Taxable</td>' +
-        '<td width="25%" align="center" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">CGST</td>' +
-        '<td width="25%" align="center" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">SGST</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;">' + Line + '</td>' +
-        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;"></td>' +
-        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;"></td>' +
-        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;"></td>' +
-        '</tr>' +
-        '</table>' +
-        '</td>');
-
-    if (($('#Discount').val() != 0)) {
-        //  myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>                <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + addCommas(parseFloat(totalAount).toFixed(Decimal)) + '           </td></tr>       <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-    }
-    else {
-        // myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>               <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + addCommas(parseFloat(totalAount).toFixed(Decimal)) + '           </td></tr>            <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-
-
-    }
-    myWindow.document.write('</tr>');
-
-    if (($('#TotRoundOff').val() != 0)) {
-        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b> ' + $('#mrpvalue').text() + '     ,    YOUR 	SAVINGS ' + (parseFloat(($('#savingvalue').text()).split(":")[1]) + parseFloat($('#Discount').val())).toFixed(0) + '.00</b></td></tr>');
-
-        myWindow.document.write('<tr height=25px;><td colspan=8 style="font-family:tahoma;font-size:12; border-top:1px solid grey;"><table width=100%><tr><td style="font-family:tahoma;font-size:12;"width=15%>Amount In words :</td><td style="font-family:tahoma;font-size:12;"width=61%><b> ' + AmountinWords + '</b></td><td style="font-family:tahoma;font-size:12;"width=15% align=left>RoundOff</td><td style="font-family:tahoma;font-size:12;" align=right width=9%>' + $('#TotRoundOff').val() + '</td></tr></table></tr>');
-    }
-    else {
-        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + '  YOUR 	SAVINGS' + (parseFloat(($('#savingvalue').text()).split(":")[1]) + parseFloat($('#Discount').val())).toFixed(0) + '.00</b></td></tr>');
-
-
-        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:12; border-top:1px solid grey;">Amount In words :&#160;' + AmountinWords + '</td></tr>');
-
-    }
-    myWindow.document.write('<table>');
-
-    distype = SalesPrintDiscountFlag;
-    if (distype == 0) {
-        myWindow.document.write('<style type="text/css"> table[rules="cols"] tr td:nth-child(8){display:none;} td[colspan="12"][align="center"]{display:none;} </style>');
-    }
-    else if (distype == 1) {
-        myWindow.document.write('<style type="text/css"> .mrpcol{display:table-cell;} </style>');
-    }
-
-    taxtype = SalesPrintTaxFlag;
-    if (taxtype == 0) {  // hide the GST/Taxable/CGST/SGST box
-        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:none;} </style>');
-    }
-    else if (taxtype == 1) {  // show it
-        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:table-cell;} </style>');
-    }
-
-    myWindow.print();
-    myWindow.close();
-
 }
 
-
-// demo original
+////////CENORA//////
 //function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB   -use Landscape mode
 //{
 
@@ -753,15 +418,6 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 
 //    }
 
-//    //distype = SalesPrintDiscountFlag;
-//    //if (distype == 0) {  //no MRP column / no savings line
-//    //    myWindow.document.write('<style type="text/css"> .mrpcol{display:none;} </style>');
-//    //}
-//    //else if (distype == 1) {  //show MRP column / savings line
-//    //    myWindow.document.write('<style type="text/css"> .mrpcol{display:table-cell;} </style>');
-//    //}
-
-
 //    var GSTINNO = 'GSTIN: 32BDNPB3729C1Z1 ';
 //    var Expd = ''
 //    //myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;">DLNo :RLF21KL2024001000,RLF20KL2024001009</td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
@@ -787,7 +443,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 //    myWindow.document.write('</tr></table>');
 
 //    var HeaderRow = '';
-//    HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>MRP</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
+//    HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>PRICE</td><td width=6% align=center>RATE</td><td align=right width=4%>AMOUNT</td></tr>'
 
 //    myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
 
@@ -805,8 +461,8 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 //            myWindow.document.write('<tr><td style="border-left:0px solid grey;font-size:11px;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=6 style="padding-left:5px;font-size:11px;">' + $('#Product' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#PHSNCode' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#ProductDesc' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#Company' + Id).val() + '</td><td align=center style="padding-left:5px;font-size:11px;">' + Expd + '</td><td align=center style="padding-left:5px;font-size:11px;">' + $('#Quantity' + Id).val() + '</td><td align=right style="padding-left:5px;font-size:11px;">' + $('#PurPrice' + Id).val() + '</td><td style="padding-right:5px;font-size:11px;" align=right>' + $('#SellPrice' + Id).val() + '</td><td align=right style="padding-right:5px;font-size:11px;">' + $('#Amount' + Id).val() + '</td></tr>');
 
 //            totalAount += parseFloat($('#Amount' + Id).val() || 0)
-
-//            if (line == 15 || line == 34) {
+//            console.log("Print Line:", line);
+//            if (line == 17 || line == 34) {
 
 //                myWindow.document.write('<tr><td height=600px colspan=16 style="border-top:1px solid black;border-right:1px solid white;border-left:1px solid white;">&#160;</td></tr>');
 
@@ -826,9 +482,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 
 //                myWindow.document.write('</td ></tr> ');
 
-//                HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>MRP</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
-
-//                //HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=7 align=left width=20%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=5% align=center>BATCH</td><td width=5% align=center>MFR</td><td width=5% align=center>EXPIRY</td><td width=5% align=center>QTY.</td><td align=right width=5%>MRP</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
+//                HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>PRICE</td><td width=6% align=center>Rate</td><td align=right width=4%>AMOUNT</td></tr>'
 
 //                myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
 //                myWindow.document.write('<tr><td colspan=16 style="border-top:1px solid black;"></td></tr>');
@@ -857,6 +511,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 
 //        }
 //    }
+
 
 
 //    for (var a = 0; a <= (10 - slnm); a++) {
@@ -936,18 +591,14 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 //    myWindow.document.write('</tr>');
 
 //    if (($('#TotRoundOff').val() != 0)) {
-//        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b> ' + $('#mrpvalue').text() + '     ,    YOUR 	SAVINGS ' + (parseFloat(($('#savingvalue').text()).split(":")[1]) + parseFloat($('#Discount').val())).toFixed(0) + '.00</b></td></tr>');
-
 //        myWindow.document.write('<tr height=25px;><td colspan=8 style="font-family:tahoma;font-size:12; border-top:1px solid grey;"><table width=100%><tr><td style="font-family:tahoma;font-size:12;"width=15%>Amount In words :</td><td style="font-family:tahoma;font-size:12;"width=61%><b> ' + AmountinWords + '</b></td><td style="font-family:tahoma;font-size:12;"width=15% align=left>RoundOff</td><td style="font-family:tahoma;font-size:12;" align=right width=9%>' + $('#TotRoundOff').val() + '</td></tr></table></tr>');
 //    }
 //    else {
-//        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + '  YOUR 	SAVINGS' + (parseFloat(($('#savingvalue').text()).split(":")[1]) + parseFloat($('#Discount').val())).toFixed(0) + '.00</b></td></tr>');
-
-
 //        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:12; border-top:1px solid grey;">Amount In words :&#160;' + AmountinWords + '</td></tr>');
 
 //    }
 //    myWindow.document.write('<table>');
+
 
 //    distype = SalesPrintDiscountFlag;
 //    if (distype == 0) {
@@ -965,13 +616,293 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 //        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:table-cell;} </style>');
 //    }
 
+
 //    myWindow.print();
 //    myWindow.close();
 
 //}
+/////cenora///////////////
+
+//GST medical shop bill
+
+function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB   -use Landscape mode
+{
+
+    console.log(ComapnydivToPrintLab)
+
+    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+
+    console.log('QRRRR')
+    console.log(ComapnydivToPrintLab)
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var today1 = new Date();
+    var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
+    var TotPQty = 0; var Rowcount = 7;
+    var MaxCnt;
+
+    MaxCnt = 47;
+    var department = $('#HLocation').val();
+    var BillNo = $('#HBillNo').val();
+    var AmountinWords = WordwithDecimal($('#BaseTextTotalProc').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+
+    var SNo = '';
+    if (flg == 0)
+        SNo = $('#HBillNoCopy').val();
+    else if (flg == 1)
+        SNo = $('#HBillNoSave').val();
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG3);
+
+    //myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+    var PTYPE = "";
+    if ($('#PayType').val() == 1) {
+        PTYPE = 'CASH'
+    }
+    else if ($('#PayType').val() == 2) {
+        PTYPE = 'CREDIT'
+    }
+    else {
+        PTYPE = 'UPI/BANK'
+    }
+
+    hdtype = SalesPrintHeaderFlag;
+
+    var LAB_PRINT_HEADER_HEIGHT = 100;
+
+    if (hdtype == 0) {  //No header
+        myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+        //myWindow.document.write('</table>');
+    }
+    else if (hdtype == 1) {//with image header
+        myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        myWindow.document.write('</table>');
+        // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
+        //myWindow.document.write('</table>');
+
+    }
+    else if (hdtype == 2) {//with company details
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
+        myWindow.document.write('<hr/>');
+        myWindow.document.write('</table>');
+
+
+    }
+
+    var GSTINNO = 'GSTIN: 32BDNPB3729C1Z1 ';
+    var Expd = ''
+    //myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;">DLNo :RLF21KL2024001000,RLF20KL2024001009</td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
+    myWindow.document.write('<table  width=100% ><tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>BILL#:&#160;' + $("#HBillSeries option:selected").text() + '/' + BillNo + '/' + PTYPE + '</b><td></tr>');
+    myWindow.document.write('<tr><td colspan=8 style="border-top:1px solid black;"></td></tr></table>');
+    var TypeText = '';
+    TypeText += '<td >Paytype</td><td>:' + $('#PayType :selected').text() + '</td>';
+
+    var MRHEAD = 'Ref#'
+
+
+    // var MRHEAD = 'MR/OP#'
+    var MRVALUE = $('#HRegNo').val() + '/' + $('#HOpNo').val()
+    if ($('#IPNumber').val() != 0) {
+        MRHEAD = 'MR/IP#';
+        MRVALUE = $('#HRegNo').val() + '/' + $('#IPNumber').val()
+    }
+
+
+    myWindow.document.write('<table width=100%><tr>');
+    myWindow.document.write('<td width=60%> <table width=100%><tr><td  width=8% style="font-family:tahoma;font-size:12;">' + MRHEAD + '</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + MRVALUE + '</td></tr>   <tr><td  width=8% style="font-family:tahoma;font-size:12;">Patient</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HPatient').val() + '</td></tr></table>');
+    myWindow.document.write('<td width=40%><table width=100%><tr><td  width=10% style="font-family:tahoma;font-size:12;">Date</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HSalesDate').val() + '&#160;&#160;&#160;  ' + time + '</td></tr>      <tr><td  width=10% style="font-family:tahoma;font-size:12;">Doctor</td><td  width=5% style="font-family:tahoma;font-size:12;">:</td><td  width=45% style="font-family:tahoma;font-size:12;">' + $('#HDoctor :selected').text() + '</td></tr></table>');
+    myWindow.document.write('</tr></table>');
+
+    var HeaderRow = '';
+    HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>PRICE</td><td width=6% align=center>DIS RATE</td><td align=right width=4%>AMOUNT</td></tr>'
+
+    myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
+
+    myWindow.document.write('<tr><td colspan=16 style="border-top:1px solid black;"></td></tr>');
+    var slnm = 0; var page = 0; var line = 0; var Dschedule; var totalAount = 0; var totalSaving = 0;
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#Product' + Id).length) {
+            slnm++;
+            Rowcount += 1;
+            line += 1;
+            Expd = ($('#Expiry' + Id).val()).replace("/20", "/");
+            var q = parseFloat($('#Quantity' + Id).val()) || 0;
+            var amt = parseFloat($('#Amount' + Id).val()) || 0;
+            var rate = q ? amt / q : 0;
+            totalSaving += q * parseFloat($('#SellPrice' + Id).val() || 0) - amt;
+            Dschedule = $("#DrugSchedule" + Id + " option:selected").text(); //$('#DrugSchedule'+Id).val();
+
+            myWindow.document.write('<tr><td style="border-left:0px solid grey;font-size:11px;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=6 style="padding-left:5px;font-size:11px;">' + $('#Product' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#PHSNCode' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#ProductDesc' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#Company' + Id).val() + '</td><td align=center style="padding-left:5px;font-size:11px;">' + Expd + '</td><td align=center style="padding-left:5px;font-size:11px;">' + $('#Quantity' + Id).val() + '</td><td align=right style="padding-left:5px;font-size:11px;">' + $('#PurPrice' + Id).val() + '</td><td style="padding-right:5px;font-size:11px;" align=right>' + rate.toFixed(2) + '</td><td align=right style="padding-right:5px;font-size:11px;">' + $('#Amount' + Id).val() + '</td></tr>');
+
+            totalAount += parseFloat($('#Amount' + Id).val() || 0)
+            console.log("Print Line:", line);
+            if (line == 17 || line == 34) {
+
+                myWindow.document.write('<tr><td height=600px colspan=16 style="border-top:1px solid black;border-right:1px solid white;border-left:1px solid white;">&#160;</td></tr>');
+
+                myWindow.document.write('<tr><td colspan=16 style="border:1px solid white;font-size:11px;" align=center>');
+
+                myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+                myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;"></td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
+                myWindow.document.write('<tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>&#160;&#160;&#160;BILLNO  : &#160;' + BillNo + '/' + PTYPE + '</b><td></tr>');
+                myWindow.document.write('<tr><td colspan=8 style="border-top:1px solid black;"></td></tr></table>');
+
+
+                myWindow.document.write('<table width=100%><tr>');
+                myWindow.document.write('<td width=60%> <table width=100%><tr><td  width=8% style="font-family:tahoma;font-size:12;">' + MRHEAD + '</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + MRVALUE + '</td></tr>   <tr><td  width=8% style="font-family:tahoma;font-size:12;">Patient</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HPatient').val() + '</td></tr></table>');
+                myWindow.document.write('<td width=40%><table width=100%><tr><td  width=10% style="font-family:tahoma;font-size:12;">Date</td><td  width=3% style="font-family:tahoma;font-size:12;">:</td><td  width=49% style="font-family:tahoma;font-size:12;">' + $('#HSalesDate').val() + '&#160;&#160;&#160;  ' + time + '</td></tr>      <tr><td  width=10% style="font-family:tahoma;font-size:12;">Doctor</td><td  width=5% style="font-family:tahoma;font-size:12;">:</td><td  width=45% style="font-family:tahoma;font-size:12;">' + $('#HDoctor :selected').text() + '</td></tr></table>');
+                myWindow.document.write('</tr></table>');
+
+                myWindow.document.write('</td ></tr> ');
+
+                HeaderRow = ' <tr  style="font-family:tahoma;border:1px solid black;font-size:12px;"><td align=center width=3%>SLNO</td><td colspan=6 align=left width=23%>&#160;&#160;&#160;&#160;&#160;PRODUCT</td><td width=4% align=center>HSN</td><td width=4% align=center>BATCH</td><td width=3% align=center>MFR</td><td width=3% align=center>EXP</td><td width=3% align=center>QTY.</td><td align=right width=5%>PRICE</td><td width=6% align=center>Rate</td><td align=right width=4%>AMOUNT</td></tr>'
+
+                myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
+                myWindow.document.write('<tr><td colspan=16 style="border-top:1px solid black;"></td></tr>');
+
+                slnm = 0;
+            }
+
+
+        }
+    }
+
+    var Prlen = 1;
+    try {
+        var Prlen = $('#TblProcedure tr:last').attr('id').match(/\d+/)[0];
+    }
+    catch (err) {
+        Prlen = 1;
+    }
+    for (var i = 1; i <= Prlen; i++) {
+        var Id = parseInt(i);
+        if ($('#Procedure' + Id).length) {
+            slnm++;
+            Rowcount += 1;
+            myWindow.document.write('<tr><td style="border-left:0px solid grey;font-size:11px;" align=center>' + slnm + '</td><td colspan=7 style="padding-left:5px;font-size:11px;">&#160;&#160;&#160;&#160;&#160' + $('#Procedure' + Id).val().substring(0, 20) + '</td><td style="padding-left:5px;font-size:10px;"></td><td align=center style="padding-left:5px;font-size:11px;"></td><td align=center style="padding-left:5px;font-size:10px;"></td><td align= style="padding-left:5px;font-size:10px;"></td><td align=center style="padding-left:5px;font-size:10px;"></td><td style="padding-right:5px;font-size:10px;" align=right></td><td align=right style="padding-right:5px;font-size:11px;">' + $('#ProcTot' + Id).val() + '</td></tr>');
+            totalAount += parseFloat($('#ProcTot' + Id).val() || 0)
+
+        }
+    }
 
 
 
+    for (var a = 0; a <= (10 - slnm); a++) {
+
+        myWindow.document.write('<tr ><td style="border-left:0px solid grey;font-family:tahoma;font-size:12;" align=center>&#160;</td><td colspan=6 style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td align=center style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-right:5px;font-family:tahoma;font-size:12;" align=right></td><td align=right style="padding-right:5px;font-family:tahoma;font-size:12;"></td><td align=right style="padding-right:5px;font-family:tahoma;font-size:12;"></td><td align=right style="padding-right:5px;font-family:tahoma;font-size:12;"></td></tr>');
+    }
+
+    var Line = "";
+    if ($('#hiddensplittaxable_0').val() != 0) {
+
+        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname0').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_0').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_0').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;">' + $('#SGST_0').val() + '</td></tr>'
+
+    }
+    if ($('#hiddensplittaxable_5').val() != 0) {
+
+
+        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname5').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_5').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_5').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_5').val() + '</td></tr>'
+
+    }
+    if ($('#splittaxable_12').val() != 0) {
+
+
+        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname12').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_12').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_12').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_12').val() + '</td></tr>'
+
+    }
+    if ($('#splittaxable_18').val() != 0) {
+
+
+        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname18').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_18').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_18').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_18').val() + '</td></tr>'
+
+    }
+    if ($('#splittaxable_28').val() != 0) {
+
+
+        Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname28').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_28').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_28').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_28').val() + '</td></tr>'
+
+    }
+    var pharmasistsign = document.getElementById("pharmisistsign");
+    $(pharmasistsign).css('height', 50); $(pharmasistsign).css('width', 100);
+    //myWindow.document.write('<tr height=2px><td></td></tr>');
+    myWindow.document.write('<table width=100% style="border-right: 1px solid grey;border-left: 1px solid grey;border-bottom: 1px solid grey;border-collapse:collapse;">');
+    myWindow.document.write('<tr style="">');
+    myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;"></td></tr><tr><td align=center style="font-family:tahoma;font-size:12;">' + (pharmasistsign.outerHTML) + '</td></tr> </table></td>');
+
+    //myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;">Prepared By&#160;:&#160;' + Billuser + '</td></tr>  <tr><td align=center style="font-family:tahoma;font-size:12;">YOUR ' + $('#savingvalue').text() + '</td></tr></table></td>');
+
+    myWindow.document.write('<td width="50%">  <table width="100%" style="border-collapse: collapse; border: 1px solid grey;">' +
+        '<tr>' +
+        '<td width="25%" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">GST%</td>' +
+        '<td width="25%" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">Taxable</td>' +
+        '<td width="25%" align="center" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">CGST</td>' +
+        '<td width="25%" align="center" style="font-family: tahoma; font-size: 12px; border-left: 1px solid grey; border-top: 1px solid grey; border-right: 1px solid grey;">SGST</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;">' + Line + '</td>' +
+        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;"></td>' +
+        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;"></td>' +
+        '<td style="border-left: 1px solid grey; border-right: 1px solid grey;"></td>' +
+        '</tr>' +
+        '</table>' +
+        '</td>');
+
+    if (($('#Discount').val() != 0)) {
+        //  myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>                <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
+
+        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + addCommas(parseFloat(totalAount).toFixed(Decimal)) + '           </td></tr>       <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
+
+    }
+    else {
+        // myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>               <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
+
+        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + addCommas(parseFloat(totalAount).toFixed(Decimal)) + '           </td></tr>            <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
+
+
+
+    }
+    myWindow.document.write('</tr>');
+    myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + ',  YOUR SAVINGS:' + totalSaving.toFixed(2) + '</b></td></tr>');
+
+    if (($('#TotRoundOff').val() != 0)) {
+        myWindow.document.write('<tr height=25px;><td colspan=8 style="font-family:tahoma;font-size:12; border-top:1px solid grey;"><table width=100%><tr><td style="font-family:tahoma;font-size:12;"width=15%>Amount In words :</td><td style="font-family:tahoma;font-size:12;"width=61%><b> ' + AmountinWords + '</b></td><td style="font-family:tahoma;font-size:12;"width=15% align=left>RoundOff</td><td style="font-family:tahoma;font-size:12;" align=right width=9%>' + $('#TotRoundOff').val() + '</td></tr></table></tr>');
+    }
+    else {
+        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:12; border-top:1px solid grey;">Amount In words :&#160;' + AmountinWords + '</td></tr>');
+
+    }
+    myWindow.document.write('<table>');
+
+
+    distype = SalesPrintDiscountFlag;
+    if (distype == 0) {
+        myWindow.document.write('<style type="text/css"> table[rules="cols"] tr td:nth-child(8){display:none;} td[colspan="12"][align="center"]{display:none;} </style>');
+    }
+    else if (distype == 1) {
+        myWindow.document.write('<style type="text/css"> .mrpcol{display:table-cell;} </style>');
+    }
+
+    taxtype = SalesPrintTaxFlag;
+    if (taxtype == 0) {  // hide the GST/Taxable/CGST/SGST box
+        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:none;} </style>');
+    }
+    else if (taxtype == 1) {  // show it
+        myWindow.document.write('<style type="text/css"> td[width="50%"]{display:table-cell;} </style>');
+    }
+
+
+    myWindow.print();
+    myWindow.close();
+
+}
 
 
 
@@ -1066,7 +997,7 @@ function PrintthisBillHMSSalesQR0(Rowlen, flg, type)             //type:1 - HALF
 
         myWindow.document.write('<tr ><td style="border-left:0px solid grey;font-family:tahoma;font-size:12;" align=center>&#160;</td><td colspan=6 style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td align=center style="padding-left:5px;font-family:tahoma;font-size:12;"></td><td style="padding-right:5px;font-family:tahoma;font-size:12;" align=right></td><td align=right style="padding-right:5px;font-family:tahoma;font-size:12;"></td><td align=right style="padding-right:5px;font-family:tahoma;font-size:12;"></td></tr>');
     }
-    
+
     myWindow.document.write('<table width=100% style="border:1px solid black;border-collapse:collapse;">');
     myWindow.document.write('<tr style="height:80px;">');
     myWindow.document.write('<td style="border-right:1px solid black;font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;">Prepared By:</td></tr><tr><td align=center style="font-family:tahoma;font-size:12;">' + Billuser + '</td></tr></table></td>');
@@ -1109,8 +1040,8 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
     console.log('AAAAAA')
     var TotPQty = 0; var Rowcount = 7;
     var MaxCnt;
-    
-        MaxCnt = 47;
+
+    MaxCnt = 47;
 
     var AmountinWords = WordwithDecimal($('#BaseTextTotalProc').text());
     var myWindow = window.open("", "", "width=1500,height=1500");
@@ -1138,7 +1069,7 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
 
 
 
-   //myWindow.document.write('<table  width=100% ><tr align=center><td style="font-size: 1.2em;">' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td  align=center style="font-size: 0.7em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 0.7em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 0.7em;border-bottom:0px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    //myWindow.document.write('<table  width=100% ><tr align=center><td style="font-size: 1.2em;">' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td  align=center style="font-size: 0.7em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 0.7em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 0.7em;border-bottom:0px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
 
     var TypeText = '';
     TypeText += '<td align=right width=10%>Paytype</td><td colspn=2 width=20% >:' + $('#PayType :selected').text() + '</td>';
@@ -1152,7 +1083,7 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
     var HeaderRow = '';
 
 
-   // style = "font-family:tahoma;font-size:80%;
+    // style = "font-family:tahoma;font-size:80%;
     HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td colspan=9 align=center width=28%>Product</td><td width=5% align=center>Qty.</td><td align=center width=5%>Rate</td><td align=center width=5%>Amount</td></tr>';
 
     myWindow.document.write('<table style="border-collapse:collapse;font-family:tahoma;font-size:80%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
@@ -1163,7 +1094,7 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
             slnm++;
             Rowcount += 1;
             myWindow.document.write('<tr class=brtd2 ><td colspan=9 style="padding-left:5px">' + $('#Product' + Id).val() + '</td><td align=center style="padding-left:5px">' + $('#Quantity' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#SellPrice' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#Amount' + Id).val() + '</td></tr><tr class=brtd2><td colspan=9 style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '       ' + $('#Expiry' + Id).val() + '</td><td></td><td align=right><del>' + $('#PurPrice' + Id).val() + '</del></td><td></td></tr>');
-           
+
         }
     }
 
@@ -1183,19 +1114,19 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
             slnm++;
             Rowcount += 1;
             myWindow.document.write('<tr class=brtd2 ><td colspan=9 style="padding-left:5px">' + $('#Procedure' + Id).val().substring(0, 20) + '</td><td></td><td></td><td></td><td></td><td align=right style="padding-right:5px">' + $('#ProcTot' + Id).val() + '</td></tr>');
-            
+
         }
     }
 
 
-   
-    for (var a = 0; a <=2 ; a++) {
-     
+
+    for (var a = 0; a <= 2; a++) {
+
         myWindow.document.write('<tr class=brtd2 ><td colspan=9 style="padding-left:5px"></td><td style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center style="padding-left:5px"></td></tr>');
-      }
+    }
 
 
-     var TaxRow = '';
+    var TaxRow = '';
     TaxRow = //'<tr style="border:1px solid white;border-bottom:1px solid grey;border-top:1px solid grey;font-weight:bold"><td colspan=13 style="opacity:0">1</td></tr>' +
         '<tr style="border:1px solid grey!important;font-weight:bold" class="brtd2"><td colspan=4 >TAX GROUP</td><td align=left colspan=2>SubTotal</td><td align=left >Discount</td><td align=left colspan=2>CGST</td><td align=left colspan=2>SGST</td><td align=left colspan=2>Total GST</td></tr>';
     var SGSTAmt = 0, CGSTAmt = 0;
@@ -1217,7 +1148,7 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
 
     }
 
- 
+
 
     myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=9 font-size: 10px;" align=left style="font-weight:bold"></td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center colspan=2><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right colspan=2><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>');
 
@@ -1237,14 +1168,14 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
 function PrintthisBillHMSSalesshinewithdiscount(Rowlen, flg, type)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB   -use Landscape mode
 {
 
-    var TotPQty = 0; var Rowcount =7;
+    var TotPQty = 0; var Rowcount = 7;
     var MaxCnt;
     if (type == 1)
         MaxCnt = 47;
-   
+
     var AmountinWords = WordwithDecimal($('#BaseTextTotalProc').text());
     var myWindow = window.open("", "", "width=1500,height=1500");
-   
+
     $(ComapnydivToPrintLab).css('height', 70);
 
     var SNo = '';
@@ -1252,9 +1183,9 @@ function PrintthisBillHMSSalesshinewithdiscount(Rowlen, flg, type)             /
         SNo = $('#HBillNoCopy').val();
     else if (flg == 1)
         SNo = $('#HBillNoSave').val();
-  
+
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-    myWindow.document.write(PrintBG3);   
+    myWindow.document.write(PrintBG3);
 
 
     $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
@@ -1286,19 +1217,19 @@ function PrintthisBillHMSSalesshinewithdiscount(Rowlen, flg, type)             /
     HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center width=3%>Sl#</td><td colspan=8 align=center width=28%>Product</td><td width=5% align=center>Qty.</td><td align=center width=5%>Amount</td><td align=center width=5%>Discount Amount</td></tr>';
 
     myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
-    var slnm = 0;var MrpMAount=0
-    for (var i = 0; i <= Rowlen; i++) { 
+    var slnm = 0; var MrpMAount = 0
+    for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
         if ($('#Product' + Id).length) {
             slnm++;
             Rowcount += 1;
             MrpMAount += (parseFloat($('#PurPrice' + Id).val()) * parseInt($('#Quantity' + Id).val()))
 
-           // alert(MrpMAount)
-            myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=8 style="padding-left:5px">' + $('#Product' + Id).val() + '</td><td align=center style="padding-left:5px">' + $('#Quantity' + Id).val() + '</td><td style="padding-right:5px" align=right>' +(parseFloat( $('#PurPrice' + Id).val())*parseInt($('#Quantity' + Id).val())).toFixed(2)  + '</td><td align=right style="padding-right:5px">' + $('#Amount' + Id).val() + '</td></tr>');
+            // alert(MrpMAount)
+            myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=8 style="padding-left:5px">' + $('#Product' + Id).val() + '</td><td align=center style="padding-left:5px">' + $('#Quantity' + Id).val() + '</td><td style="padding-right:5px" align=right>' + (parseFloat($('#PurPrice' + Id).val()) * parseInt($('#Quantity' + Id).val())).toFixed(2) + '</td><td align=right style="padding-right:5px">' + $('#Amount' + Id).val() + '</td></tr>');
             if (Rowcount % MaxCnt == 0) {
-            Rowcount = 0;
-            //myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=170px colspan=13></td></tr>');
+                Rowcount = 0;
+                //myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=170px colspan=13></td></tr>');
             }
         }
     }
@@ -1310,28 +1241,28 @@ function PrintthisBillHMSSalesshinewithdiscount(Rowlen, flg, type)             /
         Prlen = 1;
     }
     for (var i = 1; i <= Prlen; i++) {
-        var Id = parseInt(i );
+        var Id = parseInt(i);
         if ($('#Procedure' + Id).length) {
             slnm++;
             Rowcount += 1;
             //myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + slnm + '</td><td colspan=2 style="padding-left:5px">' + $('#Procedure' + Id).val().substring(0, 20) + '</td><td style="padding-left:5px"> </td><td style="padding-left:5px"> </td><td style="padding-left:5px">' + $('#ProcQty' + Id).val() + '</td><td style="padding-left:5px"> 0 </td><td align=right style="padding-right:5px">' + $('#ProcFee' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#ProcFee' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#ProcTaxable' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#ProcTaxamt' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#ProcTot' + Id).val() + '</td></tr>');
             if (Rowcount % MaxCnt == 0) {
                 Rowcount = 0;
-               // myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=170px colspan=13></td></tr>');
+                // myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=170px colspan=13></td></tr>');
             }
-            
+
         }
     }
     var Cnt = 0; var ccount = Rowcount;
-    if (Rowcount >= 37) {Cnt = (MaxCnt - Rowcount) + MaxCnt-15; }
-    else { Cnt = parseInt(MaxCnt) - Rowcount-15; }
+    if (Rowcount >= 37) { Cnt = (MaxCnt - Rowcount) + MaxCnt - 15; }
+    else { Cnt = parseInt(MaxCnt) - Rowcount - 15; }
 
-    for (var a = 1; a <= Cnt ; a++) {
+    for (var a = 1; a <= Cnt; a++) {
         var RoughRow = '';
         //RoughRow = '<tr class=brtd2 ><td style="border-left:1px solid grey;opacity:0" align=center >' + a + '</td><td colspan=6 style="padding-left:5px"></td><td align=right style="padding-right:5px"></td><td style="padding-left:5px"></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td></tr>';
 
         myWindow.document.write(RoughRow);
-         ccount++;
+        ccount++;
         if (ccount % MaxCnt == 0) {
             ccount = 0;
             //myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=170px colspan=13></td></tr>');
@@ -1342,9 +1273,8 @@ function PrintthisBillHMSSalesshinewithdiscount(Rowlen, flg, type)             /
     TaxRow = //'<tr style="border:1px solid white;border-bottom:1px solid grey;border-top:1px solid grey;font-weight:bold"><td colspan=13 style="opacity:0">1</td></tr>' +
         '<tr style="border:1px solid grey!important;font-weight:bold" class="brtd2"><td colspan=4 >TAX GROUP</td><td align=left colspan=2>SubTotal</td><td align=left >Discount</td><td align=left colspan=2>CGST</td><td align=left colspan=2>SGST</td><td align=left colspan=2>Total GST</td></tr>';
     var SGSTAmt = 0, CGSTAmt = 0;
-    for (var j = 0; j < TaxRateArray.length; j++)
-    {
-        var TaxVal = TaxRateArray[j]; var k=parseInt(j)+ 1;
+    for (var j = 0; j < TaxRateArray.length; j++) {
+        var TaxVal = TaxRateArray[j]; var k = parseInt(j) + 1;
         TaxRow += '<tr style="border:1px solid grey;" class="brtd2 TxRw"><td colspan=4 style="">' + $('#TaxGrpname' + TaxVal).text() + '</td><td align=left colspan=2>' + $('#splittaxable_' + TaxVal).val() + '</td><td align=left >0.00</td><td align=left colspan=2>' + $('#CGST_' + TaxVal).val() + '</td><td align=left colspan=2>' + $('#SGST_' + TaxVal).val() + '</td><td align=left colspan=2>' + $('#splittax_' + TaxVal).val() + '</td></tr>';
         SGSTAmt = parseFloat(SGSTAmt) + parseFloat($('#CGST_' + TaxVal).val());
         CGSTAmt = parseFloat(CGSTAmt) + parseFloat($('#SGST_' + TaxVal).val());
@@ -1352,11 +1282,11 @@ function PrintthisBillHMSSalesshinewithdiscount(Rowlen, flg, type)             /
     //TaxRow += '<tr style="border:1px solid grey!important;font-weight:bold" class="brtd2"><td colspan=4 >SUB TOTAL</td><td align=left colspan=2>' + $('#TotalTaxable').val() + '</td><td align=left >0.00</td><td align=left colspan=2>' + parseFloat(CGSTAmt).toFixed(Decimal) + '</td><td align=left colspan=2>' + parseFloat(SGSTAmt).toFixed(Decimal) + '</td><td align=left colspan=2>' + $('#TotlaTax').val() + '</td></tr>';
 
     //myWindow.document.write(TaxRow);
-     var Save=MrpMAount-parseFloat($('#BaseTextTotalProc').text());
+    var Save = MrpMAount - parseFloat($('#BaseTextTotalProc').text());
     myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=9 style="font-family:tahoma;font-size: 13px;"><b>YOUR SAVINGS : ' + addCommas(parseFloat(Save).toFixed(Decimal)) + '</b></td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center colspan=1><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right colspan=1><b>' + addCommas(parseFloat(MrpMAount).toFixed(Decimal)) + '</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right colspan=1><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>');
     myWindow.document.write('</table>');
 
-   
+
     //myWindow.document.write('<table><tr></table>');
 
 
@@ -1420,7 +1350,7 @@ function PrintthisBillHMSSalesReturn1(Rowlen, flg, type)             //type:1 - 
     if (Rowcount >= 37) { Cnt = (MaxCnt - Rowcount) + MaxCnt - 15; }
     else { Cnt = parseInt(MaxCnt) - Rowcount - 15; }
 
-    for (var a = 1; a <= Cnt ; a++) {
+    for (var a = 1; a <= Cnt; a++) {
         var RoughRow = '';
         RoughRow = '<tr class=brtd2 ><td style="border-left:1px solid grey;opacity:0" align=center >' + a + '</td><td style="padding-left:5px"></td><td colspan=2 style="padding-left:5px"></td><td style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=right style="padding-right:5px"></td><td style="padding-left:5px"></td><td style="padding-right:5px" align=right></td><td style="padding-left:5px"></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td></tr>';
 
@@ -1897,7 +1827,7 @@ function PrintthisBillLabwithlettertheadIPB(Rowlen, flg, type, Bill)            
     var MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '/' + $('#OpNo').val()
     if ($('#IpNo').val() != 0) {
         MRHEAD = 'RegNo:';
-        MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;   IP No:' + $('#AdmitDate').val().substring(8,10)+'-'+   $('#IpNo').val()
+        MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;   IP No:' + $('#AdmitDate').val().substring(8, 10) + '-' + $('#IpNo').val()
     }
 
     myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>' + billhead + '</b></u></td></tr>');
@@ -2023,10 +1953,19 @@ function PrintthisBillLabwithlettertheadIPB(Rowlen, flg, type, Bill)            
 
 
 
-function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
+
+
+
+
+
+
+
+
+
+function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
 {
 
-    var hdtype = 0;
+
 
     var TotPQty = 0; var Rowcount = 7;
     var MaxCnt;
@@ -2052,7 +1991,7 @@ function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             /
     //    $(ComapnydivToPrintLab).css('width', '100%');
     //}
 
-    //$(ComapnydivToPrintLab).css('height',100); $(ComapnydivToPrintLab).css('width', 700);
+    $(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
 
     var SNo = '';
     if (flg == 0)
@@ -2066,46 +2005,29 @@ function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             /
     // myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
     //// myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
     // myWindow.document.write('</table>');
-    //myWindow.document.write(GetLabBillPrintHeaderHTML());
-    //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-    // myWindow.document.write('</table>');
 
+    myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+    myWindow.document.write('</table>');
 
-    if (Bill == 'LB') {
-        var billhead = "Lab Bill"
-        hdtype = LabPrintHeaderFlag;
-    }
-    else if (Bill == 'PB') {
-        var billhead = "General Bill"
-        hdtype = ProcPrintHeaderFlag;
-    }
-    else {
-        var billhead = "IP BILL"
-        hdtype = IpPrintHeaderFlag;
-    }
-
-
-    var LAB_PRINT_HEADER_HEIGHT = 100;
-
-    if (hdtype == 0) {  //No header
-        myWindow.document.write('<table width=50%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+    if (type != 3) {
+        // myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
         //myWindow.document.write('</table>');
     }
-    else if (hdtype == 1) {//with image header
-        myWindow.document.write('<table width=50% ><tr ><td width=50% align=center colspan=6 style=color:#008000;font-weight:bold>' + (Comapnylogo.outerHTML) + '</td></tr>');
-        myWindow.document.write('</table>');
+    else if (type == 3) {
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
         // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
         //myWindow.document.write('</table>');
 
     }
-    else if (hdtype == 2) {//with company details
-        myWindow.document.write('<table width="50%">' + '<tr>' + '<td colspan="6" style="width:50%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<table width="50%">' + '<tr>' + '<td colspan="6" style="width:50%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<table width="50%">' + '<tr>' + '<td colspan="6" style="width:50%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<hr/>');
-        myWindow.document.write('</table>');
-
-
+    if (Bill == 'LB') {
+        var billhead = "Lab Bill"
+    }
+    else if (Bill == 'PB') {
+        var billhead = "General Bill"
+    }
+    else {
+        var billhead = "IP BILL"
     }
 
 
@@ -2118,36 +2040,28 @@ function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             /
 
     }
 
-    myWindow.document.write('<table width=50% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>' + billhead + '</b></u></td></tr>');
+    myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>' + billhead + '</b></u></td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
     if (Bill == 'LB' || Bill == 'PB') {
-        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=50% >');
-
-        myWindow.document.write('<tr ><td style="font-weight:bold;padding-top:15px;" width=5% align=left >' + MRHEAD + ' </td><td colspan=6 style="font-weight:bold;padding-top:15px;" align=left width=20%>:' + MRVALUE + '</td><td style="padding-top:15px;padding-left:20px;" width=10%>Bill No</td><td style="font-weight:bold;padding-top:15px;" colspn=2 width=10% >:' + SNo + '/' + $('#PayType option:selected').text() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=5% align=left >Patient</td><td colspan=6 style="font-weight:bold;" align=left width=90%>:' + $('#Name').val() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=5% align=left >Age/Sex</td><td colspan=2 align=left width=30% >:' + Age + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10%>Date&#160;&#160;&#160;  </td><td colspn=2 width=20% >:' + $('#BillDate').val() + ' ' + BBilltime + '</td></tr>');
-        myWindow.document.write('<tr ><td width=5% align=left >Doctor</td><td colspan=2 align=left width=30%>:' + $('#Doctor :selected').text() + '</td></tr>');
-
-
-
-
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100% ><tr ><td style="font-weight:bold;" width=10% align=left >' + MRHEAD + ' :</td><td colspan=4 style="font-weight:bold;" align=left width=60%>' + MRVALUE + '</td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + ' ' + BBilltime + '</td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 style="font-weight:bold;" align=left width=60%>' + $('#Name').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#Doctor :selected').text() + '</td>                                                            <td width=10%>Bill No</td><td style="font-weight:bold;" colspn=2 width=20% >:' + SNo + '/' + $('#PayType option:selected').text() + '</td></tr>');
         myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
         myWindow.document.write('</table>');
 
-    }          
+    }
     else {
-        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=50% ><tr ><td style="font-weight:bold;" width=10% align=left >' + MRHEAD + ' :</td><td style="font-weight:bold;" colspan=4 align=left width=50%>' + MRVALUE + '</td><td align=left width=8%><b> Bill No</b></td><td  colspn=2 width=15% ><b>:' + $('#BillNoCopy').val() + '</b></td></tr>');
-        myWindow.document.write('<tr ><td width=5% align=left >Patient:</td><td colspan=4 align=left width=50%>' + $('#Name').val() + '</td><td align=left width=8%>Bill Date</td><td colspn=2 width=15% >:' + $('#BillDate').val() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=5% align=left >Age/Gender</td><td colspan=4 align=left width=50%>' + Age + '</td><td align=left width=8%>DOA </td><td colspn=2 width=15% >:' + $('#AdmitDate').val() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=5% align=left >Doctor:</td><td colspan=4 align=left width=50%>' + $('#Doctor :selected').text() + '</td><td align=left width=8%>DOD </td><td colspn=2 width=15% >:' + $('#DischargeDate').val() + '</td></tr>');
+        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% ><tr ><td style="font-weight:bold;" width=10% align=left >' + MRHEAD + ' :</td><td style="font-weight:bold;" colspan=4 align=left width=50%>' + MRVALUE + '</td><td align=left width=8%><b> Bill No</b></td><td  colspn=2 width=15% ><b>:' + $('#BillNoCopy').val() + '</b></td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=50%>' + $('#Name').val() + '</td><td align=left width=8%>Bill Date</td><td colspn=2 width=15% >:' + $('#BillDate').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Age/Gender</td><td colspan=4 align=left width=50%>' + Age + '</td><td align=left width=8%>DOA </td><td colspn=2 width=15% >:' + $('#AdmitDate').val() + '</td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=50%>' + $('#Doctor :selected').text() + '</td><td align=left width=8%>DOD </td><td colspn=2 width=15% >:' + $('#DischargeDate').val() + '</td></tr>');
 
         myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
         myWindow.document.write('</table>');
     }
 
-    myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;font-family:tahoma;  width=50%>');
+    myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;font-family:tahoma;  width=100%>');
 
     var HeaderRow = '';
     if (Bill == 'LB') {
@@ -2203,7 +2117,7 @@ function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             /
     for (var a = 1; a <= (9 - Rowlen); a++) {
         myWindow.document.write('<tr><td>&#160;</td></tr>');
     }
-    myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=50%>');
+    myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
 
     if (parseFloat($('#DiscAmt').val() || 0) != 0) {
         myWindow.document.write('<tr><td>&#160;</td> <td style="font-weight: bold;font-size: 14px;" align=right>Total  :</td>   <td  style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#TotalAmt').text()).toFixed(Decimal)) + '</td></tr>');
@@ -2217,249 +2131,21 @@ function PrintthisBillLabwiththermalprint(Rowlen, flg, type, Bill)             /
 
     }
 
-    myWindow.document.write('<tr><td><b>Rupees ' + AmountinWords + '</b></td><td style="font-weight: bold;font-size: 14px;" align=right >Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
-
+    myWindow.document.write('<tr><td><b>Rupees ' + AmountinWords + '</b></td><td style="font-weight: bold;font-size: 14px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
     //myWindow.document.write('<tr><td>This is a computer generated Bill.</td></tr></table>');
 
 
 
-    myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=50%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
 
 
     //myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>General Medicine,Casuality,Pediatrics,Orthopedics,Pulmonology,Surgery,Neurology,Speech Therapy,Occupational Therapy, Psychological Counseling, Behaviour Therapy, IQ Test, Physiothreapy, Child Development & Early Intervention</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-    myWindow.document.write('<table style="font-family:tahoma;font-size:10px;" width=50%><tr><td align=left> Prepared by     -' + BUserNm + '</td></tr></table>');
+    myWindow.document.write('<table style="font-family:tahoma;font-size:10px;" width=100%><tr><td align=left> Prepared by     -' + BUserNm + '</td></tr></table>');
 
     //myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
 
 
 
-
-
-
-    myWindow.print();
-    myWindow.close();
-}
-
-
-
-
-
-
-
-
-function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
-{
-
-    var hdtype = 0;
-  
-    var TotPQty = 0; var Rowcount = 7;
-    var MaxCnt;
-    if (type == 1)
-        MaxCnt = 20;
-    else
-        MaxCnt = 47;
-
-    var AmountinWords = WordwithDecimal($('#GrandTotal').text());
-    var myWindow = window.open("", "", "width=1500,height=1500");
-    var Trnvalue = '';
-    if ($('#txtlpono').val() == 0) {
-        Trnvalue = '';
-    }
-    else {
-        Trnvalue = $('#txtlpono').val();
-    }
-    //if (type != 3)
-    //{ $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
-    //else if (type == 3) {
-    //    $(ComapnydivToPrintLab).css('height', 'auto');
-    //    $(ComapnydivToPrintLab).css('max-height', '200px');
-    //    $(ComapnydivToPrintLab).css('width', '100%');
-    //}
-
-    $(ComapnydivToPrintLab).css('height',100); $(ComapnydivToPrintLab).css('width', 700);
-    //$(ComapnydivToPrintLab).css({ 'width': '330px', 'height': 'auto' });    //thermmal print
-    var SNo = '';
-    if (flg == 0)
-        SNo = $('#BillNoCopy').val();
-    else if (flg == 1)
-        SNo = $('#BillNoCopy').val();
-    var Age = $('#Age').val() + '/' + $('#Gender :selected').text();
-    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-    myWindow.document.write(PrintBG3);
-
-   // myWindow.document.write('<table style="font-family:tahoma;"  width=100% ><tr align=center><td style="font-size: 1.2em;"><B>' + window.CompanySettingsArray.CompanyName + '</B></td></tr><tr><td  align=center style="font-size: 1.1em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.1em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.1em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-   //// myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-   // myWindow.document.write('</table>');
-    //myWindow.document.write(GetLabBillPrintHeaderHTML());
-       //myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-       // myWindow.document.write('</table>');
-
-    
-    if (Bill == 'LB') {
-        var billhead = "Lab Bill"
-        hdtype = LabPrintHeaderFlag;
-    }
-    else if (Bill == 'PB') {
-        var billhead = "General Bill"
-        hdtype = ProcPrintHeaderFlag;
-    }
-    else {
-        var billhead = "IP BILL"
-        hdtype = IpPrintHeaderFlag;
-    }
-
-
-    var LAB_PRINT_HEADER_HEIGHT = 100;
-
-    if (hdtype == 0) {  //No header
-        myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
-        //myWindow.document.write('</table>');
-    }
-    else if (hdtype == 1) {//with image header
-        myWindow.document.write('<table width=50% ><tr ><td width=0% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-        myWindow.document.write('</table>');
-        // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
-        //myWindow.document.write('</table>');
-
-    }
-    else if (hdtype == 2) {//with company details
-        myWindow.document.write('<table width="100%">' +'<tr>' +'<td colspan="6" style="width:100%;">' +'<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:30px;">' +window.CompanySettingsArray.CompanyName +'</p>' +'</td>' +'</tr>' +'</table>');
-        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content;  font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<table width="100%">' + '<tr>' + '<td colspan="6" style="width:100%;">' + '<p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p>' + '</td>' + '</tr>' + '</table>');
-        myWindow.document.write('<hr/>');
-        myWindow.document.write('</table>');
-        
-
-    }
-
-
-
-    var MRHEAD = 'MR/OP#'
-    var MRVALUE = $('#Opseriesname').val()+'-'+ $('#RegNo').val() + '/' + $('#OpNo').val()
-    if ($('#IpNo').val() != 0) {
-        MRHEAD = 'RegNo:';
-        MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;   IP No:' + $('#IpNo').val()
-
-    }
-
-    myWindow.document.write('<table width=100% ><tr ><td style="font-size:80%;font-family:tahoma;font-width:bold" align=center><u><b>' + billhead + '</b></u></td></tr>');
-    myWindow.document.write('</table>');
-    var TypeText = '';
-    if (Bill == 'LB' || Bill == 'PB') {
-        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-15px" width=100% ><tr ><td style="font-weight:bold;" width=10% align=left >' + MRHEAD + ' :</td><td colspan=4 style="font-weight:bold;" align=left width=60%>' + MRVALUE + '</td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + ' '+ BBilltime +'</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 style="font-weight:bold;" align=left width=60%>' + $('#Name').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#Doctor :selected').text() + '</td>                                                            <td width=10%>Bill No</td><td style="font-weight:bold;" colspn=2 width=20% >:' + SNo + '/' + $('#PayType option:selected').text() + '</td></tr>');
-        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-        myWindow.document.write('</table>');
-
-    }
-    else {
-        myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% ><tr ><td style="font-weight:bold;" width=10% align=left >' + MRHEAD + ' :</td><td style="font-weight:bold;" colspan=4 align=left width=50%>' + MRVALUE + '</td><td align=left width=8%><b> Bill No</b></td><td  colspn=2 width=15% ><b>:' + $('#BillNoCopy').val() + '</b></td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=50%>' + $('#Name').val() + '</td><td align=left width=8%>Bill Date</td><td colspn=2 width=15% >:' + $('#BillDate').val() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Age/Gender</td><td colspan=4 align=left width=50%>' + Age + '</td><td align=left width=8%>DOA </td><td colspn=2 width=15% >:' + $('#AdmitDate').val() + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=50%>' + $('#Doctor :selected').text() + '</td><td align=left width=8%>DOD </td><td colspn=2 width=15% >:' + $('#DischargeDate').val() + '</td></tr>');
-
-        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-        myWindow.document.write('</table>');
-    }
-
-   // myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;font-family:tahoma;  width=100%>');
-      myWindow.document.write('<table style="margin-top:-20px;border-collapse:collapse;font-family:tahoma" width=100%>');
-    var HeaderRow = '';
-    if (Bill == 'LB') {
-
-        if ($('#printscheme').is(':checked')) {
-            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;" ><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td  style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;"colspan=7  >TestName</td><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right></td></tr>');
-
-        }
-        else {
-            myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;" ><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td  style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;"colspan=7  >TestName</td><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
-
-        }
-    }
-    else if (Bill == 'PB') {
-        myWindow.document.write('<tr style="font-size:12px"><td style="border:1px solid #000">Sl#</td><td colspan=5 width=50% style="border:1px solid #000">Description</td><td align=center style="border:1px solid #000">Qty</td><td align=right style="border:1px solid #000">Rate</td><td align=right style="border:1px solid #000">Amount</td></tr>');
-    }
-
-    else {
-        myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Sl#</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" colspan=5  width=50%>Description</td>  <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;">Date</td>  <td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=center >Qty</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;font-family:tahoma;" align=right>Amount</td></tr>');
-    }
-
-    // myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="white">' + HeaderRow);
-
-    for (var i = 0; i <= Rowlen; i++) {
-        var Id = parseInt(i + 1);
-        if ($('#TestName' + Id).length) {
-            Rowcount += 1;
-            if (Bill == 'LB')
-            {
-                if ($('#printscheme').is(':checked')) {
-                    myWindow.document.write('<tr><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="padding-right:5px;font-family:tahoma;font-size: 11px"></td></tr>');
-
-                }
-                else {
-                    myWindow.document.write('<tr><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>');
-
-                }
-            }
-            else if (Bill == 'PB')
-            {
-                var b = 'border-left:1px solid #000;border-right:1px solid #000;font-family:tahoma;font-size:11px;';
-                myWindow.document.write('<tr><td style="' + b + '">' + $('#slrow' + Id).text() + '</td><td colspan=5 style="' + b + '">' + $('#TestCode' + Id).val() + '</td><td align=center style="' + b + '">' + $('#PQty' + Id).val() + '</td><td align=right style="' + b + '">' + $('#PRate' + Id).val() + '</td><td align=right style="' + b + '">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>');            }
-
-            else
-            {
-                myWindow.document.write('<tr ><td style=font-family:tahoma;font-size:11px>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px;font-family:tahoma;font-size: 11px"  colspan=5>' + $('#TestCode' + Id).val() + '</td>   <td style="padding-left:5px;font-family:tahoma;font-size: 11px" >' + $('#TestName' + Id).val() + '</td>   <td style="padding-left:5px;font-family:tahoma;font-size: 11px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px;font-family:tahoma;font-size: 11px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="padding-right:5px;font-family:tahoma;font-size: 11px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>');
-            }
-
-        }
-    }
-
-
-
-
-    if (Bill == 'PB') {
-        var b2 = 'border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;';
-        myWindow.document.write('<tr style="height:' + Math.max(0, (14 - (Rowcount - 7)) * 18) + 'px"><td style="' + b2 + '"></td><td colspan=5 style="' + b2 + '"></td><td style="' + b2 + '"></td><td style="' + b2 + '"></td><td style="' + b2 + '"></td></tr>');
-    }
-    else {
-        for (var a = 1; a <= (9 - Rowlen); a++) {
-            myWindow.document.write('<tr><td>&#160;</td></tr>');
-        }
-    }
-    //myWindow.document.write('</table><table style="font-family:tahoma;font-size: 12px" width=100%>');
-    var fb = (Bill == 'PB') ? 'border:1px solid #000;border-top:0;border-collapse:collapse;' : '';
-    myWindow.document.write('</table><table style="font-family:tahoma;font-size:12px;' + fb + '" width=100%>');
-
-    if (parseFloat($('#DiscAmt').val() || 0) != 0) {
-        myWindow.document.write('<tr><td>&#160;</td> <td style="font-weight: bold;font-size: 14px;" align=right>Total  :</td>   <td  style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#TotalAmt').text()).toFixed(Decimal)) + '</td></tr>');
-        myWindow.document.write('<tr><td></td>   <td style="font-weight: bold;font-size: 14px;" align=right>Dis  :</td><td   style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#DiscAmt').val()).toFixed(Decimal)) + '</td></tr>');
-       
-    }
-
-    if (parseFloat($('#Advamount').val() || 0) != 0) {
-        myWindow.document.write('<tr><td style="border-top:1px solid gray" colspan=10></td></tr><tr><td>&#160;</td> <td style="font-weight: bold;font-size: 14px;" align=right>Total  :</td>   <td  style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#Re_total').text()).toFixed(Decimal)) + '</td></tr>');
-        myWindow.document.write('<tr><td></td>   <td style="font-weight: bold;font-size: 14px;" align=right>Paid  :</td><td   style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#Advamount').val()).toFixed(Decimal)) + '</td></tr>');
-
-    }
-
-   // myWindow.document.write('<tr><td><b>Rupees '+AmountinWords+'</b></td><td style="font-weight: bold;font-size: 14px;" align=right>Net Total  :</td><td style="font-weight: bold;font-size: 14px;" align=right >' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
-    var br = (Bill == 'PB') ? 'border-right:1px solid #000;' : '';
-    myWindow.document.write('<tr><td style="' + br + '"><b>Rupees ' + AmountinWords + '</b></td><td style="font-weight:bold;font-size:14px;" align=right>Net Total :</td><td style="font-weight:bold;font-size:14px;" align=right>' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
-    //myWindow.document.write('<tr><td>This is a computer generated Bill.</td></tr></table>');
-
-    
-
-    //myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-
-
-    //myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>General Medicine,Casuality,Pediatrics,Orthopedics,Pulmonology,Surgery,Neurology,Speech Therapy,Occupational Therapy, Psychological Counseling, Behaviour Therapy, IQ Test, Physiothreapy, Child Development & Early Intervention</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-    myWindow.document.write('<table style="font-family:tahoma;font-size:10px;" width=100%><tr><td align=left> Prepared by     -' + BUserNm+'</td></tr></table>');
-
-    //myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thanks for Visiting us*****</td></tr></table>');
-
-
-   
 
 
 
@@ -2489,8 +2175,7 @@ function PrintthisBillLabwithletterthead(Rowlen, flg, type, Bill)             //
     else {
         Trnvalue = $('#txtlpono').val();
     }
-    if (type != 3)
-    { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
+    if (type != 3) { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
     else if (type == 3) {
         $(ComapnydivToPrintLab).css('height', 'auto');
         $(ComapnydivToPrintLab).css('max-height', '200px');
@@ -2534,58 +2219,52 @@ function PrintthisBillLabwithletterthead(Rowlen, flg, type, Bill)             //
     myWindow.document.write('<table width=100% ><tr ><td style="font-size:120%;font-family:tahoma;font-width:bold" align=center><u><b>' + billhead + '</b></u></td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
-    if (Bill == 'LB' || Bill == 'PB')
-    {
+    if (Bill == 'LB' || Bill == 'PB') {
         var DT = $('#BillDate').val().substring(8, 10)
 
         myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;margin-top:-35px" width=100% ><tr ><td width=10% align=left >MR No#</td><td colspan=4 align=left width=60%>' + $('#RegNo').val() + '/' + DT + '</td><td width=10%>Date&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + '</td></tr>');
         myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=60%>' + $('#Name').val() + '</td>                                                                        <td width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
-        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#Doctor :selected').text() + '</td>                                                            <td width=10%>Bill No</td><td colspn=2 width=20% >:' + SNo +'/'+$('#PayType option:selected' ).text()+ '</td></tr>');
+        myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=60%>' + $('#Doctor :selected').text() + '</td>                                                            <td width=10%>Bill No</td><td colspn=2 width=20% >:' + SNo + '/' + $('#PayType option:selected').text() + '</td></tr>');
         myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
         myWindow.document.write('</table>');
-       
+
     }
-    else
-    {
+    else {
         myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;" width=100% ><tr ><td width=10% align=left >OP#&#160;&#160; :</td><td colspan=4 align=left width=40%>' + $('#OpNo').val() + '</td><td align=right width=10%>Date&#160;&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + '</td></tr>');
         myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=40%>' + $('#Name').val() + '</td><td align=right width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
         myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=40%>' + $('#Doctor :selected').text() + '</td><td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td></tr>');
         myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
         myWindow.document.write('</table>');
-        
+
     }
 
     myWindow.document.write('<table style=margin-top:-20px; border-collapse: collapse;  width=100%>');
 
     var HeaderRow = '';
-    if (Bill == 'LB')
-    {  
+    if (Bill == 'LB') {
         myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;" ><td style="border-top:1px solid grey;border-bottom:1px solid grey;">Sl#</td><td  style="border-top:1px solid grey;border-bottom:1px solid grey;"colspan=7  >TestName</td><td style="border-top:1px solid grey;border-bottom:1px solid grey;" align=right>Amount</td></tr>');
-     }
-    else
-    {
+    }
+    else {
         myWindow.document.write('<tr  style="font-size: 12px;border-right:1px solid grey;border-bittom:1px solid grey;"><td style="border-top:1px solid grey;border-bottom:1px solid grey;">Sl#</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;" colspan=5  width=50%>Description</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;" align=center >Qty</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;" align=right >Rate</td><td style="font-size: 14px;border-top:1px solid grey;border-bottom:1px solid grey;" align=right>Amount</td></tr>');
     }
 
-   // myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="white">' + HeaderRow);
+    // myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="white">' + HeaderRow);
 
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
         if ($('#TestName' + Id).length) {
             Rowcount += 1;
-            if (Bill == 'LB')
-            { myWindow.document.write('<tr><td>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
-            else
-            { myWindow.document.write('<tr ><td >' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            if (Bill == 'LB') { myWindow.document.write('<tr><td>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            else { myWindow.document.write('<tr ><td >' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
 
         }
     }
 
-   
-    
 
-    for (var a = 1; a <= (6 - Rowlen) ; a++) {
-       myWindow.document.write('<tr><td>&#160;</td></tr>');
+
+
+    for (var a = 1; a <= (6 - Rowlen); a++) {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
     }
     myWindow.document.write('</table>');
     myWindow.document.write('<table style="font-family:tahoma;font-size: 12px" width=100%>');
@@ -2604,9 +2283,9 @@ function PrintthisBillLabwithletterthead(Rowlen, flg, type, Bill)             //
     myWindow.document.write('<table style="font-family:tahoma" width=100%><tr><td align=center> *****Thankyou for visiting us*****</td></tr></table>');
 
 
- 
 
-  
+
+
 
     myWindow.print();
     myWindow.close();
@@ -2636,8 +2315,7 @@ function PrintthisBillLabwithletterthead1(Rowlen, flg, type, Bill)             /
     else {
         Trnvalue = $('#txtlpono').val();
     }
-    if (type != 3)
-    { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
+    if (type != 3) { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
     else if (type == 3) {
         $(ComapnydivToPrintLab).css('height', 'auto');
         $(ComapnydivToPrintLab).css('max-height', '200px');
@@ -2653,8 +2331,8 @@ function PrintthisBillLabwithletterthead1(Rowlen, flg, type, Bill)             /
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG3);
 
-   // myWindow.document.write('<table  width=100% ><tr align=center><td style="font-size: 1.875em;">' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td  align=center style="font-size: 1.375em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.375em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.375em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-     myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+    // myWindow.document.write('<table  width=100% ><tr align=center><td style="font-size: 1.875em;">' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td  align=center style="font-size: 1.375em;">' + window.CompanySettingsArray.Address + '</td></tr><tr><td  align=center style="font-size: 1.375em;" colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr><td  align=center style="font-size: 1.375em;border-bottom:1px solid black">' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
     myWindow.document.write('</table>');
 
     if (type != 3) {
@@ -2664,7 +2342,7 @@ function PrintthisBillLabwithletterthead1(Rowlen, flg, type, Bill)             /
     else if (type == 3) {
         //myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
         //myWindow.document.write('</table>');
-       // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
+        // myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;&#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
         //myWindow.document.write('</table>');
 
     }
@@ -2681,10 +2359,8 @@ function PrintthisBillLabwithletterthead1(Rowlen, flg, type, Bill)             /
     myWindow.document.write('<table width=100% ><tr ><td style="font-size:120%" align=center><b>' + billhead + '</b></td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
-    if (Bill == 'LB' || Bill == 'PB')
-    { TypeText += '<td align=right width=10%>BillNo&#160;&#160;&#160;</td><td colspn=2 width=20% >:' + SNo + '</td>'; }
-    else
-    { TypeText += '<td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td>'; }
+    if (Bill == 'LB' || Bill == 'PB') { TypeText += '<td align=right width=10%>BillNo&#160;&#160;&#160;</td><td colspn=2 width=20% >:' + SNo + '</td>'; }
+    else { TypeText += '<td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td>'; }
 
     myWindow.document.write('<table style="font-size:70%;border-top:1px solid grey;border-left:1px solid grey;border-right:1px solid grey" width=100% ><tr ><td width=10% align=left >OP#&#160;&#160; :</td><td colspan=4 align=left width=40%>' + $('#OpNo').val() + '</td><td align=right width=10%>Date&#160;&#160;&#160;&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + '</td></tr>');
     myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=40%>' + $('#Name').val() + '</td><td align=right width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
@@ -2693,10 +2369,8 @@ function PrintthisBillLabwithletterthead1(Rowlen, flg, type, Bill)             /
     myWindow.document.write('</table>');
 
     var HeaderRow = '';
-    if (Bill == 'LB')
-    { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=7 align=center >TestName</td><td align=right>Amount</td></tr>'; }
-    else
-    { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=5 align=center width=50%>Description</td><td align=center >Qty</td><td align=right >Rate</td><td align=right>Amount</td></tr>'; }
+    if (Bill == 'LB') { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=7 align=center >TestName</td><td align=right>Amount</td></tr>'; }
+    else { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=5 align=center width=50%>Description</td><td align=center >Qty</td><td align=right >Rate</td><td align=right>Amount</td></tr>'; }
 
     myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
 
@@ -2704,10 +2378,8 @@ function PrintthisBillLabwithletterthead1(Rowlen, flg, type, Bill)             /
         var Id = parseInt(i + 1);
         if ($('#TestName' + Id).length) {
             Rowcount += 1;
-            if (Bill == 'LB')
-            { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
-            else
-            { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            if (Bill == 'LB') { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            else { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
 
             if (Rowcount % MaxCnt == 0) {
                 //Rowcount = 0;
@@ -2786,8 +2458,7 @@ function PrintthisBillLabwithtexthead(Rowlen, flg, type, Bill)             //typ
     else {
         Trnvalue = $('#txtlpono').val();
     }
-    if (type != 3)
-    { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
+    if (type != 3) { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
     else if (type == 3) {
         $(ComapnydivToPrintLab).css('height', 'auto');
         $(ComapnydivToPrintLab).css('max-height', '200px');
@@ -2830,10 +2501,8 @@ function PrintthisBillLabwithtexthead(Rowlen, flg, type, Bill)             //typ
     myWindow.document.write('<table width=100% ><tr ><td style="font-size:120%" align=center><b>' + billhead + '</b></td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
-    if (Bill == 'LB' || Bill == 'PB')
-    { TypeText += '<td align=right width=10%>BillNo&#160;&#160;&#160;</td><td colspn=2 width=20% >:' + SNo + '</td>'; }
-    else
-    { TypeText += '<td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td>'; }
+    if (Bill == 'LB' || Bill == 'PB') { TypeText += '<td align=right width=10%>BillNo&#160;&#160;&#160;</td><td colspn=2 width=20% >:' + SNo + '</td>'; }
+    else { TypeText += '<td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td>'; }
 
     myWindow.document.write('<table style="font-size:70%;border-top:1px solid grey;border-left:1px solid grey;border-right:1px solid grey" width=100% ><tr ><td width=10% align=left >OP#&#160;&#160; :</td><td colspan=4 align=left width=40%>' + $('#OpNo').val() + '</td><td align=right width=10%>Date&#160;&#160;&#160;&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + '</td></tr>');
     myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=40%>' + $('#Name').val() + '</td><td align=right width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
@@ -2842,10 +2511,8 @@ function PrintthisBillLabwithtexthead(Rowlen, flg, type, Bill)             //typ
     myWindow.document.write('</table>');
 
     var HeaderRow = '';
-    if (Bill == 'LB')
-    { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=7 align=center >TestName</td><td align=right>Amount</td></tr>'; }
-    else
-    { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=5 align=center width=50%>Description</td><td align=center >Qty</td><td align=right >Rate</td><td align=right>Amount</td></tr>'; }
+    if (Bill == 'LB') { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=7 align=center >TestName</td><td align=right>Amount</td></tr>'; }
+    else { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=5 align=center width=50%>Description</td><td align=center >Qty</td><td align=right >Rate</td><td align=right>Amount</td></tr>'; }
 
     myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
 
@@ -2853,10 +2520,8 @@ function PrintthisBillLabwithtexthead(Rowlen, flg, type, Bill)             //typ
         var Id = parseInt(i + 1);
         if ($('#TestName' + Id).length) {
             Rowcount += 1;
-            if (Bill == 'LB')
-            { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
-            else
-            { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            if (Bill == 'LB') { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td width=20% align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            else { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
 
             if (Rowcount % MaxCnt == 0) {
                 //Rowcount = 0;
@@ -2915,7 +2580,7 @@ function PrintthisBillLabwithtexthead(Rowlen, flg, type, Bill)             //typ
 
 
 
-function PrintthisBillLab1(Rowlen, flg, type,Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
+function PrintthisBillLab1(Rowlen, flg, type, Bill)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB
 {
 
     var TotPQty = 0; var Rowcount = 7;
@@ -2934,15 +2599,13 @@ function PrintthisBillLab1(Rowlen, flg, type,Bill)             //type:1 - HALF  
     else {
         Trnvalue = $('#txtlpono').val();
     }
-    if (type != 3)
-    { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
-    else  if (type == 3) 
-    {
+    if (type != 3) { $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700); }
+    else if (type == 3) {
         $(ComapnydivToPrintLab).css('height', 'auto');
         $(ComapnydivToPrintLab).css('max-height', '200px');
-        $(ComapnydivToPrintLab).css('width','100%');
+        $(ComapnydivToPrintLab).css('width', '100%');
     }
-    
+
     var SNo = '';
     if (flg == 0)
         SNo = $('#BillNoCopy').val();
@@ -2956,33 +2619,31 @@ function PrintthisBillLab1(Rowlen, flg, type,Bill)             //type:1 - HALF  
     myWindow.document.write('</table>');
 
     if (type != 3) {
-       // myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        // myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
         //myWindow.document.write('</table>');
     }
-    else if (type==3)
-    {
-    //myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
-    //myWindow.document.write('</table>');
-    myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
-    myWindow.document.write('</table>');
+    else if (type == 3) {
+        //myWindow.document.write('<table width=100% ><tr ><td width=100% align=left colspan=6 style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
+        //myWindow.document.write('</table>');
+        myWindow.document.write('<table width=100% ><tr ><td align=right  width=80% >Bill No &#160;&#160;: </td><td colspn=2 width=20%  >' + SNo + '</td></tr>');
+        myWindow.document.write('</table>');
 
-}
-    if (Bill == 'LB'){
-    var billhead="Lab Bill"}
-    else if (Bill == 'PB'){
-    var billhead="Observation & Procedure Bill"}
-else
-{
-var billhead="IP BILL"
-}
+    }
+    if (Bill == 'LB') {
+        var billhead = "Lab Bill"
+    }
+    else if (Bill == 'PB') {
+        var billhead = "Observation & Procedure Bill"
+    }
+    else {
+        var billhead = "IP BILL"
+    }
 
     myWindow.document.write('<table width=100% ><tr ><td style="font-size:120%" align=center><b>' + billhead + '</b></td></tr>');
     myWindow.document.write('</table>');
     var TypeText = '';
-    if (Bill == 'LB' || Bill == 'PB')
-    { TypeText += '<td align=right width=10%>BillNo</td><td colspn=2 width=20% >:' + SNo + '</td>'; }
-    else
-    { TypeText += '<td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td>'; }
+    if (Bill == 'LB' || Bill == 'PB') { TypeText += '<td align=right width=10%>BillNo</td><td colspn=2 width=20% >:' + SNo + '</td>'; }
+    else { TypeText += '<td align=right width=10%>Admit&#160;&#160;&#160; : </td><td colspn=2 width=20% >' + $('#AdmitDate').val() + '</td>'; }
 
     myWindow.document.write('<table style="font-size:70%;border-top:1px solid grey;border-left:1px solid grey;border-right:1px solid grey" width=100% ><tr ><td width=10% align=left >OP#&#160;&#160; :</td><td colspan=4 align=left width=40%>' + $('#OpNo').val() + '</td><td align=right width=10%>Date&#160;&#160;&#160;&#160;&#160;&#160;  </td><td  colspn=2 width=20% >:' + $('#BillDate').val() + '</td></tr>');
     myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=40%>' + $('#Name').val() + '</td><td align=right width=10%>Age/Sex</td><td colspn=2 width=20% >:' + Age + '</td></tr>');
@@ -2991,10 +2652,8 @@ var billhead="IP BILL"
     myWindow.document.write('</table>');
 
     var HeaderRow = '';
-    if (Bill == 'LB')
-    { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=7 align=center >TestName</td><td align=right>Amount</td></tr>'; }
-    else
-    { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=5 align=center width=50%>Description</td><td align=center >Qty</td><td align=right >Rate</td><td align=right>Amount</td></tr>'; }
+    if (Bill == 'LB') { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=7 align=center >TestName</td><td align=right>Amount</td></tr>'; }
+    else { HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td colspan=5 align=center width=50%>Description</td><td align=center >Qty</td><td align=right >Rate</td><td align=right>Amount</td></tr>'; }
 
     myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
 
@@ -3002,10 +2661,8 @@ var billhead="IP BILL"
         var Id = parseInt(i + 1);
         if ($('#TestName' + Id).length) {
             Rowcount += 1;
-            if (Bill == 'LB')
-            { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
-            else
-            { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            if (Bill == 'LB') { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=7>' + $('#TestName' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
+            else { myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#slrow' + Id).text() + '</td><td style="padding-left:5px"  colspan=5>' + $('#TestCode' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#PQty' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#PRate' + Id).val() + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#TestAmount' + Id).val()) + '</td></tr>'); }
 
             if (Rowcount % MaxCnt == 0) {
                 //Rowcount = 0;
@@ -3014,55 +2671,51 @@ var billhead="IP BILL"
         }
     }
 
-        var RoughRow = '';
-        if (Bill == 'LB')
-        {
-           // RoughRow += '<tr class=brtd2><td style="border-left:1px solid grey;" align=center>&#160;</td><td style="padding-left:5px" colspan=2></td><td style="padding-left:5px" colspan=3></td><td align=center></td><td align=right style="padding-right:5px"></td><td align=right style="border-right:1px solid grey;padding-right:5px"></td></tr>';
-        }
-        else
-        {
-           // RoughRow += '<tr class=brtd2><td style="border-left:1px solid grey;" align=center>&#160;</td><td style="padding-left:5px" colspan=5></td><td style="padding-left:5px" ></td><td style="padding-left:5px" ></td><td align=right style="border-right:1px solid grey;padding-right:5px"></td></tr>';
-        }
+    var RoughRow = '';
+    if (Bill == 'LB') {
+        // RoughRow += '<tr class=brtd2><td style="border-left:1px solid grey;" align=center>&#160;</td><td style="padding-left:5px" colspan=2></td><td style="padding-left:5px" colspan=3></td><td align=center></td><td align=right style="padding-right:5px"></td><td align=right style="border-right:1px solid grey;padding-right:5px"></td></tr>';
+    }
+    else {
+        // RoughRow += '<tr class=brtd2><td style="border-left:1px solid grey;" align=center>&#160;</td><td style="padding-left:5px" colspan=5></td><td style="padding-left:5px" ></td><td style="padding-left:5px" ></td><td align=right style="border-right:1px solid grey;padding-right:5px"></td></tr>';
+    }
 
-        var norow = Rowcount;
-        if (((MaxCnt - 10) - Rowcount) >= 0)
-        {
-            for (var a = 1; a <= (MaxCnt - 10) - Rowcount; a++) {
-               // myWindow.document.write(RoughRow);
+    var norow = Rowcount;
+    if (((MaxCnt - 10) - Rowcount) >= 0) {
+        for (var a = 1; a <= (MaxCnt - 10) - Rowcount; a++) {
+            // myWindow.document.write(RoughRow);
+        }
+    }
+    else {
+        norow = 10;
+        for (var a = 1; a <= (MaxCnt) - norow; a++) {
+            //myWindow.document.write(RoughRow);
+            Rowcount++;
+            if (Rowcount % MaxCnt == 0) {
+                Rowcount = 0;
+                // myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=180px colspan=8></td></tr>');
             }
         }
-        else
-        {
-            norow = 10;
-            for (var a = 1; a <= (MaxCnt) - norow; a++) {
-                //myWindow.document.write(RoughRow);
-                Rowcount++;
-                if (Rowcount % MaxCnt == 0) {
-                    Rowcount = 0;
-                   // myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=180px colspan=8></td></tr>');
-                }
-            }
-        }
-        if (parseFloat($('#DiscAmt').val() || 0) != 0) {
+    }
+    if (parseFloat($('#DiscAmt').val() || 0) != 0) {
 
-            myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=7 font-size: 13px;" align=center style="font-weight:bold"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;font-weight:bold" align=center >Sub Total</td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;font-weight:bold"  align=right >' + addCommas(parseFloat($('#TotalAmt').text()).toFixed(Decimal)) + '</td></tr>');
-            myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=7 font-size: 13px;" align=center style="font-weight:bold"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;font-weight:bold" align=center >Discount ' + parseFloat($('#DiscPercent').val() || 0) + '%</td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;font-weight:bold"  align=right >' + addCommas(parseFloat($('#DiscAmt').val()).toFixed(Decimal)) + '</td></tr>');
-        }
+        myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=7 font-size: 13px;" align=center style="font-weight:bold"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;font-weight:bold" align=center >Sub Total</td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;font-weight:bold"  align=right >' + addCommas(parseFloat($('#TotalAmt').text()).toFixed(Decimal)) + '</td></tr>');
+        myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=7 font-size: 13px;" align=center style="font-weight:bold"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;font-weight:bold" align=center >Discount ' + parseFloat($('#DiscPercent').val() || 0) + '%</td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;font-weight:bold"  align=right >' + addCommas(parseFloat($('#DiscAmt').val()).toFixed(Decimal)) + '</td></tr>');
+    }
 
-        myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=7 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;font-weight:bold" align=center >Total</td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;font-weight:bold"  align=right >' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
-        myWindow.document.write('</table>');
+    myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=7 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;font-weight:bold" align=center >Total</td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;font-weight:bold"  align=right >' + addCommas(parseFloat($('#GrandTotal').text()).toFixed(Decimal)) + '</td></tr>');
+    myWindow.document.write('</table>');
 
-        //myWindow.document.write('<table><tr style="border:none"><td height=15px colspan=8></td></tr></table>');
-        //myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center >Sample Collected By</td><td align=center>Sample Received in the lab by</td><td colspan=2 align=center >Sample Tested By</td><td align=center>Telephoned</td><td align=right>Result Sent/Signed</td><td align=right>Cashier</td></tr>');
-        //myWindow.document.write('<tr class=violetbg style="border-bottom:1px solid grey;height:50px"><td ></td><td align=center> </td><td colspan=2 align=center ></td><td align=center></td><td align=right></td><td align=right></td></tr>');
-        //myWindow.document.write('</table>');
-   
-        //myWindow.document.write('<table width=100%><tr style="height:15px"><td colspan=8></td></tr>');
-        //myWindow.document.write('<tr align=left><td colspan=6>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Address + '</td></tr><tr align=left><td colspan=6>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.PhoneNo + '</td></tr>');
-        //myWindow.document.write('</table>');
+    //myWindow.document.write('<table><tr style="border:none"><td height=15px colspan=8></td></tr></table>');
+    //myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center >Sample Collected By</td><td align=center>Sample Received in the lab by</td><td colspan=2 align=center >Sample Tested By</td><td align=center>Telephoned</td><td align=right>Result Sent/Signed</td><td align=right>Cashier</td></tr>');
+    //myWindow.document.write('<tr class=violetbg style="border-bottom:1px solid grey;height:50px"><td ></td><td align=center> </td><td colspan=2 align=center ></td><td align=center></td><td align=right></td><td align=right></td></tr>');
+    //myWindow.document.write('</table>');
 
-        myWindow.print();
-        myWindow.close();
+    //myWindow.document.write('<table width=100%><tr style="height:15px"><td colspan=8></td></tr>');
+    //myWindow.document.write('<tr align=left><td colspan=6>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Address + '</td></tr><tr align=left><td colspan=6>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.PhoneNo + '</td></tr>');
+    //myWindow.document.write('</table>');
+
+    myWindow.print();
+    myWindow.close();
 }
 
 
@@ -3206,7 +2859,7 @@ function PrintthisBillSalesCOPYAUTOMOBILESold(Rowlen) {
     myWindow.document.write('<tr><td height=140px colspan=17></td></tr>');
     myWindow.document.write('<tr><td width=3px></td><td colspan=7 ></td><td align=center colspan=4><b>TAX INVOICE</b></td><td colspan=2></td><td colspan=3></td><tr>')
 
-    myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + (divToPrint.outerHTML) 
+    myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + (divToPrint.outerHTML)
         + '</td><td align=right width=18% colspan=2><b>INV NO :</b></td><td width=18% colspan=3><b>' + $('#txtBillSlNocopy').val() + '</td><tr>')
     myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN#</b></td><td align=right colspan=2><b>INV NO :</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
     myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN#</b></td><td align=right colspan=2><b>LPO NO :</b></td><td colspan=3></td><tr>')
@@ -3262,7 +2915,7 @@ function PrintthisBillSalesAUTOMOBILES(Rowlen) {
     Adrs = ($.trim($('#txtaddress').val())).match(/.{1,55}/g);
     var Addres = ''; var adrlen = 0;
     if (Adrs != null) {
-        Addres = Adrs[0]; 
+        Addres = Adrs[0];
         adrlen = Adrs.length;
     }
 
@@ -3300,7 +2953,7 @@ function PrintthisBillSalesAUTOMOBILES(Rowlen) {
 
         //}        
         myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' +
-        '</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
+            '</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
     }
 
     myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr><td colspan=17><table class=printbdy>');
@@ -3317,7 +2970,7 @@ function PrintthisBillSalesAUTOMOBILES(Rowlen) {
             myWindow.document.write('<tr><td height=400px colspan=17></td></tr>');
 
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-             + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#savedbillno').val() + '</td><tr>');
+                + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#savedbillno').val() + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b></b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN# : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
             myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr></table></td></tr>');
@@ -3356,7 +3009,7 @@ function PrintthisBillSalesAUTOMOBILES(Rowlen) {
 
     myWindow.print();
     myWindow.close()
-} 
+}
 
 //New Print Function For AutoMobilesCopy 
 function PrintthisBillSalesCOPYAUTOMOBILES(Rowlen) {
@@ -3371,10 +3024,10 @@ function PrintthisBillSalesCOPYAUTOMOBILES(Rowlen) {
     //alert(divToPrint.outerHTML)
 
     var Adrs = '';
-     Adrs = ($.trim($('#txtaddress').val())).match(/.{1,55}/g);  
+    Adrs = ($.trim($('#txtaddress').val())).match(/.{1,55}/g);
 
     //Adrs = Adrs.substring(0, 40);
-  
+
     var Cust = $.trim($('#txtcustomer').val());
 
     Cust = Cust.substring(0, 30);
@@ -3383,13 +3036,12 @@ function PrintthisBillSalesCOPYAUTOMOBILES(Rowlen) {
     if ($('#Trnno').val() != '' && $('#Trnno').val() != 0)
         TRN = $('#Trnno').val();
 
-    var Addres = ''; var adrlen = 0;  
-    if (Adrs != null)
-    {
+    var Addres = ''; var adrlen = 0;
+    if (Adrs != null) {
         Addres = Adrs[0];
-        adrlen=Adrs.length;
+        adrlen = Adrs.length;
     }
-   
+
     var AmountinWords = convertNumberToWords($('#GrandTotal').val())
     var myWindow = window.open("", "", "width=1500,height=1500");
     myWindow.document.write('<style type="text/css"> @page { margin-left:0cm;}  .printbdy{ border-collapse: collapse;font-family:tahoma; font-size: 12px;} .printbdy td {border:0.0px solid black;}.tbl1{ }#header, #nav, .noprint{display: none;}.print{ page-break-after: always;} </style>');
@@ -3402,24 +3054,23 @@ function PrintthisBillSalesCOPYAUTOMOBILES(Rowlen) {
     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Addres + ' </b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
 
     if (adrlen == 1 || adrlen == 0) {
-       
+
         myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN# : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
     }
-  
-    else if (adrlen > 1) 
-   {
-      
-        myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[1] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>') 
-       // for (var p = 1; p < Adrs.length; p++) {
-       //     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[p] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
 
-       //}        
-        myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' + 
-        '</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
+    else if (adrlen > 1) {
+
+        myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[1] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
+        // for (var p = 1; p < Adrs.length; p++) {
+        //     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[p] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
+
+        //}        
+        myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' +
+            '</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
     }
-    
-       
-   
+
+
+
 
     myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr><td colspan=17><table class=printbdy>');
     for (var i = 0; i <= Rowlen; i++) {
@@ -3435,7 +3086,7 @@ function PrintthisBillSalesCOPYAUTOMOBILES(Rowlen) {
             myWindow.document.write('<tr><td height=400px colspan=17></td></tr>');
 
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-             + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#txtBillSlNocopy').val() + '</td><tr>');
+                + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#txtBillSlNocopy').val() + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b></b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN# : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
             myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr></table></td></tr>');
@@ -3477,9 +3128,9 @@ function PrintthisBillSalesCOPYAUTOMOBILES(Rowlen) {
 }
 
 //Print Function For AutoMobiles With Bin During Copy fl:1,Save-fl:0
-function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) { 
+function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen, fl) {
     var Rowcount = 0; gridtotal = 0;
-   
+
     //JsBarcode("#barcode1", $('#txtBillSlNocopy').val())
 
     var divToPrint = document.getElementById("barcode1");
@@ -3495,7 +3146,7 @@ function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) {
         billnum = $('#SalesDepartment').val() + ' - ' + $('#txtBillSlNocopy').val();
 
     //var Adrs = $.trim($('#txtaddress').val());
-   
+
     //Adrs = Adrs.substring(0, 40);
     var Adrs = '';
     Adrs = ($.trim($('#txtaddress').val())).match(/.{1,54}/g);
@@ -3505,9 +3156,9 @@ function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) {
         adrlen = Adrs.length;
     }
 
-    var Cust = $.trim($('#txtcustomer').val()); 
-   
-    Cust = Cust.substring(0, 30);  
+    var Cust = $.trim($('#txtcustomer').val());
+
+    Cust = Cust.substring(0, 30);
 
     var TRN = '';
     if ($('#Trnno').val() != '' && $('#Trnno').val() != 0)
@@ -3522,24 +3173,23 @@ function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) {
     myWindow.document.write('<tr><td width=3px></td><td colspan=7 ></td><td align=center colspan=4><b>TAX INVOICE</b></td><td colspan=2></td><td colspan=3></td><tr>')
 
     myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>' + Cust + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-        + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + billnum  + '</td><tr>')
+        + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + billnum + '</td><tr>')
     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Addres + ' </b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
     //myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>') 
-    if (adrlen == 1 || adrlen == 0) { 
-       
-        myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN# : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')  
-    }
-  
-    else if (adrlen > 1) 
-   {
-      
-        myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[1] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>') 
-       // for (var p = 1; p < Adrs.length; p++) {
-       //     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[p] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
+    if (adrlen == 1 || adrlen == 0) {
 
-       //}        
-        myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' + 
-        '</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
+        myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN# : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
+    }
+
+    else if (adrlen > 1) {
+
+        myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[1] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
+        // for (var p = 1; p < Adrs.length; p++) {
+        //     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[p] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
+
+        //}        
+        myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' +
+            '</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
     }
 
 
@@ -3548,8 +3198,8 @@ function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) {
         var Id = parseInt(i + 1);
         if ($('#txtproduct' + Id).length) {
             Rowcount += 1;
-            var bin='';
-            if ($('#Bin' + Id).text() != '')           
+            var bin = '';
+            if ($('#Bin' + Id).text() != '')
                 bin = $('#Bin' + Id).text();
             var loc = ''
             if (($('#select_location' + Id + ' option:selected').html() != undefined) && ($('#select_location' + Id + ' option:selected').html() != ''))
@@ -3563,7 +3213,7 @@ function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) {
             myWindow.document.write('<tr><td height=400px colspan=17></td></tr>');
 
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-             + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + billnum + '</td><tr>');
+                + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + billnum + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b></b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN# : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
             myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr></table></td></tr>');
@@ -3608,7 +3258,7 @@ function PrintthisBillSalesWITHBINAUTOMOBILES(Rowlen,fl) {
 
 //---------------------------------------------Spareparts
 //Print Function For SPAREPARTS With Bin During Copy fl:1,Save-fl:0 
-function PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, fl) { 
+function PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, fl) {
     var Rowcount = 0; gridtotal = 0;
 
     //JsBarcode("#barcode1", $('#txtBillSlNocopy').val())
@@ -3650,7 +3300,7 @@ function PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, fl) {
     myWindow.document.write('<style type="text/css"> @page { margin-left:0cm;}  .printbdy{ border-collapse: collapse;font-family:tahoma; font-size: 12px;} .printbdy td {border:0.0px solid black;}.tbl1{ }#header, #nav, .noprint{display: none;}.print{ page-break-after: always;} </style>');
     myWindow.document.write('<table width="100%" class="printbdy">');
     myWindow.document.write('<tr><td height=105px colspan=17></td></tr>');
- 
+
     myWindow.document.write('<tr><td width=3px></td><td colspan=7 ><b>' + Cust + '</b></td><td align=center colspan=4><b>TAX INVOICE</b></td><td width=18% align=right colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + billnum + '</b></td><tr>')
 
     myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b> TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
@@ -3670,7 +3320,7 @@ function PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, fl) {
     else
         myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
 
-    if (grdetails!='')
+    if (grdetails != '')
         myWindow.document.write('<tr><td></td><td colspan=12 ><b>' + grdetails + ' </b></td><tr>')
     else
         myWindow.document.write('<tr><td></td><td colspan=12 >.</td><tr>')
@@ -3698,19 +3348,19 @@ function PrintthisBillSalesWITHBINSPAREPARTS(Rowlen, fl) {
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center colspan=4> <b>TAX INVOICE</b> </br>' +
                 '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#txtBillSlNocopy').val() + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN : ' + TRN + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-        + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
+                + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
 
             if ($('#txtlgrgname').val() != '')
-            myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + $('#txtlgrgname').val() + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
-            else
-            myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
-
-            if (grdetails != '')
-            myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + grdetails + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+                myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + $('#txtlgrgname').val() + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
             else
                 myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
 
-            myWindow.document.write('<tr><td></td><td colspan=7 ></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>') 
+            if (grdetails != '')
+                myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + grdetails + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+            else
+                myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+
+            myWindow.document.write('<tr><td></td><td colspan=7 ></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
 
             myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr></table></td></tr>');
             Rowcount = 0;
@@ -3821,7 +3471,7 @@ function PrintthisBillSalesSPAREPARTS(Rowlen) {
     else
         myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b>' + CHtext + '</b></td><td colspan=3>' + ChassisNo + '</td><tr>')
 
-    if (grdetails!='')
+    if (grdetails != '')
         myWindow.document.write('<tr><td></td><td colspan=12 ><b>' + grdetails + ' </b></td><tr>')
     else
         myWindow.document.write('<tr><td></td><td colspan=12 >.</td><tr>')
@@ -3844,14 +3494,14 @@ function PrintthisBillSalesSPAREPARTS(Rowlen) {
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center colspan=4> <b>TAX INVOICE</b> </br>' +
                 '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#savedbillno').val() + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN : ' + TRN + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-        + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
+                + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
             if ($('#txtlgrgname').val() != '')
-            myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + $('#txtlgrgname').val() + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+                myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + $('#txtlgrgname').val() + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
             else
-            myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+                myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
 
-            if (grdetails != '') 
-               myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + grdetails + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+            if (grdetails != '')
+                myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + grdetails + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
             else
                 myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
 
@@ -3890,7 +3540,7 @@ function PrintthisBillSalesSPAREPARTS(Rowlen) {
 
     myWindow.print();
     myWindow.close()
-} 
+}
 
 
 //New Print Function For SPAREPARTS 
@@ -3933,7 +3583,7 @@ function PrintthisBillSalesCOPYSPAREPARTS(Rowlen) {
 
     myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b> TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
         + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160; &#160;:</b></td><td width=18% colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
-  
+
 
     var grdetails = '';
     if ($('#PhoneNo').val() != '' && $('#txtaddress').val() != '')
@@ -3961,7 +3611,7 @@ function PrintthisBillSalesCOPYSPAREPARTS(Rowlen) {
     else
         myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b>' + CHtext + '</b></td><td colspan=3>' + ChassisNo + '</td><tr>')
 
-    if (grdetails!='')
+    if (grdetails != '')
         myWindow.document.write('<tr><td></td><td colspan=12 ><b>' + grdetails + ' </b></td><tr>')
     else
         myWindow.document.write('<tr><td></td><td colspan=12 >.</td><tr>')
@@ -3977,10 +3627,10 @@ function PrintthisBillSalesCOPYSPAREPARTS(Rowlen) {
 
         if (Rowcount % 34 == 0) {
             myWindow.document.write('<tr><td height=350px colspan=17></td></tr>');
-            myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center colspan=4> <b>TAX INVOICE</b> </br>' + 
+            myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center colspan=4> <b>TAX INVOICE</b> </br>' +
                 '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + $('#SalesDepartment').val() + ' - ' + $('#txtBillSlNocopy').val() + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN : ' + TRN + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-        + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
+                + '</td><td align=right width=18% colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + ' : ' + $('#CurrentTimeSales').val() + '</td><tr>')
 
             if ($('#txtlgrgname').val() != '')
                 myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + $('#txtlgrgname').val() + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
@@ -3988,7 +3638,7 @@ function PrintthisBillSalesCOPYSPAREPARTS(Rowlen) {
                 myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
 
             if (grdetails != '')
-            myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + grdetails + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
+                myWindow.document.write('<tr><td></td><td colspan=7 ><b>' + grdetails + ' </b></td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
             else
                 myWindow.document.write('<tr><td></td><td colspan=7 >.</td><td align=right colspan=2><b> &#160;</b></td><td colspan=3></td><tr>')
 
@@ -4035,9 +3685,8 @@ function PrintthisBillSalesCOPYSPAREPARTS(Rowlen) {
 //---------------------------------------------End Spareparts
 
 //---------------------------------------------Sales Order
-function PrintthisBillSalesOrder(Rowlen)
-{
-   
+function PrintthisBillSalesOrder(Rowlen) {
+
     var Rowcount = 0; gridtotal = 0;
 
     //JsBarcode("#barcode1", $('#txtBillSlNocopy').val())
@@ -4084,13 +3733,13 @@ function PrintthisBillSalesOrder(Rowlen)
     //}
 
     //else
-        if (adrlen > 1) {
-        myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[1] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')           
+    if (adrlen > 1) {
+        myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs[1] + ' </b></td><td align=right colspan=2><b></b></td><td colspan=3></td><tr>')
         //myWindow.document.write('<tr><td></td><td width=40% colspan=7 ><b>TRN : ' + TRN + ' </b></td><td width=20% align=center rowspan=5 colspan=4>' +
         //'</td><td align=right width=18% colspan=2><b>LPO NO &#160;:</b></td><td width=18% colspan=3><b></td><tr>')
-        }
+    }
 
-        var TotalPdQt=0;
+    var TotalPdQt = 0;
     myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr><td colspan=17><table class=printbdy>');
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
@@ -4106,7 +3755,7 @@ function PrintthisBillSalesOrder(Rowlen)
             myWindow.document.write('<tr><td height=400px colspan=17></td></tr>');
 
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-             + '</td><td align=right width=18% colspan=2><b>ORDER# &#160;:</b></td><td width=18% colspan=3><b>' + $('#DepartmentCode').val() + ' - ' + $('#txtBillSlNocopy').val() + '</td><tr>');
+                + '</td><td align=right width=18% colspan=2><b>ORDER# &#160;:</b></td><td width=18% colspan=3><b>' + $('#DepartmentCode').val() + ' - ' + $('#txtBillSlNocopy').val() + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>#9</b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN#</b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
             myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr></table></td></tr>');
@@ -4138,7 +3787,7 @@ function PrintthisBillSalesOrder(Rowlen)
     myWindow.document.write('<tr><td align=center height=26px; colspan=17></td></tr>');
     myWindow.document.write('<tr><td align=center colspan=17>' + $('#dttime').text() + '</td></tr>');
 
-    myWindow.document.write('<tr><td align=center colspan=17>' + $('#UserDetsss').text() + '</td></tr>'); 
+    myWindow.document.write('<tr><td align=center colspan=17>' + $('#UserDetsss').text() + '</td></tr>');
 
     // myWindow.document.write('<tr><td colspan=7>Total  :  ' + AmountinWords + ' Only' + '</td><td align=right><b>' + $('#GrandTotal').val() + '</b></td></tr>');
     // myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
@@ -4150,8 +3799,8 @@ function PrintthisBillSalesOrder(Rowlen)
 
 //Print Sales Save - Local 
 function PrintthisBillSales(Rowlen) {
-   
-    console.log(Rowlen) 
+
+    console.log(Rowlen)
     var AmountinWords = convertNumberToWords($('#GrandTotal').val())
     var myWindow = window.open("", "", "width=1500,height=1500");
     myWindow.document.write('<table width=100%><tr><td rowsspan=2><img src="/app-assets/img/text.png" alt="company logo"></td><td align=right><h2>Sales Invoice</h2></td></tr> <tr><td></td><td align=right><h3># ' + $('#txtBillseriesId option:selected').html() + ' - ' + $('#savedbillno').val() + '</h3></td></tr>      ');
@@ -4159,16 +3808,16 @@ function PrintthisBillSales(Rowlen) {
     myWindow.document.write('<table width=100%><tr><td>#</td><td>Code/Description</td><td>Unit</td><td>Qty</td><td align=center>Rate</td><td align=right>Tax%</td><td align=right>Tax Amount</td><td align=right>Amount</td></tr><tr><td colspan=8><hr></td></tr>');
     var slno = 1;
     for (var i = 0; i <= Rowlen; i++) {
-       
+
         var Id = parseInt(i + 1);
-       
+
         if ($('#txtproduct' + Id).length) {
-        myWindow.document.write('<tr><td>' + slno + '</td><td><b>' + $('#txtproduct' + Id).val() + '</b></td></tr><tr><td></td><td>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + $('#txtrate' + Id).val() + '</td>   <td align=center>' + $('#txttaxpercent' + Id).val() + '</td>  <td align=right>' + $('#txttaxamnt' + Id).val() + '</td>         <td align=right>' + $('#txtamnt' + Id).val() + '</td></tr>');
-        slno++;
+            myWindow.document.write('<tr><td>' + slno + '</td><td><b>' + $('#txtproduct' + Id).val() + '</b></td></tr><tr><td></td><td>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + $('#txtrate' + Id).val() + '</td>   <td align=center>' + $('#txttaxpercent' + Id).val() + '</td>  <td align=right>' + $('#txttaxamnt' + Id).val() + '</td>         <td align=right>' + $('#txtamnt' + Id).val() + '</td></tr>');
+            slno++;
         }
-       
+
     }
-  myWindow.document.write('<tr><td height="40px"  colspan=8></td></tr>'); 
+    myWindow.document.write('<tr><td height="40px"  colspan=8></td></tr>');
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
     myWindow.document.write('<tr><td colspan=7>Total  :  ' + AmountinWords + ' Only' + '</td><td align=right><b>' + $('#GrandTotal').val() + '</b></td></tr>');
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
@@ -4206,18 +3855,18 @@ function PrintthisBillSalesMobile(Rowlen) {
     myWindow.document.write('<table width=100%><tr><td rowsspan=2><img src="/app-assets/img/text.png" alt="company logo"></td><td align=right><h2>Sales Invoice</h2></td></tr> <tr><td></td><td align=right><h3># ' + $('#txtBillseriesId option:selected').html() + ' - ' + $('#savedbillno').val() + '</h3></td></tr>      ');
     myWindow.document.write('<table width=100%><tr><td width=50%>Bill To</td><td></td></tr>  <tr><td>' + $('#txtcustomer').val() + '</td><td align=right>Invoice Date : ' + $('#txtivdate').val() + '</td></tr>   <tr><td>' + $('#txtaddress').val() + '</td><td align=right>Terms : ' + $('#select_payterms option:selected').html() + '</td></tr>  <tr><td>-</td><td align=right>Due Date : ' + $('#txtduedate').val() + '</td></tr> <tr><td>' + $('#select_place option:selected').html() + '</td><td></td></tr><tr><td colspan=2><hr></td></tr></table>')
     myWindow.document.write('<table width=100%><tr><td>#</td><td>Code/Description</td><td>Unit</td><td>Qty</td><td align=center>Rate</td><td align=right>Tax%</td><td align=right>Tax Amount</td><td align=right>Amount</td></tr><tr><td></td><td>الرمز / الوصف</td><td>وحدة</td><td>كمية</td><td align=center>معدل</td><td align=right>ضريبة %</td><td align=right>قيمة الضريبة</td><td align=right>كمية</td></tr><tr><td colspan=8><hr></td></tr>');
-    var slno =1;
+    var slno = 1;
     for (var i = 0; i <= Rowlen; i++) {
-      
+
         var Id = parseInt(i + 1);
         var sr = "";
         if ($('#Otherdescription' + Id).val() != undefined)
-            sr = $('#Otherdescription' + Id).val(); 
-        if ($('#txtproduct' + Id).length) { 
+            sr = $('#Otherdescription' + Id).val();
+        if ($('#txtproduct' + Id).length) {
             myWindow.document.write('<tr><td>' + slno + '</td><td><b>' + $('#txtproduct' + Id).val() + '</b></td></tr><tr><td></td><td>' + $('#ProductDesc' + Id).val() + ' ' + sr + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + $('#txtrate' + Id).val() + '</td>   <td align=center>' + $('#txttaxpercent' + Id).val() + '</td>  <td align=right>' + $('#txttaxamnt' + Id).val() + '</td>         <td align=right>' + $('#txtamnt' + Id).val() + '</td></tr>');
             slno++;
         }
-       
+
     }
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
     myWindow.document.write('<tr><td colspan=7>Total  :  ' + AmountinWords + ' Only' + '</td><td align=right><b>' + $('#GrandTotal').val() + '</b></td></tr>');
@@ -4249,7 +3898,7 @@ function PrintthisBillSalesMobile(Rowlen) {
 }
 
 //Print Sales Save - ORYX 
-function PrintthisBillSalesORYX(Rowlen) { 
+function PrintthisBillSalesORYX(Rowlen) {
 
     console.log(Rowlen)
     var AmountinWords = convertNumberToWords($('#GrandTotal').val())
@@ -4275,7 +3924,7 @@ function PrintthisBillSalesORYX(Rowlen) {
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
     myWindow.document.write('<tr><td colspan=7>Total  :  ' + AmountinWords + ' Only' + '</td><td align=right><b>' + $('#GrandTotal').val() + '</b></td></tr>');
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
-    myWindow.document.write('<tr><td colspan=7>Bill Discount  :  </td><td align=right><b>' + $('#disc').val() + '</b></td></tr>'); 
+    myWindow.document.write('<tr><td colspan=7>Bill Discount  :  </td><td align=right><b>' + $('#disc').val() + '</b></td></tr>');
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
 
     myWindow.document.write('<table style="border-collapse: collapse;" width="100%"><tr><td style="border:1px solid black" rowspan=2 align=center>Taxable value</td><td style="border:1px solid black" colspan=2 align=center>Centeral Tax</td><td style="border:1px solid black" colspan=2  align=center>State Tax</td><td style="border:1px solid black" rowspan=2 align=center>Total Tax Amount</td></tr>');
@@ -4407,11 +4056,11 @@ function PrintthisBillSalesMobileCopy(Rowlen) {
     myWindow.document.write('<tr><td colspan=8>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td colspan=8>' + window.CompanySettingsArray.PhoneNo + '</td></tr><tr><td colspan=8>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr><td colspan=8>' + window.CompanySettingsArray.Email + '</td></tr><tr><td colspan=8>' + window.CompanySettingsArray.TRNNo + '</td></tr>');
 
     myWindow.print();
-}  
+}
 
 
 //Print Sales Copy - ORYX 
-function PrintthisBillSalesCopyORYX(Rowlen) { 
+function PrintthisBillSalesCopyORYX(Rowlen) {
 
     console.log(Rowlen)
 
@@ -4579,8 +4228,8 @@ function PrintthisBillQuotationCopy(Rowlen) {
     //    }
     //}
 
-  
-      myWindow.document.write('<tr><td style="font-family:tahoma; font-size: 10px;" align=right colspan=5><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right><b>' + parseFloat(gridtotal).toFixed(2) + '</b></td></tr>');
+
+    myWindow.document.write('<tr><td style="font-family:tahoma; font-size: 10px;" align=right colspan=5><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right><b>' + parseFloat(gridtotal).toFixed(2) + '</b></td></tr>');
     myWindow.document.write('<tr><td colspan=7 style="font-family:tahoma; font-size: 10px;" align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right><b>' + parseFloat($('#TotalTaxable').val()).toFixed(2) + '</b></td></tr>');
 
     myWindow.document.write('<tr><td colspan=7 style="font-family:tahoma; font-size: 10px;" align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right><b>' + parseFloat($('#TotalTax').val()).toFixed(2) + '</b></td></tr>');
@@ -4595,17 +4244,15 @@ function PrintthisBillQuotationCopy(Rowlen) {
 }
 
 //New Print Function for Quotation Entry New
-function PrintthisBillQuotationNew(Rowlen,Flag)
-{
+function PrintthisBillQuotationNew(Rowlen, Flag) {
     var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-    var AmountinWords = WordwithDecimal($('#GrandTotal').val()); 
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val());
     var myWindow = window.open("", "", "width=1500,height=1500");
 
     var QtnNo = '';
     if (Flag == 0)      //Copy
     { QtnNo = $('#txtQuotationNocopy').val(); }
-    else
-    { QtnNo = $('#savedQuotation').val(); }
+    else { QtnNo = $('#savedQuotation').val(); }
 
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG2);
@@ -4619,7 +4266,7 @@ function PrintthisBillQuotationNew(Rowlen,Flag)
     myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
     myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Quote No.</td><td style="" class=rowbd>' + QtnNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#QtnDate').val() + '</td></tr></table>');
     myWindow.document.write('</td></tr></table></td></tr></table>');
-                                                                             
+
     myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
     myWindow.document.write('<table width=100% frame="box"><tr>');
     myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
@@ -4634,25 +4281,24 @@ function PrintthisBillQuotationNew(Rowlen,Flag)
     myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
     myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
     for (var i = 0; i <= Rowlen; i++) {
-        var Id = parseInt(i + 1);      
+        var Id = parseInt(i + 1);
         if ($('#txtproduct' + Id).length) {
             Rowcount += 1;
-                if (Rowcount % 44 == 0) {           //Border bottom gery for last table row in the page           
-                    myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);                   
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page            
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);                 
-                }
-                if (Rowcount % 44 == 0)
-                {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=255px colspan=8></td></tr>');
-                }
+            if (Rowcount % 44 == 0) {           //Border bottom gery for last table row in the page           
+                myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
             }
+            else {                             //Border bottom lightgery for other tbl rows in the page            
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            }
+            if (Rowcount % 44 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=255px colspan=8></td></tr>');
+            }
+        }
     }
     for (var a = 1; a <= 44 - Rowcount; a++) {
         myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
@@ -4684,8 +4330,7 @@ function PrintthisBillQuotationNewLetter(Rowlen, Flag) {
     var QtnNo = '';
     if (Flag == 0)      //Copy
     { QtnNo = $('#txtQuotationNocopy').val(); }
-    else
-    { QtnNo = $('#savedQuotation').val(); }
+    else { QtnNo = $('#savedQuotation').val(); }
 
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG2);
@@ -4761,15 +4406,15 @@ function PrintthisBillSalesReturn(Rowlen) {
     myWindow.document.write('<table width=100%><tr><td rowsspan=2><img src="/app-assets/img/text.png" alt="company logo"></td><td align=right><h2>Sales Return</h2></td></tr> <tr><td></td><td align=right><h3>Return No - ' + $('#txtBillSlNoSave').val() + '</h3></td></tr>      ');
     myWindow.document.write('<table width=100%><tr><td width=50%>Bill To</td><td></td></tr>  <tr><td>' + $('#txtcustomer').val() + '</td><td align=right colspan=2>Return Date : ' + $('#txtivdate').val() + '</td> <td></td></tr><tr><td>' + $('#txtaddress').val() + '</td></tr><tr><td>' + $('#select_place option:selected').html() + '</td><td></td></tr><tr><td colspan=3><hr></td></tr></table>')
     myWindow.document.write('<table width=100%><tr><td>#</td><td>Code/Description</td><td>Unit</td><td>Qty</td><td align=center>Rate</td><td align=right>Tax%</td><td align=right>Tax Amount</td><td align=right>Amount</td></tr><tr><td colspan=8><hr></td></tr>');
-     var slno =1;
+    var slno = 1;
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
-       
+
         if ($('#txtproduct' + Id).length) {
             myWindow.document.write('<tr><td>' + slno + '</td><td><b>' + $('#txtproduct' + Id).val() + '</b></td></tr><tr><td></td><td>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + $('#txtrate' + Id).val() + '</td>   <td align=center>' + $('#txttaxpercent' + Id).val() + '</td>  <td align=right>' + $('#txttaxamnt' + Id).val() + '</td>         <td align=right>' + $('#txtamnt' + Id).val() + '</td></tr>');
             slno++;
         }
-      
+
     }
     myWindow.document.write('<tr><td colspan=8><hr></td></tr>');
     myWindow.document.write('<tr><td colspan=7>Total  :  ' + AmountinWords + ' Only' + '</td><td align=right><b>' + $('#GrandTotal').val() + '</b></td></tr>');
@@ -4831,7 +4476,7 @@ function PrintthisBillSalesReturnCopy(Rowlen) {
 
     for (var j = 0; j < DefaultTaxArray.length; j++) {
 
-       
+
 
         var k = DefaultTaxArray[j];
         var a = parseInt(k); //parseInt(j + 1); 
@@ -4857,24 +4502,22 @@ function PrintthisBillSalesReturnCopy(Rowlen) {
 }
 
 //New Print Function For Sales Return AutoMobilesCopy & Save (flag-0 : save, flag-1 : Copy) 
-function PrintthisBillSalesReturnAutoMobile(Rowlen,flag) {
+function PrintthisBillSalesReturnAutoMobile(Rowlen, flag) {
     var Rowcount = 0; gridtotal = 0;
     var BillSlNo;
-    if (flag == 1)
-    {
+    if (flag == 1) {
         JsBarcode("#barcode1", $('#txtBillSlNocopy').val());
-        BillSlNo = $("#DepartmentCode").val()+' - '+ $('#txtBillSlNocopy').val();
+        BillSlNo = $("#DepartmentCode").val() + ' - ' + $('#txtBillSlNocopy').val();
     }
-    
-    else if (flag == 0)
-    {
+
+    else if (flag == 0) {
         JsBarcode("#barcode1", $('#txtBillSlNoSave').val());
-        BillSlNo = $("#DepartmentCode").val() + ' - ' + $('#txtBillSlNoSave').val(); 
-    } 
-    
+        BillSlNo = $("#DepartmentCode").val() + ' - ' + $('#txtBillSlNoSave').val();
+    }
+
     console.log('BillSlNo:' + BillSlNo)
-    console.log('flag:' + flag) 
-   
+    console.log('flag:' + flag)
+
 
     var divToPrint = document.getElementById("barcode1");
     divToPrint.style.width = "auto";
@@ -4903,7 +4546,7 @@ function PrintthisBillSalesReturnAutoMobile(Rowlen,flag) {
     myWindow.document.write('<tr><td></td><td colspan=7 ><b> ' + Adrs + ' </b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
     myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN : ' + TRN + ' </b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
 
-    
+
     myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr><td colspan=17><table class=printbdy>');
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
@@ -4911,15 +4554,15 @@ function PrintthisBillSalesReturnAutoMobile(Rowlen,flag) {
             Rowcount += 1;
             myWindow.document.write('<tr><td  align=center width=59px>&#160;&#160;' + Id + '</td><td width=103px colspan=2>' + $('#txtproduct' + Id).val() + '</td><td width=350px colspan=8>' + $('#ProductDesc' + Id).val() + '</td><td align=center width=50px>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td width=62px align=center>' + $('#txtquantity' + Id).val() + '</td><td width=80px align=right colspan=2>' + $('#txtrate' + Id).val() + '</td><td width=97px align=right colspan=2>' + $('#txttaxableamnt' + Id).val() + '</td><tr>');
             gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0)
-            TotQty += parseFloat($('#txtquantity' + Id).val() || 0); 
+            TotQty += parseFloat($('#txtquantity' + Id).val() || 0);
         }
 
-        if (Rowcount % 34 == 0) { 
+        if (Rowcount % 34 == 0) {
 
             myWindow.document.write('<tr><td height=400px colspan=17></td></tr>');
 
             myWindow.document.write('<tr><td colspan=17><table class="printbdy" width=100%><tr><td></td><td width=40% colspan=7 ><b>' + $('#txtcustomer').val() + '</b></td><td width=20% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-             + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + BillSlNo + '</td><tr>');
+                + '</td><td align=right width=18% colspan=2><b>INV NO &#160;:</b></td><td width=18% colspan=3><b>' + BillSlNo + '</td><tr>');
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>#9</b></td><td align=right colspan=2><b>Date &#160;&#160;&#160;&#160;&#160;:</b></td><td colspan=3>' + $('#txtivdate').val() + '</td><tr>')
             myWindow.document.write('<tr><td></td><td colspan=7 ><b>TRN#</b></td><td align=right colspan=2><b>LPO NO &#160;:</b></td><td colspan=3></td><tr>')
             myWindow.document.write('<tr><td height=50px colspan=17></td></tr><tr></table></td></tr>');
@@ -4936,7 +4579,7 @@ function PrintthisBillSalesReturnAutoMobile(Rowlen,flag) {
 
     myWindow.document.write('<tr><td height=10px></td></tr>');
     myWindow.document.write('<tr><td align=right colspan=13><b>Total Qty :  ' + TotQty + ' </b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>' + gridtotal.toFixed(2) + '</b></td><tr>');
-   // myWindow.document.write('<tr><td align=right colspan=13></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>DISCOUNT&#160;&#160;&#160;&#160;</b></td><td  align=right style="font-family:tahoma; font-size: 10px;" colspan=2><b>' + parseFloat($('#disc').val()).toFixed(2) + '</b></td><tr>');
+    // myWindow.document.write('<tr><td align=right colspan=13></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>DISCOUNT&#160;&#160;&#160;&#160;</b></td><td  align=right style="font-family:tahoma; font-size: 10px;" colspan=2><b>' + parseFloat($('#disc').val()).toFixed(2) + '</b></td><tr>');
 
     myWindow.document.write('<tr><td colspan=13>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AED  ' + AmountinWords + ' Only' + '</td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b> TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right colspan=2><b>' + parseFloat($('#TotalTaxable').val()).toFixed(2) + '</b></td><tr>');
 
@@ -4958,11 +4601,11 @@ function PrintthisBillSalesReturnAutoMobile(Rowlen,flag) {
 
     myWindow.print();
     myWindow.close()
-} 
+}
 
 
 //NEW PRINT FUCTION FOR SALES RETURN
-function PrintthisSalesRETURNAUTO(Rowlen,flag) {
+function PrintthisSalesRETURNAUTO(Rowlen, flag) {
     var myWindow = window.open("", "", "width=1500,height=1500");
     var AmountinWords = convertNumberToWords($('#GrandTotal').val())
     var TotQty = 0;
@@ -4973,18 +4616,18 @@ function PrintthisSalesRETURNAUTO(Rowlen,flag) {
     //var address = ($('#txtaddress').val()).substr(0, 60);
 
     if (flag == 0)
-        RBillNo = $('#txtBillSlNoSave').val(); 
+        RBillNo = $('#txtBillSlNoSave').val();
     else if (flag == 1)
-        RBillNo = $('#txtBillSlNocopy').val(); 
+        RBillNo = $('#txtBillSlNocopy').val();
 
     myWindow.document.write('<table width=100%><tr><td align=center><h3>SALES RETURN</h3></td></tr>');
 
 
     myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px;table-layout:fixed" width=100%><tr><td align=left colspan=6>'
-       + $('#txtcustomer').val() + '</td><td >Sales Ret No </td><td align=left colspan=2 > : ' + RBillNo + '</td></tr><tr><td colspan=6></td ><td>Ret Date </td><td colspan=2> : '
-       + $('#txtivdate').val() + '</td></tr><tr><td colspan=6></td><td>Invoice No. </td><td colspan=2> : ' + $('#select_transfer').val() + ' </td></tr><tr><td colspan=6>'
-       + ($('#txtaddress').val()).substr(0, 60) + '</td><td> Salesman </td><td colspan=2> : ' + ($('#select_salesman').find("option:selected").text()).substr(0, 25) + '</td></tr><tr><td align=left colspan=3>phone : '
-       + window.CompanySettingsArray.PhoneNo + '</td><td colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td>LPO </td><td colspan=2> : ' + $('#txtlpono').val() + '</td></tr>');
+        + $('#txtcustomer').val() + '</td><td >Sales Ret No </td><td align=left colspan=2 > : ' + RBillNo + '</td></tr><tr><td colspan=6></td ><td>Ret Date </td><td colspan=2> : '
+        + $('#txtivdate').val() + '</td></tr><tr><td colspan=6></td><td>Invoice No. </td><td colspan=2> : ' + $('#select_transfer').val() + ' </td></tr><tr><td colspan=6>'
+        + ($('#txtaddress').val()).substr(0, 60) + '</td><td> Salesman </td><td colspan=2> : ' + ($('#select_salesman').find("option:selected").text()).substr(0, 25) + '</td></tr><tr><td align=left colspan=3>phone : '
+        + window.CompanySettingsArray.PhoneNo + '</td><td colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td>LPO </td><td colspan=2> : ' + $('#txtlpono').val() + '</td></tr>');
 
 
     //myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px" width=100%><tr><td align=left colspan=6>' + $('#txtcustomer').val() + '</td><td  align=left style="padding-left:12%">Sales Ret No </td><td  align=left > : </td><td align=left style="padding-left:1%">' + RBillNo + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Ret Date </td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#txtivdate').val() + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Invoice No.</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_transfer').val() + '</td></tr><tr><td align=left colspan=6>' + $('#txtaddress').val() + '</td><td  align=left style="padding-left:12%">Salesman</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_salesman').find("option:selected").text() + '</td></tr><tr><td align=left colspan=3>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td><td align=left colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td  align=left style="padding-left:12%">LPO </td><td  align=left > : </td><td></td></tr>');
@@ -5007,19 +4650,19 @@ function PrintthisSalesRETURNAUTO(Rowlen,flag) {
         }
 
     }
-     for (var a = 1; a <= 33 - Rowcount; a++) {
-         //myWindow.document.write('<tr><td  colspan=17>&#160;</td></tr>');
-         myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td><td align=right style="padding-right:5px">1</td></tr>');
+    for (var a = 1; a <= 33 - Rowcount; a++) {
+        //myWindow.document.write('<tr><td  colspan=17>&#160;</td></tr>');
+        myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td><td align=right style="padding-right:5px">1</td></tr>');
 
     }
 
-     myWindow.document.write('<tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;">Total  :  ' + AmountinWords + ' Only' + '</td><td align=center style="border-right:1px solid white;" >' + TotQty + ' </td><td style="border-right:1px solid white;" align=right>Total</td><td align=right style="">' + total.toFixed(2) + '</td></tr><tr style="border-right:1px solid black;"><td style="border-right:1px solid white;"></td><td style="border-right:1px solid white;"colspan=3></td><td align=center style="border-right:1px solid white;" ></td><td style="border-right:1px solid white;" align=right>Disc.</td><td align=right style="">' + parseFloat($('#disc').val()).toFixed(Decimal) + '</td></tr><tr ><td style="border-right-style:none;border-left-style:none;"></td><td style="border-right-style:none;border-left-style:none;" colspan=3></td><td align=center style="border-right-style:none;border-left-style:none;" ></td><td style="border-right-style:none;border-left-style:none;" align=right>RoundOff</td><td align=right style="border-left-style:none;">' + parseFloat($('#TotRoundOff').val()).toFixed(Decimal) + '</td></tr><tr ><td style="border-right-style:none;border-left-style:none;"></td><td style="border-right-style:none;border-left-style:none;" colspan=3></td><td align=center style="border-right-style:none;border-left-style:none;" ></td><td style="border-right-style:none;border-left-style:none;" align=right>NetTotal</td><td align=right style="border-left-style:none;">' + parseFloat($('#GrandTotal').val()).toFixed(Decimal) + '</td></tr>');
+    myWindow.document.write('<tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;">Total  :  ' + AmountinWords + ' Only' + '</td><td align=center style="border-right:1px solid white;" >' + TotQty + ' </td><td style="border-right:1px solid white;" align=right>Total</td><td align=right style="">' + total.toFixed(2) + '</td></tr><tr style="border-right:1px solid black;"><td style="border-right:1px solid white;"></td><td style="border-right:1px solid white;"colspan=3></td><td align=center style="border-right:1px solid white;" ></td><td style="border-right:1px solid white;" align=right>Disc.</td><td align=right style="">' + parseFloat($('#disc').val()).toFixed(Decimal) + '</td></tr><tr ><td style="border-right-style:none;border-left-style:none;"></td><td style="border-right-style:none;border-left-style:none;" colspan=3></td><td align=center style="border-right-style:none;border-left-style:none;" ></td><td style="border-right-style:none;border-left-style:none;" align=right>RoundOff</td><td align=right style="border-left-style:none;">' + parseFloat($('#TotRoundOff').val()).toFixed(Decimal) + '</td></tr><tr ><td style="border-right-style:none;border-left-style:none;"></td><td style="border-right-style:none;border-left-style:none;" colspan=3></td><td align=center style="border-right-style:none;border-left-style:none;" ></td><td style="border-right-style:none;border-left-style:none;" align=right>NetTotal</td><td align=right style="border-left-style:none;">' + parseFloat($('#GrandTotal').val()).toFixed(Decimal) + '</td></tr>');
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var today1 = new Date();
     var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
     myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
-   
+
     myWindow.document.write('<tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td>Received By.</td></tr><tr><td align=right>Time:  ' + time + '</td></tr><tr><td align=right>Date: ' + date + ' </td></tr>');
 
 
@@ -5143,7 +4786,7 @@ function PrintthisUnloadPurchasePerforma(Rowlen) {
         }
 
     }
-  
+
     myWindow.print();
 }
 
@@ -5176,7 +4819,7 @@ function PrintthisBillPurchaseOrder(Rowlen) {
 
 
 
-function PrintthisLocationTransfer(Rowlen,flg) {
+function PrintthisLocationTransfer(Rowlen, flg) {
 
     var divToPrint = document.getElementById("barcode1");
     divToPrint.style.width = "auto";
@@ -5186,7 +4829,7 @@ function PrintthisLocationTransfer(Rowlen,flg) {
     var myWindow = window.open("", "", "width=1500,height=1500");
     myWindow.document.write('<style type="text/css">   .tdright{ border-right:1px solid black;} </style>');
     myWindow.document.write('<table style="font-size:85%" width=100%><tr><td rowsspan=2></td></tr> ');
-    
+
     var LTNo = '';
     if (flg == 0) {
         LTNo = $('#TRNoCopy').val();
@@ -5194,23 +4837,23 @@ function PrintthisLocationTransfer(Rowlen,flg) {
     else if (flg == 1) {
         LTNo = $('#TRNo').val();
     }
-   // alert('LTNo' + LTNo)
+    // alert('LTNo' + LTNo)
     if ($('#Comments').val() != '') {
         var str1 = $('#Comments').val(),
-    index = 0,
-    res = [];
+            index = 0,
+            res = [];
         while ((index = str1.indexOf(' ', index + 1)) > 0) {
             res.push(index);
         }
-      
+
         var str = $('#Comments').val();
-            //.split(" ").join("");
+        //.split(" ").join("");
 
-       
 
-       
+
+
         //var b = " "; 
-       
+
         //for (var m = 0; m < res.length; m++)
         //{
         //    var position = res[m];
@@ -5220,44 +4863,43 @@ function PrintthisLocationTransfer(Rowlen,flg) {
         //}
         // console.log('str ')
         //console.log(str)
-       
-        myWindow.document.write
-      ('<tr align=center><td colspan=17 width=90%>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
-       '<tr align=center><td colspan=17 width=90%>LOCATION TRANSFER</td></tr>' +
 
-    
-      
-'<table width="100%" id="dio" style="table-layout:fixed">' +
-    '<tr><td colspan="8"></td><td rowspan="4" colspan="3">' + divToPrint.outerHTML + '</td>' +
-    '<td colspan="3">Department </td><td colspan="3">: ' + $('#Deptcode').val() + '</td></tr>' +
-    '<tr><td rowspan="3" colspan="11">' + $('#Comments').val() + '</td>'+
-    '<td colspan="3">User </td><td colspan="3">: ' + $('#User').val() + '</td></tr> ' +
-    '<tr><td colspan="3">Transfer Number </td><td colspan="3">: ' + LTNo + '</td></tr>' +
-    '<tr><td colspan="3">Date </td><td colspan="3">: ' + $('#TRDate').val() + '</td></tr>' +
-'</table>')
+        myWindow.document.write
+            ('<tr align=center><td colspan=17 width=90%>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+                '<tr align=center><td colspan=17 width=90%>LOCATION TRANSFER</td></tr>' +
+
+
+
+                '<table width="100%" id="dio" style="table-layout:fixed">' +
+                '<tr><td colspan="8"></td><td rowspan="4" colspan="3">' + divToPrint.outerHTML + '</td>' +
+                '<td colspan="3">Department </td><td colspan="3">: ' + $('#Deptcode').val() + '</td></tr>' +
+                '<tr><td rowspan="3" colspan="11">' + $('#Comments').val() + '</td>' +
+                '<td colspan="3">User </td><td colspan="3">: ' + $('#User').val() + '</td></tr> ' +
+                '<tr><td colspan="3">Transfer Number </td><td colspan="3">: ' + LTNo + '</td></tr>' +
+                '<tr><td colspan="3">Date </td><td colspan="3">: ' + $('#TRDate').val() + '</td></tr>' +
+                '</table>')
 
     }
-    else
-    {
+    else {
         myWindow.document.write
-       ('<tr align=center><td colspan=17 width=90%>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
-        '<tr align=center><td colspan=17 width=90%>LOCATION TRANSFER</td></tr>' +
-        '<tr><td></td>' +
-        '<td width=33% colspan=7 ></td><td width=27% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
-        + '</td>' +
-        '<td align=right width=18% colspan=2></td>' +
-        '<td width=18% colspan=3> </td><tr>' +
-        '<tr align=right>' +
-        '<td colspan=17><div style="">Department : ' + $('#Deptcode').val() + '</div></td></tr>' +
-        '<tr align=right>' +
-         '<td colspan=17><div style="">User : ' + $('#User').val() + '</div></td></tr>' +
-         '<tr align=right>' +
-         '<td colspan=17><div style="">Transfer Number : ' + LTNo + '</div></td></tr>' +
-         '<tr align=right>' +
-         '<td colspan=17><div style="">Date : ' + $('#TRDate').val() + '</div></td></tr>')
+            ('<tr align=center><td colspan=17 width=90%>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+                '<tr align=center><td colspan=17 width=90%>LOCATION TRANSFER</td></tr>' +
+                '<tr><td></td>' +
+                '<td width=33% colspan=7 ></td><td width=27% align=center rowspan=5 colspan=4>' + divToPrint.outerHTML
+                + '</td>' +
+                '<td align=right width=18% colspan=2></td>' +
+                '<td width=18% colspan=3> </td><tr>' +
+                '<tr align=right>' +
+                '<td colspan=17><div style="">Department : ' + $('#Deptcode').val() + '</div></td></tr>' +
+                '<tr align=right>' +
+                '<td colspan=17><div style="">User : ' + $('#User').val() + '</div></td></tr>' +
+                '<tr align=right>' +
+                '<td colspan=17><div style="">Transfer Number : ' + LTNo + '</div></td></tr>' +
+                '<tr align=right>' +
+                '<td colspan=17><div style="">Date : ' + $('#TRDate').val() + '</div></td></tr>')
 
     }
-  
+
 
 
     myWindow.document.write('<table bordercolor="1 px solid black"  frame="box"  style="font-size:85%;margin-top:10px;border-spacing:0;border-collapse:collapse;border-color:1px solid black;margin-left:2.5%" width=97%><tr style="border:1px solid black;"><td class=tdright align=center width="5%">Sl#</td><td align=left width="17%" class=tdright style="padding-left:5px">Item Code</td><td align=left width="40%" class=tdright style="padding-left:5px">Item Name</td><td align=center width="10%" class=tdright>Bin</td><td align=left width="15%" class=tdright style="padding-left:5px">From Loc.</td><td align=left width="15%" class=tdright style="padding-left:5px">ToLoc.</td><td align=center width="15%" class=tdright>Qty.</td></tr>');
@@ -5269,25 +4911,24 @@ function PrintthisLocationTransfer(Rowlen,flg) {
         if ($('#Bin' + Id).val() != '') {
             bin = $('#Bin' + Id).val();
         }
-        else
-        {
+        else {
             bin = '';
         }
-        
+
         if ($('#txtprd' + Id).length) {
             pdt++;
-            qty = qty + parseFloat($('#txtqnty' + Id).val()); 
+            qty = qty + parseFloat($('#txtqnty' + Id).val());
             myWindow.document.write('<tr><td align=center width="5%" class=tdright>' + $('#td' + Id).text() + '</td><td class=tdright align=left width="17%" style="padding-left:5px">' + $('#txtprd' + Id).val() + '</td><td class=tdright align=left  width="40%" style="padding-left:5px">' + $('#txtdesc' + Id).val() + '</td><td class=tdright align=center  width="10%">' + bin + '</td><td class=tdright align=left  width="15%" style="padding-left:5px">' + ($('#Location option:selected').html()) + '</td><td class=tdright align=left  width="15%" style="padding-left:5px">' + ($('#ToLocation option:selected').html()) + '</td><td class=tdright align=center  width="15%">' + $('#txtqnty' + Id).val() + '</td></tr>');
         }
 
     }
- 
+
     myWindow.document.write('</table>');
     myWindow.document.write('<table style="font-size:85%" width=100%>');
     myWindow.document.write('<tr><td height="10px"  colspan=12></td></tr>');
     myWindow.document.write('<tr><td colspan=12 align=right> Total Products : ' + pdt + ' &nbsp;&nbsp;&nbsp; Total Quantity : ' + qty + '</td></tr>');
     myWindow.document.write('</table>');
-   
+
     myWindow.print();
 }
 
@@ -5490,7 +5131,7 @@ function integerToWord(integer) {
             case 60: return "Sixty";
             case 70: return "Seventy";
             case 80: return "Eighty";
-            case 90: return "Ninety"; 
+            case 90: return "Ninety";
             default: break;
         }
     }
@@ -5537,25 +5178,25 @@ function floatToWord(value) {
     var integer = value - decimalValue;
     decimalValue = Math.round(decimalValue * 100);
     var decimalText = (!decimalValue ? '' :
-      decimalValue < 10 ? "and ' " + integerToWord(decimalValue) :
-      decimalValue % 10 === 0 ? 'and ' + integerToWord(decimalValue / 10) :
-      'and ' + integerToWord(decimalValue)) + ' Fils Only';
+        decimalValue < 10 ? "and ' " + integerToWord(decimalValue) :
+            decimalValue % 10 === 0 ? 'and ' + integerToWord(decimalValue / 10) :
+                'and ' + integerToWord(decimalValue)) + ' Fils Only';
     return (
-      integer && !decimalValue ? integerToWord(integer) :
-      integer && decimalValue ? [integerToWord(integer), decimalText].join(' ') :
-      !integer && decimalValue ? decimalText :
-      integerToWord(0)
+        integer && !decimalValue ? integerToWord(integer) :
+            integer && decimalValue ? [integerToWord(integer), decimalText].join(' ') :
+                !integer && decimalValue ? decimalText :
+                    integerToWord(0)
     );
 }
 
-function WordwithDecimal(n) { 
+function WordwithDecimal(n) {
     var nums = n.toString().split('.')
     var whole = floatToWord(nums[0])
-    if ((nums.length == 2) && (nums[1]>0)) {
+    if ((nums.length == 2) && (nums[1] > 0)) {
         var fraction = floatToWord(nums[1])
         return whole + ' and' + fraction + ' Ps Only';
     } else {
-        return whole + ' Only'; 
+        return whole + ' Only';
     }
 }
 
@@ -5563,7 +5204,7 @@ function PrintthisReceiptEntryCopy(Rowlen) {
     var InvNo = '';
     var InvoDate = '';
     var Rcamount = 0, RcamountAAA = 0;
-  
+
     var AmountinWords = convertNumberToWords($('#FCAmount').val())
     var myWindow = window.open("", "", "width=1500,height=1500");
     myWindow.document.write('<table width=100%><tr><td rowsspan=2>' + (ComapnydivToPrint.outerHTML) + '</td><td align=left>' + window.CompanySettingsArray.CompanyName + '</td></table>')
@@ -5593,7 +5234,7 @@ function PrintthisReceiptEntryCopy(Rowlen) {
             InvoDate += $('#InvoDate' + i).text();
             Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
             RcamountAAA = Rcamount.toLocaleString('en');
-           
+
 
         }
     }
@@ -5631,13 +5272,13 @@ function PrintthisReceiptEntrysave(Rowlen) {
     myWindow.document.write('<table width=100%<tr><td>RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM:</td><td align=right>RV No: ' + $('#VoucherNoMain').val() + '</td></tr></table>')
 
     myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountName').val() + '</td><td align=right >Date:' + $('#VoucherDate').val() + '</td></tr></table>')
-    
+
     var AdvanceCheck = 0;
     if ($('#Advance').prop('checked'))
-    AdvanceCheck = 1;
-   
+        AdvanceCheck = 1;
+
     for (var i = 1; i <= Rowlen; i++) {
-        if ($('#SlNoCheck' + i).prop("checked")) {            
+        if ($('#SlNoCheck' + i).prop("checked")) {
             if ($('#InvoNo' + i).text()) {
                 if (InvNo == '') {
                     InvNo = InvNo + $('#InvoNo' + i).text();
@@ -5650,8 +5291,8 @@ function PrintthisReceiptEntrysave(Rowlen) {
             Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
             RcamountAAA = Rcamount.toLocaleString('en');
 
-           
-        }      
+
+        }
     }
     if (AdvanceCheck == 0) {
         myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>Settled Against InvNo:' + InvNo + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
@@ -5660,15 +5301,15 @@ function PrintthisReceiptEntrysave(Rowlen) {
 
     }
     else if (AdvanceCheck == 1) {
-        myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>Advance Received From :'+ $('#AccountName').val() +'</td><td style="border:1px solid black" align=center>Amount</td></tr>');
+        myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>Advance Received From :' + $('#AccountName').val() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
         myWindow.document.write('<tr><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
         myWindow.document.write('<tr><td style="border-left:1px solid black">Advance Received: </td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + parseFloat($('#FCAmount').val() || 0).toFixed(Decimal) + '</td></tr>');
 
     }
-    
+
 
     if ($('#AccountType').val() != 1) {
-        
+
         myWindow.document.write('<tr><td style="border-left:1px solid black">Cheque No.: ' + $('#ChequeNo').val() + '</td><td style="border-right:1px solid black">Dated: ' + $('#ChequeDate').val() + '</td><td style="border-right:1px solid black" align=right></td></tr>');
     }
 
@@ -5741,7 +5382,7 @@ function PrintthisPaymentEntryCopy(Rowlen) {
 }
 function PrintthisPaymentEntrysave(Rowlen) {
 
-   
+
     var InvNo = '';
     var InvoDate = '';
     var Rcamount = 0, RcamountAAA = 0;
@@ -5756,17 +5397,17 @@ function PrintthisPaymentEntrysave(Rowlen) {
     myWindow.document.write('<table width=100%<tr><td>PAY TO:</td><td align=right>PV No: ' + $('#VoucherNoMain').val() + '</td></tr></table>')
 
     myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountName').val() + '</td><td align=right >Date:' + $('#Amount').val() + '</td></tr></table>')
-   
+
     var AdvanceCheck = 0;
     if ($('#Advance').prop('checked'))
         AdvanceCheck = 1;
 
     for (var i = 1; i <= Rowlen; i++) {
-       
-        
+
+
 
         if ($('#SlNoCheck' + i).prop("checked")) {
-           
+
             if ($('#InvoNo' + i).text()) {
                 if (InvNo == '') {
                     InvNo = InvNo + $('#InvoNo' + i).text();
@@ -5775,7 +5416,7 @@ function PrintthisPaymentEntrysave(Rowlen) {
                     InvNo = InvNo + ',' + $('#InvoNo' + i).text();
 
             }
-           
+
             InvoDate += $('#InvoDate' + i).text();
             Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
             RcamountAAA = Rcamount.toLocaleString('en');
@@ -5814,9 +5455,8 @@ function PrintthisPaymentEntrysave(Rowlen) {
 }
 
 
-function PrintthisPurchaseenquiryCopy(Rowlen)
-{
-    
+function PrintthisPurchaseenquiryCopy(Rowlen) {
+
     var AmountinWords = convertNumberToWords($('#GrandTotal').val())
     var myWindow = window.open("", "", "width=1500,height=1500");
     myWindow.document.write('<table width=100%><tr><td rowsspan=2><img src="/app-assets/img/text.png" alt="company logo"></td><td align=right><h2>Purchase Enquiry</h2></td></tr> <tr><td></td><td align=right><h3># ' + $('#Enquiryno').val() + '</h3></td></tr>      ');
@@ -5826,14 +5466,14 @@ function PrintthisPurchaseenquiryCopy(Rowlen)
     var slno = 1;
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
-        
+
         if ($('#product_' + Id).val() != undefined) {
             myWindow.document.write('<tr><td width=4% align=center>' + slno + '</td><td>' + $('#product_' + Id).val() + '</td><td>' + $('#productdesc_' + Id).val() + '</td><td>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + $('#txtrate_' + Id).val() + '</td>   <td align=right>' + $('#txttax_' + Id).val() + '</td>           <td align=right>' + $('#amount_' + Id).val() + '</td></tr>');
             slno++;
         }
 
     }
-    
+
     myWindow.document.write('<tr><td colspan=8></td></tr></table>');
     myWindow.document.write('<table width=100%><tr><td colspan=7>Total  :  ' + AmountinWords + ' Only' + '</td><td align=right><b>' + $('#GrandTotal').val() + '</b></td></tr></table>');
 
@@ -5844,7 +5484,7 @@ function PrintthisPurchaseenquiryCopy(Rowlen)
     myWindow.document.write('<table width=100%><tr><td colspan=8 height=100px></td></tr><tr><td colspan=4 >Prepared By</td> <td colspan=4 align=right>Approved By</td></tr><tr><td colspan=8><hr></td></tr></table>');
     myWindow.document.write('<table width=100%><tr><td colspan=8>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td colspan=8>' + window.CompanySettingsArray.PhoneNo + '</td></tr><tr><td colspan=8>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr><td colspan=8>' + window.CompanySettingsArray.Email + '</td></tr><tr><td colspan=8>' + window.CompanySettingsArray.TRNNo + '</td></tr></table>');
     myWindow.print();
-    
+
 }
 
 
@@ -5877,14 +5517,14 @@ function PrintthisVoucherEntrysave(Rowlen) {
     //myWindow.document.write('<tr><td align=right>Fax :' + window.CompanySettingsArray.Fax + '</td></tr> <tr>')
     //myWindow.document.write('<tr><td align=right></td></tr></table>')
     //myWindow.document.write('<table  width=100%><tr><td><h4 align=center><u>' + Currenttype  + '</u></h4></td></tr></table>');
-    
+
     //myWindow.document.write('<table width=100%<tr><td>RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM:</td><td align=right> '+ Curtype  +'NO : ' + $('#VoucherNo').val() + '</td></tr></table>')
 
     //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountId1').val() + '</td><td align=right >Date:' + $('#VoucherDate').val() + '</td></tr></table>')
     //for (var i = 1; i < Rowlen; i++) {
     //    //ReferenceNo += $('#ReferenceNo' + i).val()+',';
     //    InvoDate += $('#InvoDate' + i).text();
-        
+
     //        amount = parseFloat(amount + $('#Credittxt' + i).val() || 0).toFixed(Decimal);
     //}
     //myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr><td style="border:1px solid black;" rowspan=2 colspan=2 align=center> Description:' + $('#VoucherEntryDescription1').val() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
@@ -5941,108 +5581,107 @@ function PrintthisVoucherEntrysave(Rowlen) {
 
 //-------------------------------------------------------------VOUCHER ENTRY PRINT FOR COPY------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    function PrintthisVoucherEntryCopy(Rowlen) {
+function PrintthisVoucherEntryCopy(Rowlen) {
 
-        ////var ReferenceNo = '';
-        //var InvoDate = '';
-        //var amount = 0;
-        //var type = $('#VoucherType').find("option:selected").html();          //heading and voucher no heading split
-        //var vouchertype = {}, Currenttype = '', Curtype = '';
+    ////var ReferenceNo = '';
+    //var InvoDate = '';
+    //var amount = 0;
+    //var type = $('#VoucherType').find("option:selected").html();          //heading and voucher no heading split
+    //var vouchertype = {}, Currenttype = '', Curtype = '';
 
-        //if ($('#VoucherType').val() != 0) {             
-        //    vouchertype = type.split('-');
-        //    Currenttype = vouchertype[1];
-        //    Curtype = vouchertype[0];
+    //if ($('#VoucherType').val() != 0) {             
+    //    vouchertype = type.split('-');
+    //    Currenttype = vouchertype[1];
+    //    Curtype = vouchertype[0];
 
-        //}
-        //var AmountinWords = convertNumberToWords($('#Credittxt').val())
-        //var myWindow = window.open("", "", "width=1500,height=1500");
-        //myWindow.document.write('<table width=100%><tr><td rowsspan=2>'+ (ComapnydivToPrint.outerHTML) +'</td><td align=left>' + window.CompanySettingsArray.CompanyName + '</td></table>')
-        //myWindow.document.write('<table width=100%><tr><td align=right>PhNo:' + window.CompanySettingsArray.PhoneNo + '</td></tr>')
-        //myWindow.document.write('<tr><td align=right>Fax :' + window.CompanySettingsArray.Fax + '</td></tr> <tr>')
-        //myWindow.document.write('<tr><td align=right></td></tr></table>')
-        //myWindow.document.write('<table  width=100%><tr><td><h4 align=center><u>' + Currenttype + '</u></h4></td></tr></table>');
-      
-        //myWindow.document.write('<table width=100%<tr><td>RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM:</td><td align=right> ' + Curtype + 'NO : ' + $('#VoucherNo').val() + '</td></tr></table>')
+    //}
+    //var AmountinWords = convertNumberToWords($('#Credittxt').val())
+    //var myWindow = window.open("", "", "width=1500,height=1500");
+    //myWindow.document.write('<table width=100%><tr><td rowsspan=2>'+ (ComapnydivToPrint.outerHTML) +'</td><td align=left>' + window.CompanySettingsArray.CompanyName + '</td></table>')
+    //myWindow.document.write('<table width=100%><tr><td align=right>PhNo:' + window.CompanySettingsArray.PhoneNo + '</td></tr>')
+    //myWindow.document.write('<tr><td align=right>Fax :' + window.CompanySettingsArray.Fax + '</td></tr> <tr>')
+    //myWindow.document.write('<tr><td align=right></td></tr></table>')
+    //myWindow.document.write('<table  width=100%><tr><td><h4 align=center><u>' + Currenttype + '</u></h4></td></tr></table>');
 
-        //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountId1').val() + '</td><td align=right >Date:' + $('#VoucherDate').val() + '</td></tr></table>')
-        //for (var i = 1; i < Rowlen; i++) {
-        //    //ReferenceNo += $('#ReferenceNo' + i).val()+',';
-        //    InvoDate += $('#InvoDate' + i).text();
+    //myWindow.document.write('<table width=100%<tr><td>RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM:</td><td align=right> ' + Curtype + 'NO : ' + $('#VoucherNo').val() + '</td></tr></table>')
 
-        //    amount = parseFloat(amount + $('#Credittxt' + i).val() || 0).toFixed(Decimal);
-        //}
-        //myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr><td style="border:1px solid black;" rowspan=2 colspan=2 align=center> Description:' + $('#VoucherEntryDescription1').val() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
-        //myWindow.document.write('<tr><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
-        //myWindow.document.write('<tr><td style="border-left:1px solid black">ReferenceNo: ' + $('#ReferenceNo1').val() + '</td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + parseFloat($('#Credittxt').val() || 0).toFixed(Decimal) + '</td></tr>');
-        //myWindow.document.write('<tfoot><tr  style="border:1px solid black;"><td align="right" colspan=2 style="border-right:1px solid black;">Total</td><td style="border-right:1px solid black" align=right>' + parseFloat($('#Credittxt').val() || 0).toFixed(Decimal) + '</td></tr></tfoot></table>')
+    //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountId1').val() + '</td><td align=right >Date:' + $('#VoucherDate').val() + '</td></tr></table>')
+    //for (var i = 1; i < Rowlen; i++) {
+    //    //ReferenceNo += $('#ReferenceNo' + i).val()+',';
+    //    InvoDate += $('#InvoDate' + i).text();
 
-
-        //myWindow.document.write('<br><br><br><br>')
-        //myWindow.document.write('<table><tr><td>Amount in words ' + $('#Currency option:selected').text() + ':' + AmountinWords + ' Only' + '</td></tr></table>')
-        //myWindow.document.write('<br><br><br><br>')
-        //myWindow.document.write('<table width=100%><tr><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
-        //myWindow.print();
+    //    amount = parseFloat(amount + $('#Credittxt' + i).val() || 0).toFixed(Decimal);
+    //}
+    //myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr><td style="border:1px solid black;" rowspan=2 colspan=2 align=center> Description:' + $('#VoucherEntryDescription1').val() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
+    //myWindow.document.write('<tr><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
+    //myWindow.document.write('<tr><td style="border-left:1px solid black">ReferenceNo: ' + $('#ReferenceNo1').val() + '</td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + parseFloat($('#Credittxt').val() || 0).toFixed(Decimal) + '</td></tr>');
+    //myWindow.document.write('<tfoot><tr  style="border:1px solid black;"><td align="right" colspan=2 style="border-right:1px solid black;">Total</td><td style="border-right:1px solid black" align=right>' + parseFloat($('#Credittxt').val() || 0).toFixed(Decimal) + '</td></tr></tfoot></table>')
 
 
+    //myWindow.document.write('<br><br><br><br>')
+    //myWindow.document.write('<table><tr><td>Amount in words ' + $('#Currency option:selected').text() + ':' + AmountinWords + ' Only' + '</td></tr></table>')
+    //myWindow.document.write('<br><br><br><br>')
+    //myWindow.document.write('<table width=100%><tr><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
+    //myWindow.print();
 
 
 
 
 
 
-   
-        var myWindow = window.open("", "", "width=1500,height=1500");
-        myWindow.document.write('<style type="text/css"> .brtd {border-right:1px solid gray;}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen">  tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');    //tfoot { display: table-footer-group;}
-        myWindow.document.write('<table style="font-size:85%" width=100%><tr><td rowsspan=2>' + (ComapnydivToPrint.outerHTML) + '</td><td rowsspan=8 align=right></td></tr> ');
-        myWindow.document.write('<tr><td height="10px"  colspan=11></td></tr>');
-        myWindow.document.write('<tr align=left><td colspan=6>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Address + '</td></tr><tr align=left><td colspan=6>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.PhoneNo + '</td></tr>');
 
-        myWindow.document.write('<table frame="box" style="font-size:85%;margin-top:10px" height=50px width=100%><tr align=center><td colspan=11><b>' + $('#VoucherType option:selected').html() + '</b></td></tr>');
-        myWindow.document.write('<tr align=center><td colspan=6><b>Voucher Number: ' + $('#VoucherNoPrint').val() + '</b></td></tr>');
 
-        myWindow.document.write('<table class="abcd"  frame="box" style="font-size:75%;margin-top:10px;border-spacing:0;border-collapse:collapse;border-color:1px solid gray;"  width=100%><tr style="border-bottom:1px solid gray"><td align=center class=brtd><b>Sl#</b></td><td align=center class=brtd><b>Date</b></td><td align=left class=brtd style="padding-left:5px"><b>Account</b></td><td align=left class=brtd style="padding-left:5px"><b>Voucher Description</b></td><td align=left class=brtd style="padding-left:5px"><b>Tax#</b></td><td align=right class=brtd style="padding-right:5px"><b>Credit</b></td><td align=right class=brtd style="padding-right:5px"><b>Debit</b></td></tr>');
 
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#AccountId' + Id).length) {
-                var DR = '0.00';
-                var CR = '0.00';
-                if ($('#VType' + Id).val() == 'Debit')
-                    DR = $('#Amount' + Id).val();
-                else if ($('#VType' + Id).val() == 'Credit')
-                    CR = $('#Amount' + Id).val();
-                myWindow.document.write('<tr><td align=center class=brtd>' + Id + '</td><td align=center class=brtd>' + $('#InvoDate' + Id).val() + '</td><td  align=left class=brtd style="padding-left:5px">' + $('#AccountId' + Id).val() + '</td><td  align=left class=brtd style="padding-left:5px">' + $('#VoucherEntryDescription' + Id).val() + '</td><td align=left class=brtd style="padding-left:5px">' + $('#TaxNo' + Id).val() + '</td><td align=right class=brtd style="padding-right:5px">' + CR + '</td><td align=right class=brtd style="padding-right:5px">' + DR + '</td></tr>');
-            }
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    myWindow.document.write('<style type="text/css"> .brtd {border-right:1px solid gray;}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen">  tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');    //tfoot { display: table-footer-group;}
+    myWindow.document.write('<table style="font-size:85%" width=100%><tr><td rowsspan=2>' + (ComapnydivToPrint.outerHTML) + '</td><td rowsspan=8 align=right></td></tr> ');
+    myWindow.document.write('<tr><td height="10px"  colspan=11></td></tr>');
+    myWindow.document.write('<tr align=left><td colspan=6>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Address + '</td></tr><tr align=left><td colspan=6>Fax:' + window.CompanySettingsArray.Fax + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.Email + '</td></tr><tr align=left><td colspan=6>' + window.CompanySettingsArray.PhoneNo + '</td></tr>');
 
+    myWindow.document.write('<table frame="box" style="font-size:85%;margin-top:10px" height=50px width=100%><tr align=center><td colspan=11><b>' + $('#VoucherType option:selected').html() + '</b></td></tr>');
+    myWindow.document.write('<tr align=center><td colspan=6><b>Voucher Number: ' + $('#VoucherNoPrint').val() + '</b></td></tr>');
+
+    myWindow.document.write('<table class="abcd"  frame="box" style="font-size:75%;margin-top:10px;border-spacing:0;border-collapse:collapse;border-color:1px solid gray;"  width=100%><tr style="border-bottom:1px solid gray"><td align=center class=brtd><b>Sl#</b></td><td align=center class=brtd><b>Date</b></td><td align=left class=brtd style="padding-left:5px"><b>Account</b></td><td align=left class=brtd style="padding-left:5px"><b>Voucher Description</b></td><td align=left class=brtd style="padding-left:5px"><b>Tax#</b></td><td align=right class=brtd style="padding-right:5px"><b>Credit</b></td><td align=right class=brtd style="padding-right:5px"><b>Debit</b></td></tr>');
+
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#AccountId' + Id).length) {
+            var DR = '0.00';
+            var CR = '0.00';
+            if ($('#VType' + Id).val() == 'Debit')
+                DR = $('#Amount' + Id).val();
+            else if ($('#VType' + Id).val() == 'Credit')
+                CR = $('#Amount' + Id).val();
+            myWindow.document.write('<tr><td align=center class=brtd>' + Id + '</td><td align=center class=brtd>' + $('#InvoDate' + Id).val() + '</td><td  align=left class=brtd style="padding-left:5px">' + $('#AccountId' + Id).val() + '</td><td  align=left class=brtd style="padding-left:5px">' + $('#VoucherEntryDescription' + Id).val() + '</td><td align=left class=brtd style="padding-left:5px">' + $('#TaxNo' + Id).val() + '</td><td align=right class=brtd style="padding-right:5px">' + CR + '</td><td align=right class=brtd style="padding-right:5px">' + DR + '</td></tr>');
         }
-        myWindow.document.write('</table>');
-
-
-        myWindow.document.write('<br><br><br><br>')
-        myWindow.document.write('<table width=100% style="font-size:85%"><tr style="text-align:center"><td style="text-decoration:overline;width:25%"  >Prepared by</td><td style="text-decoration:overline;width:25%">Accountant</td><td style="text-decoration:overline;width:25%">Approved By</td><td style="text-decoration:overline;width:25%">Received By</td></table>')
-
-        myWindow.print();
-
 
     }
+    myWindow.document.write('</table>');
+
+
+    myWindow.document.write('<br><br><br><br>')
+    myWindow.document.write('<table width=100% style="font-size:85%"><tr style="text-align:center"><td style="text-decoration:overline;width:25%"  >Prepared by</td><td style="text-decoration:overline;width:25%">Accountant</td><td style="text-decoration:overline;width:25%">Approved By</td><td style="text-decoration:overline;width:25%">Received By</td></table>')
+
+    myWindow.print();
+
+
+}
 //-------------------------------------------------------------------------------------------------------------------------------------------------------->>>>>>> .r3899
-    ////New Print Function for Sales Invoice New
-    function PrintthisBillSalesSPAREPARTSNEW(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val())
-        var myWindow = window.open("", "", "width=1500,height=1500");
+////New Print Function for Sales Invoice New
+function PrintthisBillSalesSPAREPARTSNEW(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val())
+    var myWindow = window.open("", "", "width=1500,height=1500");
 
-     
 
-        var SalesNo = '';
-        if (Flag == 1)      //Copy
-        { SalesNo = $('#txtBillSlNocopy').val(); }
-        else
-        { SalesNo = $('#savedbillno').val(); } 
 
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
+    var SalesNo = '';
+    if (Flag == 1)      //Copy
+    { SalesNo = $('#txtBillSlNocopy').val(); }
+    else { SalesNo = $('#savedbillno').val(); }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
 
     myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
     myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
@@ -6051,7 +5690,7 @@ function PrintthisVoucherEntrysave(Rowlen) {
     myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
     myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SalesNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
     myWindow.document.write('</td></tr></table></td></tr></table>');
-                                                                             
+
     myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
     myWindow.document.write('<table width=100% frame="box"><tr>');
     myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
@@ -6060,1305 +5699,1296 @@ function PrintthisVoucherEntrysave(Rowlen) {
     myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
     myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td class=blclr>Phone : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr></table>');
     myWindow.document.write('</td></tr></table></td></tr></table>');
-   
-        myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty.</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#txtproduct' + Id).length) {
-                Rowcount += 1;
-                myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right>' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                if (Rowcount % 44 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid black"><td height=250px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 44 - Rowcount; a++) {
-            myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-        }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr><td colspan=8 align=center></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
 
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
-    }
-
-
-
-    ////New Print Function for Sales Return New
-    function PrintthisBillSalesReturnDefault(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val())
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        var SRNo = '';
-        if (Flag == 1)      //Copy
-        { SRNo = $('#txtBillSlNocopy').val(); }
-        else
-        { SRNo = $('#txtBillSlNoSave').val(); } 
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-        if ($('#select_transfer').val() != '') {
+    myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty.</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#txtproduct' + Id).length) {
             Rowcount += 1;
-            myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
-            myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-            myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
-            myWindow.document.write('</td></tr></table></td>');
-            myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
-            myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd><b>SI#</td><td style="" class=rowbd>' + $('#select_transfer').val() + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
-            myWindow.document.write('</td></tr></table></td></tr></table>');
-        }
-        else
-        {
-            myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
-            myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-            myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
-            myWindow.document.write('</td></tr></table></td>');
-            myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
-            myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
-            myWindow.document.write('</td></tr></table></td></tr></table>');
-        }
-        myWindow.document.write('<table width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td height=30px class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td height=30px class=blclr>Phone : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty.</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#txtproduct' + Id).length) {
-                Rowcount += 1;
-                myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right>' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                if (Rowcount % 44 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid black"><td height=250px colspan=8></td></tr>');
-                }
+            myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right>' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+            gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+            TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            if (Rowcount % 44 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid black"><td height=250px colspan=8></td></tr>');
             }
         }
-        for (var a = 1; a <= 44 - Rowcount; a++) {
-            myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-        }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
     }
-
-
-    ////New Print Function for Sales Return New
-    function PrintthisBillSalesReturnDefaultLetter(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val())
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        var SRNo = '';
-        if (Flag == 1)      //Copy
-        { SRNo = $('#txtBillSlNocopy').val(); }
-        else
-        { SRNo = $('#txtBillSlNoSave').val(); }
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-        if ($('#select_transfer').val() != '') {
-            Rowcount += 1;
-            myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
-            myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-            myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
-            myWindow.document.write('</td></tr></table></td>');
-            myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
-            myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd><b>SI#</td><td style="" class=rowbd>' + $('#select_transfer').val() + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
-            myWindow.document.write('</td></tr></table></td></tr></table>');
-        }
-        else {
-            myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
-            myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-            myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
-            myWindow.document.write('</td></tr></table></td>');
-            myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
-            myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
-            myWindow.document.write('</td></tr></table></td></tr></table>');
-        }
-        myWindow.document.write('<table width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td height=30px class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td height=30px class=blclr>Phone : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty.</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#txtproduct' + Id).length) {
-                Rowcount += 1;
-                myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right>' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                if (Rowcount % 45 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid black"><td height=120px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 40 - Rowcount; a++) {
-            myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-        }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
-        myWindow.close()
+    for (var a = 1; a <= 44 - Rowcount; a++) {
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
     }
-
-
-    ////New Print Function for Voucher Entry/Voucher Entry Modify
-    function PrintthisVoucherEntryDefault(Rowlen, Flag) {
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        var VNo = '';
-        if (Flag == 0)      //Copy
-        { VNo = $('#TransferVoucherNoCopy').val(); }
-        else
-        { VNo = $('#TransferVoucherNo').val(); }
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style>');
-        myWindow.document.write(PrintBG);
-
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
-        myWindow.document.write('</table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + $('#VoucherType option:selected').html() + '</td></tr><tr><td class=blclr>Voucher# : ' + $('#VoucherNoPrint').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#VoucherDate').val() + '</td></tr><tr><td class=blclr style="opacity:0">Email : </td></tr><tr><td class=blclr style="opacity:0">Website : </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-        myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
-
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Date</td><td width=25%>Account</td><td>Voucher Description</td><td align=right>Credit</td><td align=right>Debit</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#AccountId' + Id).length) {
-                var DR = '0.00';
-                var CR = '0.00';
-                if ($('#VType' + Id).val() == 'Debit')
-                    DR = parseFloat($('#Amount' + Id).val()).toFixed(Decimal);
-                else if ($('#VType' + Id).val() == 'Credit')
-                    CR = parseFloat($('#Amount' + Id).val()).toFixed(Decimal);
-
-                myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#InvoDate' + Id).val() + '</td><td width=25%>' + $('#AccountId' + Id).val() + '</td><td>' + $('#VoucherEntryDescription' + Id).val() + '</td><td align=right>' + addCommas(CR) + '</td><td align=right>' + addCommas(DR) + '</td></tr>');
-
-            }
-        }
-
-        myWindow.document.write('</table>');
-
-        myWindow.document.write('<br><br><br><br>')
-        myWindow.document.write('<table width=100%><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
-
-
-        myWindow.print();
-    }
-
-
-    ////New Print Function for RV
-    function PrintthisReceiptVoucherDefault(Rowlen,flg) {
-        var Rowcount = 14;
-        var InvNo = '';
-        var InvoDate = '';
-        var Rcamount = 0, RcamountAAA = 0;
-        var AmountinWords = convertNumberToWords($('#FCAmount').val())
-
-        var RVNo = '';
-        if (flg == 0) {
-            RVNo = $('#VoucherNoMain').val();
-        }
-        else if (flg == 1) {
-            RVNo = $('#VoucherNo').val();
-        }
-
-
-
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-      
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG);
-
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
-        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:center><td style="" class=txbld>RECEIPT VOUCHER</td></tr></table>');
-        myWindow.document.write('</table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + $('#AccountName').val() + '</td></tr><tr><td class=blclr>Voucher# : ' + RVNo + '</td></tr><tr><td class=blclr>Date : ' + $('#VoucherDate').val() + '</td></tr><tr><td class=blclr  style="opacity:0">DEMO</td></tr><tr><td class=blclr style="opacity:0">Website : </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-        myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
-
-        //myWindow.document.write('<table width=100%<tr><td>RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM:</td><td align=right></td></tr></table>')
-
-        //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountName').val() + '</td><td align=right ></td></tr></table>')
-
-        for (var i = 1; i < Rowlen; i++) {
-            if ($('#SlNoCheck' + i).prop("checked")) {
-
-
-
-                if ($('#InvoNo' + i).text()) {
-                    if (InvNo == '') {
-                        InvNo = InvNo + $('#InvoNo' + i).text();
-                    }
-                    else
-                        InvNo = InvNo + ',' + $('#InvoNo' + i).text();
-
-                }
-
-                InvoDate += $('#InvoDate' + i).text();
-                Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
-                RcamountAAA = Rcamount.toLocaleString('en');
-
-
-            }
-        }
-        myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr class=violetbg><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>' + $('#VEDescription' + Rowlen).text() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
-        myWindow.document.write('<tr class=violetbg><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
-        myWindow.document.write('<tr><td style="border-left:1px solid black">Invoice No.: ' + InvNo + '</td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr>');
-
-        if (($('#ChequeNo').val() != 0)) {
-            myWindow.document.write('<tr><td style="border-left:1px solid black">Cheque No.: ' + $('#ChequeNo').val() + '</td><td style="border-right:1px solid black">Dated: ' + $('#ChequeDate').val() + '</td><td style="border-right:1px solid black" align=right></td></tr>');
-        }
-
-        myWindow.document.write('<tfoot><tr  style="border:1px solid black;"><td align="right" colspan=2 style="border-right:1px solid black;">Total</td><td style="border-right:1px solid black" align=right>' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr></tfoot></table>')
-
-        myWindow.document.write('</table>');
-
-        myWindow.document.write('<br><br>')
-        myWindow.document.write('<table><tr><td>Amount in words (AED) :' + AmountinWords + ' Only' + '</td></tr></table>')
-        myWindow.document.write('<br><br><br><br>')
-
-        myWindow.document.write('<table width=100%><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
-
-        myWindow.print();
-    }
-    
-
-    ////New Print Function for PV
-    function PrintthisPaymentVoucherDefault(Rowlen,flg) {
-        var Rowcount = 14;
-        var InvNo = '';
-        var InvoDate = '';
-        var Rcamount = 0, RcamountAAA = 0;
-        var AmountinWords = convertNumberToWords($('#FCAmount').val())
-
-
-        var PVNo = '';
-        if (flg == 0) {
-            PVNo = $('#VoucherNoMain').val();
-        }
-        else if (flg == 1) {
-            PVNo = $('#VoucherNo').val();
-        }
-
-
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG);
-
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
-        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:center><td style="" class=txbld>PAYMENT VOUCHER</td></tr></table>');
-        myWindow.document.write('</table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + $('#AccountName').val() + '</td></tr><tr><td class=blclr>Voucher# : ' + PVNo + '</td></tr><tr><td class=blclr>Date : ' + $('#VoucherDate').val() + '</td></tr><tr><td class=blclr style="opacity:0">Email : </td></tr><tr><td class=blclr style="opacity:0">Website : </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-        myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
-
-
-        //myWindow.document.write('<table width=100%<tr><td>PAY TO :</td><td align=right></td></tr></table>')
-
-        //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountName').val() + '</td><td align=right ></td></tr></table>')
-
-        for (var i = 1; i < Rowlen; i++) {
-            if ($('#SlNoCheck' + i).prop("checked")) {
-
-
-
-                if ($('#InvoNo' + i).text()) {
-                    if (InvNo == '') {
-                        InvNo = InvNo + $('#InvoNo' + i).text();
-                    }
-                    else
-                        InvNo = InvNo + ',' + $('#InvoNo' + i).text();
-
-                }
-
-                InvoDate += $('#InvoDate' + i).text();
-                Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
-                RcamountAAA = Rcamount.toLocaleString('en');
-
-
-            }
-        }
-        myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr class=violetbg><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>' + $('#VEDescription' + Rowlen).text() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
-        myWindow.document.write('<tr class=violetbg><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
-        myWindow.document.write('<tr><td style="border-left:1px solid black">Invoice No.: ' + InvNo + '</td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr>');
-
-        if (($('#ChequeNo').val() != 0)) {
-            myWindow.document.write('<tr><td style="border-left:1px solid black">Cheque No.: ' + $('#ChequeNo').val() + '</td><td style="border-right:1px solid black">Dated: ' + $('#ChequeDate').val() + '</td><td style="border-right:1px solid black" align=right></td></tr>');
-        }
-
-        myWindow.document.write('<tfoot><tr  style="border:1px solid black;"><td align="right" colspan=2 style="border-right:1px solid black;">Total</td><td style="border-right:1px solid black" align=right>' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr></tfoot></table>')
-
-        myWindow.document.write('</table>');
-
-        myWindow.document.write('<br><br>')
-        myWindow.document.write('<table><tr><td>Amount in words (AED) :' + AmountinWords + ' Only' + '</td></tr></table>')
-        myWindow.document.write('<br><br><br><br>')
-
-        myWindow.document.write('<table width=100%><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
-
-        myWindow.print();
-    }
-
-
-    //NEW PRINT FUCTION FOR CONTRACT
-    function PrintthisContractRENT(Rowlen, flag) {
-
-        var myWindow = window.open("", "", "width=1500,height=1500");
-        var AmountinWords = convertNumberToWords($('#TotalChqAmt').text())
-        var TotQty = 0;
-        var total = 0;
-        var CNo = '';
-        var Rowcount = 0;
-
-        if (flag == 0)
-            CNo = $('#ContractNo').val();
-        else if (flag == 1)
-            CNo = $('#ContractNoCopy').val();
-
-        myWindow.document.write('<table width=100%><tr>' +
-            '<td>' + (ComapnydivToPrint.outerHTML) + '</td>' +
-            '<td style="font-size:120%;"><b>RENT RECEIPT</b></td>' +
-            '</tr>');
-
-        myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=20px colspan=11></td></tr>');
-
-        myWindow.document.write('<table width=100% ><tr>' +
-            '<td  width=30%><table width=100% frame="box"><tr>' +
-            '<td style="border:none;"><table  style="font-size:85%;"><tr align=center><td colspan=3 height=50px>' +
-            '<table width=100%; style=text-align:left height=50px><tr align=center><td align=center><b>CONTRACT PERIOD</b></td></tr><tr><td align=left>FROM : ' + $('#FromPeriod').val() + '</td></tr><tr><td align=left>TO :     ' + $('#ToPeriod').val() + '</td></tr></table>' +
-            '</td></tr></table></td>' +
-            '</tr></table></td>' +
-
-            '<td width=45%></td>' +
-
-            '<td  width=25%><table width=100%  align=right><tr>' +
-            '<td style="border:none;"><table  style="font-size:85%;"><tr align=right><td colspan=3 height=50px>' +
-            '<table width=100%; style=text-align:left height=50px><tr><td  align=right>DATE : ' + $('#ContDate').val() + '</td></tr><tr><td  align=right>CONTRACT No. : <b>' + $('#ContractNoCopy').val() + '</b></td></tr></table>' +
-            '</td></tr></table></td>' +
-            '</tr></table></td>' +
-            '</tr></table>');
-
-        myWindow.document.write('<table width=100%> <tr><td align=center></td></tr><tr><td align=center></td></tr>');
-        myWindow.document.write(' <table border=1  rules=cols style="border:1px solid black;"width=100%>');
-
-
-
-
-        myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
-            '<td colspan=5 style="border-right:1px solid white;padding:5px">RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM : </td>' +
-            '<td style="border-right:1px solid white;" align=right></td>' +
-            '<td align=right style=""></td></tr>' +
-
-            '<tr style="font-size:100%;height=10%">' +
-            '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MR/MS : <b>' + $('#Tenant').val() + '</b></td>' +
-            '<td colspan=3 style="border-right:1px solid white;" align=center>PO BOX : ' + $('#TenantPOBOXNo').val() + '</td>' +
-            '<td colspan=3 style="">EMIR : ' + $('#TenantEMRID').val() + '</td></tr>' +
-            '<tr></tr>' +
-
-             '<tr style="font-size:100%;">' +
-            '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MOBILE : </td>' +
-            '<td colspan=3 style="border-right:1px solid white;" align=center>TEL No. : ' + $('#TenantPhone').val() + '</td>' +
-            '<td colspan=3 style="">FAX : </td></tr>');
-        myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px" align=center>Sl#</td><td style="padding-left:5px" align=center>AMOUNT</td><td style="padding-left:5px" align=center>CHEQUE NO/CASH</td><td style="padding-left:5px" align=center>DATE</td><td align=center>BANK</td><td align=center style="padding-right:5px">BRANCH</td><td align=center style="padding-right:5px">PARTICULARS</td></tr>');
-        var slno = 1;
-        for (var i = 0; i < Rowlen; i++) {
-            var Id = parseInt(i + 1);
-
-            if ($('#TblContract tr').length) {
-                if ($('#RentType' + Id + ' option:selected').html() == ' Rent') {
-                    Rowcount += 1;
-                    TotQty++;
-                    myWindow.document.write('<tr><td style="padding-left:5px">' + slno + '</td><td style="padding-left:5px" align=right>' + addCommas($('#Amount' + Id).val()) + '</td><td style="padding-left:5px" align=center>' + $('#ChequeNo' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#ChequeDate' + Id).val() + '</td><td align=center>' + $('#ContBank' + Id + ' option:selected').html() + '</td><td align=center style="padding-right:5px">' + $('#ContBranch' + Id).val() + '</td><td align=center style="padding-right:5px">' + $('#RentType' + Id + ' option:selected').html() + '</td></tr>');
-                    total += parseFloat($('#Amount' + Id).val() || 0);
-                    slno++;
-                }
-            }
-        }
-
-        for (var a = 1; a <= 15 - Rowcount; a++) {
-            myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td><td align=right style="padding-right:5px">1</td></tr>');
-        }
-
-
-        var TotalinWords = convertNumberToWords(total);
-
-        myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
-            '<td colspan=5 style="border-right:1px solid white;padding:5px">TOTAL AMOUNT : AED ' + TotalinWords + ' ONLY</td>' +
-            '<td style="border-right:1px solid white;" align=right></td>' +
-            '<td align=right style=""></td></tr>' +
-
-            '<tr style="font-size:100%;height=10%">' +
-            '<td colspan=3 style="border-right:1px solid white;padding:10px">DHS : <b><span style="border:1px solid gray;padding:5px;">&#160;&#160;&#160;&#160;&#160;&#160;' + addCommas((total).toFixed(Decimal)) + '</span></b></td>' +
-            '<td colspan=3 style="border-right:1px solid white;" align=center></td>' +
-            '<td colspan=3 style=""></td></tr>');
-
-        myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
-        myWindow.document.write('<table width=100%><tr><td colspan=6 align=left style="padding:5px">I/WE&#160;&#160;&#160;&#160;' + $('#Tenant').val() + ' </td><td colspan=6 align=right>Cheque Collected by :....................... </td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">OF&#160;&#160;&#160;&#160;</td><td colspan=6 align=center>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Signature  </td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">Hereby agree upon as under : &#160;&#160;&#160;&#160;</td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">RENT PER YEAR DHS : ' + addCommas((total).toFixed(Decimal)) + '</td><td colspan=6 align=right>To be Paid by : ' + TotQty + '</td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">FOR FLAT NO : ' + $('#FlatNo').val() + '</td><td colspan=6 align=right>LOCATED IN  : ' + $('#Premise').val() + '</td></tr>');
-
-
-        myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=40px colspan=11></td></tr>');
-
-        myWindow.document.write('<table width=100% ><tr style="text-align:center"><td style="text-decoration:overline;width:25%">ACCOUNTANT</td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%">TENANT</td></table>')
-
-        myWindow.print();
-    }
-
-    //NEW PRINT FUCTION FOR CONTRACT
-    function PrintthisContractSD(Rowlen, flag) {
-
-        var myWindow = window.open("", "", "width=1500,height=1500");
-        var AmountinWords = convertNumberToWords($('#TotalChqAmt').text())
-        var TotQty = 0;
-        var total = 0;
-        var CNo = '';
-        var Rowcount = 0;
-
-        if (flag == 0)
-            CNo = $('#ContractNo').val();
-        else if (flag == 1)
-            CNo = $('#ContractNoCopy').val();
-
-        myWindow.document.write('<table width=100%><tr>' +
-            '<td>' + (ComapnydivToPrint.outerHTML) + '</td>' +
-            '<td style="font-size:120%;"><b>SECURITY DEPOSIT RECEIPT</b></td></tr>');
-
-        myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=10px colspan=11></td></tr>');
-
-
-        myWindow.document.write('<table width=100% ><tr>' +
-                   '<td  width=30%></td>' +
-
-                   '<td width=45%></td>' +
-
-                   '<td  width=25%><table width=100%  align=right><tr>' +
-                   '<td style="border:none;"><table  style="font-size:85%;"><tr align=right><td colspan=3 height=50px>' +
-                   '<table width=100%; style=text-align:left height=50px><tr><td  align=right>DATE : ' + $('#ContDate').val() + '</td></tr></table>' +
-                   '</td></tr></table></td>' +
-                   '</tr></table></td>' +
-                   '</tr></table>');
-
-
-
-        myWindow.document.write('<table width=100%> <tr><td align=center></td></tr><tr><td align=center></td></tr>');
-        myWindow.document.write(' <table border=1  rules=cols style="border:1px solid black;"width=100%>');
-
-
-
-
-        myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
-            '<td colspan=5 style="border-right:1px solid white;padding:5px;font-size:90%;">RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM : </td>' +
-            '<td style="border-right:1px solid white;" align=right></td>' +
-            '<td align=right style=""></td></tr>' +
-
-            '<tr style="font-size:100%;height=10%">' +
-            '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MR/MS : <b>' + $('#Tenant').val() + '</b></td>' +
-            '<td colspan=3 style="border-right:1px solid white;" align=center>PO BOX : ' + $('#TenantPOBOXNo').val() + '</td>' +
-            '<td colspan=3 style="">EMIR : ' + $('#TenantEMRID').val() + '</td></tr>' +
-            '<tr></tr>' +
-
-             '<tr style="font-size:100%;">' +
-            '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MOBILE : </td>' +
-            '<td colspan=3 style="border-right:1px solid white;" align=center>TEL No. : ' + $('#TenantPhone').val() + '</td>' +
-            '<td colspan=3 style="">FAX : </td></tr>');
-
-        myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px" align=center>Sl#</td><td style="padding-left:5px" align=center>AMOUNT</td><td style="padding-left:5px" align=center>CHEQUE NO/CASH</td><td style="padding-left:5px" align=center>DATE</td><td align=center>BANK</td><td align=center style="padding-right:5px">BRANCH</td><td align=center style="padding-right:5px">PARTICULARS</td></tr>');
-        var slno = 1;
-        for (var i = 0; i < Rowlen; i++) {
-            var Id = parseInt(i + 1);
-
-            if ($('#TblContract tr').length) {
-                if ($('#RentType' + Id + ' option:selected').html() == 'SD') {
-                    Rowcount += 1;
-                    TotQty++;
-                    myWindow.document.write('<tr><td style="padding-left:5px" align=center>' + slno + '</td><td style="padding-left:5px" align=right>' + addCommas($('#Amount' + Id).val()) + '</td><td style="padding-left:5px" align=center>' + $('#ChequeNo' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#ChequeDate' + Id).val() + '</td><td align=center>' + $('#ContBank' + Id + ' option:selected').html() + '</td><td align=center style="padding-right:5px">' + $('#ContBranch' + Id).val() + '</td><td align=center style="padding-right:5px">' + $('#RentType' + Id + ' option:selected').html() + '</td></tr>');
-                    total += parseFloat($('#Amount' + Id).val() || 0);
-                    slno++;
-                }
-            }
-        }
-        for (var a = 1; a <= 15 - Rowcount; a++) {
-            myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td><td align=right style="padding-right:5px">1</td></tr>');
-
-        }
-
-
-        var TotalinWords = convertNumberToWords(total);
-        myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
-                  '<td colspan=5 style="border-right:1px solid white;padding:5px">TOTAL AMOUNT : AED ' + TotalinWords + ' ONLY</td>' +
-                  '<td style="border-right:1px solid white;" align=right></td>' +
-                  '<td align=right style=""></td></tr>' +
-
-                  '<tr style="font-size:100%;height=10%">' +
-                  '<td colspan=3 style="border-right:1px solid white;padding:10px">DHS : <b><span style="border:1px solid gray;padding:5px;">&#160;&#160;&#160;&#160;&#160;&#160;' + addCommas((total).toFixed(Decimal)) + '</span></b></td>' +
-                  '<td colspan=3 style="border-right:1px solid white;" align=center></td>' +
-                  '<td colspan=3 style=""></td></tr>');
-
-        myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
-        myWindow.document.write('<table width=100%><tr><td colspan=6 align=left>I/WE&#160;&#160;&#160;&#160;' + $('#Tenant').val() + ' </td><td colspan=6 align=right>Cheque Collected by :....................... </td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">OF&#160;&#160;&#160;&#160;</td><td colspan=6 align=center>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Signature  </td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">Hereby agree upon as under : &#160;&#160;&#160;&#160;</td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">RENT PER YEAR DHS : ' + addCommas((total).toFixed(Decimal)) + '</td><td colspan=6 align=right>To be Paid by :' + TotQty + '</td></tr>' +
-            '<tr><td colspan=6 align=left style="padding:5px">FOR FLAT NO :' + $('#FlatNo').val() + '</td><td colspan=6 align=right>LOCATED IN  :' + $('#Premise').val() + '</td></tr>');
-
-
-
-        myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=40px colspan=11></td></tr>');
-
-        myWindow.document.write('<table width=100% ><tr style="text-align:center"><td style="text-decoration:overline;width:25%">ACCOUNTANT</td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%">TENANT</td></table>')
-
-
-        myWindow.print();
-    }
-
-    //New Print Function for BOQ
-    function PrintthisBOQ(Rowlen) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#FCGT').text());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-       
-        var Eng = '';
-        if ($('#UserName').val()!=0)
-        {
-            Eng = $('#UserName option:selected').html();
-        }
-        else
-        {
-            Eng = '';
-        }
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-        
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
-        myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
-        myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:center><td style="" class=txbld>PROJECT ESTIMATION - BOQ</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('</tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>BOQ# :' + $('#BOQNo').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#BOQDate').val() + '</td></tr><tr><td class=blclr>Ref. : ' + $('#LPO').val() + '</td></tr><tr><td class=blclr>Prepared By :' + Eng + ' </td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td class=blclr>Job Description :' + $('#Description').val() + ' </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#Product_' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page 
-                    myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
-                   TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
-                }
-                if (Rowcount % 43 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 43 - Rowcount; a++) {
-            myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-        }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right></td><td style="font-family:tahoma; font-size: 10px;" align=right ></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:50%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#FCGT').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
-    }
-
-    
-    function PrintthisMaterialIssue(Rowlen) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#FCGT').text());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-
-        myWindow.document.write('<table width=100% ><tr>');
-        myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
-        myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:left><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td><td style="" class=txbld style=text-align:center>MATERIAL  ISSUE</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('</tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>MI# :' + $('#MINo').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#IssueDate').val() + '</td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td style="opacity:0">Demo</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#Product_' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page   
-                    myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td align=center>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page    
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td align=center>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
-                }
-                if (Rowcount % 43 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;"><td height=250px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 43 - Rowcount; a++) {
-            myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-        }
-       // myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty:  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right></td><td style="font-family:tahoma; font-size: 10px;" align=right ></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:66%; font-size: 13px;">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;width:15.5%" align=center ><b>GRAND TOTAL</b></td><td style="font-family:tahoma; font-size: 10px"  align=right ><b>' + addCommas(parseFloat($('#FCGT').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-
-        //myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        //myWindow.document.write('<td width=100%>');
-        //myWindow.document.write('<table width=100%>');
-        //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty:  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right></td><td style="font-family:tahoma; font-size: 10px;" align=right ></td></tr>');
-        //myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:66%; font-size: 13px;">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;width:15.5%" align=center ><b>GRAND TOTAL</b></td><td style="font-family:tahoma; font-size: 10px"  align=right ><b>' + addCommas(parseFloat($('#FCGT').text()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('</table>');
-        //myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
-    }
-
-
-    //New Print Function for TM
-    function PrintthisTM(Rowlen) {
-        var TotPQty = 0; var Rowcount = 14;
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-      if ($('#typeIssue').prop("checked")) {
-          var Caption = 'TOOLS'+''+' ISSUE';
-      }
-     else {
-          var Caption = 'TOOLS' + '' + ' RETURN';
-      }
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
-        myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
-        myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:center><td style="" class=txbld>'+ Caption +'</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('</tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>TM# :' + $('#VocNo').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#Date').val() + '</td></tr><tr></tr><tr><td class=blclr>Issued By :' + $('#IssuedBy').val() + ' </td></tr><tr><tr><td class=blclr>Custodian :' + $('#CustodianName').val() + ' </td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td class=blclr>Job Description :' + $('#JobcodeDesc').val() + ' </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Pcs</td><td align=center>Serial#</td><td align=center>Qty.</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#Product_' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page           
-                    myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc_' + Id).val() + '</td><td align=center>' + $('#Pcs_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Serial_' + Id).val() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td></tr>');
-                    TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page            
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc_' + Id).val() + '</td><td align=center>' + $('#Pcs_' + Id + ' option:selected').html()+ '</td><td align=center>' + $('#Serial_' + Id).val() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td></tr>');
-                    TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
-                }
-                if (Rowcount % 43 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 43 - Rowcount; a++) {
-            //alert(a)
-            myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-        }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr class=violetbg style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td style="font-family:tahoma; font-size: 10px;" align=center colspan=><b>Total Qty :  ' + TotPQty + '  </b></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
-    }
-    
-    function PrintthisPurchaseOrder(Rowlen) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#gndtotal').text());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F}  .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-
-        myWindow.document.write('<table width=100% ><tr>');
-        myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
-        myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:left><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td><td style="" class=txbld style=text-align:center>PURCHASE  ORDER</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('</tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>PO# :' + $('#CopyOrderno').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#Orderdate').val() + '</td></tr><tr><td class=blclr>Supplier :' + $('#suppliername').val() + ' </td></tr><tr><td style="opacity:0">Demo</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#product_' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 42 == 0) {           //Border bottom gery for last table row in the page   
-                    myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#amount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#quantity_' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page    
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#amount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#quantity_' + Id).val() || 0);
-                }
-                if (Rowcount % 42 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;"><td height=250px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 42 - Rowcount; a++) {
-            myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey">&#160;</td><td style="border-left:1px solid grey">&#160;</td></tr>');
-        }
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-size:110%;height: 30px;"><td align=left colspan=7><b>Total</b></td><td style="border-left:1px solid grey;" align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-weight:bold;font-size:110%;height: 30px;"><td align=left colspan=8>AED ' + AmountinWords + '</td></tr>');
-        myWindow.document.write('</table>');
-
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right style="font-family:tahoma; font-size: 10px;">Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr>'+
-            '<tr style="height:10px"><td colspan=8></td></tr><tr><td colspan=5 style="font-family:tahoma; font-size: 10px;">Printed By ' + $('#User').val() + '</td><td colspan=6 style="font-family:tahoma; font-size: 10px;" align=right>Printed at ' + $('#DepartmentName').val() + ' , Using EUMIERP</td></tr>' +
-            '<tr><td colspan=3 style="font-family:tahoma; font-size: 10px;">Printed On ' + $('#dttime').text() + '</td></tr></table>');
-        myWindow.print();
-    }
-
-
-
-    function PrintthisMaterialRequest(Rowlen,flg) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#TotalAmountLabel').text());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        var MRNo = '';
-        if (flg == 0)
-            MRNo = $('#MRNo').val();
-        else if (flg == 1)
-            MRNo = $('#CopyMRNo').val();
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-
-        myWindow.document.write('<table width=100% ><tr>');
-        myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
-        myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:left><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td><td style="" class=txbld style=text-align:center>MATERIAL  REQUEST</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('</tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>MR# :' + MRNo + '</td></tr><tr><td class=blclr>Date : ' + $('#MRDate').val() + '</td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td style="opacity:0">Demo</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#product_' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page   
-                    myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#td_' + Id).text() + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#price_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#amount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#quantity_' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page    
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#td_' + Id).text() + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#price_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#amount_' + Id).val() || 0);
-                    TotPQty += parseInt($('#quantity_' + Id).val() || 0);
-                }
-                if (Rowcount % 43 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;"><td height=250px colspan=8></td></tr>');
-                }
-            }
-        }
-        for (var a = 1; a <= 43 - Rowcount; a++) {
-            myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-        }
-        //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma;height:8px; font-size: 10px;"><td style="font-family:tahoma; font-size: 12px;" align=left colspan=8><b>Total Qty:  ' + TotPQty + '  </b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:66%; font-size: 13px;">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;width:15.5%" align=center ><b>GRAND TOTAL</b></td><td style="font-family:tahoma; font-size: 10px"  align=right ><b>' + addCommas(parseFloat($('#TotalAmountLabel').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
-    }
-
-
-
-
-
-
-    function PrintthisSalesGas(Rowlen, flg) {
-      
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 16; var MaxCnt = 44;
-
-        var AmountinWords = WordwithDecimal($('#gndtotal').text());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-        var Trnvalue = '';
-        if($('#txtlpono').val()==0){
-            Trnvalue = '';
-        }
-        else {
-            Trnvalue = $('#txtlpono').val();
-        }
-      
-        var SNo = '';
-        if (flg == 0)
-            SNo = $('#savedbillno').val(); 
-        else if (flg == 1)
-            SNo = $('#txtBillSlNocopy').val();
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-
-        myWindow.document.write('<table width=100% ><tr rowspan=2  style="text-align:center;"><td  colspan=8 style=color:#008000;font-weight:bold>' + (GasLogo.outerHTML) + '</td></tr><tr>');
-        myWindow.document.write('<td  colspan=8></td></tr></table>');
-        myWindow.document.write('<table width=100%;"><tr><td style="text-align:center" class=txbld width=50%>TAX INVOICE</td></tr></table>');
-        myWindow.document.write('<table width=100%;"><tr><td style="text-align:center">TRN :' +window.CompanySettingsArray.TRNNo + '</td></tr></table>');
-        myWindow.document.write('<td  colspan=8></td></tr></table>');
-     
-        myWindow.document.write('<table width=100% frame="box" style="border:none;"><tr>');
-        myWindow.document.write('<td width=80% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr><td>BILL TO</td></tr><tr><td >' + $('#txtcustomer').val() + '</td></tr><tr><td >' + $('#txtaddress').val() + '</td></tr><tr><td>TEL :' + $('#PhoneNo').val() + '</td></tr><tr><td >TRN : ' + Trnvalue + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=20% style="border:none;"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6>');
-        myWindow.document.write('<table width=100% style=text-align:left height=140px><tr><td>INV# :' + SNo + ' </td></tr><tr><td>DATE :' + $('#txtivdate').val() + '  </td></tr><tr><td ></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-       
-       // myWindow.document.write('<table height=5px width=100%><tr><td colspan=8></td></tr> </table>');
-
-
-        if (($('#delvno1').val() != undefined) && ($('#delvno1').val() != 0)) {
-            //alert(($('#delvno1').val() != undefined) && ($('#delvno1').val() != 0))
-            myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center width=10%>Date</td><td align=center>DO#</td><td colspan=2 align=center width=30%>Product</td><td align=center>Qty</td><td align=right>Price</td><td align=right>Amount</td></tr>');
-            for (var i = 0; i <= Rowlen; i++) {
-                var Id = parseInt(i + 1);
-                if ($('#txtproduct' + Id).length) {
-                    Rowcount += 1;
-                    if (Rowcount % MaxCnt == 0) {           //Border bottom gery for last table row in the page   
-                        myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td style="padding-left:5px">' + $('#DelvDate' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#DelvLponum' + Id).val() + '</td><td style="padding-left:5px"  colspan=2>' + $('#txtproduct' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
-                        gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
-                    }
-                    else {                             //Border bottom lightgery for other tbl rows in the page    
-                        myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td style="padding-left:5px">' + $('#DelvDate' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#DelvLponum' + Id).val() + '</td><td style="padding-left:5px"  colspan=2>' + $('#txtproduct' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
-                        gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
-                    }
-                    if (Rowcount % MaxCnt == 0) {
-                        Rowcount = 0;
-                        myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=300px colspan=8></td></tr>');
-                    }
-                }
-            }
-            if (($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)) {
-                for (var a = 1; a <= (parseInt(MaxCnt)) - (parseInt(Rowcount) + 10) ; a++) {
-                    myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-                }
-            }
-            else {
-                for (var a = 1; a <= MaxCnt - Rowcount; a++) {
-                    myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-                }
-            }
-
-            myWindow.document.write('<tr style="border-top:1px solid grey;"><td colspan=6 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Sub Total</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-            myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>VAT 5%</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-            myWindow.document.write('<tr class=violetbg><td colspan=6 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center ><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(Decimal)) + '</b></td></tr>');
-            myWindow.document.write('</table>');
-        }
-        else {
-            myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center width=7  %>Sl#</td><td align=center>Product</td><td colspan=2 align=center>Description</td><td align=center>Qty</td><td align=right>Price</td><td align=right>Amount</td></tr>');
-            for (var i = 0; i <= Rowlen; i++) {
-                var Id = parseInt(i + 1);
-                if ($('#txtproduct' + Id).length) {
-                    Rowcount += 1;
-                    if (Rowcount % MaxCnt == 0) {           //Border bottom gery for last table row in the page   
-                        myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center width=7%>' + $('#td' + Id).text() + '</td><td align=left style="padding-left:5px">' + $('#txtproduct' + Id).val() + '</td><td align=left  colspan=2 style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
-                        gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
-                    }
-                    else {                             //Border bottom lightgery for other tbl rows in the page    
-                        myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center width=7%>' + $('#td' + Id).text() + '</td><td align=left style="padding-left:5px">' + $('#txtproduct' + Id).val() + '</td><td align=left  colspan=2 style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
-                        gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
-                    }
-                    if (Rowcount % MaxCnt == 0) {
-                        Rowcount = 0;
-                        myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=300px colspan=7></td></tr>');
-                    }
-                }
-            }
-            if (($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)) {
-                for (var a = 1; a <= (parseInt(MaxCnt)) - (parseInt(Rowcount) + 10) ; a++) {
-                    myWindow.document.write('<tr><td style="border-left:1px solid grey;" width=7%>&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-                }
-            }
-            else {
-                for (var a = 1; a <= MaxCnt - Rowcount; a++) {
-                    myWindow.document.write('<tr><td style="border-left:1px solid grey;" width=7%>&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
-                }
-
-            }
-            myWindow.document.write('<tr style="border-top:1px solid grey;"><td colspan=5 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Sub Total</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-            myWindow.document.write('<tr><td colspan=5 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>VAT 5%</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-            myWindow.document.write('<tr class=violetbg><td colspan=5 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center ><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(Decimal)) + '</b></td></tr>');
-            myWindow.document.write('</table>');
-        }
-        console.log((($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)))
-        if (($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1)&& ($('#CmpnyBankAcnt').val() != undefined)) {
-            myWindow.document.write('<table width=100%><tr style="height:10px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Balance as per as on : ' + $('#OutStanding').text() + ' </td></tr>' +
-                                                      '<tr style="height:10px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Bank Details :- </td></tr>' +
-                                                      '<tr style="height:6px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">AL NOKHATHA GAS TRADING & DISTRIBUTION LLC</td></tr>' +
-                                                      '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">BANK NAME : '+$('#CmpnyBank').val()+'</td></tr>' +
-                                                      '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">ACCOUNT# :  '+$('#CmpnyAcnt').val()+'</td></tr>' +
-                                                      '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">IBAN# : '+$('#CmpnyIban').val()+'</td></tr>' +
-                                                      '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">SWIFT CODE : '+$('#CmpnySwiftCode').val()+'</td></tr>' +
-                                                      '</table>');
-
-        }
-        myWindow.document.write('<table width=100%><tr style="height:15px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Receivers Name : </td><td style="width:30%;border-bottom:1px dotted black"></td><td colspan=2 align=right style="font-family:tahoma; font-size: 12px;">For AL Nokhatha Gas Trd & Dist. L.L.C</td></tr>' +
-            '<tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Receivers Sign : </td><td style="width:30%;border-bottom:1px dotted black"></td></tr></table>');
-
-        myWindow.print();
-    }
-
-    //New Print Function for Rent Car
-    function PrintthisSalesRentCar(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        var SNo = '';
-        if (Flag == 0)      //Copy
-        { SNo = $('#savedbillno').val(); }
-        else
-        { SNo = $('#txtBillSlNocopy').val(); }
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr><td colspan=8 align=center></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+
+
+////New Print Function for Sales Return New
+function PrintthisBillSalesReturnDefault(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val())
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var SRNo = '';
+    if (Flag == 1)      //Copy
+    { SRNo = $('#txtBillSlNocopy').val(); }
+    else { SRNo = $('#txtBillSlNoSave').val(); }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+    if ($('#select_transfer').val() != '') {
+        Rowcount += 1;
         myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
         myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES INVOICE</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=70%> </td></tr></table>');
+        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
         myWindow.document.write('</td></tr></table></td>');
         myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
-        myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
+        myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd><b>SI#</td><td style="" class=rowbd>' + $('#select_transfer').val() + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
         myWindow.document.write('</td></tr></table></td></tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    }
+    else {
+        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
+        myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
+        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
         myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
-        myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td class=blclr>Address : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : ' + $('#Email').val() + '</td></tr><tr><td class=blclr>Phone# : ' + $('#PhoneNo').val() + '</td></tr></table>');
+        myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
+        myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
         myWindow.document.write('</td></tr></table></td></tr></table>');
+    }
+    myWindow.document.write('<table width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td height=30px class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td height=30px class=blclr>Phone : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
 
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td align=center>Sl#</td><td colspan=3 width=50%>Description</td><td align=center>Days</td><td align=right>Rate</td><td align=right>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#ProductDesc' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 44 == 0) {           //Border bottom gery for last table row in the page           
-                    myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td colspan=3>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page            
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td colspan=3>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                }
-                if (Rowcount % 44 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
-                }
+
+    myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty.</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#txtproduct' + Id).length) {
+            Rowcount += 1;
+            myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right>' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+            gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+            TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            if (Rowcount % 44 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid black"><td height=250px colspan=8></td></tr>');
             }
         }
-        for (var a = 1; a <= 44 - Rowcount; a++) {
-            myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+    }
+    for (var a = 1; a <= 44 - Rowcount; a++) {
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+    }
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+
+////New Print Function for Sales Return New
+function PrintthisBillSalesReturnDefaultLetter(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val())
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var SRNo = '';
+    if (Flag == 1)      //Copy
+    { SRNo = $('#txtBillSlNocopy').val(); }
+    else { SRNo = $('#txtBillSlNoSave').val(); }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+    if ($('#select_transfer').val() != '') {
+        Rowcount += 1;
+        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
+        myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
+        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
+        myWindow.document.write('</td></tr></table></td>');
+        myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
+        myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd><b>SI#</td><td style="" class=rowbd>' + $('#select_transfer').val() + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
+        myWindow.document.write('</td></tr></table></td></tr></table>');
+    }
+    else {
+        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
+        myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
+        myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES RETURN</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=50%> </td></tr></table>');
+        myWindow.document.write('</td></tr></table></td>');
+        myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
+        myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SRNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
+        myWindow.document.write('</td></tr></table></td></tr></table>');
+    }
+    myWindow.document.write('<table width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td height=30px class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td height=30px class=blclr>Phone : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty.</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#txtproduct' + Id).length) {
+            Rowcount += 1;
+            myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right>' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+            gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+            TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            if (Rowcount % 45 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid black"><td height=120px colspan=8></td></tr>');
+            }
         }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
+    }
+    for (var a = 1; a <= 40 - Rowcount; a++) {
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+    }
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
 
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
 
-        myWindow.print();
+    myWindow.print();
+    myWindow.close()
+}
+
+
+////New Print Function for Voucher Entry/Voucher Entry Modify
+function PrintthisVoucherEntryDefault(Rowlen, Flag) {
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var VNo = '';
+    if (Flag == 0)      //Copy
+    { VNo = $('#TransferVoucherNoCopy').val(); }
+    else { VNo = $('#TransferVoucherNo').val(); }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style>');
+    myWindow.document.write(PrintBG);
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + $('#VoucherType option:selected').html() + '</td></tr><tr><td class=blclr>Voucher# : ' + $('#VoucherNoPrint').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#VoucherDate').val() + '</td></tr><tr><td class=blclr style="opacity:0">Email : </td></tr><tr><td class=blclr style="opacity:0">Website : </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
+
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr class=violetbg><td>SL#</td><td>Date</td><td width=25%>Account</td><td>Voucher Description</td><td align=right>Credit</td><td align=right>Debit</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#AccountId' + Id).length) {
+            var DR = '0.00';
+            var CR = '0.00';
+            if ($('#VType' + Id).val() == 'Debit')
+                DR = parseFloat($('#Amount' + Id).val()).toFixed(Decimal);
+            else if ($('#VType' + Id).val() == 'Credit')
+                CR = parseFloat($('#Amount' + Id).val()).toFixed(Decimal);
+
+            myWindow.document.write('<tr class=brtd2><td>' + Id + '</td><td>' + $('#InvoDate' + Id).val() + '</td><td width=25%>' + $('#AccountId' + Id).val() + '</td><td>' + $('#VoucherEntryDescription' + Id).val() + '</td><td align=right>' + addCommas(CR) + '</td><td align=right>' + addCommas(DR) + '</td></tr>');
+
+        }
+    }
+
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<br><br><br><br>')
+    myWindow.document.write('<table width=100%><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
+
+
+    myWindow.print();
+}
+
+
+////New Print Function for RV
+function PrintthisReceiptVoucherDefault(Rowlen, flg) {
+    var Rowcount = 14;
+    var InvNo = '';
+    var InvoDate = '';
+    var Rcamount = 0, RcamountAAA = 0;
+    var AmountinWords = convertNumberToWords($('#FCAmount').val())
+
+    var RVNo = '';
+    if (flg == 0) {
+        RVNo = $('#VoucherNoMain').val();
+    }
+    else if (flg == 1) {
+        RVNo = $('#VoucherNo').val();
     }
 
 
-   //New Print Function for Packing History
-    function PrintthisBillPackingHistory(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 10;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val());      
-        var myWindow = window.open("", "", "width=1500,height=1500");
 
-        var SalesbilnumArray = []; var Salesbilnum = '';
-        var NetWt = 0; var GrWt = 0; var Qty = 0; var Measure = 0;
+    var myWindow = window.open("", "", "width=1500,height=1500");
 
 
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#txtproduct' + Id).length) {
-                if (SalesbilnumArray.indexOf($('#bilnum' + Id).val()) == -1)
-                { SalesbilnumArray.push($('#bilnum' + Id).val()); if (Salesbilnum == '') { Salesbilnum += $('#bilnum' + Id).val() } else { Salesbilnum += ', ' + $('#bilnum' + Id).val() } }
-                NetWt = parseFloat(NetWt) + parseFloat($('#NetWt' + Id).val());
-                GrWt = parseFloat(GrWt) + parseFloat($('#GrossWt' + Id).val());
-                Qty = parseFloat(Qty) + parseFloat($('#txtquantity' + Id).val());
-                Measure = parseFloat(Measure) + parseFloat($('#MeasureQty' + Id).val());
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG);
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
+    myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:center><td style="" class=txbld>RECEIPT VOUCHER</td></tr></table>');
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + $('#AccountName').val() + '</td></tr><tr><td class=blclr>Voucher# : ' + RVNo + '</td></tr><tr><td class=blclr>Date : ' + $('#VoucherDate').val() + '</td></tr><tr><td class=blclr  style="opacity:0">DEMO</td></tr><tr><td class=blclr style="opacity:0">Website : </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
+
+    //myWindow.document.write('<table width=100%<tr><td>RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM:</td><td align=right></td></tr></table>')
+
+    //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountName').val() + '</td><td align=right ></td></tr></table>')
+
+    for (var i = 1; i < Rowlen; i++) {
+        if ($('#SlNoCheck' + i).prop("checked")) {
+
+
+
+            if ($('#InvoNo' + i).text()) {
+                if (InvNo == '') {
+                    InvNo = InvNo + $('#InvoNo' + i).text();
+                }
+                else
+                    InvNo = InvNo + ',' + $('#InvoNo' + i).text();
+
+            }
+
+            InvoDate += $('#InvoDate' + i).text();
+            Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
+            RcamountAAA = Rcamount.toLocaleString('en');
+
+
+        }
+    }
+    myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr class=violetbg><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>' + $('#VEDescription' + Rowlen).text() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
+    myWindow.document.write('<tr class=violetbg><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
+    myWindow.document.write('<tr><td style="border-left:1px solid black">Invoice No.: ' + InvNo + '</td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr>');
+
+    if (($('#ChequeNo').val() != 0)) {
+        myWindow.document.write('<tr><td style="border-left:1px solid black">Cheque No.: ' + $('#ChequeNo').val() + '</td><td style="border-right:1px solid black">Dated: ' + $('#ChequeDate').val() + '</td><td style="border-right:1px solid black" align=right></td></tr>');
+    }
+
+    myWindow.document.write('<tfoot><tr  style="border:1px solid black;"><td align="right" colspan=2 style="border-right:1px solid black;">Total</td><td style="border-right:1px solid black" align=right>' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr></tfoot></table>')
+
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<br><br>')
+    myWindow.document.write('<table><tr><td>Amount in words (AED) :' + AmountinWords + ' Only' + '</td></tr></table>')
+    myWindow.document.write('<br><br><br><br>')
+
+    myWindow.document.write('<table width=100%><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
+
+    myWindow.print();
+}
+
+
+////New Print Function for PV
+function PrintthisPaymentVoucherDefault(Rowlen, flg) {
+    var Rowcount = 14;
+    var InvNo = '';
+    var InvoDate = '';
+    var Rcamount = 0, RcamountAAA = 0;
+    var AmountinWords = convertNumberToWords($('#FCAmount').val())
+
+
+    var PVNo = '';
+    if (flg == 0) {
+        PVNo = $('#VoucherNoMain').val();
+    }
+    else if (flg == 1) {
+        PVNo = $('#VoucherNo').val();
+    }
+
+
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG);
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
+    myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:center><td style="" class=txbld>PAYMENT VOUCHER</td></tr></table>');
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + $('#AccountName').val() + '</td></tr><tr><td class=blclr>Voucher# : ' + PVNo + '</td></tr><tr><td class=blclr>Date : ' + $('#VoucherDate').val() + '</td></tr><tr><td class=blclr style="opacity:0">Email : </td></tr><tr><td class=blclr style="opacity:0">Website : </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=20px width=100%><tr><td colspan=12></td></tr> </table>');
+
+
+    //myWindow.document.write('<table width=100%<tr><td>PAY TO :</td><td align=right></td></tr></table>')
+
+    //myWindow.document.write('<table width=100%<tr><td>M/S:&nbsp;&nbsp;&nbsp;' + $('#AccountName').val() + '</td><td align=right ></td></tr></table>')
+
+    for (var i = 1; i < Rowlen; i++) {
+        if ($('#SlNoCheck' + i).prop("checked")) {
+
+
+
+            if ($('#InvoNo' + i).text()) {
+                if (InvNo == '') {
+                    InvNo = InvNo + $('#InvoNo' + i).text();
+                }
+                else
+                    InvNo = InvNo + ',' + $('#InvoNo' + i).text();
+
+            }
+
+            InvoDate += $('#InvoDate' + i).text();
+            Rcamount = parseFloat(Rcamount + $('#FCRecAmount' + i).val() || 0).toFixed(Decimal);
+            RcamountAAA = Rcamount.toLocaleString('en');
+
+
+        }
+    }
+    myWindow.document.write('<table style="border-collapse: collapse;border-color:1px solid black" width="100%"><tr class=violetbg><td style="border:1px solid black;" rowspan=2 colspan=2 align=center>' + $('#VEDescription' + Rowlen).text() + '</td><td style="border:1px solid black" align=center>Amount</td></tr>');
+    myWindow.document.write('<tr class=violetbg><td align=center style="border:1px solid black" >' + $('#Currency option:selected').text() + '</td></tr>');
+    myWindow.document.write('<tr><td style="border-left:1px solid black">Invoice No.: ' + InvNo + '</td><td style="border-right:1px solid black" align:right</td><td align=right style="border-right:1px solid black">' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr>');
+
+    if (($('#ChequeNo').val() != 0)) {
+        myWindow.document.write('<tr><td style="border-left:1px solid black">Cheque No.: ' + $('#ChequeNo').val() + '</td><td style="border-right:1px solid black">Dated: ' + $('#ChequeDate').val() + '</td><td style="border-right:1px solid black" align=right></td></tr>');
+    }
+
+    myWindow.document.write('<tfoot><tr  style="border:1px solid black;"><td align="right" colspan=2 style="border-right:1px solid black;">Total</td><td style="border-right:1px solid black" align=right>' + addCommas(parseFloat($('#FCAmount').val() || 0).toFixed(Decimal)) + '</td></tr></tfoot></table>')
+
+    myWindow.document.write('</table>');
+
+    myWindow.document.write('<br><br>')
+    myWindow.document.write('<table><tr><td>Amount in words (AED) :' + AmountinWords + ' Only' + '</td></tr></table>')
+    myWindow.document.write('<br><br><br><br>')
+
+    myWindow.document.write('<table width=100%><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Prepared by</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Accountant</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline">Approved By</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="text-decoration:overline; align=right">Received By</td></table>')
+
+    myWindow.print();
+}
+
+
+//NEW PRINT FUCTION FOR CONTRACT
+function PrintthisContractRENT(Rowlen, flag) {
+
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var AmountinWords = convertNumberToWords($('#TotalChqAmt').text())
+    var TotQty = 0;
+    var total = 0;
+    var CNo = '';
+    var Rowcount = 0;
+
+    if (flag == 0)
+        CNo = $('#ContractNo').val();
+    else if (flag == 1)
+        CNo = $('#ContractNoCopy').val();
+
+    myWindow.document.write('<table width=100%><tr>' +
+        '<td>' + (ComapnydivToPrint.outerHTML) + '</td>' +
+        '<td style="font-size:120%;"><b>RENT RECEIPT</b></td>' +
+        '</tr>');
+
+    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=20px colspan=11></td></tr>');
+
+    myWindow.document.write('<table width=100% ><tr>' +
+        '<td  width=30%><table width=100% frame="box"><tr>' +
+        '<td style="border:none;"><table  style="font-size:85%;"><tr align=center><td colspan=3 height=50px>' +
+        '<table width=100%; style=text-align:left height=50px><tr align=center><td align=center><b>CONTRACT PERIOD</b></td></tr><tr><td align=left>FROM : ' + $('#FromPeriod').val() + '</td></tr><tr><td align=left>TO :     ' + $('#ToPeriod').val() + '</td></tr></table>' +
+        '</td></tr></table></td>' +
+        '</tr></table></td>' +
+
+        '<td width=45%></td>' +
+
+        '<td  width=25%><table width=100%  align=right><tr>' +
+        '<td style="border:none;"><table  style="font-size:85%;"><tr align=right><td colspan=3 height=50px>' +
+        '<table width=100%; style=text-align:left height=50px><tr><td  align=right>DATE : ' + $('#ContDate').val() + '</td></tr><tr><td  align=right>CONTRACT No. : <b>' + $('#ContractNoCopy').val() + '</b></td></tr></table>' +
+        '</td></tr></table></td>' +
+        '</tr></table></td>' +
+        '</tr></table>');
+
+    myWindow.document.write('<table width=100%> <tr><td align=center></td></tr><tr><td align=center></td></tr>');
+    myWindow.document.write(' <table border=1  rules=cols style="border:1px solid black;"width=100%>');
+
+
+
+
+    myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
+        '<td colspan=5 style="border-right:1px solid white;padding:5px">RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM : </td>' +
+        '<td style="border-right:1px solid white;" align=right></td>' +
+        '<td align=right style=""></td></tr>' +
+
+        '<tr style="font-size:100%;height=10%">' +
+        '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MR/MS : <b>' + $('#Tenant').val() + '</b></td>' +
+        '<td colspan=3 style="border-right:1px solid white;" align=center>PO BOX : ' + $('#TenantPOBOXNo').val() + '</td>' +
+        '<td colspan=3 style="">EMIR : ' + $('#TenantEMRID').val() + '</td></tr>' +
+        '<tr></tr>' +
+
+        '<tr style="font-size:100%;">' +
+        '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MOBILE : </td>' +
+        '<td colspan=3 style="border-right:1px solid white;" align=center>TEL No. : ' + $('#TenantPhone').val() + '</td>' +
+        '<td colspan=3 style="">FAX : </td></tr>');
+    myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px" align=center>Sl#</td><td style="padding-left:5px" align=center>AMOUNT</td><td style="padding-left:5px" align=center>CHEQUE NO/CASH</td><td style="padding-left:5px" align=center>DATE</td><td align=center>BANK</td><td align=center style="padding-right:5px">BRANCH</td><td align=center style="padding-right:5px">PARTICULARS</td></tr>');
+    var slno = 1;
+    for (var i = 0; i < Rowlen; i++) {
+        var Id = parseInt(i + 1);
+
+        if ($('#TblContract tr').length) {
+            if ($('#RentType' + Id + ' option:selected').html() == ' Rent') {
+                Rowcount += 1;
+                TotQty++;
+                myWindow.document.write('<tr><td style="padding-left:5px">' + slno + '</td><td style="padding-left:5px" align=right>' + addCommas($('#Amount' + Id).val()) + '</td><td style="padding-left:5px" align=center>' + $('#ChequeNo' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#ChequeDate' + Id).val() + '</td><td align=center>' + $('#ContBank' + Id + ' option:selected').html() + '</td><td align=center style="padding-right:5px">' + $('#ContBranch' + Id).val() + '</td><td align=center style="padding-right:5px">' + $('#RentType' + Id + ' option:selected').html() + '</td></tr>');
+                total += parseFloat($('#Amount' + Id).val() || 0);
+                slno++;
             }
         }
+    }
 
-        var CartinWords = WordwithDecimal(TotalCartonsArray.length);
-        CartinWords = CartinWords.replace('Only', ' ');
-
-        var QtnNo = '';
-        //if (Flag == 0)      //Copy
-        //{ QtnNo = $('#txtQuotationNocopy').val(); }
-        //else
-            if (Flag == 1)
-            { QtnNo = $('#txtBillSlNocopy').val(); }
-
-          //  ComapnyImgToPrint.removeAttribute('id')
-            $(ComapnyImgToPrint).attr("id", "PackingListLogo");
-            $(ComapnyImgToPrint).attr("width", "200");
-            $(ComapnyImgToPrint).attr("height", "100px");
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td,.brtd3 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-
-        myWindow.document.write('<table width=100% style=""><tr style=""><td width=10%; style="valign:top">' + (ComapnyImgToPrint.outerHTML) + '</td>');
-        myWindow.document.write('<td width=90%; style="">');
-        myWindow.document.write('<table width=100%; style="text-align:right"><tr><td style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table>');
+    for (var a = 1; a <= 15 - Rowcount; a++) {
+        myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td><td align=right style="padding-right:5px">1</td></tr>');
+    }
 
 
+    var TotalinWords = convertNumberToWords(total);
+
+    myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
+        '<td colspan=5 style="border-right:1px solid white;padding:5px">TOTAL AMOUNT : AED ' + TotalinWords + ' ONLY</td>' +
+        '<td style="border-right:1px solid white;" align=right></td>' +
+        '<td align=right style=""></td></tr>' +
+
+        '<tr style="font-size:100%;height=10%">' +
+        '<td colspan=3 style="border-right:1px solid white;padding:10px">DHS : <b><span style="border:1px solid gray;padding:5px;">&#160;&#160;&#160;&#160;&#160;&#160;' + addCommas((total).toFixed(Decimal)) + '</span></b></td>' +
+        '<td colspan=3 style="border-right:1px solid white;" align=center></td>' +
+        '<td colspan=3 style=""></td></tr>');
+
+    myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
+    myWindow.document.write('<table width=100%><tr><td colspan=6 align=left style="padding:5px">I/WE&#160;&#160;&#160;&#160;' + $('#Tenant').val() + ' </td><td colspan=6 align=right>Cheque Collected by :....................... </td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">OF&#160;&#160;&#160;&#160;</td><td colspan=6 align=center>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Signature  </td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">Hereby agree upon as under : &#160;&#160;&#160;&#160;</td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">RENT PER YEAR DHS : ' + addCommas((total).toFixed(Decimal)) + '</td><td colspan=6 align=right>To be Paid by : ' + TotQty + '</td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">FOR FLAT NO : ' + $('#FlatNo').val() + '</td><td colspan=6 align=right>LOCATED IN  : ' + $('#Premise').val() + '</td></tr>');
 
 
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% frame="box"><tr>');
-        myWindow.document.write('<td width=50% style="border:none"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=100px>');
-        myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center>');
+    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=40px colspan=11></td></tr>');
 
-        myWindow.document.write('<td class=brtd1>FOR ACCOUNT AND RISK OF</td></tr><tr><td style=color:#5c3158>' + ($('#txtcustomer').val()).substring(0, 30) + '</td></tr><tr><td class=blclr>' + ($('#txtaddress').val()).substring(0, 30) + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr></table>');     //<tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr>
+    myWindow.document.write('<table width=100% ><tr style="text-align:center"><td style="text-decoration:overline;width:25%">ACCOUNTANT</td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%">TENANT</td></table>')
+
+    myWindow.print();
+}
+
+//NEW PRINT FUCTION FOR CONTRACT
+function PrintthisContractSD(Rowlen, flag) {
+
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var AmountinWords = convertNumberToWords($('#TotalChqAmt').text())
+    var TotQty = 0;
+    var total = 0;
+    var CNo = '';
+    var Rowcount = 0;
+
+    if (flag == 0)
+        CNo = $('#ContractNo').val();
+    else if (flag == 1)
+        CNo = $('#ContractNoCopy').val();
+
+    myWindow.document.write('<table width=100%><tr>' +
+        '<td>' + (ComapnydivToPrint.outerHTML) + '</td>' +
+        '<td style="font-size:120%;"><b>SECURITY DEPOSIT RECEIPT</b></td></tr>');
+
+    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=10px colspan=11></td></tr>');
 
 
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('<td width=50% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=100px>');
-        myWindow.document.write('<table width=100% style=text-align:left>');
+    myWindow.document.write('<table width=100% ><tr>' +
+        '<td  width=30%></td>' +
 
-        myWindow.document.write('<tr><td class="brtd1" style=color:#5c3158 align=right>Sales Invoice No : </td><td class="brtd1" style=color:#5c3158 align=left>' + Salesbilnum + '</td></tr><tr><td style=color:#5c3158 align=right>Packing No &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: </td><td style=color:#5c3158 align=left>' + $('#txtBillSlNocopy').val() + '</td></tr><tr><td style=color:#5c3158 align=right>Date &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: </td><td style=color:#5c3158 align=left>' + $('#txtivdate').val() + '</td></tr><tr><td></td></tr><tr><td class=blclr></td></tr><tr><td class=blclr></td></tr></table>');
+        '<td width=45%></td>' +
 
-        myWindow.document.write('</td></tr></table></td></tr></table>');
+        '<td  width=25%><table width=100%  align=right><tr>' +
+        '<td style="border:none;"><table  style="font-size:85%;"><tr align=right><td colspan=3 height=50px>' +
+        '<table width=100%; style=text-align:left height=50px><tr><td  align=right>DATE : ' + $('#ContDate').val() + '</td></tr></table>' +
+        '</td></tr></table></td>' +
+        '</tr></table></td>' +
+        '</tr></table>');
 
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td  width=10%>C/N NO</td><td width=15%>Code</td><td width=36%>Description</td><td width=7%>Qty</td><td width=8%>Unit</td><td align=center width=8%>N.Wt.</td><td align=right width=8%>G.Wt.</td><td align=right width=8%>MEAS</td></tr>');
+
+
+    myWindow.document.write('<table width=100%> <tr><td align=center></td></tr><tr><td align=center></td></tr>');
+    myWindow.document.write(' <table border=1  rules=cols style="border:1px solid black;"width=100%>');
+
+
+
+
+    myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
+        '<td colspan=5 style="border-right:1px solid white;padding:5px;font-size:90%;">RECEIVED WITH THANKS THE FOLLOWING AMOUNT FROM : </td>' +
+        '<td style="border-right:1px solid white;" align=right></td>' +
+        '<td align=right style=""></td></tr>' +
+
+        '<tr style="font-size:100%;height=10%">' +
+        '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MR/MS : <b>' + $('#Tenant').val() + '</b></td>' +
+        '<td colspan=3 style="border-right:1px solid white;" align=center>PO BOX : ' + $('#TenantPOBOXNo').val() + '</td>' +
+        '<td colspan=3 style="">EMIR : ' + $('#TenantEMRID').val() + '</td></tr>' +
+        '<tr></tr>' +
+
+        '<tr style="font-size:100%;">' +
+        '<td colspan=3 style="border-right:1px solid white;padding:5px">&#160;&#160;&#160;&#160;MOBILE : </td>' +
+        '<td colspan=3 style="border-right:1px solid white;" align=center>TEL No. : ' + $('#TenantPhone').val() + '</td>' +
+        '<td colspan=3 style="">FAX : </td></tr>');
+
+    myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px" align=center>Sl#</td><td style="padding-left:5px" align=center>AMOUNT</td><td style="padding-left:5px" align=center>CHEQUE NO/CASH</td><td style="padding-left:5px" align=center>DATE</td><td align=center>BANK</td><td align=center style="padding-right:5px">BRANCH</td><td align=center style="padding-right:5px">PARTICULARS</td></tr>');
+    var slno = 1;
+    for (var i = 0; i < Rowlen; i++) {
+        var Id = parseInt(i + 1);
+
+        if ($('#TblContract tr').length) {
+            if ($('#RentType' + Id + ' option:selected').html() == 'SD') {
+                Rowcount += 1;
+                TotQty++;
+                myWindow.document.write('<tr><td style="padding-left:5px" align=center>' + slno + '</td><td style="padding-left:5px" align=right>' + addCommas($('#Amount' + Id).val()) + '</td><td style="padding-left:5px" align=center>' + $('#ChequeNo' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#ChequeDate' + Id).val() + '</td><td align=center>' + $('#ContBank' + Id + ' option:selected').html() + '</td><td align=center style="padding-right:5px">' + $('#ContBranch' + Id).val() + '</td><td align=center style="padding-right:5px">' + $('#RentType' + Id + ' option:selected').html() + '</td></tr>');
+                total += parseFloat($('#Amount' + Id).val() || 0);
+                slno++;
+            }
+        }
+    }
+    for (var a = 1; a <= 15 - Rowcount; a++) {
+        myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td><td align=right style="padding-right:5px">1</td></tr>');
+
+    }
+
+
+    var TotalinWords = convertNumberToWords(total);
+    myWindow.document.write('<tr style="border-top:1px solid black;font-size:100%">' +
+        '<td colspan=5 style="border-right:1px solid white;padding:5px">TOTAL AMOUNT : AED ' + TotalinWords + ' ONLY</td>' +
+        '<td style="border-right:1px solid white;" align=right></td>' +
+        '<td align=right style=""></td></tr>' +
+
+        '<tr style="font-size:100%;height=10%">' +
+        '<td colspan=3 style="border-right:1px solid white;padding:10px">DHS : <b><span style="border:1px solid gray;padding:5px;">&#160;&#160;&#160;&#160;&#160;&#160;' + addCommas((total).toFixed(Decimal)) + '</span></b></td>' +
+        '<td colspan=3 style="border-right:1px solid white;" align=center></td>' +
+        '<td colspan=3 style=""></td></tr>');
+
+    myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
+    myWindow.document.write('<table width=100%><tr><td colspan=6 align=left>I/WE&#160;&#160;&#160;&#160;' + $('#Tenant').val() + ' </td><td colspan=6 align=right>Cheque Collected by :....................... </td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">OF&#160;&#160;&#160;&#160;</td><td colspan=6 align=center>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Signature  </td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">Hereby agree upon as under : &#160;&#160;&#160;&#160;</td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">RENT PER YEAR DHS : ' + addCommas((total).toFixed(Decimal)) + '</td><td colspan=6 align=right>To be Paid by :' + TotQty + '</td></tr>' +
+        '<tr><td colspan=6 align=left style="padding:5px">FOR FLAT NO :' + $('#FlatNo').val() + '</td><td colspan=6 align=right>LOCATED IN  :' + $('#Premise').val() + '</td></tr>');
+
+
+
+    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=40px colspan=11></td></tr>');
+
+    myWindow.document.write('<table width=100% ><tr style="text-align:center"><td style="text-decoration:overline;width:25%">ACCOUNTANT</td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%"></td><td style="text-decoration:overline;width:25%">TENANT</td></table>')
+
+
+    myWindow.print();
+}
+
+//New Print Function for BOQ
+function PrintthisBOQ(Rowlen) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#FCGT').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var Eng = '';
+    if ($('#UserName').val() != 0) {
+        Eng = $('#UserName option:selected').html();
+    }
+    else {
+        Eng = '';
+    }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
+    myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
+    myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:center><td style="" class=txbld>PROJECT ESTIMATION - BOQ</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('</tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>BOQ# :' + $('#BOQNo').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#BOQDate').val() + '</td></tr><tr><td class=blclr>Ref. : ' + $('#LPO').val() + '</td></tr><tr><td class=blclr>Prepared By :' + Eng + ' </td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td class=blclr>Job Description :' + $('#Description').val() + ' </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#Product_' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page 
+                myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
+                TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
+                TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
+            }
+            if (Rowcount % 43 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 43 - Rowcount; a++) {
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+    }
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right></td><td style="font-family:tahoma; font-size: 10px;" align=right ></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:50%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#FCGT').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+
+function PrintthisMaterialIssue(Rowlen) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#FCGT').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    myWindow.document.write('<table width=100% ><tr>');
+    myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
+    myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:left><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td><td style="" class=txbld style=text-align:center>MATERIAL  ISSUE</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('</tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>MI# :' + $('#MINo').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#IssueDate').val() + '</td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td style="opacity:0">Demo</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#Product_' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page   
+                myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td align=center>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
+                TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page    
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#col' + Id).text() + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#Description_' + Id).val() + '</td><td align=center>' + $('#Unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#Rate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#TotalAmount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#TotalAmount_' + Id).val() || 0);
+                TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
+            }
+            if (Rowcount % 43 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 43 - Rowcount; a++) {
+        myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+    }
+    // myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty:  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right></td><td style="font-family:tahoma; font-size: 10px;" align=right ></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:66%; font-size: 13px;">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;width:15.5%" align=center ><b>GRAND TOTAL</b></td><td style="font-family:tahoma; font-size: 10px"  align=right ><b>' + addCommas(parseFloat($('#FCGT').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+
+    //myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    //myWindow.document.write('<td width=100%>');
+    //myWindow.document.write('<table width=100%>');
+    //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty:  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right></td><td style="font-family:tahoma; font-size: 10px;" align=right ></td></tr>');
+    //myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:66%; font-size: 13px;">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;width:15.5%" align=center ><b>GRAND TOTAL</b></td><td style="font-family:tahoma; font-size: 10px"  align=right ><b>' + addCommas(parseFloat($('#FCGT').text()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('</table>');
+    //myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+
+//New Print Function for TM
+function PrintthisTM(Rowlen) {
+    var TotPQty = 0; var Rowcount = 14;
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    if ($('#typeIssue').prop("checked")) {
+        var Caption = 'TOOLS' + '' + ' ISSUE';
+    }
+    else {
+        var Caption = 'TOOLS' + '' + ' RETURN';
+    }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
+    myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
+    myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:center><td style="" class=txbld>' + Caption + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('</tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>TM# :' + $('#VocNo').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#Date').val() + '</td></tr><tr></tr><tr><td class=blclr>Issued By :' + $('#IssuedBy').val() + ' </td></tr><tr><tr><td class=blclr>Custodian :' + $('#CustodianName').val() + ' </td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td class=blclr>Job Description :' + $('#JobcodeDesc').val() + ' </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Pcs</td><td align=center>Serial#</td><td align=center>Qty.</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#Product_' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page           
+                myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc_' + Id).val() + '</td><td align=center>' + $('#Pcs_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Serial_' + Id).val() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td></tr>');
+                TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page            
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#Product_' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc_' + Id).val() + '</td><td align=center>' + $('#Pcs_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#Serial_' + Id).val() + '</td><td align=center>' + $('#Quantity_' + Id).val() + '</td></tr>');
+                TotPQty += parseInt($('#Quantity_' + Id).val() || 0);
+            }
+            if (Rowcount % 43 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 43 - Rowcount; a++) {
+        //alert(a)
+        myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+    }
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr class=violetbg style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td style="font-family:tahoma; font-size: 10px;" align=center colspan=><b>Total Qty :  ' + TotPQty + '  </b></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+function PrintthisPurchaseOrder(Rowlen) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#gndtotal').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F}  .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    myWindow.document.write('<table width=100% ><tr>');
+    myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
+    myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:left><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td><td style="" class=txbld style=text-align:center>PURCHASE  ORDER</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('</tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>PO# :' + $('#CopyOrderno').val() + '</td></tr><tr><td class=blclr>Date : ' + $('#Orderdate').val() + '</td></tr><tr><td class=blclr>Supplier :' + $('#suppliername').val() + ' </td></tr><tr><td style="opacity:0">Demo</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#product_' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 42 == 0) {           //Border bottom gery for last table row in the page   
+                myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#amount_' + Id).val() || 0);
+                TotPQty += parseInt($('#quantity_' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page    
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + Id + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#amount_' + Id).val() || 0);
+                TotPQty += parseInt($('#quantity_' + Id).val() || 0);
+            }
+            if (Rowcount % 42 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 42 - Rowcount; a++) {
+        myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey">&#160;</td><td style="border-left:1px solid grey">&#160;</td></tr>');
+    }
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-size:110%;height: 30px;"><td align=left colspan=7><b>Total</b></td><td style="border-left:1px solid grey;" align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-weight:bold;font-size:110%;height: 30px;"><td align=left colspan=8>AED ' + AmountinWords + '</td></tr>');
+    myWindow.document.write('</table>');
+
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right style="font-family:tahoma; font-size: 10px;">Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr>' +
+        '<tr style="height:10px"><td colspan=8></td></tr><tr><td colspan=5 style="font-family:tahoma; font-size: 10px;">Printed By ' + $('#User').val() + '</td><td colspan=6 style="font-family:tahoma; font-size: 10px;" align=right>Printed at ' + $('#DepartmentName').val() + ' , Using EUMIERP</td></tr>' +
+        '<tr><td colspan=3 style="font-family:tahoma; font-size: 10px;">Printed On ' + $('#dttime').text() + '</td></tr></table>');
+    myWindow.print();
+}
+
+
+
+function PrintthisMaterialRequest(Rowlen, flg) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#TotalAmountLabel').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var MRNo = '';
+    if (flg == 0)
+        MRNo = $('#MRNo').val();
+    else if (flg == 1)
+        MRNo = $('#CopyMRNo').val();
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    myWindow.document.write('<table width=100% ><tr>');
+    myWindow.document.write('<td><table style="font-size:85%;" width=100%><tr align=center><td>');
+    myWindow.document.write('<table width=100%; style="text-align:center;"><tr style=text-align:left><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td><td style="" class=txbld style=text-align:center>MATERIAL  REQUEST</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('</tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td>COMPANY DETAILS</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td>OTHER DETAILS</td></tr><tr><td height=45px style=color:#5c3158>MR# :' + MRNo + '</td></tr><tr><td class=blclr>Date : ' + $('#MRDate').val() + '</td></tr><tr><td class=blclr>Job Code :' + $('#JobCode').val() + ' </td></tr><tr><td style="opacity:0">Demo</td></tr><tr><td style="opacity:0">Demo</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center>Code</td><td colspan=2 align=center>Description</td><td align=center>Unit</td><td align=center>Qty</td><td align=center>Rate</td><td align=center>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#product_' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 43 == 0) {           //Border bottom gery for last table row in the page   
+                myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#td_' + Id).text() + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#price_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#amount_' + Id).val() || 0);
+                TotPQty += parseInt($('#quantity_' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page    
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#td_' + Id).text() + '</td><td>' + $('#product_' + Id).val() + '</td><td colspan=2>' + $('#productdesc_' + Id).val() + '</td><td align=center>' + $('#unit_' + Id + ' option:selected').html() + '</td><td align=center>' + $('#quantity_' + Id).val() + '</td><td align=right>' + addCommas($('#price_' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#amount_' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#amount_' + Id).val() || 0);
+                TotPQty += parseInt($('#quantity_' + Id).val() || 0);
+            }
+            if (Rowcount % 43 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 43 - Rowcount; a++) {
+        myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+    }
+    //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma;height:8px; font-size: 10px;"><td style="font-family:tahoma; font-size: 12px;" align=left colspan=8><b>Total Qty:  ' + TotPQty + '  </b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:66%; font-size: 13px;">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;width:15.5%" align=center ><b>GRAND TOTAL</b></td><td style="font-family:tahoma; font-size: 10px"  align=right ><b>' + addCommas(parseFloat($('#TotalAmountLabel').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+
+
+
+
+
+function PrintthisSalesGas(Rowlen, flg) {
+
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 16; var MaxCnt = 44;
+
+    var AmountinWords = WordwithDecimal($('#gndtotal').text());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var Trnvalue = '';
+    if ($('#txtlpono').val() == 0) {
+        Trnvalue = '';
+    }
+    else {
+        Trnvalue = $('#txtlpono').val();
+    }
+
+    var SNo = '';
+    if (flg == 0)
+        SNo = $('#savedbillno').val();
+    else if (flg == 1)
+        SNo = $('#txtBillSlNocopy').val();
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    myWindow.document.write('<table width=100% ><tr rowspan=2  style="text-align:center;"><td  colspan=8 style=color:#008000;font-weight:bold>' + (GasLogo.outerHTML) + '</td></tr><tr>');
+    myWindow.document.write('<td  colspan=8></td></tr></table>');
+    myWindow.document.write('<table width=100%;"><tr><td style="text-align:center" class=txbld width=50%>TAX INVOICE</td></tr></table>');
+    myWindow.document.write('<table width=100%;"><tr><td style="text-align:center">TRN :' + window.CompanySettingsArray.TRNNo + '</td></tr></table>');
+    myWindow.document.write('<td  colspan=8></td></tr></table>');
+
+    myWindow.document.write('<table width=100% frame="box" style="border:none;"><tr>');
+    myWindow.document.write('<td width=80% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr><td>BILL TO</td></tr><tr><td >' + $('#txtcustomer').val() + '</td></tr><tr><td >' + $('#txtaddress').val() + '</td></tr><tr><td>TEL :' + $('#PhoneNo').val() + '</td></tr><tr><td >TRN : ' + Trnvalue + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=20% style="border:none;"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6>');
+    myWindow.document.write('<table width=100% style=text-align:left height=140px><tr><td>INV# :' + SNo + ' </td></tr><tr><td>DATE :' + $('#txtivdate').val() + '  </td></tr><tr><td ></td></tr><tr><td></td></tr><tr><td></td></tr><tr><td></td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+
+    // myWindow.document.write('<table height=5px width=100%><tr><td colspan=8></td></tr> </table>');
+
+
+    if (($('#delvno1').val() != undefined) && ($('#delvno1').val() != 0)) {
+        //alert(($('#delvno1').val() != undefined) && ($('#delvno1').val() != 0))
+        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center>Sl#</td><td align=center width=10%>Date</td><td align=center>DO#</td><td colspan=2 align=center width=30%>Product</td><td align=center>Qty</td><td align=right>Price</td><td align=right>Amount</td></tr>');
         for (var i = 0; i <= Rowlen; i++) {
             var Id = parseInt(i + 1);
             if ($('#txtproduct' + Id).length) {
                 Rowcount += 1;
-                if (Rowcount % 44 == 0) {           //Border bottom gery for last table row in the page           
-                    myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;">' + $('#Cart' + Id).val() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td >' + ($('#ProductDesc' + Id).val()).substring(0, 30) + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=right>' + ($('#NetWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#GrossWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#MeasureQty' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+                if (Rowcount % MaxCnt == 0) {           //Border bottom gery for last table row in the page   
+                    myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td style="padding-left:5px">' + $('#DelvDate' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#DelvLponum' + Id).val() + '</td><td style="padding-left:5px"  colspan=2>' + $('#txtproduct' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
+                    gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
                 }
-                else {                             //Border bottom lightgery for other tbl rows in the page            
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;">' + $('#Cart' + Id).val() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td >' + ($('#ProductDesc' + Id).val()).substring(0, 30) + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=right>' + ($('#NetWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#GrossWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#MeasureQty' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+                else {                             //Border bottom lightgery for other tbl rows in the page    
+                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td style="padding-left:5px">' + $('#DelvDate' + Id).val() + '</td><td style="padding-left:5px" align=center>' + $('#DelvLponum' + Id).val() + '</td><td style="padding-left:5px"  colspan=2>' + $('#txtproduct' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
+                    gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
                 }
-                if (Rowcount % 44 == 0) {
+                if (Rowcount % MaxCnt == 0) {
                     Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
+                    myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=300px colspan=8></td></tr>');
                 }
             }
         }
-        for (var a = 1; a <= 47 - Rowcount; a++) {           
-           // myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
-            myWindow.document.write('<tr class=brtd3><td style="border-left:1px solid grey;">&#160;&#160;&#160;</td><td>&#160;&#160;&#160;</td><td >&#160;&#160;&#160;</td><td align=center> &#160;&#160;&#160;</td><td>&#160;&#160;&#160;</td><td align=right>&#160;&#160;&#160;</td><td align=right style="border-right:1px solid grey;">&#160;&#160;&#160;</td><td align=right style="border-right:1px solid grey;">&#160;&#160;&#160;</td></tr>');
+        if (($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)) {
+            for (var a = 1; a <= (parseInt(MaxCnt)) - (parseInt(Rowcount) + 10); a++) {
+                myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+            }
+        }
+        else {
+            for (var a = 1; a <= MaxCnt - Rowcount; a++) {
+                myWindow.document.write('<tr><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+            }
+        }
+
+        myWindow.document.write('<tr style="border-top:1px solid grey;"><td colspan=6 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Sub Total</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+        myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>VAT 5%</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+        myWindow.document.write('<tr class=violetbg><td colspan=6 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center ><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(Decimal)) + '</b></td></tr>');
+        myWindow.document.write('</table>');
+    }
+    else {
+        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg style="border-bottom:1px solid grey"><td align=center width=7  %>Sl#</td><td align=center>Product</td><td colspan=2 align=center>Description</td><td align=center>Qty</td><td align=right>Price</td><td align=right>Amount</td></tr>');
+        for (var i = 0; i <= Rowlen; i++) {
+            var Id = parseInt(i + 1);
+            if ($('#txtproduct' + Id).length) {
+                Rowcount += 1;
+                if (Rowcount % MaxCnt == 0) {           //Border bottom gery for last table row in the page   
+                    myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center width=7%>' + $('#td' + Id).text() + '</td><td align=left style="padding-left:5px">' + $('#txtproduct' + Id).val() + '</td><td align=left  colspan=2 style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
+                    gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
+                }
+                else {                             //Border bottom lightgery for other tbl rows in the page    
+                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center width=7%>' + $('#td' + Id).text() + '</td><td align=left style="padding-left:5px">' + $('#txtproduct' + Id).val() + '</td><td align=left  colspan=2 style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;padding-right:5px">' + addCommas($('#txtfcamnt' + Id).val()) + '</td></tr>');
+                    gridtotal += parseFloat($('#txtfcamnt' + Id).val() || 0);
+                }
+                if (Rowcount % MaxCnt == 0) {
+                    Rowcount = 0;
+                    myWindow.document.write('<tr style="border:1px solid black;border-left:1px solid white;border-right:1px solid white;"><td height=300px colspan=7></td></tr>');
+                }
+            }
+        }
+        if (($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)) {
+            for (var a = 1; a <= (parseInt(MaxCnt)) - (parseInt(Rowcount) + 10); a++) {
+                myWindow.document.write('<tr><td style="border-left:1px solid grey;" width=7%>&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+            }
+        }
+        else {
+            for (var a = 1; a <= MaxCnt - Rowcount; a++) {
+                myWindow.document.write('<tr><td style="border-left:1px solid grey;" width=7%>&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td  colspan=2 style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td><td style="border-left:1px solid grey;">&#160;</td></tr>');
+            }
 
         }
-        myWindow.document.write('<tr class=brtd3 style="border-bottom:solid 1 px red;border:1px solid grey;"><td >' + TotalCartonsArray.length + ' CTNS</td><td></td><td ></td><td align=center>' + Qty + '</td><td></td><td align=right>' + NetWt + '</td><td align=right >' + GrWt + '</td><td align=right >' + Measure + '</td></tr>');
-
+        myWindow.document.write('<tr style="border-top:1px solid grey;"><td colspan=5 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Sub Total</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+        myWindow.document.write('<tr><td colspan=5 font-size: 13px;"></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>VAT 5%</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+        myWindow.document.write('<tr class=violetbg><td colspan=5 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center ><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(Decimal)) + '</b></td></tr>');
         myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-
-        //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1><b>TOTAL  &#160;&#160;&#160;&#160;&#160;:&#160;&#160;&#160;&#160;&#160; ' + TotalCartonsArray.length + ' CARTONS</b></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Quotation Validity : ' + $('#txtdays').val() + '</td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=8 style="width:100%">Total  :  ' + CartinWords + ' CTNS</td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;"></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
-
-        myWindow.print();
     }
+    console.log((($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)))
+    if (($('#typecredit').prop("checked")) && ($('#CmpnyBankAcnt').val() != '') && ($('#CmpnyBankAcnt').val() != 1) && ($('#CmpnyBankAcnt').val() != undefined)) {
+        myWindow.document.write('<table width=100%><tr style="height:10px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Balance as per as on : ' + $('#OutStanding').text() + ' </td></tr>' +
+            '<tr style="height:10px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Bank Details :- </td></tr>' +
+            '<tr style="height:6px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">AL NOKHATHA GAS TRADING & DISTRIBUTION LLC</td></tr>' +
+            '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">BANK NAME : ' + $('#CmpnyBank').val() + '</td></tr>' +
+            '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">ACCOUNT# :  ' + $('#CmpnyAcnt').val() + '</td></tr>' +
+            '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">IBAN# : ' + $('#CmpnyIban').val() + '</td></tr>' +
+            '<tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">SWIFT CODE : ' + $('#CmpnySwiftCode').val() + '</td></tr>' +
+            '</table>');
+
+    }
+    myWindow.document.write('<table width=100%><tr style="height:15px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Receivers Name : </td><td style="width:30%;border-bottom:1px dotted black"></td><td colspan=2 align=right style="font-family:tahoma; font-size: 12px;">For AL Nokhatha Gas Trd & Dist. L.L.C</td></tr>' +
+        '<tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 12px;">Receivers Sign : </td><td style="width:30%;border-bottom:1px dotted black"></td></tr></table>');
+
+    myWindow.print();
+}
+
+//New Print Function for Rent Car
+function PrintthisSalesRentCar(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 14;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var SNo = '';
+    if (Flag == 0)      //Copy
+    { SNo = $('#savedbillno').val(); }
+    else { SNo = $('#txtBillSlNocopy').val(); }
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr><tr>');
+    myWindow.document.write('<td width=75% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
+    myWindow.document.write('<table width=100%; style="text-align:left;"><tr style=text-align:left><td style="" class=txbld width=50%>SALES INVOICE</td><td width=50%> </td></tr><tr style=text-align:left><td  width=30%></td><td width=70%> </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=25% ><table  style="font-size:85%;" width=100%><tr align="center"><td colspan=6>');
+    myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Bill#</td><td style="" class=rowbd>' + SNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#txtivdate').val() + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none;border-right:1px solid grey"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>SERVICE PROVIDER</td></tr><tr><td height=45px style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=170px>');
+    myWindow.document.write('<table width=100% style=text-align:left><tr class=violetbg style=text-align:center><td class=brtd1>BILL TO</td></tr><tr><td height=45px style=color:#5c3158>' + $('#txtcustomer').val() + '</td></tr><tr><td class=blclr>Address : ' + $('#txtaddress').val() + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr><tr><td class=blclr>Email : ' + $('#Email').val() + '</td></tr><tr><td class=blclr>Phone# : ' + $('#PhoneNo').val() + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td align=center>Sl#</td><td colspan=3 width=50%>Description</td><td align=center>Days</td><td align=right>Rate</td><td align=right>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#ProductDesc' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 44 == 0) {           //Border bottom gery for last table row in the page           
+                myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td colspan=3>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page            
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;" align=center>' + $('#td' + Id).text() + '</td><td colspan=3>' + $('#ProductDesc' + Id).val() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            }
+            if (Rowcount % 44 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 44 - Rowcount; a++) {
+        myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+    }
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;">Powered By <span style="color:blue;">www.eumierp.com</span></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
+
+
+//New Print Function for Packing History
+function PrintthisBillPackingHistory(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 10;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var SalesbilnumArray = []; var Salesbilnum = '';
+    var NetWt = 0; var GrWt = 0; var Qty = 0; var Measure = 0;
+
+
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#txtproduct' + Id).length) {
+            if (SalesbilnumArray.indexOf($('#bilnum' + Id).val()) == -1) { SalesbilnumArray.push($('#bilnum' + Id).val()); if (Salesbilnum == '') { Salesbilnum += $('#bilnum' + Id).val() } else { Salesbilnum += ', ' + $('#bilnum' + Id).val() } }
+            NetWt = parseFloat(NetWt) + parseFloat($('#NetWt' + Id).val());
+            GrWt = parseFloat(GrWt) + parseFloat($('#GrossWt' + Id).val());
+            Qty = parseFloat(Qty) + parseFloat($('#txtquantity' + Id).val());
+            Measure = parseFloat(Measure) + parseFloat($('#MeasureQty' + Id).val());
+        }
+    }
+
+    var CartinWords = WordwithDecimal(TotalCartonsArray.length);
+    CartinWords = CartinWords.replace('Only', ' ');
+
+    var QtnNo = '';
+    //if (Flag == 0)      //Copy
+    //{ QtnNo = $('#txtQuotationNocopy').val(); }
+    //else
+    if (Flag == 1) { QtnNo = $('#txtBillSlNocopy').val(); }
+
+    //  ComapnyImgToPrint.removeAttribute('id')
+    $(ComapnyImgToPrint).attr("id", "PackingListLogo");
+    $(ComapnyImgToPrint).attr("width", "200");
+    $(ComapnyImgToPrint).attr("height", "100px");
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td,.brtd3 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+    myWindow.document.write('<table width=100% style=""><tr style=""><td width=10%; style="valign:top">' + (ComapnyImgToPrint.outerHTML) + '</td>');
+    myWindow.document.write('<td width=90%; style="">');
+    myWindow.document.write('<table width=100%; style="text-align:right"><tr><td style=color:#5c3158>' + window.CompanySettingsArray.CompanyName + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Fax : ' + window.CompanySettingsArray.Fax + '</td></tr><tr><td class=blclr>Email : ' + window.CompanySettingsArray.Email + '</td></tr><tr><td class=blclr>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table>');
+
+
+
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% frame="box"><tr>');
+    myWindow.document.write('<td width=50% style="border:none"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=100px>');
+    myWindow.document.write('<table width=100%; style=text-align:left><tr class=violetbg style=text-align:center>');
+
+    myWindow.document.write('<td class=brtd1>FOR ACCOUNT AND RISK OF</td></tr><tr><td style=color:#5c3158>' + ($('#txtcustomer').val()).substring(0, 30) + '</td></tr><tr><td class=blclr>' + ($('#txtaddress').val()).substring(0, 30) + '</td></tr><tr><td class=blclr>TRN# : ' + $('#txtlpono').val() + '</td></tr></table>');     //<tr><td class=blclr>Email : </td></tr><tr><td class=blclr>Website : </td></tr>
+
+
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('<td width=50% ><table style="font-size:85%;" width=100%><tr align=center><td colspan=6 height=100px>');
+    myWindow.document.write('<table width=100% style=text-align:left>');
+
+    myWindow.document.write('<tr><td class="brtd1" style=color:#5c3158 align=right>Sales Invoice No : </td><td class="brtd1" style=color:#5c3158 align=left>' + Salesbilnum + '</td></tr><tr><td style=color:#5c3158 align=right>Packing No &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: </td><td style=color:#5c3158 align=left>' + $('#txtBillSlNocopy').val() + '</td></tr><tr><td style=color:#5c3158 align=right>Date &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: </td><td style=color:#5c3158 align=left>' + $('#txtivdate').val() + '</td></tr><tr><td></td></tr><tr><td class=blclr></td></tr><tr><td class=blclr></td></tr></table>');
+
+    myWindow.document.write('</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td  width=10%>C/N NO</td><td width=15%>Code</td><td width=36%>Description</td><td width=7%>Qty</td><td width=8%>Unit</td><td align=center width=8%>N.Wt.</td><td align=right width=8%>G.Wt.</td><td align=right width=8%>MEAS</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#txtproduct' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 44 == 0) {           //Border bottom gery for last table row in the page           
+                myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;">' + $('#Cart' + Id).val() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td >' + ($('#ProductDesc' + Id).val()).substring(0, 30) + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=right>' + ($('#NetWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#GrossWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#MeasureQty' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            }
+            else {                             //Border bottom lightgery for other tbl rows in the page            
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;">' + $('#Cart' + Id).val() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td >' + ($('#ProductDesc' + Id).val()).substring(0, 30) + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=right>' + ($('#NetWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#GrossWt' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + ($('#MeasureQty' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            }
+            if (Rowcount % 44 == 0) {
+                Rowcount = 0;
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=8></td></tr>');
+            }
+        }
+    }
+    for (var a = 1; a <= 47 - Rowcount; a++) {
+        // myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
+        myWindow.document.write('<tr class=brtd3><td style="border-left:1px solid grey;">&#160;&#160;&#160;</td><td>&#160;&#160;&#160;</td><td >&#160;&#160;&#160;</td><td align=center> &#160;&#160;&#160;</td><td>&#160;&#160;&#160;</td><td align=right>&#160;&#160;&#160;</td><td align=right style="border-right:1px solid grey;">&#160;&#160;&#160;</td><td align=right style="border-right:1px solid grey;">&#160;&#160;&#160;</td></tr>');
+
+    }
+    myWindow.document.write('<tr class=brtd3 style="border-bottom:solid 1 px red;border:1px solid grey;"><td >' + TotalCartonsArray.length + ' CTNS</td><td></td><td ></td><td align=center>' + Qty + '</td><td></td><td align=right>' + NetWt + '</td><td align=right >' + GrWt + '</td><td align=right >' + Measure + '</td></tr>');
+
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+
+    //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1><b>TOTAL  &#160;&#160;&#160;&#160;&#160;:&#160;&#160;&#160;&#160;&#160; ' + TotalCartonsArray.length + ' CARTONS</b></td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Quotation Validity : ' + $('#txtdays').val() + '</td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=8 style="width:100%">Total  :  ' + CartinWords + ' CTNS</td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:8px"><td colspan=8></td></tr><tr ><td colspan=3 style="font-family:tahoma; font-size: 10px;"></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr> </table>');
+
+    myWindow.print();
+}
 
 //    function PrintthisBillForFazalLazor(Rowlen, flag)
 //    {
@@ -7394,7 +7024,7 @@ function PrintthisVoucherEntrysave(Rowlen) {
 //        var PayType = $('#select_payterms').val();       
 //        if (PayType == 1) { PayType = 'CASH' } else { PayType='CREDIT' }
 
- 
+
 
 //        myWindow.document.write('<style type="text/css"> @page { margin-left:0cm;}  .printbdy{ border-collapse: collapse;font-family:tahoma; font-size: 12px;} .printbdy td {border:0.0px solid black;}.tbl1{ }#header, #nav, .noprint{display: none;}.print{ page-break-after: always;} </style>');
 //        myWindow.document.write('<table width="100%" class="printbdy">');
@@ -7425,7 +7055,7 @@ function PrintthisVoucherEntrysave(Rowlen) {
 //         } else {
 //             myWindow.document.write('<tr><td>&#160;</td></tr>');
 //         }
-         
+
 
 //        myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr>');
 //        myWindow.document.write('<tr><td>&#160;</td></tr></table>');
@@ -7440,7 +7070,7 @@ function PrintthisVoucherEntrysave(Rowlen) {
 //            if (ItemCode != undefined) {
 
 //                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0)
-               
+
 //                if (i > 9) {
 
 //                    myWindow.document.write('<tr><td width=3%></td><td width=5%>' + i + '</td><td align=left width=17%>' + ItemCode + '</td><td  width=37%>' + ItemName + '</td><td text-align="center"  width=8%>' + Qty +'  '+Unit+ '</td><td align="right"  width=12%>' + Unitprice + '</td><td align="right"  width=15%>' + Amount + '</td></tr>');
@@ -7455,9 +7085,9 @@ function PrintthisVoucherEntrysave(Rowlen) {
 //                    }
 
 //                    myWindow.document.write('<tr><td colspan=17><table width="100%" class="printbdy">');
-                   
 
-                    
+
+
 //                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=center><b>' + PayType + '</b></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4><b></b></td><tr>')
 //                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=left><b>' + CustName + '</b></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4><b>' + BillNo + '</b></td><tr>')
 //                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#txtaddress').val() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4>' + $('#txtivdate').val() + '</td><tr>')
@@ -7498,7 +7128,7 @@ function PrintthisVoucherEntrysave(Rowlen) {
 //        var TotalLine5 = $('#TotalTaxable').val();
 //        var TotalLine4 = $('#TotalTax').val();
 //        var TotalLine1 = $('#gndtotal').text();
-        
+
 //        //myWindow.document.write('</table><table><tr><td width=3%></td><td width=100%></td><td colspan=6  align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=right colspan=4>' + TotalLine5 + '</td><tr>');
 
 //        //if (Dis != 0) {
@@ -7544,534 +7174,532 @@ function PrintthisVoucherEntrysave(Rowlen) {
 //}
 
 
-    function PrintthisBillForFazalLazor(Rowlen, flag) {
-        var BillNo = '';
-        if (flag == 1)
-            BillNo = $('#txtBillSlNocopy').val();
-        else if (flag == 0)
-            BillNo = $('#savedbillno').val();
+function PrintthisBillForFazalLazor(Rowlen, flag) {
+    var BillNo = '';
+    if (flag == 1)
+        BillNo = $('#txtBillSlNocopy').val();
+    else if (flag == 0)
+        BillNo = $('#savedbillno').val();
 
-        var Currency = $('#select_crncy option:selected').html()
-        var bal = 'Party TRN : ' + $('#txtlpono').val();
+    var Currency = $('#select_crncy option:selected').html()
+    var bal = 'Party TRN : ' + $('#txtlpono').val();
 
-        //var AmountinWords = '    ' + convertNumberToWords($('#gndtotal').text())
+    //var AmountinWords = '    ' + convertNumberToWords($('#gndtotal').text())
 
-        var AmountinWords = '    ' + WordwithDecimal($('#GrandTotal').val());
+    var AmountinWords = '    ' + WordwithDecimal($('#GrandTotal').val());
 
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td,.brtd3 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
+    var myWindow = window.open("", "", "width=1500,height=1500");
 
 
-        var Page = 0;
-        var sspace = '               ';
-        var Space = '                                                                                            ';
-        var Leftalign = '';
-        var Paytype = 'CASH';
-        var spacebal = Space;
-        var strbal = spacebal.substring(spacebal.length - 27, spacebal.length);
-        var CustName = $('#txtlgrgname').val();
-        if (CustName == '') { var CustName = $('#txtcustomer').val() }
-        var PayType = $('#select_payterms').val();
-        if (PayType == 1) { PayType = 'CASH' } else { PayType = 'CREDIT' }
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td,.brtd3 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+    var Page = 0;
+    var sspace = '               ';
+    var Space = '                                                                                            ';
+    var Leftalign = '';
+    var Paytype = 'CASH';
+    var spacebal = Space;
+    var strbal = spacebal.substring(spacebal.length - 27, spacebal.length);
+    var CustName = $('#txtlgrgname').val();
+    if (CustName == '') { var CustName = $('#txtcustomer').val() }
+    var PayType = $('#select_payterms').val();
+    if (PayType == 1) { PayType = 'CASH' } else { PayType = 'CREDIT' }
 
 
 
-        myWindow.document.write('<style type="text/css"> @page { margin-left:0cm;}  .printbdy{ border-collapse: collapse;font-family:tahoma; font-size: 12px;} .printbdy td {border:0.0px solid black;}.tbl1{ }#header, #nav, .noprint{display: none;}.print{ page-break-after: always;} </style>');
-        myWindow.document.write('<table width="100%" class="printbdy">');
-        myWindow.document.write('<tr><td height=117px colspan=17></td></tr>');
+    myWindow.document.write('<style type="text/css"> @page { margin-left:0cm;}  .printbdy{ border-collapse: collapse;font-family:tahoma; font-size: 12px;} .printbdy td {border:0.0px solid black;}.tbl1{ }#header, #nav, .noprint{display: none;}.print{ page-break-after: always;} </style>');
+    myWindow.document.write('<table width="100%" class="printbdy">');
+    myWindow.document.write('<tr><td height=117px colspan=17></td></tr>');
 
 
-        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=center><b>' + PayType + '</b></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4><b></b></td><tr>')
-        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=left><b>' + CustName + '</b></td><td width=25% colspan=1></td><td width="40%" align=center colspan=8><b>' + $('#UserDetsss1').text() + '-' + BillNo + '</b></td><td width=18% colspan=1><b></b></td><tr>')
-        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#txtaddress').val() + '</td><td width=25% colspan=1></td><td width="35%"  align=center colspan=7><b>' + $('#txtivdate').val() + '</b></td><td > : </td><td width=23%><b>' + $('#CurrentTimeSales').val() + '</b></td><tr>')
-        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#PhoneNo').val() + ',' + $('#CustPhnNew').val() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
-        if ($('#ChassisNo').val() != '') {
-            myWindow.document.write('<tr><td width=3%></td><td>Chassis# :</td><td colspan=6 width=100% align=left>' + $('#ChassisNo').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>');
-        } else {
-            myWindow.document.write('<tr><td>&#160;</td></tr>');
-        }
-        if ($('#txtlpono').val() != '') {
-            myWindow.document.write('<tr><td width=3%></td><td>Party TRN :</td><td colspan=6 width=100% align=left>' + $('#txtlpono').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>')
-        } else {
-            myWindow.document.write('<tr><td>&#160;</td></tr>');
-        }
-        if ($('#OutStanding').text() != '') {
-            myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=center >BAL :' + $('#OutStanding').text() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
-        } else {
-            myWindow.document.write('<tr><td>&#160;</td></tr>');
-        }
-        if ($('#txtmsg').val() != '') {
-            myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=10  width=100% align=left >' + $('#txtmsg').val() + '</td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
-        } else {
-            myWindow.document.write('<tr><td>&#160;</td></tr>');
-        }
+    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=center><b>' + PayType + '</b></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4><b></b></td><tr>')
+    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=left><b>' + CustName + '</b></td><td width=25% colspan=1></td><td width="40%" align=center colspan=8><b>' + $('#UserDetsss1').text() + '-' + BillNo + '</b></td><td width=18% colspan=1><b></b></td><tr>')
+    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#txtaddress').val() + '</td><td width=25% colspan=1></td><td width="35%"  align=center colspan=7><b>' + $('#txtivdate').val() + '</b></td><td > : </td><td width=23%><b>' + $('#CurrentTimeSales').val() + '</b></td><tr>')
+    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#PhoneNo').val() + ',' + $('#CustPhnNew').val() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
+    if ($('#ChassisNo').val() != '') {
+        myWindow.document.write('<tr><td width=3%></td><td>Chassis# :</td><td colspan=6 width=100% align=left>' + $('#ChassisNo').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>');
+    } else {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
+    }
+    if ($('#txtlpono').val() != '') {
+        myWindow.document.write('<tr><td width=3%></td><td>Party TRN :</td><td colspan=6 width=100% align=left>' + $('#txtlpono').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>')
+    } else {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
+    }
+    if ($('#OutStanding').text() != '') {
+        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=center >BAL :' + $('#OutStanding').text() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
+    } else {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
+    }
+    if ($('#txtmsg').val() != '') {
+        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=10  width=100% align=left >' + $('#txtmsg').val() + '</td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
+    } else {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
+    }
 
 
-        myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr>');
-        myWindow.document.write('<tr><td>&#160;</td></tr></table>');
-        myWindow.document.write('<table width="100%" class="printbdy">');
-        var RowCo = Rowlen; var gridtotal = 0;
-        var slnotxt = 0;
-        for (var i = 1; i < Rowlen; i++) {
-            var Id = parseInt(i);
+    myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr>');
+    myWindow.document.write('<tr><td>&#160;</td></tr></table>');
+    myWindow.document.write('<table width="100%" class="printbdy">');
+    var RowCo = Rowlen; var gridtotal = 0;
+    var slnotxt = 0;
+    for (var i = 1; i < Rowlen; i++) {
+        var Id = parseInt(i);
 
-            var ItemCodeText = $('#txtproduct' + Id).val();
+        var ItemCodeText = $('#txtproduct' + Id).val();
 
-            if (ItemCodeText != undefined) {
-                slnotxt++;
+        if (ItemCodeText != undefined) {
+            slnotxt++;
 
             var Unit = $("#select_unit" + Id + " option:selected").text();
             var ItemCode = $('#txtproduct' + Id).val().substring(0, 15); var ItemName = $('#ProductDesc' + Id).val().substring(0, 38); var Location = $('#select_location' + Id + ' option:selected').html(); var Qty = $('#txtquantity' + Id).val(); var unit = $('#select_unit' + Id + ' option:selected').html() + '  '; var Unitprice = parseFloat($('#txtrate' + Id).val() || 0).toFixed(2); var Amount = $('#txtamnt' + Id).val();
-            
-
-                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0)
-
-                if (i > 9) {
-
-                    myWindow.document.write('<tr><td width=3%></td><td width=5%>' + slnotxt + '</td><td align=left width=17%>' + ItemCode + '</td><td  width=37%>' + ItemName + '</td><td align="right"  width=8%>' + Qty + '  ' + Unit + '</td><td align="right"  width=12%>' + Unitprice + '</td><td align="right"  width=15%>' + Amount + '</td></tr>');
-                }
-                else {
-                    myWindow.document.write('<tr><td width=3%></td><td width=5%>' + slnotxt + '</td><td align=left width=17%>' + ItemCode + '</td><td  width=37%>' + ItemName + '</td><td align="right"  width=8%>' + Qty + '  ' + Unit + '</td><td align="right"  width=12%>' + Unitprice + '</td><td align="right"  width=15%>' + Amount + '</td></tr>');
-                }
-                if (i % 28 == 0 && Rowlen > i + 1) {
-                    Page++;
-                    for (var d = 0; d < 23; d++) {
-                        myWindow.document.write('<tr><td>&#160;</td></tr>');
-                    }
-
-                    myWindow.document.write('<tr><td colspan=17><table width="100%" class="printbdy">');
 
 
+            gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0)
 
-                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=center><b>' + PayType + '</b></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4><b></b></td><tr>')
-                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=left><b>' + CustName + '</b></td><td width=25% colspan=1></td><td width="40%" align=center colspan=8><b>' + $('#UserDetsss1').text() + '-' + BillNo + '</b></td><td width=18% colspan=1><b></b></td><tr>')
-                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#txtaddress').val() + '</td><td width=25% colspan=1></td><td width="35%"  align=center colspan=7><b>' + $('#txtivdate').val() + '</b></td><td ><b> : </b></td><td width=23% ><b>' + $('#CurrentTimeSales').val() + '</b></td><tr>')
-                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#PhoneNo').val() + ',' + $('#CustPhnNew').val() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
-                    if ($('#ChassisNo').val() != '') {
-                        myWindow.document.write('<tr><td width=3%></td><td>Chassis# :</td><td colspan=6 width=100% align=left>' + $('#ChassisNo').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>');
-                    } else {
-                        myWindow.document.write('<tr><td>&#160;</td></tr>');
-                    }
-                    if ($('#txtlpono').val() != '') {
-                        myWindow.document.write('<tr><td width=3%></td><td>Party TRN :</td><td colspan=6 width=100% align=left>' + $('#txtlpono').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>')
-                    } else {
-                        myWindow.document.write('<tr><td>&#160;</td></tr>');
-                    }
-                    if ($('#OutStanding').text() != '') {
-                        myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=center >BAL :' + $('#OutStanding').text() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
-                    } else {
-                        myWindow.document.write('<tr><td>&#160;</td></tr>');
-                    }
-                    myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr></table></td></tr>');
-                    RowCo = Rowlen - 28
+            if (i > 9) {
 
+                myWindow.document.write('<tr><td width=3%></td><td width=5%>' + slnotxt + '</td><td align=left width=17%>' + ItemCode + '</td><td  width=37%>' + ItemName + '</td><td align="right"  width=8%>' + Qty + '  ' + Unit + '</td><td align="right"  width=12%>' + Unitprice + '</td><td align="right"  width=15%>' + Amount + '</td></tr>');
+            }
+            else {
+                myWindow.document.write('<tr><td width=3%></td><td width=5%>' + slnotxt + '</td><td align=left width=17%>' + ItemCode + '</td><td  width=37%>' + ItemName + '</td><td align="right"  width=8%>' + Qty + '  ' + Unit + '</td><td align="right"  width=12%>' + Unitprice + '</td><td align="right"  width=15%>' + Amount + '</td></tr>');
+            }
+            if (i % 28 == 0 && Rowlen > i + 1) {
+                Page++;
+                for (var d = 0; d < 23; d++) {
+                    myWindow.document.write('<tr><td>&#160;</td></tr>');
                 }
 
+                myWindow.document.write('<tr><td colspan=17><table width="100%" class="printbdy">');
+
+
+
+                myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=center><b>' + PayType + '</b></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4><b></b></td><tr>')
+                myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6 width=100% align=left><b>' + CustName + '</b></td><td width=25% colspan=1></td><td width="40%" align=center colspan=8><b>' + $('#UserDetsss1').text() + '-' + BillNo + '</b></td><td width=18% colspan=1><b></b></td><tr>')
+                myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#txtaddress').val() + '</td><td width=25% colspan=1></td><td width="35%"  align=center colspan=7><b>' + $('#txtivdate').val() + '</b></td><td ><b> : </b></td><td width=23% ><b>' + $('#CurrentTimeSales').val() + '</b></td><tr>')
+                myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=left>' + $('#PhoneNo').val() + ',' + $('#CustPhnNew').val() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
+                if ($('#ChassisNo').val() != '') {
+                    myWindow.document.write('<tr><td width=3%></td><td>Chassis# :</td><td colspan=6 width=100% align=left>' + $('#ChassisNo').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>');
+                } else {
+                    myWindow.document.write('<tr><td>&#160;</td></tr>');
+                }
+                if ($('#txtlpono').val() != '') {
+                    myWindow.document.write('<tr><td width=3%></td><td>Party TRN :</td><td colspan=6 width=100% align=left>' + $('#txtlpono').val() + '</td><td width=25% rowspan=5 colspan=4></td><td align=right width=25% colspan=2></td><td width=18% colspan=4></td><tr>')
+                } else {
+                    myWindow.document.write('<tr><td>&#160;</td></tr>');
+                }
+                if ($('#OutStanding').text() != '') {
+                    myWindow.document.write('<tr><td width=3%></td><td width=15%></td><td colspan=6  width=100% align=center >BAL :' + $('#OutStanding').text() + '</td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% colspan=4></td><tr>')
+                } else {
+                    myWindow.document.write('<tr><td>&#160;</td></tr>');
+                }
+                myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr></table></td></tr>');
+                RowCo = Rowlen - 28
 
             }
 
-        }
-        RowCo = Rowlen - (Page * 28);
 
-        for (var i = 0; i < 28 - RowCo; i++) {
-           myWindow.document.write('<tr><td>&#160;</td></tr>');
-           
         }
 
+    }
+    RowCo = Rowlen - (Page * 28);
 
-        var gndtotal = parseFloat($('#GrandTotal').val() || 0).toFixed(20);
-        var Dis = parseFloat($('#TotalDiscount').text() || 0);
+    for (var i = 0; i < 28 - RowCo; i++) {
+        myWindow.document.write('<tr><td>&#160;</td></tr>');
 
-        var TotalLine5 = $('#TotalTaxable').val();
-        var TotalLine4 = $('#TotalTax').val();
-        var TotalLine1 = $('#gndtotal').text();
-
-        //myWindow.document.write('</table><table><tr><td width=3%></td><td width=100%></td><td colspan=6  align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=right colspan=4>' + TotalLine5 + '</td><tr>');
-
-        //if (Dis != 0) {
-        //    myWindow.document.write('</table><table><tr><td width=3%>Dis :</td><td>' + Dis + '</td></tr>');
-        //}
-        //else
-        //{
-        //    myWindow.document.write('<tr><td>&#160;</td></tr>');
-        //}        
-        //myWindow.document.write('<tr><td width=3%></td><td width=100%></td><td colspan=6 align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=right colspan=4>' + TotalLine4 + '</td><tr>');
-        ////myWindow.document.write('<tr><td>&#160;</td></tr>');
-        //myWindow.document.write('<tr><td width=3%></td><td class=printbdy width=100%>' + AmountinWords + ' Only' + '</td><td colspan=6  align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=rignt colspan=4><b>' + TotalLine1 + '</b></td><tr>');
-        //myWindow.document.write('<tr><td>&#160;</td></tr>');
-        //myWindow.document.write('<tr><td></td><td colspan=3 class=printbdy >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + $("#select_salesman option:selected").text() + '</td></tr>');
-        ////myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr></table>');
-
-
-        myWindow.document.write('<tr><td colspan=17><table width=100%>');
-        myWindow.document.write('<tr><td align=right style="font-family:tahoma; font-size: 12px;" colspan=13><b>Total Qty :  ' + $('#TotalPdtQty').val() + ' </b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>' + gridtotal.toFixed(2) + '</b></td><tr>');
-        myWindow.document.write('<tr><td align=right colspan=13></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>DISCOUNT&#160;&#160;&#160;&#160;</b></td><td  align=right style="font-family:tahoma; font-size: 10px;" colspan=2><b>' + parseFloat($('#disc').val()).toFixed(2) + '</b></td><tr>');
-
-        myWindow.document.write('<tr><td style="font-family:tahoma; font-size: 12px;" colspan=13>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    ' + AmountinWords + '' + '</td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b> TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right colspan=2><b>' + parseFloat($('#TotalTaxable').val()).toFixed(2) + '</b></td><tr>');
-
-        myWindow.document.write('<tr><td align=right style="font-family:tahoma; font-size: 12px;" colspan=13>Round Off  ( ' + $('#TotRoundOff').val() + '   )</td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b> TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>' + parseFloat($('#TotalTax').val()).toFixed(2) + '</b></td><tr>');
-
-
-
-        myWindow.document.write('<tr><td colspan=13></td><td style="font-family:tahoma; font-size: 12px;" align=right colspan=2><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 12px;" align=right colspan=2><b>' + parseFloat($('#gndtotal').text()).toFixed(2) + '</b></td><tr>');
-
-
-
-        myWindow.document.write('<tr><td align=center height=26px; colspan=17></td></tr>');
-        myWindow.document.write('<tr><td align=center colspan=17>' + $('#dttime').text() + '</td></tr>');
-
-        myWindow.document.write('<tr><td style="font-family:tahoma; font-size: 12px;"  align=left colspan=17>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + $('#select_salesman option:selected').html() + '</td></tr>');
-
-        myWindow.document.write('<table></td></tr>');
-
-
-
-
-        myWindow.print();
-        myWindow.close();
     }
 
 
+    var gndtotal = parseFloat($('#GrandTotal').val() || 0).toFixed(20);
+    var Dis = parseFloat($('#TotalDiscount').text() || 0);
 
-    //New Print Function for Quotation Entry gas
-    function PrintthisBillQuotationforGas(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 13;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val());
-        var myWindow = window.open("", "", "width=1500,height=1500");
+    var TotalLine5 = $('#TotalTaxable').val();
+    var TotalLine4 = $('#TotalTax').val();
+    var TotalLine1 = $('#gndtotal').text();
 
-        var QtnNo = '';
-        if (Flag == 0)      //Copy
-        { QtnNo = $('#txtQuotationNocopy').val(); }
-        else
-        { QtnNo = $('#savedQuotation').val(); }
+    //myWindow.document.write('</table><table><tr><td width=3%></td><td width=100%></td><td colspan=6  align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=right colspan=4>' + TotalLine5 + '</td><tr>');
 
-        myWindow.document.write('<style type="text/css">.emptbg td{border-right:1px solid grey;} .brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
+    //if (Dis != 0) {
+    //    myWindow.document.write('</table><table><tr><td width=3%>Dis :</td><td>' + Dis + '</td></tr>');
+    //}
+    //else
+    //{
+    //    myWindow.document.write('<tr><td>&#160;</td></tr>');
+    //}        
+    //myWindow.document.write('<tr><td width=3%></td><td width=100%></td><td colspan=6 align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=right colspan=4>' + TotalLine4 + '</td><tr>');
+    ////myWindow.document.write('<tr><td>&#160;</td></tr>');
+    //myWindow.document.write('<tr><td width=3%></td><td class=printbdy width=100%>' + AmountinWords + ' Only' + '</td><td colspan=6  align=left></td><td width=25% colspan=4></td><td width=25% align=right colspan=2></td><td width=18% class=printbdy align=rignt colspan=4><b>' + TotalLine1 + '</b></td><tr>');
+    //myWindow.document.write('<tr><td>&#160;</td></tr>');
+    //myWindow.document.write('<tr><td></td><td colspan=3 class=printbdy >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + $("#select_salesman option:selected").text() + '</td></tr>');
+    ////myWindow.document.write('<tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr><tr><td>&#160;</td></tr></table>');
 
-        //myWindow.document.write('<table style="font-size:85%;" width=100%><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
 
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (GasLogo.outerHTML) + '</td></tr></table>');
+    myWindow.document.write('<tr><td colspan=17><table width=100%>');
+    myWindow.document.write('<tr><td align=right style="font-family:tahoma; font-size: 12px;" colspan=13><b>Total Qty :  ' + $('#TotalPdtQty').val() + ' </b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>' + gridtotal.toFixed(2) + '</b></td><tr>');
+    myWindow.document.write('<tr><td align=right colspan=13></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>DISCOUNT&#160;&#160;&#160;&#160;</b></td><td  align=right style="font-family:tahoma; font-size: 10px;" colspan=2><b>' + parseFloat($('#disc').val()).toFixed(2) + '</b></td><tr>');
+
+    myWindow.document.write('<tr><td style="font-family:tahoma; font-size: 12px;" colspan=13>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    ' + AmountinWords + '' + '</td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b> TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right colspan=2><b>' + parseFloat($('#TotalTaxable').val()).toFixed(2) + '</b></td><tr>');
+
+    myWindow.document.write('<tr><td align=right style="font-family:tahoma; font-size: 12px;" colspan=13>Round Off  ( ' + $('#TotRoundOff').val() + '   )</td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b> TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right colspan=2><b>' + parseFloat($('#TotalTax').val()).toFixed(2) + '</b></td><tr>');
 
 
-        myWindow.document.write('<table width=100%; style="text-align:center"><tr style=text-align:center><td style="" class=txbld width=100%><u>QUOTATION</u></td></tr></table>');
 
-        //myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table width=100% ><tr>');
+    myWindow.document.write('<tr><td colspan=13></td><td style="font-family:tahoma; font-size: 12px;" align=right colspan=2><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 12px;" align=right colspan=2><b>' + parseFloat($('#gndtotal').text()).toFixed(2) + '</b></td><tr>');
 
-        myWindow.document.write('<td width=70% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-        myWindow.document.write('<table width=100% style=text-align:left><tr style=text-align:left><td >TO,</td></tr><tr><td >' + $('#txtcustomer').val() + '</td></tr><tr><td>Tel No &#160;&#160;&#160;&#160;: ' + $('#txtaddress').val() + '</td></tr><tr><td >Email Id &#160;: </td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
 
-        myWindow.document.write('<td width=30% style="border:none;"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
-        myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Quote No.</td><td style="" class=rowbd>' + QtnNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#QtnDate').val() + '</td></tr></table>');
-        myWindow.document.write('</td></tr></table></td>');
-        myWindow.document.write('</tr></table>');
 
-        //myWindow.document.write('<table frame="box" style="margin-top:10px;background-color:#E8EAF6;color:#00838F" height=50px width=100%><tr align=center><td colspan=12>PROJECT DESCRIPTION : [ERP Software For Gas Business Management System which includes Sales,Purchase,Inventory,Job Management and Financial Modules] </td></tr></table>');
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<tr><td align=center height=26px; colspan=17></td></tr>');
+    myWindow.document.write('<tr><td align=center colspan=17>' + $('#dttime').text() + '</td></tr>');
 
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#txtproduct' + Id).length) {
-                Rowcount += 1;
-                if (Rowcount % 42 == 0) {           //Border bottom gery for last table row in the page           
-                    myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                }
-                else {                             //Border bottom lightgery for other tbl rows in the page            
-                    myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
-                    gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
-                    TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                }
-                if (Rowcount % 42 == 0) {
-                    Rowcount = 0;
-                    myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=300px colspan=8></td></tr>');
-                }
-            }
-        }
+    myWindow.document.write('<tr><td style="font-family:tahoma; font-size: 12px;"  align=left colspan=17>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;' + $('#select_salesman option:selected').html() + '</td></tr>');
 
-        //if (Rowcount > 40)
-        //{ Rowcount = Rowcount - 40; }
-        console.log(Rowcount)
-        for (var a = 1; a <= 37 - Rowcount; a++) {
-            myWindow.document.write('<tr class=emptbg><td>&#160;</td><td></td><td colspan=2></td><td></td><td></td><td align=center></td><td align=right></td></tr>');   //<tr><td  colspan=8>&#160;</td></tr>
-        }
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        myWindow.document.write('<td width=100%>');
-        myWindow.document.write('<table width=100%>');
-        myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Quotation Validity : ' + $('#txtdays').val() + '</td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        myWindow.document.write('<tr class=violetbg><td colspan=7 style="width:90%">Total  :  ' + AmountinWords + '</td><td style="font-family:tahoma; font-size: 12px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr><td colspan=8 align=center></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<table width=100%><tr style="height:50px;"><td colspan=8></td></tr><tr ><td style="font-family:tahoma; font-size: 10px;">Receiver Name :</td><td colspan=2 style="font-family:tahoma; font-size: 10px;border-bottom:1px solid black;width:30%;"></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr>');
-        myWindow.document.write('<td style="font-family:tahoma; font-size: 10px;"><div style=margin-top:10px>Receiver Sign :</div></td><td colspan=2 style="font-family:tahoma; font-size: 10px;border-bottom:1px solid black;width:30%;"></td><td colspan=2 align=right ></td><td colspan=3 style=""></td></tr> </table>');
-        myWindow.print();
-    }
+    myWindow.document.write('<table></td></tr>');
 
 
 
 
-
-    //New Print Function for Rent Car
-    function PrintthisSalesRentCarNew(Rowlen, Flag) {
-        var gridtotal = 0; var TotPQty = 0; var Rowcount = 16;
-        var AmountinWords = WordwithDecimal($('#GrandTotal').val());
-        var myWindow = window.open("", "", "width=1500,height=1500");
-
-        var SNo = '';
-        if (Flag == 0)      //Copy
-        { SNo = $('#savedbillno').val(); }
-        else
-        { SNo = $('#txtBillSlNocopy').val(); }
+    myWindow.print();
+    myWindow.close();
+}
 
 
 
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
+//New Print Function for Quotation Entry gas
+function PrintthisBillQuotationforGas(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 13;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var QtnNo = '';
+    if (Flag == 0)      //Copy
+    { QtnNo = $('#txtQuotationNocopy').val(); }
+    else { QtnNo = $('#savedQuotation').val(); }
+
+    myWindow.document.write('<style type="text/css">.emptbg td{border-right:1px solid grey;} .brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+    //myWindow.document.write('<table style="font-size:85%;" width=100%><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (GasLogo.outerHTML) + '</td></tr></table>');
 
 
+    myWindow.document.write('<table width=100%; style="text-align:center"><tr style=text-align:center><td style="" class=txbld width=100%><u>QUOTATION</u></td></tr></table>');
 
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr></table>');
+    //myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table width=100% ><tr>');
 
-        var Vehicle = ''; var VehicleCode = ''; var NumDays = 0;
-        for (var i = 0; i <= Rowlen; i++) {
-            var Id = parseInt(i + 1);
-            if ($('#ProductDesc' + Id).length) {
-                Vehicle = $('#ProductDesc' + Id).val();
-                VehicleCode = $('#txtproduct' + Id).val();
+    myWindow.document.write('<td width=70% ><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
+    myWindow.document.write('<table width=100% style=text-align:left><tr style=text-align:left><td >TO,</td></tr><tr><td >' + $('#txtcustomer').val() + '</td></tr><tr><td>Tel No &#160;&#160;&#160;&#160;: ' + $('#txtaddress').val() + '</td></tr><tr><td >Email Id &#160;: </td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+
+    myWindow.document.write('<td width=30% style="border:none;"><table  style="font-size:85%;" width=100%><tr align=center><td colspan=6 >');
+    myWindow.document.write('<table width=100% style="text-align:center;border-collapse:collapse;background-color:#E8EAF6;border:1px solid lightgrey" ><tr class=rowbd><td class=rowbd><b>Quote No.</td><td style="" class=rowbd>' + QtnNo + ' </b></td></tr><tr class=rowbd><td class=rowbd > <b>Date &#160;&#160;  </td><td class=rowbd style=""> </b>' + $('#QtnDate').val() + '</td></tr></table>');
+    myWindow.document.write('</td></tr></table></td>');
+    myWindow.document.write('</tr></table>');
+
+    //myWindow.document.write('<table frame="box" style="margin-top:10px;background-color:#E8EAF6;color:#00838F" height=50px width=100%><tr align=center><td colspan=12>PROJECT DESCRIPTION : [ERP Software For Gas Business Management System which includes Sales,Purchase,Inventory,Job Management and Financial Modules] </td></tr></table>');
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td>SL#</td><td>Code</td><td colspan=2>Description</td><td>Unit</td><td>Qty</td><td align=center>Rate</td><td align=right>Amount</td></tr>');
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#txtproduct' + Id).length) {
+            Rowcount += 1;
+            if (Rowcount % 42 == 0) {           //Border bottom gery for last table row in the page           
+                myWindow.document.write('<tr class=brtd2  style="border-bottom:1px solid grey"><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
                 gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
                 TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
-                NumDays = $('#txtquantity' + Id).val();
             }
-        }
-        myWindow.document.write('<table width=100% ><tr> <td width=50%>');
-        myWindow.document.write('<table width=100% ><tr style=text-align:left><td style="" class=txbld>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Issue Date:' + $('#txtivdate').val() + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Invoice#:' + SNo + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Invoice Date#:' + $('#txtivdate').val() + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Due Date#:' + $('#txtduedate').val() + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Currency#:' + $('#select_crncy :selected').text() + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Number of Days#:' + NumDays + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Order#:</td></tr>' +
-            '<tr style=text-align:left><td style=""></td></tr></table></td>' +
-
-            '<td width=50%><table width=100% ><tr><td>' +
-            '<table width=100%; style="text-align:left ;border: 1px solid grey"><tr class= style=text-align:center><td class=brtd1>Invoice To</td></tr><tr><td height=15px>' + $('#txtcustomer').val() + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Nationality : </td></tr><tr><td class=blclr>Mobile : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>' +
-            '</td></tr></table></td></tr></table>');
-
-        myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td colspan=3 width=50%>Description</td><td align=center >Discount</td><td align=center>Amount</td><td align=center>Total</td><td align=center>Balance</td></tr>');
-        myWindow.document.write('<tr style=" border: 1px solid black;"><td colspan=3 width=50% >Rental Fees</td><td align=center style=" border: 1px solid black;"> ' + $('#TotalDiscount').val() + ' </td><td align=right style= "border:1px solid black;"> ' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
-        myWindow.document.write('<tr style=" border: 1px solid black;"><td colspan=3 width=50%>Vehicle ' + VehicleCode + ',' + Vehicle + '</td><td align=center  style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr></table>');
-
-
-        for (var a = 1; a <= 16; a++) {
-            myWindow.document.write('<table width=100%><tr><td  colspan=8>&#160;</td></tr>');
-        }
-        myWindow.document.write('<table height=10px width=100% style=""><tr><td colspan=8></td></tr> </table>');
-        myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr  style= "border:1px solid black;"><td colspan=3 width=50% class=violetbg>Invoice Amount</td><td align=center  style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
-        myWindow.document.write('<tr  style=" border: 1px solid black;"><td colspan=3 width=50% >Paid Amount</td><td align=center   style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
-        myWindow.document.write('<tr  style=" border: 1px solid black;"><td colspan=3 width=50% class=violetbg>Remaining Amount</td><td align=center   style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
-        myWindow.document.write('<tr  style=" border: 1px solid black;"><td colspan=3 width=50%>Security Deposit</td><td align=center   style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr></table>');
-        myWindow.document.write('</table>');
-        //myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
-        //myWindow.document.write('<td width=100%>');
-        //myWindow.document.write('<table width=100%>');
-        //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
-        //myWindow.document.write('</table>');
-        //myWindow.document.write('</td></tr></table>');
-
-        myWindow.document.write('<hr  style="border-top: 1px solid black;margin-top:30px">');
-        myWindow.document.write('<table style="font-size:80%;"  width=100%><tr><td colspan=8 ><div style="height:30px;margin-top:20px" class=txbld>Receiver Signature</div></td><td colspan=8><div  style="height:30px;margin-top:40px" class=txbld>Manager Signature</div></td><td colspan=8><div style="height:30px;margin-top:40px" class=txbld>Accountant Signature</div></td></tr> <tr><td colspan=8><div style="height:40px;border: 1px solid black;text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td><td colspan=8 ><div style="height:40px ;border: 1px solid black; text-align:center;"><div style = "margin-top:15px;color:blade">_____________________________</div></div></td><td colspan=8 ><div style="height:40px; border: 1px solid black; text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td></tr></table>');
-
-
-        myWindow.print();
-    }
-
-
-    //NEW PRINT FUCTION FOR AUTOGLASS
-    function PrintthisBillForAUTOGLASSLazor(Rowlen, flag) {
-        var myWindow = window.open("", "", "width=1500,height=1500");
-        var AmountinWords = convertNumberToWords($('#GrandTotal').val())
-        var TotQty = 0;
-        var total = 0;
-        var RBillNo = '';
-        var Rowcount = 12;
-        var PayType = '';
-        if ($('#typecash').prop("checked")) {
-            PayType = 'Cash';
-        }
-        else if ($('#typecredit').prop("checked")) {
-            PayType = 'Credit';
-        }
-
-        //var address = ($('#txtaddress').val()).substr(0, 60);
-
-        if (flag == 0)
-            RBillNo = $('#savedbillno').val();
-        else if (flag == 1)
-            RBillNo = $('#txtBillSlNocopy').val();
-
-        myWindow.document.write('<table width=100%><tr><td align=center><h3>' + window.CompanySettingsArray.CompanyName + '</h3></td></tr>' +
-            '<tr style=text-align:center><td style="">' + $('#txtaddress').val() + '</td></tr>' +
-            '<tr style=text-align:center><td style="">' + $('#CustPhnNew').val() + '</td></tr>' +
-            '<tr style=text-align:center><td style="">TRN NO:' + $('#txtlpono').val() + '</td></tr>' + '</td></tr></table></td></tr></table>');
-
-
-        myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px;table-layout:fixed;border-collapse:collapse;" width=100%><tr><td align=left colspan=6 style=" border-right: 1px solid black ;" >'
-           + $('#txtcustomer').val() + '</td><td >Invoice No: </td><td align=left colspan=2  > : ' + RBillNo + '</td></tr><tr><td colspan=6 style=" border-right: 1px solid black ;"></td ><td>Invoice Date </td><td colspan=2> : '
-           + $('#txtivdate').val() + '</td></tr><tr><td colspan=6 style=" border-right: 1px solid black ;"></td><td style="width:30";>Terms Of Payment </td><td colspan=2> ' + PayType + '</td></tr><tr><td colspan=6 style=" border-right: 1px solid black ;">'
-           + ($('#txtaddress').val()).substr(0, 60) + '</td><td> Due Date </td><td colspan=2> : ' + $('#txtduedate').val() + '</td></tr><tr><td align=left colspan=3>phone : '
-           + window.CompanySettingsArray.PhoneNo + '</td><td colspan=3 style=" border-right: 1px solid black ;" >TRN :' + $('#txtlpono').val() + '</td><td colspan=3 style=" border-right: 1px solid black ;" >SEE REFERENCE :' + $('#txtlgrgname').val() + '</td></tr>');
-
-
-        //myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px" width=100%><tr><td align=left colspan=6>' + $('#txtcustomer').val() + '</td><td  align=left style="padding-left:12%">Sales Ret No </td><td  align=left > : </td><td align=left style="padding-left:1%">' + RBillNo + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Ret Date </td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#txtivdate').val() + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Invoice No.</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_transfer').val() + '</td></tr><tr><td align=left colspan=6>' + $('#txtaddress').val() + '</td><td  align=left style="padding-left:12%">Salesman</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_salesman').find("option:selected").text() + '</td></tr><tr><td align=left colspan=3>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td><td align=left colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td  align=left style="padding-left:12%">LPO </td><td  align=left > : </td><td></td></tr>');
-
-
-        myWindow.document.write('<table width=100%> <tr><td align=center></td></tr><tr><td align=center></td></tr>');
-        myWindow.document.write(' <table border=1  rules=cols style="border:1px solid black;"width=100%>');
-
-        myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px">Sl#</td><td style="padding-left:5px">Code</td><td colspan=4 style="padding-left:5px">Description</td><td style="padding-left:5px">Location</td><td align=center>Qty</td><td align=right style="padding-right:5px">Price</td><td align=right style="padding-right:5px">AMOUNT</td></tr>');
-        var slno = 1;
-        for (var i = 0; i <= Rowlen ; i++) {
-            var Id = parseInt(i + 1);
-
-            if ($('#txtproduct' + Id).length) {
-                Rowcount += 1;
-                myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px">' + slno + '</td><td style="padding-left:5px">' + ($('#txtproduct' + Id).val()).substring(0, 13) + '</td><td colspan=4 style="padding-left:5px">' + ($('#ProductDesc' + Id).val()).substring(0, 24) + '</td><td style="padding-left:5px">' + $('#select_location' + Id + ' :selected').text() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtrate' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtamnt' + Id).val() + '</td></tr>');
-                slno++;
-                TotQty += parseFloat($('#txtquantity' + Id).val() || 0);
-                total += parseFloat($('#txtamnt' + Id).val() || 0)
+            else {                             //Border bottom lightgery for other tbl rows in the page            
+                myWindow.document.write('<tr class=brtd2><td style="border-left:1px solid grey;">' + $('#td' + Id).text() + '</td><td>' + $('#txtproduct' + Id).val() + '</td><td colspan=2>' + $('#ProductDesc' + Id).val() + '</td><td>' + $('#select_unit' + Id + ' option:selected').html() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right>' + addCommas($('#txtrate' + Id).val()) + '</td><td align=right style="border-right:1px solid grey;">' + addCommas($('#txtamnt' + Id).val()) + '</td></tr>');
+                gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+                TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
             }
-            if (Rowcount % 38 == 0) {
+            if (Rowcount % 42 == 0) {
                 Rowcount = 0;
-                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=10></td></tr>');
+                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=300px colspan=8></td></tr>');
             }
         }
-        for (var a = 1; a <= 38 - Rowcount; a++) {
-            //myWindow.document.write('<tr><td  colspan=17>&#160;</td></tr>');
-            // myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td  style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td></tr>');
-            myWindow.document.write('<tr ><td style="padding-left:5px">&#160;</td><td style="padding-left:5px"></td><td colspan=4 style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td></tr>');
+    }
 
+    //if (Rowcount > 40)
+    //{ Rowcount = Rowcount - 40; }
+    console.log(Rowcount)
+    for (var a = 1; a <= 37 - Rowcount; a++) {
+        myWindow.document.write('<tr class=emptbg><td>&#160;</td><td></td><td colspan=2></td><td></td><td></td><td align=center></td><td align=right></td></tr>');   //<tr><td  colspan=8>&#160;</td></tr>
+    }
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    myWindow.document.write('<td width=100%>');
+    myWindow.document.write('<table width=100%>');
+    myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4><b>Total Qty :  ' + TotPQty + '  </b></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Quotation Validity : ' + $('#txtdays').val() + '</td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    myWindow.document.write('<tr class=violetbg><td colspan=7 style="width:90%">Total  :  ' + AmountinWords + '</td><td style="font-family:tahoma; font-size: 12px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr><td colspan=8 align=center></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<table width=100%><tr style="height:50px;"><td colspan=8></td></tr><tr ><td style="font-family:tahoma; font-size: 10px;">Receiver Name :</td><td colspan=2 style="font-family:tahoma; font-size: 10px;border-bottom:1px solid black;width:30%;"></td><td colspan=2 align=right >Authorized Signature :</td><td colspan=3 style="width:30%;border-bottom:1px solid black"></td></tr>');
+    myWindow.document.write('<td style="font-family:tahoma; font-size: 10px;"><div style=margin-top:10px>Receiver Sign :</div></td><td colspan=2 style="font-family:tahoma; font-size: 10px;border-bottom:1px solid black;width:30%;"></td><td colspan=2 align=right ></td><td colspan=3 style=""></td></tr> </table>');
+    myWindow.print();
+}
+
+
+
+
+
+//New Print Function for Rent Car
+function PrintthisSalesRentCarNew(Rowlen, Flag) {
+    var gridtotal = 0; var TotPQty = 0; var Rowcount = 16;
+    var AmountinWords = WordwithDecimal($('#GrandTotal').val());
+    var myWindow = window.open("", "", "width=1500,height=1500");
+
+    var SNo = '';
+    if (Flag == 0)      //Copy
+    { SNo = $('#savedbillno').val(); }
+    else { SNo = $('#txtBillSlNocopy').val(); }
+
+
+
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+
+
+
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8>' + (ComapnydivToPrint.outerHTML) + '</td></tr></table>');
+
+    var Vehicle = ''; var VehicleCode = ''; var NumDays = 0;
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+        if ($('#ProductDesc' + Id).length) {
+            Vehicle = $('#ProductDesc' + Id).val();
+            VehicleCode = $('#txtproduct' + Id).val();
+            gridtotal += parseFloat($('#txttaxableamnt' + Id).val() || 0);
+            TotPQty += parseInt($('#txtquantity' + Id).val() || 0);
+            NumDays = $('#txtquantity' + Id).val();
         }
+    }
+    myWindow.document.write('<table width=100% ><tr> <td width=50%>');
+    myWindow.document.write('<table width=100% ><tr style=text-align:left><td style="" class=txbld>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Issue Date:' + $('#txtivdate').val() + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Invoice#:' + SNo + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Invoice Date#:' + $('#txtivdate').val() + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Due Date#:' + $('#txtduedate').val() + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Currency#:' + $('#select_crncy :selected').text() + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Number of Days#:' + NumDays + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Order#:</td></tr>' +
+        '<tr style=text-align:left><td style=""></td></tr></table></td>' +
+
+        '<td width=50%><table width=100% ><tr><td>' +
+        '<table width=100%; style="text-align:left ;border: 1px solid grey"><tr class= style=text-align:center><td class=brtd1>Invoice To</td></tr><tr><td height=15px>' + $('#txtcustomer').val() + '</td></tr><tr><td class=blclr>' + window.CompanySettingsArray.Address + '</td></tr><tr><td class=blclr>Nationality : </td></tr><tr><td class=blclr>Mobile : ' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>' +
+        '</td></tr></table></td></tr></table>');
+
+    myWindow.document.write('<table height=10px width=100%><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr class=violetbg><td colspan=3 width=50%>Description</td><td align=center >Discount</td><td align=center>Amount</td><td align=center>Total</td><td align=center>Balance</td></tr>');
+    myWindow.document.write('<tr style=" border: 1px solid black;"><td colspan=3 width=50% >Rental Fees</td><td align=center style=" border: 1px solid black;"> ' + $('#TotalDiscount').val() + ' </td><td align=right style= "border:1px solid black;"> ' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
+    myWindow.document.write('<tr style=" border: 1px solid black;"><td colspan=3 width=50%>Vehicle ' + VehicleCode + ',' + Vehicle + '</td><td align=center  style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr></table>');
 
 
+    for (var a = 1; a <= 16; a++) {
+        myWindow.document.write('<table width=100%><tr><td  colspan=8>&#160;</td></tr>');
+    }
+    myWindow.document.write('<table height=10px width=100% style=""><tr><td colspan=8></td></tr> </table>');
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100% bordercolor="grey"><tr  style= "border:1px solid black;"><td colspan=3 width=50% class=violetbg>Invoice Amount</td><td align=center  style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
+    myWindow.document.write('<tr  style=" border: 1px solid black;"><td colspan=3 width=50% >Paid Amount</td><td align=center   style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
+    myWindow.document.write('<tr  style=" border: 1px solid black;"><td colspan=3 width=50% class=violetbg>Remaining Amount</td><td align=center   style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr>');
+    myWindow.document.write('<tr  style=" border: 1px solid black;"><td colspan=3 width=50%>Security Deposit</td><td align=center   style= "border:1px solid black;"> ' + $('#TotalDiscount').val() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">' + $('#gndtotal').text() + '</td><td align=right  style= "border:1px solid black;">0.00</td></tr></table>');
+    myWindow.document.write('</table>');
+    //myWindow.document.write('<table style="border-collapse:collapse;font-size:80%;" frame="box" width=100%><tr>');
+    //myWindow.document.write('<td width=100%>');
+    //myWindow.document.write('<table width=100%>');
+    //myWindow.document.write('<tr style="border-top:1px solid grey;font-family:tahoma; font-size: 10px;"><td align=left colspan=1>Place  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;: ' + $('#select_place option:selected').html() + '</td><td style="font-family:tahoma; font-size: 10px;" align=center colspan=4></td><td colspan=2 style="font-family:tahoma; font-size: 10px;" align=right><b>SUB TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;" align=right ><b>' + addCommas(parseFloat(gridtotal).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr style="font-family:tahoma; font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAXABLE AMOUNT &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr style="font-family:tahoma;font-size: 10px;"><td align=left colspan=1></td><td colspan=6  align=right><b>TAX @ 5% &#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('<tr class=violetbg><td colspan=5 style="width:75%">Total  :  ' + AmountinWords + '</td><td colspan=2 style="font-family:tahoma;font-size: 10px;" align=right ><b>GRAND TOTAL&#160;&#160;&#160;&#160;</b></td><td style="font-family:tahoma; font-size: 10px;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(2)) + '</b></td></tr>');
+    //myWindow.document.write('</table>');
+    //myWindow.document.write('</td></tr></table>');
+
+    myWindow.document.write('<hr  style="border-top: 1px solid black;margin-top:30px">');
+    myWindow.document.write('<table style="font-size:80%;"  width=100%><tr><td colspan=8 ><div style="height:30px;margin-top:20px" class=txbld>Receiver Signature</div></td><td colspan=8><div  style="height:30px;margin-top:40px" class=txbld>Manager Signature</div></td><td colspan=8><div style="height:30px;margin-top:40px" class=txbld>Accountant Signature</div></td></tr> <tr><td colspan=8><div style="height:40px;border: 1px solid black;text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td><td colspan=8 ><div style="height:40px ;border: 1px solid black; text-align:center;"><div style = "margin-top:15px;color:blade">_____________________________</div></div></td><td colspan=8 ><div style="height:40px; border: 1px solid black; text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td></tr></table>');
 
 
-
-        myWindow.document.write('<tr style="border-right:1px solid black;"><td style="border-right:1px solid white;"></td><td style="border-right:1px solid white;"colspan=3><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Total value of goods excluding tax</td><td align=right style="">' + $('#TotalTaxable').val() + '</td></tr><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Total Quantity</td><td align=right style="">' + $('#TotalPdtQty').val() + '</td></tr><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Total Value</td><td align=right style="">' + $('#gndtotal').text() + '</td></tr><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Cash Received</td><td align=right style="">' + $('#gndtotal').text() + '</td></tr>');
-        var today = new Date();
-        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-        var today1 = new Date();
-        var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
-        myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
-
-        myWindow.document.write('<tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td>Received By.</td></tr><tr><td align=right>Time:  ' + time + '</td></tr><tr><td align=right>Date: ' + date + ' </td></tr>');
+    myWindow.print();
+}
 
 
-        myWindow.print();
+//NEW PRINT FUCTION FOR AUTOGLASS
+function PrintthisBillForAUTOGLASSLazor(Rowlen, flag) {
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var AmountinWords = convertNumberToWords($('#GrandTotal').val())
+    var TotQty = 0;
+    var total = 0;
+    var RBillNo = '';
+    var Rowcount = 12;
+    var PayType = '';
+    if ($('#typecash').prop("checked")) {
+        PayType = 'Cash';
+    }
+    else if ($('#typecredit').prop("checked")) {
+        PayType = 'Credit';
+    }
+
+    //var address = ($('#txtaddress').val()).substr(0, 60);
+
+    if (flag == 0)
+        RBillNo = $('#savedbillno').val();
+    else if (flag == 1)
+        RBillNo = $('#txtBillSlNocopy').val();
+
+    myWindow.document.write('<table width=100%><tr><td align=center><h3>' + window.CompanySettingsArray.CompanyName + '</h3></td></tr>' +
+        '<tr style=text-align:center><td style="">' + $('#txtaddress').val() + '</td></tr>' +
+        '<tr style=text-align:center><td style="">' + $('#CustPhnNew').val() + '</td></tr>' +
+        '<tr style=text-align:center><td style="">TRN NO:' + $('#txtlpono').val() + '</td></tr>' + '</td></tr></table></td></tr></table>');
+
+
+    myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px;table-layout:fixed;border-collapse:collapse;" width=100%><tr><td align=left colspan=6 style=" border-right: 1px solid black ;" >'
+        + $('#txtcustomer').val() + '</td><td >Invoice No: </td><td align=left colspan=2  > : ' + RBillNo + '</td></tr><tr><td colspan=6 style=" border-right: 1px solid black ;"></td ><td>Invoice Date </td><td colspan=2> : '
+        + $('#txtivdate').val() + '</td></tr><tr><td colspan=6 style=" border-right: 1px solid black ;"></td><td style="width:30";>Terms Of Payment </td><td colspan=2> ' + PayType + '</td></tr><tr><td colspan=6 style=" border-right: 1px solid black ;">'
+        + ($('#txtaddress').val()).substr(0, 60) + '</td><td> Due Date </td><td colspan=2> : ' + $('#txtduedate').val() + '</td></tr><tr><td align=left colspan=3>phone : '
+        + window.CompanySettingsArray.PhoneNo + '</td><td colspan=3 style=" border-right: 1px solid black ;" >TRN :' + $('#txtlpono').val() + '</td><td colspan=3 style=" border-right: 1px solid black ;" >SEE REFERENCE :' + $('#txtlgrgname').val() + '</td></tr>');
+
+
+    //myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px" width=100%><tr><td align=left colspan=6>' + $('#txtcustomer').val() + '</td><td  align=left style="padding-left:12%">Sales Ret No </td><td  align=left > : </td><td align=left style="padding-left:1%">' + RBillNo + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Ret Date </td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#txtivdate').val() + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Invoice No.</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_transfer').val() + '</td></tr><tr><td align=left colspan=6>' + $('#txtaddress').val() + '</td><td  align=left style="padding-left:12%">Salesman</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_salesman').find("option:selected").text() + '</td></tr><tr><td align=left colspan=3>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td><td align=left colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td  align=left style="padding-left:12%">LPO </td><td  align=left > : </td><td></td></tr>');
+
+
+    myWindow.document.write('<table width=100%> <tr><td align=center></td></tr><tr><td align=center></td></tr>');
+    myWindow.document.write(' <table border=1  rules=cols style="border:1px solid black;"width=100%>');
+
+    myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px">Sl#</td><td style="padding-left:5px">Code</td><td colspan=4 style="padding-left:5px">Description</td><td style="padding-left:5px">Location</td><td align=center>Qty</td><td align=right style="padding-right:5px">Price</td><td align=right style="padding-right:5px">AMOUNT</td></tr>');
+    var slno = 1;
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+
+        if ($('#txtproduct' + Id).length) {
+            Rowcount += 1;
+            myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px">' + slno + '</td><td style="padding-left:5px">' + ($('#txtproduct' + Id).val()).substring(0, 13) + '</td><td colspan=4 style="padding-left:5px">' + ($('#ProductDesc' + Id).val()).substring(0, 24) + '</td><td style="padding-left:5px">' + $('#select_location' + Id + ' :selected').text() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtrate' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtamnt' + Id).val() + '</td></tr>');
+            slno++;
+            TotQty += parseFloat($('#txtquantity' + Id).val() || 0);
+            total += parseFloat($('#txtamnt' + Id).val() || 0)
+        }
+        if (Rowcount % 38 == 0) {
+            Rowcount = 0;
+            myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=10></td></tr>');
+        }
+    }
+    for (var a = 1; a <= 38 - Rowcount; a++) {
+        //myWindow.document.write('<tr><td  colspan=17>&#160;</td></tr>');
+        // myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td  style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td></tr>');
+        myWindow.document.write('<tr ><td style="padding-left:5px">&#160;</td><td style="padding-left:5px"></td><td colspan=4 style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td></tr>');
+
     }
 
 
 
-    //NEW PRINT FUCTION FOR AUTOPARTS
-    function PrintthisBillForAUTOPARTSLazor(Rowlen, flag) {
-        var myWindow = window.open("", "", "width=1500,height=1500");
-        var AmountinWords = convertNumberToWords($('#GrandTotal').val())
-        var TotQty = 0;
-        var total = 0;
-        var RBillNo = '';
-        var Rowcount = 12;
-        var PayType = '';
-        if ($('#typecash').prop("checked")) {
-            PayType = 'Cash';
-        }
-        else if ($('#typecredit').prop("checked")) {
-            PayType = 'Credit';
-        }
-        var divToPrint = document.getElementById("barcode1");
+
+
+    myWindow.document.write('<tr style="border-right:1px solid black;"><td style="border-right:1px solid white;"></td><td style="border-right:1px solid white;"colspan=3><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Total value of goods excluding tax</td><td align=right style="">' + $('#TotalTaxable').val() + '</td></tr><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Total Quantity</td><td align=right style="">' + $('#TotalPdtQty').val() + '</td></tr><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Total Value</td><td align=right style="">' + $('#gndtotal').text() + '</td></tr><tr style="border-top:1px solid black;"><td colspan=4 style="border-right:1px solid white;"></td><td align=center style="border-right:1px solid white;" > </td><td colspan=4 style="border-right:1px solid white;" align=right>Cash Received</td><td align=right style="">' + $('#gndtotal').text() + '</td></tr>');
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var today1 = new Date();
+    var time = today1.getHours() + ":" + today1.getMinutes() + ":" + today1.getSeconds();
+    myWindow.document.write('<table width=100%><tr></tr><tr></tr><tr></tr><tr></tr>');
+
+    myWindow.document.write('<tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr></tr><tr><td>Received By.</td></tr><tr><td align=right>Time:  ' + time + '</td></tr><tr><td align=right>Date: ' + date + ' </td></tr>');
+
+
+    myWindow.print();
+}
 
 
 
-        //var address = ($('#txtaddress').val()).substr(0, 60);
-
-        if (flag == 0)
-            RBillNo = $('#savedbillno').val();
-        else if (flag == 1)
-            RBillNo = $('#txtBillSlNocopy').val();
-
-
-
-        //myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px" width=100%><tr><td align=left colspan=6>' + $('#txtcustomer').val() + '</td><td  align=left style="padding-left:12%">Sales Ret No </td><td  align=left > : </td><td align=left style="padding-left:1%">' + RBillNo + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Ret Date </td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#txtivdate').val() + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Invoice No.</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_transfer').val() + '</td></tr><tr><td align=left colspan=6>' + $('#txtaddress').val() + '</td><td  align=left style="padding-left:12%">Salesman</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_salesman').find("option:selected").text() + '</td></tr><tr><td align=left colspan=3>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td><td align=left colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td  align=left style="padding-left:12%">LPO </td><td  align=left > : </td><td></td></tr>');
-        myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
-        myWindow.document.write(PrintBG2);
-        myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8 align="right"  >' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
-
-        myWindow.document.write('<table width=100% ><tr> <td width=50%>');
-        myWindow.document.write('<table width=100% ><tr style=text-align:left><td style="" class=txbld>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Mobile:' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
-            '<tr style=text-align:left><td style="">TRN:' + window.CompanySettingsArray.TRNNo + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Fax:' + window.CompanySettingsArray.Fax + '</td></tr>' +
-            '<tr class= style=text-align:center><td class=brtd1>Recieved with thanks from ' + $('#txtcustomer').val() + '</td></tr>' +
-            '<tr style=text-align:left><td style="">Mobile:' + $('#CustPhnNew').val() + '</td></tr>' +
-            '<tr style=text-align:left><td style="">TRN:' + $('#txtlpono').val() + '</td></tr>' +
-            '</table></td>' +
-
-            '<td width=50%><table width=100% ><tr><td>' +
-            '<table width=100%; style="text-align:right ;"><tr class= style=text-align:right><td class=txbld>Sales Invoice</td></tr><tr><td class=brtd1>Remittance details</td></tr><tr><td class=brtd1>Bill No:' + RBillNo + '</td></tr><tr><td class=brtd1>Date:' + $('#txtivdate').val() + '</td></tr><tr><td class=class=brtd1>Pay Type :' + PayType + '</td></tr><tr><td class=brtd1>Amount : ' + $('#gndtotal').text() + '</td></tr></table>' +
-            '</td></tr></table></td></tr></table>');
-
-
-
-        myWindow.document.write(' <table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;"width=100%>');
-
-        myWindow.document.write('<tr style="border:1px solid black;background-color:#D3D3D3"><td   style="padding-left:5px">Sl#</td><td style="padding-left:5px;margin:20px">Code</td><td colspan=4 style="padding-left:5px;margin:20px">Description</td><td style="padding-left:5px;margin:20px">Location</td><td align=center style="margin:20px">Qty</td><td align=right style="padding-right:5px;margin:20px">Price</td><td align=right style="padding-right:5px;padding:20px">AMOUNT</td></tr>');
-
-
-        var slno = 1;
-        for (var i = 0; i <= Rowlen ; i++) {
-            var Id = parseInt(i + 1);
-
-            if ($('#txtproduct' + Id).length) {
-                Rowcount += 1;
-                myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px">' + slno + '</td><td style="padding-left:5px">' + ($('#txtproduct' + Id).val()).substring(0, 13) + '</td><td colspan=4 style="padding-left:5px">' + ($('#ProductDesc' + Id).val()).substring(0, 24) + '</td><td style="padding-left:5px">' + $('#select_location' + Id + ' :selected').text() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtrate' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtamnt' + Id).val() + '</td></tr>');
-                slno++;
-                TotQty += parseFloat($('#txtquantity' + Id).val() || 0);
-                total += parseFloat($('#txtamnt' + Id).val() || 0)
-            }
-            if (Rowcount % 38 == 0) {
-                Rowcount = 0;
-                myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=10></td></tr>');
-            }
-        }
-        for (var a = 1; a <= 38 - Rowcount; a++) {
-            //myWindow.document.write('<tr><td  colspan=17>&#160;</td></tr>');
-            // myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td  style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td></tr>');
-            myWindow.document.write('<tr ><td style="padding-left:5px">&#160;</td><td style="padding-left:5px"></td><td colspan=4 style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td></tr>');
-
-
-        }
-        myWindow.document.write('<tr style="border-top:1px solid grey;"><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Sub Total</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-        myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>VAT 5%</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-        myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Discount</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalDiscount').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-        myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Taxable Amount</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
-        myWindow.document.write('<tr style="border:1px solid black;" class=><td colspan=6 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td></td><td></td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center ><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(Decimal)) + '</b></td></tr>');
-        myWindow.document.write('</table>');
-        myWindow.document.write('<table style="font-size:80%;"  width=100%><tr><td colspan=8 ><div style="height:30px;margin-top:20px" class=txbld>Receiver Signature</div></td><td colspan=8><div  style="height:30px;margin-top:40px" class=txbld>Manager Signature</div></td><td colspan=8><div style="height:30px;margin-top:40px" class=txbld>Accountant Signature</div></td></tr> <tr><td colspan=8><div style="height:40px;border: 1px solid black;text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td><td colspan=8 ><div style="height:40px ;border: 1px solid black; text-align:center;"><div style = "margin-top:15px;color:blade">_____________________________</div></div></td><td colspan=8 ><div style="height:40px; border: 1px solid black; text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td></tr></table>');
-
-
-        myWindow.print();
+//NEW PRINT FUCTION FOR AUTOPARTS
+function PrintthisBillForAUTOPARTSLazor(Rowlen, flag) {
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var AmountinWords = convertNumberToWords($('#GrandTotal').val())
+    var TotQty = 0;
+    var total = 0;
+    var RBillNo = '';
+    var Rowcount = 12;
+    var PayType = '';
+    if ($('#typecash').prop("checked")) {
+        PayType = 'Cash';
     }
+    else if ($('#typecredit').prop("checked")) {
+        PayType = 'Credit';
+    }
+    var divToPrint = document.getElementById("barcode1");
+
+
+
+    //var address = ($('#txtaddress').val()).substr(0, 60);
+
+    if (flag == 0)
+        RBillNo = $('#savedbillno').val();
+    else if (flag == 1)
+        RBillNo = $('#txtBillSlNocopy').val();
+
+
+
+    //myWindow.document.write('<table  frame="box"  style="font-size:85%;margin-top:10px" width=100%><tr><td align=left colspan=6>' + $('#txtcustomer').val() + '</td><td  align=left style="padding-left:12%">Sales Ret No </td><td  align=left > : </td><td align=left style="padding-left:1%">' + RBillNo + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Ret Date </td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#txtivdate').val() + '</td></tr><tr><td align=left colspan=6></td><td  align=left style="padding-left:12%">Invoice No.</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_transfer').val() + '</td></tr><tr><td align=left colspan=6>' + $('#txtaddress').val() + '</td><td  align=left style="padding-left:12%">Salesman</td><td  align=left > : </td><td align=left style="padding-left:1%">' + $('#select_salesman').find("option:selected").text() + '</td></tr><tr><td align=left colspan=3>Phone : ' + window.CompanySettingsArray.PhoneNo + '</td><td align=left colspan=3>Fax : ' + window.CompanySettingsArray.Fax + '</td><td  align=left style="padding-left:12%">LPO </td><td  align=left > : </td><td></td></tr>');
+    myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2{border-bottom:1px solid lightgrey;} .brtd2 td{border-right:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
+    myWindow.document.write(PrintBG2);
+    myWindow.document.write('<table width=100% ><tr><td rowsspan=2 colspan=8 align="right"  >' + (ComapnydivToPrint.outerHTML) + '</td></tr>');
+
+    myWindow.document.write('<table width=100% ><tr> <td width=50%>');
+    myWindow.document.write('<table width=100% ><tr style=text-align:left><td style="" class=txbld>' + window.CompanySettingsArray.CompanyName + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Mobile:' + window.CompanySettingsArray.PhoneNo + '</td></tr>' +
+        '<tr style=text-align:left><td style="">TRN:' + window.CompanySettingsArray.TRNNo + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Fax:' + window.CompanySettingsArray.Fax + '</td></tr>' +
+        '<tr class= style=text-align:center><td class=brtd1>Recieved with thanks from ' + $('#txtcustomer').val() + '</td></tr>' +
+        '<tr style=text-align:left><td style="">Mobile:' + $('#CustPhnNew').val() + '</td></tr>' +
+        '<tr style=text-align:left><td style="">TRN:' + $('#txtlpono').val() + '</td></tr>' +
+        '</table></td>' +
+
+        '<td width=50%><table width=100% ><tr><td>' +
+        '<table width=100%; style="text-align:right ;"><tr class= style=text-align:right><td class=txbld>Sales Invoice</td></tr><tr><td class=brtd1>Remittance details</td></tr><tr><td class=brtd1>Bill No:' + RBillNo + '</td></tr><tr><td class=brtd1>Date:' + $('#txtivdate').val() + '</td></tr><tr><td class=class=brtd1>Pay Type :' + PayType + '</td></tr><tr><td class=brtd1>Amount : ' + $('#gndtotal').text() + '</td></tr></table>' +
+        '</td></tr></table></td></tr></table>');
+
+
+
+    myWindow.document.write(' <table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;"width=100%>');
+
+    myWindow.document.write('<tr style="border:1px solid black;background-color:#D3D3D3"><td   style="padding-left:5px">Sl#</td><td style="padding-left:5px;margin:20px">Code</td><td colspan=4 style="padding-left:5px;margin:20px">Description</td><td style="padding-left:5px;margin:20px">Location</td><td align=center style="margin:20px">Qty</td><td align=right style="padding-right:5px;margin:20px">Price</td><td align=right style="padding-right:5px;padding:20px">AMOUNT</td></tr>');
+
+
+    var slno = 1;
+    for (var i = 0; i <= Rowlen; i++) {
+        var Id = parseInt(i + 1);
+
+        if ($('#txtproduct' + Id).length) {
+            Rowcount += 1;
+            myWindow.document.write('<tr style="border:1px solid black;"><td style="padding-left:5px">' + slno + '</td><td style="padding-left:5px">' + ($('#txtproduct' + Id).val()).substring(0, 13) + '</td><td colspan=4 style="padding-left:5px">' + ($('#ProductDesc' + Id).val()).substring(0, 24) + '</td><td style="padding-left:5px">' + $('#select_location' + Id + ' :selected').text() + '</td><td align=center>' + $('#txtquantity' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtrate' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#txtamnt' + Id).val() + '</td></tr>');
+            slno++;
+            TotQty += parseFloat($('#txtquantity' + Id).val() || 0);
+            total += parseFloat($('#txtamnt' + Id).val() || 0)
+        }
+        if (Rowcount % 38 == 0) {
+            Rowcount = 0;
+            myWindow.document.write('<tr style="border:1px solid white;border-bottom:1px solid grey"><td height=250px colspan=10></td></tr>');
+        }
+    }
+    for (var a = 1; a <= 38 - Rowcount; a++) {
+        //myWindow.document.write('<tr><td  colspan=17>&#160;</td></tr>');
+        // myWindow.document.write('<tr style="opacity:0"><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td  style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td style="padding-left:5px">1</td><td align=center>1</td><td align=right style="padding-right:5px">1</td></tr>');
+        myWindow.document.write('<tr ><td style="padding-left:5px">&#160;</td><td style="padding-left:5px"></td><td colspan=4 style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center></td><td align=right style="padding-right:5px"></td><td align=right style="padding-right:5px"></td></tr>');
+
+
+    }
+    myWindow.document.write('<tr style="border-top:1px solid grey;"><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Sub Total</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+    myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>VAT 5%</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTax').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+    myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Discount</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalDiscount').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+    myWindow.document.write('<tr><td colspan=6 font-size: 13px;"></td><td></td><td></td><td style="font-family:tahoma;font-size: 10px;border-left:1px solid grey;" align=center ><b>Taxable Amount</b></td><td style="font-family:tahoma; font-size: 10px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#TotalTaxable').val() || 0).toFixed(Decimal)) + '</b></td></tr>');
+    myWindow.document.write('<tr style="border:1px solid black;" class=><td colspan=6 font-size: 13px;" align=center style="font-weight:bold">' + AmountinWords + '</td><td></td><td></td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center ><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right ><b>' + addCommas(parseFloat($('#gndtotal').text()).toFixed(Decimal)) + '</b></td></tr>');
+    myWindow.document.write('</table>');
+    myWindow.document.write('<table style="font-size:80%;"  width=100%><tr><td colspan=8 ><div style="height:30px;margin-top:20px" class=txbld>Receiver Signature</div></td><td colspan=8><div  style="height:30px;margin-top:40px" class=txbld>Manager Signature</div></td><td colspan=8><div style="height:30px;margin-top:40px" class=txbld>Accountant Signature</div></td></tr> <tr><td colspan=8><div style="height:40px;border: 1px solid black;text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td><td colspan=8 ><div style="height:40px ;border: 1px solid black; text-align:center;"><div style = "margin-top:15px;color:blade">_____________________________</div></div></td><td colspan=8 ><div style="height:40px; border: 1px solid black; text-align:center;"><div style="margin-top:15px;color:black">_____________________________</div></div></td></tr></table>');
+
+
+    myWindow.print();
+}

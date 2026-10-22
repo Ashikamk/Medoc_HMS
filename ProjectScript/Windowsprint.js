@@ -5,9 +5,6 @@ var ComapnydivToPrint = document.getElementById("ComapnyImage");
 var ComapnyImgToPrint = document.getElementById("ComapnyImage");
 var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
 
-var pharmasistsign = document.getElementById("pharmisistsign");
-
-
 var GasLogo = document.getElementById("ComapnyImageDashbpard"); 
 
 //Flag -Purchase or sales or return
@@ -365,19 +362,13 @@ function PrintthisBillWindowsHMS(Flag, Rowlen, type,Bill)
         //else if (type == 'SAVE')
         //{ PrintthisBillHMSSales(Rowlen, 0, 1) }
     }
-} 
+}
 
 //GST medical shop bill
 
 function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB   -use Landscape mode
 {
 
-    console.log(ComapnydivToPrintLab)
-
-    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-
-    console.log('QRRRR')
-    console.log(ComapnydivToPrintLab)
     var today = new Date();
     var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
     var today1 = new Date();
@@ -402,7 +393,12 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     myWindow.document.write('<style type="text/css">.brdrgh{border-right:1px solid grey;} .blclr{color:#00838F} .brtd2 td{border-right:1px solid grey;} .brtd3 td{border-bottom:1px solid grey;} .txbld{font-weight:bold;font-size:20} .txbld1{font-size:15}  </style> <style type="text/css" media="print"> tfoot{display:table-footer-group;} </style> <style type="text/css" media="screen"> tfoot{ position: relative; display: block;} tr { page-break-inside: avoid }</style>');
     myWindow.document.write(PrintBG3);
 
-    myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+    //myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+
+    myWindow.document.write('<table width=100% ><tr><td height=100px width=100%>&#160;</td></tr></table>');
+
+
+
     var PTYPE = "";
     if ($('#PayType').val() == 1) {
         PTYPE = 'CASH'
@@ -415,9 +411,9 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     }
 
     var GSTINNO = 'GSTIN: 32BDNPB3729C1Z1 ';
-    var Expd=''
+    var Expd = ''
     //myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;">DLNo :RLF21KL2024001000,RLF20KL2024001009</td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
-    myWindow.document.write('<table  width=100% ><tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>BILL#:&#160;' + $("#HBillSeries option:selected").text()+'/' + BillNo + '/' + PTYPE + '</b><td></tr>');
+    myWindow.document.write('<table  width=100% ><tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>BILL#:&#160;' + $("#HBillSeries option:selected").text() + '/' + BillNo + '/' + PTYPE + '</b><td></tr>');
     myWindow.document.write('<tr><td colspan=8 style="border-top:1px solid black;"></td></tr></table>');
     var TypeText = '';
     TypeText += '<td >Paytype</td><td>:' + $('#PayType :selected').text() + '</td>';
@@ -425,7 +421,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     var MRHEAD = 'Ref#'
 
 
-   // var MRHEAD = 'MR/OP#'
+    // var MRHEAD = 'MR/OP#'
     var MRVALUE = $('#HRegNo').val() + '/' + $('#HOpNo').val()
     if ($('#IPNumber').val() != 0) {
         MRHEAD = 'MR/IP#';
@@ -444,7 +440,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     myWindow.document.write('<table border-collapse:collapse; border=1 rules=cols style="border:1px solid black;font-size=70%"  width=100% ">' + HeaderRow);
 
     myWindow.document.write('<tr><td colspan=16 style="border-top:1px solid black;"></td></tr>');
-    var slnm = 0; var page = 0; var line = 0; var Dschedule; var totalAount = 0;
+    var slnm = 0; var page = 0; var line = 0;
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
         if ($('#Product' + Id).length) {
@@ -452,19 +448,18 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
             Rowcount += 1;
             line += 1;
             Expd = ($('#Expiry' + Id).val()).replace("/20", "/");
-            Dschedule = $("#DrugSchedule" + Id + " option:selected").text(); //$('#DrugSchedule'+Id).val();
-
             myWindow.document.write('<tr><td style="border-left:0px solid grey;font-size:11px;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=6 style="padding-left:5px;font-size:11px;">' + $('#Product' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#PHSNCode' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#ProductDesc' + Id).val() + '</td><td style="padding-left:5px;font-size:11px;">' + $('#Company' + Id).val() + '</td><td align=center style="padding-left:5px;font-size:11px;">' + Expd + '</td><td align=center style="padding-left:5px;font-size:11px;">' + $('#Quantity' + Id).val() + '</td><td align=right style="padding-left:5px;font-size:11px;">' + $('#PurPrice' + Id).val() + '</td><td style="padding-right:5px;font-size:11px;" align=right>' + $('#SellPrice' + Id).val() + '</td><td align=right style="padding-right:5px;font-size:11px;">' + $('#Amount' + Id).val() + '</td></tr>');
 
-            totalAount += parseFloat($('#Amount' + Id).val()||0)
+
 
             if (line == 17 || line == 34) {
 
                 myWindow.document.write('<tr><td height=600px colspan=16 style="border-top:1px solid black;border-right:1px solid white;border-left:1px solid white;">&#160;</td></tr>');
-              
-                myWindow.document.write('<tr><td colspan=16 style="border:1px solid white;font-size:11px;" align=center>');
 
-                myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+                myWindow.document.write('<tr><td colspan=16 style="border:1px solid white;font-size:11px;" align=center>');
+                myWindow.document.write('<table width=100% ><tr><td height=100px width=100%>&#160;</td></tr></table>');
+
+                // myWindow.document.write('<table width=100% ><tr><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
 
                 myWindow.document.write('<table  width=100% ><tr height=10px;><td style="font-family:tahoma;font-size:80%;">' + GSTINNO + '</td>  <td colspan=4 align=right style="font-family:tahoma;font-size:80%;"></td></tr><tr><td colspan=8 style="border-top:1px solid black;font-family:tahoma;font-size:80%;"></td></tr>');
                 myWindow.document.write('<tr><td  style="font-family:tahoma;font-size:80%;width=35%;"><b>DEPARTMENT : PHARMACY</b></td>    <td width=40% style="font-family:tahoma;font-size:80%;align=center;" ><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;PHARMACY BILL</b></td>     <td width=25% style="font-family:tahoma;font-size:80%;align=left;" ><b>&#160;&#160;&#160;BILLNO  : &#160;' + BillNo + '/' + PTYPE + '</b><td></tr>');
@@ -505,8 +500,6 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
             slnm++;
             Rowcount += 1;
             myWindow.document.write('<tr><td style="border-left:0px solid grey;font-size:11px;" align=center>' + slnm + '</td><td colspan=7 style="padding-left:5px;font-size:11px;">&#160;&#160;&#160;&#160;&#160' + $('#Procedure' + Id).val().substring(0, 20) + '</td><td style="padding-left:5px;font-size:10px;"></td><td align=center style="padding-left:5px;font-size:11px;"></td><td align=center style="padding-left:5px;font-size:10px;"></td><td align= style="padding-left:5px;font-size:10px;"></td><td align=center style="padding-left:5px;font-size:10px;"></td><td style="padding-right:5px;font-size:10px;" align=right></td><td align=right style="padding-right:5px;font-size:11px;">' + $('#ProcTot' + Id).val() + '</td></tr>');
-            totalAount += parseFloat($('#ProcTot' + Id).val() || 0)
-
         }
     }
 
@@ -546,12 +539,13 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
         Line += '<tr><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#TaxGrpname28').text() + '</td><td width=25% style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#splittaxable_28').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-right: 1px solid grey;border-top: 1px solid grey;">' + $('#CGST_28').val() + '</td><td width=25% align=center style="font-family:tahoma;font-size:12;border-top: 1px solid grey;">' + $('#SGST_28').val() + '</td></tr>'
 
     }
+
     var pharmasistsign = document.getElementById("pharmisistsign");
-    $(pharmasistsign).css('height', 50); $(pharmasistsign).css('width',100);
+    $(pharmasistsign).css('height', 50); $(pharmasistsign).css('width', 100);
     //myWindow.document.write('<tr height=2px><td></td></tr>');
     myWindow.document.write('<table width=100% style="border-right: 1px solid grey;border-left: 1px solid grey;border-bottom: 1px solid grey;border-collapse:collapse;">');
     myWindow.document.write('<tr style="">');
-    myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;"></td></tr><tr><td align=center style="font-family:tahoma;font-size:12;">' + (pharmasistsign.outerHTML) +'</td></tr> </table></td>');
+    myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;"></td></tr><tr><td align=center style="font-family:tahoma;font-size:12;"> ' + (pharmasistsign.outerHTML) + '</td></tr> </table></td>');
 
     //myWindow.document.write('<td font-family:tahoma;font-size:12;" align=center><table><tr><td style="font-family:tahoma;font-size:12;">Prepared By&#160;:&#160;' + Billuser + '</td></tr>  <tr><td align=center style="font-family:tahoma;font-size:12;">YOUR ' + $('#savingvalue').text() + '</td></tr></table></td>');
 
@@ -572,29 +566,20 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
         '</td>');
 
     if (($('#Discount').val() != 0)) {
-      //  myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>                <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + addCommas(parseFloat(totalAount).toFixed(Decimal))    + '           </td></tr>       <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-  
+        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>                <tr><td style="font-family:tahoma;font-size:12;">Discount</td><td   style="font-family:tahoma;font-size:12;" align=right>' + addCommas(parseFloat($('#Discount').val()).toFixed(Decimal)) + '</td></tr>      <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
     }
     else {
-      // myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>               <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + addCommas(parseFloat(totalAount).toFixed(Decimal)) + '           </td></tr>            <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
-
-
-
+        myWindow.document.write('<td width=25%> <table width=100%><tr><td style="font-family:tahoma;font-size:12;" >Amount</td><td align=right style="font-family:tahoma;font-size:12;">          ' + $('#TotalTaxable').val() + '           </td></tr>         <tr><td style="font-family:tahoma;font-size:12;">Total Tax</td><td  align=right style="font-family:tahoma;font-size:12;">' + $('#TotlaTax').val() + '</td></tr>               <tr><td style="font-family:tahoma;font-size:12;">Net Amount</td><td  align=right style="font-family:tahoma;font-size:12;"><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>                    </table>  </td>');
     }
     myWindow.document.write('</tr>');
 
     if (($('#TotRoundOff').val() != 0)) {
-        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b> ' + $('#mrpvalue').text() + '     ,    YOUR 	SAVINGS ' + (parseFloat(($('#savingvalue').text()).split(":")[1]) + parseFloat($('#Discount').val())).toFixed(0) + '.00</b></td></tr>');
-        
+        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b> ' + $('#mrpvalue').text() + '     ,    YOUR ' + $('#savingvalue').text() + '</b></td></tr>');
+
         myWindow.document.write('<tr height=25px;><td colspan=8 style="font-family:tahoma;font-size:12; border-top:1px solid grey;"><table width=100%><tr><td style="font-family:tahoma;font-size:12;"width=15%>Amount In words :</td><td style="font-family:tahoma;font-size:12;"width=61%><b> ' + AmountinWords + '</b></td><td style="font-family:tahoma;font-size:12;"width=15% align=left>RoundOff</td><td style="font-family:tahoma;font-size:12;" align=right width=9%>' + $('#TotRoundOff').val() + '</td></tr></table></tr>');
     }
     else {
-        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + '  YOUR 	SAVINGS' + (parseFloat(($('#savingvalue').text()).split(":")[1]) + parseFloat($('#Discount').val())).toFixed(0) + '.00</b></td></tr>');
-
+        myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + '  YOUR ' + $('#savingvalue').text() + '</b></td></tr>');
 
         myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:12; border-top:1px solid grey;">Amount In words :&#160;' + AmountinWords + '</td></tr>');
 
@@ -605,6 +590,7 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
     myWindow.close();
 
 }
+
 
 
 
@@ -741,8 +727,8 @@ function PrintthisBillHMSSalesQR0(Rowlen, flg, type)             //type:1 - HALF
 
 function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   ,type:2 - FULL   ---------- Bill : PB,LB,IB   -use Landscape mode
 {
-    // alert('')
-    console.log('AAAAAA')
+   // alert('')
+
     var TotPQty = 0; var Rowcount = 7;
     var MaxCnt;
     
@@ -751,7 +737,7 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
     var AmountinWords = WordwithDecimal($('#BaseTextTotalProc').text());
     var myWindow = window.open("", "", "width=1500,height=1500");
 
-    $(GasLogo).css('height', 150); $(GasLogo).css('width', 300);
+    $(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
 
     var SNo = '';
     if (flg == 0)
@@ -764,7 +750,7 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
 
 
     //$(ComapnydivToPrintLab).css('height', 130); $(ComapnydivToPrintLab).css('width', 700);
-    myWindow.document.write('<table width=80% ><tr ><td width=100% align=left  style=color:#008000;font-weight:bold>' + (GasLogo.outerHTML) + '</td></tr>');
+    myWindow.document.write('<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' + (ComapnydivToPrintLab.outerHTML) + '</td></tr>');
     //myWindow.document.write('</table>');
 
     //myWindow.document.write('<table width=100% ><tr ><td height=56px></td></tr>');
@@ -779,26 +765,23 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
     var TypeText = '';
     TypeText += '<td align=right width=10%>Paytype</td><td colspn=2 width=20% >:' + $('#PayType :selected').text() + '</td>';
 
-    myWindow.document.write('<table style="font-family:tahoma;font-size:80%;border-top:1px solid grey;border-left:1px solid grey;border-right:1px solid grey" width=100% ><tr ><td width=10% align=left >OP#</td><td colspan=4 align=left width=50%>' + $('#HOpNo').val() + '</td><td align=right width=10%>Bill No&#160;</td><td  colspn=2 width=20% >:' + SNo + '</td></tr>');
+    myWindow.document.write('<table style="font-size:75%;border-top:1px solid grey;border-left:1px solid grey;border-right:1px solid grey" width=100% ><tr ><td width=10% align=left >OP#</td><td colspan=4 align=left width=50%>' + $('#HOpNo').val() + '</td><td align=right width=10%>Bill No&#160;</td><td  colspn=2 width=20% >:' + SNo + '</td></tr>');
     myWindow.document.write('<tr ><td width=10% align=left >Patient:</td><td colspan=4 align=left width=50%>' + $('#HPatient').val() + '</td><td align=right width=10%>Date&#160;&#160;&#160;&#160;&#160; </td><td colspn=2 width=20% >:' + $('#HSalesDate').val() + '</td></tr>');
     myWindow.document.write('<tr ><td width=10% align=left >Doctor:</td><td colspan=4 align=left width=50%>' + $('#HDoctor :selected').text() + '</td>' + TypeText + '</tr>');
     myWindow.document.write('<tr><td  colspan=8>&#160;</td></tr>');
     myWindow.document.write('</table>');
 
     var HeaderRow = '';
+    HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td align=center width=3%>Sl#</td><td colspan=6 align=center width=28%>Product</td><td width=5% align=center>Batch</td><td width=5% align=center>Expiry</td><td width=5% align=center>Qty.</td><td align=center width=5%>Rate</td><td align=center width=5%>Amount</td></tr>';
 
-
-   // style = "font-family:tahoma;font-size:80%;
-    HeaderRow = '<tr class=violetbg style="border-bottom:1px solid grey"><td colspan=9 align=center width=28%>Product</td><td width=5% align=center>Qty.</td><td align=center width=5%>Rate</td><td align=center width=5%>Amount</td></tr>';
-
-    myWindow.document.write('<table style="border-collapse:collapse;font-family:tahoma;font-size:80%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
+    myWindow.document.write('<table style="border-collapse:collapse;font-size:70%;" frame="box" width=100% bordercolor="grey">' + HeaderRow);
     var slnm = 0;
     for (var i = 0; i <= Rowlen; i++) {
         var Id = parseInt(i + 1);
         if ($('#Product' + Id).length) {
             slnm++;
             Rowcount += 1;
-            myWindow.document.write('<tr class=brtd2 ><td colspan=9 style="padding-left:5px">' + $('#Product' + Id).val() + '</td><td align=center style="padding-left:5px">' + $('#Quantity' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#SellPrice' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#Amount' + Id).val() + '</td></tr><tr class=brtd2><td colspan=9 style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '       ' + $('#Expiry' + Id).val() + '</td><td></td><td align=right><del>' + $('#PurPrice' + Id).val() + '</del></td><td></td></tr>');
+            myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + $('#tdSl' + Id).text() + '</td><td colspan=6 style="padding-left:5px">' + $('#Product' + Id).val() + '</td><td style="padding-left:5px">' + $('#ProductDesc' + Id).val() + '</td><td align=center style="padding-left:5px">' + $('#Expiry' + Id).val() + '</td><td align=center style="padding-left:5px">' + $('#Quantity' + Id).val() + '</td><td style="padding-right:5px" align=right>' + $('#SellPrice' + Id).val() + '</td><td align=right style="padding-right:5px">' + $('#Amount' + Id).val() + '</td></tr>');
            
         }
     }
@@ -818,16 +801,16 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
         if ($('#Procedure' + Id).length) {
             slnm++;
             Rowcount += 1;
-            myWindow.document.write('<tr class=brtd2 ><td colspan=9 style="padding-left:5px">' + $('#Procedure' + Id).val().substring(0, 20) + '</td><td></td><td></td><td></td><td></td><td align=right style="padding-right:5px">' + $('#ProcTot' + Id).val() + '</td></tr>');
+            myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>' + slnm + '</td><td colspan=6 style="padding-left:5px">' + $('#Procedure' + Id).val().substring(0, 20) + '</td><td></td><td></td><td></td><td></td><td align=right style="padding-right:5px">' + $('#ProcTot' + Id).val() + '</td></tr>');
             
         }
     }
 
 
    
-    for (var a = 0; a <=2 ; a++) {
+    for (var a = 0; a <= (14 - slnm) ; a++) {
      
-        myWindow.document.write('<tr class=brtd2 ><td colspan=9 style="padding-left:5px"></td><td style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center style="padding-left:5px"></td></tr>');
+        myWindow.document.write('<tr class=brtd2 ><td style="border-left:1px solid grey;" align=center>&#160;</td><td colspan=6 style="padding-left:5px"></td><td style="padding-left:5px"></td><td style="padding-left:5px"></td><td align=center style="padding-left:5px"></td><td style="padding-right:5px" align=right></td><td align=right style="padding-right:5px"></td></tr>');
       }
 
 
@@ -853,12 +836,8 @@ function PrintthisBillHMSSales(Rowlen, flg, type)             //type:1 - HALF   
 
     }
 
- 
-
-    myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=9 font-size: 10px;" align=left style="font-weight:bold"></td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center colspan=2><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right colspan=2><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>');
-
-    myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td align=center colspan=13 style="font-family:tahoma;font-size: 13px;"><b>YOUR  ' + $('#savingvalue').text() + '</b></td></tr>');
-
+   
+    myWindow.document.write('<tr style="border:1px solid grey;" class=violetbg><td colspan=9 font-size: 13px;" align=left style="font-weight:bold">' + AmountinWords + '</td><td style="font-family:tahoma;font-size: 13px;border-left:1px solid grey;" align=center colspan=2><b>Total</b></td><td style="font-family:tahoma; font-size: 13px;border-left:1px solid grey;"  align=right colspan=2><b>' + addCommas(parseFloat($('#BaseTextTotalProc').text()).toFixed(Decimal)) + '</b></td></tr>');
     myWindow.document.write('</table>');
 
 
@@ -1634,7 +1613,7 @@ function PrintthisBillLabwithlettertheadIPB(Rowlen, flg, type, Bill)            
     myWindow.document.write('<br><br><table style="font-family:tahoma" width=100%><tr><td style="font-weight: bold;font-size: 14px;">Prepared by</td><td style="font-weight: bold;font-size: 14px;">Checked by</td><td style="font-weight: bold;font-size: 14px;">Approved by</td><td align=right style="font-weight: bold;font-size: 14px;">Cashier</td></tr></table>');
 
 
-    myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;position:fixed;bottom: 10px;" width=100%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
+    myWindow.document.write('<br><br><table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>SPECIALITY CONSULTATION, CASUALITY, PHARMACY, LABORATORY, ECG</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
 
 
     //myWindow.document.write('<table style="font-family:tahoma;border-style: double;border-radious:5px;font-size:12px;font-weight: bold;" width=100%><tr><td align=center>General Medicine,Casuality,Pediatrics,Orthopedics,Pulmonology,Surgery,Neurology,Speech Therapy,Occupational Therapy, Psychological Counseling, Behaviour Therapy, IQ Test, Physiothreapy, Child Development & Early Intervention</td></tr><tr><td align=center>FOR OP BOOKING CALL-' + window.CompanySettingsArray.PhoneNo + '</td></tr></table>');
@@ -1742,7 +1721,7 @@ function PrintthisBillLab(Rowlen, flg, type, Bill)             //type:1 - HALF  
     var MRVALUE = $('#Opseriesname').val()+'-'+ $('#RegNo').val() + '/' + $('#OpNo').val()
     if ($('#IpNo').val() != 0) {
         MRHEAD = 'RegNo:';
-        MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;   IP No:' + $('#IpNo').val()
+        MRVALUE = $('#Opseriesname').val() + '-' + $('#RegNo').val() + '&#160;&#160;&#160;&#160;&#160;&#160;&#160;   IP No:' + $('#AdmitDate').val().substring(8, 10) + '-' + $('#IpNo').val()
 
     }
 

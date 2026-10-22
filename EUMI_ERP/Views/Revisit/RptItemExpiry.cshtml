@@ -276,6 +276,7 @@
         data.Param5 = $('#Type').val();
         data.Param6 = $('#Schedule').val();
         data.Param7 = $('#Location').val();
+        data.Param8 = ERPUserId;
         data.DeptId = ERPDeptId;
         data.UserId = SupplierId;
 
@@ -475,28 +476,27 @@
 
     function GetLocation() {
         var data = {};
-        data.LocationId = 0;
+        data.Param1 = '';
+        data.Param10 = '0';
+        data.Param2 = 99;              // 99 = location list mode
+        data.Param8 = ERPUserId;       // logged-in user
         $.ajax({
             type: "POST",
-            url: "../Master/LocationGetandGets",
+            url: "../Revisit/HMS_Rpt_ItemExpiry",
             data: data,
             success: function (result) {
-                LocationLoad(result.oList);
-
-
+                LocationLoad(result);
             }
         });
-
     }
 
     function LocationLoad(result) {
         $("#Location").empty();
-        LocationSelect = "<option value='0'>-Select-</option>";
+        var opts = "<option value='0'>-Select-</option>";
         for (var i = 0; i < result.length; i++) {
-            LocationSelect += "<option value='" + result[i].LocationId + "'locname='" + result[i].LocationName + "'>" + result[i].LocationName + "</option>";
-
+            opts += "<option value='" + result[i].ItemId + "'>" + result[i].ItemDesc + "</option>";
         }
-        $("#Location").append(LocationSelect);
+        $("#Location").append(opts);
     }
 
     function GroupPageLoad() {

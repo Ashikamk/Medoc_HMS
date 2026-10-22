@@ -945,7 +945,836 @@ function CmnPrintFunction(Form, Rowlen, Type, Flag) {
 //}
 ////////////////////////////CENORA/////////////////////////////
 
+////////Janatha old PrintResultContinuous(Roelen)
+//function PrintTestResultContinuous(Rowlen) {
+
+//    var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
+
+
+//    var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
+//    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';
+
+//    var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
+
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+
+//    if ($('#headprint').is(':checked')) {
+//        var LB = 2;
+//    }
+//    else {
+//        var LB = LabHead
+//    }
+
+//    var powerdby = document.getElementById("ComapnyImage1");
+//    var powerdby1 = document.getElementById("printqrr");
+//    var barcode2 = document.getElementById("printbarcode1");
+
+//    $(powerdby).css('height', 30); $(powerdby).css('width', 280);
+
+//    myWindow.document.write(`
+//    <style>
+//        @page { size: A4; margin: 15mm; }
+
+//        table { border-collapse: collapse; }
+//        table.report-table { width: 100%; }
+
+//        .page {
+//            display: flex;
+//            flex-direction: column;
+//            height: 245mm;
+//            page-break-after: always;
+//            box-sizing: border-box;
+//        }
+//        .page:last-child { page-break-after: auto; }
+
+//        .page-content {
+//            flex: 1 1 auto;
+//        }
+//        .page-footer {
+//            flex-shrink: 0;
+//            margin-top: auto;
+//            width: 100%;
+//        }
+//    </style>
+//    `);
+
+//    var ColHeaderRow = '<tr>' +
+//        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
+//        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
+//        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+//        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td>' +
+//        '</tr>';
+
+//    var HeaderBlockHTML = '';
+//    if (LB == 1) {
+//        var LROW = 90;
+//        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+//    }
+//    else if (LB == 2) {
+//        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+//        //$(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+//        $(ComapnydivToPrintLab).css({ 'width': '660px', 'height': 'auto' });
+//        HeaderBlockHTML = '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' +
+//            (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
+//    }
+//    else {
+//        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+//    }
+
+//    var PatientInfoHTML = '<table  style="" width=100%>' +
+//        '<tr>' +
+//        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
+//        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+//        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+//        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+//        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+//        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+//        '</table></td>' +
+//        '<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
+//        '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
+//        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+//        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+//        '</table></td>' +
+//        '</tr>' +
+//        '</table>';
+
+//    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
+//    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+//        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+//        '<tr>' +
+//        '<td></td>' +
+//        '<td width=200px align=center>' +
+//        '<b>LAB TECHNICIAN</b>' +
+//        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
+//        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
+//        '</td>' +
+//        '</tr>' +
+//        '</table>' +
+//        '</div>';
+//    myWindow.document.write('<div class="page"><div class="page-content">');
+//    myWindow.document.write(HeaderBlockHTML);
+//    myWindow.document.write(Div);
+//    myWindow.document.write(PatientInfoHTML);
+
+//    var Maxvalue = 0;
+//    var Minvalue = 0;
+//    var Res = ''; var printresult = '';
+//    var finalnotes = "";
+//    var CurrentDept = 0, CurrentMainTest = 0;
+
+//    var ROWS_PER_PAGE = 15;
+//    var rowsOnThisPage = 0;
+
+//    myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//    myWindow.document.write(ColHeaderRow);
+
+//    for (var i = 1; i <= Rowlen; i++) {
+
+//        Maxvalue = 0;
+//        Minvalue = 0;
+//        Res = 0;
+//        printresult = '';
+
+//        if ($("#selprint_" + i).is(":checked")) {
+
+//            var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
+
+
+//            if ($("#Notes_" + i).val() != '') {
+//                if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
+//                    finalnotes = finalnotes + $("#Notes_" + i).val();
+//                }
+//            }
+
+
+//            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+//                var headsBefore = 0;
+//                if (Dept != CurrentDept) headsBefore++;
+//                if (($("#TestName_" + i).text()).includes("@@")) headsBefore++;
+
+//                if (rowsOnThisPage > 0 && (rowsOnThisPage + headsBefore + 1) >= ROWS_PER_PAGE) {
+//                    myWindow.document.write('</table>');
+//                    myWindow.document.write('</div>');
+//                    myWindow.document.write(FooterHTML);
+//                    myWindow.document.write('</div>');
+
+//                    myWindow.document.write('<div class="page"><div class="page-content">');
+//                    myWindow.document.write(HeaderBlockHTML);
+//                    myWindow.document.write(PatientInfoHTML);
+//                    myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//                    myWindow.document.write(ColHeaderRow);
+
+//                    rowsOnThisPage = 0;
+//                }
+//            }
+
+//            if (Dept != CurrentDept) {
+//                CurrentDept = Dept;
+//                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
+//                rowsOnThisPage++;
+//            }
+
+//            if (($("#TestName_" + i).text()).includes("@@")) {
+//                myWindow.document.write('<tr>' +
+//                    '<td  align=left colspan=4 style="padding:10px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+//                    '<tr>');
+//                rowsOnThisPage++;
+//            }
+
+//            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+//                CurrentMainTest = $("#TestId_" + i).val();
+//                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
+//                rowsOnThisPage++;
+//            }
+//            else if ($.trim($("#Result_" + i).val()) != '' && $.trim($("#Result_" + i).val()) != '.') {
+//                Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+//                Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+//                Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
+
+//                if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
+
+//                if (Res > Maxvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else if (Res < Minvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else {
+//                    printresult = '' + $("#Result_" + i).val() + '';
+//                }
+//                Res = $("#Result_" + i).val();
+//                if ((Res.toLowerCase()).indexOf("rech") != -1) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+
+//                if (($("#TestName_" + i).text()).includes("##")) {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '<tr>');
+//                }
+//                else {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '<tr>');
+//                }
+//                rowsOnThisPage++;
+//            }
+
+//            if (rowsOnThisPage >= ROWS_PER_PAGE && i < Rowlen) {
+//                myWindow.document.write('</table>');
+//                myWindow.document.write('</div>');
+//                myWindow.document.write(FooterHTML);
+//                myWindow.document.write('</div>');
+
+//                myWindow.document.write('<div class="page"><div class="page-content">');
+//                myWindow.document.write(HeaderBlockHTML);
+//                myWindow.document.write(PatientInfoHTML);
+//                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//                myWindow.document.write(ColHeaderRow);
+
+//                rowsOnThisPage = 0;
+//            }
+//        }
+//    }
+
+//    myWindow.document.write('</table>');
+
+//    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
+
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.write(FooterHTML);
+
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.close();
+
+//    setTimeout(function () {
+//        myWindow.focus();
+//        myWindow.print();
+//    }, 500);
+//}
+
+////////////////////
 /////////////JANATHA///////////////////////
+//function PrintTestResult(Rowlen) {
+
+//    var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
+
+//    var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
+//    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';
+
+//    var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
+
+
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+
+//    if ($('#headprint').is(':checked')) {
+//        var LB = 2;
+//    }
+//    else {
+//        var LB = LabHead
+//    }
+
+//    var powerdby = document.getElementById("ComapnyImage1");
+//    var powerdby1 = document.getElementById("printqrr");
+//    var barcode2 = document.getElementById("printbarcode1");
+
+//    $(powerdby).css('height', 30); $(powerdby).css('width', 280);
+
+//    myWindow.document.write(`
+//    <style>
+//        @page { size: A4; margin: 15mm; }
+
+//        table { border-collapse: collapse; }
+//        table.report-table { width: 100%; }
+
+//        .page {
+//            display: flex;
+//            flex-direction: column;
+//            height: 245mm;
+//            page-break-after: always;
+//            box-sizing: border-box;
+//        }
+//        .page:last-child { page-break-after: auto; }
+
+//        .page-content {
+//            flex: 1 1 auto;
+//        }
+//        .page-footer {
+//            flex-shrink: 0;
+//            margin-top: auto;
+//            width: 100%;
+//        }
+//    </style>
+//    `);
+
+//    var ColHeaderRow = '<tr>' +
+//        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
+//        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
+//        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+//        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td>' +
+//        '</tr>';
+
+//    var HeaderBlockHTML = '';
+//    if (LB == 1) {
+//        var LROW = 90;
+//        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+//    }
+//    else if (LB == 2) {
+//        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+//        //$(ComapnydivToPrintLab).css('height', 100); $(ComapnydivToPrintLab).css('width', 700);
+//        $(ComapnydivToPrintLab).css({ 'width': '660px', 'height': 'auto' });
+//        HeaderBlockHTML = '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' +
+//            (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
+//    }
+//    else {
+//        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+//    }
+
+//    var PatientInfoHTML = '<table  style="" width=100%>' +
+//        '<tr>' +
+//        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
+//        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+//        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+//        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+//        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+//        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+//        '</table></td>' +
+//        '<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
+//        '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
+//        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+//        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+//        '</table></td>' +
+//        '</tr>' +
+//        '</table>';
+//    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
+//    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+//        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+//        '<tr>' +
+//        '<td></td>' +
+//        '<td width=200px align=center>' +
+//        '<b>LAB TECHNICIAN</b>' +
+//        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
+//        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
+//        '</td>' +
+//        '</tr>' +
+//        '</table>' +
+//        '</div>';
+//    myWindow.document.write('<div class="page"><div class="page-content">');
+
+//    myWindow.document.write(HeaderBlockHTML);
+
+//    myWindow.document.write(Div);
+
+//    myWindow.document.write(PatientInfoHTML);
+
+//    var Maxvalue = 0;
+//    var Minvalue = 0;
+//    var Res = ''; var printresult = '';
+//    var finalnotes = "";
+//    var CurrentDept = 0, CurrentMainTest = 0;
+
+//    var ROWS_PER_PAGE = 15;
+//    var rowsOnThisPage = 0;
+//    var hasPrintedAnyRow = false;
+
+//    myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//    myWindow.document.write(ColHeaderRow);
+
+//    for (var i = 1; i <= Rowlen; i++) {
+
+//        Maxvalue = 0;
+//        Minvalue = 0;
+//        Res = 0;
+//        printresult = '';
+
+//        if ($("#selprint_" + i).is(":checked")) {
+
+//            var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
+
+//            var isNewDept = (Dept != CurrentDept);
+
+//            if (isNewDept && rowsOnThisPage > 0) {
+//                myWindow.document.write('</table>');
+//                myWindow.document.write('</div>');
+//                myWindow.document.write(FooterHTML);
+//                myWindow.document.write('</div>');
+
+//                myWindow.document.write('<div class="page"><div class="page-content">');
+//                myWindow.document.write('<div class="page"><div class="page-content">');
+//                myWindow.document.write(HeaderBlockHTML);
+//                myWindow.document.write(PatientInfoHTML);
+//                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//                myWindow.document.write(ColHeaderRow);
+
+//                rowsOnThisPage = 0;
+//                CurrentDept = 0;
+//                CurrentMainTest = 0;
+//            }
+
+//            if ($("#Notes_" + i).val() != '') {
+//                if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
+//                    finalnotes = finalnotes + $("#Notes_" + i).val();
+//                }
+//            }
+
+//            if (Dept != CurrentDept) {
+//                CurrentDept = Dept;
+//                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td><tr>');
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//            }
+
+//            if (($("#TestName_" + i).text()).includes("@@")) {
+//                myWindow.document.write('<tr>' +
+//                    '<td  align=left colspan=4 style="padding:10px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+//                    '<tr>');
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//                continue;
+//            }
+
+//            if (TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest) {
+//                CurrentMainTest = $("#TestId_" + i).val();
+//                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '<b></td><tr>');
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//            }
+//            else if ($.trim($("#Result_" + i).val()) != '' && $.trim($("#Result_" + i).val()) != '.') {
+//                Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+//                Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+//                Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
+
+//                if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
+
+//                if (Res > Maxvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else if (Res < Minvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else {
+//                    printresult = '' + $("#Result_" + i).val() + '';
+//                }
+//                Res = $("#Result_" + i).val();
+//                if ((Res.toLowerCase()).indexOf("rech") != -1) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+
+//                if (($("#TestName_" + i).text()).includes("##")) {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '<tr>');
+//                }
+//                else {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '<tr>');
+//                }
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//                console.log('rowsOnThisPage' + rowsOnThisPage)
+//            }
+
+//            if (rowsOnThisPage >= ROWS_PER_PAGE) {
+//                myWindow.document.write('</table>');
+//                myWindow.document.write('</div>');
+//                myWindow.document.write(FooterHTML);
+//                myWindow.document.write('</div>');
+
+//                myWindow.document.write('<div class="page"><div class="page-content">');
+//                myWindow.document.write(HeaderBlockHTML);
+//                myWindow.document.write(PatientInfoHTML);
+//                myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//                myWindow.document.write(ColHeaderRow);
+
+//                rowsOnThisPage = 0;
+//                CurrentDept = Dept;
+//            }
+//        }
+//    }
+
+//    myWindow.document.write('</table>');
+
+//    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
+
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.write(FooterHTML);
+
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.close();
+
+//    setTimeout(function () {
+//        myWindow.focus();
+//        myWindow.print();
+//    }, 500);
+//}
+
+//function PrintTestResultContinuous(Rowlen) {
+
+//    var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
+
+//    var loggedUserId = (typeof ERPUserId !== 'undefined') ? ERPUserId : 0;
+//    var loggedUserName = (window.LoggedInUserArray && window.LoggedInUserArray[3]) ? window.LoggedInUserArray[3] : 'Lab Technician';
+
+//    var SignLabTech = '<img src="' + signBaseUrl + loggedUserId + '.png" alt="" height="25" width="55" onerror="this.style.display=\'none\'" />';
+
+//    var myWindow = window.open("", "", "width=1500,height=1500");
+
+//    if ($('#headprint').is(':checked')) {
+//        var LB = 2;
+//    }
+//    else {
+//        var LB = LabHead
+//    }
+
+//    var powerdby = document.getElementById("ComapnyImage1");
+//    var powerdby1 = document.getElementById("printqrr");
+//    var barcode2 = document.getElementById("printbarcode1");
+
+//    $(powerdby).css('height', 30); $(powerdby).css('width', 280);
+
+//    myWindow.document.write(`
+//    <style>
+//        @page { size: A4; margin: 15mm; }
+
+//        html, body { margin: 0; }
+//        body { width: 180mm; }
+
+//        table { border-collapse: collapse; }
+//        table.report-table { width: 100%; }
+
+//        .page {
+//            display: flex;
+//            flex-direction: column;
+//            height: 245mm;
+//            overflow: hidden;
+//            page-break-after: always;
+//            box-sizing: border-box;
+//        }
+//        .page:last-child { page-break-after: auto; }
+
+//        .page-content {
+//            flex: 1 1 0;
+//            min-height: 0;
+//            overflow: hidden;
+//        }
+//        .page-footer {
+//            flex-shrink: 0;
+//            margin-top: auto;
+//            width: 100%;
+//            height: 102px;
+//        }
+//    </style>
+//    `);
+
+//    var ColHeaderRow = '<tr>' +
+//        '<td class="p-0" style="width:37%;font-weight:bold;' + BorderX + '">Test</td>' +
+//        '<td class="p-0" style="width:18%;font-weight:bold;' + BorderX + '">Result</td>' +
+//        '<td class="p-0" style="width:15%;font-weight:bold;' + BorderX + '">Unit</td>' +
+//        '<td class="p-0" style="width:30%;font-weight:bold;' + BorderX + '">Reference Range</td>' +
+//        '</tr>';
+
+//    var HeaderBlockHTML = '';
+//    if (LB == 1) {
+//        var LROW = 90;
+//        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+//    }
+//    else if (LB == 2) {
+//        var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+//        var headImgH = 0;
+//        if (ComapnydivToPrintLab.naturalWidth > 0) {
+//            headImgH = Math.round(660 * ComapnydivToPrintLab.naturalHeight / ComapnydivToPrintLab.naturalWidth);
+//        }
+//        else if (ComapnydivToPrintLab.offsetHeight > 0 && ComapnydivToPrintLab.offsetWidth > 0) {
+//            headImgH = Math.round(660 * ComapnydivToPrintLab.offsetHeight / ComapnydivToPrintLab.offsetWidth);
+//        }
+//        else {
+//            headImgH = 150;
+//        }
+//        $(ComapnydivToPrintLab).css({ 'width': '660px', 'height': headImgH + 'px' });
+//        HeaderBlockHTML = '<table width=100% ><tr ><td width=100% align=center  style=color:#008000;font-weight:bold>' +
+//            (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>';
+//    }
+//    else {
+//        HeaderBlockHTML = '<table width=100%><tr><td height=' + LROW + 'px></td></tr></table>';
+//    }
+
+//    var PatientInfoHTML = '<table  style="" width=100%>' +
+//        '<tr>' +
+//        '<td width=45%><table style="font-family: tahoma; font-size:15px;">' +
+//        '<tr><td style="font-weight: bold;">Patient ID</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#RegNumber").val() + '</td></tr>' +
+//        '<tr><td style="font-weight: bold;">Patient Name</td><td style="font-weight: bold;"> : </td><td style="font-weight: bold;">' + $("#PatientName").val() + '</td></tr>' +
+//        '<tr><td>Age/Gender</td><td> : </td><td>' + $("#Age").val() + ', ' + $("#Gender").val() + '</td></tr>' +
+//        '<tr><td>Ref. By</td><td> : </td><td>' + $("#Doctor option:selected").text() + '</td></tr>' +
+//        '<tr><td>Contact No</td> <td> : </td><td>' + ($("#Remarksphone").val()).replace('##', '').substring(0, 10) + '</td></tr>' +
+//        '</table></td>' +
+//        '<td width=15% align="center">' + (barcode2 ? barcode2.outerHTML : '') + '</td>' +
+//        '<td width=40% align="right"><table  style="font-family:tahoma; font-size:15px;">' +
+//        '<tr><td>Sample Id</td><td> : </td><td>' + $("#OPNumber").val() + '</td></tr>' +
+//        '<tr><td>Collection Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Receiving Date</td><td> : </td><td>' + $("#BillDate").val() + '</td></tr>' +
+//        '<tr><td>Reporting Date</td><td> : </td><td>' + $("#ResultDate").val() + ' ' + $("#ResultTime").val() + '</td></tr>' +
+//        '</table></td>' +
+//        '</tr>' +
+//        '</table>';
+
+//    var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
+//    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
+//        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
+//        '<tr>' +
+//        '<td></td>' +
+//        '<td width=200px align=center>' +
+//        '<b>LAB TECHNICIAN</b>' +
+//        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
+//        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
+//        '</td>' +
+//        '</tr>' +
+//        '</table>' +
+//        '</div>';
+
+//    var PageBreakHTML = '</table></div>' + FooterHTML + '</div>' +
+//        '<div class="page"><div class="page-content">' +
+//        HeaderBlockHTML + PatientInfoHTML +
+//        '<table class="report-table" style="font-family:tahoma;font-size:15px;">' + ColHeaderRow;
+
+//    myWindow.document.write('<div class="page"><div class="page-content">');
+
+//    myWindow.document.write(HeaderBlockHTML);
+
+//    myWindow.document.write(Div);
+
+//    myWindow.document.write(PatientInfoHTML);
+
+//    var Maxvalue = 0;
+//    var Minvalue = 0;
+//    var Res = ''; var printresult = '';
+//    var finalnotes = "";
+//    var CurrentDept = 0, CurrentMainTest = 0;
+
+//    var PAGE_BODY = 824;
+//    var SAFETY_PX = 14;
+//    var rowsOnThisPage = 0;
+//    var hasPrintedAnyRow = false;
+
+//    myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
+//    myWindow.document.write(ColHeaderRow);
+
+//    for (var i = 1; i <= Rowlen; i++) {
+
+//        Maxvalue = 0;
+//        Minvalue = 0;
+//        Res = 0;
+//        printresult = '';
+
+//        if ($("#selprint_" + i).is(":checked")) {
+
+//            var Dept = $("#MedDeptId_" + i).val(); var TestHead = $("#TestId_" + i).val(); var SubTestId = $("#SubTestId_" + i).val();
+
+//            var ResultText = $.trim($("#Result_" + i).val());
+//            var isNote = ($("#TestName_" + i).text()).includes("@@");
+//            var isHead = !isNote && TestHead != 0 && SubTestId == 0 && TestHead != CurrentMainTest;
+//            var hasResult = !isNote && !isHead && ResultText != '' && ResultText != '.';
+
+//            var refParts = ($("#NormalValue_" + i).val() || '').split('##');
+//            var refLines = 0;
+//            for (var p = 0; p < refParts.length; p++) {
+//                refLines += Math.max(1, Math.ceil(refParts[p].length / 28));
+//            }
+//            var nameLines = Math.max(1, Math.ceil($.trim($("#TestName_" + i).text()).length / 32));
+//            var resLines = Math.max(1, Math.ceil(ResultText.length / 14));
+//            var rowLines = Math.max(refLines, nameLines, resLines);
+
+//            var deptH = (Dept != CurrentDept) ? 20 : 0;
+//            var rowH = 0;
+//            var keepH = 0;
+//            if (isNote) { rowH = 37; }
+//            else if (isHead) { rowH = 20; }
+//            else if (hasResult) { rowH = 12 + 18 * rowLines; }
+
+//            if (isNote || isHead) {
+//                var lookMain = isHead ? TestHead : CurrentMainTest;
+//                for (var j = i + 1; j <= Rowlen; j++) {
+//                    if (!$("#selprint_" + j).is(":checked")) { continue; }
+//                    var jTest = $("#TestId_" + j).val();
+//                    var jSub = $("#SubTestId_" + j).val();
+//                    var jResult = $.trim($("#Result_" + j).val());
+//                    if (($("#TestName_" + j).text()).includes("@@")) { keepH += 37; continue; }
+//                    if (jTest != 0 && jSub == 0 && jTest != lookMain) { lookMain = jTest; keepH += 20; continue; }
+//                    if (jResult == '' || jResult == '.') { continue; }
+//                    var nextParts = ($("#NormalValue_" + j).val() || '').split('##');
+//                    var nextLines = 0;
+//                    for (var q = 0; q < nextParts.length; q++) {
+//                        nextLines += Math.max(1, Math.ceil(nextParts[q].length / 28));
+//                    }
+//                    keepH += 12 + 18 * nextLines;
+//                    break;
+//                }
+//            }
+
+//            var tbls = myWindow.document.getElementsByClassName('report-table');
+//            var pcs = myWindow.document.getElementsByClassName('page-content');
+//            var usedPx = tbls[tbls.length - 1].getBoundingClientRect().bottom - pcs[pcs.length - 1].getBoundingClientRect().top;
+//            var freePx = PAGE_BODY - usedPx - SAFETY_PX;
+
+//            if ((deptH + rowH) > 0 && rowsOnThisPage > 0 && (deptH + rowH + keepH) > freePx) {
+//                myWindow.document.write(PageBreakHTML);
+//                rowsOnThisPage = 0;
+//                CurrentDept = 0;
+//                CurrentMainTest = 0;
+//            }
+
+//            if ($("#Notes_" + i).val() != '') {
+//                if (finalnotes.indexOf($("#Notes_" + i).val()) == -1) {
+//                    finalnotes = finalnotes + $("#Notes_" + i).val();
+//                }
+//            }
+
+//            if (Dept != CurrentDept) {
+//                CurrentDept = Dept;
+//                myWindow.document.write('<tr><td align=center colspan=4 class="p-0" style=" border:1px solid #f2f2f2;background-color:#f2f2f2" height="" ><b>' + $("#MedDept_" + i).val() + '</b></td></tr>');
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//            }
+
+//            if (isNote) {
+//                myWindow.document.write('<tr>' +
+//                    '<td  align=left colspan=4 style="padding:10px;  border:0px solid black;font-family:tahoma; font-size: 15px;" class="p-0"  ><b>' + ($("#TestName_" + i).text()).replace("@@", "") + '</b></td>' +
+//                    '</tr>');
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//                continue;
+//            }
+
+//            if (isHead) {
+//                CurrentMainTest = $("#TestId_" + i).val();
+//                myWindow.document.write('<tr><td colspan=4 class="p-0" height="20" style=" border:0px solid black;"><b>' + $("#TestName_" + i).text() + '</b></td></tr>');
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//            }
+//            else if (hasResult) {
+//                Maxvalue = parseFloat($('#MaxVal_' + i).val() || 0);
+//                Minvalue = parseFloat($('#MinVal_' + i).val() || 0);
+//                Res = parseFloat(($("#Result_" + i).val()).replace(',', ''));
+
+//                if (isNaN($.trim($("#Result_" + i).val().replace(',', '')))) { Res = 0 }
+
+//                if (Res > Maxvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else if (Res < Minvalue) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+//                else {
+//                    printresult = '' + $("#Result_" + i).val() + '';
+//                }
+//                Res = $("#Result_" + i).val();
+//                if ((Res.toLowerCase()).indexOf("rech") != -1) {
+//                    printresult = '<b>' + $("#Result_" + i).val() + '</b>';
+//                }
+
+//                if (($("#TestName_" + i).text()).includes("##")) {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >&#160;&#160;' + ($("#TestName_" + i).text()).replace("##", "&#160;") + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '</tr>');
+//                }
+//                else {
+//                    myWindow.document.write('<tr>' +
+//                        '<td style="padding:5px;  border:1px solid #f2f2f2;font-family:tahoma; font-size: 15px;" class="p-0"  >' + $("#TestName_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + printresult + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + $("#StdUnit_" + i).text() + '</td>' +
+//                        '<td style="padding:5px;font-family:tahoma; border:1px solid #f2f2f2; font-size: 15px;"  class="p-0"  >' + ($("#NormalValue_" + i).val()).replace(/##/g, "<br>") + '</td>' +
+//                        '</tr>');
+//                }
+//                rowsOnThisPage++;
+//                hasPrintedAnyRow = true;
+//            }
+//        }
+//    }
+
+//    myWindow.document.write('</table>');
+
+//    myWindow.document.write('<table style="font-family:tahoma;font-size: 12px;"  width=100%><tr><td><br><b>' + (finalnotes).replace("undefined", "") + '</b></td></tr></table>');
+
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.write(FooterHTML);
+
+//    myWindow.document.write('</div>');
+
+//    myWindow.document.close();
+
+//    setTimeout(function () {
+//        myWindow.focus();
+//        myWindow.print();
+//    }, 500);
+//}
+////////////JANATHA//////////
+
+
+///////BOBAN AND MOLY POLYCLINIC//////////
 function PrintTestResult(Rowlen) {
 
     var signBaseUrl = window.location.origin + "/app-assets/LabSign/";
@@ -1040,18 +1869,8 @@ function PrintTestResult(Rowlen) {
         '</tr>' +
         '</table>';
     var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
-    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
-        '<tr>' +
-        '<td></td>' +
-        '<td width=200px align=center>' +
-        '<b>LAB TECHNICIAN</b>' +
-        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
-        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
-        '</td>' +
-        '</tr>' +
-        '</table>' +
-        '</div>';
+    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' + '<table style="font-family:tahoma;font-size:12px;" width=100%>' + '<tr>' + '<td></td>' + '<td width=200px align=center>' + 'LAB TECHNICIAN<br>' + '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span><br>' + SignLabTech + '</td>' + '</tr>' + '</table>' + '</div>';
+
     myWindow.document.write('<div class="page"><div class="page-content">');
 
     myWindow.document.write(HeaderBlockHTML);
@@ -1066,7 +1885,7 @@ function PrintTestResult(Rowlen) {
     var finalnotes = "";
     var CurrentDept = 0, CurrentMainTest = 0;
 
-    var ROWS_PER_PAGE = 15;
+    var ROWS_PER_PAGE = 19;
     var rowsOnThisPage = 0;
     var hasPrintedAnyRow = false;
 
@@ -1305,18 +2124,8 @@ function PrintTestResultContinuous(Rowlen) {
         '</table>';
 
     var FooterOffsetStyle = $('#headprint').is(':checked') ? ' style="margin-top:0mm;"' : '';
-    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' +
-        '<table style="font-family:tahoma;font-size:12px;" width=100%>' +
-        '<tr>' +
-        '<td></td>' +
-        '<td width=200px align=center>' +
-        '<b>LAB TECHNICIAN</b>' +
-        '<div style="height:50px;display:flex;align-items:center;justify-content:center;margin:8px 0;">' + SignLabTech + '</div>' +
-        '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span>' +
-        '</td>' +
-        '</tr>' +
-        '</table>' +
-        '</div>';
+    var FooterHTML = '<div class="page-footer"' + FooterOffsetStyle + '>' + '<table style="font-family:tahoma;font-size:12px;" width=100%>' + '<tr>' + '<td></td>' + '<td width=200px align=center>' + 'LAB TECHNICIAN<br>' + '<span style="font-size:14px;white-space:nowrap;">' + loggedUserName + '</span><br>' + SignLabTech + '</td>' + '</tr>' + '</table>' + '</div>';
+
     myWindow.document.write('<div class="page"><div class="page-content">');
     myWindow.document.write(HeaderBlockHTML);
     myWindow.document.write(Div);
@@ -1328,7 +2137,7 @@ function PrintTestResultContinuous(Rowlen) {
     var finalnotes = "";
     var CurrentDept = 0, CurrentMainTest = 0;
 
-    var ROWS_PER_PAGE = 15;
+    var ROWS_PER_PAGE = 19;
     var rowsOnThisPage = 0;
 
     myWindow.document.write('<table class="report-table" style="font-family:tahoma;font-size:15px;">');
@@ -1444,7 +2253,9 @@ function PrintTestResultContinuous(Rowlen) {
         myWindow.print();
     }, 500);
 }
-////////////JANATHA//////////
+
+
+/////////////BOBAN AND MOLY POLYCLINIC///////////////
 
 
 function PrintTestResultPDF(Rowlen) {
