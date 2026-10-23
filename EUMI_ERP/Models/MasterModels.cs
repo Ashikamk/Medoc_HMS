@@ -33,6 +33,30 @@ namespace EUMI_ERP
             return oDMasters.MethodMasterInsertandUpdate(oMasterModels, dbName);
         }
 
+        public long SchemeId { get; set; }
+        public string DiscountCode { get; set; }
+        public string DiscountName { get; set; }
+
+        public decimal? PharmaDisc { get; set; }
+        public decimal? LabDisc { get; set; }
+        public decimal? ProcedureDisc { get; set; }
+        public decimal? IPDisc { get; set; }
+        public decimal? RegistrationDisc { get; set; }
+        public decimal? RevisitDisc { get; set; }
+        public decimal? Other1Disc { get; set; }
+        public decimal? Other2Disc { get; set; }
+        public decimal? Other3Disc { get; set; }
+
+        public DataSet SchemeDiscountMasterGetandGets(MasterModels oMasterModels, string dbName)
+        {
+            return oDMasters.SchemeDiscountMasterGetandGets(oMasterModels, dbName);
+        }
+
+        public DataSet SchemeDiscountMasterInsertandUpdate(MasterModels oMasterModels, string dbName)
+        {
+            return oDMasters.SchemeDiscountMasterInsertandUpdate(oMasterModels, dbName);
+        }
+
 
 
 

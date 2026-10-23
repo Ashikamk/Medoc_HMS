@@ -870,8 +870,8 @@ function PrintthisBillHMSSalesQR(Rowlen, flg, type)             //type:1 - HALF 
 
     }
     myWindow.document.write('</tr>');
-    myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + ',  YOUR SAVINGS:' + totalSaving.toFixed(2) + '</b></td></tr>');
-
+    //myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + ',  YOUR SAVINGS:' + totalSaving.toFixed(2) + '</b></td></tr>');
+    if (totalSaving > 0) myWindow.document.write('<tr height=25px;><td colspan=12 style="font-family:tahoma;font-size:15; border-top:1px solid grey;" align=center><b>' + $('#mrpvalue').text() + ',  YOUR SAVINGS:' + totalSaving.toFixed(2) + '</b></td></tr>');
     if (($('#TotRoundOff').val() != 0)) {
         myWindow.document.write('<tr height=25px;><td colspan=8 style="font-family:tahoma;font-size:12; border-top:1px solid grey;"><table width=100%><tr><td style="font-family:tahoma;font-size:12;"width=15%>Amount In words :</td><td style="font-family:tahoma;font-size:12;"width=61%><b> ' + AmountinWords + '</b></td><td style="font-family:tahoma;font-size:12;"width=15% align=left>RoundOff</td><td style="font-family:tahoma;font-size:12;" align=right width=9%>' + $('#TotRoundOff').val() + '</td></tr></table></tr>');
     }

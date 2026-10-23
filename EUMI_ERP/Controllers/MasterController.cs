@@ -255,6 +255,81 @@ namespace EUMI_ERP.Controllers
             }
 
         [HttpPost]
+        public ActionResult SchemeDiscountMasterInsertandUpdate(MasterModels oMasterModels)
+        {
+            MasterModels obj = new MasterModels();
+            List<MasterModels> oList = new List<MasterModels>();
+
+            try
+            {
+                DataSet dsDataSet = obj.SchemeDiscountMasterInsertandUpdate(oMasterModels, dbName);
+
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0 && dsDataSet.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        MasterModels MModels = new MasterModels();
+                        MModels.SchemeId = Convert.ToInt32(row["SchemeId"]);
+                        MModels.Status = row["Status"].ToString();
+                        oList.Add(MModels);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult SchemeDiscountMasterGetandGets(MasterModels oMasterModels)
+        {
+            MasterModels obj = new MasterModels();
+            List<MasterModels> oList = new List<MasterModels>();
+
+            try
+            {
+                DataSet dsDataSet = obj.SchemeDiscountMasterGetandGets(oMasterModels, dbName);
+
+                if (dsDataSet != null && dsDataSet.Tables.Count > 0)
+                {
+                    foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                    {
+                        MasterModels MModels = new MasterModels();
+
+                        MModels.SchemeId = Convert.ToInt64(row["SchemeId"]);
+                        MModels.DiscountCode = row["DiscountCode"].ToString();
+                        MModels.DiscountName = row["DiscountName"].ToString();
+                        MModels.Remarks = row["Remarks"].ToString();
+                        MModels.PharmaDisc = row["PharmaDisc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["PharmaDisc"]);
+                        MModels.LabDisc = row["LabDisc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["LabDisc"]);
+                        MModels.ProcedureDisc = row["ProcedureDisc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["ProcedureDisc"]);
+                        MModels.IPDisc = row["IPDisc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["IPDisc"]);
+                        MModels.RegistrationDisc = row["RegistrationDisc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["RegistrationDisc"]);
+                        MModels.RevisitDisc = row["RevisitDisc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["RevisitDisc"]);
+                        MModels.Other1Disc = row["Other1Disc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["Other1Disc"]);
+                        MModels.Other2Disc = row["Other2Disc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["Other2Disc"]);
+                        MModels.Other3Disc = row["Other3Disc"] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(row["Other3Disc"]);
+
+                        oList.Add(MModels);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return new JsonResult()
+            {
+                Data = oList,
+                MaxJsonLength = 86753090
+            };
+        }
+
+        [HttpPost]
         public ActionResult BillInfoGdetandGets(CustomerMaster CustomerMaster)
         {
             CustomerMaster obj = new CustomerMaster();
@@ -559,6 +634,11 @@ namespace EUMI_ERP.Controllers
         }
 
         public ActionResult PersonForm()
+        {
+            return View();
+        }
+
+        public ActionResult SchemeDiscountMaster()
         {
             return View();
         }

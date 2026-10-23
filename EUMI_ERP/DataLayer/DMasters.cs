@@ -139,6 +139,50 @@ namespace EUMI_ERP
             }
 
         }
+
+        public DataSet SchemeDiscountMasterInsertandUpdate(MasterModels oMasterModels, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[14];
+                arlParms[0] = new SqlParameter("@SchemeId", oMasterModels.SchemeId);
+                arlParms[1] = new SqlParameter("@DiscountCode", oMasterModels.DiscountCode);
+                arlParms[2] = new SqlParameter("@DiscountName", oMasterModels.DiscountName);
+                arlParms[3] = new SqlParameter("@Remarks", (object)oMasterModels.Remarks ?? DBNull.Value);
+                arlParms[4] = new SqlParameter("@PharmaDisc", (object)oMasterModels.PharmaDisc ?? DBNull.Value);
+                arlParms[5] = new SqlParameter("@LabDisc", (object)oMasterModels.LabDisc ?? DBNull.Value);
+                arlParms[6] = new SqlParameter("@ProcedureDisc", (object)oMasterModels.ProcedureDisc ?? DBNull.Value);
+                arlParms[7] = new SqlParameter("@IPDisc", (object)oMasterModels.IPDisc ?? DBNull.Value);
+                arlParms[8] = new SqlParameter("@RegistrationDisc", (object)oMasterModels.RegistrationDisc ?? DBNull.Value);
+                arlParms[9] = new SqlParameter("@RevisitDisc", (object)oMasterModels.RevisitDisc ?? DBNull.Value);
+                arlParms[10] = new SqlParameter("@Other1Disc", (object)oMasterModels.Other1Disc ?? DBNull.Value);
+                arlParms[11] = new SqlParameter("@Other2Disc", (object)oMasterModels.Other2Disc ?? DBNull.Value);
+                arlParms[12] = new SqlParameter("@Other3Disc", (object)oMasterModels.Other3Disc ?? DBNull.Value);
+                arlParms[13] = new SqlParameter("@DelFlag", oMasterModels.DelFlag);
+                return SQLHelper.ExecuteDataset("SchemeDiscountMasterInsertandUpdate", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
+        public DataSet SchemeDiscountMasterGetandGets(MasterModels oMasterModels, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@SchemeId", oMasterModels.SchemeId);
+                return SQLHelper.ExecuteDataset("SchemeDiscountMasterGetandGets", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
         public DataSet PCAccSearch(VoucherTypeModel VoucherTypeModel, string dbName)
         {
             try
