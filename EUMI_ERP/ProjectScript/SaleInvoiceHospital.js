@@ -1550,7 +1550,7 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
     if (flg == 3) {
         $('#BillNo').val($('#BillNoCopy').val());
         $('#saleinv,#btnsaveedit,#BtnClearproc').show();
-        $('#Copysales,#btnprint,#btnedit,#btndelete,#btnsubmit,#btnview,#btnlist,#btnacctran,#btnprec').hide();
+        $('#Copysales,#btnprint,#btnedit,#btndelete,#btnsubmit,#btnview,#btnlist,#btnacctran,#btnprec,#btnwapp').hide();
         $('.rdonl').attr('readonly', true).css('background-color', 'white');
         $('.dedisa.proccls,.dedisa.proccls0').addClass('bgclrwhite ');
         $('#HBillSeries').prop('disabled', true).addClass('bgclrwhite ');
@@ -1596,7 +1596,7 @@ function copyrefresh(flg) {                                //flg:0 - Copy ,flg :
         if (flg == 0)
             $('#HBillNoCopy').focus().select();
     }
-    if (flg != 3) { $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec').hide(); }
+    if (flg != 3) { $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec,#btnwapp').hide(); }
     CheckEOD();
 }
 
@@ -1767,7 +1767,7 @@ function SalesGetandGets(result) {
             ItemFocus();
             $('.SlRow input,.SlRow select,.input-group select').prop('disabled', 'true');
             $('.rdonl').removeClass('bgclrwhite');
-            $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec').show();
+            $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnprec,#btnwapp').show();
 
 
             if (parseFloat(result[0].Variable2 || 0) == 0) {
@@ -3099,7 +3099,7 @@ function formrefresh(flg) {
         // $('.form-control').css('background-color', '');
         $('.rdonl').addClass('bgclrwhite');
         $('#saleinv,#btnnew,#btnview,#btnadd,#btnsubmit,#btnlist,#BtnClearproc').show();
-        $('#Copysales,#btnsaveedit,#btnprint,#btnedit,#btndelete,#btnacctran,#btnprec,#btnprecold').hide();
+        $('#Copysales,#btnsaveedit,#btnprint,#btnedit,#btndelete,#btnacctran,#btnprec,#btnprecold,#btnwapp').hide();
         $('select:not(.disb)').prop('disabled', false);
 
         ClearFields(3, 0);

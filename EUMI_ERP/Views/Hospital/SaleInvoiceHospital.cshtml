@@ -907,6 +907,7 @@
                                                     @*<button type="button" style="width:120px" id="btnlist" onclick="GetRows(0)" class="btn btn-primary mr-1 mb-1 btn-sm">Copy <i class="ft-align-justify"></i></button>*@
                                                     <button type="button" style="width:120px" id="btnnew" class="btn btn-primary mr-1 mb-1 btn-sm avdbtn" onclick="Formrefreshconfirm(0)">New <i class="ft-refresh-cw position-right"></i></button>
                                                     <button style="display:none;width:120px" type="button" id="btnprint" onclick="PrintthisBillHospital('SALES', RowCount, 'COPY')" class="btn btn-primary mr-1 mb-1 btn-sm">Print <i class="ft-printer"></i></button>
+                                                    <button style="display:none;width:120px" type="button" id="btnwapp" onclick="sentmeassgewapSales()" class="btn btn-danger mr-1 mb-1 btn-sm">Whatsup <i class="fa fa-upload"></i></button>
                                                     <button style="display:none;width:120px" type="button" id="btnedit" onclick="$('#otptype').val(0), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-secondary white mr-1 mb-1 btn-sm">Edit<i class="fa ft-edit"></i></button>
                                                     <button style="display:none;width:120px" type="button" id="btndelete" onclick="$('#otptype').val(1), $('#OTPDiv').show(), $('#txtotp,#otpremarks').prop('disabled', false), $('#txtotp').focus()" class="btn btn-danger mr-1 mb-1 btn-sm">Delete <i class="fa fa-times"></i></button>
                                                     <button style="display:none;width:120px" type="button" id="btnsaveedit" class="btn btn-warning white mr-1 mb-1 btn-sm">Update<i class="fa fa-check-square-o"></i></button>
@@ -2137,6 +2138,41 @@ function LoadFromWorksheet(p) {
             };
         });
         AddMedicineList(fakeList);
+    }
+</script>
+
+<script>
+    function sentmeassgewapSales() {
+        var mobile = '';
+
+        // First try the Phone No box
+        mobile = ($('#Remarks').val() || '').replace(/\D/g, '');
+
+        // If it is empty, take the number from the address box (TN######6385224773)
+        if (mobile.length < 10) {
+            var parts = ($('#custaddress1').val() || '').split('##');
+            mobile = (parts[parts.length - 1] || '').replace(/\D/g, '');
+        }
+
+        if (mobile.length > 10) mobile = mobile.slice(-10);
+
+        if (mobile.length != 10) {
+            warningshow('INVALID MOBILE NO PLEASE CHECK', 'Remarks');
+            return;
+        }
+
+        var billNo = ($("#HBillSeries :selected").text() || '') + ' - ' + ($('#HBillNoCopy').val() || $('#HBillNo').val());
+        var amount = $('#BaseTextTotalProc').text();
+        var company = (typeof CompanySettingsArray !== 'undefined') ? CompanySettingsArray.CompanyName : '';
+
+        var Msg = "Hai " + $('#HPatient').val() + ", thank you for your purchase.\n" +
+            "Bill No: " + billNo + "\n" +
+            "Amount: " + amount + "\n" +
+            company;
+
+        var url = "https://api.whatsapp.com/send/?phone=91" + mobile +
+            "&text=" + encodeURIComponent(Msg) + "&app_absent=0";
+        window.open(url, '_blank');
     }
 </script>
 
