@@ -1254,6 +1254,7 @@ namespace EUMI_ERP.Controllers
                     MModels.Foccupation = row["FatherOccupation"].ToString();
                     MModels.Moccupation = row["MotherOccupation"].ToString();
                     MModels.Mname = row["Mothersname"].ToString();
+                    MModels.Religion = row["Religion"].ToString();
 
                     oList.Add(MModels);
                 }

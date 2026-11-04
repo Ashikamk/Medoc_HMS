@@ -225,23 +225,305 @@
 // Morning-Afternoon-Evening-Night pattern, tweak parseFrequency() below.
 // =========================================================================
 
+//function PrescriptionOnlyPrint() {
+
+//    var myWindow = window.open("", "", "width=900,height=1100");
+
+//    var patName = $("#PatientName").val();
+//    var patAge = $("#PatientAge").text();
+//    var patGender = $("#PatientGender").text();
+//    var caseDate = $("#CaseDate").val();
+//    var opNo = $("#PatientOP").text();
+
+//    var doctor = $("#Vistdr_1").val();
+//    var regNo = $("#UserRegNo").text();
+//    var speciality = $("#UserSpeciality").text();
+
+//    var diagnosis = $('#ICDDetails').val() || '';
+
+//    function esc(v) { return (v == null) ? '' : String(v); }
+//    function parseFrequency(str) {
+//        var parts = (str || '').split('-').map(function (p) { return p.trim(); });
+//        var cell = { M: '', A: '', E: '', N: '' };
+//        function v(x) { return (x && x !== '0') ? x : ''; }
+//        if (parts.length >= 4) {
+//            cell.M = v(parts[0]); cell.A = v(parts[1]); cell.E = v(parts[2]); cell.N = v(parts[3]);
+//        } else if (parts.length === 3) {
+//            cell.M = v(parts[0]); cell.A = v(parts[1]); cell.N = v(parts[2]);
+//        } else if (parts.length === 2) {
+//            cell.M = v(parts[0]); cell.N = v(parts[1]);
+//        } else if (parts.length === 1) {
+//            cell.M = v(parts[0]);
+//        }
+//        return cell;
+//    }
+
+//    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+//    $(ComapnydivToPrintLab).css('height', 90);
+//    $(ComapnydivToPrintLab).css('width', 600);
+//    var headerHtml = '<table width="100%"><tr><td width="100%" align="center">' +
+//        ComapnydivToPrintLab.outerHTML + '</td></tr></table>';
+
+//    myWindow.document.open();
+//    myWindow.document.write(`
+//<html>
+//<head>
+//    <style>
+//        * { box-sizing: border-box; margin: 0; padding: 0; }
+//        body {
+//            font-family: Arial, sans-serif;
+//            font-size: 13px;
+//            background: #fff;
+//            color: #1a1a1a;
+//        }
+//        .page {
+//            width: 850px;
+//            min-height: 1050px;
+//            margin: 0 auto;
+//            padding: 20px 36px 100px 36px;
+//            position: relative;
+//        }
+
+//        /* ---------- PATIENT INFO CARD ---------- */
+//        .patient-card {
+//            border: 3px solid #1a1a1a;
+//            border-radius: 18px;
+//            padding: 16px 24px;
+//            margin-top: 14px;
+//            background: #ffffff;
+//        }
+//        .patient-row {
+//            display: flex;
+//            align-items: center;
+//            flex-wrap: wrap;
+//            margin-bottom: 10px;
+//        }
+//        .patient-row:last-child { margin-bottom: 0; }
+//        .field {
+//            display: flex;
+//            align-items: center;
+//            margin-right: 34px;
+//        }
+//        .field:last-child { margin-right: 0; }
+//        .field .icon {
+//            width: 26px;
+//            height: 26px;
+//            min-width: 26px;
+//            border-radius: 50%;
+//            background: #1a1a1a;
+//            color: #fff;
+//            display: inline-flex;
+//            align-items: center;
+//            justify-content: center;
+//            font-size: 13px;
+//            margin-right: 8px;
+//        }
+//        .field .lbl {
+//            font-weight: bold;
+//            font-size: 13px;
+//            white-space: nowrap;
+//            margin-right: 6px;
+//        }
+//        .field .val {
+//            font-size: 13px;
+//            border-bottom: 1px solid #c9c9c9;
+//            min-width: 140px;
+//            padding-bottom: 1px;
+//        }
+//        .field.wide .val { min-width: 420px; }
+
+//        /* ---------- Rx MARK ---------- */
+//        .rx {
+//            font-family: 'Times New Roman', Times, serif;
+//            font-size: 40px;
+//            font-style: italic;
+//            margin: 18px 0 8px 0;
+//            line-height: 1;
+//            color: #1a1a1a;
+//        }
+
+//        /* ---------- MEDICINE TABLE ---------- */
+//        .med-table {
+//            width: 100%;
+//            border-collapse: collapse;
+//            font-size: 12.5px;
+//        }
+//        .med-table th {
+//            background-color: #ffffff;
+//            color: #1a1a1a;
+//            font-weight: bold;
+//            padding: 10px 6px;
+//            text-align: center;
+//            border: 1px solid #1a1a1a;
+//        }
+//        .med-table td {
+//            padding: 8px 6px;
+//            border: 1px solid #c9c9c9;
+//            text-align: center;
+//            vertical-align: middle;
+//        }
+//        .med-table tr:nth-child(even) td { background-color: #f2f2f2; }
+//        .med-table td.sno {
+//            background-color: inherit;
+//            color: #1a1a1a;
+//            font-weight: bold;
+//            width: 5%;
+//        }
+//        .med-table td.drugname { text-align: left; width: 26%; }
+//        .med-brand   { font-weight: bold; }
+//        .med-generic { font-size: 11px; color: #555; margin-top: 2px; }
+//        .no-med      { font-style: italic; color: #666; }
+//        .timecol { width: 6%; }
+
+//        /* ---------- FOOTER ---------- */
+//        .footer {
+//            position: absolute;
+//            bottom: 200px;
+//            right: 36px;
+//            text-align: right;
+//            line-height: 1.7;
+//            font-size: 16px;
+//            letter-spacing: 0.5px;
+//        }
+//        .footer-doctor {
+//            font-weight: bold;
+//            font-size: 20px;
+//            letter-spacing: 0.5px;
+//        }
+//    </style>
+//</head>
+//<body>
+//<div class="page">
+
+//    <!-- CLINIC HEADER -->
+//    ${headerHtml}
+
+//    <!-- PATIENT INFO CARD (matches reference template) -->
+//    <div class="patient-card">
+//        <div class="patient-row">
+//            <div class="field">
+//                <span class="icon">&#128100;</span>
+//                <span class="lbl">NAME :</span>
+//                <span class="val">${esc(patName)}</span>
+//            </div>
+//            <div class="field">
+//                <span class="icon">&#127874;</span>
+//                <span class="lbl">AGE :</span>
+//                <span class="val" style="min-width:60px">${esc(patAge)}</span>
+//            </div>
+//            <div class="field">
+//                <span class="icon">&#9893;</span>
+//                <span class="lbl">SEX :</span>
+//                <span class="val" style="min-width:60px">${esc(patGender)}</span>
+//            </div>
+//        </div>
+//        <div class="patient-row">
+//            <div class="field wide">
+//                <span class="icon">&#128203;</span>
+//                <span class="lbl">OP/IP No. :</span>
+//                <span class="val">${esc(opNo)}</span>
+//            </div>
+//        </div>
+//        <div class="patient-row">
+//            <div class="field">
+//                <span class="icon">&#128197;</span>
+//                <span class="lbl">DATE :</span>
+//                <span class="val">${esc(caseDate)}</span>
+//            </div>
+//            <div class="field wide">
+//                <span class="icon">&#128221;</span>
+//                <span class="lbl">DIAGNOSIS :</span>
+//                <span class="val">${esc(diagnosis)}</span>
+//            </div>
+//        </div>
+//    </div>
+
+//    <div class="rx"></div>
+
+//    <table class="med-table">
+//        <thead>
+//            <tr>
+//                <th>S.NO</th>
+//                <th>NAME OF THE DRUG</th>
+//                <th>DOSE</th>
+//                <th>ROUTE</th>
+//                <th class="timecol">M</th>
+//                <th class="timecol">A</th>
+//                <th class="timecol">E</th>
+//                <th class="timecol">N</th>
+//                <th>DURATION<br>(In Days)</th>
+//            </tr>
+//        </thead>
+//        <tbody id="med-body"></tbody>
+//    </table>
+
+//    <div class="footer">
+//        <div>Electronically Signed by:</div>
+//        <div class="footer-doctor">${esc(doctor)}</div>
+//        ${regNo ? `<div>(Reg No.: ${esc(regNo)})</div>` : ''}
+//        ${speciality ? `<div>${esc(speciality)}</div>` : ''}
+//    </div>
+
+//</div>
+//</body>
+//</html>`);
+
+//    myWindow.document.close();
+
+//    var hasMedicine = false;
+//    var rows = '';
+
+//    for (var i = 1; i <= (typeof MedCount !== 'undefined' ? MedCount : 0); i++) {
+//        var medName = $('#Medicine' + i).val();
+
+//        if (medName && $.trim(medName) !== '') {
+//            hasMedicine = true;
+
+//            var dose = $('#Daily' + i).val() || '';
+//            var route = $('#mednote' + i).val() || '';
+//            var freq = parseFrequency($('#Dosage' + i).val());
+//            var days = $('#Days' + i).val() || '';
+
+//            rows += `
+//        <tr>
+//            <td class="sno">${i}</td>
+//            <td class="drugname">
+//                <div class="med-brand">${esc(medName)}</div>
+//            </td>
+//            <td>${esc(dose)}</td>
+//            <td>${esc(route)}</td>
+//            <td>${esc(freq.M)}</td>
+//            <td>${esc(freq.A)}</td>
+//            <td>${esc(freq.E)}</td>
+//            <td>${esc(freq.N)}</td>
+//            <td>${esc(days)}</td>
+//        </tr>`;
+//        }
+//    }
+
+//    if (!hasMedicine) {
+//        rows = `<tr><td colspan="9" class="no-med">No medicines prescribed</td></tr>`;
+//    }
+
+//    myWindow.document.getElementById('med-body').innerHTML = rows;
+
+//    myWindow.focus();
+//    setTimeout(function () { myWindow.print(); }, 700);
+//}
+
+
 function PrescriptionOnlyPrint() {
 
-    var myWindow = window.open("", "", "width=900,height=1100");
+    var myWindow = window.open("", "", "width=1500,height=1500");
+    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
+    var hdtype = PrintHeaderFlag;
+    var LAB_PRINT_HEADER_HEIGHT = 100;
 
-    var patName = $("#PatientName").val();
-    var patAge = $("#PatientAge").text();
-    var patGender = $("#PatientGender").text();
-    var caseDate = $("#CaseDate").val();
-    var opNo = $("#PatientOP").text();
+    function esc(v) {
+        return (v == null) ? '' : String(v)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
-    var doctor = $("#Vistdr_1").val();
-    var regNo = $("#UserRegNo").text();
-    var speciality = $("#UserSpeciality").text();
-
-    var diagnosis = $('#ICDDetails').val() || '';
-
-    function esc(v) { return (v == null) ? '' : String(v); }
     function parseFrequency(str) {
         var parts = (str || '').split('-').map(function (p) { return p.trim(); });
         var cell = { M: '', A: '', E: '', N: '' };
@@ -258,255 +540,121 @@ function PrescriptionOnlyPrint() {
         return cell;
     }
 
-    var ComapnydivToPrintLab = document.getElementById("ComapnyImage");
-    $(ComapnydivToPrintLab).css('height', 90);
-    $(ComapnydivToPrintLab).css('width', 600);
-    var headerHtml = '<table width="100%"><tr><td width="100%" align="center">' +
-        ComapnydivToPrintLab.outerHTML + '</td></tr></table>';
+   
+    if (hdtype == 0) {
+        myWindow.document.write('<table width=100%><tr><td style="height:' + LAB_PRINT_HEADER_HEIGHT + 'px;">&#160;</td></tr></table>');
+    }
+    else if (hdtype == 1) {
+        myWindow.document.write('<table width=100%><tr><td width=100% align=center colspan=6 style="color:#008000;font-weight:bold;">' + (ComapnydivToPrintLab.outerHTML) + '</td></tr></table>');
+    }
+    else if (hdtype == 2) {
+        myWindow.document.write('<table width="100%"><tr><td colspan="6" style="width:100%;"><p style="margin:0 auto; width:max-content; font-weight:bold; font-size:30px;">' + window.CompanySettingsArray.CompanyName + '</p></td></tr></table>');
+        myWindow.document.write('<table width="100%"><tr><td colspan="6" style="width:100%;"><p style="margin:0 auto; width:max-content; font-weight:bold; font-size:25px;">' + window.CompanySettingsArray.Address + '</p></td></tr></table>');
+        myWindow.document.write('<table width="100%"><tr><td colspan="6" style="width:100%;"><p style="margin:0 auto; width:max-content; font-weight:bold; font-size:20px;">' + window.CompanySettingsArray.PhoneNo + '</p></td></tr></table>');
+        myWindow.document.write('<hr/>');
+    }
 
-    myWindow.document.open();
-    myWindow.document.write(`
-<html>
-<head>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 13px;
-            background: #fff;
-            color: #1a1a1a;
-        }
-        .page {
-            width: 850px;
-            min-height: 1050px;
-            margin: 0 auto;
-            padding: 20px 36px 100px 36px;
-            position: relative;
-        }
+    
+    myWindow.document.write('<table width=100% style="margin-bottom:4px;"><tr><td style="font-family:tahoma;font-size:13px;font-weight:normal;" align=center>PATIENT SUMMARY</td></tr></table>');
+    myWindow.document.write(
+        '<div style="font-family:tahoma;font-size:13px;font-weight:normal;display:flex;justify-content:space-between;align-items:flex-start;">' +
 
-        /* ---------- PATIENT INFO CARD ---------- */
-        .patient-card {
-            border: 3px solid #1a1a1a;
-            border-radius: 18px;
-            padding: 16px 24px;
-            margin-top: 14px;
-            background: #ffffff;
-        }
-        .patient-row {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        .patient-row:last-child { margin-bottom: 0; }
-        .field {
-            display: flex;
-            align-items: center;
-            margin-right: 34px;
-        }
-        .field:last-child { margin-right: 0; }
-        .field .icon {
-            width: 26px;
-            height: 26px;
-            min-width: 26px;
-            border-radius: 50%;
-            background: #1a1a1a;
-            color: #fff;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            margin-right: 8px;
-        }
-        .field .lbl {
-            font-weight: bold;
-            font-size: 13px;
-            white-space: nowrap;
-            margin-right: 6px;
-        }
-        .field .val {
-            font-size: 13px;
-            border-bottom: 1px solid #c9c9c9;
-            min-width: 140px;
-            padding-bottom: 1px;
-        }
-        .field.wide .val { min-width: 420px; }
+        '<div style="white-space:nowrap;">' +
+        '<div><b>MR-No/OP-No:</b> ' + $("#PRegNo").val() + '/' + $("#PatientOP").text() + '</div>' +
+        '<div><b>Name:</b> ' + $("#PatientName").val() + '</div>' +
+        '<div><b>Doctor:</b> ' +
+        (DoctorName !== '' ? DoctorName : $("#UserDetsss").text()) +
+        (DoctorQualification !== '' ? '  ' + DoctorQualification : '') +
+        '</div>' +
+        '</div>' +
 
-        /* ---------- Rx MARK ---------- */
-        .rx {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 40px;
-            font-style: italic;
-            margin: 18px 0 8px 0;
-            line-height: 1;
-            color: #1a1a1a;
-        }
+        '<div style="white-space:nowrap;text-align:left;">' +
+        '<div><b>Date:</b> ' + $("#CaseDate").val() + '</div>' +
+        '<div><b>Age:</b> ' + $("#PatientAge").text() + '</div>' +
+        '<div><b>Sex:</b> ' + $("#PatientGender").text() + '</div>' +
+        '</div>' +
 
-        /* ---------- MEDICINE TABLE ---------- */
-        .med-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12.5px;
-        }
-        .med-table th {
-            background-color: #ffffff;
-            color: #1a1a1a;
-            font-weight: bold;
-            padding: 10px 6px;
-            text-align: center;
-            border: 1px solid #1a1a1a;
-        }
-        .med-table td {
-            padding: 8px 6px;
-            border: 1px solid #c9c9c9;
-            text-align: center;
-            vertical-align: middle;
-        }
-        .med-table tr:nth-child(even) td { background-color: #f2f2f2; }
-        .med-table td.sno {
-            background-color: inherit;
-            color: #1a1a1a;
-            font-weight: bold;
-            width: 5%;
-        }
-        .med-table td.drugname { text-align: left; width: 26%; }
-        .med-brand   { font-weight: bold; }
-        .med-generic { font-size: 11px; color: #555; margin-top: 2px; }
-        .no-med      { font-style: italic; color: #666; }
-        .timecol { width: 6%; }
+        '</div>' +
+        '<hr style="border:0;border-top:1px solid #000;margin:6px 0;"/>'
+    );
 
-        /* ---------- FOOTER ---------- */
-        .footer {
-            position: absolute;
-            bottom: 200px;
-            right: 36px;
-            text-align: right;
-            line-height: 1.7;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-        .footer-doctor {
-            font-weight: bold;
-            font-size: 20px;
-            letter-spacing: 0.5px;
-        }
-    </style>
-</head>
-<body>
-<div class="page">
+    
+    if (SummaryGapFlag == 0) {
+        myWindow.document.write('<table width=100%><tr>');
+        myWindow.document.write('<td style="width:150px;height:250px;vertical-align:top;">&#160;</td>');
+        myWindow.document.write('<td style="vertical-align:top;">');
+    }
 
-    <!-- CLINIC HEADER -->
-    ${headerHtml}
 
-    <!-- PATIENT INFO CARD (matches reference template) -->
-    <div class="patient-card">
-        <div class="patient-row">
-            <div class="field">
-                <span class="icon">&#128100;</span>
-                <span class="lbl">NAME :</span>
-                <span class="val">${esc(patName)}</span>
-            </div>
-            <div class="field">
-                <span class="icon">&#127874;</span>
-                <span class="lbl">AGE :</span>
-                <span class="val" style="min-width:60px">${esc(patAge)}</span>
-            </div>
-            <div class="field">
-                <span class="icon">&#9893;</span>
-                <span class="lbl">SEX :</span>
-                <span class="val" style="min-width:60px">${esc(patGender)}</span>
-            </div>
-        </div>
-        <div class="patient-row">
-            <div class="field wide">
-                <span class="icon">&#128203;</span>
-                <span class="lbl">OP/IP No. :</span>
-                <span class="val">${esc(opNo)}</span>
-            </div>
-        </div>
-        <div class="patient-row">
-            <div class="field">
-                <span class="icon">&#128197;</span>
-                <span class="lbl">DATE :</span>
-                <span class="val">${esc(caseDate)}</span>
-            </div>
-            <div class="field wide">
-                <span class="icon">&#128221;</span>
-                <span class="lbl">DIAGNOSIS :</span>
-                <span class="val">${esc(diagnosis)}</span>
-            </div>
-        </div>
-    </div>
+    var th = 'style="border:1px solid #1a1a1a;padding:5px;text-align:center;background:#eeeeee;"';
+    var td = 'style="border:1px solid #ccc;padding:4px;text-align:center;"';
 
-    <div class="rx"></div>
+    var slno = 1;
+    var bodyRows = '';
 
-    <table class="med-table">
-        <thead>
-            <tr>
-                <th>S.NO</th>
-                <th>NAME OF THE DRUG</th>
-                <th>DOSE</th>
-                <th>ROUTE</th>
-                <th class="timecol">M</th>
-                <th class="timecol">A</th>
-                <th class="timecol">E</th>
-                <th class="timecol">N</th>
-                <th>DURATION<br>(In Days)</th>
-            </tr>
-        </thead>
-        <tbody id="med-body"></tbody>
-    </table>
-
-    <div class="footer">
-        <div>Electronically Signed by:</div>
-        <div class="footer-doctor">${esc(doctor)}</div>
-        ${regNo ? `<div>(Reg No.: ${esc(regNo)})</div>` : ''}
-        ${speciality ? `<div>${esc(speciality)}</div>` : ''}
-    </div>
-
-</div>
-</body>
-</html>`);
-
-    myWindow.document.close();
-
-    var hasMedicine = false;
-    var rows = '';
-
-    for (var i = 1; i <= (typeof MedCount !== 'undefined' ? MedCount : 0); i++) {
+    for (var i = 1; i <= MedCount + 1; i++) {
         var medName = $('#Medicine' + i).val();
-
-        if (medName && $.trim(medName) !== '') {
-            hasMedicine = true;
+        if ($('#Medicine' + i).length && medName && $.trim(medName) !== '') {
 
             var dose = $('#Daily' + i).val() || '';
             var route = $('#mednote' + i).val() || '';
             var freq = parseFrequency($('#Dosage' + i).val());
             var days = $('#Days' + i).val() || '';
 
-            rows += `
-        <tr>
-            <td class="sno">${i}</td>
-            <td class="drugname">
-                <div class="med-brand">${esc(medName)}</div>
-            </td>
-            <td>${esc(dose)}</td>
-            <td>${esc(route)}</td>
-            <td>${esc(freq.M)}</td>
-            <td>${esc(freq.A)}</td>
-            <td>${esc(freq.E)}</td>
-            <td>${esc(freq.N)}</td>
-            <td>${esc(days)}</td>
-        </tr>`;
+            bodyRows += '<tr>' +
+                '<td ' + td + '>' + slno + '</td>' +
+                '<td style="border:1px solid #ccc;padding:4px;text-align:left;">' + esc(medName) + '</td>' +
+                '<td ' + td + '>' + esc(dose) + '</td>' +
+                '<td ' + td + '>' + esc(route) + '</td>' +
+                '<td ' + td + '>' + esc(freq.M) + '</td>' +
+                '<td ' + td + '>' + esc(freq.A) + '</td>' +
+                '<td ' + td + '>' + esc(freq.E) + '</td>' +
+                '<td ' + td + '>' + esc(freq.N) + '</td>' +
+                '<td ' + td + '>' + esc(days) + '</td>' +
+                '</tr>';
+            slno++;
         }
     }
 
-    if (!hasMedicine) {
-        rows = `<tr><td colspan="9" class="no-med">No medicines prescribed</td></tr>`;
+ 
+    if (bodyRows !== '') {
+        var html = '<table style="font-family:tahoma;font-size:13px;font-weight:normal;" width=100%>' +
+            '<tr><td height=25px>&#160;</td></tr>' +
+            '<tr style="background-color:#D3D3D3"><td><b>Medicine Advice</b></td></tr>' +
+            '<tr><td>' +
+            '<table width=100% style="font-family:tahoma;font-size:13px;border-collapse:collapse;">' +
+            '<tr>' +
+            '<th ' + th + '>S.NO</th>' +
+            '<th ' + th + '>NAME OF THE DRUG</th>' +
+            '<th ' + th + '>DOSE</th>' +
+            '<th ' + th + '>ROUTE</th>' +
+            '<th ' + th + '>M</th>' +
+            '<th ' + th + '>A</th>' +
+            '<th ' + th + '>E</th>' +
+            '<th ' + th + '>N</th>' +
+            '<th ' + th + '>DURATION<br>(In Days)</th>' +
+            '</tr>' +
+            bodyRows +
+            '</table></td></tr></table>';
+        myWindow.document.write(html);
     }
 
-    myWindow.document.getElementById('med-body').innerHTML = rows;
+    
+    if ($.trim($('#NextDate').val()) != '' && $('#NextDate').val() != $('#CaseDate').val()) {
+        myWindow.document.write(
+            '<table style="font-family:tahoma;font-size:13px;font-weight:normal;" width=100%>' +
+            '<tr><td height=10px>&#160;</td></tr>' +
+            '<tr><td style="white-space:nowrap;">YOUR NEXT VISIT SCHEDULED ON ' + $('#NextDate').val() + '</td></tr>' +
+            '</table>');
+    }
 
-    myWindow.focus();
-    setTimeout(function () { myWindow.print(); }, 700);
+   
+    if (SummaryGapFlag == 0) {
+        myWindow.document.write('</td></tr></table>');
+    }
+
+   
+    printFooter(myWindow, function () {
+        myWindow.print();
+    });
 }

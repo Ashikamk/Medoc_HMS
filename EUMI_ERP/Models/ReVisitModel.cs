@@ -142,6 +142,7 @@ namespace EUMI_ERP.Models
         public decimal Cash { get; set; }
         public decimal Upi { get; set; }
         public decimal Card { get; set; }
+        public string Religion { get; set; }
 
         DReVisit oDReVisit = new DReVisit();
         DHospital oDHospital = new DHospital();

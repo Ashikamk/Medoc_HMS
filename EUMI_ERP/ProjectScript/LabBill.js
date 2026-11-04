@@ -1,5 +1,5 @@
 ﻿    var Copyflag = 0; var Editflag = 0; var DeptLoad = ''; var Count = 0; var SlNum = 0; var DeptSelect = ""; var Updateflag = 0;
-
+    var PatientDiscount = 0; var DiscountApplied = false;var BillPatientId = 0;
     //Document Ready
     $(document).ready(function () {
 
@@ -371,7 +371,8 @@
 
     }
 
-    function GetPatientData(result) {
+function GetPatientData(result) {
+    console.log('PATIENT DATA:', result[0]);
         debugger;
         var age = AgeCalculation(result[0].DOB); var yearString = '';
         if (age.years == 0) { yearString = age.months + " Months"; }
@@ -388,6 +389,16 @@
         $('#Doctor').val(result[0].DoctorId);
         $('#RegSeries').val(result[0].OPSerId);
         // $('#TestName0'), focus();
+
+    PatientDiscount = parseFloat(result[0].Religion || 0);
+    PatientDiscount = isNaN(PatientDiscount) ? 0 : PatientDiscount;
+    DiscountApplied = false;
+    if (PatientDiscount > 0) {
+        $('#DiscountMsgText').text('Discount available (' + PatientDiscount + '%) - click to apply');
+        $('#DiscountInfoPopUp').show();
+    } else {
+        $('#DiscountInfoPopUp').hide();
+    }
 
         var savedSeries = sessionStorage.getItem("LB_OPSeries");
         if (savedSeries) { $('#Opseriesname').val(savedSeries); sessionStorage.removeItem("LB_OPSeries"); }
@@ -411,7 +422,13 @@
         }
     }
 
-
+function ApplyPatientDiscount() {
+    if (PatientDiscount <= 0) return;
+    DiscountApplied = true;
+    $('#DiscPercent').val(parseFloat(Math.min(PatientDiscount, 100)).toFixed(Decimal));
+    CalcGrandTotal(0);
+}
+        
     function Gettestadviceget() {
         var data = {};
         data.RevisitId = $('#OpNo').val();
@@ -431,8 +448,10 @@
 
     function ClearData(flg, Id) {
         if (flg == 0) {
+            DiscountApplied = false; PatientDiscount = 0;
             $('.patdet').val('');
             $('#Doctor,#Gender').val(0);
+            $('#DiscountInfoPopUp').hide();
         }
         else if (flg == 1) {
             RateArray = [];
@@ -616,6 +635,7 @@
                 TotalAmount = parseFloat(TotalAmount) + parseFloat($('#TestAmount' + i).val() || 0);
             }
         }
+        if (flg == 1 && DiscountApplied) { flg = 0; }   // keep the applied discount when tests are added or removed
 
         if (flg == 0) {
             DiscountPer = parseFloat($('#DiscPercent').val());
@@ -698,7 +718,8 @@
         $('#TestName0').focus();
     }
 
-    function formrefreshconfirm() {
+function formrefreshconfirm() {
+    $('#DiscountInfoPopUp').hide();
         if (Editflag != 0) {
             warningshow('Please Update Edit Mode');
         }
@@ -717,7 +738,8 @@
     }
 
     //Form Refresh
-    function formrefresh() {
+function formrefresh() {
+    DiscountApplied = false; PatientDiscount = 0;
         $('.rdonl').attr('readonly', true).css('background-color', 'white');
         $('.form-control:not(.avdclr),#BillDate,#btnadd').val('').prop('disabled', false);
         $('select').each((i, item) => {
@@ -916,6 +938,8 @@
 
     //Clear All Values Before Copy Function
     function copyrefresh(flg) {                                //flg:0 - Copy ,flg :1-View  ,flg:2 -New bill copy   ,flg:3 -Edit btn click
+        $('#DiscountInfoPopUp').hide();
+        DiscountApplied = false; PatientDiscount = 0;
         if (flg == 3) {
             $('#BillNo').val($('#BillNoCopy').val());
             $('#BillNo,.btn').show();
@@ -1066,6 +1090,8 @@
 
         //console.log(result[0].SurgeryDate)
         if (result.length > 0) {
+            $('#DiscountInfoPopUp').hide();
+            DiscountApplied = false; PatientDiscount = 0;
             if (result[0].DeptId == ERPDeptId) {
                 $('#btnedit,#btndelete,#btnacctran,#btnprint,#btnsubmitnew').show();
             }
