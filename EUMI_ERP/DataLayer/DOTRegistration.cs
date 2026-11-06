@@ -95,6 +95,23 @@ namespace EUMI_ERP.DataLayer
             }
         }
 
+        public DataSet HMS_OTProcedureGets(OTRegistrationModel obj, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[3];
+                arlParms[0] = new SqlParameter("@ProcedureId", obj.ProcedureId);
+                arlParms[1] = new SqlParameter("@UserId", obj.UserId);
+                arlParms[2] = new SqlParameter("@DeptId", obj.DeptId);
+                return SQLHelper.ExecuteDataset("HMS_OTProcedureGets", dbName, arlParms);
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
         // ── Patient Search ───────────────────────────────────────
         public DataSet HMS_OTPorPatientSearch(OTRegistrationModel obj, string dbName)
         {

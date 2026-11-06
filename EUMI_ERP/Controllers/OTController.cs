@@ -191,6 +191,37 @@ namespace EUMI_ERP.Controllers
             return new JsonResult { Data = new { oList }, MaxJsonLength = 86753090 };
         }
 
+        [HttpPost]
+        public JsonResult HMS_OTProcedureGets(OTRegistrationModel model)
+        {
+            var oList = new List<object>();
+            try
+            {
+                model.ProcedureId = 0;
+                model.UserId = Convert.ToInt64(Session["UserId"] ?? 1);
+                model.DeptId = 0;
+
+                DataSet ds = objModel.HMS_OTProcedureGets(model, dbName);
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        oList.Add(new
+                        {
+                            ProcedureId = Convert.ToInt64(row["ProcedureId"]),
+                            ProcedureName = row["ProcedureName"].ToString(),
+                            ProcedureCode = row["ProcedureCode"].ToString(),
+                            ProcedureCharge = row["Procedurecharge"] == DBNull.Value ? 0 : Convert.ToDecimal(row["Procedurecharge"])
+                        });
+                    }
+                }
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+            return new JsonResult { Data = new { oList }, MaxJsonLength = 86753090 };
+        }
+
         // ── Registration List ────────────────────────────────────
         [HttpPost]
         public JsonResult HMS_OTRegistrationList(string FromInsDate, string ToInsDate, int? Status)

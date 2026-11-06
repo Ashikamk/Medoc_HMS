@@ -116,8 +116,6 @@
             color: #000;
         }
 
-    
-
     .ot-container {
         display: flex;
         gap: 25px;
@@ -162,9 +160,10 @@
         display: block;
     }
 
+    /* NEW: #Procedure added to this rule */
     #PatientName, #Age, #Gender, #ContactNo, #OpNo, #RevisitId, #IpNo,
     #AdmissionStatus, #OpDate, #OpTime, #OperationTheatre, #DoctorConsultant,
-    #Status, #Notes, #RegNo, #Opseriesname {
+    #Procedure, #Status, #Notes, #RegNo, #Opseriesname {
         height: 50px;
         font-size: 18px;
         padding: 12px 14px;
@@ -551,6 +550,15 @@
                                                             <option value="">Select Consultant</option>
                                                         </select>
                                                     </div>
+
+                                                    <!-- NEW: Procedure -->
+                                                    <div class="col-md-12 mt-2">
+                                                        <label class="label-control">Procedure *</label>
+                                                        <select id="Procedure" class="form-control">
+                                                            <option value="">Select Procedure</option>
+                                                        </select>
+                                                    </div>
+
                                                     <div class="col-md-12 mt-2">
                                                         <label class="label-control">Notes / Remarks</label>
                                                         <textarea id="Notes" class="form-control" placeholder="Enter notes"></textarea>
@@ -629,6 +637,7 @@
                     <th>Patient Name</th>
                     <th>Reg No</th>
                     <th>Doctor</th>
+                    <th>Procedure</th>
                     <th>OT</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -636,7 +645,7 @@
             </thead>
             <tbody>
                 <tr class="ot-empty-row">
-                    <td colspan="9">Enter a date range and click <strong>GO</strong> to load records</td>
+                    <td colspan="10">Enter a date range and click <strong>GO</strong> to load records</td>
                 </tr>
             </tbody>
         </table>
@@ -656,6 +665,7 @@
         document.title = "Operation Theatre";
         SetCurrentDateTime();
         LoadDoctors();
+        LoadProcedures();          // NEW
         LoadRegNumber();
         LoadOperationTheatres();
         Defaultfocus();
@@ -713,6 +723,28 @@
                     $.each(r.oList, function (i, x) { o += '<option value="' + x.DoctorId + '">' + x.DoctorName + '</option>'; });
                 $('#DoctorConsultant').html(o);
                 sessionStorage.setItem('otDoctors', o);
+            }
+        });
+    }
+
+    // NEW: load Procedure dropdown from HMS_Procedure
+    function LoadProcedures() {
+        var cached = sessionStorage.getItem('otProcedures');
+        if (cached && cached.indexOf('<option value="') !== -1) {
+            $('#Procedure').html(cached); return;
+        }
+        sessionStorage.removeItem('otProcedures');
+        $.ajax({
+            type: "POST", url: "../OT/HMS_OTProcedureGets",
+            data: { ProcedureId: 0 },
+            success: function (r) {
+                var o = '<option value="">Select Procedure</option>';
+                if (r.oList && r.oList.length)
+                    $.each(r.oList, function (i, x) {
+                        o += '<option value="' + x.ProcedureId + '">' + x.ProcedureName + '</option>';
+                    });
+                $('#Procedure').html(o);
+                if (r.oList && r.oList.length) sessionStorage.setItem('otProcedures', o);
             }
         });
     }
@@ -875,8 +907,9 @@
         if ($.fn.DataTable.isDataTable('#tblOTList')) {
             $('#tblOTList').DataTable().destroy();
         }
+        // 10 columns now (Procedure added)
         $('#tblOTList tbody').html(
-            "<tr class='ot-empty-row'><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Loading...</td></tr>"
+            "<tr class='ot-empty-row'><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>Loading...</td></tr>"
         );
 
         $('body').addClass('ot-modal-open');
@@ -930,6 +963,7 @@
                 { data: 'PatientName' },
                 { data: 'RegNo' },
                 { data: 'DoctorName' },
+                { data: 'ProcedureName', defaultContent: '' },   // NEW
                 { data: 'RoomName' },
                 { data: 'Status', render: function (data) { return getStatusBadge(data); } },
                 {
@@ -971,6 +1005,7 @@
                 $('#OpTime').val(data.OpTime);
                 $('#OperationTheatre').val(data.OperationTheatre);
                 $('#DoctorConsultant').val(data.DoctorConsultant);
+                $('#Procedure').val(data.ProcedureId);           // NEW
                 $('#Status').val(data.Status);
                 $('#Notes').val(data.Notes);
                 CloseOTList();
@@ -1018,6 +1053,7 @@
         if (!$("#OpTime").val()) { warningshow("Please select operation time"); $('#OpTime').focus(); return; }
         if (!$("#OperationTheatre").val()) { warningshow("Please select operation theatre"); $('#OperationTheatre').focus(); return; }
         if (!$("#DoctorConsultant").val()) { warningshow("Please select consultant doctor"); $('#DoctorConsultant').focus(); return; }
+        if (!$("#Procedure").val()) { warningshow("Please select procedure"); $('#Procedure').focus(); return; }   // NEW
         if (!$("#Status").val()) { warningshow("Please select status"); $('#Status').focus(); return; }
 
         var id = $('#OTRegistrationId').val();
@@ -1057,6 +1093,7 @@
                 OpTime: $('#OpTime').val(),
                 OperationTheatre: parseInt($('#OperationTheatre').val()),
                 DoctorConsultant: parseInt($('#DoctorConsultant').val()),
+                ProcedureId: parseInt($('#Procedure').val()),      // NEW
                 Status: parseInt($('#Status').val()),
                 Notes: $('#Notes').val(),
                 UserId: ERPUserId,
@@ -1143,6 +1180,7 @@
         $('#HiddenRegNo,#RegSeries,#Notes').val('');
         $('#Status').val('1');
         $('#OperationTheatre').val('');
+        $('#Procedure').val('');                                   // NEW
         SetCurrentDateTime();
         setTimeout(function () { $('#RegNo').focus().select(); }, 100);
     }

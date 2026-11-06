@@ -80,6 +80,18 @@ namespace EUMI_ERP.Models
         public long UserId { get; set; }
         public long DeptId { get; set; }
 
+        // Properties
+        public long ProcedureId { get; set; }
+        public string ProcedureName { get; set; }
+        public string ProcedureCode { get; set; }
+        public decimal ProcedureCharge { get; set; }
+
+        // Delegation method
+        public DataSet HMS_OTProcedureGets(OTRegistrationModel obj, string dbName)
+        {
+            return _dotRegistration.HMS_OTProcedureGets(obj, dbName);
+        }
+
         // ── DAL Delegation ───────────────────────────────────────
         private DOTRegistration _dotRegistration = new DOTRegistration();
 
