@@ -82,6 +82,8 @@ namespace EUMI_ERP.Models
 
         // Properties
         public long ProcedureId { get; set; }
+        public string ProcedureIds { get; set; }
+        public int DurationMinutes { get; set; }
         public string ProcedureName { get; set; }
         public string ProcedureCode { get; set; }
         public decimal ProcedureCharge { get; set; }

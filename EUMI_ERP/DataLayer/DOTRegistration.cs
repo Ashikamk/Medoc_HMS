@@ -13,9 +13,9 @@ namespace EUMI_ERP.DataLayer
 
         // ── Save / Update ────────────────────────────────────────
         public int SaveOTRegistration(OTRegistrationModel model, string dbName,
-            out string errorMessage, out string conflictType,
-            out string conflictPatientName, out string conflictRegNo,
-            out string conflictOpDate, out string conflictOpTime)
+    out string errorMessage, out string conflictType,
+    out string conflictPatientName, out string conflictRegNo,
+    out string conflictOpDate, out string conflictOpTime)
         {
             errorMessage = ""; conflictType = "";
             conflictPatientName = ""; conflictRegNo = "";
@@ -23,7 +23,7 @@ namespace EUMI_ERP.DataLayer
 
             try
             {
-                arlParms = new SqlParameter[19];
+                arlParms = new SqlParameter[22];
                 arlParms[0] = new SqlParameter("@OTRegistrationId", model.OTRegistrationId == 0 ? (object)DBNull.Value : model.OTRegistrationId);
                 arlParms[1] = new SqlParameter("@PatientId", model.PatientId);
                 arlParms[2] = new SqlParameter("@RegNo", model.RegNo ?? (object)DBNull.Value);
@@ -43,6 +43,9 @@ namespace EUMI_ERP.DataLayer
                 arlParms[16] = new SqlParameter("@Notes", model.Notes ?? (object)DBNull.Value);
                 arlParms[17] = new SqlParameter("@UserId", model.UserId);
                 arlParms[18] = new SqlParameter("@DeptId", model.DeptId);
+                arlParms[19] = new SqlParameter("@ProcedureId", model.ProcedureId == 0 ? (object)DBNull.Value : (object)model.ProcedureId);   // NEW
+                arlParms[20] = new SqlParameter("@ProcedureIds", string.IsNullOrEmpty(model.ProcedureIds) ? (object)DBNull.Value : (object)model.ProcedureIds);
+                arlParms[21] = new SqlParameter("@DurationMinutes", model.DurationMinutes <= 0 ? (object)DBNull.Value : model.DurationMinutes);
 
                 DataSet ds = SQLHelper.ExecuteDataset("HMS_OTRegistrationInsertUpdate", dbName, arlParms);
 
@@ -56,9 +59,9 @@ namespace EUMI_ERP.DataLayer
                 int status = Convert.ToInt32(row["Status"]);
                 errorMessage = row["Message"].ToString();
 
-                if (status == 0 && errorMessage == "OT_THEATRE_CONFLICT")
+                if (status == 0 && (errorMessage == "OT_THEATRE_CONFLICT" || errorMessage == "DOCTOR_CONFLICT"))
                 {
-                    conflictType = "OT_THEATRE_CONFLICT";
+                    conflictType = errorMessage;
                     conflictPatientName = row["PatientName"].ToString();
                     conflictRegNo = row["RegNo"].ToString();
                     conflictOpDate = row["OpDate"].ToString();
@@ -77,6 +80,7 @@ namespace EUMI_ERP.DataLayer
                 return 0;
             }
         }
+
 
         // ── Doctor List ──────────────────────────────────────────
         public DataSet HMS_OTDoctorGets(OTRegistrationModel obj, string dbName)

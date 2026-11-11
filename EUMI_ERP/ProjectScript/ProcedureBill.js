@@ -1,5 +1,29 @@
 ﻿var Copyflag = 0; var Editflag = 0; var DeptLoad = ''; var Count = 0; var SlNum = 0; var DeptSelect = ""; var Updateflag = 0;
 
+var OrigSchemeDis = (typeof SchemeDis !== 'undefined') ? SchemeDis : 0;
+
+function ShowSchemeNotice(msg) {
+    $('#SchemeNotice').remove();
+    var html = '<div id="SchemeNotice" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);' +
+        'z-index:99999;background:#6b2fa0;color:#fff;' +
+        'height:50px;line-height:40px;padding:0 18px;padding-top:2px; border-radius:3px;' +
+        'font-size:18px;font-weight:400;' +
+        'box-shadow:0 2px 8px rgba(0,0,0,.3);min-width:290px;max-width:500px;white-space:nowrap;">' +
+        '<span id="SchemeNoticeText">' + msg + '</span>' +
+        '<span onclick="CloseSchemeNotice()" title="Close" ' +
+        'style="cursor:pointer;float:right;margin-left:14px;font-weight:bold;font-size:18px;">&times;</span>' +
+        '</div>';
+    $('body').append(html);
+
+function CloseSchemeNotice() {
+    $('#SchemeNotice').remove();
+}
+
+// keep a manually typed discount when procedures are added
+$(document).on('keyup', '#DiscPercent,#DiscAmt', function () {
+    SchemeDis = parseFloat($('#DiscPercent').val()) || 0;
+});
+
 //Document Ready
 $(document).ready(function () {
 
@@ -343,6 +367,15 @@ function GetPatientData(result) {
     Gettestadviceget(result[0].OPNumber, result[0].OPSerId, result[0].RevisitId);
     CreditBillGets(PRID)
 
+    GetPatientSchemeDiscByReg($('#RegSeries').val(), $('#RegNo').val(), 'ProcedureDisc', function (disc, name) {
+        if (disc > 0) {
+            SchemeDis = disc;                 // so CalcGrandTotal(1) keeps it
+            $('#DiscPercent').val(disc);
+            CalcGrandTotal(0);
+            ShowSchemeNotice('Scheme discount ' + disc + '% applied ');
+        }
+    });
+
     if ($('#IpNo').val() != 0) {
         if (AutoIPPaytype = 'CREDIT') {
             $('#PayType').val(2);
@@ -412,8 +445,10 @@ function Gettestadviceget(OPNumber, OPSerId, RevisitId) {
 
 function ClearData(flg, Id) {
     if (flg == 0) {
+        SchemeDis = OrigSchemeDis; CloseSchemeNotice();
         $('.patdet').val('');
         $('#Doctor,#Gender').val(0);
+        CalcGrandTotal(1);      // redraws Dis%, Dis Amt and Net Amount
     }
     else if (flg == 1) {
         $('#TestCode' + Id).val(''); $('#TestId' + Id).val(''); $('#PQty' + Id).val(''); $('#PRate' + Id).val('');
@@ -698,7 +733,10 @@ function formrefresh() {
     $('#Cash').prop('checked', true);
     $('.TsRw').remove();
     Count = 0;
+    SchemeDis = OrigSchemeDis;
+    CloseSchemeNotice();
     CalcGrandTotal(1);
+    $('#DiscPercent,#DiscAmt').val('0.00');
     $('#BillNo,.btn').show();
     $('#BillNoCopy,#btnprint,#btnedit,#btnupdate,#btndelete,#btnacctran').hide();
     Copyflag = 0;
@@ -890,6 +928,8 @@ function GetViewList(result) {
 
 //Clear All Values Before Copy Function
 function copyrefresh(flg) {                                //flg:0 - Copy ,flg :1-View  ,flg:2 -New bill copy   ,flg:3 -Edit btn click
+    if (flg != 3) { SchemeDis = OrigSchemeDis; CloseSchemeNotice(); }
+
     if (flg == 3) {
         $('#BillNo').val($('#BillNoCopy').val());
         $('#BillNo,.btn').show();

@@ -10,6 +10,43 @@ using EUMI_ERP.Models;
 
 namespace EUMI_ERP.DataLayer
 {
+    public class SchemeDiscountDL
+    {
+        SqlParameter[] arlParms;
+
+        public DataSet HMS_SchemeDiscountGets(SchemeDiscountModel SchemeDiscountModel, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[1];
+                arlParms[0] = new SqlParameter("@SchemeId", SchemeDiscountModel.SchemeId);
+
+                return SQLHelper.ExecuteDataset("HMS_SchemeDiscountGets", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+
+        public DataSet HMS_PatientSchemeDiscountGets(PatientSchemeModel m, string dbName)
+        {
+            try
+            {
+                arlParms = new SqlParameter[3];
+                arlParms[0] = new SqlParameter("@PatientId", m.PatientId);
+                arlParms[1] = new SqlParameter("@RegNo", m.RegNo);
+                arlParms[2] = new SqlParameter("@RegSeries", m.RegSeries);
+                return SQLHelper.ExecuteDataset("HMS_PatientSchemeDiscountGets", dbName, arlParms);
+            }
+            catch (SqlException exMe)
+            {
+                Console.WriteLine(exMe.Message);
+                return null;
+            }
+        }
+    }
     public class DReVisit
     {
         private SqlParameter[] arlParms;

@@ -1011,7 +1011,61 @@ namespace EUMI_ERP.Controllers
 
         }
 
+        public ActionResult HMS_SchemeDiscountGets(SchemeDiscountModel SchemeDiscountModel)
+        {
+            SchemeDiscountModel obj = new SchemeDiscountModel();
+            List<SchemeDiscountModel> oList = new List<SchemeDiscountModel>();
+            try
+            {
+                DataSet dsDataSet = new DataSet();
+                dsDataSet = obj.HMS_SchemeDiscountGets(SchemeDiscountModel, dbName);
+                foreach (DataRow row in dsDataSet.Tables[0].Rows)
+                {
+                    SchemeDiscountModel MModels = new SchemeDiscountModel();
 
+                    MModels.SchemeId = Convert.ToInt32(row["SchemeId"].ToString());
+                    MModels.DiscountCode = row["DiscountCode"].ToString();
+                    MModels.DiscountName = row["DiscountName"].ToString();
+                    MModels.RegistrationDisc = Convert.ToDecimal(row["RegistrationDisc"].ToString());
+
+                    oList.Add(MModels);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult HMS_PatientSchemeDiscountGets(PatientSchemeModel PatientSchemeModel)
+        {
+            PatientSchemeModel obj = new PatientSchemeModel();
+            List<PatientSchemeModel> oList = new List<PatientSchemeModel>();
+            try
+            {
+                DataSet ds = obj.HMS_PatientSchemeDiscountGets(PatientSchemeModel, dbName);
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    PatientSchemeModel m = new PatientSchemeModel();
+                    m.SchemeId = Convert.ToInt32(row["SchemeId"]);
+                    m.DiscountName = row["DiscountName"].ToString();
+                    m.PharmaDisc = Convert.ToDecimal(row["PharmaDisc"]);
+                    m.LabDisc = Convert.ToDecimal(row["LabDisc"]);
+                    m.ProcedureDisc = Convert.ToDecimal(row["ProcedureDisc"]);
+                    m.IPDisc = Convert.ToDecimal(row["IPDisc"]);
+                    m.RegistrationDisc = Convert.ToDecimal(row["RegistrationDisc"]);
+                    m.RevisitDisc = Convert.ToDecimal(row["RevisitDisc"]);
+                    oList.Add(m);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Message  :" + ex.Message + "+" + ex.StackTrace);
+            }
+            return Json(new { oList, success = true }, JsonRequestBehavior.AllowGet);
+        }
 
 
 
@@ -1254,7 +1308,6 @@ namespace EUMI_ERP.Controllers
                     MModels.Foccupation = row["FatherOccupation"].ToString();
                     MModels.Moccupation = row["MotherOccupation"].ToString();
                     MModels.Mname = row["Mothersname"].ToString();
-                    MModels.Religion = row["Religion"].ToString();
 
                     oList.Add(MModels);
                 }

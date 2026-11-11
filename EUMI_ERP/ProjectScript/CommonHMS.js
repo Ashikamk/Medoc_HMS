@@ -47,3 +47,36 @@
         days: dateAge
     };
 }
+
+// field = 'LabDisc' | 'ProcedureDisc' | 'PharmaDisc' | 'IPDisc' | 'RevisitDisc'
+function GetPatientSchemeDisc(patientId, field, callback) {
+    $.ajax({
+        type: "POST",
+        url: "../Revisit/HMS_PatientSchemeDiscountGets",
+        data: { PatientId: patientId },
+        success: function (result) {
+            var disc = 0, name = '';
+            if (result.oList && result.oList.length > 0) {
+                disc = parseFloat(result.oList[0][field] || 0);
+                name = result.oList[0].DiscountName;
+            }
+            callback(disc, name);
+        }
+    });
+}
+
+function GetPatientSchemeDiscByReg(regSeries, regNo, field, callback) {
+    $.ajax({
+        type: "POST",
+        url: "../Revisit/HMS_PatientSchemeDiscountGets",
+        data: { RegSeries: regSeries, RegNo: regNo },
+        success: function (result) {
+            var disc = 0, name = '';
+            if (result.oList && result.oList.length > 0) {
+                disc = parseFloat(result.oList[0][field] || 0);
+                name = result.oList[0].DiscountName;
+            }
+            callback(disc, name);
+        }
+    });
+}

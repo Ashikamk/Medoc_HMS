@@ -298,6 +298,43 @@ namespace EUMI_ERP.Models
         }
     }
 
+    public class SchemeDiscountModel
+    {
+        public int SchemeId { get; set; }
+        public string DiscountCode { get; set; }
+        public string DiscountName { get; set; }
+        public decimal RegistrationDisc { get; set; }
+
+        SchemeDiscountDL oDScheme = new SchemeDiscountDL();
+
+        public DataSet HMS_SchemeDiscountGets(SchemeDiscountModel SchemeDiscountModel, string dbName)
+        {
+            return oDScheme.HMS_SchemeDiscountGets(SchemeDiscountModel, dbName);
+        }
+    }
+
+    public class PatientSchemeModel
+    {
+        public long PatientId { get; set; }
+        public int SchemeId { get; set; }
+        public string DiscountName { get; set; }
+        public decimal PharmaDisc { get; set; }
+        public decimal LabDisc { get; set; }
+        public decimal ProcedureDisc { get; set; }
+        public decimal IPDisc { get; set; }
+        public decimal RegistrationDisc { get; set; }
+        public decimal RevisitDisc { get; set; }
+        public long RegNo { get; set; }
+        public int RegSeries { get; set; }
+
+        SchemeDiscountDL oDScheme = new SchemeDiscountDL();
+
+        public DataSet HMS_PatientSchemeDiscountGets(PatientSchemeModel m, string dbName)
+        {
+            return oDScheme.HMS_PatientSchemeDiscountGets(m, dbName);
+        }
+    }
+
 
     public class HMSSerialModel
     {

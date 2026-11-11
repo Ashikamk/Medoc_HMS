@@ -51,6 +51,19 @@ namespace EUMI_ERP.Controllers
                         Message = "Operation theatre already booked for this date."
                     });
                 }
+                else if (conflictType == "DOCTOR_CONFLICT")
+                {
+                    return Json(new
+                    {
+                        Status = 0,
+                        ConflictType = "DOCTOR_CONFLICT",
+                        PatientName = conflictPatientName,
+                        RegNo = conflictRegNo,
+                        OpDate = conflictOpDate,
+                        OpTime = conflictOpTime,
+                        Message = "Doctor already booked at this time."
+                    });
+                }
                 else if (conflictType == "PATIENT_CONFLICT")
                 {
                     return Json(new
@@ -239,6 +252,13 @@ namespace EUMI_ERP.Controllers
 
                 DataSet ds = objModel.HMS_OTRegistrationList(filter, dbName);
 
+                // safe even before the SP is updated
+                // safe even before the SP is updated
+                bool hasProcId = ds.Tables[0].Columns.Contains("ProcedureId");
+                bool hasProcName = ds.Tables[0].Columns.Contains("ProcedureName");
+                bool hasProcIds = ds.Tables[0].Columns.Contains("ProcedureIds");     // NEW
+                bool hasDur = ds.Tables[0].Columns.Contains("DurationMinutes");
+
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
                     list.Add(new
@@ -249,10 +269,15 @@ namespace EUMI_ERP.Controllers
                         PatientName = row["PatientName"].ToString(),
                         RegNo = row["RegNo"].ToString(),
                         DoctorName = row["DoctorName"].ToString(),
+                        ProcedureId = (hasProcId && row["ProcedureId"] != DBNull.Value) ? Convert.ToInt64(row["ProcedureId"]) : 0L,
+                        ProcedureIds = (hasProcIds && row["ProcedureIds"] != DBNull.Value) ? row["ProcedureIds"].ToString() : "",
+                        ProcedureName = (hasProcName && row["ProcedureName"] != DBNull.Value) ? row["ProcedureName"].ToString() : "",
                         RoomName = row["OTName"].ToString(),
-                        Status = row["Status"].ToString()
+                        Status = row["Status"].ToString(),
+                        DurationMinutes = (hasDur && row["DurationMinutes"] != DBNull.Value) ? Convert.ToInt32(row["DurationMinutes"]) : 120
                     });
                 }
+                
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
 
@@ -282,11 +307,24 @@ namespace EUMI_ERP.Controllers
                     model.OpTime = row["OpTime"].ToString();
                     model.DoctorConsultant = Convert.ToInt32(row["DoctorConsultant"]);
                     model.OperationTheatre = Convert.ToInt32(row["OperationTheatre"]);
+
+                    if (ds.Tables[0].Columns.Contains("ProcedureId") && row["ProcedureId"] != DBNull.Value)
+                        model.ProcedureId = Convert.ToInt64(row["ProcedureId"]);
+
+                    // all selected procedures, e.g. "40086,30087"
+                    if (ds.Tables[0].Columns.Contains("ProcedureIds") && row["ProcedureIds"] != DBNull.Value)
+                        model.ProcedureIds = row["ProcedureIds"].ToString();
+
+                    // NEW: duration in minutes (120 for old records that have none)
+                    model.DurationMinutes = (ds.Tables[0].Columns.Contains("DurationMinutes") && row["DurationMinutes"] != DBNull.Value)
+                        ? Convert.ToInt32(row["DurationMinutes"])
+                        : 120;
+
                     model.Status = row["Status"].ToString();
                     model.Notes = row["Notes"].ToString();
                     model.IpNo = row["IpNo"].ToString();
                     model.OpNo = row["OpNo"].ToString();
-                    model.RevisitId = Convert.ToInt64(row["RevisitId"]);
+                    model.RevisitId = row["RevisitId"] == DBNull.Value ? 0 : Convert.ToInt64(row["RevisitId"]);
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }

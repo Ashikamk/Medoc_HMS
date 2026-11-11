@@ -1,5 +1,32 @@
 ﻿var Copyflag = 0; var Editflag = 0; var DeptLoad = ''; var Count = 0; var SlNum = 0; var DeptSelect = ""; var Updateflag = 0;
 
+var OrigSchemeDis = (typeof SchemeDis !== 'undefined') ? SchemeDis : 0;
+if (typeof SchemeDis === 'undefined') { SchemeDis = 0; }
+
+function ShowSchemeNotice(msg) {
+    $('#SchemeNotice').remove();
+    var html = '<div id="SchemeNotice" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);' +
+        'z-index:99999;background:#6b2fa0;color:#fff;' +
+        'height:50px;line-height:40px;padding:0 18px;padding-top:2px;border-radius:3px;' +
+        'font-size:18px;font-weight:400;' +
+        'box-shadow:0 2px 8px rgba(0,0,0,.3);min-width:290px;max-width:500px;white-space:nowrap;">' +
+        '<span id="SchemeNoticeText">' + msg + '</span>' +
+        '<span onclick="CloseSchemeNotice()" title="Close" ' +
+        'style="cursor:pointer;float:right;margin-left:14px;font-weight:bold;font-size:18px;">&times;</span>' +
+        '</div>';
+    $('body').append(html);
+}
+
+function CloseSchemeNotice() {
+    $('#SchemeNotice').remove();
+}
+
+// keep a manually typed discount when items are added
+$(document).on('keyup', '#DiscPercent,#DiscAmt', function () {
+    SchemeDis = parseFloat($('#DiscPercent').val()) || 0;
+});
+
+
 //Document Ready
 $(document).ready(function () {
 
@@ -281,6 +308,7 @@ function formrefreshnew() {
     $('#Cash').prop('checked', true);
     $('.TsRw').remove();
     Count = 0;
+    SchemeDis = OrigSchemeDis; CloseSchemeNotice();
     CalcGrandTotal(1);
     $('#BillNo,.btn').show();
     $('#BillNoCopy,#btnprint,#btnedit,#btnupdate,#btndelete,#btnacctran').hide();
@@ -675,12 +703,22 @@ function GetPatientData(result) {
     $('#Doctor').val(result[0].DoctorId);
     $('#RegSeries').val(result[0].OPSerId);
     Gettestadviceget(result[0].OPNumber, result[0].OPSerId, result[0].RevisitId);
+    GetPatientSchemeDiscByReg(result[0].OPSerId, result[0].OPNumber, 'IPDisc', function (disc, name) {
+        if (disc > 0) {
+            SchemeDis = disc;
+            $('#DiscPercent').val(disc);
+            CalcGrandTotal(0);
+            ShowSchemeNotice('Scheme discount ' + disc + '% applied');
+        }
+    });
 }
 
 function ClearData(flg, Id) {
     if (flg == 0) {
+        SchemeDis = OrigSchemeDis; CloseSchemeNotice();
         $('.patdet').val('');
         $('#Doctor,#Gender').val(0);
+        CalcGrandTotal(1);
     }
     else if (flg == 1) {
         $('#TestCode' + Id).val(''); $('#TestId' + Id).val(''); $('#PQty' + Id).val(''); $('#PRate' + Id).val('');
@@ -842,7 +880,7 @@ function AmountCalc(id) {
 function CalcGrandTotal(flg) { // flg-0 : Disc%    ,flg-2 : DiscAmt    ,flg-1 : Other
 
     var TotalAmount = 0;
-    var DiscountPer = 0;
+    var DiscountPer = SchemeDis;
     var DiscountAmt = 0;
     var NetAmt = 0;
 
@@ -853,9 +891,7 @@ function CalcGrandTotal(flg) { // flg-0 : Disc%    ,flg-2 : DiscAmt    ,flg-1 : 
             TotalAmount = parseFloat(TotalAmount) + parseFloat($('#TestAmount' + i).val() || 0);
         }
     }
-  
 
-   
     if (flg == 0) {
         DiscountPer = parseFloat($('#DiscPercent').val());
         DiscountPer = isNaN(DiscountPer) ? 0 : DiscountPer;
@@ -866,12 +902,15 @@ function CalcGrandTotal(flg) { // flg-0 : Disc%    ,flg-2 : DiscAmt    ,flg-1 : 
         DiscountAmt = parseFloat($('#DiscAmt').val());
         DiscountAmt = isNaN(DiscountAmt) ? 0 : DiscountAmt;
         DiscountPer = (parseFloat(DiscountAmt) * 100) / parseFloat(TotalAmount);
+        DiscountPer = isNaN(DiscountPer) ? 0 : DiscountPer;
         $('#DiscPercent').val(parseFloat(DiscountPer).toFixed(Decimal));
+    }
+    else {
+        DiscountPer = parseFloat(SchemeDis) || 0;
+        DiscountAmt = (parseFloat(TotalAmount) * DiscountPer) / 100;
     }
 
     NetAmt = parseFloat(TotalAmount) - parseFloat(DiscountAmt);
-
-    
 
     var Ad = parseFloat($('#Advamount').val() || 0)
     TotalAmountlessad = parseFloat((NetAmt - Ad) || 0)
@@ -880,7 +919,7 @@ function CalcGrandTotal(flg) { // flg-0 : Disc%    ,flg-2 : DiscAmt    ,flg-1 : 
     $('#TotalAmt').text(TotalAmountlessad.toFixed(Decimal));
     $('#NetAmt,#GrandTotal').text(TotalAmountlessad.toFixed(Decimal));
 
-    if (flg == 1) { $('#DiscPercent').val(parseFloat(DiscountPer).toFixed(Decimal)); $('#DiscAmt').val(parseFloat(DiscountAmt).toFixed(Decimal)); }              //Function Call not from Discount input
+    if (flg == 1) { $('#DiscPercent').val(parseFloat(DiscountPer).toFixed(Decimal)); $('#DiscAmt').val(parseFloat(DiscountAmt).toFixed(Decimal)); }
     paytypechange()
 }
 
@@ -974,7 +1013,9 @@ function formrefresh() {
     $('.TsRw').remove();
     $(".denull").val('');
     Count = 0;
+    SchemeDis = OrigSchemeDis; CloseSchemeNotice();
     CalcGrandTotal(1);
+    $('#DiscPercent,#DiscAmt').val('0.00');
     $('#BillNo,.btn').show();
     $('#BillNoCopy,#btnprint,#btnedit,#btnupdate,#btndelete,#btnacctran').hide();
     Copyflag = 0;
@@ -1178,6 +1219,8 @@ function GetViewList(result) {
 
 //Clear All Values Before Copy Function
 function copyrefresh(flg) {                                //flg:0 - Copy ,flg :1-View  ,flg:2 -New bill copy   ,flg:3 -Edit btn click
+    if (flg != 3) { SchemeDis = OrigSchemeDis; CloseSchemeNotice(); }
+
     if (flg == 3) {
         $('#BillNo').val($('#BillNoCopy').val());
         $('#BillNo,.btn').show();

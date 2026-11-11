@@ -7,6 +7,47 @@ var IPPatientFlag = CIPTaxZero; var INTaxType = CTaxType;
 
 var SpecialFeeFlag = 1;
 
+var SchemePharmaDisc = 0;
+
+var SchemeAuto = true;
+
+$(document).on('keydown', '#Discount,#Discountpercent', function () {
+    SchemeAuto = false;     // user typed a manual discount
+});
+function ShowSchemeNotice(msg) {
+    $('#SchemeNotice').remove();
+    var html = '<div id="SchemeNotice" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);' +
+        'z-index:99999;background:#6b2fa0;color:#fff;' +
+        'height:50px;line-height:40px;padding:0 18px;padding-top:2px; border-radius:3px;' +
+        'font-size:18px;font-weight:400;' +
+        'box-shadow:0 2px 8px rgba(0,0,0,.3);min-width:290px;max-width:500px;white-space:nowrap;">' +
+        '<span id="SchemeNoticeText">' + msg + '</span>' +
+        '<span onclick="CloseSchemeNotice()" title="Close" ' +
+        'style="cursor:pointer;float:right;margin-left:14px;font-weight:bold;font-size:18px;">&times;</span>' +
+        '</div>';
+    $('body').append(html);
+}
+
+function CloseSchemeNotice() {
+    $('#SchemeNotice').remove();
+}
+
+function ApplySchemeDisc() {
+    if (SchemeAuto && SchemePharmaDisc > 0 && Copyflag == 0) {
+        $('#Discountpercent').val(parseFloat(SchemePharmaDisc).toFixed(Decimal));
+        if ($('.SlRow').length > 0) {
+            CalcDiscountSplitTaxbyPrecentage();
+            roundoffcalcn(1);
+        }
+    }
+    else if (!SchemeAuto && Copyflag == 0 && $('.SlRow').length > 0
+        && parseFloat($('#Discountpercent').val() || 0) > 0) {
+        // manual discount: recalculate the amount from the typed percent
+        CalcDiscountSplitTaxbyPrecentage();
+        roundoffcalcn(1);
+    }
+}
+
 
 $(document).keydown(function (event) {
     //$('#Warningpopup').fadeOut();
@@ -697,6 +738,17 @@ function LoadAutoComplete() {
             $("#PrescriptionInfoPopUp").fadeOut("slow");
             $('#btnprec').hide();
 
+            if (Copyflag == 0 && SchemePharmaDisc > 0) {
+                SchemePharmaDisc = 0; SchemeAuto = true;
+                CloseSchemeNotice();
+                $('#Discountpercent').val('0.00');
+                $('#Discount').val('0.00');
+                if ($('.SlRow').length > 0) {
+                    CalcDiscountSplitTax();   // recalculates totals without the scheme
+                    roundoffcalcn(0);
+                }
+            }
+
             $('.Ptdtls').val('');
             IPPAtiemtSelect(0);
             IPPAtiemtSelect(0);
@@ -775,6 +827,15 @@ function LoadAutoComplete() {
 
                         IPPAtiemtSelect(0);
                         CreditBillGets();
+                        SchemePharmaDisc = 0;
+                        CloseSchemeNotice();
+                        GetPatientSchemeDiscByReg(result.oList[0].OPSerId, result.oList[0].OPNumber, 'PharmaDisc', function (disc, name) {
+                            if (disc > 0) {
+                                SchemePharmaDisc = disc; SchemeAuto = true;
+                                ApplySchemeDisc();
+                                ShowSchemeNotice('Scheme discount ' + disc + '% applied');
+                            }
+                        });
 
                     }
                 }
@@ -1477,6 +1538,7 @@ function GetRows(flg) {
 
 function BillCopy(flg)      //flg:0 - Copy ,flg :1-View  
 {
+    SchemePharmaDisc = 0; CloseSchemeNotice();
     Copyflag = 1;
     copyrefresh(0);
 
@@ -1547,6 +1609,7 @@ function CallViewList() {
 
 //Clear All Values Before Copy Function
 function copyrefresh(flg) {                                //flg:0 - Copy ,flg :1-View  ,flg:2 -New bill copy   ,flg:3 -Edit btn click
+    if (flg != 3) { SchemePharmaDisc = 0; CloseSchemeNotice(); }
     if (flg == 3) {
         $('#BillNo').val($('#BillNoCopy').val());
         $('#saleinv,#btnsaveedit,#BtnClearproc').show();
@@ -1810,10 +1873,13 @@ function SalesGetandGets(result) {
             ProcedureGrandTotalCalc(1);
         }
     }
+    var savedPerc = parseFloat(result[0].Discountpercent || 0);
     $('#Discount').val(result[0].Discount);
-    $('#Discountpercent').val(result[0].Discountpercent);
-    CalcDiscountSplitTax();
+    $('#Discountpercent').val(savedPerc.toFixed(Decimal));
+    if (savedPerc > 0) { CalcDiscountSplitTaxbyPrecentage(); }
+    else { CalcDiscountSplitTax(); }
     roundoffcalcn(0);
+    $('#Discountpercent').val(savedPerc.toFixed(Decimal));
 
     $('#UPISpecialFeeAmt').val(result[0].JobNo);
     $('#BAmount').val(result[0].Area);
@@ -2078,6 +2144,7 @@ function AddProduct() {
 
     IPPAtiemtSelect(0);
     mrpsellingratecalculation()
+    ApplySchemeDisc();
 }
 
 
@@ -2253,6 +2320,7 @@ function UpdateRow(flg, Id) {
                 AmountCalc(Id);
                 CalcGrandTotal(1);
                 roundoffcalcn(0);
+                ApplySchemeDisc();
                 return true;
             }
         }, 80);
@@ -2276,6 +2344,7 @@ function DeleteRow(flg, Id) {
             $('#Product0').focus().select();
             CalcGrandTotal(1);
             roundoffcalcn(0);
+            ApplySchemeDisc();
             if ($('.SlRow').length == 0) { $('#HLocation').prop('disabled', false); }
         }
         else if (flg == 2) {
@@ -2603,6 +2672,11 @@ function roundoffcalcn(flg) {
 
 //----Bill Discount 
 function CalcDiscountSplitTax() {       //Calc from discountamount
+    if (SchemeAuto && SchemePharmaDisc > 0 && Copyflag == 0 && $('.SlRow').length > 0) {
+        $('#Discountpercent').val(parseFloat(SchemePharmaDisc).toFixed(Decimal));
+        CalcDiscountSplitTaxbyPrecentage();
+        return;
+    }
     if ($('.SlRow').length > 0) {
         if (parseFloat($('#Discount').val() || 0) > 0) {
             var Totalamt = 0;
@@ -3001,7 +3075,16 @@ function ClearFields(Flag, Id) {
     }
     else if (Flag == 4)        //Clear Discount Fields
     {
-        $('#Discount,#Discountpercent').val('0.00');
+        if (SchemeAuto && SchemePharmaDisc > 0 && Copyflag == 0) {
+            $('#Discount').val('0.00');
+            $('#Discountpercent').val(parseFloat(SchemePharmaDisc).toFixed(Decimal));
+        }
+        else if (!SchemeAuto && parseFloat($('#Discountpercent').val() || 0) > 0) {
+            // manual discount: keep the percent the user typed
+        }
+        else {
+            $('#Discount,#Discountpercent').val('0.00');
+        }
     }
     else if (Flag == 5)        //Clear Procedure Fields
     {
@@ -3080,6 +3163,7 @@ function Formrefreshconfirm(flg) {
 function formrefresh(flg) {
     if (flg == 0)     //New Button click
     {
+        SchemePharmaDisc = 0; SchemeAuto = true; CloseSchemeNotice();
         RowCount = 1; Copyflag = 0; ProcCount = 1; ItemIdArray = [];
 
         $('.SlRow').remove();

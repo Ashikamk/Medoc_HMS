@@ -1,6 +1,49 @@
 ﻿var colorArray = ['#33ccff', '#ff66cc', '#ff9966', '#FFFF99', '#00B3E6',
 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D'];
 var BillFlag = 0;
+
+var ManualDisc = false;
+var PatSchemeDisc = 0;
+var PatSchemeName = '';
+
+function ShowSchemeNotice(msg) {
+    $('#SchemeNotice').remove();
+    var html = '<div id="SchemeNotice" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);' +
+        'z-index:99999;background:#6b2fa0;color:#fff;' +
+        'height:50px;line-height:40px;padding:0 18px;padding-top:2px;border-radius:3px;' +
+        'font-size:18px;font-weight:400;' +
+        'box-shadow:0 2px 8px rgba(0,0,0,.3);min-width:290px;max-width:500px;white-space:nowrap;">' +
+        '<span id="SchemeNoticeText">' + msg + '</span>' +
+        '<span onclick="CloseSchemeNotice()" title="Close" ' +
+        'style="cursor:pointer;float:right;margin-left:14px;font-weight:bold;font-size:18px;">&times;</span>' +
+        '</div>';
+    $('body').append(html);
+}
+
+function CloseSchemeNotice() {
+    $('#SchemeNotice').remove();
+}
+
+// Fetch the patient's scheme discount (same helper Lab Bill uses)
+function LoadPatientScheme() {
+    PatSchemeDisc = 0; PatSchemeName = '';
+    GetPatientSchemeDiscByReg($('#RegSeriesId').val(), $('#RegNumber').val(), 'RevisitDisc', function (disc, name) {
+        PatSchemeDisc = parseFloat(disc) || 0;
+        PatSchemeName = name || '';
+        ApplySchemeDisc();
+    });
+}
+
+// Put the scheme discount in the box unless the user typed one, then recalculate
+function ApplySchemeDisc() {
+    if (!ManualDisc) {
+        $('#OtherFees').val(PatSchemeDisc > 0 ? PatSchemeDisc : '');
+        if (PatSchemeDisc > 0) { ShowSchemeNotice('Scheme discount ' + PatSchemeDisc + '% applied'); }
+        else { CloseSchemeNotice(); }
+    }
+    discountcalculation();
+}
+
 $(document).ready(function () {
     RevisitIDLoad();
     Defaultfocus();
@@ -8,6 +51,14 @@ $(document).ready(function () {
     ShiftLoad();
     $("#RevisitDate").val(CurDate);
     $("#LabelDate").text(CurDate);
+
+    $('#OtherFees').on('keyup input', function () {
+        if (!(parseFloat(fixedconfee) > 0)) {
+            fixedconfee = parseFloat($('#ConsultationFees').val() || 0);
+        }
+        ManualDisc = $.trim($(this).val()) !== '';
+        discountcalculation();
+    });
 
 
     $("#btnsubmit").click(function (e) {
@@ -169,9 +220,52 @@ function TokenNumberLoad() {
         $("#PatTokenNumber").val('');
     }
 }
+//var fixedconfee = 0;
+//function ChangeFee()
+//{
+//    var data = {};
+//    data.DoctorId = $("#DocName").val();
+//    data.PatientId = $("#PatientId").val();
+
+//    $.ajax({
+//        type: "POST",
+//        url: "../Revisit/HMS_DoctorFeegets",
+//        data: data,
+//        success: function (result) {
+//            $("#ConsultationFees").val(result.oList[0].ConsultFees)
+//            $('#PatLastVisitdayes').text(result.oList[0].FromDate + '-' + result.oList[0].ToDate)
+//            DDCONFEE = parseFloat(result.oList[0].ConsultFees || 0).toFixed(Decimal)
+//            amountfillinpopup();
+//            fixedconfee = parseFloat(result.oList[0].ConsultFees || 0).toFixed(Decimal)
+//            $("#OtherFee").val('');
+//        }
+//    });
+
+//    //debugger;
+//    //var FeeDuration = parseInt($("#DocName").find("option:selected").attr("feedur") || 0)
+
+//    //var D1 = ($('#LabelDate').text().split("/"));
+//    //var D2 = ($('#PatLastVisit').text().split("/"));
+
+//    //const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+//    //const firstDate = new Date(D1[2], D1[1], D1[0]);
+//    //const secondDate = new Date(D2[2], D2[1], D2[0]);
+
+//    //const diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+
+//    //$('#PatLastVisitdayes').text(diffDays +' Day(s) Before')
+
+//    //if (FeeDuration < diffDays) {
+//    //    $("#ConsultationFees").val(parseFloat($("#DocName").find("option:selected").attr("Fee") || 0).toFixed(Decimal));
+//    //}
+//    //else {
+//    //    $("#ConsultationFees").val(0);
+//    //    $("#ConsultationFees").val(0);
+//    //}
+//}
+
 var fixedconfee = 0;
-function ChangeFee()
-{
+function ChangeFee() {
     var data = {};
     data.DoctorId = $("#DocName").val();
     data.PatientId = $("#PatientId").val();
@@ -180,37 +274,15 @@ function ChangeFee()
         type: "POST",
         url: "../Revisit/HMS_DoctorFeegets",
         data: data,
-        success: function (result) {           
-            $("#ConsultationFees").val(result.oList[0].ConsultFees)
-            $('#PatLastVisitdayes').text(result.oList[0].FromDate + '-' + result.oList[0].ToDate)
-            DDCONFEE = parseFloat(result.oList[0].ConsultFees || 0).toFixed(Decimal)
+        success: function (result) {
+            $("#ConsultationFees").val(result.oList[0].ConsultFees);
+            $('#PatLastVisitdayes').text(result.oList[0].FromDate + '-' + result.oList[0].ToDate);
+            DDCONFEE = parseFloat(result.oList[0].ConsultFees || 0).toFixed(Decimal);
             amountfillinpopup();
-            fixedconfee = parseFloat(result.oList[0].ConsultFees || 0).toFixed(Decimal)
-            $("#OtherFee").val('');
+            fixedconfee = parseFloat(result.oList[0].ConsultFees || 0).toFixed(Decimal);
+            ApplySchemeDisc();     // scheme discount, or keep the typed one
         }
     });
-
-    //debugger;
-    //var FeeDuration = parseInt($("#DocName").find("option:selected").attr("feedur") || 0)
-
-    //var D1 = ($('#LabelDate').text().split("/"));
-    //var D2 = ($('#PatLastVisit').text().split("/"));
-
-    //const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    //const firstDate = new Date(D1[2], D1[1], D1[0]);
-    //const secondDate = new Date(D2[2], D2[1], D2[0]);
-
-    //const diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
-
-    //$('#PatLastVisitdayes').text(diffDays +' Day(s) Before')
-   
-    //if (FeeDuration < diffDays) {
-    //    $("#ConsultationFees").val(parseFloat($("#DocName").find("option:selected").attr("Fee") || 0).toFixed(Decimal));
-    //}
-    //else {
-    //    $("#ConsultationFees").val(0);
-    //    $("#ConsultationFees").val(0);
-    //}
 }
 
 function ShiftLoad() {
@@ -259,6 +331,10 @@ function formrefresh() {
     //$("#btnsubmit").attr("disabled", true);
     RevisitIDLoad();
     Defaultfocus();
+    ManualDisc = false;
+    PatSchemeDisc = 0;
+    fixedconfee = 0;
+    CloseSchemeNotice();
 }
 
 function SaveandUpdateRevisit(Flag) {
@@ -510,6 +586,8 @@ function GetRevisit(result) {
 
         fixedconfee = parseFloat(result[0].ConsultFees || 0) / (1 - (parseFloat(result[0].OtherFees || 0) / 100));
 
+        ManualDisc = parseFloat(result[0].OtherFees || 0) > 0;
+        CloseSchemeNotice();
 
         var Am = parseFloat(result[0].VisitFees || 0) + parseFloat(result[0].ConsultFees || 0) 
 
@@ -623,6 +701,10 @@ function ClearPatData() {
     $('#PatName').val('');
     $('#PatientId').val(0);
     $('#myImg').attr('src', "/app-assets/img/portrait/medium/avatar-m-100.jpg");
+    ManualDisc = false;
+    PatSchemeDisc = 0;
+    fixedconfee = 0;
+    CloseSchemeNotice();
 }
 
 function GetPatientData(result, Flag) {
@@ -669,6 +751,7 @@ function GetPatientData(result, Flag) {
         $("#RegSeries").val(result[0].OPSerName);
         $("#RegSeriesId").val(result[0].OPSerId);
         if (Flag == 1) {//insert mode
+            LoadPatientScheme();
             var exists = false;
             $('#DocName option').each(function () {
                 if (this.value == result[0].DoctorId) {
@@ -1801,6 +1884,7 @@ function ApplyAppointmentRevisit(AppointmentId, TokenNo, DoctorId, PatientRegId,
             success: function (result) {
                 if (result.oList.length > 0) {
                     GetPatientData(result.oList, 0);
+                    LoadPatientScheme();
                     setTimeout(function () {
                         if (DoctorId && DoctorId > 0) {
                             $('#DocName').val(DoctorId);
