@@ -479,6 +479,75 @@ function openPatientModal() {
     }, 50);
 }
 
+//function initExistingOPAutocomplete() {
+//    if ($("#ExistingOP").data("ui-autocomplete")) {
+//        $("#ExistingOP").autocomplete("destroy");
+//    }
+
+//    $("#ExistingOP").autocomplete({
+//        appendTo: "body",
+//        delay: 0,
+//        autoFocus: true,
+//        minLength: 1,
+//        source: function (request, response) {
+//            $.ajax({
+//                url: '../Revisit/HMS_PatientSearch',
+//                type: "POST",
+//                data: { PatientName: request.term, DeptId: 1 },
+//                dataType: "json",
+//                success: function (result) {
+//                    var data = result.oList || result;
+//                    if (!data || data.length === 0) { response([]); return; }
+//                    response($.map(data, function (item) {
+//                        return {
+//                            ColCount: '3R',
+//                            label: item.OPSerName + '-' + item.OPNumber,
+//                            label1: item.PatientName,
+//                            label2: item.Contact,
+//                            headers: ["RegNo", "Patient", "Mobile"],
+//                            PatientName: item.PatientName,
+//                            Contact: item.Contact,
+//                            DOB: item.DOB,
+//                            Gender: item.Gender,
+//                            Age: item.Age,
+//                            OPNumber: item.OPNumber
+//                        };
+//                    }));
+//                },
+//                error: function () { response([]); }
+//            });
+//        },
+//        select: function (event, ui) {
+//            event.preventDefault();
+//            var gender = 0;
+//            if (ui.item.Gender === 'Male') gender = 1;
+//            else if (ui.item.Gender === 'Female') gender = 2;
+//            else gender = 3;
+
+//            $('#AppFirst').val(ui.item.PatientName);
+//            $('#ExistingOP').val(ui.item.label.split('-')[0] !== '' ? ui.item.label : ui.item.OPNumber);
+//            $('#MobileNo').val(ui.item.Contact);
+//            $('#PGender').val(gender);
+
+//            var dob = normalizeDateToDDMMYYYY(ui.item.DOB);
+//            if (dob) {
+//                calcAgeFields(dob, 'Age', 'AgeMonths', 'AgeDays');
+//                var parts = dob.split('/');
+//                if (parts.length === 3) {
+//                    $('#PDOB').val(parts[2] + '-' + parts[1] + '-' + parts[0]);
+//                }
+//            } else if (ui.item.Age && ui.item.Age !== '') {
+//                $('#Age').val(ui.item.Age);
+//                $('#AgeMonths').val('0');
+//                $('#AgeDays').val('0');
+//            }
+//        },
+//        focus: function (event, ui) { event.preventDefault(); }
+//    });
+
+//    $(document).on('mousedown', '.ui-menu-item', function () { $(this).click(); });
+//}
+
 function initExistingOPAutocomplete() {
     if ($("#ExistingOP").data("ui-autocomplete")) {
         $("#ExistingOP").autocomplete("destroy");
@@ -490,6 +559,7 @@ function initExistingOPAutocomplete() {
         autoFocus: true,
         minLength: 1,
         source: function (request, response) {
+            window._acItem = null;
             $.ajax({
                 url: '../Revisit/HMS_PatientSearch',
                 type: "POST",
@@ -542,11 +612,131 @@ function initExistingOPAutocomplete() {
                 $('#AgeDays').val('0');
             }
         },
-        focus: function (event, ui) { event.preventDefault(); }
+        focus: function (event, ui) {
+            event.preventDefault();
+            window._acItem = ui.item;   
+        }
     });
 
-    $(document).on('mousedown', '.ui-menu-item', function () { $(this).click(); });
+   
+    if (!window._acEnterBound) {
+        window._acEnterBound = true;
+        document.addEventListener('keydown', function (e) {
+            if (e.keyCode === 13 && e.target.id === 'ExistingOP' &&
+                window._acItem && $('.ui-autocomplete:visible').length) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                $('#ExistingOP').data('ui-autocomplete')._trigger('select', e, { item: window._acItem });
+                $('#ExistingOP').autocomplete('close');
+                window._acItem = null;
+                $('#MobileNo').focus();
+            }
+        }, true);
+    }
+
+    if (!window._acMouseBound) {
+        window._acMouseBound = true;
+        $(document).on('mousedown', '.ui-menu-item', function () { $(this).click(); });
+    }
 }
+
+//demo
+
+//function initExistingOPAutocomplete() {
+//    if ($("#ExistingOP").data("ui-autocomplete")) {
+//        $("#ExistingOP").autocomplete("destroy");
+//    }
+
+//    $("#ExistingOP").autocomplete({
+//        appendTo: "body",
+//        delay: 0,
+//        autoFocus: true,
+//        minLength: 1,
+//        source: function (request, response) {
+//            window._acItem = null;
+//            $.ajax({
+//                url: '../Revisit/HMS_PatientSearch',
+//                type: "POST",
+//                data: { PatientName: request.term, DeptId: 1 },
+//                dataType: "json",
+//                success: function (result) {
+//                    var data = result.oList || result;
+//                    if (!data || data.length === 0) { response([]); return; }
+//                    response($.map(data, function (item) {
+//                        return {
+//                            ColCount: '3R',
+//                            label: item.OPSerName + '-' + item.OPNumber,
+//                            label1: item.PatientName,
+//                            label2: item.Contact,
+//                            headers: ["RegNo", "Patient", "Mobile"],
+//                            PatientName: item.PatientName,
+//                            Contact: item.Contact,
+//                            DOB: item.DOB,
+//                            Gender: item.Gender,
+//                            Age: item.Age,
+//                            OPNumber: item.OPNumber,
+//                            Address: item.Add1,
+//                            Street: item.Add2
+//                        };
+//                    }));
+//                },
+//                error: function () { response([]); }
+//            });
+//        },
+//        select: function (event, ui) {
+//            event.preventDefault();
+//            var gender = 0;
+//            if (ui.item.Gender === 'Male') gender = 1;
+//            else if (ui.item.Gender === 'Female') gender = 2;
+//            else gender = 3;
+
+//            $('#AppFirst').val(ui.item.PatientName);
+//            $('#ExistingOP').val(ui.item.label.split('-')[0] !== '' ? ui.item.label : ui.item.OPNumber);
+//            $('#MobileNo').val(ui.item.Contact);
+//            $('#PGender').val(gender);
+//            $('#PAddress').val(ui.item.Address || '');
+//            $('#PStreet').val(ui.item.Street || '');
+
+//            var dob = normalizeDateToDDMMYYYY(ui.item.DOB);
+//            if (dob) {
+//                calcAgeFields(dob, 'Age', 'AgeMonths', 'AgeDays');
+//                var parts = dob.split('/');
+//                if (parts.length === 3) {
+//                    $('#PDOB').val(parts[2] + '-' + parts[1] + '-' + parts[0]);
+//                }
+//            } else if (ui.item.Age && ui.item.Age !== '') {
+//                $('#Age').val(ui.item.Age);
+//                $('#AgeMonths').val('0');
+//                $('#AgeDays').val('0');
+//            }
+//        },
+//        focus: function (event, ui) {
+//            event.preventDefault();
+//            window._acItem = ui.item;   // remember highlighted row
+//        }
+//    });
+
+//    // Register once: Enter selects the highlighted row before Common.js can steal it
+//    if (!window._acEnterBound) {
+//        window._acEnterBound = true;
+//        document.addEventListener('keydown', function (e) {
+//            if (e.keyCode === 13 && e.target.id === 'ExistingOP' &&
+//                window._acItem && $('.ui-autocomplete:visible').length) {
+//                e.preventDefault();
+//                e.stopImmediatePropagation();
+//                $('#ExistingOP').data('ui-autocomplete')._trigger('select', e, { item: window._acItem });
+//                $('#ExistingOP').autocomplete('close');
+//                window._acItem = null;
+//                $('#MobileNo').focus();
+//            }
+//        }, true);
+//    }
+
+//    if (!window._acMouseBound) {
+//        window._acMouseBound = true;
+//        $(document).on('mousedown', '.ui-menu-item', function () { $(this).click(); });
+//    }
+//}
 
 function closePatientModal() {
     document.querySelector('footer').style.display = 'flex';

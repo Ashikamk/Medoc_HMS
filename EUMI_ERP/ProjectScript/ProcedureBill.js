@@ -4,6 +4,7 @@ var OrigSchemeDis = (typeof SchemeDis !== 'undefined') ? SchemeDis : 0;
 
 function ShowSchemeNotice(msg) {
     $('#SchemeNotice').remove();
+
     var html = '<div id="SchemeNotice" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);' +
         'z-index:99999;background:#6b2fa0;color:#fff;' +
         'height:50px;line-height:40px;padding:0 18px;padding-top:2px; border-radius:3px;' +
@@ -13,7 +14,9 @@ function ShowSchemeNotice(msg) {
         '<span onclick="CloseSchemeNotice()" title="Close" ' +
         'style="cursor:pointer;float:right;margin-left:14px;font-weight:bold;font-size:18px;">&times;</span>' +
         '</div>';
+
     $('body').append(html);
+}
 
 function CloseSchemeNotice() {
     $('#SchemeNotice').remove();

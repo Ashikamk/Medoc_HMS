@@ -9,7 +9,7 @@
 
     /* ================= PAGE SHELL ================= */
     .ot-page {
-        font-family: inherit; /* same font as the rest of the site (Re-Visit page) */
+        font-family: inherit;
         color: #1e293b;
     }
 
@@ -86,7 +86,7 @@
         box-shadow: 0 1px 2px rgba(15,23,42,.06);
         display: flex;
         flex-direction: column;
-        overflow: visible; /* CHANGED: so the procedure dropdown is not clipped */
+        overflow: visible;
     }
 
     .ot-card-head {
@@ -96,7 +96,7 @@
         padding: 11px 16px;
         background: #f0fdfa;
         border-bottom: 1px solid #e2e8f0;
-        border-radius: 8px 8px 0 0; /* ADDED: replaces the clipping the card used to do */
+        border-radius: 8px 8px 0 0;
     }
 
         .ot-card-head h2 {
@@ -510,34 +510,48 @@
         z-index: 999999;
     }
 
+    /* ================= STATUS (light "glass" colors, same as OT Schedule cards) ================= */
     .status-badge {
         padding: 4px 10px;
         border-radius: 15px;
-        color: white;
+        border: 1px solid transparent;
         font-size: 12px;
+        font-weight: 600;
         display: inline-block;
         min-width: 80px;
         text-align: center;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 
     .scheduled {
-        background: #3498db;
+        background: #fdf0d0;
+        color: #d97706;
+        border-color: rgba(217,119,6,.35) !important;
     }
 
     .badge-progress {
-        background: #f39c12;
+        background: #dcf7e6;
+        color: #16a34a;
+        border-color: rgba(22,163,74,.35) !important;
     }
 
     .completed {
-        background: #27ae60;
+        background: #ece6fb;
+        color: #6d4fd8;
+        border-color: rgba(109,79,216,.35) !important;
     }
 
     .cancelled {
-        background: #e74c3c;
+        background: #fee2e2;
+        color: #e11d48;
+        border-color: rgba(225,29,72,.35) !important;
     }
 
     .postponed {
-        background: #7f8c8d;
+        background: #e2e8f0;
+        color: #64748b;
+        border-color: rgba(100,116,139,.35) !important;
     }
 
     body.ot-modal-open {
@@ -560,12 +574,12 @@
     #OTListModal {
         display: none;
         position: fixed;
-        top: 24px; /* gap on the top */
-        left: 28px; /* gap on the left */
-        right: 28px; /* gap on the right */
+        top: 24px;
+        left: 28px;
+        right: 28px;
         bottom: 0;
         transform: none;
-        z-index: 9990; /* above the site navbar, below SweetAlert popups (10000) */
+        z-index: 9990;
         width: auto;
         height: auto;
         max-width: none;
@@ -730,7 +744,7 @@
         flex: 1;
         overflow-y: auto;
         overflow-x: auto;
-        padding: 0 22px 90px; /* extra bottom space so Previous / Next can scroll fully into view */
+        padding: 0 22px 90px;
         background: #fff;
         min-height: 0;
     }
@@ -788,9 +802,8 @@
 
     /* status dropdown inside the list */
     .status-select {
-        border: none;
+        border: 1px solid transparent;
         border-radius: 12px;
-        color: #fff;
         font-size: 12px;
         font-weight: 600;
         height: 22px;
@@ -798,6 +811,8 @@
         padding: 0 6px;
         text-align: center;
         cursor: pointer;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 
         .status-select option {
@@ -1759,7 +1774,7 @@
             </select>
         </div>
         <button type="button" class="sch-today-btn" style="height:34px" onclick="TdGoToday()">Today</button>
-        <button type="button" class="btn-go" onclick="LoadTodayOT()">REFRESH</button>
+        <button type="button" class="btn-go" onclick="LoadTodayOT(true)">REFRESH</button>
         <span class="td-count" id="tdCount">0 Operations</span>
     </div>
 
@@ -2432,9 +2447,10 @@
     var SCH_END = 24;        // timeline ends   24:00 (full day)
     var SCH_MINUTES = 120;   // default length when a record has no duration stored
     var SCH_LANE = 58;
-    var SCH_LOOKBACK_DAYS = 90;   // how many days before the chosen day to search for registrations
+    var SCH_LOOKBACK_DAYS = 30;   // how many days before the chosen day to search for registrations
     var schDate = new Date();
     var schOps = [];
+    var schAll = null, schFrom = null, schTo = null;   // cached server data for the schedule
 
     function schPad(n) { return ('0' + n).slice(-2); }
     function schFmt(d) { return schPad(d.getDate()) + '/' + schPad(d.getMonth() + 1) + '/' + d.getFullYear(); }
@@ -2497,7 +2513,7 @@
         $('#OTModalOverlay').show();
         $('#OTListModal').hide();
         $('#OTScheduleModal').css('display', 'flex');
-        LoadOTSchedule();
+        LoadOTSchedule(true);   // always fetch fresh data when the screen opens
     }
 
     function SchSetBox() {
@@ -2511,8 +2527,7 @@
     }
     function SchGoToday() { schDate = schNowIST(); SchSetBox(); LoadOTSchedule(); }
 
-    function LoadOTSchedule() {
-        $('#SchTable').html('<div class="sch-loading">Loading schedule...</div>');
+    function LoadOTSchedule(force) {
         var day = schFmt(schDate);
 
         // HMS_OTRegistrationList filters by REGISTRATION date, not OP date.
@@ -2522,16 +2537,24 @@
         var fromD = new Date(schDate.getFullYear(), schDate.getMonth(), schDate.getDate() - SCH_LOOKBACK_DAYS);
         var toD = schDate > today ? schDate : today;   // also covers back-dated entries
 
+        function show(list) {
+            schOps = $.grep(list, function (r) { return schNorm(r.OpDate) === day; });
+            RenderOTSchedule();
+        }
+
+        // date change inside the already-loaded range: no server call
+        if (!force && schAll && fromD >= schFrom && toD <= schTo) { show(schAll); return; }
+
+        $('#SchTable').html('<div class="sch-loading">Loading schedule...</div>');
         $.ajax({
             type: "POST",
             url: "../OT/HMS_OTRegistrationList",
             data: { FromInsDate: schFmt(fromD), ToInsDate: schFmt(toD), Status: '' },
             dataType: "json",
             success: function (data) {
-                var list = (data && data.oList) ? data.oList : (data || []);
-                // keep only operations whose OP date is the chosen day
-                schOps = $.grep(list, function (r) { return schNorm(r.OpDate) === day; });
-                RenderOTSchedule();
+                schAll = (data && data.oList) ? data.oList : (data || []);
+                schFrom = fromD; schTo = toD;
+                show(schAll);
             },
             error: function () { $('#SchTable').html('<div class="sch-empty">Unable to load the schedule</div>'); }
         });
@@ -2667,6 +2690,7 @@
     // ==================== TODAY'S OT LIST ====================
     var tdDate = new Date();
     var tdOps = [];
+    var tdAll = null, tdFrom = null, tdTo = null;   // cached server data for Today's OT
 
     function schTimeFromMin(m) {            // minutes from midnight -> "3:17 PM"
         m = ((m % 1440) + 1440) % 1440;
@@ -2698,7 +2722,7 @@
         $('#OTModalOverlay').show();
         $('#OTListModal').hide();
         $('#OTTodayModal').css('display', 'flex');
-        LoadTodayOT();
+        LoadTodayOT(true);   // always fetch fresh data when the screen opens
     }
 
     function TdSetBox() {
@@ -2708,8 +2732,7 @@
     }
     function TdGoToday() { tdDate = schNowIST(); TdSetBox(); LoadTodayOT(); }
 
-    function LoadTodayOT() {
-        $('#TodayOTBody').html('<tr><td colspan="10" class="td-empty">Loading...</td></tr>');
+    function LoadTodayOT(force) {
         var day = schFmt(tdDate);
 
         // the list is filtered by REGISTRATION date, so ask for a wider range
@@ -2718,16 +2741,25 @@
         var fromD = new Date(tdDate.getFullYear(), tdDate.getMonth(), tdDate.getDate() - SCH_LOOKBACK_DAYS);
         var toD = tdDate > today ? tdDate : today;
 
+        function show(list) {
+            tdOps = $.grep(list, function (r) { return schNorm(r.OpDate) === day; });
+            tdOps.sort(function (a, b) { return (schMin(a.OpTime) || 0) - (schMin(b.OpTime) || 0); });
+            RenderTodayOT();
+        }
+
+        // date change inside the already-loaded range: no server call
+        if (!force && tdAll && fromD >= tdFrom && toD <= tdTo) { show(tdAll); return; }
+
+        $('#TodayOTBody').html('<tr><td colspan="10" class="td-empty">Loading...</td></tr>');
         $.ajax({
             type: "POST",
             url: "../OT/HMS_OTRegistrationList",
             data: { FromInsDate: schFmt(fromD), ToInsDate: schFmt(toD), Status: '' },
             dataType: "json",
             success: function (data) {
-                var list = (data && data.oList) ? data.oList : (data || []);
-                tdOps = $.grep(list, function (r) { return schNorm(r.OpDate) === day; });
-                tdOps.sort(function (a, b) { return (schMin(a.OpTime) || 0) - (schMin(b.OpTime) || 0); });
-                RenderTodayOT();
+                tdAll = (data && data.oList) ? data.oList : (data || []);
+                tdFrom = fromD; tdTo = toD;
+                show(tdAll);
             },
             error: function () {
                 $('#TodayOTBody').html('<tr><td colspan="10" class="td-empty">Unable to load the list</td></tr>');
@@ -3020,4 +3052,3 @@
 </script>
 <script src="~/Scripts/Appoinmentscripts/sweet.js"></script>
 <link rel="stylesheet" href="/Scripts/Autocomplete/autocomplete.css" />
-
