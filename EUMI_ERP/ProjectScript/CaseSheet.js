@@ -1434,7 +1434,6 @@ function GetVisitData(result) {
     $('.VRow').remove();
     for (var i = 0; i < result.length; i++) {
 
-
         var slno = parseInt(i + 1);
         var TDate = ''; var scls = '';
         if (result[i].RevisitDate == CurDate) { TDate = 'CURRENT VISIT'; scls = 'danger text-bold-500' }
@@ -1443,26 +1442,23 @@ function GetVisitData(result) {
             AAAA = "background-color:red;color:black"
 
             var Visit = '<tr class="jsgrid-header-row VRow" style=' + AAAA + ' >' +
-                //'<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;"><i class="icon-trash"></i></td>' +
                 '<td onclick=CallIPCaseLoad(' + result[i].IPNumber + ') class="jsgrid-align-center VROWID" style="width: 8%;cursor:pointer"  id="VistTr_' + slno + '">' + slno + '</td>' +
                 '<td onclick=CallIPCaseLoad(' + result[i].IPNumber + ') class="jsgrid-align-center" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control" style="background-color:white;border:none" value="' + result[i].RevisitId + '" ></td>' +
                 '<td onclick=CallIPCaseLoad(' + result[i].IPNumber + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control ' + scls + '" style="background-color:white;border:none" value="' + TDate.substring(0, 10) + '" ></td>' +
                 '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control ' + scls + '" style="background-color:white;border:none" value="' + TDate.substring(11, 25) + '" ></td>' +
-                '<td onclick=CallIPCaseLoad(' + result[i].IPNumber + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control" style="background-color:white;border:none" value="' + result[i].HealthCard + '" ></td>' +
+                '<td onclick=CallIPCaseLoad(' + result[i].IPNumber + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control" style="background-color:white;border:none" id="VWt_' + result[i].RevisitId + '" value="-" ></td>' +
                 '<td onclick=CallIPCaseLoad(' + result[i].IPNumber + ') class="" style="width: 30%;cursor:pointer"><input type=text readonly class="form-control" id="Vistdr_' + slno + '" style="background-color:white;border:none" value="' + result[i].DoctorName + '" ></td>' +
                 '<td class="" style="width: 5%;cursor:pointer" align=center>' +
-
                 ' </td>' +
                 '</tr>';
         }
         else {
             var Visit = '<tr class="jsgrid-header-row VRow"  >' +
-                //'<td class="jsgrid-control-field jsgrid-align-center" id="editheader" style="width: 5%;"><i class="icon-trash"></i></td>' +
                 '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="jsgrid-align-center VROWID" style="width: 8%;cursor:pointer"  id="VistTr_' + slno + '">' + slno + '</td>' +
                 '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="jsgrid-align-center" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control" style="background-color:white;border:none" value="' + result[i].RevisitId + '" ></td>' +
                 '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control ' + scls + '" style="background-color:white;border:none" value="' + TDate.substring(0, 10) + '" ></td>' +
                 '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control ' + scls + '" style="background-color:white;border:none" value="' + TDate.substring(11, 25) + '" ></td>' +
-                '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control" style="background-color:white;border:none" value="' + result[i].HealthCard + '" ></td>' +
+                '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="" style="width: 15%;cursor:pointer"><input type=text readonly class="form-control" style="background-color:white;border:none" id="VWt_' + result[i].RevisitId + '" value="-" ></td>' +
                 '<td onclick=CallCaseLoad(' + result[i].DoctorId + ',2,' + slno + ') class="" style="width: 30%;cursor:pointer"><input type=text readonly class="form-control" id="Vistdr_' + slno + '"  style="background-color:white;border:none" value="' + result[i].DoctorName + '" ></td>' +
                 '<td class="" style="width: 5%;cursor:pointer" align=center>' +
                 '<a onclick=ConfirmEdit(' + result[i].DoctorId + ',0,0) ><i class="ft-edit font-medium-5"></i></a>' +
@@ -1473,6 +1469,18 @@ function GetVisitData(result) {
         slno++;
         $('.VRow').css('cursor', 'pointer');
     }
+
+    for (var j = 0; j < result.length; j++) {
+        LoadVisitWeight(result[j].RevisitId);
+    }
+}
+
+function LoadVisitWeight(revisitId) {
+    $.post("../Revisit/RevisitPatientHealthDetailsGetandGets",
+        { RevisitId: revisitId, PatientId: $('#PatientId').val(), DoctorId: ERPUserId },
+        function (res) {
+            if (res.length && res[0].Weight) $("#VWt_" + revisitId).val(res[0].Weight);
+        });
 }
 
 function ConfirmEdit(Id, type, fl) {
