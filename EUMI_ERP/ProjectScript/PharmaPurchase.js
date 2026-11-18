@@ -3449,6 +3449,12 @@ function GetPurchaseListDefault() {
     $('#ViewFromDate').val(GetFirstDayMonth());
     $('#ViewToDate').val(CurDate);
 
+    $('#ViewLocation').html($('#Location').html());
+    $('#ViewLocation').val(UserLocationId);       // default = logged-in user's location
+    if ($('#ViewLocation').val() == null) {       // not in the list, fall back to -Select-
+        $('#ViewLocation').val(0);
+    }
+
     $('#PurchaseView').modal("show");
     $("#PurchaseView").appendTo("body");
 
@@ -3460,7 +3466,7 @@ function GetPurchaseList() {
     var dataPI = {};
     dataPI.FromDate = $('#ViewFromDate').val();
     dataPI.ToDate = $('#ViewToDate').val();
-    dataPI.PurchaseDeptId = ERPDeptId;
+    dataPI.PurchaseDeptId = 0;
     dataPI.DepartmentId = ERPDeptId;
     dataPI.UserId = ERPUserId;
     $.ajax({
@@ -3480,8 +3486,8 @@ function GetPIListView(result) {
     $('#ViewFromDate,#ViewToDate').prop("disabled", false);
     disable_datatable('tbl_PIViewList');
 
-    var responseText = "<thead><tr><th>Sl#</th><th>PI#</th><th>Invoice#</th><th>Date</th><th>Supplier</th><th>PType</th><th>Grand Total</th><th>User</th><th>Print</th></tr>" +
-        "<tr><th> </th><th>PI#</th><th>Invoice#</th><th>Date</th><th>Supplier</th><th>PType</th><th>Grand Total</th><th>User</th><th> </th></tr></thead><tbody>";
+    var responseText = "<thead><tr><th>Sl#</th><th>PI#</th><th>Invoice#</th><th>Date</th><th>Supplier</th><th>Location</th><th>Grand Total</th><th>User</th><th>Print</th></tr>" +
+        "<tr><th> </th><th>PI#</th><th>Invoice#</th><th>Date</th><th>Supplier</th><th>Location</th><th>Grand Total</th><th>User</th><th> </th></tr></thead><tbody>";
     for (var l = 0; l < result.length; l++) {
         var slno = parseInt(l + 1);
 
@@ -3962,7 +3968,31 @@ function datatableWithsearch(tablename, Type) {
                 .draw();
         });
     });
+    if (tablename == 'tbl_PIViewList') {
+        FilterPurchaseByLocation();
+    }
 }
+
+function FilterPurchaseByLocation() {
+    var name = '';
+    if ($('#ViewLocation').val() != 0) {
+        name = $('#ViewLocation option:selected').text();
+    }
+    $('#tbl_PIViewList thead tr:eq(1) th:eq(5) input').val(name);
+    if ($.fn.DataTable.isDataTable('#tbl_PIViewList')) {
+        var t = $('#tbl_PIViewList').DataTable();
+        if (name == '') {
+            t.column(5).search('').draw();
+        } else {
+            // exact match, so "LOCATION 1" does not also match "LOCATION 10"
+            t.column(5).search('^' + $.fn.dataTable.util.escapeRegex(name) + '$', true, false).draw();
+        }
+    }
+}
+
+$(document).on('change', '#ViewLocation', function () {
+    FilterPurchaseByLocation();
+});
 
 
 function disable_datatable(tablename) {
@@ -4267,6 +4297,8 @@ function DivHideShow(Flag) {
         $("#PurchaseTransactionPopup").appendTo("body");
     }
 }
+
+
 
 
 function UploadPurchaseFiles() {
