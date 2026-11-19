@@ -3450,8 +3450,8 @@ function GetPurchaseListDefault() {
     $('#ViewToDate').val(CurDate);
 
     $('#ViewLocation').html($('#Location').html());
-    $('#ViewLocation').val(UserLocationId);       // default = logged-in user's location
-    if ($('#ViewLocation').val() == null) {       // not in the list, fall back to -Select-
+    $('#ViewLocation').val(UserLocationId);       
+    if ($('#ViewLocation').val() == null) {       
         $('#ViewLocation').val(0);
     }
 
@@ -3984,7 +3984,7 @@ function FilterPurchaseByLocation() {
         if (name == '') {
             t.column(5).search('').draw();
         } else {
-            // exact match, so "LOCATION 1" does not also match "LOCATION 10"
+            
             t.column(5).search('^' + $.fn.dataTable.util.escapeRegex(name) + '$', true, false).draw();
         }
     }
