@@ -25,7 +25,9 @@
                             <tr>
                                 <td><h4 id="header"></h4></td>
                                 <td width="35%"></td>
-                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#Group').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+                                @*<td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(), $('#Group').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>*@
+                                <td align="right"><button type="button" style="width:100px" onclick="$('#popupdiv').show(); $('#Qty').focus()" id="btnback" class="btn btn-outline-primary">Back</button></td>
+
                                 <td align="right">
                                     <div class="btn-group" id="buttonPlace">
                                         <div align="right">
@@ -71,9 +73,13 @@
             <form id="monthpopup" style="display:none1">
 
                 <div class="modal-body">
-                   
-                    
-                    <div class="row" style="margin-left:2%"><h6>Exclude Purchase Date</h6></div>
+
+
+                    @*<div class="row" style="margin-left:2%"><h6>Exclude Purchase Date</h6></div>*@
+                    <div class="row" style="margin-left:2%;align-items:center;margin-bottom:4%">
+                        <input type="checkbox" id="chkExcludeDate" checked style="margin-right:8px;width:16px;height:16px;cursor:pointer" />
+                        <label for="chkExcludeDate" style="margin:0;cursor:pointer"><h6 style="margin:0">Exclude Purchase Date</h6></label>
+                    </div>
                     <div class="row" style="margin-top:1%">
                         <div class="col-md-2">
                             <label style="font-weight:bold">From</label>
@@ -91,7 +97,7 @@
                         </div>
                     </div>
                     <div class="row" style="border-bottom:1px solid #cfd8dc;margin-top:3%;"></div>
-                    <div class="row" style="margin-top:3%">
+                    <div class="row" style="margin-top: 3%; display: none">
                         <div class="col-md-2">
                             <label style="font-weight:bold">Group</label>
                         </div>
@@ -111,7 +117,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row" style="margin-top:3%">
+                    <div class="row" style="margin-top: 3%; display: none">
                         <div class="col-md-2">
                             <label style="font-weight:bold">Category</label>
                         </div>
@@ -134,21 +140,21 @@
 
                     <div class="row" style="margin-top:3%">
                         @*<label style="margin-top:2%;font-weight:bold;margin-left:10%">Dept.</label>
-                            <div class="col-md-4" style="margin-top:2%;">
-                                <select id="dept" class="form-control" name="priority">
-                                    <option value='0'>-All-</option>
-                                </select>
-                            </div>*@
+            <div class="col-md-4" style="margin-top:2%;">
+                <select id="dept" class="form-control" name="priority">
+                    <option value='0'>-All-</option>
+                </select>
+            </div>*@
                         <div class="col-md-2">
                             <label style="font-weight:bold">Qty.</label>
                         </div>
                         <div class="col-md-4">
                             <input type="text" id="Qty" class="form-control" autocomplete="off">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display:none">
                             <label style="font-weight:bold;">TopValues</label>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" style="display:none">
                             <input type="text" id="Values" class="form-control" autocomplete="off">
                         </div>
 
@@ -348,7 +354,7 @@
 
     $(function () {
         //GetNonMovingItems(1, 10);
-        $('#Group').focus();
+        $('#Qty').focus();
         $('#Group').keypress(function (e) {
             var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
             if (key == 13) {
@@ -384,10 +390,17 @@
                 e.preventDefault();
             }
         });
+        //$('#Qty').keypress(function (e) {
+        //    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        //    if (key == 13) {
+        //        $('#Values').focus();
+        //        e.preventDefault();
+        //    }
+        //});
         $('#Qty').keypress(function (e) {
             var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
             if (key == 13) {
-                $('#Values').focus();
+                $('#btnsubmit').focus();
                 e.preventDefault();
             }
         });
@@ -440,7 +453,8 @@
             data1.Qty = parseInt($('#Qty').val() || 0);
             data1.DateFrom = $('#DateFrom').val();
             data1.DateTo = $('#DateTo').val();
-            data1.Type = parseInt($('#Values').val()||0);
+        //data1.Type = parseInt($('#Values').val()||0);
+        data1.Type = $('#chkExcludeDate').is(':checked') ? 1 : 0;
             data1.GroupId = parseInt($('#Group').val() || 0);
             data1.SubGroupId = parseInt($('#Subgroup').val() || 0);
             data1.CategoryId = parseInt($('#Category').val() || 0);
