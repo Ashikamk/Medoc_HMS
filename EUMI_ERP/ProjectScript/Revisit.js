@@ -149,26 +149,47 @@ $(document).ready(function () {
 
 });
 
-function DoctorLoad() {
-    var Feeduration = 0;
-    var data = {};                                       //dropdownbind
-    data.DoctorId = 0;
-    data.DeptId = ERPDeptId;
-    $.ajax({
-        type: "POST",
-        url: "../Revisit/HMS_RevistDoctorGets",
-        data: data,
-        success: function (result) {
-            if (result.oList.length > 0) {
-                $("#DocName,#DoctorSearchId").empty()
-                $("#DocName,#DoctorSearchId").append("<option value='0' Fee='0'>--Select--</option>");
+//function DoctorLoad() {
+//    var Feeduration = 0;
+//    var data = {};                                       //dropdownbind
+//    data.DoctorId = 0;
+//    data.DeptId = ERPDeptId;
+//    $.ajax({
+//        type: "POST",
+//        url: "../Revisit/HMS_RevistDoctorGets",
+//        data: data,
+//        success: function (result) {
+//            if (result.oList.length > 0) {
+//                $("#DocName,#DoctorSearchId").empty()
+//                $("#DocName,#DoctorSearchId").append("<option value='0' Fee='0'>--Select--</option>");
 
-                for (var i = 0; i < result.oList.length; i++) {
-                    Feeduration = parseInt(result.oList[i].Status||0);
-                    $("#DocName,#DoctorSearchId").append("<option value='" + result.oList[i].DoctorId + "' Tokenprefix='" + result.oList[i].Add1+"'   Feedur='" + Feeduration + "'   Fee='" + result.oList[i].ConsultFees + "'>" + result.oList[i].DoctorName + "</option>");
-                }
-         
-            }
+//                for (var i = 0; i < result.oList.length; i++) {
+//                    Feeduration = parseInt(result.oList[i].Status||0);
+//                    $("#DocName,#DoctorSearchId").append("<option value='" + result.oList[i].DoctorId + "' Tokenprefix='" + result.oList[i].Add1+"'   Feedur='" + Feeduration + "'   Fee='" + result.oList[i].ConsultFees + "'>" + result.oList[i].DoctorName + "</option>");
+//                }
+
+//            }
+//        }
+//    });
+//}
+function DoctorLoad() {
+    $.when(
+        $.post("../Master/DoctorGetandGets", { DoctorId: 0, DoctorsId: 0 }),
+        $.post("../Revisit/HMS_RevistDoctorGets", { DoctorId: 0, DeptId: ERPDeptId })
+    ).done(function (master, doctors) {
+        var hidden = {};
+        $.each(master[0].oList || [], function (i, d) {
+            if (parseInt(d.DeptId) == 26) hidden[d.DoctorsId] = true;
+        });
+
+        var list = doctors[0].oList;
+        if (list.length > 0) {
+            $("#DocName,#DoctorSearchId").empty().append("<option value='0' Fee='0'>--Select--</option>");
+            $.each(list, function (i, d) {
+                if (hidden[d.DoctorId]) return;
+                var Feeduration = parseInt(d.Status || 0);
+                $("#DocName,#DoctorSearchId").append("<option value='" + d.DoctorId + "' Tokenprefix='" + d.Add1 + "' Feedur='" + Feeduration + "' Fee='" + d.ConsultFees + "'>" + d.DoctorName + "</option>");
+            });
         }
     });
 }

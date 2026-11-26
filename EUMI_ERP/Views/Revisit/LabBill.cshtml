@@ -477,8 +477,18 @@
                                             <div class="col-md-1 ">
                                                 <label class="label-control">Doctor</label>
                                             </div>
+                                            @*<div class="col-md-2">
+            <select id="Doctor" class="form-control patdet"></select>
+        </div>*@
                                             <div class="col-md-2">
-                                                <select id="Doctor" class="form-control patdet"></select>
+                                                <div class="input-group">
+                                                    <select id="Doctor" class="form-control patdet"></select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-outline-primary" onclick="adddoctor(0)" title="Add Doctor" style="padding:0 10px">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="col-md-1  text-right">
@@ -925,6 +935,38 @@
     </div>
 </div>
 
+<div class="container">
+    <div class="modal fade" id="doctorentrydiv" role="dialog" style="">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="margin-top:30%">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="QtyCheckTable" class="table table-sm table-responsive-sm text-center mb-0">
+                                <tr class="text-left" style="border:hidden">
+                                    <th>Doctor Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" id="Doctorname" class="form-control form-control-sm text-bold-500"></td>
+                                    <td><input type="text" id="doctormobile" class="form-control form-control-sm text-bold-500"></td>
+                                    <td><input type="text" id="doctoraddress" class="form-control form-control-sm text-bold-500"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-black avdbtn black" data-dismiss="modal">Cancel</button>
+                    @*<button type="bssutton" class="btn btn-warning avdbtn white" onclick="doctorsave()">Save</button>*@
+                    <button type="button" class="btn btn-warning avdbtn white" onclick="doctorsave(1)">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="Loadingsave" class="overlay1" style="background: none;display: none;">
     <div style="margin-top:23%;margin-left: 50%;">
         <img src="/app-assets/img/Loading_1.gif">
@@ -941,6 +983,7 @@
 </div>
 <script type="text/javascript" src="~/app-assets/FromStack/dist/QRCODE.js"></script>
 <script>
+
         createQRCode(printurl);
         function createQRCode(data) {
 
@@ -1073,6 +1116,68 @@
             //$('#printscheme').attr('checked')
         }
 
+    function adddoctor(A) {
+        $('#doctorentrydiv').modal('show');
+        $('#doctorentrydiv').appendTo('body');
+        setTimeout(function () { $('#Doctorname').focus(); }, 300);
+    }
+
+    function doctorsave(flag) {
+        if ($.trim($('#Doctorname').val()) == '') {
+            warningshow('Please Enter Doctor Name', 'Doctorname');
+        }
+        else {
+            $('#doctorentrydiv').modal('hide');
+
+            // same logic as registration: flag 0 = delete, otherwise save
+            var delfl = (flag === 0) ? 0 : 1;
+
+            var data = {};
+            data.Active = 1;
+            data.Name = $.trim($('#Doctorname').val());
+            data.MobileNumber = $.trim($('#doctormobile').val());
+            data.Address1 = $('#doctoraddress').val();
+            data.Doctor_UserId = ERPUserId;
+            data.DelFlag = delfl;
+            data.MainDept = ERPDeptId;
+            data.Department = 26;
+
+            $.ajax({
+                type: "POST",
+                url: "../Master/DoctorInsertandUpdate",
+                data: data,
+                success: function (result) {
+                    var DoctorId = result.oList[0].DoctorsId;
+                    DoctorLoad(DoctorId);
+                    $('#Doctorname').val('');
+                    $('#doctormobile').val('');
+                    $('#doctoraddress').val('');
+                }
+            });
+        }
+    }
+
+    // Reloads the Doctor dropdown and selects the newly added doctor
+    function DoctorLoad(NewDoctorId) {
+        var data = {};
+        data.DoctorId = 0;
+        data.DeptId = ERPDeptId;
+        $.ajax({
+            type: "POST",
+            url: "../Revisit/HMS_RevistDoctorGets",
+            data: data,
+            success: function (result) {
+                if (result.oList.length > 0) {
+                    $("#Doctor").empty();
+                    $("#Doctor").append("<option value='0' Fee='0'>Select</option>");
+                    for (var i = 0; i < result.oList.length; i++) {
+                        $("#Doctor").append("<option value='" + result.oList[i].DoctorId + "' Fee='" + result.oList[i].ConsultFees + "'>" + result.oList[i].DoctorName + "</option>");
+                    }
+                    if (NewDoctorId) { $("#Doctor").val(NewDoctorId); }
+                }
+            }
+        });
+    }
 
 
         function ngOnDestroy1() {
