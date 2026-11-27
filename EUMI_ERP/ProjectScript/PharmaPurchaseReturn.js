@@ -1829,7 +1829,9 @@ function PurchaseGets(result) {
     if (result.length > 0) {
         $("#PIValid").val(1);
         $("#PINo_A").val(result[0].SlNo);
-        $("#PINo_S,#PINo_C").val(result[0].InvoNo);
+        //$("#PINo_S,#PINo_C").val(result[0].InvoNo);
+        $("#PINo_C").val(result[0].SlNo);
+        $("#PINo_S").val(result[0].InvoNo || '');
         $("#SupplierId").val(result[0].SupplierId);
         $("#Supplier").val(result[0].SupplierName);
         $("#PayType").val(result[0].PayType);
@@ -2347,7 +2349,8 @@ function GetCopyofThisPurchase(slno, dept, Print) {
     formrefresh(1);
     $('.smallTextbox,.billdisc,#PharmaPIDate,#txtnotes,.btndis').prop("disabled", true);
     $('#copypurchase').show();
-    $("#purchaseinv,#btnsubmit").hide();
+    //$("#purchaseinv,#btnsubmit").hide();
+    $("#btnsubmit").hide();
     $("#CrntMode").removeClass();
     $("#CrntMode").addClass("badge badge-warning white");
     $("#CrntMode").text('Mode : Copy');
